@@ -251,7 +251,7 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 		return tr
 	}}
 
-	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme).WithObjects(objects...).Build()
+	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme).WithObjects(objects...).WithStatusSubresource(objects...).Build()
 
 	provider := metric.NewMeterProvider()
 	meter := provider.Meter("keptn/task")

@@ -2,6 +2,7 @@ package keptntask
 
 import (
 	"context"
+	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"testing"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
@@ -25,18 +26,11 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 
 	cm := makeConfigMap(cmName, namespace)
 
-	fakeClient := fake.NewClientBuilder().WithObjects(cm).Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	require.Nil(t, err)
-
 	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, namespace, cmName)
-
-	err = fakeClient.Create(context.TODO(), taskDefinition)
-	require.Nil(t, err)
+	fakeClient := fakeclient.NewClient(cm, taskDefinition)
 
 	taskDefinition.Status.Function.ConfigMap = cmName
-	err = fakeClient.Status().Update(context.TODO(), taskDefinition)
+	err := fakeClient.Status().Update(context.TODO(), taskDefinition)
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{
@@ -96,19 +90,12 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	taskDefinitionName := "my-task-definition"
 
 	cm := makeConfigMap(cmName, namespace)
-
-	fakeClient := fake.NewClientBuilder().WithObjects(cm).Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	require.Nil(t, err)
-
 	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, common.KLTNamespace, cmName)
 
-	err = fakeClient.Create(context.TODO(), taskDefinition)
-	require.Nil(t, err)
+	fakeClient := fakeclient.NewClient(cm, taskDefinition)
 
 	taskDefinition.Status.Function.ConfigMap = cmName
-	err = fakeClient.Status().Update(context.TODO(), taskDefinition)
+	err := fakeClient.Status().Update(context.TODO(), taskDefinition)
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{

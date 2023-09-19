@@ -33,16 +33,9 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedReplicaSet(t 
 
 	rep := int32(1)
 	replicasetFail := makeReplicaSet("myrep", "default", &rep, 0)
-
-	fakeClient := k8sfake.NewClientBuilder().WithObjects(replicasetFail).Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	testrequire.Nil(t, err)
-
 	workloadInstance := makeWorkloadInstanceWithRef(replicasetFail.ObjectMeta, "ReplicaSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
-	require.Nil(t, err)
+	fakeClient := fake.NewClient(replicasetFail, workloadInstance)
 
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fakeClient,
@@ -57,17 +50,10 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_UnavailableReplicaS
 
 	rep := int32(1)
 	replicasetFail := makeReplicaSet("myrep", "default", &rep, 0)
-
-	// do not put the ReplicaSet into the cluster
-	fakeClient := k8sfake.NewClientBuilder().WithObjects().Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	testrequire.Nil(t, err)
-
 	workloadInstance := makeWorkloadInstanceWithRef(replicasetFail.ObjectMeta, "ReplicaSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
-	require.Nil(t, err)
+	// do not put the ReplicaSet into the cluster
+	fakeClient := fake.NewClient(workloadInstance)
 
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fakeClient,
@@ -82,17 +68,9 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedStatefulSet(t
 
 	rep := int32(1)
 	statefulsetFail := makeStatefulSet("mystat", "default", &rep, 0)
-
-	fakeClient := k8sfake.NewClientBuilder().WithObjects(statefulsetFail).Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	testrequire.Nil(t, err)
-
 	workloadInstance := makeWorkloadInstanceWithRef(statefulsetFail.ObjectMeta, "StatefulSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
-	require.Nil(t, err)
-
+	fakeClient := fake.NewClient(statefulsetFail, workloadInstance)
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fakeClient,
 	}
@@ -106,17 +84,10 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_UnavailableStateful
 
 	rep := int32(1)
 	statefulSetFail := makeStatefulSet("mystat", "default", &rep, 0)
-
-	// do not put the StatefulSet into the cluster
-	fakeClient := k8sfake.NewClientBuilder().WithObjects().Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	testrequire.Nil(t, err)
-
 	workloadInstance := makeWorkloadInstanceWithRef(statefulSetFail.ObjectMeta, "StatefulSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
-	require.Nil(t, err)
+	// do not put the StatefulSet into the cluster
+	fakeClient := fake.NewClient(workloadInstance)
 
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fakeClient,
@@ -130,16 +101,9 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_UnavailableStateful
 func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedDaemonSet(t *testing.T) {
 
 	daemonSetFail := makeDaemonSet("mystat", "default", 1, 0)
-
-	fakeClient := k8sfake.NewClientBuilder().WithObjects(daemonSetFail).Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	testrequire.Nil(t, err)
-
 	workloadInstance := makeWorkloadInstanceWithRef(daemonSetFail.ObjectMeta, "DaemonSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
-	require.Nil(t, err)
+	fakeClient := fake.NewClient(daemonSetFail, workloadInstance)
 
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fakeClient,
@@ -152,17 +116,10 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_FailedDaemonSet(t *
 
 func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_UnavailableDaemonSet(t *testing.T) {
 	daemonSetFail := makeDaemonSet("mystat", "default", 1, 0)
-
-	// do not put the DaemonSet into the cluster
-	fakeClient := k8sfake.NewClientBuilder().WithObjects().Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	testrequire.Nil(t, err)
-
 	workloadInstance := makeWorkloadInstanceWithRef(daemonSetFail.ObjectMeta, "DaemonSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
-	require.Nil(t, err)
+	// do not put the DaemonSet into the cluster
+	fakeClient := fake.NewClient(workloadInstance)
 
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fakeClient,
@@ -177,16 +134,9 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyReplicaSet(t *
 
 	rep := int32(1)
 	replicaSet := makeReplicaSet("myrep", "default", &rep, 1)
-
-	fakeClient := k8sfake.NewClientBuilder().WithObjects(replicaSet).Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	testrequire.Nil(t, err)
-
 	workloadInstance := makeWorkloadInstanceWithRef(replicaSet.ObjectMeta, "ReplicaSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
-	require.Nil(t, err)
+	fakeClient := fake.NewClient(replicaSet, workloadInstance)
 
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fakeClient,
@@ -201,16 +151,9 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyStatefulSet(t 
 
 	rep := int32(1)
 	statefulSet := makeStatefulSet("mystat", "default", &rep, 1)
-
-	fakeClient := k8sfake.NewClientBuilder().WithObjects(statefulSet).Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	testrequire.Nil(t, err)
-
 	workloadInstance := makeWorkloadInstanceWithRef(statefulSet.ObjectMeta, "StatefulSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
-	require.Nil(t, err)
+	fakeClient := fake.NewClient(statefulSet, workloadInstance)
 
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fakeClient,
@@ -224,16 +167,9 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyStatefulSet(t 
 func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyDaemonSet(t *testing.T) {
 
 	daemonSet := makeDaemonSet("mystat", "default", 1, 1)
-
-	fakeClient := k8sfake.NewClientBuilder().WithObjects(daemonSet).Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	testrequire.Nil(t, err)
-
 	workloadInstance := makeWorkloadInstanceWithRef(daemonSet.ObjectMeta, "DaemonSet")
 
-	err = fakeClient.Create(context.TODO(), workloadInstance)
-	require.Nil(t, err)
+	fakeClient := fake.NewClient(daemonSet, workloadInstance)
 
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fakeClient,
@@ -246,16 +182,8 @@ func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_ReadyDaemonSet(t *t
 
 func TestKeptnWorkloadInstanceReconciler_reconcileDeployment_UnsupportedReferenceKind(t *testing.T) {
 
-	fakeClient := k8sfake.NewClientBuilder().WithObjects().Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	testrequire.Nil(t, err)
-
 	workloadInstance := makeWorkloadInstanceWithRef(metav1.ObjectMeta{}, "Unknown")
-
-	err = fakeClient.Create(context.TODO(), workloadInstance)
-	require.Nil(t, err)
-
+	fakeClient := fake.NewClient(workloadInstance)
 	r := &KeptnWorkloadInstanceReconciler{
 		Client: fakeClient,
 	}

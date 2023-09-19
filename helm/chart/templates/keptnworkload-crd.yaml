@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnworkloads.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.1
+    controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -72,9 +72,9 @@ spec:
                     type: string
                   uid:
                     description: UID is a type that holds unique ID values, including
-                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to string.  Being
-                      a type captures intent and helps make sure that UIDs and names
-                      do not get conflated.
+                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to
+                      string.  Being a type captures intent and helps make sure that
+                      UIDs and names do not get conflated.
                     type: string
                 required:
                 - kind
@@ -152,9 +152,9 @@ spec:
                     type: string
                   uid:
                     description: UID is a type that holds unique ID values, including
-                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to string.  Being
-                      a type captures intent and helps make sure that UIDs and names
-                      do not get conflated.
+                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to
+                      string.  Being a type captures intent and helps make sure that
+                      UIDs and names do not get conflated.
                     type: string
                 required:
                 - kind
@@ -213,33 +213,33 @@ spec:
                 description: PostDeploymentEvaluations is a list of all evaluations
                   to be performed during the post-deployment phase of the KeptnWorkload.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnWorkload, or in the KLT
+                  located in the same namespace as the KeptnWorkload, or in the Keptn
                   namespace.
                 items:
                   type: string
                 type: array
               postDeploymentTasks:
                 description: PostDeploymentTasks is a list of all tasks to be performed
-                  during the post-deployment phase of the KeptnWorkload. The items of
-                  this list refer to the names of KeptnTaskDefinitions located in the
-                  same namespace as the KeptnWorkload, or in the KLT namespace.
+                  during the post-deployment phase of the KeptnWorkload. The items
+                  of this list refer to the names of KeptnTaskDefinitions located
+                  in the same namespace as the KeptnWorkload, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               preDeploymentEvaluations:
-                description: PreDeploymentEvaluations is a list of all evaluations to
-                  be performed during the pre-deployment phase of the KeptnWorkload.
+                description: PreDeploymentEvaluations is a list of all evaluations
+                  to be performed during the pre-deployment phase of the KeptnWorkload.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnWorkload, or in the KLT
+                  located in the same namespace as the KeptnWorkload, or in the Keptn
                   namespace.
                 items:
                   type: string
                 type: array
               preDeploymentTasks:
                 description: PreDeploymentTasks is a list of all tasks to be performed
-                  during the pre-deployment phase of the KeptnWorkload. The items of
-                  this list refer to the names of KeptnTaskDefinitions located in the
-                  same namespace as the KeptnApp, or in the KLT namespace.
+                  during the pre-deployment phase of the KeptnWorkload. The items
+                  of this list refer to the names of KeptnTaskDefinitions located
+                  in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -254,9 +254,9 @@ spec:
                     type: string
                   uid:
                     description: UID is a type that holds unique ID values, including
-                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to string.  Being
-                      a type captures intent and helps make sure that UIDs and names
-                      do not get conflated.
+                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to
+                      string.  Being a type captures intent and helps make sure that
+                      UIDs and names do not get conflated.
                     type: string
                 required:
                 - kind
@@ -284,9 +284,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnevaluations.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.1
+    controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -284,21 +284,21 @@ spec:
                   the KeptnEvaluation is done.
                 type: string
               checkType:
-                description: Type indicates whether the KeptnEvaluation is part of the
-                  pre- or postDeployment phase.
+                description: Type indicates whether the KeptnEvaluation is part of
+                  the pre- or postDeployment phase.
                 type: string
               evaluationDefinition:
                 description: EvaluationDefinition refers to the name of the KeptnEvaluationDefinition
                   which includes the objectives for the KeptnEvaluation. The KeptnEvaluationDefinition
-                  can be located in the same namespace as the KeptnEvaluation, or in
-                  the KLT namespace.
+                  can be located in the same namespace as the KeptnEvaluation, or
+                  in the Keptn namespace.
                 type: string
               failAction:
                 type: string
               retries:
                 default: 10
-                description: Retries indicates how many times the KeptnEvaluation can
-                  be attempted in the case of an error or missed evaluation objective,
+                description: Retries indicates how many times the KeptnEvaluation
+                  can be attempted in the case of an error or missed evaluation objective,
                   before considering the KeptnEvaluation to be failed.
                 type: integer
               retryInterval:
@@ -332,8 +332,8 @@ spec:
                   properties:
                     message:
                       description: Message contains additional information about the
-                        evaluation of an objective. This can include explanations about
-                        why an evaluation has failed (e.g. due to a missed objective),
+                        evaluation of an objective. This can include explanations
+                        about why an evaluation has failed (e.g. due to a missed objective),
                         or if there was any error during the evaluation of the objective.
                       type: string
                     status:
@@ -354,8 +354,8 @@ spec:
               overallStatus:
                 default: Pending
                 description: OverallStatus describes the overall status of the KeptnEvaluation.
-                  The Overall status is derived from the status of the individual objectives
-                  of the KeptnEvaluationDefinition referenced by the KeptnEvaluation.
+                  The Overall status is derived from the status of the individual
+                  objectives of the KeptnEvaluationDefinition referenced by the KeptnEvaluation.
                 type: string
               retryCount:
                 default: 0
@@ -377,9 +377,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

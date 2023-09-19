@@ -12,20 +12,22 @@ namespace: keptn-lifecycle-toolkit-system
 # commonLabels:
 #   someName: someValue
 
-bases:
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
   - ../crd
   - ../rbac
   - ../manager
   - ../metrics
-  # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix including the one in
-  # crd/kustomization.yaml
   - ../webhook
+# [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix including the one in
+# crd/kustomization.yaml
 # [CERTMANAGER] To enable cert-manager, uncomment all sections with 'CERTMANAGER'. 'WEBHOOK' components are required.
 # - ../certmanager
 # [PROMETHEUS] To enable prometheus monitor, uncomment all sections with 'PROMETHEUS'.
 # - ../prometheus
 
-patchesStrategicMerge:
+patches:
 # Protect the /metrics endpoint by putting it behind auth.
 # If you want your controller to expose the /metrics
 # endpoint w/o any authn/z, please comment the following line.
@@ -44,7 +46,7 @@ patchesStrategicMerge:
 # - webhookcainjection_patch.yaml
 
 # the following config is for teaching kustomize how to do var substitution
-vars:
+replacements:
 #  [CERTMANAGER] To enable cert-manager, uncomment all sections with 'CERTMANAGER' prefix.
 # - name: CERTIFICATE_NAMESPACE # namespace of the certificate CR
 #   objref:

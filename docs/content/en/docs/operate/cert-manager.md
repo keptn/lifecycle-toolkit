@@ -12,7 +12,7 @@ Bundling the cert-manager simplifies the installation for new users
 and provides the functionality Keptn needs
 without the overhead of other cert-managers.
 For a description of the architecture, see
-[Keptn Certificate Manager](../concepts/architecture/cert-manager.md).
+[Keptn Certificate Manager](../architecture/cert-manager.md).
 
 Keptn also works well with `cert-manager.io`.
 If you are already using `cert-manager.io`,

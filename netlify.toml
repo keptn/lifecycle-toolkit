@@ -1,3 +1,9 @@
+# https://docs.netlify.com/routing/redirects/redirect-options/#custom-404-page-handling
+[[redirects]]
+  from = "/*"
+  to = "/404/"
+  status = 404
+
 [build]
 base = "docs/"
 publish = "public/"
@@ -20,11 +26,10 @@ HUGO_ENV = "development"
 [context.branch-deploy.environment]
 HUGO_ENV = "staging"
 
-[context.production.environment]
-HUGO_ENV = "production"
-
 [context.production]
 # On netlify our branch will always be the one we are currently building for
 # important information regarding naming
 # https://gohugo.io/getting-started/configuration/#configure-with-environment-variables
 command = "HUGOxPARAMSxGITHUB_BRANCH=$BRANCH HUGOxPARAMSxCURRENTVERSION=$BRANCH hugo -b $URL"
+
+environment = { HUGO_ENV = "production" }

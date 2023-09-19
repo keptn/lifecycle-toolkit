@@ -35,7 +35,7 @@ func TestEvaluate(t *testing.T) {
 				},
 			},
 			providerRequest: metricstypes.ProviderRequest{
-				Objective: &metricsapi.Objective{
+				Objective: metricsapi.Objective{
 					AnalysisValueTemplateRef: metricsapi.ObjectReference{
 						Name:      "mytemp",
 						Namespace: "default",
@@ -63,7 +63,7 @@ func TestEvaluate(t *testing.T) {
 				},
 			},
 			providerRequest: metricstypes.ProviderRequest{
-				Objective: &metricsapi.Objective{
+				Objective: metricsapi.Objective{
 					AnalysisValueTemplateRef: metricsapi.ObjectReference{
 						Name:      "mytemp",
 						Namespace: "default",

@@ -1,7 +1,6 @@
 package common
 
 import (
-	"context"
 	"fmt"
 
 	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
@@ -9,11 +8,9 @@ import (
 	"go.opentelemetry.io/otel/metric"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func AddApp(c client.Client, name string) error {
+func GetApp(name string) *lfcv1alpha3.KeptnApp {
 	app := &lfcv1alpha3.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
@@ -26,21 +23,10 @@ func AddApp(c client.Client, name string) error {
 		},
 		Status: lfcv1alpha3.KeptnAppStatus{},
 	}
-	return c.Create(context.TODO(), app)
+	return app
 }
 
-func UpdateAppRevision(c client.Client, name string, revision uint) error {
-	app := &lfcv1alpha3.KeptnApp{}
-	err := c.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: name}, app)
-	if err != nil {
-		return err
-	}
-	app.Spec.Revision = revision
-	app.Generation = int64(revision)
-	return c.Update(context.TODO(), app)
-}
-
-func AddAppVersion(c client.Client, namespace string, appName string, version string, workloads []lfcv1alpha3.KeptnWorkloadRef, status lfcv1alpha3.KeptnAppVersionStatus) error {
+func ReturnAppVersion(namespace string, appName string, version string, workloads []lfcv1alpha3.KeptnWorkloadRef, status lfcv1alpha3.KeptnAppVersionStatus) *lfcv1alpha3.KeptnAppVersion {
 	appVersionName := fmt.Sprintf("%s-%s", appName, version)
 	app := &lfcv1alpha3.KeptnAppVersion{
 		TypeMeta: metav1.TypeMeta{},
@@ -61,7 +47,7 @@ func AddAppVersion(c client.Client, namespace string, appName string, version st
 		},
 		Status: status,
 	}
-	return c.Create(context.TODO(), app)
+	return app
 }
 
 func InitAppMeters() apicommon.KeptnMeters {

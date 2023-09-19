@@ -1,0 +1,104 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  name: value-1
+spec:
+  provider:
+    name: my-first-mocked-provider
+  query: 'query-1'
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  name: value-2
+spec:
+  provider:
+    name: my-second-mocked-provider
+  query: 'query-2'
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  name: value-3
+spec:
+  provider:
+    name: my-third-mocked-provider
+  query: 'query-3'
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisDefinition
+metadata:
+  name: ed-my-proj-dev-svc1
+spec:
+  objectives:
+    - analysisValueTemplateRef:
+        name: value-1
+      target:
+        failure:
+          lessThan:
+            fixedValue: 5
+        warning:
+          lessThan:
+            fixedValue: 4
+      weight: 2
+      keyObjective: false
+    - analysisValueTemplateRef:
+        name: value-2
+      target:
+        failure:
+          greaterThan:
+            fixedValue: 20
+        warning:
+          greaterThan:
+            fixedValue: 15
+      weight: 1
+      keyObjective: false
+    - analysisValueTemplateRef:
+        name: value-3
+      target:
+        failure:
+          notInRange:
+            lowBound: 25
+            highBound: 35
+      weight: 1
+      keyObjective: false
+  totalScore:
+    passPercentage: 75
+    warningPercentage: 50
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: Analysis
+metadata:
+  name: analysis-sample
+spec:
+  timeframe:
+    from: 2023-09-14T07:33:19Z
+    to: 2023-09-14T07:33:19Z
+  args:
+    "ns": "keptn-lifecycle-toolkit-system"
+  analysisDefinition:
+    name: ed-my-proj-dev-svc1
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetricsProvider
+metadata:
+  name: my-first-mocked-provider
+spec:
+  type: prometheus
+  targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetricsProvider
+metadata:
+  name: my-second-mocked-provider
+spec:
+  type: prometheus
+  targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetricsProvider
+metadata:
+  name: my-third-mocked-provider
+spec:
+  type: prometheus
+  targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"

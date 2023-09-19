@@ -23,8 +23,8 @@ func NewSLIConverter() *SLIConverter {
 
 func (c *SLIConverter) Convert(fileContent []byte, provider string, namespace string) (string, error) {
 	//check that provider and namespace is set
-	if provider == "" || namespace == "" {
-		return "", fmt.Errorf("--sli-provider and --sli-namespace needs to be set for conversion")
+	if err := c.validateInput(provider, namespace); err != nil {
+		return "", err
 	}
 
 	// unmarshall content
@@ -63,7 +63,7 @@ func (c *SLIConverter) convertMapToAnalysisValueTemplate(slis map[string]string,
 				APIVersion: "metrics.keptn.sh/v1alpha3",
 			},
 			ObjectMeta: v1.ObjectMeta{
-				Name: key,
+				Name: ConvertResourceName(key),
 			},
 			Spec: metricsapi.AnalysisValueTemplateSpec{
 				Query: convertQuery(query),
@@ -79,9 +79,24 @@ func (c *SLIConverter) convertMapToAnalysisValueTemplate(slis map[string]string,
 	return result
 }
 
+func (c *SLIConverter) validateInput(provider, namespace string) error {
+	// check that provider and namespace is set
+	if provider == "" || namespace == "" {
+		return fmt.Errorf("missing arguments: 'keptn-provider-name' and 'keptn-provider-namespace' needs to be set for conversion")
+	}
+	if err := ValidateResourceName(provider); err != nil {
+		return err
+	}
+	if err := ValidateResourceName(namespace); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func convertQuery(query string) string {
-	// regex matching string starting with $, then upptercase letter
-	// followed by unlimited occurences of uppercase letters and numbers
+	// regex matching string starting with $, then uppercase letter
+	// followed by unlimited occurrences of uppercase letters and numbers
 	// examples: $LIST, $L, $L2T, $L555
 	re := regexp.MustCompile(`\$\b[A-Z][A-Z0-9]*\b`)
 	//get all substrings matching regex

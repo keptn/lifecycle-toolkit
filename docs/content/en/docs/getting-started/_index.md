@@ -1,8 +1,7 @@
 ---
 title: Getting started with Keptn
 description: Get started with Keptn
-weight: 10
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
+weight: 20
 ---
 
 Keptn works whether or not you use a GitOps strategy.
@@ -78,10 +77,6 @@ Apply the file and restart Keptn to pick up the new config:
 
 ```shell
 kubectl apply -f collectorconfig.yaml
-kubectl rollout restart deployment -n keptn-lifecycle-toolkit-system -l control-plane=lifecycle-operator
-kubectl rollout status deployment -n keptn-lifecycle-toolkit-system -l control-plane=lifecycle-operator --watch
-kubectl rollout restart deployment -n keptn-lifecycle-toolkit-system -l component=scheduler
-kubectl rollout status deployment -n keptn-lifecycle-toolkit-system -l component=scheduler --watch
 ```
 
 ## Step 2: Create Namespace for Demo Application
@@ -332,10 +327,10 @@ Create some Keptn Grafana dashboards that will be available when Grafana is inst
 <!---x-release-please-start-version-->
 ```shell
 kubectl create ns monitoring
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/klt-v0.8.1/examples/support/observability/config/prometheus/grafana-config.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/klt-v0.8.1/examples/support/observability/config/prometheus/grafana-dashboard-keptn-applications.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/klt-v0.8.1/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/klt-v0.8.1/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/klt-v0.8.2/examples/support/observability/config/prometheus/grafana-config.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/klt-v0.8.2/examples/support/observability/config/prometheus/grafana-dashboard-keptn-applications.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/klt-v0.8.2/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/klt-v0.8.2/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
 ```
 <!---x-release-please-end-->
 
@@ -413,7 +408,7 @@ prometheus:
       - job_name: "scrape_klt"
         scrape_interval: 5s
         static_configs:
-          - targets: ['keptn-klt-lifecycle-operator-metrics-service.keptn-lifecycle-toolkit-system.svc.cluster.local:2222']
+          - targets: ['lifecycle-operator-metrics-service.keptn-lifecycle-toolkit-system.svc.cluster.local:2222']
 ```
 
 ```shell

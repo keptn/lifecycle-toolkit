@@ -1,6 +1,8 @@
 package analysis
 
 import (
+	"time"
+
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
@@ -23,7 +25,7 @@ func NewWorkersPool(ctx context.Context, analysis *metricsapi.Analysis, objectiv
 	if numJobs <= numWorkers { // do not start useless go routines
 		numWorkers = numJobs
 	}
-	_, cancel := context.WithCancel(ctx)
+	_, cancel := context.WithTimeout(ctx, 10*time.Second)
 	providerChans := make(map[string]chan metricstypes.ProviderRequest, len(providers.SupportedProviders))
 
 	assigner := TaskAssigner{tasks: objectives, numWorkers: numWorkers}
@@ -73,24 +75,20 @@ func (aw WorkersPool) DispatchAndCollect(ctx context.Context) (map[string]metric
 func (aw WorkersPool) CollectAnalysisResults(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
 	var err error
 	results := make(map[string]metricsapi.ProviderResult, aw.numJobs)
-loop:
 	for a := 1; a <= aw.numJobs; a++ {
 		select {
 		case <-ctx.Done():
 			err = errors.New("Collection terminated")
-			break loop
+			break
 		default:
 			res, err2 := aw.GetResult(ctx)
 			if err2 != nil {
 				err = err2
-				aw.cancel()
-				break loop
-			}
-			results[analysis.ComputeKey(res.Objective)] = *res
-			if res.ErrMsg != "" {
-				err = errors.New(res.ErrMsg)
-				aw.cancel()
-				break loop
+			} else {
+				results[analysis.ComputeKey(res.Objective)] = *res
+				if res.ErrMsg != "" {
+					err = errors.New(res.ErrMsg)
+				}
 			}
 		}
 	}

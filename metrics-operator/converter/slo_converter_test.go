@@ -23,14 +23,22 @@ objectives:
   - sli: "response_time_p90"
     key_sli: false
     pass:
-    - criteria:
+      - criteria:
         - ">600"
         - "<800"
     warning:
-    - criteria:
+      - criteria:
         - "<=1000"
         - ">500"
     weight: 2
+  - sli: "response_time_p91"
+    key_sli: false
+    pass:
+      - criteria:
+        - "<600"
+      - criteria:
+        - ">800"
+    weight: 5
   - sli: "response_time_p80"
     key_sli: false
     pass:
@@ -66,10 +74,10 @@ objectives:
     pass:
       - criteria:
           - "<=+100%"
-          - ">=80"
+          - ">=100"
       - criteria:
           - "<=+100%"
-          - ">=80"
+          - "<=80"
   - sli: "throughput"
     pass:
       - criteria:
@@ -88,7 +96,7 @@ metadata:
 spec:
   objectives:
   - analysisValueTemplateRef:
-      name: response_time_p90
+      name: response-time-p90
       namespace: default
     target:
       failure:
@@ -101,7 +109,16 @@ spec:
           lowBound: "600"
     weight: 2
   - analysisValueTemplateRef:
-      name: response_time_p80
+      name: response-time-p91
+      namespace: default
+    target:
+      failure:
+        inRange:
+          highBound: "800"
+          lowBound: "600"
+    weight: 5
+  - analysisValueTemplateRef:
+      name: response-time-p80
       namespace: default
     target:
       failure:
@@ -113,7 +130,7 @@ spec:
           lowBound: "600"
     weight: 2
   - analysisValueTemplateRef:
-      name: response_time_p70
+      name: response-time-p70
       namespace: default
     target:
       failure:
@@ -125,7 +142,7 @@ spec:
           lowBound: "600"
     weight: 2
   - analysisValueTemplateRef:
-      name: response_time_p95
+      name: response-time-p95
       namespace: default
     target:
       failure:
@@ -138,13 +155,17 @@ spec:
   - analysisValueTemplateRef:
       name: cpu
       namespace: default
-    target: {}
+    target:
+      failure:
+        inRange:
+          highBound: "100"
+          lowBound: "80"
   - analysisValueTemplateRef:
       name: throughput
       namespace: default
     target: {}
   - analysisValueTemplateRef:
-      name: error_rate
+      name: error-rate
       namespace: default
     target: {}
   totalScore:
@@ -840,7 +861,7 @@ func TestNewOperator(t *testing.T) {
 	}
 }
 
-func TestShouldIgnoreObjective(t *testing.T) {
+func TestHasNotSupportedCriteria(t *testing.T) {
 	tests := []struct {
 		name string
 		o    *Objective
@@ -852,10 +873,34 @@ func TestShouldIgnoreObjective(t *testing.T) {
 				Pass:    []Criteria{},
 				Warning: []Criteria{},
 			},
+			want: true,
+		},
+		{
+			name: "pass == 1, warn == 0",
+			o: &Objective{
+				Pass: []Criteria{
+					{
+						Operators: []string{},
+					},
+				},
+				Warning: []Criteria{},
+			},
 			want: false,
 		},
 		{
-			name: "valid criteria",
+			name: "pass == 0, warn == 1",
+			o: &Objective{
+				Pass: []Criteria{},
+				Warning: []Criteria{
+					{
+						Operators: []string{},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "pass == 1; warn == 1",
 			o: &Objective{
 				Pass: []Criteria{
 					{
@@ -871,7 +916,7 @@ func TestShouldIgnoreObjective(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "OR criteria",
+			name: "pass == 2; warn == 1",
 			o: &Objective{
 				Pass: []Criteria{
 					{
@@ -888,6 +933,21 @@ func TestShouldIgnoreObjective(t *testing.T) {
 				},
 			},
 			want: true,
+		},
+		{
+			name: "pass == 2; warn == 0",
+			o: &Objective{
+				Pass: []Criteria{
+					{
+						Operators: []string{},
+					},
+					{
+						Operators: []string{},
+					},
+				},
+				Warning: []Criteria{},
+			},
+			want: false,
 		},
 	}
 
@@ -1154,15 +1214,62 @@ func TestSetupTarget(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "logical OR criteria -> informative slo",
+			name: "logical OR criteria -> with pass only",
 			o: &Objective{
 				Name: "criteria",
 				Pass: []Criteria{
 					{
-						Operators: []string{"<10"},
+						Operators: []string{">15"},
 					},
 					{
-						Operators: []string{">1"},
+						Operators: []string{"<10"},
+					},
+				},
+			},
+			want: &metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					InRange: &metricsapi.RangeValue{
+						LowBound:  *resource.NewDecimalQuantity(*dec10, resource.DecimalSI),
+						HighBound: *resource.NewDecimalQuantity(*dec15, resource.DecimalSI),
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "logical OR criteria -> with pass only - error",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{">====15"},
+					},
+					{
+						Operators: []string{"<10"},
+					},
+				},
+			},
+			want:    &metricsapi.Target{},
+			wantErr: true,
+		},
+		{
+			name: "logical OR criteria with pass and warn -> informative",
+			o: &Objective{
+				Name: "criteria",
+				Pass: []Criteria{
+					{
+						Operators: []string{">15"},
+					},
+					{
+						Operators: []string{"<10"},
+					},
+				},
+				Warning: []Criteria{
+					{
+						Operators: []string{">15"},
+					},
+					{
+						Operators: []string{"<10"},
 					},
 				},
 			},
@@ -2146,5 +2253,58 @@ func TestIsSuperInterval(t *testing.T) {
 			}
 		})
 
+	}
+}
+
+func TestSLOConverter_validateInput(t *testing.T) {
+	type args struct {
+		analysisDef string
+		namespace   string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "no analysisDefinition name",
+			args: args{
+				analysisDef: "",
+				namespace:   "my-namespace",
+			},
+			wantErr: true,
+		},
+		{
+			name: "no namespace",
+			args: args{
+				analysisDef: "analysis-def",
+				namespace:   "",
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid analysisDefinition name",
+			args: args{
+				analysisDef: "analysis_def",
+				namespace:   "my-namespace",
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid namespace",
+			args: args{
+				analysisDef: "analysis-def",
+				namespace:   "my_namespace",
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &SLOConverter{}
+			if err := c.validateInput(tt.args.analysisDef, tt.args.namespace); (err != nil) != tt.wantErr {
+				t.Errorf("validateInput() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
 	}
 }

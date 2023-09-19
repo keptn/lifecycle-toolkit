@@ -1,14 +1,50 @@
 apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  name: ready
+spec:
+  provider:
+    name: my-mocked-provider
+  query: 'sum(kube_pod_container_status_ready{namespace="{{.ns}}"})'
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisDefinition
+metadata:
+  name: ed-my-proj-dev-svc1
+spec:
+  objectives:
+    - analysisValueTemplateRef:
+        name: ready
+      target:
+        failure:
+          lessThan:
+            fixedValue: 2
+        warning:
+          lessThan:
+            fixedValue: 3
+      weight: 1
+      keyObjective: false
+  totalScore:
+    passPercentage: 90
+    warningPercentage: 75
+---
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: Analysis
 metadata:
   name: analysis-sample
-  namespace: $NAMESPACE
 spec:
   timeframe:
-    from: $CURRENT_TIME
-    to: $LATER
+    from: 2023-09-14T07:33:19Z
+    to: 2023-09-14T07:33:19Z
   args:
     "ns": "keptn-lifecycle-toolkit-system"
   analysisDefinition:
     name: ed-my-proj-dev-svc1
-    namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetricsProvider
+metadata:
+  name: my-mocked-provider
+spec:
+  type: prometheus
+  targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"

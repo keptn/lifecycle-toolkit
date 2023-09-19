@@ -26,7 +26,8 @@
         "helm/chart/Chart.yaml",
         "Makefile",
         "helm/chart/values.yaml",
-        "helm/chart/README.md"
+        "helm/chart/README.md",
+        "docs/content/en/docs/getting-started/_index.md"
       ]
     },
     "klt-cert-manager": {
@@ -72,7 +73,9 @@
       "prerelease": false,
       "draft": false,
       "extra-files": [
-        "Makefile"
+        "Makefile",
+        "converter/sli_converter.md",
+        "converter/slo_converter.md"
       ]
     },
     "runtimes/python-runtime": {

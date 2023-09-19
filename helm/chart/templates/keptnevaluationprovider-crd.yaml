@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnevaluationproviders.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.1
+    controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -50,7 +50,8 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnEvaluationProviderSpec defines the desired state of KeptnEvaluationProvider
+            description: KeptnEvaluationProviderSpec defines the desired state of
+              KeptnEvaluationProvider
             properties:
               secretName:
                 type: string
@@ -86,14 +87,15 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnEvaluationProviderSpec defines the desired state of KeptnEvaluationProvider
+            description: KeptnEvaluationProviderSpec defines the desired state of
+              KeptnEvaluationProvider
             properties:
               secretKeyRef:
                 description: SecretKeySelector selects a key of a Secret.
                 properties:
                   key:
-                    description: The key of the secret to select from.  Must be a valid
-                      secret key.
+                    description: The key of the secret to select from.  Must be a
+                      valid secret key.
                     type: string
                   name:
                     description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
@@ -138,14 +140,15 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnEvaluationProviderSpec defines the desired state of KeptnEvaluationProvider
+            description: KeptnEvaluationProviderSpec defines the desired state of
+              KeptnEvaluationProvider
             properties:
               secretKeyRef:
                 description: SecretKeySelector selects a key of a Secret.
                 properties:
                   key:
-                    description: The key of the secret to select from.  Must be a valid
-                      secret key.
+                    description: The key of the secret to select from.  Must be a
+                      valid secret key.
                     type: string
                   name:
                     description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
@@ -171,9 +174,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

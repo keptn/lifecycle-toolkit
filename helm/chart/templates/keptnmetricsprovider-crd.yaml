@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnmetricsproviders.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.0
+    controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -46,8 +46,8 @@ spec:
                 description: SecretKeySelector selects a key of a Secret.
                 properties:
                   key:
-                    description: The key of the secret to select from.  Must be a valid
-                      secret key.
+                    description: The key of the secret to select from.  Must be a
+                      valid secret key.
                     type: string
                   name:
                     description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
@@ -99,8 +99,8 @@ spec:
                   to the metrics provider.
                 properties:
                   key:
-                    description: The key of the secret to select from.  Must be a valid
-                      secret key.
+                    description: The key of the secret to select from.  Must be a
+                      valid secret key.
                     type: string
                   name:
                     description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
@@ -118,8 +118,8 @@ spec:
                   is reachable with included port and protocol.
                 type: string
               type:
-                description: Type represents the provider type. This can be one of prometheus,
-                  dynatrace, datadog, dql.
+                description: Type represents the provider type. This can be one of
+                  prometheus, dynatrace, datadog, dql.
                 pattern: prometheus|dynatrace|datadog|dql
                 type: string
             required:
@@ -133,9 +133,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

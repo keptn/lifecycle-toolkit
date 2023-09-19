@@ -286,6 +286,6 @@ for detailed information.
 To learn more about the Keptn Metrics Server, see:
 
 - Architecture:
-  [Keptn Metrics Operator](../concepts/architecture/components/metrics-operator/_index.md)
+  [Keptn Metrics Operator](../architecture/components/metrics-operator/_index.md)
 - More information about implementing Keptn Metrics:
   [Keptn Metrics](../implementing/evaluatemetrics.md)

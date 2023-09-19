@@ -1,7 +1,7 @@
 ---
 title: Keptn for Non-Kubernetes Applications
 description: Using Keptn with Non-Kubernetes Applications
-weight: 20
+weight: 95
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
@@ -51,10 +51,6 @@ kind: KeptnTask
 metadata:
   name: runhelloworld1
 spec:
-  workload: "my-workload"
-  workloadVersion: "1.0.0"
-  appVersion: "1.0.0"
-  app: "my-app"
   taskDefinition: helloworldtask
   context:
     appName: "my-app"
@@ -87,10 +83,6 @@ kind: KeptnTask
 metadata:
   name: runhelloworld2
 spec:
-  workload: "my-workload"
-  workloadVersion: "1.0.1"
-  appVersion: "1.0.1"
-  app: "my-app"
   taskDefinition: helloworldtask
   context:
     appName: "my-app"

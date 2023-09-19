@@ -19,7 +19,8 @@ Two methods are supported for installing Keptn:
   the [Helm Chart](#use-helm-chart).
   This is the preferred strategy because it allows you to customize your cluster.
 
-* See the [use manifests](#use-manifests) section for more information on installing via manifest.
+* Releases v0.8.2 and earlier can be installed using
+  the [manifests](#use-manifests).
   This is the less-preferred way because it does not support customization.
 
 After Keptn is installed, you must
@@ -108,7 +109,7 @@ For more information,see
 
 ## Use manifests
 
-Versions v0.10.0 and earlier of Keptn can be installed using manifests,
+Versions v0.8.2 and earlier of Keptn can be installed using manifests,
 although we recommend that you use Helm Charts
 because they allow you to easily customize your configuration.
 

@@ -5,9 +5,12 @@ metadata:
 spec:
   taskDefinition: schedule-upstream-deployment
   context:
-    workloadName: my-workload
-    workloadVersion: "1.0"
-  app: my-app
+    appName: "my-app"
+    appVersion: "1.0.0"
+    objectType: ""
+    taskType: ""
+    workloadName: "my-workload"
+    workloadVersion: "1.0.0"
   parameters:
     map:
       targetDate: "2022-04-16T06:55:31.820Z"

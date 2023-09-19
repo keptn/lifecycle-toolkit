@@ -9,7 +9,7 @@ on:
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-tags depName=cloud-bulldozer/kube-burner
-  KUBE_BURNER_VERSION: "v1.7.6"
+  KUBE_BURNER_VERSION: "v1.7.7"
 defaults:
   run:
     shell: bash
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache build tools
         id: cache-build-tools

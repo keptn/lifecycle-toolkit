@@ -1,0 +1,12 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: Analysis
+metadata:
+  name: analysis-sample
+  namespace: testy
+spec:
+  analysisDefinition:
+    name: ed-my-proj-dev-svc1
+status:
+  pass: true
+  # yamllint disable-line rule:line-length
+  raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"lessThan":{"fixedValue":"2"}},"fulfilled":false},"warnResult":{"operator":{"lessThan":{"fixedValue":"3"}},"fulfilled":false},"warning":false,"pass":true},"value":4,"score":1}],"totalScore":1,"maximumScore":1,"pass":true,"warning":false}'

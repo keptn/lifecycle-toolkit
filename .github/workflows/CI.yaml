@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Extract branch name
         id: extract_branch
@@ -86,7 +86,7 @@ jobs:
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Go 1.x
         uses: actions/setup-go@v4
@@ -98,7 +98,7 @@ jobs:
 
       - name: Unit Test ${{ matrix.config.name }}
         working-directory: ./${{ matrix.config.folder }}
-        run: make test
+        run: make unit-test
 
       - name: Report code coverage
         uses: codecov/codecov-action@v3
@@ -132,7 +132,7 @@ jobs:
             folder: "klt-cert-manager/"
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache build tools
         id: cache-build-tools
@@ -143,10 +143,10 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Build Docker Image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64
@@ -176,7 +176,7 @@ jobs:
         working-directory: ./${{ matrix.config.folder }}
         run: make controller-gen
 
-      - name: Generate release.yaml
+      - name: Generate test release manifest
         if: matrix.config.name != 'deno-runtime' && matrix.config.name != 'python-runtime'
         working-directory: ./${{ matrix.config.folder }}
         env:
@@ -236,10 +236,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out klt repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check out helm-charts repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: 'keptn/lifecycle-toolkit-charts'
           path: ./helm-charts-repository

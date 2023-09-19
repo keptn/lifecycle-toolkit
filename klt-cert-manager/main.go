@@ -26,7 +26,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	// nolint:gci
 	// +kubebuilder:scaffold:imports
-
 )
 
 var (

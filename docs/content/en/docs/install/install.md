@@ -109,7 +109,7 @@ For more information,see
 
 ## Use manifests
 
-Versions v0.8.2 and earlier of the Lifecycle Toolkit can be installed using manifests,
+Versions v0.8.2 and earlier of Keptn can be installed using manifests,
 although we recommend that you use Helm Charts
 because they allow you to easily customize your configuration.
 

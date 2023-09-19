@@ -303,11 +303,11 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 			var got error
 			switch tt.verb {
 			case "create":
-				got = ktd.ValidateCreate()
+				_, got = ktd.ValidateCreate()
 			case "update":
-				got = ktd.ValidateUpdate(tt.oldSpec)
+				_, got = ktd.ValidateUpdate(tt.oldSpec)
 			case "delete":
-				got = ktd.ValidateDelete()
+				_, got = ktd.ValidateDelete()
 			}
 
 			if tt.want != nil {

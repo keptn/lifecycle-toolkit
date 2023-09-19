@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: analysisdefinitions.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.1
+    controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -22,7 +22,8 @@ spec:
   - name: v1alpha3
     schema:
       openAPIV3Schema:
-        description: AnalysisDefinition is the Schema for the analysisdefinitions APIs
+        description: AnalysisDefinition is the Schema for the analysisdefinitions
+          APIs
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -50,24 +51,26 @@ spec:
                         AnalysisValueTemplate
                       properties:
                         name:
+                          description: Name defines the name of the referenced object
                           type: string
                         namespace:
+                          description: Namespace defines the namespace of the referenced
+                            object
                           type: string
                       required:
                       - name
-                      - namespace
                       type: object
                     keyObjective:
                       default: false
-                      description: KeyObjective defines if the objective fails when
-                        the target is not met
+                      description: KeyObjective defines whether the whole analysis
+                        fails when this objective's target is not met
                       type: boolean
                     target:
                       description: Target defines failure or warning criteria
                       properties:
                         failure:
                           description: Failure defines limits up to which an analysis
-                            fails.
+                            fails
                           properties:
                             equalTo:
                               description: EqualTo represents '==' operator
@@ -108,6 +111,31 @@ spec:
                               required:
                               - fixedValue
                               type: object
+                            inRange:
+                              description: InRange represents operator checking the
+                                value is inclusively in the defined range, e.g. 2
+                                <= x <= 5
+                              properties:
+                                highBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: HighBound defines the higher bound
+                                    of the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                lowBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: LowBound defines the lower bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - highBound
+                              - lowBound
+                              type: object
                             lessThan:
                               description: LessThan represents '<' operator
                               properties:
@@ -134,31 +162,6 @@ spec:
                               required:
                               - fixedValue
                               type: object
-                            inRange:
-                              description: InRange represents operator checking the
-                                value is inclusively in the defined range, e.g. 2
-                                <= x <= 5
-                              properties:
-                                highBound:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: HighBound defines the higher bound of
-                                    the range
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                lowBound:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: LowBound defines the lower bound of
-                                    the range
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - highBound
-                              - lowBound
-                              type: object
                             notInRange:
                               description: NotInRange represents operator checking
                                 the value is exclusively out of the defined range,
@@ -168,8 +171,8 @@ spec:
                                   anyOf:
                                   - type: integer
                                   - type: string
-                                  description: HighBound defines the higher bound of
-                                    the range
+                                  description: HighBound defines the higher bound
+                                    of the range
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true
                                 lowBound:
@@ -228,6 +231,31 @@ spec:
                               required:
                               - fixedValue
                               type: object
+                            inRange:
+                              description: InRange represents operator checking the
+                                value is inclusively in the defined range, e.g. 2
+                                <= x <= 5
+                              properties:
+                                highBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: HighBound defines the higher bound
+                                    of the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                lowBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: LowBound defines the lower bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - highBound
+                              - lowBound
+                              type: object
                             lessThan:
                               description: LessThan represents '<' operator
                               properties:
@@ -254,31 +282,6 @@ spec:
                               required:
                               - fixedValue
                               type: object
-                            inRange:
-                              description: InRange represents operator checking the
-                                value is inclusively in the defined range, e.g. 2
-                                <= x <= 5
-                              properties:
-                                highBound:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: HighBound defines the higher bound of
-                                    the range
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                lowBound:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: LowBound defines the lower bound of
-                                    the range
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - highBound
-                              - lowBound
-                              type: object
                             notInRange:
                               description: NotInRange represents operator checking
                                 the value is exclusively out of the defined range,
@@ -288,8 +291,8 @@ spec:
                                   anyOf:
                                   - type: integer
                                   - type: string
-                                  description: HighBound defines the higher bound of
-                                    the range
+                                  description: HighBound defines the higher bound
+                                    of the range
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true
                                 lowBound:
@@ -308,26 +311,26 @@ spec:
                       type: object
                     weight:
                       default: 1
-                      description: Weight can be used to emphasize the importance of
-                        one Objective over the others
+                      description: Weight can be used to emphasize the importance
+                        of one Objective over the others
                       type: integer
                   required:
                   - analysisValueTemplateRef
                   type: object
                 type: array
               totalScore:
-                description: TotalScore defines the required score for an analysis to
-                  be successful
+                description: TotalScore defines the required score for an analysis
+                  to be successful
                 properties:
                   passPercentage:
-                    description: PassPercentage defines the threshold to reach for an
-                      analysis to pass.
+                    description: PassPercentage defines the threshold to reach for
+                      an analysis to pass
                     maximum: 100
                     minimum: 0
                     type: integer
                   warningPercentage:
-                    description: WarningPercentage defines the threshold to reach for
-                      an analysis to pass with a 'warning' status.
+                    description: WarningPercentage defines the threshold to reach
+                      for an analysis to pass with a 'warning' status
                     maximum: 100
                     minimum: 0
                     type: integer
@@ -346,9 +349,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

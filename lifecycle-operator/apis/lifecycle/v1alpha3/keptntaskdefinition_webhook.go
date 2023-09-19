@@ -25,6 +25,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
+	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
 // log is for logging in this package.
@@ -41,24 +42,24 @@ func (r *KeptnTaskDefinition) SetupWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.Validator = &KeptnTaskDefinition{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *KeptnTaskDefinition) ValidateCreate() error {
+func (r *KeptnTaskDefinition) ValidateCreate() (admission.Warnings, error) {
 	keptntaskdefinitionlog.Info("validate create", "name", r.Name)
 
-	return r.validateKeptnTaskDefinition()
+	return []string{}, r.validateKeptnTaskDefinition()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *KeptnTaskDefinition) ValidateUpdate(old runtime.Object) error {
+func (r *KeptnTaskDefinition) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 	keptntaskdefinitionlog.Info("validate update", "name", r.Name)
 
-	return r.validateKeptnTaskDefinition()
+	return []string{}, r.validateKeptnTaskDefinition()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *KeptnTaskDefinition) ValidateDelete() error {
+func (r *KeptnTaskDefinition) ValidateDelete() (admission.Warnings, error) {
 	keptntaskdefinitionlog.Info("validate delete", "name", r.Name)
 
-	return nil
+	return []string{}, nil
 }
 
 func (r *KeptnTaskDefinition) validateKeptnTaskDefinition() error {

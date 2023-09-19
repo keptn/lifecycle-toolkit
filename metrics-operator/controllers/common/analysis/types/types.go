@@ -5,7 +5,7 @@ import (
 )
 
 type ProviderRequest struct {
-	Objective *v1alpha3.Objective
+	Objective v1alpha3.Objective
 	Query     string
 	Provider  *v1alpha3.KeptnMetricsProvider
 }

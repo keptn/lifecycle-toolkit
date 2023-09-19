@@ -1,7 +1,7 @@
 ---
 title: Keptn Metrics
 description: Implement Keptn metrics
-weight: 85
+weight: 20
 ---
 
 The Keptn Metrics Operator provides a single entry point

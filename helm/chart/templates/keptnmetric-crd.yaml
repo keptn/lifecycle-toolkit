@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnmetrics.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.0
+    controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
@@ -60,8 +60,8 @@ spec:
             description: KeptnMetricSpec defines the desired state of KeptnMetric
             properties:
               fetchIntervalSeconds:
-                description: FetchIntervalSeconds represents the update frequency in
-                  seconds that is used to update the metric
+                description: FetchIntervalSeconds represents the update frequency
+                  in seconds that is used to update the metric
                 type: integer
               provider:
                 description: Provider represents the provider object
@@ -84,8 +84,8 @@ spec:
             description: KeptnMetricStatus defines the observed state of KeptnMetric
             properties:
               lastUpdated:
-                description: LastUpdated represents the time when the status data was
-                  last updated
+                description: LastUpdated represents the time when the status data
+                  was last updated
                 format: date-time
                 type: string
               rawValue:
@@ -136,8 +136,8 @@ spec:
             description: KeptnMetricSpec defines the desired state of KeptnMetric
             properties:
               fetchIntervalSeconds:
-                description: FetchIntervalSeconds represents the update frequency in
-                  seconds that is used to update the metric
+                description: FetchIntervalSeconds represents the update frequency
+                  in seconds that is used to update the metric
                 type: integer
               provider:
                 description: Provider represents the provider object
@@ -160,8 +160,8 @@ spec:
             description: KeptnMetricStatus defines the observed state of KeptnMetric
             properties:
               lastUpdated:
-                description: LastUpdated represents the time when the status data was
-                  last updated
+                description: LastUpdated represents the time when the status data
+                  was last updated
                 format: date-time
                 type: string
               rawValue:
@@ -215,8 +215,8 @@ spec:
             description: KeptnMetricSpec defines the desired state of KeptnMetric
             properties:
               fetchIntervalSeconds:
-                description: FetchIntervalSeconds represents the update frequency in
-                  seconds that is used to update the metric
+                description: FetchIntervalSeconds represents the update frequency
+                  in seconds that is used to update the metric
                 type: integer
               provider:
                 description: Provider represents the provider object
@@ -231,11 +231,11 @@ spec:
                 description: Query represents the query to be run
                 type: string
               range:
-                description: Range represents the time range for which data is to be
-                  queried
+                description: Range represents the time range for which data is to
+                  be queried
                 properties:
                   aggregation:
-                    description: 'Aggregation defines as the type of aggregation function
+                    description: 'Aggregation defines the type of aggregation function
                       to be applied on the data. Accepted values: p90, p95, p99, max,
                       min, avg, median'
                     enum:
@@ -270,8 +270,8 @@ spec:
                   not be evaluated
                 type: string
               lastUpdated:
-                description: LastUpdated represents the time when the status data was
-                  last updated
+                description: LastUpdated represents the time when the status data
+                  was last updated
                 format: date-time
                 type: string
               rawValue:
@@ -291,9 +291,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []

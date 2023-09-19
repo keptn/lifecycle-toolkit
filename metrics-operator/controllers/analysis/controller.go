@@ -41,7 +41,6 @@ type AnalysisReconciler struct {
 	Scheme     *runtime.Scheme
 	Log        logr.Logger
 	MaxWorkers int //maybe 2 or 4 as def
-	Namespace  string
 	NewWorkersPoolFactory
 	common.IAnalysisEvaluator
 }
@@ -73,14 +72,12 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	//find AnalysisDefinition to have the collection of Objectives
+	analysisDefNamespace := analysis.Spec.AnalysisDefinition.GetNamespace(analysis.Namespace)
 	analysisDef := &metricsapi.AnalysisDefinition{}
-	if analysis.Spec.AnalysisDefinition.Namespace == "" {
-		analysis.Spec.AnalysisDefinition.Namespace = a.Namespace
-	}
 	err := a.Client.Get(ctx,
 		types.NamespacedName{
 			Name:      analysis.Spec.AnalysisDefinition.Name,
-			Namespace: analysis.Spec.AnalysisDefinition.Namespace},
+			Namespace: analysisDefNamespace},
 		analysisDef,
 	)
 
@@ -89,7 +86,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			a.Log.Info(
 				fmt.Sprintf("AnalysisDefinition '%s' in namespace '%s' not found, requeue",
 					analysis.Spec.AnalysisDefinition.Name,
-					analysis.Spec.AnalysisDefinition.Namespace),
+					analysisDefNamespace),
 			)
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 		}
@@ -107,7 +104,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	//create multiple workers handling the Objectives
-	childCtx, wp := a.NewWorkersPoolFactory(ctx, analysis, todo, a.MaxWorkers, a.Client, a.Log, a.Namespace)
+	childCtx, wp := a.NewWorkersPoolFactory(ctx, analysis, todo, a.MaxWorkers, a.Client, a.Log, analysisDefNamespace)
 
 	res, err := wp.DispatchAndCollect(childCtx)
 	if err != nil {
@@ -120,6 +117,12 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	maps.Copy(res, done)
 
 	err = a.evaluateObjectives(ctx, res, analysisDef, analysis)
+
+	// if evaluation was successful remove the stored values
+	if err == nil {
+		analysis.Status.StoredValues = nil
+		err = a.updateStatus(ctx, analysis)
+	}
 
 	return ctrl.Result{}, err
 }

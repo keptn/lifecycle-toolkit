@@ -1,13 +1,9 @@
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTask
 metadata:
   name: slack-deployment-notification
 spec:
   taskDefinition: slack-notification-inline
-  appVersion: "1.0"
-  workload: "w"
-  workloadVersion: "2.0"
-  app: "app"
   context:
     workloadName: my-workload
     workloadVersion: "1.0"

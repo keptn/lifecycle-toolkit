@@ -30,7 +30,19 @@ const CONTEXTID contextID = "start"
 // this test checks if the chain of reconcile events is correct
 func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
-	r, eventChannel, tracer, _ := setupReconciler()
+	pendingStatus := lfcv1alpha3.KeptnAppVersionStatus{
+		CurrentPhase:                   "",
+		Status:                         apicommon.StatePending,
+		PreDeploymentStatus:            apicommon.StatePending,
+		PreDeploymentEvaluationStatus:  apicommon.StatePending,
+		WorkloadOverallStatus:          apicommon.StatePending,
+		PostDeploymentStatus:           apicommon.StatePending,
+		PostDeploymentEvaluationStatus: apicommon.StatePending,
+	}
+
+	app := controllercommon.ReturnAppVersion("default", "myappversion", "1.0.0", nil, pendingStatus)
+
+	r, eventChannel, tracer, _ := setupReconciler(app)
 
 	tests := []struct {
 		name       string
@@ -74,21 +86,6 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 		},
 	}
 
-	pendingStatus := lfcv1alpha3.KeptnAppVersionStatus{
-		CurrentPhase:                   "",
-		Status:                         apicommon.StatePending,
-		PreDeploymentStatus:            apicommon.StatePending,
-		PreDeploymentEvaluationStatus:  apicommon.StatePending,
-		WorkloadOverallStatus:          apicommon.StatePending,
-		PostDeploymentStatus:           apicommon.StatePending,
-		PostDeploymentEvaluationStatus: apicommon.StatePending,
-	}
-
-	// setting up fakeclient CRD data
-
-	err := controllercommon.AddAppVersion(r.Client, "default", "myappversion", "1.0.0", nil, pendingStatus)
-	require.Nil(t, err)
-
 	traces := 0
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -120,7 +117,6 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 }
 
 func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
-	r, eventChannel, tracer, _ := setupReconciler()
 
 	status := lfcv1alpha3.KeptnAppVersionStatus{
 		CurrentPhase:        apicommon.PhaseAppPreDeployment.ShortName,
@@ -161,8 +157,7 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 		},
 		Status: status,
 	}
-	err := r.Client.Create(context.TODO(), app)
-	require.Nil(t, err)
+	r, eventChannel, tracer, _ := setupReconciler(app)
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -195,11 +190,9 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 }
 
 func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
-	r, eventChannel, tracer, _ := setupReconciler()
 
-	err := controllercommon.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
-	require.Nil(t, err)
-
+	app := controllercommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
+	r, eventChannel, tracer, _ := setupReconciler(app)
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
 			Namespace: "default",
@@ -302,7 +295,7 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 	}
 
 	fake.SetupSchemes()
-	fakeClient := k8sfake.NewClientBuilder().WithObjects(objs...).WithScheme(scheme.Scheme).WithObjects().WithIndex(&lfcv1alpha3.KeptnWorkloadInstance{}, "spec.app", workloadInstanceIndexer).Build()
+	fakeClient := k8sfake.NewClientBuilder().WithObjects(objs...).WithStatusSubresource(objs...).WithScheme(scheme.Scheme).WithObjects().WithIndex(&lfcv1alpha3.KeptnWorkloadInstance{}, "spec.app", workloadInstanceIndexer).Build()
 
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppVersionReconciler{

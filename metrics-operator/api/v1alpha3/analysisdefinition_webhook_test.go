@@ -286,8 +286,10 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, tt.wantErr, tt.obj.ValidateCreate())
-			require.Equal(t, tt.wantErr, tt.obj.ValidateUpdate(&AnalysisDefinition{}))
+			_, err := tt.obj.ValidateCreate()
+			require.Equal(t, tt.wantErr, err)
+			_, err = tt.obj.ValidateUpdate(&AnalysisDefinition{})
+			require.Equal(t, tt.wantErr, err)
 		})
 	}
 }

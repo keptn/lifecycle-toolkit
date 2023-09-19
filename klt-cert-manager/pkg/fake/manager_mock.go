@@ -13,7 +13,7 @@ import (
 	"net/http"
 	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/config/v1alpha1"
+	"sigs.k8s.io/controller-runtime/pkg/config"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -53,7 +53,7 @@ import (
 //			GetConfigFunc: func() *rest.Config {
 //				panic("mock out the GetConfig method")
 //			},
-//			GetControllerOptionsFunc: func() v1alpha1.ControllerConfigurationSpec {
+//			GetControllerOptionsFunc: func() config.Controller {
 //				panic("mock out the GetControllerOptions method")
 //			},
 //			GetEventRecorderForFunc: func(name string) record.EventRecorder {
@@ -61,6 +61,9 @@ import (
 //			},
 //			GetFieldIndexerFunc: func() client.FieldIndexer {
 //				panic("mock out the GetFieldIndexer method")
+//			},
+//			GetHTTPClientFunc: func() *http.Client {
+//				panic("mock out the GetHTTPClient method")
 //			},
 //			GetLoggerFunc: func() logr.Logger {
 //				panic("mock out the GetLogger method")
@@ -71,11 +74,8 @@ import (
 //			GetSchemeFunc: func() *runtime.Scheme {
 //				panic("mock out the GetScheme method")
 //			},
-//			GetWebhookServerFunc: func() *webhook.Server {
+//			GetWebhookServerFunc: func() webhook.Server {
 //				panic("mock out the GetWebhookServer method")
-//			},
-//			SetFieldsFunc: func(ifaceVal interface{}) error {
-//				panic("mock out the SetFields method")
 //			},
 //			StartFunc: func(ctx context.Context) error {
 //				panic("mock out the Start method")
@@ -115,13 +115,16 @@ type MockManager struct {
 	GetConfigFunc func() *rest.Config
 
 	// GetControllerOptionsFunc mocks the GetControllerOptions method.
-	GetControllerOptionsFunc func() v1alpha1.ControllerConfigurationSpec
+	GetControllerOptionsFunc func() config.Controller
 
 	// GetEventRecorderForFunc mocks the GetEventRecorderFor method.
 	GetEventRecorderForFunc func(name string) record.EventRecorder
 
 	// GetFieldIndexerFunc mocks the GetFieldIndexer method.
 	GetFieldIndexerFunc func() client.FieldIndexer
+
+	// GetHTTPClientFunc mocks the GetHTTPClient method.
+	GetHTTPClientFunc func() *http.Client
 
 	// GetLoggerFunc mocks the GetLogger method.
 	GetLoggerFunc func() logr.Logger
@@ -133,10 +136,7 @@ type MockManager struct {
 	GetSchemeFunc func() *runtime.Scheme
 
 	// GetWebhookServerFunc mocks the GetWebhookServer method.
-	GetWebhookServerFunc func() *webhook.Server
-
-	// SetFieldsFunc mocks the SetFields method.
-	SetFieldsFunc func(ifaceVal interface{}) error
+	GetWebhookServerFunc func() webhook.Server
 
 	// StartFunc mocks the Start method.
 	StartFunc func(ctx context.Context) error
@@ -195,6 +195,9 @@ type MockManager struct {
 		// GetFieldIndexer holds details about calls to the GetFieldIndexer method.
 		GetFieldIndexer []struct {
 		}
+		// GetHTTPClient holds details about calls to the GetHTTPClient method.
+		GetHTTPClient []struct {
+		}
 		// GetLogger holds details about calls to the GetLogger method.
 		GetLogger []struct {
 		}
@@ -206,11 +209,6 @@ type MockManager struct {
 		}
 		// GetWebhookServer holds details about calls to the GetWebhookServer method.
 		GetWebhookServer []struct {
-		}
-		// SetFields holds details about calls to the SetFields method.
-		SetFields []struct {
-			// IfaceVal is the ifaceVal argument value.
-			IfaceVal interface{}
 		}
 		// Start holds details about calls to the Start method.
 		Start []struct {
@@ -230,11 +228,11 @@ type MockManager struct {
 	lockGetControllerOptions   sync.RWMutex
 	lockGetEventRecorderFor    sync.RWMutex
 	lockGetFieldIndexer        sync.RWMutex
+	lockGetHTTPClient          sync.RWMutex
 	lockGetLogger              sync.RWMutex
 	lockGetRESTMapper          sync.RWMutex
 	lockGetScheme              sync.RWMutex
 	lockGetWebhookServer       sync.RWMutex
-	lockSetFields              sync.RWMutex
 	lockStart                  sync.RWMutex
 }
 
@@ -514,7 +512,7 @@ func (mock *MockManager) GetConfigCalls() []struct {
 }
 
 // GetControllerOptions calls GetControllerOptionsFunc.
-func (mock *MockManager) GetControllerOptions() v1alpha1.ControllerConfigurationSpec {
+func (mock *MockManager) GetControllerOptions() config.Controller {
 	if mock.GetControllerOptionsFunc == nil {
 		panic("MockManager.GetControllerOptionsFunc: method is nil but IManager.GetControllerOptions was just called")
 	}
@@ -596,6 +594,33 @@ func (mock *MockManager) GetFieldIndexerCalls() []struct {
 	mock.lockGetFieldIndexer.RLock()
 	calls = mock.calls.GetFieldIndexer
 	mock.lockGetFieldIndexer.RUnlock()
+	return calls
+}
+
+// GetHTTPClient calls GetHTTPClientFunc.
+func (mock *MockManager) GetHTTPClient() *http.Client {
+	if mock.GetHTTPClientFunc == nil {
+		panic("MockManager.GetHTTPClientFunc: method is nil but IManager.GetHTTPClient was just called")
+	}
+	callInfo := struct {
+	}{}
+	mock.lockGetHTTPClient.Lock()
+	mock.calls.GetHTTPClient = append(mock.calls.GetHTTPClient, callInfo)
+	mock.lockGetHTTPClient.Unlock()
+	return mock.GetHTTPClientFunc()
+}
+
+// GetHTTPClientCalls gets all the calls that were made to GetHTTPClient.
+// Check the length with:
+//
+//	len(mockedIManager.GetHTTPClientCalls())
+func (mock *MockManager) GetHTTPClientCalls() []struct {
+} {
+	var calls []struct {
+	}
+	mock.lockGetHTTPClient.RLock()
+	calls = mock.calls.GetHTTPClient
+	mock.lockGetHTTPClient.RUnlock()
 	return calls
 }
 
@@ -681,7 +706,7 @@ func (mock *MockManager) GetSchemeCalls() []struct {
 }
 
 // GetWebhookServer calls GetWebhookServerFunc.
-func (mock *MockManager) GetWebhookServer() *webhook.Server {
+func (mock *MockManager) GetWebhookServer() webhook.Server {
 	if mock.GetWebhookServerFunc == nil {
 		panic("MockManager.GetWebhookServerFunc: method is nil but IManager.GetWebhookServer was just called")
 	}
@@ -704,38 +729,6 @@ func (mock *MockManager) GetWebhookServerCalls() []struct {
 	mock.lockGetWebhookServer.RLock()
 	calls = mock.calls.GetWebhookServer
 	mock.lockGetWebhookServer.RUnlock()
-	return calls
-}
-
-// SetFields calls SetFieldsFunc.
-func (mock *MockManager) SetFields(ifaceVal interface{}) error {
-	if mock.SetFieldsFunc == nil {
-		panic("MockManager.SetFieldsFunc: method is nil but IManager.SetFields was just called")
-	}
-	callInfo := struct {
-		IfaceVal interface{}
-	}{
-		IfaceVal: ifaceVal,
-	}
-	mock.lockSetFields.Lock()
-	mock.calls.SetFields = append(mock.calls.SetFields, callInfo)
-	mock.lockSetFields.Unlock()
-	return mock.SetFieldsFunc(ifaceVal)
-}
-
-// SetFieldsCalls gets all the calls that were made to SetFields.
-// Check the length with:
-//
-//	len(mockedIManager.SetFieldsCalls())
-func (mock *MockManager) SetFieldsCalls() []struct {
-	IfaceVal interface{}
-} {
-	var calls []struct {
-		IfaceVal interface{}
-	}
-	mock.lockSetFields.RLock()
-	calls = mock.calls.SetFields
-	mock.lockSetFields.RUnlock()
 	return calls
 }
 

@@ -18,6 +18,7 @@ import (
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
@@ -73,8 +74,6 @@ func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {
 
 func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
-	r, _, tracer := setupReconciler()
-
 	tests := []struct {
 		name           string
 		req            ctrl.Request
@@ -115,12 +114,10 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 	// setting up fakeclient CRD data
 
-	err := controllercommon.AddApp(r.Client, "myapp")
-	require.Nil(t, err)
-	err = controllercommon.AddApp(r.Client, "myfinishedapp")
-	require.Nil(t, err)
-	err = controllercommon.AddAppVersion(r.Client, "default", "myfinishedapp", "1.0.0-6b86b273", nil, lfcv1alpha3.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
-	require.Nil(t, err)
+	app := controllercommon.GetApp("myapp")
+	appfin := controllercommon.GetApp("myfinishedapp")
+	appver := controllercommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0-6b86b273", nil, lfcv1alpha3.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
+	r, _, tracer := setupReconciler(app, appfin, appver)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -151,12 +148,19 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 }
 
 func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
-	r, _, _ := setupReconciler()
 
-	err := controllercommon.AddApp(r.Client, "myapp")
-	require.Nil(t, err)
+	app := controllercommon.GetApp("myapp")
+	app.Spec.Revision = uint(2)
+	app.Generation = int64(2)
+	appVersion := &lfcv1alpha3.KeptnAppVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "myapp-1.0.0-6b86b273",
+			Namespace: "default",
+		},
+	}
+	r, _, _ := setupReconciler(app, appVersion)
 
-	_, err = r.Reconcile(context.TODO(), ctrl.Request{
+	_, err := r.Reconcile(context.TODO(), ctrl.Request{
 		NamespacedName: types.NamespacedName{
 			Namespace: "default",
 			Name:      "myapp",
@@ -166,21 +170,6 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 	require.Nil(t, err)
 
 	keptnappversion := &lfcv1alpha3.KeptnAppVersion{}
-	err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: "myapp-1.0.0-6b86b273"}, keptnappversion)
-	require.Nil(t, err)
-
-	err = controllercommon.UpdateAppRevision(r.Client, "myapp", 2)
-	require.Nil(t, err)
-
-	_, err = r.Reconcile(context.TODO(), ctrl.Request{
-		NamespacedName: types.NamespacedName{
-			Namespace: "default",
-			Name:      "myapp",
-		},
-	})
-
-	require.Nil(t, err)
-
 	err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: "myapp-1.0.0-d4735e3a"}, keptnappversion)
 	require.Nil(t, err)
 
@@ -189,7 +178,7 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 	require.Equal(t, apicommon.StateDeprecated, keptnappversion.Status.Status)
 }
 
-func setupReconciler() (*KeptnAppReconciler, chan string, *fake.ITracerMock) {
+func setupReconciler(objs ...client.Object) (*KeptnAppReconciler, chan string, *fake.ITracerMock) {
 	// setup logger
 	opts := zap.Options{
 		Development: true,
@@ -205,7 +194,7 @@ func setupReconciler() (*KeptnAppReconciler, chan string, *fake.ITracerMock) {
 		return tr
 	}}
 
-	fakeClient := fake.NewClient()
+	fakeClient := fake.NewClient(objs...)
 
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppReconciler{

@@ -8,6 +8,7 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
@@ -25,18 +26,11 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 
 	cm := makeConfigMap(cmName, namespace)
 
-	fakeClient := fake.NewClientBuilder().WithObjects(cm).Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	require.Nil(t, err)
-
 	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, namespace, cmName)
-
-	err = fakeClient.Create(context.TODO(), taskDefinition)
-	require.Nil(t, err)
+	fakeClient := fakeclient.NewClient(cm, taskDefinition)
 
 	taskDefinition.Status.Function.ConfigMap = cmName
-	err = fakeClient.Status().Update(context.TODO(), taskDefinition)
+	err := fakeClient.Status().Update(context.TODO(), taskDefinition)
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{
@@ -96,19 +90,12 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	taskDefinitionName := "my-task-definition"
 
 	cm := makeConfigMap(cmName, namespace)
-
-	fakeClient := fake.NewClientBuilder().WithObjects(cm).Build()
-
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	require.Nil(t, err)
-
 	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, common.KLTNamespace, cmName)
 
-	err = fakeClient.Create(context.TODO(), taskDefinition)
-	require.Nil(t, err)
+	fakeClient := fakeclient.NewClient(cm, taskDefinition)
 
 	taskDefinition.Status.Function.ConfigMap = cmName
-	err = fakeClient.Status().Update(context.TODO(), taskDefinition)
+	err := fakeClient.Status().Update(context.TODO(), taskDefinition)
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{
@@ -166,20 +153,19 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 	namespace := "default"
 	taskDefinitionName := "my-task-definition"
 
-	job := makeJob("my.job", namespace)
+	jobStatus := batchv1.JobStatus{
+		Conditions: []batchv1.JobCondition{
+			{
+				Type: batchv1.JobFailed,
+			},
+		},
+	}
+
+	job := makeJob("my.job", namespace, jobStatus)
 
 	fakeClient := fake.NewClientBuilder().WithObjects(job).Build()
 
 	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
-	require.Nil(t, err)
-
-	job.Status.Conditions = []batchv1.JobCondition{
-		{
-			Type: batchv1.JobFailed,
-		},
-	}
-
-	err = fakeClient.Status().Update(context.TODO(), job)
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{
@@ -207,21 +193,19 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 		},
 	}
 
-	err = fakeClient.Status().Update(context.TODO(), job)
-	require.Nil(t, err)
-
 	r.updateTaskStatus(job, task)
 
 	require.Equal(t, apicommon.StateSucceeded, task.Status.Status)
 }
 
-func makeJob(name, namespace string) *batchv1.Job {
+func makeJob(name, namespace string, status batchv1.JobStatus) *batchv1.Job {
 	return &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
 		},
-		Spec: batchv1.JobSpec{},
+		Spec:   batchv1.JobSpec{},
+		Status: status,
 	}
 }
 

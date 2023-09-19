@@ -23,6 +23,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
+	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
 // log is for logging in this package.
@@ -39,36 +40,36 @@ func (r *AnalysisDefinition) SetupWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.Validator = &AnalysisDefinition{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *AnalysisDefinition) ValidateCreate() error {
+func (r *AnalysisDefinition) ValidateCreate() (admission.Warnings, error) {
 	analysisdefinitionlog.Info("validate create", "name", r.Name)
 
 	for _, o := range r.Spec.Objectives {
 		if err := o.validate(); err != nil {
-			return err
+			return []string{}, err
 		}
 	}
 
-	return r.Spec.TotalScore.validate()
+	return []string{}, r.Spec.TotalScore.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *AnalysisDefinition) ValidateUpdate(old runtime.Object) error {
+func (r *AnalysisDefinition) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 	analysisdefinitionlog.Info("validate update", "name", r.Name)
 
 	for _, o := range r.Spec.Objectives {
 		if err := o.validate(); err != nil {
-			return err
+			return []string{}, err
 		}
 	}
 
-	return r.Spec.TotalScore.validate()
+	return []string{}, r.Spec.TotalScore.validate()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *AnalysisDefinition) ValidateDelete() error {
+func (r *AnalysisDefinition) ValidateDelete() (admission.Warnings, error) {
 	analysisdefinitionlog.Info("validate delete", "name", r.Name)
 
-	return nil
+	return []string{}, nil
 }
 
 func (s *TotalScore) validate() error {

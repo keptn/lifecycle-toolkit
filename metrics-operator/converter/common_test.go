@@ -20,6 +20,8 @@ func TestIsGreaterOrEqual(t *testing.T) {
 	require.True(t, isGreaterOrEqual(">="))
 }
 
+const resourceNameWith253Characters = "my-sample-app-pod-name-is-a-very-long-example-name-012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890253-my-sample-app-pod-name-is-a-very-long-example-name-my-sample-app-pod-name-is-a-very-lon"
+
 func TestConvertResourceName(t *testing.T) {
 	type args struct {
 		name string
@@ -35,6 +37,41 @@ func TestConvertResourceName(t *testing.T) {
 				name: "Invalid_resource",
 			},
 			want: "invalid-resource",
+		},
+		{
+			name: "starts with '-'",
+			args: args{
+				name: "-my-resource",
+			},
+			want: "my-resource",
+		},
+		{
+			name: "ends with '-'",
+			args: args{
+				name: "my-resource-",
+			},
+			want: "my-resource",
+		},
+		{
+			name: "empty string",
+			args: args{
+				name: "",
+			},
+			want: "",
+		},
+		{
+			name: "name is 253 characters long",
+			args: args{
+				name: resourceNameWith253Characters,
+			},
+			want: resourceNameWith253Characters,
+		},
+		{
+			name: "name is 254 characters long",
+			args: args{
+				name: resourceNameWith253Characters + "x",
+			},
+			want: resourceNameWith253Characters,
 		},
 	}
 	for _, tt := range tests {
@@ -72,6 +109,20 @@ func TestValidateResourceName(t *testing.T) {
 			name: "invalid resource name containing '_'",
 			args: args{
 				name: "my_invalid-resource-name",
+			},
+			wantErr: true,
+		},
+		{
+			name: "253 characters long",
+			args: args{
+				name: resourceNameWith253Characters,
+			},
+			wantErr: false,
+		},
+		{
+			name: "254 characters long",
+			args: args{
+				name: resourceNameWith253Characters + "x",
 			},
 			wantErr: true,
 		},

@@ -280,7 +280,7 @@ func TestCertificateWatcher_updateCertificatesFromSecret(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			watcher := &CertificateWatcher{
-				Reader:                tt.apiReader,
+				apiReader:             tt.apiReader,
 				fs:                    afero.NewOsFs(),
 				certificateDirectory:  tt.certificateDirectory,
 				namespace:             tt.namespace,
@@ -305,7 +305,9 @@ func newFakeClient(objs ...client.Object) client.Reader {
 
 func TestNewCertificateWatcher(t *testing.T) {
 	logger := testr.New(t)
+	fclient := newFakeClient()
 	want := &CertificateWatcher{
+		apiReader:             fclient,
 		fs:                    afero.NewOsFs(),
 		namespace:             "default",
 		certificateSecretName: "my-secret",
@@ -314,7 +316,7 @@ func TestNewCertificateWatcher(t *testing.T) {
 		ICertificateHandler:   defaultCertificateHandler{},
 		Log:                   testr.New(t),
 	}
-	got := NewCertificateWatcher("test", "default", "my-secret", logger)
+	got := NewCertificateWatcher(fclient, "test", "default", "my-secret", logger)
 	require.EqualValues(t, got, want)
 
 }

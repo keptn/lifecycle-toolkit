@@ -44,7 +44,9 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadinstance"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/options"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"go.opentelemetry.io/otel"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/sdk/metric"
 	corev1 "k8s.io/api/core/v1"
@@ -56,6 +58,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/controller-runtime/pkg/metrics/server"
+	ctrlWebhook "sigs.k8s.io/controller-runtime/pkg/webhook"
+	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
 var (
@@ -341,7 +345,7 @@ func main() {
 		os.Exit(1)
 	}
 	if !disableWebhook {
-		webhookBuilder.SetCertificateWatcher(
+		webhookBuilder = webhookBuilder.SetCertificateWatcher(
 			certificates.NewCertificateWatcher(
 				mgr.GetAPIReader(),
 				webhookBuilder.GetOptions().CertDir,
@@ -349,7 +353,21 @@ func main() {
 				certCommon.SecretName,
 				setupLog,
 			))
-		webhookBuilder.Register(mgr, nil)
+
+		setupLog.Info(fmt.Sprintf("%v", webhookBuilder))
+		webhookLogger := ctrl.Log.WithName("Mutating Webhook")
+		webhookRecorder := mgr.GetEventRecorderFor("keptn/webhook")
+		webhookBuilder.Register(mgr, map[string]*ctrlWebhook.Admission{
+			"/mutate-v1-pod": {
+				Handler: &pod_mutator.PodMutatingWebhook{
+					Client:      mgr.GetClient(),
+					Tracer:      otel.Tracer("keptn/webhook"),
+					EventSender: controllercommon.NewEventMultiplexer(webhookLogger, webhookRecorder, ceClient),
+					Decoder:     admission.NewDecoder(mgr.GetScheme()),
+					Log:         webhookLogger,
+				},
+			},
+		})
 		setupLog.Info("starting webhook")
 	}
 	setupLog.Info("starting manager")

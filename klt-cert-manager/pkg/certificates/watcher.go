@@ -29,7 +29,7 @@ type ICertificateWatcher interface {
 }
 
 type CertificateWatcher struct {
-	Reader                client.Reader
+	apiReader             client.Reader
 	fs                    afero.Fs
 	certificateDirectory  string
 	namespace             string
@@ -39,8 +39,9 @@ type CertificateWatcher struct {
 	Log logr.Logger
 }
 
-func NewCertificateWatcher(certDir string, namespace string, secretName string, log logr.Logger) *CertificateWatcher {
+func NewCertificateWatcher(reader client.Reader, certDir string, namespace string, secretName string, log logr.Logger) *CertificateWatcher {
 	return &CertificateWatcher{
+		apiReader:             reader,
 		fs:                    afero.NewOsFs(),
 		certificateDirectory:  certDir,
 		namespace:             namespace,
@@ -66,7 +67,7 @@ func (watcher *CertificateWatcher) watchForCertificatesSecret() {
 func (watcher *CertificateWatcher) updateCertificatesFromSecret() error {
 	var secret corev1.Secret
 
-	err := watcher.Reader.Get(context.TODO(),
+	err := watcher.apiReader.Get(context.TODO(),
 		client.ObjectKey{Name: watcher.certificateSecretName, Namespace: watcher.namespace}, &secret)
 	if err != nil {
 		return err

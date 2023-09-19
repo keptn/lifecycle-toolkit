@@ -178,31 +178,7 @@ func main() {
 		opt.WebhookServer = webhookBuilder.GetWebhookServer()
 	}
 
-	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-		Scheme: scheme,
-		Metrics: server.Options{
-			BindAddress: metricsAddr,
-		},
-		Client: ctrlclient.Options{
-			Cache: &ctrlclient.CacheOptions{
-				DisableFor: disableCacheFor,
-			},
-		},
-		HealthProbeBindAddress: probeAddr,
-		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "3f8532ca.keptn.sh",
-		// LeaderElectionReleaseOnCancel defines if the leader should step down voluntarily
-		// when the Manager ends. This requires the binary to immediately end when the
-		// Manager is stopped, otherwise, this setting is unsafe. Setting this significantly
-		// speeds up voluntary leader transitions as the new leader don't have to wait
-		// LeaseDuration time first.
-		//
-		// In the default scaffold provided, the program ends immediately after
-		// the manager stops, so would be fine to enable this option. However,
-		// if you are doing or is intended to do any operation such as perform cleanups
-		// after the manager stops then its usage might be unsafe.
-		// LeaderElectionReleaseOnCancel: true,
-	})
+	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), opt)
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
@@ -248,7 +224,7 @@ func main() {
 	setupProbes(mgr)
 
 	if !disableWebhook {
-		webhookBuilder.SetCertificateWatcher(
+		webhookBuilder = webhookBuilder.SetCertificateWatcher(
 			certificates.NewCertificateWatcher(
 				mgr.GetAPIReader(),
 				webhookBuilder.GetOptions().CertDir,
@@ -256,6 +232,8 @@ func main() {
 				certCommon.SecretName,
 				setupLog,
 			))
+
+		setupLog.Info("Start certificate watcher:", webhookBuilder)
 		webhookBuilder.Register(mgr, nil)
 		setupLog.Info("starting webhook")
 	}

@@ -82,7 +82,7 @@ func (c *SLIConverter) convertMapToAnalysisValueTemplate(slis map[string]string,
 func (c *SLIConverter) validateInput(provider, namespace string) error {
 	// check that provider and namespace is set
 	if provider == "" || namespace == "" {
-		fmt.Errorf("missing arguments: 'keptn-provider-name' and 'keptn-provider-namespace' needs to be set for conversion")
+		return fmt.Errorf("missing arguments: 'keptn-provider-name' and 'keptn-provider-namespace' needs to be set for conversion")
 	}
 	if err := ValidateResourceName(provider); err != nil {
 		return err

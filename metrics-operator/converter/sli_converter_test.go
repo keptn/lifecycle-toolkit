@@ -168,6 +168,7 @@ func TestConvertQuery(t *testing.T) {
 	}
 }
 
+//nolint:dupl
 func TestSLIConverter_validateInput(t *testing.T) {
 	type args struct {
 		provider  string

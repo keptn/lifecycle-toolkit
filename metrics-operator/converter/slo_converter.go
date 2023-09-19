@@ -145,7 +145,7 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 func (c *SLOConverter) validateInput(analysisDef, namespace string) error {
 	// check that provider and namespace is set
 	if analysisDef == "" || namespace == "" {
-		fmt.Errorf("missing arguments: 'analysis-definition-name' and 'analysis-value-template-namespace' needs to be set for conversion")
+		return fmt.Errorf("missing arguments: 'analysis-definition-name' and 'analysis-value-template-namespace' needs to be set for conversion")
 	}
 	if err := ValidateResourceName(analysisDef); err != nil {
 		return err

@@ -33,7 +33,6 @@ spec:
   objectives:
     - analysisValueTemplateRef:
         name: value-1
-        namespace: $NAMESPACE
       target:
         failure:
           lessThan:
@@ -45,7 +44,6 @@ spec:
       keyObjective: false
     - analysisValueTemplateRef:
         name: value-2
-        namespace: $NAMESPACE
       target:
         failure:
           greaterThan:
@@ -57,7 +55,6 @@ spec:
       keyObjective: false
     - analysisValueTemplateRef:
         name: value-3
-        namespace: $NAMESPACE
       target:
         failure:
           notInRange:

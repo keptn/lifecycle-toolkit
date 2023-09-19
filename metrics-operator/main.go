@@ -146,7 +146,7 @@ func main() {
 		setupLog.Error(err, "unable to start OTel")
 	}
 	metricProvider := metric.NewMeterProvider(metric.WithReader(exporter))
-	meter := metricProvider.Meter("keptn/metric")
+	meter := metricProvider.Meter("keptn/task")
 
 	// Initialize your metric
 	keptnMetricActive, err := meter.Int64Counter("keptn_metric_active")

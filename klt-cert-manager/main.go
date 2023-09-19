@@ -8,6 +8,7 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
+
 	// nolint:gci
 	// +kubebuilder:scaffold:imports
 	"go.opentelemetry.io/otel/exporters/prometheus"
@@ -77,7 +78,7 @@ func main() {
 		setupLog.Error(err, "unable to start OTel")
 	}
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
-	meter := provider.Meter("keptn/klt-cert-manager")
+	meter := provider.Meter("keptn/task")
 
 	// Initialize your metric
 	myMetric, err := meter.Int64Counter("keptn_klt-cert-manager_active")

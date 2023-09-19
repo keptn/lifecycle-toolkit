@@ -129,7 +129,7 @@ _Appears in:_
 
 _Underlying type:_ `string`
 
-
+AnalysisState represents the state of the analysis
 
 _Appears in:_
 - [AnalysisStatus](#analysisstatus)

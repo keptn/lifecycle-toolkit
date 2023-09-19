@@ -19,6 +19,7 @@ func (o *ObjectReference) GetNamespace(defaultNamespace string) string {
 	return defaultNamespace
 }
 
+// AnalysisState represents the state of the analysis
 type AnalysisState string
 
 const (

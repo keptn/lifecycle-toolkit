@@ -232,8 +232,6 @@ func main() {
 				certCommon.SecretName,
 				setupLog,
 			))
-
-		setupLog.Info("Start certificate watcher:", webhookBuilder)
 		webhookBuilder.Register(mgr, nil)
 		setupLog.Info("starting webhook")
 	}

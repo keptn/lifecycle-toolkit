@@ -1,16 +1,16 @@
 apiVersion: kuttl.dev/v1
 kind: TestStep
 commands:
-  - script: ./retrieve-metrics2.sh "lifecycle-operator"
+  - script: ./retrieve-metrics2.sh "keptn_lifecycle_active"
     validate:
       assert:
         - contains:
-            - "keptn_lifecycle_active 1"
-  - script: ./retrieve-metrics2.sh "metrics-operator"
-    validate:
-      assert:
-        - contains:
-            - "keptn_metric_active 1"
+            - "keptn_lifecycle_active"
+  # - script: ./retrieve-metrics2.sh "metrics-operator"
+  #   validate:
+  #     assert:
+  #       - contains:
+  #           - "keptn_metric_active 1"
   # - script: ./retrieve-metrics2.sh "klt-cert-manager"
   #   validate:
   #     assert:

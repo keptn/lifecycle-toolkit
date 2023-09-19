@@ -45,9 +45,9 @@ type AnalysisStatus struct {
 	// Raw contains the raw result of the SLO computation
 	Raw string `json:"raw,omitempty"`
 	// Pass returns whether the SLO is satisfied
-	Pass bool `json:"pass"`
+	Pass bool `json:"pass,omitempty"`
 	// Warning returns whether the analysis returned a warning
-	Warning bool `json:"warning"`
+	Warning bool `json:"warning,omitempty"`
 	// State describes the current state of the Analysis
 	// +kubebuilder:default:=Pending
 	State AnalysisState `json:"state"`

@@ -101,14 +101,14 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			client:  fake2.NewClient(&analysis, &analysisDef, &template),
 			want:    controllerruntime.Result{},
 			wantErr: false,
-			status:  &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true},
+			status:  &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true, State: metricsapi.StateCompleted},
 			res:     metricstypes.AnalysisResult{Pass: true},
 		}, {
 			name:    "succeeded - analysis in different namespace, status updated",
 			client:  fake2.NewClient(&analysis2, &analysisDef2, &template),
 			want:    controllerruntime.Result{},
 			wantErr: false,
-			status:  &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true},
+			status:  &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true, State: metricsapi.StateCompleted},
 			res:     metricstypes.AnalysisResult{Pass: true},
 		},
 	}
@@ -197,7 +197,7 @@ func TestAnalysisReconciler_ExistingAnalysisStatusIsFlushedWhenEvaluationFinishe
 		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
 	}
 
-	status := &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true}
+	status := &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true, State: metricsapi.StateCompleted}
 
 	got, err := a.Reconcile(context.TODO(), req)
 

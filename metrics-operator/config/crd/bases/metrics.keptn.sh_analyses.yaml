@@ -98,6 +98,7 @@ spec:
                 description: Raw contains the raw result of the SLO computation
                 type: string
               state:
+                default: Pending
                 description: State describes the current state of the Analysis
                 type: string
               storedValues:
@@ -133,9 +134,7 @@ spec:
                 description: Warning returns whether the analysis returned a warning
                 type: boolean
             required:
-            - pass
             - state
-            - warning
             type: object
         type: object
     served: true

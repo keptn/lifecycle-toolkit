@@ -82,6 +82,10 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	if analysis.Status.State.IsPending() {
 		analysis.Status.State = v1alpha3.StateProgressing
+		if err := a.updateStatus(ctx, analysis); err != nil {
+			a.Log.Error(err, "Failed to update Analysis Status")
+			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+		}
 	}
 
 	var done map[string]metricsapi.ProviderResult
@@ -91,7 +95,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	//create multiple workers handling the Objectives
-	childCtx, wp := a.NewWorkersPoolFactory(ctx, analysis, todo, a.MaxWorkers, a.Client, a.Log, analysisDefNamespace)
+	childCtx, wp := a.NewWorkersPoolFactory(ctx, analysis, todo, a.MaxWorkers, a.Client, a.Log, analysisDef.Namespace)
 
 	res, err := wp.DispatchAndCollect(childCtx)
 	if err != nil {
@@ -143,11 +147,12 @@ func (a *AnalysisReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (a *AnalysisReconciler) retrieveAnalysisDefinition(ctx context.Context, analysis *metricsapi.Analysis) (*metricsapi.AnalysisDefinition, error) {
+	analysisDefNamespace := analysis.Spec.AnalysisDefinition.GetNamespace(analysis.Namespace)
 	analysisDef := &metricsapi.AnalysisDefinition{}
 	err := a.Client.Get(ctx,
 		types.NamespacedName{
 			Name:      analysis.Spec.AnalysisDefinition.Name,
-			Namespace: a.determineAnalysisDefNamespace(analysis)},
+			Namespace: analysisDefNamespace},
 		analysisDef,
 	)
 
@@ -165,13 +170,6 @@ func (a *AnalysisReconciler) retrieveAnalysisDefinition(ctx context.Context, ana
 	}
 
 	return analysisDef, nil
-}
-
-func (a *AnalysisReconciler) determineAnalysisDefNamespace(analysis *metricsapi.Analysis) string {
-	if analysis.Spec.AnalysisDefinition.Namespace != "" {
-		return analysis.Spec.AnalysisDefinition.Namespace
-	}
-	return a.Namespace
 }
 
 func extractMissingObjectives(objectives []metricsapi.Objective, status map[string]metricsapi.ProviderResult) ([]metricsapi.Objective, map[string]metricsapi.ProviderResult) {

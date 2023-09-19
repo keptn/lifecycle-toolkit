@@ -82,10 +82,6 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	if analysis.Status.State.IsPending() {
 		analysis.Status.State = v1alpha3.StateProgressing
-		if err := a.updateStatus(ctx, analysis); err != nil {
-			a.Log.Error(err, "Failed to update Analysis Status")
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
-		}
 	}
 
 	var done map[string]metricsapi.ProviderResult
@@ -105,19 +101,15 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	maps.Copy(res, done)
-
-	err = a.evaluateObjectives(ctx, res, analysisDef, analysis)
-
-	// if evaluation was successful remove the stored values
-	if err == nil {
-		analysis.Status.StoredValues = nil
-		err = a.updateStatus(ctx, analysis)
+	a.evaluateObjectives(ctx, res, analysisDef, analysis)
+	if err := a.updateStatus(ctx, analysis); err != nil {
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
 
-	return ctrl.Result{}, err
+	return ctrl.Result{}, nil
 }
 
-func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[string]metricsapi.ProviderResult, analysisDef *metricsapi.AnalysisDefinition, analysis *metricsapi.Analysis) error {
+func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[string]metricsapi.ProviderResult, analysisDef *metricsapi.AnalysisDefinition, analysis *metricsapi.Analysis) {
 	eval := a.Evaluate(res, analysisDef)
 	analysisResultJSON, err := json.Marshal(eval)
 	if err != nil {
@@ -128,7 +120,8 @@ func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[str
 	analysis.Status.Warning = eval.Warning
 	analysis.Status.Pass = eval.Pass
 	analysis.Status.State = metricsapi.StateCompleted
-	return a.updateStatus(ctx, analysis)
+	// if evaluation was successful remove the stored values
+	analysis.Status.StoredValues = nil
 }
 
 func (a *AnalysisReconciler) updateStatus(ctx context.Context, analysis *metricsapi.Analysis) error {

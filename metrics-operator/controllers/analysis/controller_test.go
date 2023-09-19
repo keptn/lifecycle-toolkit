@@ -2,6 +2,7 @@ package analysis
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"testing"
 	"time"
@@ -73,46 +74,6 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 		},
 	}
 
-	tests := []struct {
-		name    string
-		client  client.Client
-		req     controllerruntime.Request
-		want    controllerruntime.Result
-		wantErr bool
-		status  *metricsapi.AnalysisStatus
-		res     metricstypes.AnalysisResult
-	}{
-		{
-			name:    "analysis does not exist, reconcile no status update",
-			client:  fake2.NewClient(),
-			want:    controllerruntime.Result{},
-			wantErr: false,
-			status:  nil,
-			res:     metricstypes.AnalysisResult{},
-		}, {
-			name:    "analysisDefinition does not exist, requeue no status update",
-			client:  fake2.NewClient(&analysis),
-			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
-			wantErr: false,
-			status:  &metricsapi.AnalysisStatus{},
-			res:     metricstypes.AnalysisResult{Pass: false},
-		}, {
-			name:    "succeeded, status updated",
-			client:  fake2.NewClient(&analysis, &analysisDef, &template),
-			want:    controllerruntime.Result{},
-			wantErr: false,
-			status:  &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true, State: metricsapi.StateCompleted},
-			res:     metricstypes.AnalysisResult{Pass: true},
-		}, {
-			name:    "succeeded - analysis in different namespace, status updated",
-			client:  fake2.NewClient(&analysis2, &analysisDef2, &template),
-			want:    controllerruntime.Result{},
-			wantErr: false,
-			status:  &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true, State: metricsapi.StateCompleted},
-			res:     metricstypes.AnalysisResult{Pass: true},
-		},
-	}
-
 	req := controllerruntime.Request{
 		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
 	}
@@ -125,6 +86,70 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 		return ctx, &mymock
 	}
 
+	tests := []struct {
+		name        string
+		client      client.Client
+		req         controllerruntime.Request
+		want        controllerruntime.Result
+		wantErr     bool
+		status      *metricsapi.AnalysisStatus
+		res         metricstypes.AnalysisResult
+		mockFactory NewWorkersPoolFactory
+	}{
+		{
+			name:        "analysis does not exist, reconcile no status update",
+			client:      fake2.NewClient(),
+			want:        controllerruntime.Result{},
+			wantErr:     false,
+			status:      nil,
+			res:         metricstypes.AnalysisResult{},
+			mockFactory: mockFactory,
+		}, {
+			name:    "analysisDefinition does not exist, requeue no status update",
+			client:  fake2.NewClient(&analysis),
+			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			wantErr: false,
+			status: &metricsapi.AnalysisStatus{
+				State: metricsapi.StatePending,
+			},
+			res:         metricstypes.AnalysisResult{Pass: false},
+			mockFactory: mockFactory,
+		}, {
+			name:    "mockfactory failed",
+			client:  fake2.NewClient(&analysis, &analysisDef, &template),
+			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			wantErr: false,
+			status: &metricsapi.AnalysisStatus{
+				State: metricsapi.StateProgressing,
+			},
+			res: metricstypes.AnalysisResult{Pass: false},
+			mockFactory: func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, obj []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
+				mymock := fake.IAnalysisPoolMock{
+					DispatchAndCollectFunc: func(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
+						return map[string]metricsapi.ProviderResult{}, fmt.Errorf("error")
+					},
+				}
+				return ctx, &mymock
+			},
+		}, {
+			name:        "succeeded, status updated",
+			client:      fake2.NewClient(&analysis, &analysisDef, &template),
+			want:        controllerruntime.Result{},
+			wantErr:     false,
+			status:      &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true, State: metricsapi.StateCompleted},
+			res:         metricstypes.AnalysisResult{Pass: true},
+			mockFactory: mockFactory,
+		}, {
+			name:        "succeeded - analysis in different namespace, status updated",
+			client:      fake2.NewClient(&analysis2, &analysisDef2, &template),
+			want:        controllerruntime.Result{},
+			wantErr:     false,
+			status:      &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true, State: metricsapi.StateCompleted},
+			res:         metricstypes.AnalysisResult{Pass: true},
+			mockFactory: mockFactory,
+		},
+	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			a := &AnalysisReconciler{
@@ -132,7 +157,7 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 				Scheme:                tt.client.Scheme(),
 				Log:                   testr.New(t),
 				MaxWorkers:            2,
-				NewWorkersPoolFactory: mockFactory,
+				NewWorkersPoolFactory: tt.mockFactory,
 				IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
 					EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
 						return tt.res
@@ -234,6 +259,9 @@ func getTestCRDs() (metricsapi.Analysis, metricsapi.AnalysisDefinition, metricsa
 				Name:      "my-analysis-def",
 				Namespace: "default",
 			},
+		},
+		Status: metricsapi.AnalysisStatus{
+			State: metricsapi.StatePending,
 		},
 	}
 

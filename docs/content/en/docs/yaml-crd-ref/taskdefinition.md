@@ -29,27 +29,29 @@ differentiated by the `spec` section:
   to define tasks using the language and facilities of your choice,
   although it is more complicated that using one of the pre-defined runtimes.
   See
-  [Yaml synopsis for container-runtime](#yaml-synopsis-for-container-runtime)
+  [Synopsis for container-runtime](#synopsis-for-container-runtime)
   and
   [Examples for a custom-runtime container](#examples-for-a-custom-runtime-container).
-* Use the pre-defined `deno-runtime` runner
-  to define tasks using Deno scripts,
-  which use a syntax similar to JavaScript and Typescript,
-  with a few limitations.
-  You can use this to specify simple actions
-  without having to define a container.
-  See
-  [Yaml synopsis for Deno-runtime container](#yaml-synopsis-for-deno-runtime-container)
-  and
-  [Deno-runtime examples](#examples-for-deno-runtime-runner).
-* Use the pre-defined `python-runtime` runner
-  to define your task using Python 3.
-  See
-  [Yaml synopsis for python-runtime runner](#yaml-synopsis-for-python-runtime-runner)
-  and
-  [Examples for a python-runtime runner](#examples-for-a-python-runtime-runner).
+* Pre-defined containers
 
-## Yaml Synopsis for all runners
+  * Use the pre-defined `deno-runtime` runner
+    to define tasks using Deno scripts,
+    which use a syntax similar to JavaScript and Typescript,
+    with a few limitations.
+    You can use this to specify simple actions
+    without having to define a container.
+    See
+    [Synopsis for Deno-runtime container](#deno-runtime)
+    and
+    [Deno-runtime examples](#examples-for-deno-runtime-runner).
+  * Use the pre-defined `python-runtime` runner
+    to define your task using Python 3.
+    See
+    [Synopsis for python-runtime runner](#python-runtime)
+    and
+    [Examples for a python-runtime runner](#examples-for-a-python-runtime-runner).
+
+## Synopsis for all runners
 
 The `KeptnTaskDefinition` Yaml files for all runners
 include the same lines at the top.
@@ -67,10 +69,11 @@ spec:
   timeout: <duration-in-seconds>
 ```
 
-The API ref points to
+TODO: The API ref points to
 [Kubernetes doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)
 where I don't find a direct hit
 but timeouts seem to be measured in seconds.
+Please verify
 
 ### Fields used for all containers
 
@@ -95,18 +98,18 @@ but timeouts seem to be measured in seconds.
     and code the functionality in Deno script,
     which is similar to JavaScript and Typescript.
     See
-    [Yaml synopsis for deno-runtime container](#yaml-synopsis-for-deno-runtime-container).
+    [Synopsis for deno-runtime container](#deno-runtime)
     * **python** -- Use a `python-runtime` function
     and code the functionality in Python 3.
     See
-    [Yaml synopsis for python-runtime runner](#yaml-synopsis-for-python-runtime-runner)
+    [Synopsis for python-runtime runner](#python-runtime)
     * **container** -- Use the runner defined
       for the `container-runtime` container.
       This is a standard Kubernetes container
       for which you define the image, runner, runtime parameters, etc.
       and code the functionality to match the container you define.
       See
-      [Yaml synopsis for container-runtime container](#yaml-synopsis-for-container-runtime).
+      [Synopsis for container-runtime container](#synopsis-for-container-runtime).
   * **retries** (optional) - specifies the number of times,
     a job executing the `KeptnTaskDefinition`
     should be restarted if an attempt is unsuccessful.
@@ -115,127 +118,7 @@ but timeouts seem to be measured in seconds.
     If the task does not complete successfully within this time frame,
     it is considered to be failed.
 
-## Yaml Synopsis for deno-runtime container
-
-When using the `deno-runtime` runner to define a task,
-the task is coded in Deno-script
-(which is mostly the same as JavaScript and TypeScript)
-and executed in the
-[Deno](https://deno.com/manual) runner,
-which is a lightweight runtime environment
-that executes in your namespace.
-Note that Deno has tighter restrictions
-for permissions and importing data
-so a script that works properly elsewhere
-may not function out of the box when run in the `deno-runtime` runner.
-
-```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
-kind: KeptnTaskDefinition
-metadata:
-  name: <task-name>
-spec:
-  deno:
-    inline | httpRef | functionRef | ConfigMapRef
-    parameters:
-      map:
-        textMessage: "This is my configuration"
-    secureParameters:
-      secret: slack-token
-```
-
-### Spec fields for deno-runtime definitions
-
-* **spec**
-  * **deno** -- Specify that the task uses the `deno-runtime`
-    and is expressed as a [Deno](https://deno.com/) script.
-    Refer to [deno runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/deno-runtime)
-    for more information about this runner.
-
-    The task can be defined as one of the following:
-
-    * **inline** - Include the actual executable code to execute.
-      This can be written as a full-fledged Deno script
-      that is included in this file.
-      For example:
-
-      ```yaml
-      deno:
-        inline:
-          code: |
-            console.log("Deployment Task has been executed");
-      ```
-
-    * **httpRef** - Specify a Deno script to be executed at runtime
-      from the remote webserver that is specified.
-      For example:
-
-      ```yaml
-      name: hello-keptn-http
-        spec:
-            deno:
-              httpRef:
-                url: "https://www.example.com/yourscript.js"
-      ```
-
-    * **functionRef** -- Execute one or more `KeptnTaskDefinition` resources
-      that have been defined to use the `deno-runtime` runner.
-      Populate this field with the value(s) of the `name` field
-      for the `KeptnTaskDefinition`(s) to be called.
-      This is commonly used to call a general function
-      that is used in multiple places, possibly with different parameters.
-      An example is:
-
-       ```yaml
-       spec:
-         deno:
-           functionRef:
-             name: slack-notification
-       ```
-
-      This can also be used to group a set of tasks
-      into a single `KeptnTaskDefinition`,
-      such as defining a `KeptnTaskDefinition` for testing.
-      In this case, it calls other, existing `KeptnTaskDefinition`s
-      for each type of test to be run,
-      specifying each by the value of the `name` field.
-    * **ConfigMapRef** - Specify the name of a
-      [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
-      resource that contains the function to be executed.
-
-  * **parameters** - An optional field to supply input parameters to a function.
-    Keptn passes the values defined inside the `map` field
-    as a JSON object.
-    For example:
-
-     ```yaml
-       spec:
-         parameters:
-           map:
-             textMessage: "This is my configuration"
-     ```
-
-     See
-     [Parameterized functions](../implementing/tasks/#parameterized-functions)
-     for more information.
-
-  * **secureParameters** -- An optional field used to pass a Kubernetes secret.
-    The `secret` value is the Kubernetes secret name
-    that is mounted into the runtime and made available to functions
-    using the `SECURE_DATA` environment variable.
-    For example:
-
-    ```yaml
-    secureParameters:
-      secret: slack-token
-    ```
-
-    Note that, currently, only one secret can be passed.
-
-    See [Create secret text](../implementing/tasks/#create-secret-text)
-    for details.
-
-## Yaml Synopsis for container-runtime
+## Synopsis for container-runtime
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
@@ -273,13 +156,44 @@ almost anything that you implemented with JES for Keptn v1.
       [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
       spec documentation.
 
-## Yaml Synopsis for Python-runtime runner
+## Synopsis for pre-defined containers
 
-The `python-runtime` runner provides a way
-to easily define a task using Python 3.
+The pre-defined containers allow you to easily define a task
+using either Deno or Python syntax.
 You do not need to specify the image, volumes, and so forth.
-Instead, just provide a Python script
+Instead, just provide either a Deno or Python script
 and Keptn sets up the container and runs the script as part of the task.
+
+### deno-runtime
+
+When using the `deno-runtime` runner to define a task,
+the executables are coded in Deno-script
+(which is mostly the same as JavaScript and TypeScript)
+and executed in the
+[Deno](https://deno.com/manual) runner,
+which is a lightweight runtime environment
+that executes in your namespace.
+Note that Deno has tighter restrictions
+for permissions and importing data
+so a script that works properly elsewhere
+may not function out of the box when run in the `deno-runtime` runner.
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v?alpha?
+kind: KeptnTaskDefinition
+metadata:
+  name: <task-name>
+spec:
+  deno:
+    inline | httpRef | functionRef | ConfigMapRef
+    parameters:
+      map:
+        textMessage: "This is my configuration"
+    secureParameters:
+      secret: <secret-name>
+```
+
+### python-runtime
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
@@ -293,97 +207,88 @@ spec:
         map:
           textMessage: "This is my configuration"
       secureParameters:
-        secret: slack-token
+        secret: <secret-name>
 ```
 
-### Spec used only for the python-runtime runner
+### Fields for pre-defined containers
 
-The `python-runtime` runner is used to define tasks using  Python 3 code.
-
-* **spec**
+* **spec** -- choose either `deno` or `python`
+  * **deno** -- Specify that the task uses the `deno-runtime`
+    and is expressed as a [Deno](https://deno.com/) script.
+    Refer to [deno runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/deno-runtime)
+    for more information about this runner.
   * **python** -- Identifies this as a Python runner.
-    * **inline** -- Include the actual Python 3.1 code to execute.
-      For example, the following example
-      prints data stored in the parameters map:
 
-      ```yaml
-      python:
-        inline:
-          code: |
-            data = os.getenv('DATA')
-            print(data)
-      ```
+* **inline | httpRef | functionRef | ConfigMapRef** -- choose the syntax
+  used to call the executables.
+  Only one of these can be specified per `KeptnTaskDefinition` resource:
 
-    * **httpRef** - Specify a Deno script to be executed at runtime
+  * **inline** - Include the actual executable code to execute.
+
+    * **deno example:**
+        [Example 1: inline script for a Deno script](#example-1-inline-script-for-a-deno-script)
+
+    * **python example:**
+        [Example 1: inline code for a python-runtime runner](#example-1-inline-code-for-a-python-runtime-runner)
+
+  * **httpRef** - Specify one or two scripts to be executed at runtime
       from the remote webserver that is specified.
-      For example:
 
-      ```yaml
-      name: hello-keptn-http
-        spec:
-            python:
-              httpRef:
-                url: "https://www.example.com/yourscript.py"
-      ```
+    * **deno example:**
+        [Example 2: httpRef script for a Deno script](#example-2-httpref-script-for-a-deno-script)
+    * **python example:**
+        [Example 2: httpRef for a python-runtime runner](#example-2-httpref-for-a-python-runtime-runner)
 
-    * **functionRef** -- Execute one or more `KeptnTaskDefinition` resources
-      that have been defined to use the `python-runtime` runner.
+  * **functionRef** -- Execute one or two `KeptnTaskDefinition` resources.
       Populate this field with the value(s) of the `metadata.name` field
       for each `KeptnDefinitionTask` to be called.
       This is commonly used to call a general function
       that is used in multiple places,
       possibly with different parameters.
-      An example is:
 
-      ```yaml
-       spec:
-         python:
-           functionRef:
-             name: slack-notification
-       ```
+    * **deno example:**
+        [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
+    * **python example:**
+        [Example 3: functionRef for a python-runtime runner](#example-3-functionref-for-a-python-runtime-runner)
 
-      This can also be used to group a set of tasks
-      into a single `KeptnTaskDefinition`,
-      such as defining a `KeptnTaskDefinition` for testing.
-      In this case, it calls other, existing `KeptnTaskDefinition`s
-      for each type of test to be run,
-      specifying each by the value of the `name` field.
-
-    * **ConfigMapRef** -- Specify the name of a
+  * **ConfigMapRef** - Specify the name of a
       [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
       resource that contains the function to be executed.
+
+    * **deno example:**
+        [Example 5: ConfigMap for a Deno script](#example-5-configmap-for-a-deno-script)
+    * **python example:**
+        [Example 4: ConfigMapRef for a python-runtime runner](#example-4-configmapref-for-a-python-runtime-runner)
 
   * **parameters** - An optional field to supply input parameters to a function.
     Keptn passes the values defined inside the `map` field
     as a JSON object.
-    For example:
+    See
+    [Passing secrets, environment variables, and modifying the python command](#passing-secrets-environment-variables-and-modifying-the-python-command)
+    and
+    [Parameterized functions](../implementing/tasks/#parameterized-functions)
+    for more information.
 
-     ```yaml
-       spec:
-         parameters:
-           map:
-             textMessage: "This is my configuration"
-     ```
-
-     See
-     [Parameterized functions](../implementing/tasks/#parameterized-functions)
-     for more information.
+    * **deno example:**
+      [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
+    * **python example:**
+      [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
 
   * **secureParameters** -- An optional field used to pass a Kubernetes secret.
     The `secret` value is the Kubernetes secret name
     that is mounted into the runtime and made available to functions
     using the `SECURE_DATA` environment variable.
-    For example:
 
-    ```yaml
-    secureParameters:
-      secret: slack-token
-    ```
-
-    Note that, currently, only one secret can be passed.
+    Note that, currently, only one secret can be passed
+    per `KeptnTaskDefinition` resource.
 
     See [Create secret text](../implementing/tasks/#create-secret-text)
     for details.
+
+    * **deno example:**
+      [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
+    * **python example:**
+      [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
 
 ## Usage
 
@@ -417,6 +322,30 @@ for details.
 Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
 and the revised code is picked up without additional changes.
+
+## Examples for a custom-runtime container
+
+For an example of a `KeptnTaskDefinition` that defines a custom container.
+ see
+[container-task.yaml](<https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/container-task.yaml>.
+This is a trivial example that just runs `busybox`,
+then spawns a shell and runs the `sleep 30` command.
+The `spec` includes:
+
+```yaml
+spec:
+  container:
+    name: testy-test
+    image: busybox:1.36.0
+    command:
+      - 'sh'
+      - '-c'
+      - 'sleep 30'
+```
+
+This task is then referenced in the
+[app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml)
+file.
 
 ## Examples for deno-runtime runner
 
@@ -542,31 +471,6 @@ data:
     console.log(targetDate);
 ```
 
-## Examples for a custom-runtime container
-
-For an example of a `KeptnTaskDefinition` that defines a custom container.
- see
-[container-task.yaml](<https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/container-task.yaml>.
-The `spec` includes:
-
-```yaml
-spec:
-  container:
-    name: testy-test
-    image: busybox:1.36.0
-    command:
-      - 'sh'
-      - '-c'
-      - 'sleep 30'
-```
-
-This task is then referenced in
-
-[app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml).
-
-This is a trivial example that just runs `busybox`,
-then spawns a shell and runs the `sleep 30` command.
-
 ## Examples for a python-runtime runner
 
 ### Example 1: inline code for a python-runtime runner
@@ -653,9 +557,12 @@ This modifies the synopsis in the following ways:
 
 ## Limitations
 
-Only one
-[runtime](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
-is allowed per `KeptnTaskDefinition`.
+* Only one
+  [runtime](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
+  is allowed per `KeptnTaskDefinition` resource.
+
+* Only one secret can be passed
+  per `KeptnTaskDefinition` resource.
 
 ## See also
 

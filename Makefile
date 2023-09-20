@@ -41,19 +41,22 @@ load-test:
 #Run tests for subfiles
 .PHONY: metrics-operator-test
 metrics-operator-test:
-        $(MAKE) -C metrics-operator test
+	$(MAKE) -C metrics-operator test
 
 .PHONY: certmanager-test
 certmanager-test:
-        $(MAKE) -C klt-cert-manager test
+	$(MAKE) -C klt-cert-manager test
 
 .PHONY: operator-test
 operator-test:
-        $(MAKE) -C lifecycle-operator test
+	$(MAKE) -C lifecycle-operator test
 
 .PHONY: scheduler-test
 scheduler-test:
-        $(MAKE) -C scheduler test
+	$(MAKE) -C scheduler test
+
+.PHONY: unit-test
+unit-test: metrics-operator-test certmanager-test operator-test scheduler-test
 
 .PHONY: install-prometheus
 install-prometheus:
@@ -120,16 +123,19 @@ yamllint:
 ##Run lint for the subfiles
 .PHONY: metrics-operator-lint
 metrics-operator-lint:
-        $(MAKE) -C metrics-operator lint
+	$(MAKE) -C metrics-operator lint
 
 .PHONY: certmanager-lint
 certmanager-lint:
-        $(MAKE) -C klt-cert-manager lint
+	$(MAKE) -C klt-cert-manager lint
 
 .PHONY: operator-lint
 operator-lint:
-        $(MAKE) -C lifecycle-operator lint
+	$(MAKE) -C lifecycle-operator lint
 
 .PHONY: scheduler-lint
 scheduler-lint:
-        $(MAKE) -C scheduler lint
+	$(MAKE) -C scheduler lint
+
+.PHONY: lint
+lint: metrics-operator-lint certmanager-lint operator-lint scheduler-lint

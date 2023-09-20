@@ -25,3 +25,22 @@ func TestObjectReference_GetNamespace(t *testing.T) {
 
 	require.Equal(t, "ns", o.GetNamespace("default"))
 }
+
+func TestAnalysisState_IsPending(t *testing.T) {
+	a := StatePending
+	require.True(t, a.IsPending())
+
+	a = ""
+	require.True(t, a.IsPending())
+
+	a = StateCompleted
+	require.False(t, a.IsPending())
+}
+
+func TestAnalysisState_IsCompleted(t *testing.T) {
+	a := StateCompleted
+	require.True(t, a.IsCompleted())
+
+	a = StateProgressing
+	require.False(t, a.IsCompleted())
+}

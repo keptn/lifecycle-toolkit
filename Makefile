@@ -25,11 +25,13 @@ KUSTOMIZE ?= $(LOCALBIN)/kustomize
 .PHONY: integration-test #these tests should run on a real cluster!
 integration-test:	# to run a single test by name use --test eg. --test=expose-keptn-metric
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test.yaml
+	kubectl kuttl test --start-kind=false ./test/testmetrics/ --config=kuttl-test.yaml
 	kubectl kuttl test --start-kind=false ./test/testcertificate/ --config=kuttl-test.yaml
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
 integration-test-local: install-prometheus
 	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
+	kubectl kuttl test --start-kind=false ./test/testmetrics/ --config=kuttl-test-local.yaml
 	kubectl kuttl test --start-kind=false ./test/testcertificate/ --config=kuttl-test-local.yaml
 
 .PHONY: load-test

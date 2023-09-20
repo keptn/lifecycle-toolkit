@@ -125,6 +125,17 @@ _Appears in:_
 | `analysisDefinition` _[ObjectReference](#objectreference)_ | AnalysisDefinition refers to the AnalysisDefinition, a CRD that stores the AnalysisValuesTemplates |
 
 
+#### AnalysisState
+
+_Underlying type:_ `string`
+
+AnalysisState represents the state of the analysis
+
+_Appears in:_
+- [AnalysisStatus](#analysisstatus)
+
+
+
 #### AnalysisStatus
 
 
@@ -139,6 +150,7 @@ _Appears in:_
 | `raw` _string_ | Raw contains the raw result of the SLO computation |
 | `pass` _boolean_ | Pass returns whether the SLO is satisfied |
 | `warning` _boolean_ | Warning returns whether the analysis returned a warning |
+| `state` _[AnalysisState](#analysisstate)_ | State describes the current state of the Analysis (Pending/Progressing/Completed) |
 | `storedValues` _object (keys:string, values:[ProviderResult](#providerresult))_ | StoredValues contains all analysis values that have already been retrieved successfully |
 
 

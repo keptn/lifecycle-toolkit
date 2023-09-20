@@ -18,3 +18,20 @@ func (o *ObjectReference) GetNamespace(defaultNamespace string) string {
 
 	return defaultNamespace
 }
+
+// AnalysisState represents the state of the analysis
+type AnalysisState string
+
+const (
+	StatePending     AnalysisState = "Pending"
+	StateProgressing AnalysisState = "Progressing"
+	StateCompleted   AnalysisState = "Completed"
+)
+
+func (s AnalysisState) IsPending() bool {
+	return s == StatePending || s == ""
+}
+
+func (s AnalysisState) IsCompleted() bool {
+	return s == StateCompleted
+}

@@ -1,7 +1,7 @@
 ---
 title: OpenTelemetry observability
 description: How to standardize access to OpenTelemetry observability data
-weight: 140
+weight: 40
 ---
 
 

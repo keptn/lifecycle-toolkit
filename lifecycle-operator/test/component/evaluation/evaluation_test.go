@@ -109,16 +109,6 @@ var _ = Describe("Evaluation", Ordered, func() {
 				common.LogErrorIfPresent(err)
 			})
 			It("KeptnEvaluationController Should succeed, as it finds KeptnEvaluationDefinition in default KLT namespace", func() {
-				By("create default KLT namespace")
-
-				ns := &v1.Namespace{
-					ObjectMeta: metav1.ObjectMeta{
-						Name: KLTnamespace,
-					},
-				}
-				err := k8sClient.Create(context.TODO(), ns)
-				Expect(err).To(BeNil())
-
 				By("Create EvaluationDefiniton")
 
 				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, KLTnamespace, metricName)
@@ -130,7 +120,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 				By("Update KeptnMetric to have status")
 
 				metric2 := &metricsapi.KeptnMetric{}
-				err = k8sClient.Get(context.TODO(), types.NamespacedName{
+				err := k8sClient.Get(context.TODO(), types.NamespacedName{
 					Namespace: KLTnamespace,
 					Name:      metric.Name,
 				}, metric2)

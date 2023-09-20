@@ -19,3 +19,5 @@ spec:
     foo: bar # can be any key/value pair; NOT only project/stage/service
   analysisDefinition:
     name: ed-my-proj-dev-svc1
+status:
+  state: Pending

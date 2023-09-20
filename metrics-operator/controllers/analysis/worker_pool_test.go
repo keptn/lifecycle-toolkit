@@ -27,7 +27,12 @@ func TestNewWorkerPool(t *testing.T) {
 		numJobs:    1,
 	}
 
-	_, got := NewWorkersPool(context.TODO(), &analysis, objs, 4, nil, log, "default")
+	// no objectives to evaluate
+	_, got := NewWorkersPool(context.TODO(), &analysis, []metricsapi.Objective{}, 4, nil, log, "default")
+	require.Equal(t, 0, got.(WorkersPool).numWorkers)
+	require.Equal(t, 0, got.(WorkersPool).numJobs)
+
+	_, got = NewWorkersPool(context.TODO(), &analysis, objs, 4, nil, log, "default")
 	//make sure never to create more workers than needed
 	require.Equal(t, want.numJobs, got.(WorkersPool).numWorkers)
 	//make sure all objectives are processed

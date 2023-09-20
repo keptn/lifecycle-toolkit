@@ -48,6 +48,8 @@ type AnalysisStatus struct {
 	Pass bool `json:"pass,omitempty"`
 	// Warning returns whether the analysis returned a warning
 	Warning bool `json:"warning,omitempty"`
+	// State describes the current state of the Analysis (Pending/Progressing/Completed)
+	State AnalysisState `json:"state"`
 	// StoredValues contains all analysis values that have already been retrieved successfully
 	StoredValues map[string]ProviderResult `json:"storedValues,omitempty"`
 }
@@ -55,6 +57,7 @@ type AnalysisStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="AnalysisDefinition",type=string,JSONPath=.spec.analysisDefinition.name
+//+kubebuilder:printcolumn:name="State",type=string,JSONPath=`.status.state`
 //+kubebuilder:printcolumn:name="Warning",type=string,JSONPath=`.status.warning`
 //+kubebuilder:printcolumn:name="Pass",type=string,JSONPath=`.status.pass`
 

@@ -323,7 +323,7 @@ Most functionality coded using the Keptn v1
 (Job Executor Service) facility
 can simply be moved into a `KeptnTaskDefinition` resource
 that uses the
-[container-runtime runner](../../yaml-crd-ref/taskdefinition.md/#yaml-synopsis-for-container-runtime).
+[container-runtime runner](../../yaml-crd-ref/taskdefinition.md/#synopsis-for-container-runtime).
 If the JES container code is written in JavaScript or TypeScript,
 you may be able to use the `deno-runtime` runner.
 If the JES container code is written in Python 3,

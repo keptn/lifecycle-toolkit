@@ -5,4 +5,3 @@ testDirs:
   - ./test/integration/
 timeout: 400
 skipDelete: true
-parallel: 4

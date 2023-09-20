@@ -49,7 +49,6 @@ type AnalysisStatus struct {
 	// Warning returns whether the analysis returned a warning
 	Warning bool `json:"warning,omitempty"`
 	// State describes the current state of the Analysis
-	// +kubebuilder:default:=Pending
 	State AnalysisState `json:"state"`
 	// StoredValues contains all analysis values that have already been retrieved successfully
 	StoredValues map[string]ProviderResult `json:"storedValues,omitempty"`

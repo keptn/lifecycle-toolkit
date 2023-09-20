@@ -94,7 +94,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	if !evaluation.Status.OverallStatus.IsSucceeded() {
-		evaluationDefinition, err := controllercommon.GetEvaluationDefinition(r.Client, r.Log, ctx, evaluation.Spec.EvaluationDefinition, req.NamespacedName.Namespace)
+		evaluationDefinition, err := controllercommon.GetEvaluationDefinition(r.Client, r.Log, ctx, evaluation.Spec.EvaluationDefinition, req.NamespacedName.Namespace, r.Namespace)
 		if err != nil {
 			if errors.IsNotFound(err) {
 				r.Log.Info(err.Error() + ", ignoring error since object must be deleted")
@@ -168,8 +168,9 @@ func (r *KeptnEvaluationReconciler) performEvaluation(ctx context.Context, evalu
 	}
 
 	provider := &keptnmetric.KeptnMetricProvider{
-		Log:       r.Log,
-		K8sClient: r.Client,
+		Log:              r.Log,
+		K8sClient:        r.Client,
+		DefaultNamespace: r.Namespace,
 	}
 
 	for _, query := range evaluationDefinition.Spec.Objectives {

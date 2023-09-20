@@ -371,12 +371,13 @@ func TestTaskHandler(t *testing.T) {
 				initObjs = append(initObjs, tt.taskDef)
 			}
 			handler := TaskHandler{
-				SpanHandler: &spanHandlerMock,
-				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
-				Client:      fake.NewClientBuilder().WithObjects(initObjs...).Build(),
-				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
-				Scheme:      scheme.Scheme,
+				SpanHandler:      &spanHandlerMock,
+				Log:              ctrl.Log.WithName("controller"),
+				EventSender:      NewK8sSender(record.NewFakeRecorder(100)),
+				Client:           fake.NewClientBuilder().WithObjects(initObjs...).Build(),
+				Tracer:           trace.NewNoopTracerProvider().Tracer("tracer"),
+				Scheme:           scheme.Scheme,
+				DefaultNamespace: KLTNamespace,
 			}
 			status, summary, err := handler.ReconcileTasks(context.TODO(), context.TODO(), tt.object, tt.createAttr)
 			if len(tt.wantStatus) == len(status) {

@@ -181,7 +181,7 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation_withDefinitionInD
 	evaluationDefinition := &klcv1alpha3.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-definition",
-			Namespace: controllercommon.KLTNamespace,
+			Namespace: "keptn",
 		},
 		Spec: klcv1alpha3.KeptnEvaluationDefinitionSpec{
 			Objectives: []klcv1alpha3.Objective{
@@ -263,6 +263,7 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 		EventSender:   controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Meters:        telemetry.SetUpKeptnTaskMeters(meter),
 		TracerFactory: tf,
+		Namespace:     "keptn",
 	}
 	return r, fakeClient
 }

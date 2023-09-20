@@ -52,6 +52,7 @@ type KeptnAppVersionReconciler struct {
 	TracerFactory telemetry.TracerFactory
 	Meters        apicommon.KeptnMeters
 	SpanHandler   telemetry.ISpanHandler
+	Namespace     string
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversions,verbs=get;list;watch;create;update;patch;delete

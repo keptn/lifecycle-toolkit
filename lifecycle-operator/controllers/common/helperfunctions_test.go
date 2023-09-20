@@ -14,6 +14,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
+const KLTNamespace = "keptn"
+
 func Test_GetItemStatus(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -423,7 +425,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			client := fake.NewClientBuilder().WithObjects(tt.taskDef).Build()
-			d, err := GetTaskDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.taskDefName, tt.taskDefNamespace)
+			d, err := GetTaskDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.taskDefName, tt.taskDefNamespace, KLTNamespace)
 			if tt.out != nil && d != nil {
 				require.Equal(t, tt.out.Name, d.Name)
 				require.Equal(t, tt.out.Namespace, d.Namespace)
@@ -505,7 +507,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			client := fake.NewClientBuilder().WithObjects(tt.evalDef).Build()
-			d, err := GetEvaluationDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.evalDefName, tt.evalDefNamespace)
+			d, err := GetEvaluationDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.evalDefName, tt.evalDefNamespace, KLTNamespace)
 			if tt.out != nil && d != nil {
 				require.Equal(t, tt.out.Name, d.Name)
 				require.Equal(t, tt.out.Namespace, d.Namespace)

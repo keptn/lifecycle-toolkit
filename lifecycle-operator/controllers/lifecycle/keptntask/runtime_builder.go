@@ -209,7 +209,7 @@ func (fb *RuntimeBuilder) parseRuntimeTaskDefinition(spec *klcv1alpha3.RuntimeSp
 
 func (fb *RuntimeBuilder) handleParent(ctx context.Context, params *RuntimeExecutionParams) error {
 	var parentJobParams RuntimeExecutionParams
-	parentDefinition, err := controllercommon.GetTaskDefinition(fb.options.Client, fb.options.Log, ctx, fb.options.funcSpec.FunctionReference.Name, fb.options.req.Namespace)
+	parentDefinition, err := controllercommon.GetTaskDefinition(fb.options.Client, fb.options.Log, ctx, fb.options.funcSpec.FunctionReference.Name, fb.options.req.Namespace, "")
 	if err != nil {
 		fb.options.eventSender.Emit(apicommon.PhaseCreateTask, "Warning", fb.options.task, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
 		return err

@@ -6,7 +6,6 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
@@ -18,6 +17,8 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
+
+const KLTNamespace = "mynamespace"
 
 func TestKeptnTaskReconciler_createJob(t *testing.T) {
 	namespace := "default"
@@ -90,7 +91,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	taskDefinitionName := "my-task-definition"
 
 	cm := makeConfigMap(cmName, namespace)
-	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, common.KLTNamespace, cmName)
+	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, KLTNamespace, cmName)
 
 	fakeClient := fakeclient.NewClient(cm, taskDefinition)
 
@@ -103,6 +104,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
+		Namespace:   KLTNamespace,
 	}
 
 	task := makeTask("my-task", namespace, taskDefinitionName)

@@ -52,6 +52,7 @@ type KeptnWorkloadInstanceReconciler struct {
 	Meters        apicommon.KeptnMeters
 	SpanHandler   *telemetry.SpanHandler
 	TracerFactory telemetry.TracerFactory
+	Namespace     string
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete

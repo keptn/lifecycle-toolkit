@@ -194,6 +194,7 @@ func main() {
 		EventSender:   controllercommon.NewEventMultiplexer(taskLogger, taskRecorder, ceClient),
 		Meters:        keptnMeters,
 		TracerFactory: telemetry.GetOtelInstance(),
+		Namespace:     env.PodNamespace,
 	}
 	if err = (taskReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
@@ -262,6 +263,7 @@ func main() {
 		Meters:        keptnMeters,
 		TracerFactory: telemetry.GetOtelInstance(),
 		SpanHandler:   spanHandler,
+		Namespace:     env.PodNamespace,
 	}
 	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
@@ -278,6 +280,7 @@ func main() {
 		TracerFactory: telemetry.GetOtelInstance(),
 		Meters:        keptnMeters,
 		SpanHandler:   spanHandler,
+		Namespace:     env.PodNamespace,
 	}
 	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")

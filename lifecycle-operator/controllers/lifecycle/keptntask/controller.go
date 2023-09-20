@@ -48,6 +48,7 @@ type KeptnTaskReconciler struct {
 	Log           logr.Logger
 	Meters        apicommon.KeptnMeters
 	TracerFactory telemetry.TracerFactory
+	Namespace     string
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks,verbs=get;list;watch;create;update;patch;delete

@@ -12,12 +12,13 @@ import (
 
 func (r *KeptnWorkloadInstanceReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 	taskHandler := controllercommon.TaskHandler{
-		Client:      r.Client,
-		EventSender: r.EventSender,
-		Log:         r.Log,
-		Tracer:      r.getTracer(),
-		Scheme:      r.Scheme,
-		SpanHandler: r.SpanHandler,
+		Client:           r.Client,
+		EventSender:      r.EventSender,
+		Log:              r.Log,
+		Tracer:           r.getTracer(),
+		Scheme:           r.Scheme,
+		SpanHandler:      r.SpanHandler,
+		DefaultNamespace: r.Namespace,
 	}
 
 	taskCreateAttributes := controllercommon.CreateTaskAttributes{

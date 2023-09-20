@@ -274,7 +274,7 @@ _Appears in:_
 | `rawValue` _integer array_ | RawValue represents the resulting value in raw format |
 | `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
 | `errMsg` _string_ | ErrMsg represents the error details when the query could not be evaluated |
-| `results` _[IntervalResult](#intervalresult) array_ | IntervalResults contain a slice of all the interval results |
+| `intervalResults` _[IntervalResult](#intervalresult) array_ | IntervalResults contain a slice of all the interval results |
 
 
 #### KeptnMetricsProvider

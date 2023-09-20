@@ -22,7 +22,7 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]v1alpha3.ProviderResult
 	result := types.ObjectiveResult{
 		Score:     0.0,
 		Value:     0.0,
-		Objective: obj,
+		Objective: *obj,
 	}
 
 	// get the value

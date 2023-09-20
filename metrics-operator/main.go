@@ -20,6 +20,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	analysistypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
+	analysismetrics "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics/analysis"
 	"log"
 	"os"
 	"os/signal"
@@ -200,31 +202,29 @@ func main() {
 	}
 
 	if env.EnableKeptnAnalysis {
-
-		// OTel Setup
-		metrics, err := analysiscontroller.SetupMetric()
-		if err != nil {
-			setupLog.Error(err, "unable to create metric keptn_analysis_result/keptn_objective_result")
-			os.Exit(1)
-		}
-
 		analysisLogger := ctrl.Log.WithName("KeptnAnalysis Controller")
 		targetEval := analysis.NewTargetEvaluator(&analysis.OperatorEvaluator{})
 		objEval := analysis.NewObjectiveEvaluator(&targetEval)
 		analysisEval := analysis.NewAnalysisEvaluator(&objEval)
 
-		if err = (&analysiscontroller.AnalysisReconciler{
+		ac := &analysiscontroller.AnalysisReconciler{
 			Client:                mgr.GetClient(),
 			Scheme:                mgr.GetScheme(),
 			Log:                   analysisLogger.V(env.AnalysisControllerLogLevel),
 			MaxWorkers:            2,
 			NewWorkersPoolFactory: analysiscontroller.NewWorkersPool,
 			IAnalysisEvaluator:    &analysisEval,
-			Metrics:               metrics,
-		}).SetupWithManager(mgr); err != nil {
+		}
+		if err = ac.SetupWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 			os.Exit(1)
 		}
+
+		res := make(chan analysistypes.AnalysisCompletion)
+
+		ac.SetAnalysisResultsChannel(res)
+
+		_ = analysismetrics.GetResultsReporter(ctx, res)
 	}
 	// +kubebuilder:scaffold:builder
 

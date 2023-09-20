@@ -67,3 +67,10 @@ func (a *AnalysisResult) GetAchievedPercentage() float64 {
 	}
 	return (a.TotalScore / a.MaximumScore) * 100.0
 }
+
+// AnalysisCompletion consolidates an analysis definition and its result into one struct, which is needed to communicate
+// both objects via a channel
+type AnalysisCompletion struct {
+	Result   AnalysisResult
+	Analysis v1alpha3.Analysis
+}

@@ -50,7 +50,7 @@ type AnalysisReconciler struct {
 	MaxWorkers int //maybe 2 or 4 as def
 	NewWorkersPoolFactory
 	common.IAnalysisEvaluator
-	Metrics
+	analysisResults chan evalType.AnalysisCompletion
 }
 
 //+kubebuilder:rbac:groups=metrics.keptn.sh,resources=analyses,verbs=get;list;watch;create;update;patch;delete
@@ -147,67 +147,23 @@ func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[str
 		analysis.Status.Warning = true
 	}
 	analysis.Status.Pass = eval.Pass
-	go a.reportResultsAsPromMetric(eval, analysis)
+	go a.reportAnalysisResult(eval, *analysis)
 	return a.updateStatus(ctx, analysis)
 }
 
-func (a *AnalysisReconciler) reportResultsAsPromMetric(eval evalType.AnalysisResult, analysis *metricsapi.Analysis) {
-	f := analysis.Spec.From.String()
-	t := analysis.Spec.To.String()
-	labelsAnalysis := prometheus.Labels{
-		"name":      analysis.Name,
-		"namespace": analysis.Namespace,
-		"from":      f,
-		"to":        t,
+func (a *AnalysisReconciler) reportAnalysisResult(eval evalType.AnalysisResult, analysis metricsapi.Analysis) {
+	if a.analysisResults == nil {
+		return
 	}
-	if m, err := a.Metrics.AnalysisResult.GetMetricWith(labelsAnalysis); err == nil {
-		m.Set(eval.GetAchievedPercentage())
-	} else {
-		a.Log.Error(err, "unable to set value for analysis result metric")
-	}
-	// expose also the individual objectives
-	for _, o := range eval.ObjectiveResults {
-		name := o.Objective.AnalysisValueTemplateRef.Name
-		ns := o.Objective.AnalysisValueTemplateRef.Namespace
-		labelsObjective := prometheus.Labels{
-			"name":               name,
-			"namespace":          ns,
-			"analysis_name":      analysis.Name,
-			"analysis_namespace": analysis.Namespace,
-			"key_objective":      fmt.Sprintf("%v", o.Objective.KeyObjective),
-			"weight":             fmt.Sprintf("%v", o.Objective.Weight),
-			"from":               f,
-			"to":                 t,
-		}
-		if m, err := a.Metrics.ObjectiveResult.GetMetricWith(labelsObjective); err == nil {
-			m.Set(o.Value)
-		} else {
-			a.Log.Error(err, "unable to set value for objective result metric")
-		}
+
+	a.analysisResults <- evalType.AnalysisCompletion{
+		Result:   eval,
+		Analysis: analysis,
 	}
 }
 
-//nolint:ineffassign,staticcheck
-func SetupMetric() (m Metrics, err error) {
-
-	labelNamesAnalysis := []string{"name", "namespace", "from", "to"}
-	a := prometheus.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "keptn_analysis_result",
-		Help: "Result of Analysis",
-	}, labelNamesAnalysis)
-	err = prometheus.Register(a)
-
-	labelNames := []string{"name", "namespace", "analysis_name", "analysis_namespace", "key_objective", "weight", "from", "to"}
-	o := prometheus.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "keptn_objective_result",
-		Help: "Result of the Analysis Objective",
-	}, labelNames)
-	err = prometheus.Register(o)
-
-	return Metrics{
-		AnalysisResult:  a,
-		ObjectiveResult: o,
-	}, err
+func (a *AnalysisReconciler) SetAnalysisResultsChannel(c chan evalType.AnalysisCompletion) {
+	a.analysisResults = c
 }
 
 func (a *AnalysisReconciler) updateStatus(ctx context.Context, analysis *metricsapi.Analysis) error {

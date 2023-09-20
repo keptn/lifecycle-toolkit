@@ -1,12 +1,8 @@
 package analysis
 
 import (
-	"bytes"
 	"context"
-	"fmt"
-	"net/http"
 	"reflect"
-	"strings"
 	"testing"
 	"time"
 
@@ -16,10 +12,8 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis/fake"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	fakeEvaluator "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/fake"
-	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
+	analysistypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	fake2 "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
-	prometheus "github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -27,32 +21,16 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func TestAnalysisReconciler_ExposeMetrics(t *testing.T) {
-	serveMetrics := func() {
-		fmt.Printf("serving metrics at localhost:2222/metrics")
-		http.Handle("/metrics", promhttp.Handler())
-		err := http.ListenAndServe(":2222", nil)
-		if err != nil {
-			fmt.Printf("error serving http: %v", err)
-			return
-		}
-	}
-	go serveMetrics()
-
+func TestAnalysisReconciler_SendResultToChannel(t *testing.T) {
 	analysis, analysisDef, template, _ := getTestCRDs()
 	fakeclient := fake2.NewClient(&analysis, &analysisDef, &template)
-	res := metricstypes.AnalysisResult{
+	res := analysistypes.AnalysisResult{
 		Pass: true,
-		ObjectiveResults: []metricstypes.ObjectiveResult{
+		ObjectiveResults: []analysistypes.ObjectiveResult{
 			{
-				Objective: &analysisDef.Spec.Objectives[0],
+				Objective: analysisDef.Spec.Objectives[0],
 			},
 		},
-	}
-	metrics, err := SetupMetric()
-	if err != nil {
-		//ignore if it is an already registered error
-		require.Contains(t, err.Error(), prometheus.AlreadyRegisteredError{}.Error())
 	}
 
 	req := controllerruntime.Request{
@@ -73,42 +51,29 @@ func TestAnalysisReconciler_ExposeMetrics(t *testing.T) {
 		Log:                   testr.New(t),
 		MaxWorkers:            2,
 		NewWorkersPoolFactory: mockFactory,
-		Metrics:               metrics,
 		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
-			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) analysistypes.AnalysisResult {
 				return res
 			}},
 	}
-	_, err = a.Reconcile(context.TODO(), req)
+
+	resChan := make(chan analysistypes.AnalysisCompletion)
+	a.SetAnalysisResultsChannel(resChan)
+
+	_, err := a.Reconcile(context.TODO(), req)
 	require.Nil(t, err)
 
-	// check for metrics
-	require.Eventually(t, func() bool {
-		payload := getHTTPMetric(t)
-		return strings.Contains(payload, "keptn_analysis_result")
-	}, 60*time.Second, 1*time.Second)
-	require.Eventually(t, func() bool {
-		payload := getHTTPMetric(t)
-		return strings.Contains(payload, "keptn_objective_result")
-	}, 60*time.Second, 1*time.Second)
-
-}
-
-func getHTTPMetric(t *testing.T) string {
-	cli := &http.Client{}
-	r, _ := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:2222/metrics", nil)
-	resp, err := cli.Do(r)
-	require.Nil(t, err)
-	buf := new(bytes.Buffer)
-	_, err = buf.ReadFrom(resp.Body)
-	require.Nil(t, err)
-	return buf.String()
+	select {
+	case <-time.After(5 * time.Second):
+		t.Error("timed out waiting for the analysis result to be reported")
+	case analysisResult := <-resChan:
+		require.Equal(t, "my-analysis", analysisResult.Analysis.Name)
+	}
 }
 
 func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 
 	analysis, analysisDef, template, _ := getTestCRDs()
-	metrics, _ := SetupMetric()
 
 	analysis2 := metricsapi.Analysis{
 		ObjectMeta: metav1.ObjectMeta{
@@ -165,7 +130,7 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 		want    controllerruntime.Result
 		wantErr bool
 		status  *metricsapi.AnalysisStatus
-		res     metricstypes.AnalysisResult
+		res     analysistypes.AnalysisResult
 	}{
 		{
 			name:    "analysis does not exist, reconcile no status update",
@@ -173,28 +138,28 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			want:    controllerruntime.Result{},
 			wantErr: false,
 			status:  nil,
-			res:     metricstypes.AnalysisResult{},
+			res:     analysistypes.AnalysisResult{},
 		}, {
 			name:    "analysisDefinition does not exist, requeue no status update",
 			client:  fake2.NewClient(&analysis),
 			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
 			wantErr: false,
 			status:  &metricsapi.AnalysisStatus{},
-			res:     metricstypes.AnalysisResult{Pass: false},
+			res:     analysistypes.AnalysisResult{Pass: false},
 		}, {
 			name:    "succeeded, status updated",
 			client:  fake2.NewClient(&analysis, &analysisDef, &template),
 			want:    controllerruntime.Result{},
 			wantErr: false,
 			status:  &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true},
-			res:     metricstypes.AnalysisResult{Pass: true},
+			res:     analysistypes.AnalysisResult{Pass: true},
 		}, {
 			name:    "succeeded - analysis in different namespace, status updated",
 			client:  fake2.NewClient(&analysis2, &analysisDef2, &template),
 			want:    controllerruntime.Result{},
 			wantErr: false,
 			status:  &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true},
-			res:     metricstypes.AnalysisResult{Pass: true},
+			res:     analysistypes.AnalysisResult{Pass: true},
 		},
 	}
 
@@ -218,9 +183,8 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 				Log:                   testr.New(t),
 				MaxWorkers:            2,
 				NewWorkersPoolFactory: mockFactory,
-				Metrics:               metrics,
 				IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
-					EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+					EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) analysistypes.AnalysisResult {
 						return tt.res
 					}},
 			}
@@ -274,8 +238,8 @@ func TestAnalysisReconciler_ExistingAnalysisStatusIsFlushedWhenEvaluationFinishe
 		MaxWorkers:            2,
 		NewWorkersPoolFactory: mockFactory,
 		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
-			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
-				return metricstypes.AnalysisResult{Pass: true}
+			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) analysistypes.AnalysisResult {
+				return analysistypes.AnalysisResult{Pass: true}
 			}},
 	}
 

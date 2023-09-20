@@ -7,7 +7,6 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
@@ -114,7 +113,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 
 				ns := &v1.Namespace{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: controllercommon.KLTNamespace,
+						Name: KLTnamespace,
 					},
 				}
 				err := k8sClient.Create(context.TODO(), ns)
@@ -122,17 +121,17 @@ var _ = Describe("Evaluation", Ordered, func() {
 
 				By("Create EvaluationDefiniton")
 
-				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, controllercommon.KLTNamespace, metricName)
+				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, KLTnamespace, metricName)
 
 				By("Create KeptnMetric")
 
-				metric := makeKeptnMetric(metricName, controllercommon.KLTNamespace)
+				metric := makeKeptnMetric(metricName, KLTnamespace)
 
 				By("Update KeptnMetric to have status")
 
 				metric2 := &metricsapi.KeptnMetric{}
 				err = k8sClient.Get(context.TODO(), types.NamespacedName{
-					Namespace: controllercommon.KLTNamespace,
+					Namespace: KLTnamespace,
 					Name:      metric.Name,
 				}, metric2)
 				Expect(err).To(BeNil())
@@ -149,14 +148,14 @@ var _ = Describe("Evaluation", Ordered, func() {
 				evaluationdef := &klcv1alpha3.KeptnEvaluationDefinition{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
-						Namespace: controllercommon.KLTNamespace,
+						Namespace: KLTnamespace,
 						Name:      evaluationDefinitionName,
 					}, evaluationdef)
 					g.Expect(err).To(BeNil())
 					g.Expect(evaluationdef.Spec.Objectives[0]).To(Equal(klcv1alpha3.Objective{
 						KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 							Name:      metricName,
-							Namespace: controllercommon.KLTNamespace,
+							Namespace: KLTnamespace,
 						},
 						EvaluationTarget: "<10",
 					}))

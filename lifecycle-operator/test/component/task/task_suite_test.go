@@ -30,6 +30,8 @@ var (
 	ctx        context.Context
 )
 
+const KLTnamespace = "keptnlifecycle"
+
 var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
 	ctx, k8sManager, tracer, _, k8sClient, readyToStart = common.InitSuite()
@@ -45,6 +47,7 @@ var _ = BeforeSuite(func() {
 		Log:           GinkgoLogr,
 		Meters:        common.InitKeptnMeters(),
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
+		Namespace:     KLTnamespace,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 	close(readyToStart)

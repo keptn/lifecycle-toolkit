@@ -33,6 +33,8 @@ var (
 	spanRecorder *sdktest.SpanRecorder
 )
 
+const KLTnamespace = "keptnlifecycle"
+
 var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
@@ -46,6 +48,7 @@ var _ = BeforeSuite(func() {
 		Meters:        common.InitKeptnMeters(),
 		SpanHandler:   &telemetry.SpanHandler{},
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
+		Namespace:     KLTnamespace,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 	close(readyToStart)

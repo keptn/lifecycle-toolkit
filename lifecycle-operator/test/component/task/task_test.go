@@ -5,7 +5,6 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -83,13 +82,13 @@ var _ = Describe("Task", Ordered, func() {
 
 				ns := &v1.Namespace{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: controllercommon.KLTNamespace,
+						Name: KLTnamespace,
 					},
 				}
 				err := k8sClient.Create(context.TODO(), ns)
 				Expect(err).To(BeNil())
 
-				taskDefinition = makeTaskDefinition(taskDefinitionName, controllercommon.KLTNamespace)
+				taskDefinition = makeTaskDefinition(taskDefinitionName, KLTnamespace)
 				task = makeTask(name, namespace, taskDefinition.Name)
 
 				By("Verifying that a job has been created")
@@ -136,13 +135,13 @@ var _ = Describe("Task", Ordered, func() {
 
 				ns := &v1.Namespace{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: controllercommon.KLTNamespace,
+						Name: KLTnamespace,
 					},
 				}
 				err := k8sClient.Create(context.TODO(), ns)
 				Expect(common.IgnoreAlreadyExists(err)).To(BeNil())
 
-				taskDefinition = makeContainerTaskDefinition(taskDefinitionName, controllercommon.KLTNamespace)
+				taskDefinition = makeContainerTaskDefinition(taskDefinitionName, KLTnamespace)
 				task = makeTask(name, namespace, taskDefinition.Name)
 
 				By("Verifying that a job has been created")

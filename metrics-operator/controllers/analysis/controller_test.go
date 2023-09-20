@@ -51,6 +51,36 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 		},
 	}
 
+	analysisCompleted := metricsapi.Analysis{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-analysis",
+			Namespace: "default",
+		},
+		Spec: metricsapi.AnalysisSpec{
+			Timeframe: metricsapi.Timeframe{
+				From: metav1.Time{
+					Time: time.Now(),
+				},
+				To: metav1.Time{
+					Time: time.Now(),
+				},
+			},
+			Args: map[string]string{
+				"good": "good",
+				"dot":  ".",
+			},
+			AnalysisDefinition: metricsapi.ObjectReference{
+				Name:      "my-analysis-def",
+				Namespace: "default",
+			},
+		},
+		Status: metricsapi.AnalysisStatus{
+			State: metricsapi.StateCompleted,
+			Raw:   "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}",
+			Pass:  true,
+		},
+	}
+
 	analysisDef2 := metricsapi.AnalysisDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-analysis-def",
@@ -139,6 +169,11 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			status:      &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true, State: metricsapi.StateCompleted},
 			res:         metricstypes.AnalysisResult{Pass: true},
 			mockFactory: mockFactory,
+		}, {
+			name:    "already completed analysis",
+			client:  fake2.NewClient(&analysisCompleted),
+			want:    controllerruntime.Result{},
+			wantErr: false,
 		}, {
 			name:        "succeeded - analysis in different namespace, status updated",
 			client:      fake2.NewClient(&analysis2, &analysisDef2, &template),

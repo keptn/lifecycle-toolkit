@@ -33,3 +33,11 @@ func TestAnalysisState_IsPending(t *testing.T) {
 	a = StateCompleted
 	require.False(t, a.IsPending())
 }
+
+func TestAnalysisState_IsCompleted(t *testing.T) {
+	a := StateCompleted
+	require.True(t, a.IsCompleted())
+
+	a = StateProgressing
+	require.False(t, a.IsCompleted())
+}

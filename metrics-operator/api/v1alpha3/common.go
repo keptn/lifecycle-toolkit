@@ -31,3 +31,7 @@ const (
 func (s AnalysisState) IsPending() bool {
 	return s == StatePending
 }
+
+func (s AnalysisState) IsCompleted() bool {
+	return s == StateCompleted
+}

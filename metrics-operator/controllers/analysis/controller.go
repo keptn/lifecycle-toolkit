@@ -72,6 +72,10 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		return ctrl.Result{}, err
 	}
 
+	if analysis.Status.State.IsCompleted() {
+		return ctrl.Result{}, nil
+	}
+
 	//find AnalysisDefinition to have the collection of Objectives
 	analysisDef, err := a.retrieveAnalysisDefinition(ctx, analysis)
 	if err != nil {

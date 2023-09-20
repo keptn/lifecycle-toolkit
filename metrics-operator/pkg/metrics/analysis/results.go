@@ -3,10 +3,11 @@ package analysis
 import (
 	"context"
 	"fmt"
+	"sync"
+
 	analysistypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/prometheus/client_golang/prometheus"
 	"k8s.io/klog/v2"
-	"sync"
 )
 
 const analysisResultMetricName = "keptn_analysis_result"

@@ -43,15 +43,19 @@ import (
 
 const traceComponentName = "keptn/lifecycle-operator/workloadinstance"
 
+type RemoveGatesFunc func(ctx context.Context, c client.Client, log logr.Logger, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error
+
 // KeptnWorkloadInstanceReconciler reconciles a KeptnWorkloadInstance object
 type KeptnWorkloadInstanceReconciler struct {
 	client.Client
-	Scheme        *runtime.Scheme
-	EventSender   controllercommon.IEvent
-	Log           logr.Logger
-	Meters        apicommon.KeptnMeters
-	SpanHandler   *telemetry.SpanHandler
-	TracerFactory telemetry.TracerFactory
+	Scheme                  *runtime.Scheme
+	EventSender             controllercommon.IEvent
+	Log                     logr.Logger
+	Meters                  apicommon.KeptnMeters
+	SpanHandler             *telemetry.SpanHandler
+	TracerFactory           telemetry.TracerFactory
+	SchedullingGatesEnabled bool
+	RemoveGates             RemoveGatesFunc
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
@@ -61,7 +65,7 @@ type KeptnWorkloadInstanceReconciler struct {
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/finalizers,verbs=update
 // +kubebuilder:rbac:groups=core,resources=events,verbs=create;watch;patch
-// +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
+// +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch;update
 // +kubebuilder:rbac:groups=apps,resources=replicasets;deployments;statefulsets;daemonsets,verbs=get;list;watch
 // +kubebuilder:rbac:groups=argoproj.io,resources=rollouts,verbs=get;list;watch
 
@@ -135,6 +139,14 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadInstance, phase, span, reconcilePreEval)
 		if !result.Continue {
 			return result.Result, err
+		}
+	}
+
+	if r.SchedullingGatesEnabled {
+		// pre-evaluation checks done at this moment, we can remove the gate
+		if err := r.RemoveGates(ctx, r.Client, r.Log, workloadInstance); err != nil {
+			r.Log.Error(err, "could not remove SchedullingGates")
+			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 	}
 

@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
@@ -805,6 +806,161 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) 
 		assert.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
 		assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
 	}
+}
+
+func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion_schedullingGates(t *testing.T) {
+
+	testNamespace := "some-ns"
+
+	wi := &klcv1alpha3.KeptnWorkloadInstance{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "some-wi",
+			Namespace: testNamespace,
+		},
+		Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
+				AppName: "some-app",
+				Version: "1.0.0",
+			},
+			WorkloadName:    "some-app-some-workload",
+			PreviousVersion: "",
+			TraceId:         nil,
+		},
+		Status: klcv1alpha3.KeptnWorkloadInstanceStatus{
+			DeploymentStatus:               apicommon.StateSucceeded,
+			PreDeploymentStatus:            apicommon.StateSucceeded,
+			PostDeploymentStatus:           apicommon.StateSucceeded,
+			PreDeploymentEvaluationStatus:  apicommon.StateSucceeded,
+			PostDeploymentEvaluationStatus: apicommon.StateSucceeded,
+			CurrentPhase:                   apicommon.PhaseWorkloadPostEvaluation.ShortName,
+			Status:                         apicommon.StateSucceeded,
+			StartTime:                      metav1.Time{},
+			EndTime:                        metav1.Time{},
+		},
+	}
+
+	app := controllercommon.ReturnAppVersion(
+		testNamespace,
+		"some-app",
+		"1.0.0",
+		[]klcv1alpha3.KeptnWorkloadRef{
+			{
+				Name:    "some-workload",
+				Version: "1.0.0",
+			},
+		},
+		klcv1alpha3.KeptnAppVersionStatus{
+			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
+		},
+	)
+
+	ch := make(chan bool)
+	var called bool
+	go func() {
+		called = <-ch
+	}()
+	r, eventChannel, _ := setupReconciler(wi, app)
+	r.SchedullingGatesEnabled = true
+	r.RemoveGates = func(ctx context.Context, c client.Client, log logr.Logger, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error {
+		ch <- true
+		return nil
+	}
+
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: testNamespace,
+			Name:      "some-wi",
+		},
+	}
+
+	result, err := r.Reconcile(context.TODO(), req)
+
+	require.True(t, called)
+	require.Nil(t, err)
+
+	// do not requeue since we reached completion
+	require.False(t, result.Requeue)
+
+	// here we do not expect an event about the application preEvaluation being finished since that  will have been sent in
+	// one of the previous reconciliation loops that lead to the first phase being reached
+	expectedEvents := []string{
+		"CompletedFinished",
+	}
+
+	for _, e := range expectedEvents {
+		event := <-eventChannel
+		assert.Equal(t, strings.Contains(event, req.Name), true, "wrong workloadinstance")
+		assert.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
+		assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+	}
+}
+
+func TestKeptnWorkloadInstanceReconciler_RmoveGates_fail(t *testing.T) {
+
+	testNamespace := "some-ns"
+
+	wi := &klcv1alpha3.KeptnWorkloadInstance{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "some-wi",
+			Namespace: testNamespace,
+		},
+		Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+			KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
+				AppName: "some-app",
+				Version: "1.0.0",
+			},
+			WorkloadName:    "some-app-some-workload",
+			PreviousVersion: "",
+			TraceId:         nil,
+		},
+		Status: klcv1alpha3.KeptnWorkloadInstanceStatus{
+			DeploymentStatus:               apicommon.StateSucceeded,
+			PreDeploymentStatus:            apicommon.StateSucceeded,
+			PostDeploymentStatus:           apicommon.StateSucceeded,
+			PreDeploymentEvaluationStatus:  apicommon.StateSucceeded,
+			PostDeploymentEvaluationStatus: apicommon.StateSucceeded,
+			CurrentPhase:                   apicommon.PhaseWorkloadPostEvaluation.ShortName,
+			Status:                         apicommon.StateSucceeded,
+			StartTime:                      metav1.Time{},
+			EndTime:                        metav1.Time{},
+		},
+	}
+
+	app := controllercommon.ReturnAppVersion(
+		testNamespace,
+		"some-app",
+		"1.0.0",
+		[]klcv1alpha3.KeptnWorkloadRef{
+			{
+				Name:    "some-workload",
+				Version: "1.0.0",
+			},
+		},
+		klcv1alpha3.KeptnAppVersionStatus{
+			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
+		},
+	)
+	r, _, _ := setupReconciler(wi, app)
+	r.SchedullingGatesEnabled = true
+	r.RemoveGates = func(ctx context.Context, c client.Client, log logr.Logger, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error {
+		return fmt.Errorf("err")
+	}
+
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: testNamespace,
+			Name:      "some-wi",
+		},
+	}
+
+	result, err := r.Reconcile(context.TODO(), req)
+
+	require.NotNil(t, err)
+
+	// do not requeue since we reached completion
+	require.True(t, result.Requeue)
 }
 
 func TestKeptnWorkloadInstanceReconciler_ReconcileFailed(t *testing.T) {

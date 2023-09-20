@@ -36,11 +36,12 @@ import (
 
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
-	Client      client.Client
-	Tracer      trace.Tracer
-	Decoder     *admission.Decoder
-	EventSender controllercommon.IEvent
-	Log         logr.Logger
+	Client                  client.Client
+	Tracer                  trace.Tracer
+	Decoder                 *admission.Decoder
+	EventSender             controllercommon.IEvent
+	Log                     logr.Logger
+	SchedullingGatesEnabled bool
 }
 
 const InvalidAnnotationMessage = "Invalid annotations"
@@ -93,16 +94,25 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
 	podIsAnnotated := a.isPodAnnotated(pod)
-	logger.Info("Checked if pod is annotated.")
-
 	if !podIsAnnotated {
 		logger.Info("Pod is not annotated, check for parent annotations...")
 		podIsAnnotated = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
 	}
 
 	if podIsAnnotated {
-		logger.Info("Resource is annotated with Keptn annotations, using Keptn scheduler")
-		pod.Spec.SchedulerName = "keptn-scheduler"
+		_, gateRemoved := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.SchedullingGateRemoved, "")
+		logger.Info("Resource is annotated with Keptn annotations")
+		if a.SchedullingGatesEnabled {
+			if !gateRemoved {
+				pod.Spec.SchedulingGates = []corev1.PodSchedulingGate{
+					{
+						Name: "gated-klt",
+					},
+				}
+			}
+		} else {
+			pod.Spec.SchedulerName = "keptn-scheduler"
+		}
 		logger.Info("Annotations", "annotations", pod.Annotations)
 
 		isAppAnnotationPresent := a.isAppAnnotationPresent(pod)

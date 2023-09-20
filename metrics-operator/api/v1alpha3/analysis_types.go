@@ -58,6 +58,7 @@ type AnalysisStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="AnalysisDefinition",type=string,JSONPath=.spec.analysisDefinition.name
+//+kubebuilder:printcolumn:name="State",type=string,JSONPath=`.status.state`
 //+kubebuilder:printcolumn:name="Warning",type=string,JSONPath=`.status.warning`
 //+kubebuilder:printcolumn:name="Pass",type=string,JSONPath=`.status.pass`
 

@@ -18,6 +18,9 @@ spec:
     - jsonPath: .spec.analysisDefinition.name
       name: AnalysisDefinition
       type: string
+    - jsonPath: .status.state
+      name: State
+      type: string
     - jsonPath: .status.warning
       name: Warning
       type: string

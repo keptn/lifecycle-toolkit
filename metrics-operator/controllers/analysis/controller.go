@@ -27,7 +27,6 @@ import (
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	evalType "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
-	"github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/exp/maps"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -108,7 +107,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	maps.Copy(res, done)
-	a.evaluateObjectives(ctx, res, analysisDef, analysis)
+	a.evaluateObjectives(res, analysisDef, analysis)
 	if err := a.updateStatus(ctx, analysis); err != nil {
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
@@ -116,7 +115,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	return ctrl.Result{}, nil
 }
 
-func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[string]metricsapi.ProviderResult, analysisDef *metricsapi.AnalysisDefinition, analysis *metricsapi.Analysis) {
+func (a *AnalysisReconciler) evaluateObjectives(res map[string]metricsapi.ProviderResult, analysisDef *metricsapi.AnalysisDefinition, analysis *metricsapi.Analysis) {
 	eval := a.Evaluate(res, analysisDef)
 	analysisResultJSON, err := json.Marshal(eval)
 	if err != nil {

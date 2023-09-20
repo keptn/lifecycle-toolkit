@@ -13,7 +13,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis/fake"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	fakeEvaluator "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/fake"
-	analysistypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
+	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	fake2 "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -25,9 +25,9 @@ import (
 func TestAnalysisReconciler_SendResultToChannel(t *testing.T) {
 	analysis, analysisDef, template, _ := getTestCRDs()
 	fakeclient := fake2.NewClient(&analysis, &analysisDef, &template)
-	res := analysistypes.AnalysisResult{
+	res := metricstypes.AnalysisResult{
 		Pass: true,
-		ObjectiveResults: []analysistypes.ObjectiveResult{
+		ObjectiveResults: []metricstypes.ObjectiveResult{
 			{
 				Objective: analysisDef.Spec.Objectives[0],
 			},
@@ -53,12 +53,12 @@ func TestAnalysisReconciler_SendResultToChannel(t *testing.T) {
 		MaxWorkers:            2,
 		NewWorkersPoolFactory: mockFactory,
 		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
-			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) analysistypes.AnalysisResult {
+			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
 				return res
 			}},
 	}
 
-	resChan := make(chan analysistypes.AnalysisCompletion)
+	resChan := make(chan metricstypes.AnalysisCompletion)
 	a.SetAnalysisResultsChannel(resChan)
 
 	_, err := a.Reconcile(context.TODO(), req)
@@ -298,8 +298,8 @@ func TestAnalysisReconciler_ExistingAnalysisStatusIsFlushedWhenEvaluationFinishe
 		MaxWorkers:            2,
 		NewWorkersPoolFactory: mockFactory,
 		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
-			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) analysistypes.AnalysisResult {
-				return analysistypes.AnalysisResult{Pass: true}
+			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+				return metricstypes.AnalysisResult{Pass: true}
 			}},
 	}
 

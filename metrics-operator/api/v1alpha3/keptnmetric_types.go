@@ -46,7 +46,7 @@ type KeptnMetricStatus struct {
 	// ErrMsg represents the error details when the query could not be evaluated
 	ErrMsg string `json:"errMsg,omitempty"`
 	// IntervalResults contain a slice of all the interval results
-	IntervalResults []IntervalResult `json:"results,omitempty"`
+	IntervalResults []IntervalResult `json:"intervalResults,omitempty"`
 }
 
 // ProviderRef represents the provider object

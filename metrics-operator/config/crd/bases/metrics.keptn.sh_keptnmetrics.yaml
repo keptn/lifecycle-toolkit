@@ -246,11 +246,6 @@ spec:
                       past results should be stored in the status of a KeptnMetric
                     maximum: 255
                     type: integer
-                required:
-                - aggregation
-                - interval
-                - step
-                - storedResults
                 type: object
             required:
             - fetchIntervalSeconds
@@ -264,16 +259,7 @@ spec:
                 description: ErrMsg represents the error details when the query could
                   not be evaluated
                 type: string
-              lastUpdated:
-                description: LastUpdated represents the time when the status data
-                  was last updated
-                format: date-time
-                type: string
-              rawValue:
-                description: RawValue represents the resulting value in raw format
-                format: byte
-                type: string
-              results:
+              intervalResults:
                 description: IntervalResults contain a slice of all the interval results
                 items:
                   properties:
@@ -287,8 +273,8 @@ spec:
                       format: date-time
                       type: string
                     range:
-                      description: RawValue represents the resulting value in raw
-                        format
+                      description: Range represents the time range for which this
+                        data was queried
                       properties:
                         aggregation:
                           description: 'Aggregation defines the type of aggregation
@@ -318,20 +304,25 @@ spec:
                             a KeptnMetric
                           maximum: 255
                           type: integer
-                      required:
-                      - aggregation
-                      - interval
-                      - step
-                      - storedResults
                       type: object
                     value:
                       description: Value represents the resulting value
                       type: string
                   required:
                   - lastUpdated
+                  - range
                   - value
                   type: object
                 type: array
+              lastUpdated:
+                description: LastUpdated represents the time when the status data
+                  was last updated
+                format: date-time
+                type: string
+              rawValue:
+                description: RawValue represents the resulting value in raw format
+                format: byte
+                type: string
               value:
                 description: Value represents the resulting value
                 type: string

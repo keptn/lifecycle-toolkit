@@ -48,7 +48,7 @@ type AnalysisStatus struct {
 	Pass bool `json:"pass,omitempty"`
 	// Warning returns whether the analysis returned a warning
 	Warning bool `json:"warning,omitempty"`
-	// State describes the current state of the Analysis
+	// State describes the current state of the Analysis (Pending/Progressing/Completed)
 	State AnalysisState `json:"state"`
 	// StoredValues contains all analysis values that have already been retrieved successfully
 	StoredValues map[string]ProviderResult `json:"storedValues,omitempty"`

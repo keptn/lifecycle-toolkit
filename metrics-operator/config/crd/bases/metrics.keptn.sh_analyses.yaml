@@ -101,7 +101,7 @@ spec:
                 description: Raw contains the raw result of the SLO computation
                 type: string
               state:
-                description: State describes the current state of the Analysis
+                description: State describes the current state of the Analysis (Pending/Progressing/Completed)
                 type: string
               storedValues:
                 additionalProperties:

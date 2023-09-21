@@ -279,7 +279,7 @@ spec:
 
       You must annotate the `KeptnApp` resource to run the
       calling `KeptnTaskDefiniton` resource.
-        
+
       The `KeptnTaskDefinition` called with `functionref`
       is the `parent task` whose runner is used for the execution
       even if it is not the same runner defined in the

@@ -210,7 +210,7 @@ spec:
                     type: string
                   description: Args corresponds to a map of key/value pairs that can
                     be used to substitute placeholders in the AnalysisValueTemplate
-                    query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})".
+                    query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:)".
                   type: object
                 timeframe:
                   description: Timeframe specifies the range for the corresponding query

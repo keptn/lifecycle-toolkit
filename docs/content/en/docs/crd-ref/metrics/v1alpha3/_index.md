@@ -147,6 +147,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
+| `timeframe` _[Timeframe](#timeframe)_ | Timeframe describes the time frame which is evaluated by the Analysis |
 | `raw` _string_ | Raw contains the raw result of the SLO computation |
 | `pass` _boolean_ | Pass returns whether the SLO is satisfied |
 | `warning` _boolean_ | Warning returns whether the analysis returned a warning |
@@ -494,6 +495,7 @@ _Appears in:_
 
 _Appears in:_
 - [AnalysisSpec](#analysisspec)
+- [AnalysisStatus](#analysisstatus)
 
 | Field | Description |
 | --- | --- |

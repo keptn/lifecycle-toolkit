@@ -210,7 +210,7 @@ spec:
                     type: string
                   description: Args corresponds to a map of key/value pairs that can
                     be used to substitute placeholders in the AnalysisValueTemplate
-                    query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:)".
+                    query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})".
                   type: object
                 timeframe:
                   description: Timeframe specifies the range for the corresponding query
@@ -279,11 +279,33 @@ spec:
                   description: StoredValues contains all analysis values that have already
                     been retrieved successfully
                   type: object
+                timeframe:
+                  description: Timeframe describes the time frame which is evaluated
+                    by the Analysis
+                  properties:
+                    from:
+                      description: From is the time of start for the query, this field
+                        follows RFC3339 time format
+                      format: date-time
+                      type: string
+                    recent:
+                      description: Recent describes a recent timeframe using a duration
+                        string. E.g. Setting this to '5m' will cause the Analysis to
+                        be performed for the last five minutes
+                      pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                      type: string
+                    to:
+                      description: To is the time of end for the query, this field follows
+                        RFC3339 time format
+                      format: date-time
+                      type: string
+                  type: object
                 warning:
                   description: Warning returns whether the analysis returned a warning
                   type: boolean
               required:
                 - state
+                - timeframe
               type: object
           type: object
       served: true

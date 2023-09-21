@@ -2,6 +2,7 @@ package task_test
 
 import (
 	"context"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"os"
 	"testing"
 	"time"
@@ -39,6 +40,8 @@ var _ = BeforeSuite(func() {
 	_ = os.Setenv(controllercommon.FunctionRuntimeImageKey, "my-image-js")
 	_ = os.Setenv(controllercommon.PythonRuntimeImageKey, "my-image-py")
 
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
+
 	// //setup controllers here
 	controller := &keptntask.KeptnTaskReconciler{
 		Client:        k8sManager.GetClient(),
@@ -47,7 +50,6 @@ var _ = BeforeSuite(func() {
 		Log:           GinkgoLogr,
 		Meters:        common.InitKeptnMeters(),
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
-		Namespace:     KeptnNamespace,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 	close(readyToStart)

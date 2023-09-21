@@ -2,6 +2,7 @@ package workloadinstance_test
 
 import (
 	"context"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"os"
 	"testing"
 	"time"
@@ -40,6 +41,7 @@ var _ = BeforeSuite(func() {
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
 	// //setup controllers here
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
 	controller := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
 		Client:        k8sManager.GetClient(),
 		Scheme:        k8sManager.GetScheme(),
@@ -48,7 +50,6 @@ var _ = BeforeSuite(func() {
 		Meters:        common.InitKeptnMeters(),
 		SpanHandler:   &telemetry.SpanHandler{},
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
-		Namespace:     KeptnNamespace,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 	close(readyToStart)

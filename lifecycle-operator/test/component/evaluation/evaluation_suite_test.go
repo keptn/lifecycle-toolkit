@@ -2,6 +2,7 @@ package evaluation_test
 
 import (
 	"context"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"os"
 	"testing"
 	"time"
@@ -40,6 +41,7 @@ var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
 	// //setup controllers here
 	controller := &keptnevaluation.KeptnEvaluationReconciler{
 		Client:        k8sManager.GetClient(),
@@ -48,7 +50,6 @@ var _ = BeforeSuite(func() {
 		Log:           GinkgoLogr,
 		Meters:        common.InitKeptnMeters(),
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
-		Namespace:     KeptnNamespace,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 

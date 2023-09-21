@@ -35,7 +35,9 @@ differentiated by the `spec` section:
 * Pre-defined containers
 
   * Use the pre-defined `deno-runtime` runner
-    to define tasks using Deno scripts,
+    to define tasks using
+    [Deno](https://deno.com/)
+    scripts,
     which use a syntax similar to JavaScript and Typescript,
     with a few limitations.
     You can use this to specify simple actions
@@ -45,7 +47,8 @@ differentiated by the `spec` section:
     and
     [Deno-runtime examples](#examples-for-deno-runtime-runner).
   * Use the pre-defined `python-runtime` runner
-    to define your task using Python 3.
+    to define your task using
+    [Python 3](https://www.python.org/).
     See
     [Synopsis for python-runtime runner](#python-runtime)
     and
@@ -110,15 +113,22 @@ Please verify
       and code the functionality to match the container you define.
       See
       [Synopsis for container-runtime container](#synopsis-for-container-runtime).
-  * **retries** (optional) - specifies the number of times,
+  * **retries** (optional) -- specifies the number of times
     a job executing the `KeptnTaskDefinition`
     should be restarted if an attempt is unsuccessful.
-  * **timeout** (optional)* -- specifies the maximum time, in seconds,
+  * **timeout** (optional) -- specifies the maximum time, in seconds,
     to wait for the task to be completed successfully.
     If the task does not complete successfully within this time frame,
     it is considered to be failed.
 
 ## Synopsis for container-runtime
+
+Use the `container-runtime` to specify your own
+[Kubernetes container](https://kubernetes.io/docs/concepts/containers/)
+image and define almost task you want to do.
+If you are migrating from Keptn v1,
+you can use a `container-runtime` to execute
+almost anything that you implemented with JES for Keptn v1.
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v?alpha?
@@ -133,12 +143,6 @@ spec:
 ```
 
 ### Spec used only for container-runtime
-
-The `container-runtime` can be used to specify
-your own container image and define almost task you want to do.
-If you are migrating from Keptn v1,
-you can use a `container-runtime` to execute
-almost anything that you implemented with JES for Keptn v1.
 
 * **spec**
   * **container** -- Container definition.
@@ -167,10 +171,11 @@ and Keptn sets up the container and runs the script as part of the task.
 ### deno-runtime
 
 When using the `deno-runtime` runner to define a task,
-the executables are coded in Deno-script
+the executables are coded in
+[Deno-script](https://deno.com/manual),
 (which is mostly the same as JavaScript and TypeScript)
 and executed in the
-[Deno](https://deno.com/manual) runner,
+`deno-runtime` runner,
 which is a lightweight runtime environment
 that executes in your namespace.
 Note that Deno has tighter restrictions
@@ -234,6 +239,37 @@ spec:
   * **httpRef** - Specify one or two scripts to be executed at runtime
       from the remote webserver that is specified.
 
+      This syntax allows you to call a general function
+      that is used in multiple places,
+      possibly with different parameters.
+      For example, you could define a `test-script` that runs a test
+      that can be used for different purposes,
+      depending on the parameters that are passed to it.
+
+      To implement this:
+    * define the following scripts on a remote webserver
+        that Keptn can access:
+
+      * `mytest` that gives the executable code for the test
+      * `login-parameters` that sets`DATA={user: test}`
+      * `myuser-parameters` that sets`DATA={user: myuser}`  
+
+    * create a `KeptnTaskDefinition` named `login-test`
+        that uses the `httpRef` syntax to call the
+        `login-parameters` and `mytest` scripts
+        to run the login test.
+    * create a `KeptnTaskDefinition` named `myuser-test`
+        that uses the `httpRef` syntax to call the
+        `myuser-parameters` and `mytest` resources
+        to test the `myuser` login
+    * Annotate the `KeptnApp` resource to call the
+        `login-test` and `myuser-test` resources.
+        Both of these resources will then run in parallel
+        if they are both assigned to the same stage (pre- or post-deployment).
+
+      Only the first two scripts listed are executed;
+      any other scripts are silently ignored.
+
     * **deno example:**
         [Example 2: httpRef script for a Deno script](#example-2-httpref-script-for-a-deno-script)
     * **python example:**
@@ -242,9 +278,34 @@ spec:
   * **functionRef** -- Execute one or two `KeptnTaskDefinition` resources.
       Populate this field with the value(s) of the `metadata.name` field
       for each `KeptnDefinitionTask` to be called.
-      This is commonly used to call a general function
-      that is used in multiple places,
+
+      Like the `httpRef` syntax,this is commonly used
+      to call a general function that is used in multiple places,
       possibly with different parameters.
+      In this case, you could:
+    * define the following `KeptnTaskDefinition` resources:
+      * `mytest` that calls the executable for the test.
+      * `login-parameters` that sets`DATA={user: test}`
+      * `myuser-parameters` that sets`DATA={user: myuser}`  
+    * create a `KeptnTaskDefinition` named `login-test`
+        that uses the `functionRef` syntax to call the
+        `login-parameters` and `mytest` resources
+        to run the login test.
+    * create a `KeptnTaskDefinition` named `myuser-test`
+        that uses the `functionRef` syntax to call
+        the `myuser-parameters` and `mytest` resources
+        to test the `myuser` login
+    * Annotate the `KeptnApp` resource to call the
+        `login-test` and `myuser-test` resources.
+        Both of these resources will then run in parallel
+        if they are both assigned to the same stage (pre- or post-deployment).
+    * The `mytest` resource is the `parent task`
+        whose runner is used for the execution
+        even if it is not the same runner defined in the
+        `login-test` or `myuser-test` resource.
+
+      Only the first two `KeptnTaskDefinition` resources listed are executed;
+      any other scripts are silently ignored.
 
     * **deno example:**
         [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
@@ -311,11 +372,13 @@ the size of the volume is 50% of the memory allocated for the node.
 
 A task can be executed either pre-deployment or post-deployment
 as specified in the pod template specs of your Workloads
-[Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
 [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
 and
-[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/).
+[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/))
+and in the
+[KeptnApp](app.md) resource.
 See
 [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 for details.
@@ -323,25 +386,25 @@ Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
 and the revised code is picked up without additional changes.
 
+All `KeptnTaskDefinition` resources specified to the `KeptnApp` resource
+at the same stage (either pre- or post-deployment) run in parallel.
+You can run multiple executables sequentially
+either by using the `inline` syntax for a pre-defined container
+or by creating your own Kubernetes container
+and running it in the Keptn `custom-runtime` runner.
+See
+[Executing sequential tasks](#executing-sequential-tasks)
+for more information.
+
 ## Examples for a custom-runtime container
 
 For an example of a `KeptnTaskDefinition` that defines a custom container.
  see
-[container-task.yaml](<https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/container-task.yaml>.
+[container-task.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/container-task.yaml).
 This is a trivial example that just runs `busybox`,
-then spawns a shell and runs the `sleep 30` command.
-The `spec` includes:
+then spawns a shell and runs the `sleep 30` command:
 
-```yaml
-spec:
-  container:
-    name: testy-test
-    image: busybox:1.36.0
-    command:
-      - 'sh'
-      - '-c'
-      - 'sleep 30'
-```
+{{< embed path="/examples/sample-app/base/container-task.yaml" >}}
 
 This task is then referenced in the
 [app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml)

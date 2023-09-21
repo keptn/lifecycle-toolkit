@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1alpha3"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -75,6 +76,7 @@ func Test_keptnmetric(t *testing.T) {
 			wantError: false,
 		},
 	}
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -83,9 +85,8 @@ func Test_keptnmetric(t *testing.T) {
 			client := fake.NewClientBuilder().WithObjects(tt.metric).Build()
 
 			kmp := KeptnMetricProvider{
-				Log:              ctrl.Log.WithName("testytest"),
-				K8sClient:        client,
-				DefaultNamespace: KeptnNamespace,
+				Log:       ctrl.Log.WithName("testytest"),
+				K8sClient: client,
 			}
 
 			obj := klcv1alpha3.Objective{
@@ -206,13 +207,13 @@ func Test_Getkeptnmetric(t *testing.T) {
 	err := metricsapi.AddToScheme(scheme.Scheme)
 	require.Nil(t, err)
 
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			client := fake.NewClientBuilder().WithObjects(tt.metric).Build()
 			kmp := KeptnMetricProvider{
-				Log:              ctrl.Log.WithName("testytest"),
-				K8sClient:        client,
-				DefaultNamespace: KeptnNamespace,
+				Log:       ctrl.Log.WithName("testytest"),
+				K8sClient: client,
 			}
 
 			m, err := kmp.GetKeptnMetric(context.TODO(), tt.objective, tt.namespace)

@@ -7,6 +7,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	batchv1 "k8s.io/api/batch/v1"
@@ -99,12 +100,12 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	err := fakeClient.Status().Update(context.TODO(), taskDefinition)
 	require.Nil(t, err)
 
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
 		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
-		Namespace:   KeptnNamespace,
 	}
 
 	task := makeTask("my-task", namespace, taskDefinitionName)

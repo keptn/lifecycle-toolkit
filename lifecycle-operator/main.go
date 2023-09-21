@@ -19,6 +19,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"log"
 	"net/http"
 	"os"
@@ -136,6 +137,9 @@ func main() {
 	// parse the flags, so we ensure they can be set to something else than their default values
 	flag.Parse()
 
+	// inject pod namespace into common configs
+	config.Instance().SetDefaultNamespace(env.PodNamespace)
+
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	disableCacheFor := []ctrlclient.Object{&corev1.Secret{}}
@@ -194,7 +198,6 @@ func main() {
 		EventSender:   controllercommon.NewEventMultiplexer(taskLogger, taskRecorder, ceClient),
 		Meters:        keptnMeters,
 		TracerFactory: telemetry.GetOtelInstance(),
-		Namespace:     env.PodNamespace,
 	}
 	if err = (taskReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
@@ -263,7 +266,6 @@ func main() {
 		Meters:        keptnMeters,
 		TracerFactory: telemetry.GetOtelInstance(),
 		SpanHandler:   spanHandler,
-		Namespace:     env.PodNamespace,
 	}
 	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
@@ -280,7 +282,6 @@ func main() {
 		TracerFactory: telemetry.GetOtelInstance(),
 		Meters:        keptnMeters,
 		SpanHandler:   spanHandler,
-		Namespace:     env.PodNamespace,
 	}
 	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
@@ -296,7 +297,6 @@ func main() {
 		EventSender:   controllercommon.NewEventMultiplexer(evaluationLogger, evaluationRecorder, ceClient),
 		TracerFactory: telemetry.GetOtelInstance(),
 		Meters:        keptnMeters,
-		Namespace:     env.PodNamespace,
 	}
 	if err = (evaluationReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")

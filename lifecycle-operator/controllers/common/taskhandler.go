@@ -22,12 +22,11 @@ import (
 
 type TaskHandler struct {
 	client.Client
-	EventSender      IEvent
-	Log              logr.Logger
-	Tracer           trace.Tracer
-	Scheme           *runtime.Scheme
-	SpanHandler      telemetry.ISpanHandler
-	DefaultNamespace string
+	EventSender IEvent
+	Log         logr.Logger
+	Tracer      trace.Tracer
+	Scheme      *runtime.Scheme
+	SpanHandler telemetry.ISpanHandler
 }
 
 type CreateTaskAttributes struct {
@@ -159,7 +158,7 @@ func (r TaskHandler) setupTasks(taskCreateAttributes CreateTaskAttributes, piWra
 }
 
 func (r TaskHandler) handleTaskNotExists(ctx context.Context, phaseCtx context.Context, taskCreateAttributes CreateTaskAttributes, taskName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, task *klcv1alpha3.KeptnTask, taskStatus *klcv1alpha3.ItemStatus) error {
-	definition, err := GetTaskDefinition(r.Client, r.Log, ctx, taskName, piWrapper.GetNamespace(), r.DefaultNamespace)
+	definition, err := GetTaskDefinition(r.Client, r.Log, ctx, taskName, piWrapper.GetNamespace())
 	if err != nil {
 		r.Log.Error(err, "could not find KeptnTaskDefinition")
 		return controllererrors.ErrCannotGetKeptnTaskDefinition

@@ -20,11 +20,17 @@ import (
 //			GetCreationRequestTimeoutFunc: func() time.Duration {
 //				panic("mock out the GetCreationRequestTimeout method")
 //			},
+//			GetDefaultNamespaceFunc: func() string {
+//				panic("mock out the GetDefaultNamespace method")
+//			},
 //			SetCloudEventsEndpointFunc: func(endpoint string)  {
 //				panic("mock out the SetCloudEventsEndpoint method")
 //			},
 //			SetCreationRequestTimeoutFunc: func(value time.Duration)  {
 //				panic("mock out the SetCreationRequestTimeout method")
+//			},
+//			SetDefaultNamespaceFunc: func(namespace string)  {
+//				panic("mock out the SetDefaultNamespace method")
 //			},
 //		}
 //
@@ -39,11 +45,17 @@ type MockConfig struct {
 	// GetCreationRequestTimeoutFunc mocks the GetCreationRequestTimeout method.
 	GetCreationRequestTimeoutFunc func() time.Duration
 
+	// GetDefaultNamespaceFunc mocks the GetDefaultNamespace method.
+	GetDefaultNamespaceFunc func() string
+
 	// SetCloudEventsEndpointFunc mocks the SetCloudEventsEndpoint method.
 	SetCloudEventsEndpointFunc func(endpoint string)
 
 	// SetCreationRequestTimeoutFunc mocks the SetCreationRequestTimeout method.
 	SetCreationRequestTimeoutFunc func(value time.Duration)
+
+	// SetDefaultNamespaceFunc mocks the SetDefaultNamespace method.
+	SetDefaultNamespaceFunc func(namespace string)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -52,6 +64,9 @@ type MockConfig struct {
 		}
 		// GetCreationRequestTimeout holds details about calls to the GetCreationRequestTimeout method.
 		GetCreationRequestTimeout []struct {
+		}
+		// GetDefaultNamespace holds details about calls to the GetDefaultNamespace method.
+		GetDefaultNamespace []struct {
 		}
 		// SetCloudEventsEndpoint holds details about calls to the SetCloudEventsEndpoint method.
 		SetCloudEventsEndpoint []struct {
@@ -63,11 +78,18 @@ type MockConfig struct {
 			// Value is the value argument value.
 			Value time.Duration
 		}
+		// SetDefaultNamespace holds details about calls to the SetDefaultNamespace method.
+		SetDefaultNamespace []struct {
+			// Namespace is the namespace argument value.
+			Namespace string
+		}
 	}
 	lockGetCloudEventsEndpoint    sync.RWMutex
 	lockGetCreationRequestTimeout sync.RWMutex
+	lockGetDefaultNamespace       sync.RWMutex
 	lockSetCloudEventsEndpoint    sync.RWMutex
 	lockSetCreationRequestTimeout sync.RWMutex
+	lockSetDefaultNamespace       sync.RWMutex
 }
 
 // GetCloudEventsEndpoint calls GetCloudEventsEndpointFunc.
@@ -121,6 +143,33 @@ func (mock *MockConfig) GetCreationRequestTimeoutCalls() []struct {
 	mock.lockGetCreationRequestTimeout.RLock()
 	calls = mock.calls.GetCreationRequestTimeout
 	mock.lockGetCreationRequestTimeout.RUnlock()
+	return calls
+}
+
+// GetDefaultNamespace calls GetDefaultNamespaceFunc.
+func (mock *MockConfig) GetDefaultNamespace() string {
+	if mock.GetDefaultNamespaceFunc == nil {
+		panic("MockConfig.GetDefaultNamespaceFunc: method is nil but IConfig.GetDefaultNamespace was just called")
+	}
+	callInfo := struct {
+	}{}
+	mock.lockGetDefaultNamespace.Lock()
+	mock.calls.GetDefaultNamespace = append(mock.calls.GetDefaultNamespace, callInfo)
+	mock.lockGetDefaultNamespace.Unlock()
+	return mock.GetDefaultNamespaceFunc()
+}
+
+// GetDefaultNamespaceCalls gets all the calls that were made to GetDefaultNamespace.
+// Check the length with:
+//
+//	len(mockedIConfig.GetDefaultNamespaceCalls())
+func (mock *MockConfig) GetDefaultNamespaceCalls() []struct {
+} {
+	var calls []struct {
+	}
+	mock.lockGetDefaultNamespace.RLock()
+	calls = mock.calls.GetDefaultNamespace
+	mock.lockGetDefaultNamespace.RUnlock()
 	return calls
 }
 
@@ -185,5 +234,37 @@ func (mock *MockConfig) SetCreationRequestTimeoutCalls() []struct {
 	mock.lockSetCreationRequestTimeout.RLock()
 	calls = mock.calls.SetCreationRequestTimeout
 	mock.lockSetCreationRequestTimeout.RUnlock()
+	return calls
+}
+
+// SetDefaultNamespace calls SetDefaultNamespaceFunc.
+func (mock *MockConfig) SetDefaultNamespace(namespace string) {
+	if mock.SetDefaultNamespaceFunc == nil {
+		panic("MockConfig.SetDefaultNamespaceFunc: method is nil but IConfig.SetDefaultNamespace was just called")
+	}
+	callInfo := struct {
+		Namespace string
+	}{
+		Namespace: namespace,
+	}
+	mock.lockSetDefaultNamespace.Lock()
+	mock.calls.SetDefaultNamespace = append(mock.calls.SetDefaultNamespace, callInfo)
+	mock.lockSetDefaultNamespace.Unlock()
+	mock.SetDefaultNamespaceFunc(namespace)
+}
+
+// SetDefaultNamespaceCalls gets all the calls that were made to SetDefaultNamespace.
+// Check the length with:
+//
+//	len(mockedIConfig.SetDefaultNamespaceCalls())
+func (mock *MockConfig) SetDefaultNamespaceCalls() []struct {
+	Namespace string
+} {
+	var calls []struct {
+		Namespace string
+	}
+	mock.lockSetDefaultNamespace.RLock()
+	calls = mock.calls.SetDefaultNamespace
+	mock.lockSetDefaultNamespace.RUnlock()
 	return calls
 }

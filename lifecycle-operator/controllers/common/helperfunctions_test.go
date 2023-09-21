@@ -6,6 +6,7 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -422,10 +423,12 @@ func Test_GetTaskDefinition(t *testing.T) {
 	err := klcv1alpha3.AddToScheme(scheme.Scheme)
 	require.Nil(t, err)
 
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			client := fake.NewClientBuilder().WithObjects(tt.taskDef).Build()
-			d, err := GetTaskDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.taskDefName, tt.taskDefNamespace, KeptnNamespace)
+			d, err := GetTaskDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.taskDefName, tt.taskDefNamespace)
 			if tt.out != nil && d != nil {
 				require.Equal(t, tt.out.Name, d.Name)
 				require.Equal(t, tt.out.Namespace, d.Namespace)
@@ -503,11 +506,12 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 
 	err := klcv1alpha3.AddToScheme(scheme.Scheme)
 	require.Nil(t, err)
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			client := fake.NewClientBuilder().WithObjects(tt.evalDef).Build()
-			d, err := GetEvaluationDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.evalDefName, tt.evalDefNamespace, KeptnNamespace)
+			d, err := GetEvaluationDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.evalDefName, tt.evalDefNamespace)
 			if tt.out != nil && d != nil {
 				require.Equal(t, tt.out.Name, d.Name)
 				require.Equal(t, tt.out.Namespace, d.Namespace)

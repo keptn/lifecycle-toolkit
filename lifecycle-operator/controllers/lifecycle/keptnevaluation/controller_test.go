@@ -9,6 +9,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1alpha3"
@@ -23,8 +24,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
-
-const KeptnNamespace = "klt-namespace"
 
 func TestKeptnEvaluationReconciler_Reconcile_FailEvaluation(t *testing.T) {
 
@@ -256,6 +255,8 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 	provider := metric.NewMeterProvider()
 	meter := provider.Meter("keptn/task")
 
+	config.Instance().SetDefaultNamespace("keptn")
+
 	r := &KeptnEvaluationReconciler{
 		Client:        fakeClient,
 		Scheme:        fakeClient.Scheme(),
@@ -263,7 +264,6 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 		EventSender:   controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Meters:        telemetry.SetUpKeptnTaskMeters(meter),
 		TracerFactory: tf,
-		Namespace:     "keptn",
 	}
 	return r, fakeClient
 }

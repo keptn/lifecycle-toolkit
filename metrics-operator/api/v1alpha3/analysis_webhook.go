@@ -29,9 +29,9 @@ import (
 // Analysislog is for logging in this package.
 var Analysislog = logf.Log.WithName("analysis-webhook")
 
-func (r *Analysis) SetupWebhookWithManager(mgr ctrl.Manager) error {
+func (a *Analysis) SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
-		For(r).
+		For(a).
 		Complete()
 }
 

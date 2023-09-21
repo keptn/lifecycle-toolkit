@@ -23,7 +23,7 @@ type KeptnPrometheusProvider struct {
 	HttpClient http.Client
 }
 
-func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error) {
+func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
@@ -35,11 +35,11 @@ func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query 
 	r.Log.Info(fmt.Sprintf(
 		"Running query: /api/v1/query_range?query=%s&start=%d&end=%d",
 		query,
-		spec.From.Unix(), spec.To.Unix(),
+		analysis.GetFromTime().Unix(), analysis.GetToTime().Unix(),
 	))
 	queryRange := prometheus.Range{
-		Start: spec.From.Time,
-		End:   spec.To.Time,
+		Start: analysis.GetFromTime(),
+		End:   analysis.GetToTime(),
 		Step:  time.Minute,
 	}
 	result, warnings, err := api.QueryRange(

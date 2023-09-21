@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -76,12 +77,24 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		return ctrl.Result{}, nil
 	}
 
+	// make sure the correct time frame is set in the status - once an Analysis with a duration string specifying the
+	// time frame is triggered, the time frame derived from that duration should stay the same and not shift over the course
+	// of multiple reconciliation loops
+	if analysis.Status.Timeframe.From.IsZero() || analysis.Status.Timeframe.To.IsZero() {
+		analysis.Status.Timeframe.From = metav1.Time{
+			Time: analysis.Spec.GetFrom(),
+		}
+		analysis.Status.Timeframe.To = metav1.Time{
+			Time: analysis.Spec.GetTo(),
+		}
+	}
+
 	//find AnalysisDefinition to have the collection of Objectives
 	analysisDef, err := a.retrieveAnalysisDefinition(ctx, analysis)
 	if err != nil {
 		// do not return error, as here we should always try to fetch the definition again
 		// in the next reconcile loop
-		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, a.updateStatus(ctx, analysis)
 	}
 
 	if analysis.Status.State.IsPending() {

@@ -21,7 +21,7 @@ import (
 //			EvaluateQueryForStepFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
 //				panic("mock out the EvaluateQueryForStep method")
 //			},
-//			FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error) {
+//			FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 //				panic("mock out the FetchAnalysisValue method")
 //			},
 //		}
@@ -38,7 +38,7 @@ type KeptnSLIProviderMock struct {
 	EvaluateQueryForStepFunc func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error)
 
 	// FetchAnalysisValueFunc mocks the FetchAnalysisValue method.
-	FetchAnalysisValueFunc func(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error)
+	FetchAnalysisValueFunc func(ctx context.Context, query string, spec metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -67,7 +67,7 @@ type KeptnSLIProviderMock struct {
 			// Query is the query argument value.
 			Query string
 			// Spec is the spec argument value.
-			Spec metricsapi.AnalysisSpec
+			Spec metricsapi.Analysis
 			// Provider is the provider argument value.
 			Provider *metricsapi.KeptnMetricsProvider
 		}
@@ -158,14 +158,14 @@ func (mock *KeptnSLIProviderMock) EvaluateQueryForStepCalls() []struct {
 }
 
 // FetchAnalysisValue calls FetchAnalysisValueFunc.
-func (mock *KeptnSLIProviderMock) FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error) {
+func (mock *KeptnSLIProviderMock) FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 	if mock.FetchAnalysisValueFunc == nil {
 		panic("KeptnSLIProviderMock.FetchAnalysisValueFunc: method is nil but KeptnSLIProvider.FetchAnalysisValue was just called")
 	}
 	callInfo := struct {
 		Ctx      context.Context
 		Query    string
-		Spec     metricsapi.AnalysisSpec
+		Spec     metricsapi.Analysis
 		Provider *metricsapi.KeptnMetricsProvider
 	}{
 		Ctx:      ctx,
@@ -186,13 +186,13 @@ func (mock *KeptnSLIProviderMock) FetchAnalysisValue(ctx context.Context, query 
 func (mock *KeptnSLIProviderMock) FetchAnalysisValueCalls() []struct {
 	Ctx      context.Context
 	Query    string
-	Spec     metricsapi.AnalysisSpec
+	Spec     metricsapi.Analysis
 	Provider *metricsapi.KeptnMetricsProvider
 } {
 	var calls []struct {
 		Ctx      context.Context
 		Query    string
-		Spec     metricsapi.AnalysisSpec
+		Spec     metricsapi.Analysis
 		Provider *metricsapi.KeptnMetricsProvider
 	}
 	mock.lockFetchAnalysisValue.RLock()

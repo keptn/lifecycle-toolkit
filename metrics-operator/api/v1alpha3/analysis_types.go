@@ -18,6 +18,7 @@ package v1alpha3
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"time"
 )
 
 // AnalysisSpec defines the desired state of Analysis
@@ -42,6 +43,8 @@ type ProviderResult struct {
 
 // AnalysisStatus stores the status of the overall analysis returns also pass or warnings
 type AnalysisStatus struct {
+	// Timeframe describes the time frame which is evaluated by the Analysis
+	Timeframe Timeframe `json:"timeframe"`
 	// Raw contains the raw result of the SLO computation
 	Raw string `json:"raw,omitempty"`
 	// Pass returns whether the SLO is satisfied
@@ -91,6 +94,28 @@ type Timeframe struct {
 	// +kubebuilder:validation:Type:=string
 	// +optional
 	Recent metav1.Duration `json:"recent,omitempty"`
+}
+
+func (a *Analysis) GetFromTime() time.Time {
+	return a.Status.Timeframe.GetFrom()
+}
+
+func (a *Analysis) GetToTime() time.Time {
+	return a.Status.Timeframe.GetTo()
+}
+
+func (t *Timeframe) GetFrom() time.Time {
+	if t.Recent.Duration > 0 {
+		return time.Now().UTC().Add(-t.Recent.Duration)
+	}
+	return t.From.Time
+}
+
+func (t *Timeframe) GetTo() time.Time {
+	if t.Recent.Duration > 0 {
+		return time.Now().UTC()
+	}
+	return t.To.Time
 }
 
 func init() {

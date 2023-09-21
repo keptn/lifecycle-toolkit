@@ -499,6 +499,7 @@ _Appears in:_
 | --- | --- |
 | `from` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | From is the time of start for the query, this field follows RFC3339 time format |
 | `to` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | To is the time of end for the query, this field follows RFC3339 time format |
+| `recent` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ | Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' will cause the Analysis to be performed for the last five minutes |
 
 
 #### TotalScore

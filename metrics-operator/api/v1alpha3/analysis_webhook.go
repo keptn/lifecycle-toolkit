@@ -70,8 +70,8 @@ func (a *Analysis) ValidateDelete() (admission.Warnings, error) {
 
 func (a *Analysis) validateTimeframe() error {
 	// if 'Recent'  is set, this must be the only field
-	if a.Spec.Timeframe.Recent != nil {
-		if a.Spec.Timeframe.From != nil || a.Spec.Timeframe.To != nil {
+	if a.Spec.Timeframe.Recent.Duration != 0 {
+		if !a.Spec.Timeframe.From.IsZero() || !a.Spec.Timeframe.To.IsZero() {
 			return field.Invalid(
 				field.NewPath("spec").Child("timeframe"),
 				a.Spec.Timeframe,
@@ -81,7 +81,7 @@ func (a *Analysis) validateTimeframe() error {
 		return nil
 	}
 	// if 'Recent' is not set, both 'From' and 'To' must be set
-	if a.Spec.Timeframe.From == nil || a.Spec.Timeframe.To == nil {
+	if a.Spec.Timeframe.From.IsZero() || a.Spec.Timeframe.To.IsZero() {
 		return field.Invalid(
 			field.NewPath("spec").Child("timeframe"),
 			a.Spec.Timeframe,

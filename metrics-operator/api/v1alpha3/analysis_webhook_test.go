@@ -26,10 +26,10 @@ func TestAnalysis_ValidateCreate(t *testing.T) {
 			fields: fields{
 				Spec: AnalysisSpec{
 					Timeframe: Timeframe{
-						From: &v1.Time{
+						From: v1.Time{
 							Time: time.Now(),
 						},
-						To: &v1.Time{
+						To: v1.Time{
 							Time: time.Now().Add(1 * time.Second),
 						},
 					},
@@ -43,7 +43,7 @@ func TestAnalysis_ValidateCreate(t *testing.T) {
 			fields: fields{
 				Spec: AnalysisSpec{
 					Timeframe: Timeframe{
-						Recent: &v1.Duration{
+						Recent: v1.Duration{
 							Duration: 5 * time.Second,
 						},
 					},
@@ -57,10 +57,10 @@ func TestAnalysis_ValidateCreate(t *testing.T) {
 			fields: fields{
 				Spec: AnalysisSpec{
 					Timeframe: Timeframe{
-						From: &v1.Time{
+						From: v1.Time{
 							Time: time.Now().Add(1 * time.Second),
 						},
-						To: &v1.Time{
+						To: v1.Time{
 							Time: time.Now(),
 						},
 					},
@@ -74,7 +74,7 @@ func TestAnalysis_ValidateCreate(t *testing.T) {
 			fields: fields{
 				Spec: AnalysisSpec{
 					Timeframe: Timeframe{
-						To: &v1.Time{
+						To: v1.Time{
 							Time: time.Now(),
 						},
 					},
@@ -88,7 +88,7 @@ func TestAnalysis_ValidateCreate(t *testing.T) {
 			fields: fields{
 				Spec: AnalysisSpec{
 					Timeframe: Timeframe{
-						From: &v1.Time{
+						From: v1.Time{
 							Time: time.Now(),
 						},
 					},
@@ -102,10 +102,10 @@ func TestAnalysis_ValidateCreate(t *testing.T) {
 			fields: fields{
 				Spec: AnalysisSpec{
 					Timeframe: Timeframe{
-						From: &v1.Time{
+						From: v1.Time{
 							Time: time.Now(),
 						},
-						Recent: &v1.Duration{
+						Recent: v1.Duration{
 							Duration: 1 * time.Second,
 						},
 					},

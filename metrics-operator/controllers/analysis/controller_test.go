@@ -22,6 +22,56 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+func TestAnalysisReconciler_SendResultToChannel(t *testing.T) {
+	analysis, analysisDef, template, _ := getTestCRDs()
+	fakeclient := fake2.NewClient(&analysis, &analysisDef, &template)
+	res := metricstypes.AnalysisResult{
+		Pass: true,
+		ObjectiveResults: []metricstypes.ObjectiveResult{
+			{
+				Objective: analysisDef.Spec.Objectives[0],
+			},
+		},
+	}
+
+	req := controllerruntime.Request{
+		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
+	}
+	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, obj []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
+		mymock := fake.IAnalysisPoolMock{
+			DispatchAndCollectFunc: func(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
+				return map[string]metricsapi.ProviderResult{}, nil
+			},
+		}
+		return ctx, &mymock
+	}
+
+	a := &AnalysisReconciler{
+		Client:                fakeclient,
+		Scheme:                fakeclient.Scheme(),
+		Log:                   testr.New(t),
+		MaxWorkers:            2,
+		NewWorkersPoolFactory: mockFactory,
+		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
+			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+				return res
+			}},
+	}
+
+	resChan := make(chan metricstypes.AnalysisCompletion)
+	a.SetAnalysisResultsChannel(resChan)
+
+	_, err := a.Reconcile(context.TODO(), req)
+	require.Nil(t, err)
+
+	select {
+	case <-time.After(5 * time.Second):
+		t.Error("timed out waiting for the analysis result to be reported")
+	case analysisResult := <-resChan:
+		require.Equal(t, "my-analysis", analysisResult.Analysis.Name)
+	}
+}
+
 func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 
 	analysis, analysisDef, template, _ := getTestCRDs()

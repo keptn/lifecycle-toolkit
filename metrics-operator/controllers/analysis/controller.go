@@ -26,6 +26,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
+	evalType "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"golang.org/x/exp/maps"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -44,6 +45,7 @@ type AnalysisReconciler struct {
 	MaxWorkers int //maybe 2 or 4 as def
 	NewWorkersPoolFactory
 	common.IAnalysisEvaluator
+	analysisResults chan evalType.AnalysisCompletion
 }
 
 //+kubebuilder:rbac:groups=metrics.keptn.sh,resources=analyses,verbs=get;list;watch;create;update;patch;delete
@@ -105,7 +107,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	maps.Copy(res, done)
-	a.evaluateObjectives(ctx, res, analysisDef, analysis)
+	a.evaluateObjectives(res, analysisDef, analysis)
 	if err := a.updateStatus(ctx, analysis); err != nil {
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
@@ -113,7 +115,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	return ctrl.Result{}, nil
 }
 
-func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[string]metricsapi.ProviderResult, analysisDef *metricsapi.AnalysisDefinition, analysis *metricsapi.Analysis) {
+func (a *AnalysisReconciler) evaluateObjectives(res map[string]metricsapi.ProviderResult, analysisDef *metricsapi.AnalysisDefinition, analysis *metricsapi.Analysis) {
 	eval := a.Evaluate(res, analysisDef)
 	analysisResultJSON, err := json.Marshal(eval)
 	if err != nil {
@@ -126,6 +128,22 @@ func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[str
 	analysis.Status.State = metricsapi.StateCompleted
 	// if evaluation was successful remove the stored values
 	analysis.Status.StoredValues = nil
+	go a.reportAnalysisResult(eval, *analysis)
+}
+
+func (a *AnalysisReconciler) reportAnalysisResult(eval evalType.AnalysisResult, analysis metricsapi.Analysis) {
+	if a.analysisResults == nil {
+		return
+	}
+
+	a.analysisResults <- evalType.AnalysisCompletion{
+		Result:   eval,
+		Analysis: analysis,
+	}
+}
+
+func (a *AnalysisReconciler) SetAnalysisResultsChannel(c chan evalType.AnalysisCompletion) {
+	a.analysisResults = c
 }
 
 func (a *AnalysisReconciler) updateStatus(ctx context.Context, analysis *metricsapi.Analysis) error {

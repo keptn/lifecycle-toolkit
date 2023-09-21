@@ -141,14 +141,14 @@ func removePodGates(ctx context.Context, c client.Client, log logr.Logger, podNa
 		return err
 	}
 
-	if pod.Annotations[apicommon.SchedullingGateRemoved] != "" {
+	if pod.Annotations[apicommon.SchedulingGateRemoved] != "" {
 		return nil
 	}
 
 	if len(pod.Annotations) == 0 {
 		pod.Annotations = make(map[string]string, 1)
 	}
-	pod.Annotations[apicommon.SchedullingGateRemoved] = "true"
+	pod.Annotations[apicommon.SchedulingGateRemoved] = "true"
 	pod.Spec.SchedulingGates = nil
 	return c.Update(ctx, pod)
 }

@@ -1208,7 +1208,7 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 	}, workload.Spec)
 }
 
-func TestPodMutatingWebhook_Handle_SchedullingGates(t *testing.T) {
+func TestPodMutatingWebhook_Handle_SchedulingGates(t *testing.T) {
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "example-pod",
@@ -1252,12 +1252,12 @@ func TestPodMutatingWebhook_Handle_SchedullingGates(t *testing.T) {
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
-		SchedullingGatesEnabled: true,
-		Client:                  fakeClient,
-		Tracer:                  tr,
-		Decoder:                 decoder,
-		EventSender:             controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		Log:                     testr.New(t),
+		SchedulingGatesEnabled: true,
+		Client:                 fakeClient,
+		Tracer:                 tr,
+		Decoder:                decoder,
+		EventSender:            controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		Log:                    testr.New(t),
 	}
 
 	// Convert the Pod object to a byte array

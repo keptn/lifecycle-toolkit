@@ -255,15 +255,15 @@ func main() {
 	workloadInstanceLogger := ctrl.Log.WithName("KeptnWorkloadInstance Controller").V(env.KeptnWorkloadInstanceControllerLogLevel)
 	workloadInstanceRecorder := mgr.GetEventRecorderFor("keptnworkloadinstance-controller")
 	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-		SchedullingGatesEnabled: false,
-		RemoveGates:             controllercommon.RemoveGates,
-		Client:                  mgr.GetClient(),
-		Scheme:                  mgr.GetScheme(),
-		Log:                     workloadInstanceLogger,
-		EventSender:             controllercommon.NewEventMultiplexer(workloadInstanceLogger, workloadInstanceRecorder, ceClient),
-		Meters:                  keptnMeters,
-		TracerFactory:           telemetry.GetOtelInstance(),
-		SpanHandler:             spanHandler,
+		SchedulingGatesEnabled: false,
+		RemoveGates:            controllercommon.RemoveGates,
+		Client:                 mgr.GetClient(),
+		Scheme:                 mgr.GetScheme(),
+		Log:                    workloadInstanceLogger,
+		EventSender:            controllercommon.NewEventMultiplexer(workloadInstanceLogger, workloadInstanceRecorder, ceClient),
+		Meters:                 keptnMeters,
+		TracerFactory:          telemetry.GetOtelInstance(),
+		SpanHandler:            spanHandler,
 	}
 	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
@@ -362,12 +362,12 @@ func main() {
 		webhookBuilder.Register(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
 				Handler: &pod_mutator.PodMutatingWebhook{
-					SchedullingGatesEnabled: false,
-					Client:                  mgr.GetClient(),
-					Tracer:                  otel.Tracer("keptn/webhook"),
-					EventSender:             controllercommon.NewEventMultiplexer(webhookLogger, webhookRecorder, ceClient),
-					Decoder:                 admission.NewDecoder(mgr.GetScheme()),
-					Log:                     webhookLogger,
+					SchedulingGatesEnabled: false,
+					Client:                 mgr.GetClient(),
+					Tracer:                 otel.Tracer("keptn/webhook"),
+					EventSender:            controllercommon.NewEventMultiplexer(webhookLogger, webhookRecorder, ceClient),
+					Decoder:                admission.NewDecoder(mgr.GetScheme()),
+					Log:                    webhookLogger,
 				},
 			},
 		})

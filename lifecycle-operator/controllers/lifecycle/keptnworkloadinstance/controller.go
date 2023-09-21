@@ -48,14 +48,14 @@ type RemoveGatesFunc func(ctx context.Context, c client.Client, log logr.Logger,
 // KeptnWorkloadInstanceReconciler reconciles a KeptnWorkloadInstance object
 type KeptnWorkloadInstanceReconciler struct {
 	client.Client
-	Scheme                  *runtime.Scheme
-	EventSender             controllercommon.IEvent
-	Log                     logr.Logger
-	Meters                  apicommon.KeptnMeters
-	SpanHandler             *telemetry.SpanHandler
-	TracerFactory           telemetry.TracerFactory
-	SchedullingGatesEnabled bool
-	RemoveGates             RemoveGatesFunc
+	Scheme                 *runtime.Scheme
+	EventSender            controllercommon.IEvent
+	Log                    logr.Logger
+	Meters                 apicommon.KeptnMeters
+	SpanHandler            *telemetry.SpanHandler
+	TracerFactory          telemetry.TracerFactory
+	SchedulingGatesEnabled bool
+	RemoveGates            RemoveGatesFunc
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
@@ -75,7 +75,7 @@ type KeptnWorkloadInstanceReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 //
-//nolint:gocyclo
+//nolint:gocyclo,gocognit
 func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.Log.Info("Searching for KeptnWorkloadInstance")
 
@@ -142,10 +142,10 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 	}
 
-	if r.SchedullingGatesEnabled {
+	if r.SchedulingGatesEnabled {
 		// pre-evaluation checks done at this moment, we can remove the gate
 		if err := r.RemoveGates(ctx, r.Client, r.Log, workloadInstance); err != nil {
-			r.Log.Error(err, "could not remove SchedullingGates")
+			r.Log.Error(err, "could not remove SchedulingGates")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 	}

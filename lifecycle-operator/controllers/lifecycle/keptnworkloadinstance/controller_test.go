@@ -808,7 +808,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) 
 	}
 }
 
-func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion_schedullingGates(t *testing.T) {
+func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion_SchedulingGates(t *testing.T) {
 
 	testNamespace := "some-ns"
 
@@ -861,7 +861,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion_schedullingGat
 		called = <-ch
 	}()
 	r, eventChannel, _ := setupReconciler(wi, app)
-	r.SchedullingGatesEnabled = true
+	r.SchedulingGatesEnabled = true
 	r.RemoveGates = func(ctx context.Context, c client.Client, log logr.Logger, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error {
 		ch <- true
 		return nil
@@ -889,14 +889,18 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion_schedullingGat
 	}
 
 	for _, e := range expectedEvents {
-		event := <-eventChannel
-		assert.Equal(t, strings.Contains(event, req.Name), true, "wrong workloadinstance")
-		assert.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
-		assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+		select {
+		case event := <-eventChannel:
+			assert.Equal(t, strings.Contains(event, req.Name), true, "wrong workloadinstance")
+			assert.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
+			assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+		case <-time.After(5 * time.Second):
+			t.Error("Didn't receive the cloud event")
+		}
 	}
 }
 
-func TestKeptnWorkloadInstanceReconciler_RmoveGates_fail(t *testing.T) {
+func TestKeptnWorkloadInstanceReconciler_RemoveGates_fail(t *testing.T) {
 
 	testNamespace := "some-ns"
 
@@ -943,7 +947,7 @@ func TestKeptnWorkloadInstanceReconciler_RmoveGates_fail(t *testing.T) {
 		},
 	)
 	r, _, _ := setupReconciler(wi, app)
-	r.SchedullingGatesEnabled = true
+	r.SchedulingGatesEnabled = true
 	r.RemoveGates = func(ctx context.Context, c client.Client, log logr.Logger, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error {
 		return fmt.Errorf("err")
 	}

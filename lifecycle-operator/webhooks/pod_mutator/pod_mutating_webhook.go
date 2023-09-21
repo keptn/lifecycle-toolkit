@@ -36,12 +36,12 @@ import (
 
 // PodMutatingWebhook annotates Pods
 type PodMutatingWebhook struct {
-	Client                  client.Client
-	Tracer                  trace.Tracer
-	Decoder                 *admission.Decoder
-	EventSender             controllercommon.IEvent
-	Log                     logr.Logger
-	SchedullingGatesEnabled bool
+	Client                 client.Client
+	Tracer                 trace.Tracer
+	Decoder                *admission.Decoder
+	EventSender            controllercommon.IEvent
+	Log                    logr.Logger
+	SchedulingGatesEnabled bool
 }
 
 const InvalidAnnotationMessage = "Invalid annotations"
@@ -100,9 +100,9 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	}
 
 	if podIsAnnotated {
-		_, gateRemoved := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.SchedullingGateRemoved, "")
+		_, gateRemoved := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.SchedulingGateRemoved, "")
 		logger.Info("Resource is annotated with Keptn annotations")
-		if a.SchedullingGatesEnabled {
+		if a.SchedulingGatesEnabled {
 			if !gateRemoved {
 				pod.Spec.SchedulingGates = []corev1.PodSchedulingGate{
 					{

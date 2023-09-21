@@ -91,6 +91,8 @@ type envConfig struct {
 	KeptnWorkloadInstanceControllerLogLevel   int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
+	SchedulingGatesEnabled bool `envconfig:"SCHEDULING_GATES_ENABLED" default:"false"`
+
 	KeptnOptionsCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
 
@@ -255,7 +257,7 @@ func main() {
 	workloadInstanceLogger := ctrl.Log.WithName("KeptnWorkloadInstance Controller").V(env.KeptnWorkloadInstanceControllerLogLevel)
 	workloadInstanceRecorder := mgr.GetEventRecorderFor("keptnworkloadinstance-controller")
 	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-		SchedulingGatesHandler: controllercommon.NewSchedulingGatesHandler(mgr.GetClient(), workloadInstanceLogger, false),
+		SchedulingGatesHandler: controllercommon.NewSchedulingGatesHandler(mgr.GetClient(), workloadInstanceLogger, env.SchedulingGatesEnabled),
 		Client:                 mgr.GetClient(),
 		Scheme:                 mgr.GetScheme(),
 		Log:                    workloadInstanceLogger,
@@ -361,7 +363,7 @@ func main() {
 		webhookBuilder.Register(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
 				Handler: &pod_mutator.PodMutatingWebhook{
-					SchedulingGatesEnabled: false,
+					SchedulingGatesEnabled: env.SchedulingGatesEnabled,
 					Client:                 mgr.GetClient(),
 					Tracer:                 otel.Tracer("keptn/webhook"),
 					EventSender:            controllercommon.NewEventMultiplexer(webhookLogger, webhookRecorder, ceClient),

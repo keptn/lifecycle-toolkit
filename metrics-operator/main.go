@@ -157,9 +157,6 @@ func main() {
 
 	go serveMetrics()
 
-	// Set the metric value as soon as the operator starts
-	keptnMetricActive.Add(context.Background(), 1)
-
 	// Start the custom metrics adapter
 	go startCustomMetricsAdapter(env.PodNamespace)
 
@@ -258,6 +255,9 @@ func main() {
 		webhookBuilder.Register(mgr, nil)
 		setupLog.Info("starting webhook")
 	}
+
+	// Set the metric value as soon as the operator starts
+	keptnMetricActive.Add(context.Background(), 1)
 	setupLog.Info("starting manager")
 	setupLog.Info("Keptn metrics-operator is alive")
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {

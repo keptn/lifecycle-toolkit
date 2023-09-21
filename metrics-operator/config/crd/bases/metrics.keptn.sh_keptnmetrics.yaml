@@ -241,6 +241,11 @@ spec:
                     description: Step represents the query resolution step width for
                       the data query
                     type: string
+                  storedResults:
+                    description: StoredResults indicates the upper limit of how many
+                      past results should be stored in the status of a KeptnMetric
+                    maximum: 255
+                    type: integer
                 type: object
             required:
             - fetchIntervalSeconds
@@ -254,6 +259,61 @@ spec:
                 description: ErrMsg represents the error details when the query could
                   not be evaluated
                 type: string
+              intervalResults:
+                description: IntervalResults contain a slice of all the interval results
+                items:
+                  properties:
+                    errMsg:
+                      description: ErrMsg represents the error details when the query
+                        could not be evaluated
+                      type: string
+                    lastUpdated:
+                      description: LastUpdated represents the time when the status
+                        data was last updated
+                      format: date-time
+                      type: string
+                    range:
+                      description: Range represents the time range for which this
+                        data was queried
+                      properties:
+                        aggregation:
+                          description: 'Aggregation defines the type of aggregation
+                            function to be applied on the data. Accepted values: p90,
+                            p95, p99, max, min, avg, median'
+                          enum:
+                          - p90
+                          - p95
+                          - p99
+                          - max
+                          - min
+                          - avg
+                          - median
+                          type: string
+                        interval:
+                          default: 5m
+                          description: Interval specifies the duration of the time
+                            interval for the data query
+                          type: string
+                        step:
+                          description: Step represents the query resolution step width
+                            for the data query
+                          type: string
+                        storedResults:
+                          description: StoredResults indicates the upper limit of
+                            how many past results should be stored in the status of
+                            a KeptnMetric
+                          maximum: 255
+                          type: integer
+                      type: object
+                    value:
+                      description: Value represents the resulting value
+                      type: string
+                  required:
+                  - lastUpdated
+                  - range
+                  - value
+                  type: object
+                type: array
               lastUpdated:
                 description: LastUpdated represents the time when the status data
                   was last updated
@@ -266,10 +326,6 @@ spec:
               value:
                 description: Value represents the resulting value
                 type: string
-            required:
-            - lastUpdated
-            - rawValue
-            - value
             type: object
         type: object
     served: true

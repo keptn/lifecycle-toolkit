@@ -223,7 +223,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 				Status: metricsapi.KeptnMetricStatus{
 					ErrMsg:   "client_error: client error: 404",
 					Value:    "",
-					RawValue: []byte{},
+					RawValue: []byte(nil),
 				},
 			},
 		},
@@ -281,7 +281,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 				Status: metricsapi.KeptnMetricStatus{
 					ErrMsg:   "client_error: client error: 404",
 					Value:    "",
-					RawValue: []byte{},
+					RawValue: []byte(nil),
 				},
 			},
 		},

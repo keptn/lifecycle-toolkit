@@ -126,6 +126,14 @@ Please verify
 Use the `container-runtime` to specify your own
 [Kubernetes container](https://kubernetes.io/docs/concepts/containers/)
 image and define almost task you want to do.
+
+You can code a sequence of executables here
+that need to be run in order
+as long as they are executables that are part of the lifecycle workflow.
+Task sequences that are not part of the lifecycle workflow
+should be handled by the pipeline engine tools being used
+such as Jenkins, Argo Workflows, Flux, and Tekton.
+
 If you are migrating from Keptn v1,
 you can use a `container-runtime` to execute
 almost anything that you implemented with JES for Keptn v1.
@@ -229,6 +237,12 @@ spec:
   Only one of these can be specified per `KeptnTaskDefinition` resource:
 
   * **inline** - Include the actual executable code to execute.
+    You can code a sequence of executables here
+    that need to be run in order
+    as long as they are executables that are part of the lifecycle workflow.
+    Task sequences that are not part of the lifecycle workflow
+    should be handled by the pipeline engine tools being used
+    such as Jenkins, Argo Workflows, Flux, and Tekton.
 
     * **deno example:**
         [Example 1: inline script for a Deno script](#example-1-inline-script-for-a-deno-script)

@@ -120,7 +120,7 @@ You have two options:
   (either `deno-runtime` or `python-runtime`)
   to to code the actual calls inline in the `KeptnTaskDefinition` resource.
   See
-  [Fields for pre-defined containers](../../yaml-crd-ref/taskdefinition/#fields-for-pre-defined-containers)
+  [Fields for pre-defined containers](../../yaml-crd-ref/taskdefinition.md/#fields-for-pre-defined-containers)
   for more information.
 
 - Encode all your steps in the language of your choice

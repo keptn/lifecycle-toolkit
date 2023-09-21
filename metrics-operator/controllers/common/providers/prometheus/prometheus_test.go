@@ -2,6 +2,7 @@ package prometheus
 
 import (
 	"context"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -180,10 +181,10 @@ func Test_prometheus(t *testing.T) {
 				require.Nil(t, err)
 			}))
 			defer svr.Close()
-
+			fclient := fake.NewClient()
 			kpp := KeptnPrometheusProvider{
-				HttpClient: http.Client{},
-				Log:        ctrl.Log.WithName("testytest"),
+				K8sClient: fclient,
+				Log:       ctrl.Log.WithName("testytest"),
 			}
 			p := metricsapi.KeptnMetricsProvider{
 				Spec: metricsapi.KeptnMetricsProviderSpec{
@@ -337,11 +338,11 @@ func TestFetchAnalysisValue(t *testing.T) {
 			TargetServer: svr.URL,
 		},
 	}
-
+	fclient := fake.NewClient()
 	// Create your KeptnPrometheusProvider instance
 	provider := KeptnPrometheusProvider{
-		HttpClient: http.Client{},
-		Log:        ctrl.Log.WithName("testytest"),
+		K8sClient: fclient,
+		Log:       ctrl.Log.WithName("testytest"),
 	}
 
 	// Prepare the analysis spec

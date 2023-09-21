@@ -31,8 +31,8 @@ func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) 
 	switch strings.ToLower(providerType) {
 	case PrometheusProviderType:
 		return &prometheus.KeptnPrometheusProvider{
-			HttpClient: http.Client{},
-			Log:        log,
+			K8sClient: k8sClient,
+			Log:       log,
 		}, nil
 	case DynatraceProviderType:
 		return &dynatrace.KeptnDynatraceProvider{

@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strings"
-
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -16,18 +14,8 @@ const apiKey, appKey = "DD_CLIENT_API_KEY", "DD_CLIENT_APP_KEY"
 
 var ErrSecretKeyRefNotDefined = errors.New("the SecretKeyRef property with the DataDog API Key is missing")
 
-func hasDDSecretDefined(spec metricsapi.KeptnMetricsProviderSpec) bool {
-	if spec.SecretKeyRef == (corev1.SecretKeySelector{}) {
-		return false
-	}
-	if strings.TrimSpace(spec.SecretKeyRef.Name) == "" {
-		return false
-	}
-	return true
-}
-
 func getDDSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (string, string, error) {
-	if !hasDDSecretDefined(provider.Spec) {
+	if !provider.HasSecretDefined() {
 		return "", "", ErrSecretKeyRefNotDefined
 	}
 	ddCredsSecret := &corev1.Secret{}

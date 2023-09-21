@@ -6,7 +6,8 @@ weight: 85
 
 Keptn populates the `KeptnTask` resource
 for tasks that deploy software on Kubernetes.
-When using Keptn to deploy software built on a virtual machine,
+When using Keptn to run tasks for software
+that is deployed outside of Kubernetes,
 you must manually populate the `KeptnTask` definition
 and modify it manually for each new run.
 

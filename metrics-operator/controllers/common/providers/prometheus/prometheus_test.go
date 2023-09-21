@@ -5,6 +5,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 
@@ -313,11 +314,18 @@ func Test_resultsForMatrix(t *testing.T) {
 	}
 }
 
-func TestFetchAnalysisValue(t *testing.T) {
+func TestFetchAnalysisValueWithAuth(t *testing.T) {
 
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte(promPayloadWithRangeAndStep))
-		require.Nil(t, err)
+		header := r.Header.Get("Authorization")
+		t.Log(header)
+		if strings.Contains(header, "Bearer secretValue") {
+			_, err := w.Write([]byte(promPayloadWithRangeAndStep))
+			require.Nil(t, err)
+		} else {
+			_, err := w.Write([]byte("Unauthorized"))
+			require.Nil(t, err)
+		}
 	}))
 	defer svr.Close()
 

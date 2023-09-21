@@ -2,6 +2,8 @@ processor:
   useRawDocstring: true
   ignoreTypes:
     - "EmptyStatus$"
+    - "KeptnEvaluationProvider$"
+    - "KeptnEvaluationProviderList$"
   ignoreFields:
     - "TypeMeta$"
     - "EmptyStatus$"

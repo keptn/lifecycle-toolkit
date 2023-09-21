@@ -21,8 +21,6 @@ Package v1alpha2 contains API Schema definitions for the lifecycle v1alpha2 API 
 - [KeptnEvaluationDefinition](#keptnevaluationdefinition)
 - [KeptnEvaluationDefinitionList](#keptnevaluationdefinitionlist)
 - [KeptnEvaluationList](#keptnevaluationlist)
-- [KeptnEvaluationProvider](#keptnevaluationprovider)
-- [KeptnEvaluationProviderList](#keptnevaluationproviderlist)
 - [KeptnTask](#keptntask)
 - [KeptnTaskDefinition](#keptntaskdefinition)
 - [KeptnTaskDefinitionList](#keptntaskdefinitionlist)
@@ -397,53 +395,6 @@ KeptnEvaluationList contains a list of KeptnEvaluation
 | `items` _[KeptnEvaluation](#keptnevaluation) array_ |  |
 
 
-#### KeptnEvaluationProvider
-
-
-
-KeptnEvaluationProvider is the Schema for the keptnevaluationproviders API
-
-_Appears in:_
-- [KeptnEvaluationProviderList](#keptnevaluationproviderlist)
-
-| Field | Description |
-| --- | --- |
-| `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2`
-| `kind` _string_ | `KeptnEvaluationProvider`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
-| `spec` _[KeptnEvaluationProviderSpec](#keptnevaluationproviderspec)_ |  |
-| `status` _string_ | unused field |
-
-
-#### KeptnEvaluationProviderList
-
-
-
-KeptnEvaluationProviderList contains a list of KeptnEvaluationProvider
-
-
-
-| Field | Description |
-| --- | --- |
-| `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2`
-| `kind` _string_ | `KeptnEvaluationProviderList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
-| `items` _[KeptnEvaluationProvider](#keptnevaluationprovider) array_ |  |
-
-
-#### KeptnEvaluationProviderSpec
-
-
-
-KeptnEvaluationProviderSpec defines the desired state of KeptnEvaluationProvider
-
-_Appears in:_
-- [KeptnEvaluationProvider](#keptnevaluationprovider)
-
-| Field | Description |
-| --- | --- |
-| `targetServer` _string_ |  |
-| `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#secretkeyselector-v1-core)_ |  |
 
 
 #### KeptnEvaluationSpec

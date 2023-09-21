@@ -11,9 +11,9 @@ The following is an imperative walkthrough.
 
 - [Docker](https://docs.docker.com/get-started/overview/)
 - [kubectl](https://kubernetes.io/docs/reference/kubectl/)
+- [Helm](https://helm.sh/docs/intro/install/)
 - A Kubernetes cluster >= 1.24 (we recommend [Kubernetes kind](https://kind.sigs.k8s.io/docs/user/quick-start/))
   (`kind create cluster`)
-- [Helm](https://helm.io)
 
 ## Objectives
 

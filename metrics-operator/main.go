@@ -21,7 +21,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -42,7 +41,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/converter"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	"go.opentelemetry.io/otel/sdk/metric"
 	corev1 "k8s.io/api/core/v1"
@@ -154,8 +152,6 @@ func main() {
 		setupLog.Error(err, "unable to create metric keptn_metric_active")
 		os.Exit(1)
 	}
-
-	go serveMetrics()
 
 	// Start the custom metrics adapter
 	go startCustomMetricsAdapter(env.PodNamespace)
@@ -295,17 +291,6 @@ func startCustomMetricsAdapter(namespace string) {
 
 	metricsAdapter := adapter.MetricsAdapter{KltNamespace: namespace}
 	metricsAdapter.RunAdapter(ctx)
-}
-
-func serveMetrics() {
-	log.Printf("serving metrics at localhost:2222/metrics")
-
-	http.Handle("/metrics", promhttp.Handler())
-	err := http.ListenAndServe(":2222", nil)
-	if err != nil {
-		fmt.Printf("error serving http: %v", err)
-		return
-	}
 }
 
 func convertSLI(SLIFilePath, provider, namespace string) (string, error) {

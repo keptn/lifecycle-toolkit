@@ -255,8 +255,7 @@ func main() {
 	workloadInstanceLogger := ctrl.Log.WithName("KeptnWorkloadInstance Controller").V(env.KeptnWorkloadInstanceControllerLogLevel)
 	workloadInstanceRecorder := mgr.GetEventRecorderFor("keptnworkloadinstance-controller")
 	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-		SchedulingGatesEnabled: false,
-		RemoveGates:            controllercommon.RemoveGates,
+		SchedulingGatesHandler: controllercommon.NewSchedulingGatesHandler(mgr.GetClient(), workloadInstanceLogger, false),
 		Client:                 mgr.GetClient(),
 		Scheme:                 mgr.GetScheme(),
 		Log:                    workloadInstanceLogger,

@@ -7,7 +7,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
@@ -779,6 +778,11 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) 
 		},
 	)
 	r, eventChannel, _ := setupReconciler(wi, app)
+	r.SchedulingGatesHandler = &fake.ISchedulingGatesHandlerMock{
+		IsSchedullingEnabledFunc: func() bool {
+			return false
+		},
+	}
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -855,17 +859,16 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion_SchedulingGate
 		},
 	)
 
-	ch := make(chan bool)
-	var called bool
-	go func() {
-		called = <-ch
-	}()
-	r, eventChannel, _ := setupReconciler(wi, app)
-	r.SchedulingGatesEnabled = true
-	r.RemoveGates = func(ctx context.Context, c client.Client, log logr.Logger, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error {
-		ch <- true
-		return nil
+	schedulingGatesMock := &fake.ISchedulingGatesHandlerMock{
+		RemoveGatesFunc: func(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error {
+			return nil
+		},
+		IsSchedullingEnabledFunc: func() bool {
+			return true
+		},
 	}
+	r, eventChannel, _ := setupReconciler(wi, app)
+	r.SchedulingGatesHandler = schedulingGatesMock
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -876,7 +879,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion_SchedulingGate
 
 	result, err := r.Reconcile(context.TODO(), req)
 
-	require.True(t, called)
+	require.Len(t, schedulingGatesMock.RemoveGatesCalls(), 1)
 	require.Nil(t, err)
 
 	// do not requeue since we reached completion
@@ -947,9 +950,13 @@ func TestKeptnWorkloadInstanceReconciler_RemoveGates_fail(t *testing.T) {
 		},
 	)
 	r, _, _ := setupReconciler(wi, app)
-	r.SchedulingGatesEnabled = true
-	r.RemoveGates = func(ctx context.Context, c client.Client, log logr.Logger, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error {
-		return fmt.Errorf("err")
+	r.SchedulingGatesHandler = &fake.ISchedulingGatesHandlerMock{
+		RemoveGatesFunc: func(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error {
+			return fmt.Errorf("err")
+		},
+		IsSchedullingEnabledFunc: func() bool {
+			return true
+		},
 	}
 
 	req := ctrl.Request{

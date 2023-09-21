@@ -43,8 +43,6 @@ import (
 
 const traceComponentName = "keptn/lifecycle-operator/workloadinstance"
 
-type RemoveGatesFunc func(ctx context.Context, c client.Client, log logr.Logger, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error
-
 // KeptnWorkloadInstanceReconciler reconciles a KeptnWorkloadInstance object
 type KeptnWorkloadInstanceReconciler struct {
 	client.Client
@@ -54,8 +52,7 @@ type KeptnWorkloadInstanceReconciler struct {
 	Meters                 apicommon.KeptnMeters
 	SpanHandler            *telemetry.SpanHandler
 	TracerFactory          telemetry.TracerFactory
-	SchedulingGatesEnabled bool
-	RemoveGates            RemoveGatesFunc
+	SchedulingGatesHandler controllercommon.ISchedulingGatesHandler
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
@@ -142,9 +139,9 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 	}
 
-	if r.SchedulingGatesEnabled {
+	if r.SchedulingGatesHandler.IsSchedullingEnabled() {
 		// pre-evaluation checks done at this moment, we can remove the gate
-		if err := r.RemoveGates(ctx, r.Client, r.Log, workloadInstance); err != nil {
+		if err := r.SchedulingGatesHandler.RemoveGates(ctx, workloadInstance); err != nil {
 			r.Log.Error(err, "could not remove SchedulingGates")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}

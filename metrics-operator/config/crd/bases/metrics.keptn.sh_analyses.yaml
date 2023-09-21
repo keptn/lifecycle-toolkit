@@ -77,14 +77,17 @@ spec:
                       follows RFC3339 time format
                     format: date-time
                     type: string
+                  recent:
+                    description: Recent describes a recent timeframe using a duration
+                      string. E.g. Setting this to '5m' will cause the Analysis to
+                      be performed for the last five minutes
+                    pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                    type: string
                   to:
                     description: To is the time of end for the query, this field follows
                       RFC3339 time format
                     format: date-time
                     type: string
-                required:
-                - from
-                - to
                 type: object
             required:
             - analysisDefinition

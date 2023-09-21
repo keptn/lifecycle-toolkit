@@ -81,9 +81,16 @@ type AnalysisList struct {
 
 type Timeframe struct {
 	// From is the time of start for the query, this field follows RFC3339 time format
-	From metav1.Time `json:"from"`
+	From *metav1.Time `json:"from,omitempty"`
 	// To is the time of end for the query, this field follows RFC3339 time format
-	To metav1.Time `json:"to"`
+	To *metav1.Time `json:"to,omitempty"`
+	// Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' will cause the Analysis
+	// to be performed for the last five minutes
+	// +optional
+	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+	// +kubebuilder:validation:Type:=string
+	// +optional
+	Recent *metav1.Duration `json:"recent,omitempty"`
 }
 
 func init() {

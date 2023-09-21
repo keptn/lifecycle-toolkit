@@ -252,6 +252,10 @@ func setupValidationWebhooks(mgr manager.Manager) {
 		setupLog.Error(err, "unable to create webhook", "webhook", "AnalysisDefinition")
 		os.Exit(1)
 	}
+	if err := (&metricsv1alpha3.Analysis{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "Analysis")
+		os.Exit(1)
+	}
 }
 
 func setupProbes(mgr manager.Manager) {

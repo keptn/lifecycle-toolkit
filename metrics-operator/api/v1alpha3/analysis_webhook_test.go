@@ -114,6 +114,16 @@ func TestAnalysis_ValidateCreate(t *testing.T) {
 			want:    []string{},
 			wantErr: true,
 		},
+		{
+			name: "invalid Analysis with no timeframe info set",
+			fields: fields{
+				Spec: AnalysisSpec{
+					Timeframe: Timeframe{},
+				},
+			},
+			want:    []string{},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

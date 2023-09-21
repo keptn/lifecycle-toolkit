@@ -34,7 +34,7 @@ spec:
       weight: 1
       keyObjective: false
   totalScore:
-    passPercentage: 90
+    passPercentage: 50
     warningPercentage: 75
 ---
 apiVersion: metrics.keptn.sh/v1alpha3

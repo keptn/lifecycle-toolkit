@@ -26,8 +26,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// log is for logging in this package.
-var Analysislog = logf.Log.WithName("Analysis-webhook")
+// Analysislog is for logging in this package.
+var Analysislog = logf.Log.WithName("analysis-webhook")
 
 func (r *Analysis) SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).

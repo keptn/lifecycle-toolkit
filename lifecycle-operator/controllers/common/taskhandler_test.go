@@ -101,7 +101,7 @@ func TestTaskHandler(t *testing.T) {
 			},
 			taskDef: &v1alpha3.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 					Name:      "task-def",
 				},
 			},
@@ -141,7 +141,7 @@ func TestTaskHandler(t *testing.T) {
 			},
 			taskDef: &v1alpha3.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 					Name:      "task-def",
 				},
 			},
@@ -377,7 +377,7 @@ func TestTaskHandler(t *testing.T) {
 				Client:           fake.NewClientBuilder().WithObjects(initObjs...).Build(),
 				Tracer:           trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:           scheme.Scheme,
-				DefaultNamespace: KLTNamespace,
+				DefaultNamespace: KeptnNamespace,
 			}
 			status, summary, err := handler.ReconcileTasks(context.TODO(), context.TODO(), tt.object, tt.createAttr)
 			if len(tt.wantStatus) == len(status) {

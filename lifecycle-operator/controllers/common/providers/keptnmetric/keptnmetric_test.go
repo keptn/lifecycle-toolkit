@@ -14,7 +14,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
-const KLTNamespace = "test"
+const KeptnNamespace = "test"
 
 func Test_keptnmetric(t *testing.T) {
 	tests := []struct {
@@ -85,7 +85,7 @@ func Test_keptnmetric(t *testing.T) {
 			kmp := KeptnMetricProvider{
 				Log:              ctrl.Log.WithName("testytest"),
 				K8sClient:        client,
-				DefaultNamespace: KLTNamespace,
+				DefaultNamespace: KeptnNamespace,
 			}
 
 			obj := klcv1alpha3.Objective{
@@ -189,14 +189,14 @@ func Test_Getkeptnmetric(t *testing.T) {
 			metric: &metricsapi.KeptnMetric{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "metric",
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 				},
 			},
 			namespace: "my-other-namespace",
 			out: &metricsapi.KeptnMetric{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "metric",
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 				},
 			},
 			wantError: false,
@@ -212,7 +212,7 @@ func Test_Getkeptnmetric(t *testing.T) {
 			kmp := KeptnMetricProvider{
 				Log:              ctrl.Log.WithName("testytest"),
 				K8sClient:        client,
-				DefaultNamespace: KLTNamespace,
+				DefaultNamespace: KeptnNamespace,
 			}
 
 			m, err := kmp.GetKeptnMetric(context.TODO(), tt.objective, tt.namespace)

@@ -14,7 +14,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
-const KLTNamespace = "keptn"
+const KeptnNamespace = "keptn"
 
 func Test_GetItemStatus(t *testing.T) {
 	tests := []struct {
@@ -404,7 +404,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 			taskDef: &klcv1alpha3.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "taskDef",
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 				},
 			},
 			taskDefName:      "taskDef",
@@ -412,7 +412,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 			out: &klcv1alpha3.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "taskDef",
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 				},
 			},
 			wantError: false,
@@ -425,7 +425,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			client := fake.NewClientBuilder().WithObjects(tt.taskDef).Build()
-			d, err := GetTaskDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.taskDefName, tt.taskDefNamespace, KLTNamespace)
+			d, err := GetTaskDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.taskDefName, tt.taskDefNamespace, KeptnNamespace)
 			if tt.out != nil && d != nil {
 				require.Equal(t, tt.out.Name, d.Name)
 				require.Equal(t, tt.out.Namespace, d.Namespace)
@@ -486,7 +486,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 			evalDef: &klcv1alpha3.KeptnEvaluationDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "evalDef",
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 				},
 			},
 			evalDefName:      "evalDef",
@@ -494,7 +494,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 			out: &klcv1alpha3.KeptnEvaluationDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "evalDef",
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 				},
 			},
 			wantError: false,
@@ -507,7 +507,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			client := fake.NewClientBuilder().WithObjects(tt.evalDef).Build()
-			d, err := GetEvaluationDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.evalDefName, tt.evalDefNamespace, KLTNamespace)
+			d, err := GetEvaluationDefinition(client, ctrl.Log.WithName("testytest"), context.TODO(), tt.evalDefName, tt.evalDefNamespace, KeptnNamespace)
 			if tt.out != nil && d != nil {
 				require.Equal(t, tt.out.Name, d.Name)
 				require.Equal(t, tt.out.Namespace, d.Namespace)

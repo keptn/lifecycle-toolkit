@@ -24,7 +24,7 @@ import (
 	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
-const KltNamespace = "klt-namespace"
+const KeptnNamespace = "klt-namespace"
 
 func TestKeptnEvaluationReconciler_Reconcile_FailEvaluation(t *testing.T) {
 
@@ -164,7 +164,7 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation(t *testing.T) {
 	require.Equal(t, "value '10' met objective '<11'", updatedEvaluation.Status.EvaluationStatus[metric.Name].Message)
 }
 
-func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation_withDefinitionInDefaultKLTNamespace(t *testing.T) {
+func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation_withDefinitionInDefaultKeptnNamespace(t *testing.T) {
 
 	const namespace = "my-namespace"
 	metric := &metricsapi.KeptnMetric{

@@ -18,7 +18,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
-const KLTNamespace = "mynamespace"
+const KeptnNamespace = "mynamespace"
 
 func TestKeptnTaskReconciler_createJob(t *testing.T) {
 	namespace := "default"
@@ -91,7 +91,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	taskDefinitionName := "my-task-definition"
 
 	cm := makeConfigMap(cmName, namespace)
-	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, KLTNamespace, cmName)
+	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, KeptnNamespace, cmName)
 
 	fakeClient := fakeclient.NewClient(cm, taskDefinition)
 
@@ -104,7 +104,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
-		Namespace:   KLTNamespace,
+		Namespace:   KeptnNamespace,
 	}
 
 	task := makeTask("my-task", namespace, taskDefinitionName)

@@ -111,17 +111,17 @@ var _ = Describe("Evaluation", Ordered, func() {
 			It("KeptnEvaluationController Should succeed, as it finds KeptnEvaluationDefinition in default KLT namespace", func() {
 				By("Create EvaluationDefiniton")
 
-				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, KLTnamespace, metricName)
+				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, KeptnNamespace, metricName)
 
 				By("Create KeptnMetric")
 
-				metric := makeKeptnMetric(metricName, KLTnamespace)
+				metric := makeKeptnMetric(metricName, KeptnNamespace)
 
 				By("Update KeptnMetric to have status")
 
 				metric2 := &metricsapi.KeptnMetric{}
 				err := k8sClient.Get(context.TODO(), types.NamespacedName{
-					Namespace: KLTnamespace,
+					Namespace: KeptnNamespace,
 					Name:      metric.Name,
 				}, metric2)
 				Expect(err).To(BeNil())
@@ -138,14 +138,14 @@ var _ = Describe("Evaluation", Ordered, func() {
 				evaluationdef := &klcv1alpha3.KeptnEvaluationDefinition{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
-						Namespace: KLTnamespace,
+						Namespace: KeptnNamespace,
 						Name:      evaluationDefinitionName,
 					}, evaluationdef)
 					g.Expect(err).To(BeNil())
 					g.Expect(evaluationdef.Spec.Objectives[0]).To(Equal(klcv1alpha3.Objective{
 						KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 							Name:      metricName,
-							Namespace: KLTnamespace,
+							Namespace: KeptnNamespace,
 						},
 						EvaluationTarget: "<10",
 					}))

@@ -82,13 +82,13 @@ var _ = Describe("Task", Ordered, func() {
 
 				ns := &v1.Namespace{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: KLTnamespace,
+						Name: KeptnNamespace,
 					},
 				}
 				err := k8sClient.Create(context.TODO(), ns)
 				Expect(err).To(BeNil())
 
-				taskDefinition = makeTaskDefinition(taskDefinitionName, KLTnamespace)
+				taskDefinition = makeTaskDefinition(taskDefinitionName, KeptnNamespace)
 				task = makeTask(name, namespace, taskDefinition.Name)
 
 				By("Verifying that a job has been created")
@@ -135,13 +135,13 @@ var _ = Describe("Task", Ordered, func() {
 
 				ns := &v1.Namespace{
 					ObjectMeta: metav1.ObjectMeta{
-						Name: KLTnamespace,
+						Name: KeptnNamespace,
 					},
 				}
 				err := k8sClient.Create(context.TODO(), ns)
 				Expect(common.IgnoreAlreadyExists(err)).To(BeNil())
 
-				taskDefinition = makeContainerTaskDefinition(taskDefinitionName, KLTnamespace)
+				taskDefinition = makeContainerTaskDefinition(taskDefinitionName, KeptnNamespace)
 				task = makeTask(name, namespace, taskDefinition.Name)
 
 				By("Verifying that a job has been created")

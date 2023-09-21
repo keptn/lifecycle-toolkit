@@ -7,6 +7,7 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	kltfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
@@ -101,7 +102,7 @@ func TestTaskHandler(t *testing.T) {
 			},
 			taskDef: &v1alpha3.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 					Name:      "task-def",
 				},
 			},
@@ -141,7 +142,7 @@ func TestTaskHandler(t *testing.T) {
 			},
 			taskDef: &v1alpha3.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 					Name:      "task-def",
 				},
 			},
@@ -353,6 +354,7 @@ func TestTaskHandler(t *testing.T) {
 			unbindSpanCalls: 1,
 		},
 	}
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

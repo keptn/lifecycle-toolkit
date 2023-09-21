@@ -51,7 +51,6 @@ type KeptnEvaluationReconciler struct {
 	Log           logr.Logger
 	Meters        apicommon.KeptnMeters
 	TracerFactory telemetry.TracerFactory
-	Namespace     string
 }
 
 // clusterrole

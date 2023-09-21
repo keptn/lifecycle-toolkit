@@ -9,6 +9,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1alpha3"
@@ -23,8 +24,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
-
-const KltNamespace = "klt-namespace"
 
 func TestKeptnEvaluationReconciler_Reconcile_FailEvaluation(t *testing.T) {
 
@@ -164,7 +163,7 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation(t *testing.T) {
 	require.Equal(t, "value '10' met objective '<11'", updatedEvaluation.Status.EvaluationStatus[metric.Name].Message)
 }
 
-func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation_withDefinitionInDefaultKLTNamespace(t *testing.T) {
+func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation_withDefinitionInDefaultKeptnNamespace(t *testing.T) {
 
 	const namespace = "my-namespace"
 	metric := &metricsapi.KeptnMetric{
@@ -181,7 +180,7 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation_withDefinitionInD
 	evaluationDefinition := &klcv1alpha3.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-definition",
-			Namespace: controllercommon.KLTNamespace,
+			Namespace: "keptn",
 		},
 		Spec: klcv1alpha3.KeptnEvaluationDefinitionSpec{
 			Objectives: []klcv1alpha3.Objective{
@@ -255,6 +254,8 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 
 	provider := metric.NewMeterProvider()
 	meter := provider.Meter("keptn/task")
+
+	config.Instance().SetDefaultNamespace("keptn")
 
 	r := &KeptnEvaluationReconciler{
 		Client:        fakeClient,

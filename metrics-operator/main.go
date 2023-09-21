@@ -278,7 +278,7 @@ func startCustomMetricsAdapter(namespace string) {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM)
 	defer cancel()
 
-	metricsAdapter := adapter.MetricsAdapter{KltNamespace: namespace}
+	metricsAdapter := adapter.MetricsAdapter{KeptnNamespace: namespace}
 	metricsAdapter.RunAdapter(ctx)
 }
 

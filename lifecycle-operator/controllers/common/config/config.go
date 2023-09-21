@@ -13,11 +13,14 @@ type IConfig interface {
 	GetCreationRequestTimeout() time.Duration
 	SetCloudEventsEndpoint(endpoint string)
 	GetCloudEventsEndpoint() string
+	SetDefaultNamespace(namespace string)
+	GetDefaultNamespace() string
 }
 
 type ControllerConfig struct {
 	keptnAppCreationRequestTimeout time.Duration
 	cloudEventsEndpoint            string
+	defaultNamespace               string
 }
 
 var instance *ControllerConfig
@@ -44,4 +47,12 @@ func (o *ControllerConfig) SetCloudEventsEndpoint(endpoint string) {
 
 func (o *ControllerConfig) GetCloudEventsEndpoint() string {
 	return o.cloudEventsEndpoint
+}
+
+func (o *ControllerConfig) SetDefaultNamespace(ns string) {
+	o.defaultNamespace = ns
+}
+
+func (o *ControllerConfig) GetDefaultNamespace() string {
+	return o.defaultNamespace
 }

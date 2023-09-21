@@ -36,7 +36,7 @@ func init() {
 }
 
 type envConfig struct {
-	KLTNamespace          string `envconfig:"NAMESPACE" default:"keptn-lifecycle-toolkit-system"`
+	KeptnNamespace        string `envconfig:"NAMESPACE" default:"keptn-lifecycle-toolkit-system"`
 	KLTLabelSelectorKey   string `envconfig:"LABEL_SELECTOR_KEY" default:"keptn.sh/inject-cert"`
 	KLTLabelSelectorValue string `envconfig:"LABEL_SELECTOR_VALUE" default:"true"`
 }
@@ -66,7 +66,7 @@ func main() {
 		Scheme: scheme,
 		Cache: cache.Options{
 			DefaultNamespaces: map[string]cache.Config{
-				env.KLTNamespace: {},
+				env.KeptnNamespace: {},
 			},
 		},
 		Metrics: metricsserver.Options{
@@ -99,7 +99,7 @@ func main() {
 		Scheme:        mgr.GetScheme(),
 		CancelMgrFunc: nil,
 		Log:           ctrl.Log.WithName("KeptnWebhookCert Controller"),
-		Namespace:     env.KLTNamespace,
+		Namespace:     env.KeptnNamespace,
 		MatchLabels: map[string]string{
 			env.KLTLabelSelectorKey: env.KLTLabelSelectorValue,
 		},

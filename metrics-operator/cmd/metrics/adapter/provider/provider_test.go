@@ -15,7 +15,7 @@ import (
 	provider2 "sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
 )
 
-const kltNamespace = "my-namespace"
+const KeptnNamespace = "my-namespace"
 
 func TestProvider(t *testing.T) {
 	metricObj1 := getSampleKeptnMetric("my-metric", map[string]interface{}{})
@@ -26,7 +26,7 @@ func TestProvider(t *testing.T) {
 	scheme := runtime.NewScheme()
 	fakeClient := fake.NewSimpleDynamicClient(scheme, km)
 
-	provider := NewProvider(context.TODO(), fakeClient, kltNamespace)
+	provider := NewProvider(context.TODO(), fakeClient, KeptnNamespace)
 
 	require.NotNil(t, provider)
 
@@ -43,14 +43,14 @@ func TestProvider(t *testing.T) {
 		"value": "10.0",
 	}
 	km.SetUnstructuredContent(metricObj1)
-	_, err := fakeClient.Resource(keptnMetricGroupVersionResource).Namespace(kltNamespace).UpdateStatus(context.TODO(), km, metav1.UpdateOptions{})
+	_, err := fakeClient.Resource(keptnMetricGroupVersionResource).Namespace(KeptnNamespace).UpdateStatus(context.TODO(), km, metav1.UpdateOptions{})
 
 	require.Nil(t, err)
 
 	// eventually the updated value should be reflected
 	require.Eventually(t, func() bool {
 		metricValue, err := provider.GetMetricByName(context.TODO(), types.NamespacedName{
-			Namespace: kltNamespace,
+			Namespace: KeptnNamespace,
 			Name:      "my-metric",
 		}, provider2.CustomMetricInfo{}, nil)
 
@@ -62,7 +62,7 @@ func TestProvider(t *testing.T) {
 
 	// look for an unknown metric
 	metricValue, err := provider.GetMetricByName(context.TODO(), types.NamespacedName{
-		Namespace: kltNamespace,
+		Namespace: KeptnNamespace,
 		Name:      "my-unknown-metric",
 	}, provider2.CustomMetricInfo{}, labels.Set{}.AsSelector())
 
@@ -72,7 +72,7 @@ func TestProvider(t *testing.T) {
 	// look for metrics based on a label selector
 	metrics, err := provider.GetMetricBySelector(
 		context.TODO(),
-		kltNamespace,
+		KeptnNamespace,
 		labels.Set(map[string]string{"app": "frontend"}).AsSelector(),
 		provider2.CustomMetricInfo{},
 		nil,
@@ -86,7 +86,7 @@ func TestProvider(t *testing.T) {
 	km2 := &unstructured.Unstructured{}
 	km2.SetUnstructuredContent(metricObj2)
 
-	_, err = fakeClient.Resource(keptnMetricGroupVersionResource).Namespace(kltNamespace).Create(context.TODO(), km2, metav1.CreateOptions{})
+	_, err = fakeClient.Resource(keptnMetricGroupVersionResource).Namespace(KeptnNamespace).Create(context.TODO(), km2, metav1.CreateOptions{})
 	require.Nil(t, err)
 
 	// wait for the new metric to be registered
@@ -99,7 +99,7 @@ func TestProvider(t *testing.T) {
 	// retrieve based on the selector again
 	metrics, err = provider.GetMetricBySelector(
 		context.TODO(),
-		kltNamespace,
+		KeptnNamespace,
 		labels.Set(map[string]string{"app": "frontend"}).AsSelector(),
 		provider2.CustomMetricInfo{},
 		nil,
@@ -109,9 +109,9 @@ func TestProvider(t *testing.T) {
 	require.Len(t, metrics.Items, 1)
 
 	// delete the metrics again
-	err = fakeClient.Resource(keptnMetricGroupVersionResource).Namespace(kltNamespace).Delete(context.TODO(), "my-metric", metav1.DeleteOptions{})
+	err = fakeClient.Resource(keptnMetricGroupVersionResource).Namespace(KeptnNamespace).Delete(context.TODO(), "my-metric", metav1.DeleteOptions{})
 	require.Nil(t, err)
-	err = fakeClient.Resource(keptnMetricGroupVersionResource).Namespace(kltNamespace).Delete(context.TODO(), "my-metric-2", metav1.DeleteOptions{})
+	err = fakeClient.Resource(keptnMetricGroupVersionResource).Namespace(KeptnNamespace).Delete(context.TODO(), "my-metric-2", metav1.DeleteOptions{})
 	require.Nil(t, err)
 
 	// wait for the length of the returned list to be 0
@@ -128,7 +128,7 @@ func getSampleKeptnMetric(metricName string, labels map[string]interface{}) map[
 		"kind":       "KeptnMetric",
 		"metadata": map[string]interface{}{
 			"name":      metricName,
-			"namespace": kltNamespace,
+			"namespace": KeptnNamespace,
 			"labels":    labels,
 		},
 		"spec": map[string]interface{}{

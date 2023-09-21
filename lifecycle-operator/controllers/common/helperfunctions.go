@@ -7,13 +7,12 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
-
-const KLTNamespace = "keptn-lifecycle-toolkit-system"
 
 // GetItemStatus retrieves the state of the task/evaluation, if it does not exists, it creates a default one
 func GetItemStatus(name string, instanceStatus []klcv1alpha3.ItemStatus) klcv1alpha3.ItemStatus {
@@ -96,7 +95,7 @@ func getObject(k8sclient client.Client, log logr.Logger, ctx context.Context, de
 	if err != nil {
 		log.Info("Failed to get resource from application namespace", "resource type", fmt.Sprintf("%T", definition), "Definition name", definitionName, "namespace", namespace)
 		if k8serrors.IsNotFound(err) {
-			if err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: KLTNamespace}, definition); err != nil {
+			if err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: config.Instance().GetDefaultNamespace()}, definition); err != nil {
 				log.Info("Failed to get resource from default KLT namespace", "resource type", fmt.Sprintf("%T", definition), "definition name", definitionName)
 				return err
 			}

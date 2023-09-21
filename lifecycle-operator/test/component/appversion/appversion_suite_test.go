@@ -7,6 +7,7 @@ import (
 	"time"
 
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnappversion"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
@@ -33,9 +34,13 @@ var (
 	spanRecorder *sdktest.SpanRecorder
 )
 
+const KeptnNamespace = "keptnlifecycle"
+
 var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
+
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
 
 	// //setup controllers here
 	controller := &keptnappversion.KeptnAppVersionReconciler{

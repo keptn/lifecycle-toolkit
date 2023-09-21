@@ -9,6 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"net/http"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"strings"
 )
 
 const apiKey = "ACCESS_TOKEN"
@@ -21,7 +22,8 @@ type transport struct {
 }
 
 func (t *transport) RoundTrip(req *http.Request) (*http.Response, error) {
-	req.Header.Add("Authorization:Bearer", t.apiToken)
+	bearer := "Bearer " + t.apiToken
+	req.Header.Add("Authorization", bearer)
 	return t.underlyingTransport.RoundTrip(req)
 }
 
@@ -38,5 +40,5 @@ func getPrometheusSecret(ctx context.Context, provider metricsapi.KeptnMetricsPr
 	if len(apiKeyVal) == 0 {
 		return "", fmt.Errorf("secret does not contain %s", apiKey)
 	}
-	return string(apiKeyVal), nil
+	return strings.Trim(string(apiKeyVal), "\n"), nil
 }

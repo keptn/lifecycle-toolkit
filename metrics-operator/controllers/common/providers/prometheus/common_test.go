@@ -44,25 +44,15 @@ func TestGetSecret_NoSecretDefined(t *testing.T) {
 	}))
 	defer svr.Close()
 
-	secretName := "datadogSecret"
-	apiKey, apiKeyValue := "DD_CLIENT_API_KEY", "fake-api-key"
-	appKey, appKeyValue := "DD_CLIENT_APP_KEY", "fake-app-key"
-	apiToken := &corev1.Secret{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "garbage",
-			Namespace: "",
-		},
-		Data: map[string][]byte{
-			apiKey: []byte(apiKeyValue),
-			appKey: []byte(appKeyValue),
-		},
-	}
-	fakeClient := fake.NewClient(apiToken)
+	secretName := "testSecret"
+
+	fakeClient := fake.NewClient()
 
 	b := true
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			SecretKeyRef: v1.SecretKeySelector{
+				Key: apiKey,
 				LocalObjectReference: v1.LocalObjectReference{
 					Name: secretName,
 				},
@@ -73,7 +63,8 @@ func TestGetSecret_NoSecretDefined(t *testing.T) {
 	}
 	r1, e := getPrometheusSecret(context.TODO(), p, fakeClient)
 	require.NotNil(t, e)
-	require.True(t, strings.Contains(e.Error(), "secrets \""+secretName+"\" not found"))
+	t.Log(e.Error())
+	require.True(t, strings.Contains(e.Error(), "the SecretKeyRef property with the Prometheus API Key is missing"))
 	require.Empty(t, r1)
 
 }
@@ -85,32 +76,32 @@ func TestGetSecret_HappyPath(t *testing.T) {
 	}))
 	defer svr.Close()
 
-	secretName := "datadogSecret"
+	secretName := "mySecret"
 	apiToken := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      secretName,
-			Namespace: "",
+			Namespace: "default",
 		},
 		Data: map[string][]byte{
-			apiKey: []byte(apiKey),
+			apiKey: []byte("mytoken"),
 		},
 	}
 	fakeClient := fake.NewClient(apiToken)
 
-	b := true
 	p := metricsapi.KeptnMetricsProvider{
+		ObjectMeta: metav1.ObjectMeta{Namespace: "default"},
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			SecretKeyRef: v1.SecretKeySelector{
+				Key: apiKey,
 				LocalObjectReference: v1.LocalObjectReference{
 					Name: secretName,
 				},
-				Optional: &b,
 			},
 			TargetServer: svr.URL,
 		},
 	}
 	r1, e := getPrometheusSecret(context.TODO(), p, fakeClient)
 	require.Nil(t, e)
-	require.Equal(t, apiKey, r1)
+	require.Equal(t, "mytoken", r1)
 
 }

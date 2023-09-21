@@ -181,6 +181,7 @@ func Test_prometheus(t *testing.T) {
 				require.Nil(t, err)
 			}))
 			defer svr.Close()
+
 			fclient := fake.NewClient()
 			kpp := KeptnPrometheusProvider{
 				K8sClient: fclient,
@@ -188,12 +189,6 @@ func Test_prometheus(t *testing.T) {
 			}
 			p := metricsapi.KeptnMetricsProvider{
 				Spec: metricsapi.KeptnMetricsProviderSpec{
-					SecretKeyRef: v1.SecretKeySelector{
-						LocalObjectReference: v1.LocalObjectReference{
-							Name: "myapitoken",
-						},
-						Key: "mykey",
-					},
 					TargetServer: svr.URL,
 				},
 			}
@@ -333,12 +328,21 @@ func TestFetchAnalysisValue(t *testing.T) {
 				LocalObjectReference: v1.LocalObjectReference{
 					Name: "myapitoken",
 				},
-				Key: "mykey",
+				Key: apiKey,
 			},
 			TargetServer: svr.URL,
 		},
 	}
-	fclient := fake.NewClient()
+	secret := v1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "myapitoken",
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			apiKey: []byte("secretValue"),
+		},
+	}
+	fclient := fake.NewClient(&secret)
 	// Create your KeptnPrometheusProvider instance
 	provider := KeptnPrometheusProvider{
 		K8sClient: fclient,

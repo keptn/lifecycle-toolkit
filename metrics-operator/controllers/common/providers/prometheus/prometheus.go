@@ -3,7 +3,8 @@ package prometheus
 import (
 	"context"
 	"encoding/json"
-	"fmt"      //nolint:gci
+	"fmt" //nolint:gci
+	"github.com/pkg/errors"
 	"net/http" //nolint:gci
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"time"
@@ -27,10 +28,14 @@ type KeptnPrometheusProvider struct {
 func (r *KeptnPrometheusProvider) NewHttpClient(ctx context.Context, provider metricsapi.KeptnMetricsProvider) (*http.Client, error) {
 
 	token, err := getPrometheusSecret(ctx, provider, r.K8sClient)
+
 	if err != nil {
+		if errors.Is(err, ErrSecretKeyRefNotDefined) {
+			//if no secret is registered the provider will attempt to connect without authentication
+			return &http.Client{}, nil
+		}
 		return nil, err
 	}
-
 	return &http.Client{Transport: &transport{underlyingTransport: http.DefaultTransport, apiToken: token}}, nil
 }
 

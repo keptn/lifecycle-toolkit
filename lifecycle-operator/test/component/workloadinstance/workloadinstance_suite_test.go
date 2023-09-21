@@ -2,12 +2,12 @@ package workloadinstance_test
 
 import (
 	"context"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"os"
 	"testing"
 	"time"
 
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadinstance"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"

@@ -114,7 +114,13 @@ you can put them all in one `KeptnTaskDefinition` resource,
 which can execute a virtually unlimited number
 of programs, scripts, and functions,
 as long as they all need the same runner.
-You have two options:
+You have the following options:
+
+- Encode all your steps in the language of your choice
+  and build a Kubernetes container
+  that Keptn executes in a `custom-runtime` runner.
+  This is often the best solution if you need to execute complex sequences
+  because it gives you the most flexibility..
 
 - Use the `inline` syntax for one of the Keptn pre-defined runners
   (either `deno-runtime` or `python-runtime`)
@@ -123,11 +129,12 @@ You have two options:
   [Fields for pre-defined containers](../../yaml-crd-ref/taskdefinition.md/#fields-for-pre-defined-containers)
   for more information.
 
-- Encode all your steps in the language of your choice
-  and build a Kubernetes container
-  that Keptn executes in a `custom-runtime` runner.
-  This is often the best solution if you need to execute complex sequences
-  because it gives you the most flexibility..
+- Create a script that calls the functions, programs, and scripts
+  that need to execute sequentially
+  and install this on a remote webserver that Keptn can access.
+  Then use the `httpRef` syntax for one of the pre-defined runners
+  to call this script from your `KeptnTaskDefinition`,
+  which can set parameters for the script if appropriate.
 
 For more details about implementing these options, see the
 [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)

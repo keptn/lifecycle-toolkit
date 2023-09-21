@@ -250,76 +250,47 @@ spec:
     * **python example:**
         [Example 1: inline code for a python-runtime runner](#example-1-inline-code-for-a-python-runtime-runner)
 
-  * **httpRef** - Specify one or two scripts to be executed at runtime
+  * **httpRef** - Specify a script to be executed at runtime
       from the remote webserver that is specified.
 
       This syntax allows you to call a general function
       that is used in multiple places,
-      possibly with different parameters.
-      For example, you could define a `test-script` that runs a test
-      that can be used for different purposes,
-      depending on the parameters that are passed to it.
+      possibly with different parameters
+      that are provided in the calling `KeptnTaskDefinition` resource.
+      Another `KeptnTaskDefinition` resource could call this same script
+      but with different parameters.
 
-      To implement this:
-    * define the following scripts on a remote webserver
-        that Keptn can access:
-
-      * `mytest` that gives the executable code for the test
-      * `login-parameters` that sets`DATA={user: test}`
-      * `myuser-parameters` that sets`DATA={user: myuser}`  
-
-    * create a `KeptnTaskDefinition` named `login-test`
-        that uses the `httpRef` syntax to call the
-        `login-parameters` and `mytest` scripts
-        to run the login test.
-    * create a `KeptnTaskDefinition` named `myuser-test`
-        that uses the `httpRef` syntax to call the
-        `myuser-parameters` and `mytest` resources
-        to test the `myuser` login
-    * Annotate the `KeptnApp` resource to call the
-        `login-test` and `myuser-test` resources.
-        Both of these resources will then run in parallel
-        if they are both assigned to the same stage (pre- or post-deployment).
-
-      Only the first two scripts listed are executed;
-      any other scripts are silently ignored.
+      Only one script can be executed.
+      Any other scripts listed here are silently ignored.
 
     * **deno example:**
         [Example 2: httpRef script for a Deno script](#example-2-httpref-script-for-a-deno-script)
     * **python example:**
         [Example 2: httpRef for a python-runtime runner](#example-2-httpref-for-a-python-runtime-runner)
 
-  * **functionRef** -- Execute one or two `KeptnTaskDefinition` resources.
+  * **functionRef** -- Execute another `KeptnTaskDefinition` resources.
       Populate this field with the value(s) of the `metadata.name` field
       for each `KeptnDefinitionTask` to be called.
 
       Like the `httpRef` syntax,this is commonly used
       to call a general function that is used in multiple places,
-      possibly with different parameters.
-      In this case, you could:
-    * define the following `KeptnTaskDefinition` resources:
-      * `mytest` that calls the executable for the test.
-      * `login-parameters` that sets`DATA={user: test}`
-      * `myuser-parameters` that sets`DATA={user: myuser}`  
-    * create a `KeptnTaskDefinition` named `login-test`
-        that uses the `functionRef` syntax to call the
-        `login-parameters` and `mytest` resources
-        to run the login test.
-    * create a `KeptnTaskDefinition` named `myuser-test`
-        that uses the `functionRef` syntax to call
-        the `myuser-parameters` and `mytest` resources
-        to test the `myuser` login
-    * Annotate the `KeptnApp` resource to call the
-        `login-test` and `myuser-test` resources.
-        Both of these resources will then run in parallel
-        if they are both assigned to the same stage (pre- or post-deployment).
-    * The `mytest` resource is the `parent task`
-        whose runner is used for the execution
-        even if it is not the same runner defined in the
-        `login-test` or `myuser-test` resource.
+      possibly with different parameters
+      that are set in the calling `KeptnTaskDefinition` resource.
 
-      Only the first two `KeptnTaskDefinition` resources listed are executed;
-      any other scripts are silently ignored.
+      You must annotate the `KeptnApp` resource to run the
+      calling `KeptnTaskDefiniton` resource.
+        
+      The `KeptnTaskDefinition` called with `functionref`
+      is the `parent task` whose runner is used for the execution
+      even if it is not the same runner defined in the
+      calling `KeptnTaskDefinition`.
+
+      Only one `KeptnTaskDefinition` resources can be listed
+      with the `functionRef` syntax
+      although that `KeptnTaskDefinition` can call multipe
+      executables (programs, functions, and scripts)..
+      Any calls to additional `KeptnTaskDefinition` resources
+      are silently ignored.
 
     * **deno example:**
         [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)

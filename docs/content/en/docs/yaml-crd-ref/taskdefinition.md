@@ -41,7 +41,7 @@ differentiated by the `spec` section:
     which use a syntax similar to JavaScript and Typescript,
     with a few limitations.
     You can use this to specify simple actions
-    without having to define a container.
+    without having to define a full container.
     See
     [Synopsis for Deno-runtime container](#deno-runtime)
     and

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -19,12 +18,18 @@ var errCouldNotCast = fmt.Errorf("could not cast result")
 var errNoValues = fmt.Errorf("no values in query result")
 var errTooManyValues = fmt.Errorf("too many values in query result")
 
-type RoundtripGetter func(context.Context, metricsapi.KeptnMetricsProvider, client.Client) (http.RoundTripper, error)
-
 type KeptnPrometheusProvider struct {
 	Log       logr.Logger
 	K8sClient client.Client
-	Getter    RountripGetter
+	Getter    IRoundTripper
+}
+
+func NewPrometheusProvider(log logr.Logger, k8sClient client.Client) *KeptnPrometheusProvider {
+	return &KeptnPrometheusProvider{
+		K8sClient: k8sClient,
+		Log:       log,
+		Getter:    RoundTripperRetriever{},
+	}
 }
 
 func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
@@ -115,7 +120,7 @@ func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metr
 }
 
 func (r *KeptnPrometheusProvider) setupApi(ctx context.Context, provider metricsapi.KeptnMetricsProvider) (prometheus.API, error) {
-	rt, err := r.Getter(ctx, provider, r.K8sClient)
+	rt, err := r.Getter.GetRoundTripper(ctx, provider, r.K8sClient)
 	if err != nil {
 		return nil, err
 	}

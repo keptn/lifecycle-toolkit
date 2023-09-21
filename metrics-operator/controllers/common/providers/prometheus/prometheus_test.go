@@ -14,6 +14,7 @@ import (
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
+	fakeprom "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus/fake"
 	promapi "github.com/prometheus/client_golang/api"
 	"github.com/prometheus/common/model"
 	"github.com/stretchr/testify/require"
@@ -193,7 +194,7 @@ func Test_prometheus(t *testing.T) {
 			kpp := KeptnPrometheusProvider{
 				K8sClient: fclient,
 				Log:       ctrl.Log.WithName("testytest"),
-				Getter:    GetRoundtripper,
+				Getter:    RoundTripperRetriever{},
 			}
 			p := metricsapi.KeptnMetricsProvider{
 				Spec: metricsapi.KeptnMetricsProviderSpec{
@@ -357,8 +358,8 @@ func TestFetchAnalysisValueWithAuth(t *testing.T) {
 			Namespace: "",
 		},
 		Data: map[string][]byte{
-			userName: []byte(userName),
-			password: []byte(password),
+			secretKeyUserName: []byte(secretKeyUserName),
+			secretKeyPassword: []byte(secretKeyPassword),
 		},
 	}
 	fclient := fake.NewClient(&secret)
@@ -366,7 +367,7 @@ func TestFetchAnalysisValueWithAuth(t *testing.T) {
 	provider := KeptnPrometheusProvider{
 		K8sClient: fclient,
 		Log:       ctrl.Log.WithName("testytest"),
-		Getter:    GetRoundtripper,
+		Getter:    RoundTripperRetriever{},
 	}
 
 	// Prepare the analysis spec
@@ -398,14 +399,16 @@ func TestKeptnPrometheusProvider_setupApi(t *testing.T) {
 	var b byte = 0x7f
 	tests := []struct {
 		name          string
-		getter        RountripGetter
+		getter        IRoundTripper
 		provider      metricsapi.KeptnMetricsProvider
 		expectedError string
 	}{
 		{
 			name: "Successful setup",
-			getter: func(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
-				return promapi.DefaultRoundTripper, nil
+			getter: &fakeprom.IRoundTripperMock{
+				GetRoundTripperFunc: func(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
+					return promapi.DefaultRoundTripper, nil
+				},
 			},
 			provider: metricsapi.KeptnMetricsProvider{
 				Spec: metricsapi.KeptnMetricsProviderSpec{
@@ -416,9 +419,12 @@ func TestKeptnPrometheusProvider_setupApi(t *testing.T) {
 		},
 		{
 			name: "Error in getter",
-			getter: func(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
-				return nil, errors.New("bad")
+			getter: &fakeprom.IRoundTripperMock{
+				GetRoundTripperFunc: func(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
+					return nil, errors.New("bad")
+				},
 			},
+
 			provider: metricsapi.KeptnMetricsProvider{
 				Spec: metricsapi.KeptnMetricsProviderSpec{
 					TargetServer: "http://example.com",
@@ -428,8 +434,10 @@ func TestKeptnPrometheusProvider_setupApi(t *testing.T) {
 		},
 		{
 			name: "Error in NewClient",
-			getter: func(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
-				return promapi.DefaultRoundTripper, nil
+			getter: &fakeprom.IRoundTripperMock{
+				GetRoundTripperFunc: func(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
+					return promapi.DefaultRoundTripper, nil
+				},
 			},
 			provider: metricsapi.KeptnMetricsProvider{
 				Spec: metricsapi.KeptnMetricsProviderSpec{

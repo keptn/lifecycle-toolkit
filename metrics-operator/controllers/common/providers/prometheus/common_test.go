@@ -172,9 +172,10 @@ func Test_GetRoundtripper(t *testing.T) {
 			errorStr:  "not found",
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := GetRoundtripper(context.TODO(), tt.provider, tt.k8sClient)
+			got, err := RoundTripperRetriever{}.GetRoundTripper(context.TODO(), tt.provider, tt.k8sClient)
 			t.Log(err)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("getRoundtripper() error = %v, wantErr %v", err, tt.wantErr)

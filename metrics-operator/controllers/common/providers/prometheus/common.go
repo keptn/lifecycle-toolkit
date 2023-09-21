@@ -24,7 +24,15 @@ type SecretData struct {
 	Password config.Secret `json:"password"`
 }
 
-func GetRoundtripper(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
+//go:generate moq -pkg fake -skip-ensure -out ./fake/roundtripper_mock.go . IRoundTripper
+type IRoundTripper interface {
+	GetRoundTripper(context.Context, metricsapi.KeptnMetricsProvider, client.Client) (http.RoundTripper, error)
+}
+
+type RoundTripperRetriever struct {
+}
+
+func (r RoundTripperRetriever) GetRoundTripper(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
 	secret, err := getPrometheusSecret(ctx, provider, k8sClient)
 	if err != nil {
 		if errors.Is(err, ErrSecretKeyRefNotDefined) {
@@ -33,7 +41,6 @@ func GetRoundtripper(ctx context.Context, provider metricsapi.KeptnMetricsProvid
 		return nil, err
 	}
 	return config.NewBasicAuthRoundTripper(secret.User, secret.Password, "", promapi.DefaultRoundTripper), nil
-
 }
 
 func getPrometheusSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (*SecretData, error) {
@@ -46,8 +53,8 @@ func getPrometheusSecret(ctx context.Context, provider metricsapi.KeptnMetricsPr
 	}
 
 	var secretData SecretData
-	user, ok := secret.Data[userName]
-	pw, yes := secret.Data[password]
+	user, ok := secret.Data[secretKeyUserName]
+	pw, yes := secret.Data[secretKeyPassword]
 	if !ok || !yes {
 		return nil, ErrInvalidSecretFormat
 	}

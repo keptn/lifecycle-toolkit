@@ -125,7 +125,7 @@ Please verify
 
 Use the `container-runtime` to specify your own
 [Kubernetes container](https://kubernetes.io/docs/concepts/containers/)
-image and define almost task you want to do.
+and define the task you want to execute.
 
 You can code a sequence of executables here
 that need to be run in order

@@ -6,4 +6,3 @@ commands:
       assert:
         - contains:
             - "keptn_lifecycle_active"
-

@@ -20,7 +20,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -29,6 +28,7 @@ import (
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	"golang.org/x/exp/maps"
 	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -77,17 +77,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		return ctrl.Result{}, nil
 	}
 
-	// make sure the correct time frame is set in the status - once an Analysis with a duration string specifying the
-	// time frame is triggered, the time frame derived from that duration should stay the same and not shift over the course
-	// of multiple reconciliation loops
-	if analysis.Status.Timeframe.From.IsZero() || analysis.Status.Timeframe.To.IsZero() {
-		analysis.Status.Timeframe.From = metav1.Time{
-			Time: analysis.Spec.GetFrom(),
-		}
-		analysis.Status.Timeframe.To = metav1.Time{
-			Time: analysis.Spec.GetTo(),
-		}
-	}
+	ensureAnalysisTimeframeIsSet(analysis)
 
 	//find AnalysisDefinition to have the collection of Objectives
 	analysisDef, err := a.retrieveAnalysisDefinition(ctx, analysis)
@@ -124,6 +114,20 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	return ctrl.Result{}, nil
+}
+
+func ensureAnalysisTimeframeIsSet(analysis *metricsapi.Analysis) {
+	// make sure the correct time frame is set in the status - once an Analysis with a duration string specifying the
+	// time frame is triggered, the time frame derived from that duration should stay the same and not shift over the course
+	// of multiple reconciliation loops
+	if analysis.Status.Timeframe.From.IsZero() || analysis.Status.Timeframe.To.IsZero() {
+		analysis.Status.Timeframe.From = metav1.Time{
+			Time: analysis.Spec.GetFrom(),
+		}
+		analysis.Status.Timeframe.To = metav1.Time{
+			Time: analysis.Spec.GetTo(),
+		}
+	}
 }
 
 func (a *AnalysisReconciler) evaluateObjectives(ctx context.Context, res map[string]metricsapi.ProviderResult, analysisDef *metricsapi.AnalysisDefinition, analysis *metricsapi.Analysis) {

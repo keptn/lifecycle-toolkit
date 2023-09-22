@@ -355,9 +355,26 @@ func TestAnalysisReconciler_ExistingAnalysisStatusIsFlushedWhenEvaluationFinishe
 }
 
 func TestAnalysisReconciler_AnalysisTimeframeIsDerivedFromDurationString(t *testing.T) {
-	analysis, _, _, _ := getTestCRDs()
-
-	analysis.Spec.Timeframe = metricsapi.Timeframe{Recent: metav1.Duration{Duration: 5 * time.Minute}}
+	analysis := metricsapi.Analysis{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-analysis",
+			Namespace: "default",
+		},
+		Spec: metricsapi.AnalysisSpec{
+			Timeframe: metricsapi.Timeframe{Recent: metav1.Duration{Duration: 5 * time.Minute}},
+			Args: map[string]string{
+				"good": "good",
+				"dot":  ".",
+			},
+			AnalysisDefinition: metricsapi.ObjectReference{
+				Name:      "my-analysis-def",
+				Namespace: "default",
+			},
+		},
+		Status: metricsapi.AnalysisStatus{
+			State: metricsapi.StatePending,
+		},
+	}
 
 	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, obj []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
 		mymock := fake.IAnalysisPoolMock{

@@ -139,7 +139,7 @@ func Test_GetPodsOfOwner(t *testing.T) {
 			result: nil,
 		},
 		{
-			name: "pod list not mathing kind or uid",
+			name: "pod list not matching kind or uid",
 			pods: &corev1.PodList{
 				Items: []corev1.Pod{
 					{

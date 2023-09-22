@@ -354,6 +354,53 @@ func TestAnalysisReconciler_ExistingAnalysisStatusIsFlushedWhenEvaluationFinishe
 
 }
 
+func TestAnalysisReconciler_AnalysisTimeframeIsDerivedFromDurationString(t *testing.T) {
+	analysis, _, _, _ := getTestCRDs()
+
+	analysis.Spec.Timeframe = metricsapi.Timeframe{Recent: metav1.Duration{Duration: 5 * time.Minute}}
+
+	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, obj []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
+		mymock := fake.IAnalysisPoolMock{
+			DispatchAndCollectFunc: func(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
+				return map[string]metricsapi.ProviderResult{}, nil
+			},
+		}
+		return ctx, &mymock
+	}
+
+	fclient := fake2.NewClient(&analysis)
+	a := &AnalysisReconciler{
+		Client:                fclient,
+		Scheme:                fclient.Scheme(),
+		Log:                   testr.New(t),
+		MaxWorkers:            2,
+		NewWorkersPoolFactory: mockFactory,
+		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
+			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+				return metricstypes.AnalysisResult{Pass: true}
+			}},
+	}
+
+	req := controllerruntime.Request{
+		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
+	}
+
+	got, err := a.Reconcile(context.TODO(), req)
+
+	// expect to be re-queued, since the AnalysisDefinition was not there, but the from/to timestamps should be set
+	// as soon as the reconciliation has started
+	require.Nil(t, err)
+	require.True(t, got.Requeue)
+	resAnalysis := metricsapi.Analysis{}
+	err = fclient.Get(context.TODO(), req.NamespacedName, &resAnalysis)
+	require.Nil(t, err)
+
+	currentTime := time.Now().UTC()
+	require.WithinDuration(t, currentTime, resAnalysis.Status.Timeframe.GetTo(), time.Minute)
+	require.WithinDuration(t, currentTime.Add(-5*time.Minute), resAnalysis.Status.Timeframe.GetFrom(), time.Minute)
+
+}
+
 func getTestCRDs() (metricsapi.Analysis, metricsapi.AnalysisDefinition, metricsapi.AnalysisValueTemplate, metricsapi.KeptnMetricsProvider) {
 	currentTime := time.Now().Round(time.Minute)
 	analysis := metricsapi.Analysis{

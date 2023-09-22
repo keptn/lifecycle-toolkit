@@ -34,6 +34,7 @@ import (
 	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnappcreationrequest"
@@ -135,6 +136,9 @@ func main() {
 	opts.BindFlags(flag.CommandLine)
 	// parse the flags, so we ensure they can be set to something else than their default values
 	flag.Parse()
+
+	// inject pod namespace into common configs
+	config.Instance().SetDefaultNamespace(env.PodNamespace)
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
@@ -293,7 +297,6 @@ func main() {
 		EventSender:   controllercommon.NewEventMultiplexer(evaluationLogger, evaluationRecorder, ceClient),
 		TracerFactory: telemetry.GetOtelInstance(),
 		Meters:        keptnMeters,
-		Namespace:     env.PodNamespace,
 	}
 	if err = (evaluationReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")

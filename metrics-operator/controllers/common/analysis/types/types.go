@@ -31,10 +31,11 @@ type OperatorResult struct {
 }
 
 type ObjectiveResult struct {
-	Result TargetResult `json:"result"`
-	Value  float64      `json:"value"`
-	Score  float64      `json:"score"`
-	Error  error        `json:"error,omitempty"`
+	Result    TargetResult       `json:"result"`
+	Objective v1alpha3.Objective `json:"objective"`
+	Value     float64            `json:"value"`
+	Score     float64            `json:"score"`
+	Error     error              `json:"error,omitempty"`
 }
 
 func (o *ObjectiveResult) IsFail() bool {
@@ -65,4 +66,11 @@ func (a *AnalysisResult) GetAchievedPercentage() float64 {
 		return 100.0
 	}
 	return (a.TotalScore / a.MaximumScore) * 100.0
+}
+
+// AnalysisCompletion consolidates an analysis definition and its result into one struct, which is needed to communicate
+// both objects via a channel
+type AnalysisCompletion struct {
+	Result   AnalysisResult
+	Analysis v1alpha3.Analysis
 }

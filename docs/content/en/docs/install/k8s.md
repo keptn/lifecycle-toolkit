@@ -67,6 +67,8 @@ Your cluster should include the following:
 
 * [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
 
+* [Helm](https://helm.sh/docs/intro/install/)
+
 * Metric provider such as
   [Prometheus](https://prometheus.io/),
   [Dynatrace](https://www.dynatrace.com/),

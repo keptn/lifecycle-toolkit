@@ -36,3 +36,22 @@ func TestGetOptionsInstance(t *testing.T) {
 	timeout := o2.GetCreationRequestTimeout()
 	require.Equal(t, 5*time.Second, timeout)
 }
+
+func TestConfig_SetAndGetDefaultNamespace(t *testing.T) {
+	i := Instance()
+
+	ns := i.GetDefaultNamespace()
+
+	require.Empty(t, ns)
+	i.SetDefaultNamespace("test")
+	require.Equal(t, "test", i.GetDefaultNamespace())
+}
+
+func TestConfig_SetAndGetCloudEventEndpoint(t *testing.T) {
+	i := Instance()
+
+	ns := i.GetCloudEventsEndpoint()
+	require.Empty(t, ns)
+	i.SetCloudEventsEndpoint("mytestendpoint")
+	require.Equal(t, "mytestendpoint", i.GetCloudEventsEndpoint())
+}

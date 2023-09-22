@@ -7,6 +7,7 @@ import (
 	"time"
 
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnevaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
@@ -34,12 +35,13 @@ var (
 	ns           *v1.Namespace
 )
 
-const KLTnamespace = "keptnlifecycle"
+const KeptnNamespace = "keptnlifecycle"
 
 var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
 	// //setup controllers here
 	controller := &keptnevaluation.KeptnEvaluationReconciler{
 		Client:        k8sManager.GetClient(),
@@ -48,11 +50,10 @@ var _ = BeforeSuite(func() {
 		Log:           GinkgoLogr,
 		Meters:        common.InitKeptnMeters(),
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
-		Namespace:     KLTnamespace,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 
-	ns = common.MakeKLTDefaultNamespace(k8sClient, KLTnamespace)
+	ns = common.MakeKLTDefaultNamespace(k8sClient, KeptnNamespace)
 	close(readyToStart)
 })
 

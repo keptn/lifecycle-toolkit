@@ -6,6 +6,7 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -13,6 +14,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
+
+const KeptnNamespace = "keptn"
 
 func Test_GetItemStatus(t *testing.T) {
 	tests := []struct {
@@ -402,7 +405,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 			taskDef: &klcv1alpha3.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "taskDef",
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 				},
 			},
 			taskDefName:      "taskDef",
@@ -410,7 +413,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 			out: &klcv1alpha3.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "taskDef",
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 				},
 			},
 			wantError: false,
@@ -419,6 +422,8 @@ func Test_GetTaskDefinition(t *testing.T) {
 
 	err := klcv1alpha3.AddToScheme(scheme.Scheme)
 	require.Nil(t, err)
+
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -484,7 +489,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 			evalDef: &klcv1alpha3.KeptnEvaluationDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "evalDef",
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 				},
 			},
 			evalDefName:      "evalDef",
@@ -492,7 +497,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 			out: &klcv1alpha3.KeptnEvaluationDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "evalDef",
-					Namespace: KLTNamespace,
+					Namespace: KeptnNamespace,
 				},
 			},
 			wantError: false,
@@ -501,6 +506,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 
 	err := klcv1alpha3.AddToScheme(scheme.Scheme)
 	require.Nil(t, err)
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

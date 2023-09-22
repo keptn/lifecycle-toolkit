@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -57,8 +57,9 @@ func (p *KeptnMetricProvider) GetKeptnMetric(ctx context.Context, objective klcv
 	} else {
 		if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: namespace}, metric); err != nil {
 			p.Log.Error(err, "Failed to get KeptnMetric from KeptnEvaluation resource namespace")
-			if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: common.KLTNamespace}, metric); err != nil {
-				p.Log.Error(err, "Failed to get KeptnMetric from "+common.KLTNamespace+" namespace")
+			defaultNamespace := config.Instance().GetDefaultNamespace()
+			if err := p.K8sClient.Get(ctx, types.NamespacedName{Name: objective.KeptnMetricRef.Name, Namespace: defaultNamespace}, metric); err != nil {
+				p.Log.Error(err, "Failed to get KeptnMetric from "+defaultNamespace+" namespace")
 				return nil, err
 			}
 		}

@@ -32,10 +32,10 @@ var providerInstance *keptnMetricsProvider
 var providerOnce sync.Once
 
 type keptnMetricsProvider struct {
-	client       dynamic.Interface
-	scheme       *runtime.Scheme
-	logger       logr.Logger
-	KltNamespace string
+	client         dynamic.Interface
+	scheme         *runtime.Scheme
+	logger         logr.Logger
+	KeptnNamespace string
 
 	// cache is being populated via the updates received by the provider's dynamic informer
 	// this way, we avoid sending a request to the Kubernetes API each time a custom metric value should be retrieved
@@ -54,8 +54,8 @@ func NewProvider(ctx context.Context, client dynamic.Interface, namespace string
 			cache: CustomMetricsCache{
 				metrics: map[metricKey]CustomMetricValue{},
 			},
-			logger:       ctrl.Log.WithName("provider"),
-			KltNamespace: namespace,
+			logger:         ctrl.Log.WithName("provider"),
+			KeptnNamespace: namespace,
 		}
 
 		if err := providerInstance.watchMetrics(ctx); err != nil {

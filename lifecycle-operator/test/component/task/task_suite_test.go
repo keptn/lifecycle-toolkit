@@ -7,6 +7,7 @@ import (
 	"time"
 
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptntask"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
@@ -30,12 +31,16 @@ var (
 	ctx        context.Context
 )
 
+const KeptnNamespace = "keptnlifecycle"
+
 var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
 	ctx, k8sManager, tracer, _, k8sClient, readyToStart = common.InitSuite()
 
 	_ = os.Setenv(controllercommon.FunctionRuntimeImageKey, "my-image-js")
 	_ = os.Setenv(controllercommon.PythonRuntimeImageKey, "my-image-py")
+
+	config.Instance().SetDefaultNamespace(KeptnNamespace)
 
 	// //setup controllers here
 	controller := &keptntask.KeptnTaskReconciler{

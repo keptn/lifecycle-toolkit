@@ -36,10 +36,12 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	analysiscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
+	analysistypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
 	metricscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/metrics"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/converter"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
+	analysismetrics "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics/analysis"
 	"github.com/open-feature/go-sdk/pkg/openfeature"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -200,23 +202,29 @@ func main() {
 	}
 
 	if env.EnableKeptnAnalysis {
-
 		analysisLogger := ctrl.Log.WithName("KeptnAnalysis Controller")
 		targetEval := analysis.NewTargetEvaluator(&analysis.OperatorEvaluator{})
 		objEval := analysis.NewObjectiveEvaluator(&targetEval)
 		analysisEval := analysis.NewAnalysisEvaluator(&objEval)
 
-		if err = (&analysiscontroller.AnalysisReconciler{
+		ac := &analysiscontroller.AnalysisReconciler{
 			Client:                mgr.GetClient(),
 			Scheme:                mgr.GetScheme(),
 			Log:                   analysisLogger.V(env.AnalysisControllerLogLevel),
 			MaxWorkers:            2,
 			NewWorkersPoolFactory: analysiscontroller.NewWorkersPool,
 			IAnalysisEvaluator:    &analysisEval,
-		}).SetupWithManager(mgr); err != nil {
+		}
+		if err = ac.SetupWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
 			os.Exit(1)
 		}
+
+		res := make(chan analysistypes.AnalysisCompletion)
+
+		ac.SetAnalysisResultsChannel(res)
+
+		_ = analysismetrics.GetResultsReporter(ctx, res)
 	}
 	// +kubebuilder:scaffold:builder
 
@@ -274,7 +282,7 @@ func startCustomMetricsAdapter(namespace string) {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM)
 	defer cancel()
 
-	metricsAdapter := adapter.MetricsAdapter{KltNamespace: namespace}
+	metricsAdapter := adapter.MetricsAdapter{KeptnNamespace: namespace}
 	metricsAdapter.RunAdapter(ctx)
 }
 

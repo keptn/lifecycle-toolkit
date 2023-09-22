@@ -20,6 +20,8 @@ import (
 	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
+const KeptnNamespace = "test"
+
 func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout_SingleWorkload(t *testing.T) {
 	r, fakeClient, theClock := setupReconcilerAndClient(t)
 
@@ -665,6 +667,9 @@ func setupReconcilerAndClient(t *testing.T) (*KeptnAppCreationRequestReconciler,
 		config: &fake.MockConfig{
 			GetCreationRequestTimeoutFunc: func() time.Duration {
 				return 30 * time.Second
+			},
+			GetDefaultNamespaceFunc: func() string {
+				return KeptnNamespace
 			},
 		},
 	}

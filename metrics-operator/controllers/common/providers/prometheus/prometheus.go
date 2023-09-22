@@ -35,11 +35,11 @@ func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query 
 	r.Log.Info(fmt.Sprintf(
 		"Running query: /api/v1/query_range?query=%s&start=%d&end=%d",
 		query,
-		analysis.GetFromTime().Unix(), analysis.GetToTime().Unix(),
+		analysis.GetFrom().Unix(), analysis.GetTo().Unix(),
 	))
 	queryRange := prometheus.Range{
-		Start: analysis.GetFromTime(),
-		End:   analysis.GetToTime(),
+		Start: analysis.GetFrom(),
+		End:   analysis.GetTo(),
 		Step:  time.Minute,
 	}
 	result, warnings, err := api.QueryRange(

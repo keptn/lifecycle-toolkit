@@ -97,12 +97,34 @@ type Timeframe struct {
 	Recent metav1.Duration `json:"recent,omitempty"`
 }
 
-func (a *Analysis) GetFromTime() time.Time {
+// GetFrom returns the 'from' timestamp from the status of the Analysis.
+// This function has been added to provide a clear way of retrieving the correct timestamp
+// to use, which is the one from the Status.
+func (a *Analysis) GetFrom() time.Time {
+	a.EnsureTimeframeIsSet()
 	return a.Status.Timeframe.GetFrom()
 }
 
-func (a *Analysis) GetToTime() time.Time {
+// GetTo returns the 'from' timestamp from the status of the Analysis.
+// This function has been added to provide a clear way of retrieving the correct timestamp
+// to use, which is the one from the Status.
+func (a *Analysis) GetTo() time.Time {
+	a.EnsureTimeframeIsSet()
 	return a.Status.Timeframe.GetTo()
+}
+
+func (a *Analysis) EnsureTimeframeIsSet() {
+	// make sure the correct time frame is set in the status - once an Analysis with a duration string specifying the
+	// time frame is triggered, the time frame derived from that duration should stay the same and not shift over the course
+	// of multiple reconciliation loops
+	if a.Status.Timeframe.From.IsZero() || a.Status.Timeframe.To.IsZero() {
+		a.Status.Timeframe.From = metav1.Time{
+			Time: a.Spec.GetFrom(),
+		}
+		a.Status.Timeframe.To = metav1.Time{
+			Time: a.Spec.GetTo(),
+		}
+	}
 }
 
 func (t *Timeframe) GetFrom() time.Time {

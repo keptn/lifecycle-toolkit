@@ -29,7 +29,7 @@ type KeptnDataDogProvider struct {
 func (d *KeptnDataDogProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
-	res, _, err := d.query(ctx, query, *provider, analysis.GetFromTime().Unix(), analysis.GetToTime().Unix())
+	res, _, err := d.query(ctx, query, *provider, analysis.GetFrom().Unix(), analysis.GetTo().Unix())
 	return res, err
 }
 

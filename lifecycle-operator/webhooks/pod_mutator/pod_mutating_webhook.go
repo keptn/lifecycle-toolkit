@@ -105,7 +105,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 			logger.Info("SchedulingGates enabled")
 			_, gateRemoved := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.SchedulingGateRemoved, "")
 			if gateRemoved {
-				admission.Allowed("gate of the pod already removed")
+				return admission.Allowed("gate of the pod already removed")
 			}
 			pod.Spec.SchedulingGates = []corev1.PodSchedulingGate{
 				{

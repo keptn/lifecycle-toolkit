@@ -2,9 +2,9 @@ package prometheus
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
@@ -52,7 +52,7 @@ func TestGetSecret_NoSecretDefined(t *testing.T) {
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			SecretKeyRef: v1.SecretKeySelector{
-				Key: apiKey,
+				Key: "apiKey",
 				LocalObjectReference: v1.LocalObjectReference{
 					Name: secretName,
 				},
@@ -64,7 +64,7 @@ func TestGetSecret_NoSecretDefined(t *testing.T) {
 	r1, e := getPrometheusSecret(context.TODO(), p, fakeClient)
 	require.NotNil(t, e)
 	t.Log(e.Error())
-	require.True(t, strings.Contains(e.Error(), "the SecretKeyRef property with the Prometheus API Key is missing"))
+	require.True(t, errors.Is(e, ErrSecretKeyRefNotDefined))
 	require.Empty(t, r1)
 
 }
@@ -83,7 +83,8 @@ func TestGetSecret_HappyPath(t *testing.T) {
 			Namespace: "default",
 		},
 		Data: map[string][]byte{
-			apiKey: []byte("mytoken"),
+			"user":     []byte("myuser"),
+			"password": []byte("mytoken"),
 		},
 	}
 	fakeClient := fake.NewClient(apiToken)
@@ -92,7 +93,7 @@ func TestGetSecret_HappyPath(t *testing.T) {
 		ObjectMeta: metav1.ObjectMeta{Namespace: "default"},
 		Spec: metricsapi.KeptnMetricsProviderSpec{
 			SecretKeyRef: v1.SecretKeySelector{
-				Key: apiKey,
+				Key: "login",
 				LocalObjectReference: v1.LocalObjectReference{
 					Name: secretName,
 				},
@@ -102,6 +103,7 @@ func TestGetSecret_HappyPath(t *testing.T) {
 	}
 	r1, e := getPrometheusSecret(context.TODO(), p, fakeClient)
 	require.Nil(t, e)
-	require.Equal(t, "mytoken", r1)
+	require.Equal(t, "myuser", r1.User)
+	require.Equal(t, "mytoken", r1.Password)
 
 }

@@ -2,12 +2,14 @@ package prometheus
 
 import (
 	"context"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/prometheus/common/model"
@@ -319,7 +321,7 @@ func TestFetchAnalysisValueWithAuth(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		header := r.Header.Get("Authorization")
 		t.Log(header)
-		if strings.Contains(header, "Bearer secretValue") {
+		if strings.Contains(header, "Basic user:password") {
 			_, err := w.Write([]byte(promPayloadWithRangeAndStep))
 			require.Nil(t, err)
 		} else {
@@ -336,18 +338,24 @@ func TestFetchAnalysisValueWithAuth(t *testing.T) {
 				LocalObjectReference: v1.LocalObjectReference{
 					Name: "myapitoken",
 				},
-				Key: apiKey,
+				Key: "defaultuser",
 			},
 			TargetServer: svr.URL,
 		},
 	}
+
+	secValue := SecretData{Password: password, User: userName}
+	secByte, err := json.Marshal(secValue)
+
+	require.Nil(t, err)
+
 	secret := v1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "myapitoken",
 			Namespace: "",
 		},
 		Data: map[string][]byte{
-			apiKey: []byte("secretValue"),
+			"defaultuser": secByte,
 		},
 	}
 	fclient := fake.NewClient(&secret)

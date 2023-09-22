@@ -3,10 +3,7 @@ package prometheus
 import (
 	"context"
 	"encoding/json"
-	"fmt" //nolint:gci
-	"github.com/pkg/errors"
-	"net/http" //nolint:gci
-	"sigs.k8s.io/controller-runtime/pkg/client"
+	"fmt"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -14,6 +11,7 @@ import (
 	promapi "github.com/prometheus/client_golang/api"
 	prometheus "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 var errCouldNotCast = fmt.Errorf("could not cast result")
@@ -25,35 +23,14 @@ type KeptnPrometheusProvider struct {
 	K8sClient client.Client
 }
 
-func (r *KeptnPrometheusProvider) NewHttpClient(ctx context.Context, provider metricsapi.KeptnMetricsProvider) (*http.Client, error) {
-
-	token, err := getPrometheusSecret(ctx, provider, r.K8sClient)
-
-	if err != nil {
-		if errors.Is(err, ErrSecretKeyRefNotDefined) {
-			//if no secret is registered the provider will attempt to connect without authentication
-			return &http.Client{}, nil
-		}
-		return nil, err
-	}
-	return &http.Client{Transport: &transport{underlyingTransport: http.DefaultTransport, apiToken: token}}, nil
-}
-
 func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
-
-	c, err := r.NewHttpClient(ctx, *provider)
+	api, err := r.setupApi(ctx, *provider)
 	if err != nil {
 		return "", err
 	}
 
-	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: c})
-	if err != nil {
-		return "", err
-	}
-
-	api := prometheus.NewAPI(client)
 	r.Log.Info(fmt.Sprintf(
 		"Running query: /api/v1/query_range?query=%s&start=%d&end=%d",
 		query,
@@ -86,16 +63,12 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	c, err := r.NewHttpClient(ctx, provider)
-	if err != nil {
-		return "", nil, err
-	}
-	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: c})
+	api, err := r.setupApi(ctx, provider)
+
 	if err != nil {
 		return "", nil, err
 	}
 
-	api := prometheus.NewAPI(client)
 	if metric.Spec.Range != nil {
 		result, warnings, err := evaluateQueryWithRange(ctx, metric, r, api)
 		if err != nil {
@@ -122,17 +95,10 @@ func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metr
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	c, err := r.NewHttpClient(ctx, provider)
+	api, err := r.setupApi(ctx, provider)
 	if err != nil {
 		return nil, nil, err
 	}
-
-	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: c})
-	if err != nil {
-		return nil, nil, err
-	}
-
-	api := prometheus.NewAPI(client)
 
 	result, warnings, err := evaluateQueryWithRange(ctx, metric, r, api)
 	if err != nil {
@@ -142,6 +108,19 @@ func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metr
 		r.Log.Info("Prometheus API returned warnings: " + warnings[0])
 	}
 	return getResultForStepMatrix(result)
+}
+
+func (r *KeptnPrometheusProvider) setupApi(ctx context.Context, provider metricsapi.KeptnMetricsProvider) (prometheus.API, error) {
+	rt, err := getRoundtripper(ctx, provider, r.K8sClient)
+	if err != nil {
+		return nil, err
+	}
+
+	pClient, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, RoundTripper: rt})
+	if err != nil {
+		return nil, err
+	}
+	return prometheus.NewAPI(pClient), nil
 }
 
 func evaluateQueryWithRange(ctx context.Context, metric metricsapi.KeptnMetric, r *KeptnPrometheusProvider, api prometheus.API) (model.Value, prometheus.Warnings, error) {

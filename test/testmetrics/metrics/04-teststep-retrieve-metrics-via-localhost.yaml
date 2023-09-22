@@ -1,0 +1,9 @@
+apiVersion: kuttl.dev/v1
+kind: TestStep
+commands:
+  - script: ./retrieve-metrics2.sh "keptn_lifecycle_active"
+    validate:
+      assert:
+        - contains:
+            - "keptn_lifecycle_active"
+            

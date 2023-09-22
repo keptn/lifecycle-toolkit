@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -119,6 +120,14 @@ func main() {
 	}
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
 	meter := provider.Meter("keptn/task")
+
+	keptnLifecycleActive, err := meter.Int64Counter("keptn_lifecycle_active")
+
+	if err != nil {
+		setupLog.Error(err, "unable to create metric keptn_lifecycle_active")
+		os.Exit(1)
+	}
+
 	keptnMeters := telemetry.SetUpKeptnTaskMeters(meter)
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
@@ -347,6 +356,9 @@ func main() {
 		setupLog.Error(err, "unable to set up ready check")
 		os.Exit(1)
 	}
+
+	// Set the metric value as soon as the operator starts
+	keptnLifecycleActive.Add(context.Background(), 1)
 	if !disableWebhook {
 		webhookBuilder = webhookBuilder.SetCertificateWatcher(
 			certificates.NewCertificateWatcher(

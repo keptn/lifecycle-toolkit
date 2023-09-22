@@ -18,8 +18,8 @@ type ISchedulingGatesHandler interface {
 	IsSchedulingEnabled() bool
 }
 
-type RemoveGatesFunc func(ctx context.Context, c client.Client, log logr.Logger, podName string, podNamespace string) error
-type GetPodsFunc func(ctx context.Context, c client.Client, log logr.Logger, ownerUID types.UID, ownerKind string, namespace string) ([]string, error)
+type RemoveGatesFunc func(ctx context.Context, c client.Client, podName string, podNamespace string) error
+type GetPodsFunc func(ctx context.Context, c client.Client, ownerUID types.UID, ownerKind string, namespace string) ([]string, error)
 
 type SchedulingGatesHandler struct {
 	client.Client
@@ -42,15 +42,15 @@ func NewSchedulingGatesHandler(c client.Client, l logr.Logger, enabled bool) *Sc
 func (h *SchedulingGatesHandler) RemoveGates(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error {
 	switch workloadInstance.Spec.ResourceReference.Kind {
 	case "Pod":
-		return h.removeGates(ctx, h.Client, h.Logger, workloadInstance.Spec.ResourceReference.Name, workloadInstance.Namespace)
+		return h.removeGates(ctx, h.Client, workloadInstance.Spec.ResourceReference.Name, workloadInstance.Namespace)
 	case "ReplicaSet", "StatefulSet", "DaemonSet":
-		podList, err := h.getPods(ctx, h.Client, h.Logger, workloadInstance.Spec.ResourceReference.UID, workloadInstance.Spec.ResourceReference.Kind, workloadInstance.Namespace)
+		podList, err := h.getPods(ctx, h.Client, workloadInstance.Spec.ResourceReference.UID, workloadInstance.Spec.ResourceReference.Kind, workloadInstance.Namespace)
 		if err != nil {
 			h.Logger.Error(err, "cannot get pods")
 			return err
 		}
 		for _, pod := range podList {
-			err := h.removeGates(ctx, h.Client, h.Logger, pod, workloadInstance.Namespace)
+			err := h.removeGates(ctx, h.Client, pod, workloadInstance.Namespace)
 			if err != nil {
 				h.Logger.Error(err, "cannot remove gates from pod")
 				return err
@@ -67,11 +67,10 @@ func (h *SchedulingGatesHandler) IsSchedulingEnabled() bool {
 	return h.enabled
 }
 
-func removePodGates(ctx context.Context, c client.Client, log logr.Logger, podName string, podNamespace string) error {
+func removePodGates(ctx context.Context, c client.Client, podName string, podNamespace string) error {
 	pod := &v1.Pod{}
 	err := c.Get(ctx, types.NamespacedName{Namespace: podNamespace, Name: podName}, pod)
 	if err != nil {
-		log.Error(err, "cannot remove gates from pod")
 		return err
 	}
 
@@ -87,11 +86,10 @@ func removePodGates(ctx context.Context, c client.Client, log logr.Logger, podNa
 	return c.Update(ctx, pod)
 }
 
-func getPodsOfOwner(ctx context.Context, c client.Client, log logr.Logger, ownerUID types.UID, ownerKind string, namespace string) ([]string, error) {
+func getPodsOfOwner(ctx context.Context, c client.Client, ownerUID types.UID, ownerKind string, namespace string) ([]string, error) {
 	pods := &v1.PodList{}
 	err := c.List(ctx, pods, client.InNamespace(namespace))
 	if err != nil {
-		log.Error(err, "cannot list pods")
 		return nil, err
 	}
 

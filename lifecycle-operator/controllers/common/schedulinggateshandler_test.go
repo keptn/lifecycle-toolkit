@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
@@ -14,7 +13,6 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
-	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
@@ -109,7 +107,7 @@ func Test_RemovePodGates(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			client := fake.NewClientBuilder().WithObjects(tt.pod).WithStatusSubresource(tt.pod).Build()
-			err := removePodGates(context.TODO(), client, ctrl.Log.WithName("testytest"), tt.podName, tt.pod.Namespace)
+			err := removePodGates(context.TODO(), client, tt.podName, tt.pod.Namespace)
 			if tt.wantError != (err != nil) {
 				t.Errorf("want error: %t, got: %v", tt.wantError, err)
 			}
@@ -202,7 +200,7 @@ func Test_GetPodsOfOwner(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			client := fake.NewClientBuilder().WithLists(tt.pods).Build()
-			res, err := getPodsOfOwner(context.TODO(), client, ctrl.Log.WithName("testytest"), tt.uid, tt.kind, namespace)
+			res, err := getPodsOfOwner(context.TODO(), client, tt.uid, tt.kind, namespace)
 			require.Nil(t, err)
 			require.Equal(t, tt.result, res)
 		})
@@ -245,7 +243,7 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 		{
 			name: "pod - happy path",
 			handler: SchedulingGatesHandler{
-				removeGates: func(ctx context.Context, c client.Client, log logr.Logger, podName, podNamespace string) error {
+				removeGates: func(ctx context.Context, c client.Client, podName, podNamespace string) error {
 					return nil
 				},
 			},
@@ -263,7 +261,7 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 		{
 			name: "pod - fail path",
 			handler: SchedulingGatesHandler{
-				removeGates: func(ctx context.Context, c client.Client, log logr.Logger, podName, podNamespace string) error {
+				removeGates: func(ctx context.Context, c client.Client, podName, podNamespace string) error {
 					return fmt.Errorf("pod")
 				},
 			},
@@ -281,10 +279,10 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 		{
 			name: "ReplicaSet, StatefulSet, DaemonSet - happy path",
 			handler: SchedulingGatesHandler{
-				removeGates: func(ctx context.Context, c client.Client, log logr.Logger, podName, podNamespace string) error {
+				removeGates: func(ctx context.Context, c client.Client, podName, podNamespace string) error {
 					return nil
 				},
-				getPods: func(ctx context.Context, c client.Client, log logr.Logger, ownerUID types.UID, ownerKind, namespace string) ([]string, error) {
+				getPods: func(ctx context.Context, c client.Client, ownerUID types.UID, ownerKind, namespace string) ([]string, error) {
 					return []string{"podName"}, nil
 				},
 			},
@@ -302,7 +300,7 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 		{
 			name: "ReplicaSet, StatefulSet, DaemonSet - happy path - no pods found",
 			handler: SchedulingGatesHandler{
-				getPods: func(ctx context.Context, c client.Client, log logr.Logger, ownerUID types.UID, ownerKind, namespace string) ([]string, error) {
+				getPods: func(ctx context.Context, c client.Client, ownerUID types.UID, ownerKind, namespace string) ([]string, error) {
 					return []string{}, nil
 				},
 			},
@@ -320,7 +318,7 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 		{
 			name: "ReplicaSet, StatefulSet, DaemonSet - happy path - err getPods",
 			handler: SchedulingGatesHandler{
-				getPods: func(ctx context.Context, c client.Client, log logr.Logger, ownerUID types.UID, ownerKind, namespace string) ([]string, error) {
+				getPods: func(ctx context.Context, c client.Client, ownerUID types.UID, ownerKind, namespace string) ([]string, error) {
 					return []string{}, fmt.Errorf("err")
 				},
 			},
@@ -338,10 +336,10 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 		{
 			name: "ReplicaSet, StatefulSet, DaemonSet - err removeGates",
 			handler: SchedulingGatesHandler{
-				removeGates: func(ctx context.Context, c client.Client, log logr.Logger, podName, podNamespace string) error {
+				removeGates: func(ctx context.Context, c client.Client, podName, podNamespace string) error {
 					return fmt.Errorf("err")
 				},
-				getPods: func(ctx context.Context, c client.Client, log logr.Logger, ownerUID types.UID, ownerKind, namespace string) ([]string, error) {
+				getPods: func(ctx context.Context, c client.Client, ownerUID types.UID, ownerKind, namespace string) ([]string, error) {
 					return []string{"podName"}, nil
 				},
 			},

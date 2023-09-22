@@ -139,7 +139,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		}
 	}
 
-	if r.SchedulingGatesHandler.IsSchedullingEnabled() {
+	if r.SchedulingGatesHandler.IsSchedulingEnabled() {
 		// pre-evaluation checks done at this moment, we can remove the gate
 		if err := r.SchedulingGatesHandler.RemoveGates(ctx, workloadInstance); err != nil {
 			r.Log.Error(err, "could not remove SchedulingGates")

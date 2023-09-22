@@ -100,10 +100,10 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	}
 
 	if podIsAnnotated {
-		_, gateRemoved := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.SchedulingGateRemoved, "")
 		logger.Info("Resource is annotated with Keptn annotations")
 		if a.SchedulingGatesEnabled {
 			logger.Info("SchedulingGates enabled")
+			_, gateRemoved := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.SchedulingGateRemoved, "")
 			if !gateRemoved {
 				pod.Spec.SchedulingGates = []corev1.PodSchedulingGate{
 					{

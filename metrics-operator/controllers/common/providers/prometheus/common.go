@@ -8,7 +8,6 @@ import (
 	"github.com/prometheus/common/config"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/json"
 	"net/http"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -46,15 +45,12 @@ func getPrometheusSecret(ctx context.Context, provider metricsapi.KeptnMetricsPr
 	}
 
 	var secretData SecretData
-	if data, ok := secret.Data[provider.Spec.SecretKeyRef.Key]; ok {
-		// Unmarshal the JSON data into the SecretData struct
-		if err := json.Unmarshal(data, &secretData); err != nil {
-			return nil, ErrInvalidSecretFormat
-		}
-	} else if _, ok := secret.Data[userName]; !ok {
+	user, ok := secret.Data[userName]
+	pw, yes := secret.Data[password]
+	if !ok || !yes {
 		return nil, ErrInvalidSecretFormat
 	}
-	secretData.User = string(secret.Data[userName])
-	secretData.Password = config.Secret(secret.Data[password])
+	secretData.User = string(user)
+	secretData.Password = config.Secret(pw)
 	return &secretData, nil
 }

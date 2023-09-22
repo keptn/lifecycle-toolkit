@@ -2,7 +2,7 @@ package prometheus
 
 import (
 	"context"
-	"encoding/json"
+	"encoding/base64"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -320,8 +320,10 @@ func TestFetchAnalysisValueWithAuth(t *testing.T) {
 
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		header := r.Header.Get("Authorization")
+		//prometheus encodes basic user password in header
 		t.Log(header)
-		if strings.Contains(header, "Basic user:password") {
+		encoded := "Basic " + base64.StdEncoding.EncodeToString([]byte("user:password"))
+		if strings.Contains(header, encoded) {
 			_, err := w.Write([]byte(promPayloadWithRangeAndStep))
 			require.Nil(t, err)
 		} else {
@@ -344,18 +346,14 @@ func TestFetchAnalysisValueWithAuth(t *testing.T) {
 		},
 	}
 
-	secValue := SecretData{Password: password, User: userName}
-	secByte, err := json.Marshal(secValue)
-
-	require.Nil(t, err)
-
 	secret := v1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "myapitoken",
 			Namespace: "",
 		},
 		Data: map[string][]byte{
-			"defaultuser": secByte,
+			userName: []byte(userName),
+			password: []byte(password),
 		},
 	}
 	fclient := fake.NewClient(&secret)

@@ -2,7 +2,7 @@ package prometheus
 
 import (
 	"context"
-	"github.com/pkg/errors"
+	"github.com/prometheus/common/config"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -32,7 +33,7 @@ func TestGetSecret_NoKeyDefined(t *testing.T) {
 	}
 	r1, e := getPrometheusSecret(context.TODO(), p, fakeClient)
 	require.NotNil(t, e)
-	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
+	require.ErrorIs(t, ErrSecretKeyRefNotDefined, e)
 	require.Empty(t, r1)
 
 }
@@ -64,7 +65,7 @@ func TestGetSecret_NoSecretDefined(t *testing.T) {
 	r1, e := getPrometheusSecret(context.TODO(), p, fakeClient)
 	require.NotNil(t, e)
 	t.Log(e.Error())
-	require.True(t, errors.Is(e, ErrSecretKeyRefNotDefined))
+	require.True(t, k8serrors.IsNotFound(e))
 	require.Empty(t, r1)
 
 }
@@ -104,6 +105,6 @@ func TestGetSecret_HappyPath(t *testing.T) {
 	r1, e := getPrometheusSecret(context.TODO(), p, fakeClient)
 	require.Nil(t, e)
 	require.Equal(t, "myuser", r1.User)
-	require.Equal(t, "mytoken", r1.Password)
+	require.Equal(t, config.Secret("mytoken"), r1.Password)
 
 }

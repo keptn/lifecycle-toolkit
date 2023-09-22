@@ -104,12 +104,13 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		if a.SchedulingGatesEnabled {
 			logger.Info("SchedulingGates enabled")
 			_, gateRemoved := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.SchedulingGateRemoved, "")
-			if !gateRemoved {
-				pod.Spec.SchedulingGates = []corev1.PodSchedulingGate{
-					{
-						Name: "gated-klt",
-					},
-				}
+			if gateRemoved {
+				admission.Allowed("gate of the pod already removed")
+			}
+			pod.Spec.SchedulingGates = []corev1.PodSchedulingGate{
+				{
+					Name: "gated-klt",
+				},
 			}
 		} else {
 			logger.Info("SchedulingGates disabled, using keptn-scheduler")

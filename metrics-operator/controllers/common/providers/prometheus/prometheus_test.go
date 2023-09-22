@@ -346,21 +346,23 @@ func TestFetchAnalysisValue(t *testing.T) {
 
 	// Prepare the analysis spec
 	now := time.Now()
-	analysisSpec := metricsapi.AnalysisSpec{
-		Timeframe: metricsapi.Timeframe{
-			From: metav1.Time{
-				Time: now.Add(-time.Hour),
-			},
-			To: metav1.Time{
-				Time: now,
-			}},
+	analysis := metricsapi.Analysis{
+		Spec: metricsapi.AnalysisSpec{
+			Timeframe: metricsapi.Timeframe{
+				From: metav1.Time{
+					Time: now.Add(-time.Hour),
+				},
+				To: metav1.Time{
+					Time: now,
+				}},
+		},
 	}
 
 	// Prepare the expected result
 	expectedResult := "1"
 
 	// Call the function
-	result, err := provider.FetchAnalysisValue(context.Background(), "your_query_string_here", analysisSpec, mockProvider)
+	result, err := provider.FetchAnalysisValue(context.Background(), "your_query_string_here", analysis, mockProvider)
 
 	// Assertions
 	require.NoError(t, err)

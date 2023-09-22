@@ -954,14 +954,16 @@ func TestFetchAnalysisValue_HappyPath(t *testing.T) {
 		},
 	}
 
-	spec := metricsapi.AnalysisSpec{
-		Timeframe: metricsapi.Timeframe{
-			From: metav1.Time{Time: time.Now()},
-			To:   metav1.Time{Time: time.Now()},
+	analysis := metricsapi.Analysis{
+		Spec: metricsapi.AnalysisSpec{
+			Timeframe: metricsapi.Timeframe{
+				From: metav1.Time{Time: time.Now()},
+				To:   metav1.Time{Time: time.Now()},
+			},
 		},
 	}
 
-	r, e := kdd.FetchAnalysisValue(context.TODO(), "system.cpu.idle{*}", spec, &p)
+	r, e := kdd.FetchAnalysisValue(context.TODO(), "system.cpu.idle{*}", analysis, &p)
 	require.Nil(t, e)
 	require.Equal(t, fmt.Sprintf("%.3f", 89.116), r)
 

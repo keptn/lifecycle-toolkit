@@ -202,7 +202,6 @@ Do this by using the `keptn.sh/pre-deployment-tasks` label.
 
 > Note: If a pre-deployment task fails, the pod will remain in a Pending state.
 
-
 ## Further Information
 
 There is a lot more you can do with KeptnTasks.

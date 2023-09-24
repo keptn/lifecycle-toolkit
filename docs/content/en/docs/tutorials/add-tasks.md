@@ -15,6 +15,9 @@ When Keptn is successfully monitoring your deployments, it can also run arbitrar
 - pre-deployment (before the pod is scheduled) and
 - post-deployment (after the post is scheduled)
 
+> Pre and post deployments can also run on a KeptnApp level.
+> See [annotations to KeptnApp](../implementing/integrate/_index.md#annotations-to-keptnapp)
+
 ## Prerequisites: Deploy webhook sink
 
 During this exercise, you will configure Keptn to trigger a webhook before and after a deployment has successfully completed.

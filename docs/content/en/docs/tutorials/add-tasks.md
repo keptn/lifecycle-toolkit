@@ -187,6 +187,9 @@ spec:
         - containerPort: 80
 ```
 
+> Best Practice: Start with post deployment tasks.
+> Pre-deployment tasks can potentially block deployments (see below).
+
 ### What Happens Next?
 
 1. The deployment will be applied

@@ -195,11 +195,13 @@ spec:
 1. The Kubernetes Job will create a Pod
 1. The pod will run curl and send a new event to the event sink
 
-## TODO: Keptn Evaluations
-
-Next: Create a tutorial on Keptn evaluations
-
-----
+## Further Information
 
 There is a lot more you can do with KeptnTasks.
 See [pre and post deployment checks page](../implementing/integrate#pre--and-post-deployment-checks) to find out more.
+
+## What's next?
+
+Keptn can also run pre and post deployment SLO evaluations.
+
+Continue the Keptn learning journey by adding evaluations.

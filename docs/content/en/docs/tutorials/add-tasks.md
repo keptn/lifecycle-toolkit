@@ -1,6 +1,6 @@
 ---
 title: Add Deployment Tasks
-description: Add KeptnTasks to deployments
+description: Add KeptnTasks to deployments X
 weight: 10
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
@@ -71,6 +71,7 @@ apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTaskDefinition
 metadata:
   name: send-event
+  namespace: keptndemo
 spec:
   retries: 0
   timeout: 5s
@@ -104,6 +105,7 @@ apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnTask
 metadata:
   name: runsendevent1
+  namespace: keptndemo
 spec:
   taskDefinition: send-event
   context:
@@ -115,14 +117,14 @@ spec:
     workloadVersion: "1.0.0"
 ```
 
-If it works, `kubectl get jobs` should show:
+If it works, `kubectl -n keptndemo get jobs` should show:
 
 ```shell
 NAME                  COMPLETIONS   DURATION   AGE
 runsendevent1-*****   1/1           6s         2m
 ```
 
-`kubectl get pods` will show the successfully executed pod.
+`kubectl -n keptndemo get pods` will show the successfully executed pod.
 
 The webhook sync should show this:
 

@@ -101,7 +101,6 @@ type Timeframe struct {
 // This function has been added to provide a clear way of retrieving the correct timestamp
 // to use, which is the one from the Status.
 func (a *Analysis) GetFrom() time.Time {
-	a.EnsureTimeframeIsSet()
 	return a.Status.Timeframe.GetFrom()
 }
 
@@ -109,7 +108,6 @@ func (a *Analysis) GetFrom() time.Time {
 // This function has been added to provide a clear way of retrieving the correct timestamp
 // to use, which is the one from the Status.
 func (a *Analysis) GetTo() time.Time {
-	a.EnsureTimeframeIsSet()
 	return a.Status.Timeframe.GetTo()
 }
 

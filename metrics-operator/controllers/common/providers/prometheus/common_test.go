@@ -19,16 +19,12 @@ import (
 const prometheusPayload = "test"
 
 func TestGetSecret_NoKeyDefined(t *testing.T) {
-	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte(prometheusPayload))
-		require.Nil(t, err)
-	}))
-	defer svr.Close()
+
 	fakeClient := fake.NewClient()
 
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: svr.URL,
+			TargetServer: "svr.URL",
 		},
 	}
 	r1, e := getPrometheusSecret(context.TODO(), p, fakeClient)
@@ -39,11 +35,6 @@ func TestGetSecret_NoKeyDefined(t *testing.T) {
 }
 
 func TestGetSecret_NoSecretDefined(t *testing.T) {
-	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte(prometheusPayload))
-		require.Nil(t, err)
-	}))
-	defer svr.Close()
 
 	secretName := "testSecret"
 
@@ -59,7 +50,7 @@ func TestGetSecret_NoSecretDefined(t *testing.T) {
 				},
 				Optional: &b,
 			},
-			TargetServer: svr.URL,
+			TargetServer: "svr",
 		},
 	}
 	r1, e := getPrometheusSecret(context.TODO(), p, fakeClient)

@@ -44,7 +44,7 @@ The template will refer to that provider and query it.
 
 Let's consider the following Analysis:
 
-{{< embed path="/lifecycle-operator/config/samples/metrics_v1alpha3_analysis.yaml" >}}
+{{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysis.yaml" >}}
 
 This cr setups the timeframe we are interested in as between 5am and 10am of the 5th of May 2023 ,
 and adds a few specific key-value pair that will be substituted in the query
@@ -52,7 +52,7 @@ for instance the query could contain a {{.nodename }} and this value will be sub
 
 The definition of this Analysis is referenced by its name and namespace and can be seen here:
 
-{{< embed path="/lifecycle-operator/config/samples/metrics_v1alpha3_analysisdefinition.yaml" >}}
+{{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysisdefinition.yaml" >}}
 
 This simple definition contains a single objective, response-time-p95. For this objective there are both a
 failure and warning criteria:
@@ -65,7 +65,9 @@ Since the objective is one only, this means that we either will pass with 100% (
 
 The objective points to the corresponding AnalysisValueTemplate:
 
-{{< embed path="/lifecycle-operator/config/samples/metrics_v1alpha3_analysisdvaluetemplate.yaml" >}}
+
+
+{{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysisvaluetemplate.yaml" >}}
 
 This template tell us that we will query a provider called prometheus using this query:
 ```shell

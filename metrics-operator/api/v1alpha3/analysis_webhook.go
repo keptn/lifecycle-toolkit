@@ -44,10 +44,10 @@ func (a *Analysis) ValidateCreate() (admission.Warnings, error) {
 	Analysislog.Info("validate create", "name", a.Name)
 
 	if err := a.validateTimeframe(); err != nil {
-		return []string{}, err
+		return admission.Warnings{}, err
 	}
 
-	return []string{}, nil
+	return admission.Warnings{}, nil
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -55,17 +55,17 @@ func (a *Analysis) ValidateUpdate(old runtime.Object) (admission.Warnings, error
 	Analysislog.Info("validate update", "name", a.Name)
 
 	if err := a.validateTimeframe(); err != nil {
-		return []string{}, err
+		return admission.Warnings{}, err
 	}
 
-	return []string{}, nil
+	return admission.Warnings{}, nil
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
 func (a *Analysis) ValidateDelete() (admission.Warnings, error) {
 	Analysislog.Info("validate delete", "name", a.Name)
 
-	return []string{}, nil
+	return admission.Warnings{}, nil
 }
 
 func (a *Analysis) validateTimeframe() error {

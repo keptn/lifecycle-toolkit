@@ -16,7 +16,7 @@ spec:
     project: my-project
     stage: dev
     service: svc1
-    foo: bar # can be any key/value pair; NOT only project/stage/service
+    nodename: test # can be any key/value pair; NOT only project/stage/service
   analysisDefinition:
     name: ed-my-proj-dev-svc1
     namespace: keptn-lifecycle-toolkit-system

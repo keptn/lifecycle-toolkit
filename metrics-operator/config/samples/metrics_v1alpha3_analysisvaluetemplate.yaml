@@ -12,4 +12,4 @@ metadata:
 spec:
   provider:
     name: prometheus
-  query: "sum(kube_pod_container_resource_limits{resource='{{.Resource}}'}) - sum(kube_node_status_capacity{resource='{{.Resource}}'})"
+  query: "sum(kube_pod_container_resource_limits{node='{{.nodename}}'}) - sum(kube_node_status_capacity{node='{{.nodename}}'})"

@@ -3,6 +3,7 @@ package prometheus
 import (
 	"context"
 	"encoding/base64"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -13,11 +14,13 @@ import (
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
+	promapi "github.com/prometheus/client_golang/api"
 	"github.com/prometheus/common/model"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const promWarnPayloadWithNoRange = "{\"status\":\"success\",\"warnings\":[\"awarning\"],\"data\":{\"resultType\":\"vector\",\"result\":[{\"metric\":{\"__name__\":\"kube_pod_info\",\"container\":\"kube-rbac-proxy-main\",\"created_by_kind\":\"DaemonSet\",\"created_by_name\":\"kindnet\",\"host_ip\":\"172.18.0.2\",\"host_network\":\"true\",\"instance\":\"10.244.0.24:8443\",\"job\":\"kube-state-metrics\",\"namespace\":\"kube-system\",\"node\":\"kind-control-plane\",\"pod\":\"kindnet-llt85\",\"pod_ip\":\"172.18.0.2\",\"uid\":\"0bb9d9db-2658-439f-aed9-ab3e8502397d\"},\"value\":[1669714193.275,\"1\"]}]}}"
@@ -387,4 +390,65 @@ func TestFetchAnalysisValueWithAuth(t *testing.T) {
 	// Assertions
 	require.NoError(t, err)
 	require.Equal(t, expectedResult, result)
+}
+
+func TestKeptnPrometheusProvider_setupApi(t *testing.T) {
+	var b byte
+	b = 0x7f
+	tests := []struct {
+		name          string
+		getter        RountripGetter
+		provider      metricsapi.KeptnMetricsProvider
+		expectedError string
+	}{
+		{
+			name: "Successful setup",
+			getter: func(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
+				return promapi.DefaultRoundTripper, nil
+			},
+			provider: metricsapi.KeptnMetricsProvider{
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					TargetServer: "http://example.com",
+				},
+			},
+			expectedError: "",
+		},
+		{
+			name: "Error in getter",
+			getter: func(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
+				return nil, errors.New("bad")
+			},
+			provider: metricsapi.KeptnMetricsProvider{
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					TargetServer: "http://example.com",
+				},
+			},
+			expectedError: "bad",
+		},
+		{
+			name: "Error in NewClient",
+			getter: func(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
+				return promapi.DefaultRoundTripper, nil
+			},
+			provider: metricsapi.KeptnMetricsProvider{
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					TargetServer: string(b),
+				},
+			},
+			expectedError: "parse",
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			r := &KeptnPrometheusProvider{
+				K8sClient: fake.NewClient(), // Initialize with your K8s client
+			}
+			_, err := r.setupApi(context.Background(), tc.provider, tc.getter)
+			if tc.expectedError == "" {
+				require.Nil(t, err)
+			} else {
+				require.Contains(t, err.Error(), tc.expectedError)
+			}
+		})
+	}
 }

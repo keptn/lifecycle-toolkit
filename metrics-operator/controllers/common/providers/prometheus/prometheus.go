@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -18,6 +19,8 @@ var errCouldNotCast = fmt.Errorf("could not cast result")
 var errNoValues = fmt.Errorf("no values in query result")
 var errTooManyValues = fmt.Errorf("too many values in query result")
 
+type RountripGetter func(context.Context, metricsapi.KeptnMetricsProvider, client.Client) (http.RoundTripper, error)
+
 type KeptnPrometheusProvider struct {
 	Log       logr.Logger
 	K8sClient client.Client
@@ -26,7 +29,7 @@ type KeptnPrometheusProvider struct {
 func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
-	api, err := r.setupApi(ctx, *provider)
+	api, err := r.setupApi(ctx, *provider, getRoundtripper)
 	if err != nil {
 		return "", err
 	}
@@ -63,7 +66,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	api, err := r.setupApi(ctx, provider)
+	api, err := r.setupApi(ctx, provider, getRoundtripper)
 
 	if err != nil {
 		return "", nil, err
@@ -95,7 +98,7 @@ func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metr
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	api, err := r.setupApi(ctx, provider)
+	api, err := r.setupApi(ctx, provider, getRoundtripper)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -110,8 +113,8 @@ func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metr
 	return getResultForStepMatrix(result)
 }
 
-func (r *KeptnPrometheusProvider) setupApi(ctx context.Context, provider metricsapi.KeptnMetricsProvider) (prometheus.API, error) {
-	rt, err := getRoundtripper(ctx, provider, r.K8sClient)
+func (r *KeptnPrometheusProvider) setupApi(ctx context.Context, provider metricsapi.KeptnMetricsProvider, getter RountripGetter) (prometheus.API, error) {
+	rt, err := getter(ctx, provider, r.K8sClient)
 	if err != nil {
 		return nil, err
 	}

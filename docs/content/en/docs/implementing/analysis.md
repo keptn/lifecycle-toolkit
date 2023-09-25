@@ -94,7 +94,7 @@ NAMESPACE   NAME              ANALYSISDEFINITION    STATE   WARNING   PASS
 default     analysis-sample   ed-my-proj-dev-svc1
 ```
 
-You can than describe the analysis like so:
+You can then describe the analysis like so:
 
 ```shell
 kubectl describe analyses.metrics.keptn.sh analysis-sample -n=default

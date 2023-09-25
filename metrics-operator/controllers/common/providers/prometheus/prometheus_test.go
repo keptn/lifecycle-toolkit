@@ -12,6 +12,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/prometheus/common/model"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"

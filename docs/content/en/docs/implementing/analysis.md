@@ -8,7 +8,7 @@ The Keptn Metrics Operator implements an SLO/SLI feature set inspired by Keptn v
 With an Analysis Definition you can specify multiple Service Level Objectives that will be evaluated in your Analysis.  
 At the end of the Analysis the status will return whether your objective failed or passed.
 
-This data can be seen as prometheus metrics and can be displayed on Grafana.
+This data can be seen as Prometheus metrics and can be displayed on Grafana.
 
 ## Keptn Analysis basics
 

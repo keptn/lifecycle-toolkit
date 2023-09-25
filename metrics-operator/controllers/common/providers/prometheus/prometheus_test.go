@@ -393,8 +393,7 @@ func TestFetchAnalysisValueWithAuth(t *testing.T) {
 }
 
 func TestKeptnPrometheusProvider_setupApi(t *testing.T) {
-	var b byte
-	b = 0x7f
+	var b byte = 0x7f
 	tests := []struct {
 		name          string
 		getter        RountripGetter

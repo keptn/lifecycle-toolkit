@@ -12,7 +12,7 @@ This data can be seen as Prometheus metrics and can be displayed on Grafana.
 
 ## Keptn Analysis basics
 
-Keptn Analysis are implemented with three resources:
+A Keptn Analysis is implemented with three resources:
 
 * [Analysis](https://lifecycle.keptn.sh/docs/crd-ref/metrics/v1alpha3/#analysis) --
   define the specific configurations and the analysis to report

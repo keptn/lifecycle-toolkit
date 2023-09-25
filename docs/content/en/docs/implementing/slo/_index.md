@@ -13,6 +13,8 @@ At the end of the Analysis the status will return whether your objective failed 
 
 This data can be seen as Prometheus metrics and can be displayed on Grafana.
 
+Keptn v1 users may use [SLO](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/converter/slo_converter.md#slo-converter) and [SLI converters](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/converter/sli_converter.md#sli-converter) to migrate towards Keptn Analysis 
+
 ## Keptn Analysis basics
 
 A Keptn Analysis is implemented with three resources:

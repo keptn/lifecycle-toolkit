@@ -20,7 +20,7 @@ and Keptn evaluations.
 > **Note**
 The full SLO capabilities
 provided by Keptn v1 such as weighting and scoring
-have a first implementation in the Analysis.[GitHub Epic 1646](https://github.com/keptn/lifecycle-toolkit/issues/1646).
+have a first implementation in the [Analysis](https://lifecycle.keptn.sh/docs/implementing/slo/).
 
 Notice the paradigm differences when implementing Keptn evaluations:
 

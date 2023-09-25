@@ -4,7 +4,7 @@ description: Understand Analyses in Keptn and how to use them
 weight: 150
 ---
 
-The Keptn Metrics Operator implements an SLO/SLI feature set inspired by Keptnv1 under the name of Analysis.
+The Keptn Metrics Operator implements an SLO/SLI feature set inspired by Keptn v1 under the name of Analysis.
 With an Analysis Definition you can specify multiple Service Level Objectives that will be evaluated in your Analysis.  
 At the end of the Analysis the status will return whether your objective failed or passed.
 

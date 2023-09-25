@@ -131,8 +131,6 @@ spec:
         ports:
         - containerPort: 80
 ---
-apiVersion: apps/v1
-kind: Service
 apiVersion: v1
 kind: Service
 metadata:

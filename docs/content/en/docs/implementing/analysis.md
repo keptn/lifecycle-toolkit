@@ -69,14 +69,14 @@ This template tell us that we will query a provider called prometheus using this
  sum(kube_pod_container_resource_limits{node='{{.nodename}}'}) - sum(kube_node_status_capacity{node='{{.nodename}}'})
 ```
 
-at runtime the metrics operator will try to substitute everything in {{. }} format with a key-value pair in the Analysis resource,
+at runtime the metrics operator will try to substitute everything in '{{. }}' format with a key-value pair in the Analysis resource,
 so in this case the query would become:
 
 ```shell
  sum(kube_pod_container_resource_limits{node='test'}) - sum(kube_node_status_capacity{node='test'})
 ```
 
-For a working example you can check [here]() 
+For a working example you can check [here](https://github.com/keptn/lifecycle-toolkit/tree/main/test/integration/analysis-controller-multiple-providers) 
 
 ## Accessing Analysis
 

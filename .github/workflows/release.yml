@@ -118,7 +118,7 @@ jobs:
           echo "build matrix: ${{ steps.build-matrix.outputs.result }}"
 
   build-release:
-    if: needs.release-please.outputs.releases-created == 'true' && needs.release-please.outputs.build-matrix != ''
+    if: needs.release-please.outputs.releases-created == 'true' && needs.release-please.outputs.build-matrix != '{}'
     needs:
       - release-please
     strategy:

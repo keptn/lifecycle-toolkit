@@ -14,7 +14,7 @@ available resources), but one may want to evaluate the value of a metric for a s
 For example, one may execute load tests for a service after it has been deployed, and then verify
 if performance-related metrics, such as response time or error rate during the time
 when the tests have been executed meet certain criteria.
-That is where the `Analysis` capabilities of the `metrics-operator` come in. 
+That is where the `Analysis` capabilities of the `metrics-operator` come in.
 
 ## Defining Metrics
 
@@ -85,24 +85,26 @@ EOF
 
 ### Setting up Prometheus
 
-**Option 1: Using real data from podtato-head**
+#### Option 1: Using real data from podtato-head
 
 The queries provided to these `AnalysisValueTemplates` rely on actual data coming from Prometheus, particularly
 the data for the **podtato-head** application that has been deployed in the [sample-app example](../../sample-app/README.md).
-Also, this example assumes you have prometheus installed in your cluster, which can be done by following the instructions in
-the [observability-example](../observability/README.md).
+Also, this example assumes you have prometheus installed in your cluster, which can be done
+by following the instructions in the [observability-example](../observability/README.md).
 
 When you have done so, you also need to make sure that the podtato-head application is monitored by Prometheus by
-creating a Prometheus `ServiceMonitor`. Ths can be done by applying the manifest in `./config/service-monitor.yaml`:
+creating a Prometheus `ServiceMonitor`.
+Ths can be done by applying the manifest in `./config/service-monitor.yaml`:
 
 ```shell
 kubectl apply -f ./config/service-monitor.yaml
 ```
 
-**Option 2: Using Mockserver**
+#### Option 2: Using Mockserver
 
 If you do not want to go through the process of deploying an actual application and setting up Prometheus, you can also use
-[MockServer](https://www.mock-server.com) to fake the monitoring data. To deploy the mock server, use the following command:
+[MockServer](https://www.mock-server.com) to fake the monitoring data.
+To deploy the mock server, use the following command:
 
 ```shell
 kubectl apply -f ./config/mock-server.yaml
@@ -124,7 +126,7 @@ spec:
 EOF
 ```
 
-## Defining goals for the metrics 
+## Defining goals for the metrics
 
 Now that we have defined our metrics, it is time to describe what we expect from these values.
 This is done in an `AnalysisDefinition`, which looks can be applied using the following command:
@@ -192,8 +194,9 @@ Once applied, the status of the analysis can be checked with:
 kubectl get analyses -n analysis-demo
 ```
 
-This command should yield a list of all analyses within our `analysis-demo` namespace, together with the current status of the
-analysis. In our case, we will receive one analysis which has already completed and has passed:
+This command should yield a list of all analyses within our `analysis-demo` namespace,
+together with the current status of the analysis.
+In our case, we will receive one analysis which has already completed and has passed:
 
 **NOTE:** This example uses real data from an actual service monitored by Prometheus, so it could very well be that
 the result of your analysis might be a different one, as those values heavily depend on the environment this example

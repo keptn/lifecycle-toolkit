@@ -96,6 +96,8 @@ type envConfig struct {
 	KeptnOptionsCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
 
+const KeptnLifecycleActiveMetric = "keptn_lifecycle_active"
+
 //nolint:funlen,gocognit,gocyclo
 func main() {
 	var env envConfig
@@ -121,10 +123,10 @@ func main() {
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
 	meter := provider.Meter("keptn/task")
 
-	keptnLifecycleActive, err := meter.Int64Counter("keptn_lifecycle_active")
+	keptnLifecycleActive, err := meter.Int64Counter(KeptnLifecycleActiveMetric)
 
 	if err != nil {
-		setupLog.Error(err, "unable to create metric keptn_lifecycle_active")
+		setupLog.Error(err, "unable to create metric "+KeptnLifecycleActiveMetric)
 		os.Exit(1)
 	}
 

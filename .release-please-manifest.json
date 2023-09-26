@@ -1,5 +1,5 @@
 {
-  ".": "0.8.2",
+  ".": "0.8.3",
   "klt-cert-manager": "1.1.0",
   "runtimes/python-runtime": "1.0.0",
   "runtimes/deno-runtime": "1.0.1",

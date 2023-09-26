@@ -173,6 +173,7 @@ You can also specify a custom app definition with the annotation:
 keptn.sh/app: "your-app-name"
 ```
 
+
 In this case the webhook does not generate an app,
 but it expects that the user will provide one.
 Additionally, it computes a version string,

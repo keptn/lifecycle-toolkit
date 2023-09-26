@@ -50,7 +50,7 @@ Let's consider the following Analysis:
 
 This CR sets up the timeframe we are interested in
 as between 5 am and 10 am on the 5th of May 2023,
-and adds a few specific key-value pair that will be substituted in the query
+and adds a few specific key-value pairs that will be substituted in the query.
 for instance the query could contain a {{.nodename }} and this value will be substituted by test
 
 The definition of this Analysis is referenced by its name and namespace and can be seen here:

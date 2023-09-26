@@ -113,10 +113,6 @@ jobs:
             console.log("release matrix: " + JSON.stringify({ config: releaseMatrix }));
             return releaseMatrix.length > 0 ? { config: releaseMatrix } : {};
 
-      - name: debug
-        run: |
-          echo "build matrix: ${{ steps.build-matrix.outputs.result }}"
-
   build-release:
     if: needs.release-please.outputs.releases-created == 'true' && needs.release-please.outputs.build-matrix != '{}'
     needs:

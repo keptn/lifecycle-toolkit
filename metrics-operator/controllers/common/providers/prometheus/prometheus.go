@@ -24,6 +24,7 @@ type RountripGetter func(context.Context, metricsapi.KeptnMetricsProvider, clien
 type KeptnPrometheusProvider struct {
 	Log       logr.Logger
 	K8sClient client.Client
+	getter RountripGetter
 }
 
 func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {

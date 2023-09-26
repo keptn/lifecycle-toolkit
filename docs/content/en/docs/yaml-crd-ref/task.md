@@ -8,7 +8,7 @@ Keptn populates the `KeptnTask` resource
 for tasks that deploy software on Kubernetes.
 When using Keptn to run tasks for software
 that is deployed outside of Kubernetes,
-you must manually populate the `KeptnTask` definition
+you must create the `KeptnTask` definition manually
 and modify it manually for each new run.
 
 ## Synopsis
@@ -23,9 +23,9 @@ spec:
   workloadVersion: "1.0.0"
   appVersion: "1.0.0"
   app: "my-app"
-  taskDefinition: helloworldtask
+  taskDefinition: <name-of-KeptnTaskDefinition resource>
   context:
-    appName: "my-app"
+    appName: "<name-of-KeptnApp-resource>""
     appVersion: "1.0.0"
     objectType: ""
     taskType: ""

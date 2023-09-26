@@ -57,7 +57,7 @@ The definition of this Analysis is referenced by its name and namespace and can 
 
 {{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysisdefinition.yaml" >}}
 
-This simple definition contains a single objective, response-time-p95. For this objective there are both a
+This simple definition contains a single objective, `response-time-p95`. For this objective, there are both
 failure and warning criteria:
 
 * objective will fail if the percentile 95 is less than 600

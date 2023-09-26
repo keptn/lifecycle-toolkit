@@ -37,7 +37,7 @@ Each of these objectives:
 * specifies failure or warning target criteria,
 * specifies whether the objective is a key objective (its failure would fail the analysis)
 * indicates the weight of the objective on the overall analysis
-* refers to an AnalysisValueTemplate that contains the SLIs, so from what provider to gather the data and how to compute the analysis
+* refers to an AnalysisValueTemplate that contains the SLIs, defining the data provider from which to gather the data and how to compute the analysis
 
 In each AnalysisValueTemplate we store the query for the analysis of the SLI. You must define a
 [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md) resource

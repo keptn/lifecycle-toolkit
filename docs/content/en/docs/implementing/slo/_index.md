@@ -40,7 +40,7 @@ Each of these objectives:
 * refers to an AnalysisValueTemplate that contains the SLIs, defining the data provider from which to gather the data and how to compute the analysis
 
 In each AnalysisValueTemplate we store the query for the analysis of the SLI. You must define a
-[KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md) resource
+[KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md) resource
 for each instance of each data provider you are using.
 The template refers to that provider and queries it.
 

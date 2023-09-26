@@ -11,7 +11,7 @@ The Keptn Metrics Operator implements an SLO/SLI feature set inspired by Keptn v
 With an Analysis Definition you can specify multiple Service Level Objectives that will be evaluated in your Analysis.
 At the end of the Analysis the status returns whether your objective failed or passed.
 
-This data can be seen as Prometheus metrics and can be displayed on Grafana.
+The Analysis result is exposed as an OpenTelemetry metric and can be displayed on dashboard tools, such as Grafana.
 
 Keptn v1 users may use [SLO](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/converter/slo_converter.md#slo-converter) and [SLI converters](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/converter/sli_converter.md#sli-converter) to migrate towards Keptn Analysis. 
 

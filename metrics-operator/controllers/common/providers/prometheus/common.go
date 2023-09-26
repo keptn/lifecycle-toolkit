@@ -13,8 +13,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-const userName = "user"
-const password = "password"
+const secretKeyUserName = "user"
+const secretKeyPassword = "password"
 
 var ErrSecretKeyRefNotDefined = errors.New("the SecretKeyRef property with the Prometheus API Key is missing")
 var ErrInvalidSecretFormat = errors.New("secret key does not contain user and password")

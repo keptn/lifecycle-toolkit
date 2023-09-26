@@ -15,8 +15,8 @@ import (
 //
 //		// make and configure a mocked common.ISchedulingGatesHandler
 //		mockedISchedulingGatesHandler := &ISchedulingGatesHandlerMock{
-//			IsSchedulingEnabledFunc: func() bool {
-//				panic("mock out the IsSchedulingEnabled method")
+//			EnabledFunc: func() bool {
+//				panic("mock out the Enabled method")
 //			},
 //			RemoveGatesFunc: func(ctx context.Context, workloadInstance *lfcv1alpha3.KeptnWorkloadInstance) error {
 //				panic("mock out the RemoveGates method")
@@ -28,16 +28,16 @@ import (
 //
 //	}
 type ISchedulingGatesHandlerMock struct {
-	// IsSchedulingEnabledFunc mocks the IsSchedulingEnabled method.
-	IsSchedulingEnabledFunc func() bool
+	// EnabledFunc mocks the Enabled method.
+	EnabledFunc func() bool
 
 	// RemoveGatesFunc mocks the RemoveGates method.
 	RemoveGatesFunc func(ctx context.Context, workloadInstance *lfcv1alpha3.KeptnWorkloadInstance) error
 
 	// calls tracks calls to the methods.
 	calls struct {
-		// IsSchedulingEnabled holds details about calls to the IsSchedulingEnabled method.
-		IsSchedulingEnabled []struct {
+		// Enabled holds details about calls to the Enabled method.
+		Enabled []struct {
 		}
 		// RemoveGates holds details about calls to the RemoveGates method.
 		RemoveGates []struct {
@@ -47,34 +47,34 @@ type ISchedulingGatesHandlerMock struct {
 			WorkloadInstance *lfcv1alpha3.KeptnWorkloadInstance
 		}
 	}
-	lockIsSchedulingEnabled sync.RWMutex
+	lockEnabled sync.RWMutex
 	lockRemoveGates         sync.RWMutex
 }
 
-// IsSchedulingEnabled calls IsSchedulingEnabledFunc.
-func (mock *ISchedulingGatesHandlerMock) IsSchedulingEnabled() bool {
-	if mock.IsSchedulingEnabledFunc == nil {
-		panic("ISchedulingGatesHandlerMock.IsSchedulingEnabledFunc: method is nil but ISchedulingGatesHandler.IsSchedulingEnabled was just called")
+// Enabled calls EnabledFunc.
+func (mock *ISchedulingGatesHandlerMock) Enabled() bool {
+	if mock.EnabledFunc == nil {
+		panic("ISchedulingGatesHandlerMock.EnabledFunc: method is nil but ISchedulingGatesHandler.Enabled was just called")
 	}
 	callInfo := struct {
 	}{}
-	mock.lockIsSchedulingEnabled.Lock()
-	mock.calls.IsSchedulingEnabled = append(mock.calls.IsSchedulingEnabled, callInfo)
-	mock.lockIsSchedulingEnabled.Unlock()
-	return mock.IsSchedulingEnabledFunc()
+	mock.lockEnabled.Lock()
+	mock.calls.Enabled = append(mock.calls.Enabled, callInfo)
+	mock.lockEnabled.Unlock()
+	return mock.EnabledFunc()
 }
 
-// IsSchedulingEnabledCalls gets all the calls that were made to IsSchedulingEnabled.
+// EnabledCalls gets all the calls that were made to Enabled.
 // Check the length with:
 //
-//	len(mockedISchedulingGatesHandler.IsSchedulingEnabledCalls())
-func (mock *ISchedulingGatesHandlerMock) IsSchedulingEnabledCalls() []struct {
+//	len(mockedISchedulingGatesHandler.EnabledCalls())
+func (mock *ISchedulingGatesHandlerMock) EnabledCalls() []struct {
 } {
 	var calls []struct {
 	}
-	mock.lockIsSchedulingEnabled.RLock()
-	calls = mock.calls.IsSchedulingEnabled
-	mock.lockIsSchedulingEnabled.RUnlock()
+	mock.lockEnabled.RLock()
+	calls = mock.calls.Enabled
+	mock.lockEnabled.RUnlock()
 	return calls
 }
 

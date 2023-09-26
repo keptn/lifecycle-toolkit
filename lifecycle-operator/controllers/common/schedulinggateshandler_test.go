@@ -212,11 +212,11 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabled(t *testing.T) {
 		enabled: true,
 	}
 
-	require.True(t, h.IsSchedulingEnabled())
+	require.True(t, h.Enabled())
 
 	h.enabled = false
 
-	require.False(t, h.IsSchedulingEnabled())
+	require.False(t, h.Enabled())
 }
 
 func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.T) {

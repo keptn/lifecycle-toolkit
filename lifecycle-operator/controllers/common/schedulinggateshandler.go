@@ -15,7 +15,7 @@ import (
 //go:generate moq -pkg fake -skip-ensure -out ./fake/schedulinggateshandler_mock.go . ISchedulingGatesHandler
 type ISchedulingGatesHandler interface {
 	RemoveGates(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error
-	IsSchedulingEnabled() bool
+	Enabled() bool
 }
 
 type RemoveGatesFunc func(ctx context.Context, c client.Client, podName string, podNamespace string) error
@@ -63,7 +63,7 @@ func (h *SchedulingGatesHandler) RemoveGates(ctx context.Context, workloadInstan
 	return nil
 }
 
-func (h *SchedulingGatesHandler) IsSchedulingEnabled() bool {
+func (h *SchedulingGatesHandler) Enabled() bool {
 	return h.enabled
 }
 

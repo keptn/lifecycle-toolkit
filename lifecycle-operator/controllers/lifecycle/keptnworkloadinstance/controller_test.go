@@ -779,7 +779,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion(t *testing.T) 
 	)
 	r, eventChannel, _ := setupReconciler(wi, app)
 	r.SchedulingGatesHandler = &fake.ISchedulingGatesHandlerMock{
-		IsSchedulingEnabledFunc: func() bool {
+		EnabledFunc: func() bool {
 			return false
 		},
 	}
@@ -863,7 +863,7 @@ func TestKeptnWorkloadInstanceReconciler_ReconcileReachCompletion_SchedulingGate
 		RemoveGatesFunc: func(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error {
 			return nil
 		},
-		IsSchedulingEnabledFunc: func() bool {
+		EnabledFunc: func() bool {
 			return true
 		},
 	}
@@ -954,7 +954,7 @@ func TestKeptnWorkloadInstanceReconciler_RemoveGates_fail(t *testing.T) {
 		RemoveGatesFunc: func(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error {
 			return fmt.Errorf("err")
 		},
-		IsSchedulingEnabledFunc: func() bool {
+		EnabledFunc: func() bool {
 			return true
 		},
 	}

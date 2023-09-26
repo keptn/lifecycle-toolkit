@@ -123,7 +123,7 @@ func main() {
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
 	meter := provider.Meter("keptn/task")
 
-	keptnLifecycleActive, err := meter.Int64Counter(KeptnLifecycleActiveMetric)
+	keptnLifecycleActive, err := meter.Int64Counter(KeptnLifecycleActiveMetric, metric.WithDescription("signals that Keptn Lifecycle Operator is installed correctly and ready"))
 
 	if err != nil {
 		setupLog.Error(err, "unable to create metric "+KeptnLifecycleActiveMetric)

@@ -24,13 +24,13 @@ type RountripGetter func(context.Context, metricsapi.KeptnMetricsProvider, clien
 type KeptnPrometheusProvider struct {
 	Log       logr.Logger
 	K8sClient client.Client
-	getter RountripGetter
+	Getter    RountripGetter
 }
 
 func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
-	api, err := r.setupApi(ctx, *provider, getRoundtripper)
+	api, err := r.setupApi(ctx, *provider)
 	if err != nil {
 		return "", err
 	}
@@ -67,7 +67,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	api, err := r.setupApi(ctx, provider, getRoundtripper)
+	api, err := r.setupApi(ctx, provider)
 
 	if err != nil {
 		return "", nil, err
@@ -99,7 +99,7 @@ func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metr
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	api, err := r.setupApi(ctx, provider, getRoundtripper)
+	api, err := r.setupApi(ctx, provider)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -114,8 +114,8 @@ func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metr
 	return getResultForStepMatrix(result)
 }
 
-func (r *KeptnPrometheusProvider) setupApi(ctx context.Context, provider metricsapi.KeptnMetricsProvider, getter RountripGetter) (prometheus.API, error) {
-	rt, err := getter(ctx, provider, r.K8sClient)
+func (r *KeptnPrometheusProvider) setupApi(ctx context.Context, provider metricsapi.KeptnMetricsProvider) (prometheus.API, error) {
+	rt, err := r.Getter(ctx, provider, r.K8sClient)
 	if err != nil {
 		return nil, err
 	}

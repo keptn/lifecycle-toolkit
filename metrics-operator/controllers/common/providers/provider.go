@@ -33,6 +33,7 @@ func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) 
 		return &prometheus.KeptnPrometheusProvider{
 			K8sClient: k8sClient,
 			Log:       log,
+			Getter:    prometheus.GetRoundtripper,
 		}, nil
 	case DynatraceProviderType:
 		return &dynatrace.KeptnDynatraceProvider{

@@ -193,6 +193,7 @@ func Test_prometheus(t *testing.T) {
 			kpp := KeptnPrometheusProvider{
 				K8sClient: fclient,
 				Log:       ctrl.Log.WithName("testytest"),
+				Getter:    GetRoundtripper,
 			}
 			p := metricsapi.KeptnMetricsProvider{
 				Spec: metricsapi.KeptnMetricsProviderSpec{
@@ -365,6 +366,7 @@ func TestFetchAnalysisValueWithAuth(t *testing.T) {
 	provider := KeptnPrometheusProvider{
 		K8sClient: fclient,
 		Log:       ctrl.Log.WithName("testytest"),
+		Getter:    GetRoundtripper,
 	}
 
 	// Prepare the analysis spec
@@ -441,8 +443,9 @@ func TestKeptnPrometheusProvider_setupApi(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			r := &KeptnPrometheusProvider{
 				K8sClient: fake.NewClient(), // Initialize with your K8s client
+				Getter:    tc.getter,
 			}
-			_, err := r.setupApi(context.Background(), tc.provider, tc.getter)
+			_, err := r.setupApi(context.Background(), tc.provider)
 			if tc.expectedError == "" {
 				require.Nil(t, err)
 			} else {

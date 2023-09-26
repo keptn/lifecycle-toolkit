@@ -104,7 +104,7 @@ func TestGetSecret_HappyPath(t *testing.T) {
 
 }
 
-func Test_getRoundtripper(t *testing.T) {
+func Test_GetRoundtripper(t *testing.T) {
 	goodsecret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "test",
@@ -174,7 +174,7 @@ func Test_getRoundtripper(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := getRoundtripper(context.TODO(), tt.provider, tt.k8sClient)
+			got, err := GetRoundtripper(context.TODO(), tt.provider, tt.k8sClient)
 			t.Log(err)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("getRoundtripper() error = %v, wantErr %v", err, tt.wantErr)

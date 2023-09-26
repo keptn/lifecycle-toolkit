@@ -24,7 +24,7 @@ type SecretData struct {
 	Password config.Secret `json:"password"`
 }
 
-func getRoundtripper(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
+func GetRoundtripper(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (http.RoundTripper, error) {
 	secret, err := getPrometheusSecret(ctx, provider, k8sClient)
 	if err != nil {
 		if errors.Is(err, ErrSecretKeyRefNotDefined) {

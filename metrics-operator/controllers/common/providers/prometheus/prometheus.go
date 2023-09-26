@@ -19,7 +19,7 @@ var errCouldNotCast = fmt.Errorf("could not cast result")
 var errNoValues = fmt.Errorf("no values in query result")
 var errTooManyValues = fmt.Errorf("too many values in query result")
 
-type RountripGetter func(context.Context, metricsapi.KeptnMetricsProvider, client.Client) (http.RoundTripper, error)
+type RoundtripGetter func(context.Context, metricsapi.KeptnMetricsProvider, client.Client) (http.RoundTripper, error)
 
 type KeptnPrometheusProvider struct {
 	Log       logr.Logger

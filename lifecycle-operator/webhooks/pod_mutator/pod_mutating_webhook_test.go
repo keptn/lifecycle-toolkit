@@ -1364,7 +1364,7 @@ func TestPodMutatingWebhook_Handle_SchedulingGates(t *testing.T) {
 	op := jsonpatch.Operation{
 		Operation: "add",
 		Path:      "/spec/schedulingGates",
-		Value:     []interface{}{map[string]interface{}{"name": "gated-klt"}},
+		Value:     []interface{}{map[string]interface{}{"name": apicommon.KeptnGate}},
 	}
 
 	require.Len(t, resp.Patches, 2)

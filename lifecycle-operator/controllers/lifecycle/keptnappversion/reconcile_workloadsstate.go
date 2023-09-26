@@ -85,5 +85,5 @@ func (r *KeptnAppVersionReconciler) handleUnaccessibleWorkloadInstanceList(ctx c
 }
 
 func getWorkloadInstanceName(appName string, workloadName string, version string) string {
-	return operatorcommon.CreateResourceName(apicommon.MaxK8sObjectLength, apicommon.MinKLTNameLen, appName, workloadName, version)
+	return operatorcommon.CreateResourceName(apicommon.MaxK8sObjectLength, apicommon.MinKeptnNameLen, appName, workloadName, version)
 }

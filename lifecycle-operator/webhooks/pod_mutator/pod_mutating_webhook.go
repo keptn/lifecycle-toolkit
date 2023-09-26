@@ -82,7 +82,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		return admission.Allowed("namespace is not enabled for lifecycle operator")
 	}
 
-	// check the OwnerReference of the pod to see if it is supported and intended to be managed by KLT
+	// check the OwnerReference of the pod to see if it is supported and intended to be managed by Keptn
 	ownerRef := a.getOwnerReference(pod.ObjectMeta)
 
 	if ownerRef.Kind == "" {
@@ -109,7 +109,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 			}
 			pod.Spec.SchedulingGates = []corev1.PodSchedulingGate{
 				{
-					Name: "gated-klt",
+					Name: apicommon.KeptnGate,
 				},
 			}
 		} else {
@@ -451,7 +451,7 @@ func (a *PodMutatingWebhook) generateAppCreationRequest(ctx context.Context, pod
 func (a *PodMutatingWebhook) getWorkloadName(pod *corev1.Pod) string {
 	workloadName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	applicationName, _ := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
-	return operatorcommon.CreateResourceName(apicommon.MaxK8sObjectLength, apicommon.MinKLTNameLen, applicationName, workloadName)
+	return operatorcommon.CreateResourceName(apicommon.MaxK8sObjectLength, apicommon.MinKeptnNameLen, applicationName, workloadName)
 }
 
 func (a *PodMutatingWebhook) getAppName(pod *corev1.Pod) string {

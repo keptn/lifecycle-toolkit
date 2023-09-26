@@ -41,7 +41,7 @@ var _ webhook.Validator = &Analysis{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (a *Analysis) ValidateCreate() (admission.Warnings, error) {
-	Analysislog.Info("validate create", "name", a.Name)
+	Analysislog.Info("validate create", "name", a.Name, "namespace", a.Namespace)
 
 	if err := a.validateTimeframe(); err != nil {
 		return admission.Warnings{}, err
@@ -52,7 +52,7 @@ func (a *Analysis) ValidateCreate() (admission.Warnings, error) {
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (a *Analysis) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
-	Analysislog.Info("validate update", "name", a.Name)
+	Analysislog.Info("validate update", "name", a.Name, "namespace", a.Namespace)
 
 	if err := a.validateTimeframe(); err != nil {
 		return admission.Warnings{}, err
@@ -63,7 +63,7 @@ func (a *Analysis) ValidateUpdate(old runtime.Object) (admission.Warnings, error
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
 func (a *Analysis) ValidateDelete() (admission.Warnings, error) {
-	Analysislog.Info("validate delete", "name", a.Name)
+	Analysislog.Info("validate delete", "name", a.Name, "namespace", a.Namespace)
 
 	return admission.Warnings{}, nil
 }

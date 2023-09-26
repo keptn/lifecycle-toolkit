@@ -75,7 +75,9 @@ spec:
                   type: object
                 timeframe:
                   description: Timeframe specifies the range for the corresponding query
-                    in the AnalysisValueTemplate
+                    in the AnalysisValueTemplate. Please note that either a combination
+                    of 'from' and 'to' or the 'recent' property may be set. If this
+                    is not the case, the Analysis can not be added to the cluster.
                   properties:
                     from:
                       description: From is the time of start for the query, this field

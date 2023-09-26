@@ -24,7 +24,9 @@ import (
 
 // AnalysisSpec defines the desired state of Analysis
 type AnalysisSpec struct {
-	//Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate
+	// Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate. Please note that either
+	// a combination of 'from' and 'to' or the 'recent' property may be set. If this is not the case, the Analysis can
+	// not be added to the cluster.
 	Timeframe `json:"timeframe"`
 	// Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})".
 	Args map[string]string `json:"args,omitempty"`

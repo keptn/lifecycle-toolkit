@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.5](https://github.com/mowies/lifecycle-controller/compare/klt-v0.8.4...klt-v0.8.5) (2023-09-26)
+
+
+### Features
+
+* try again ([27a2752](https://github.com/mowies/lifecycle-controller/commit/27a2752108454f937bf1763b22c37850f87d65b4))
+
 ## [0.8.4](https://github.com/mowies/lifecycle-controller/compare/klt-v0.8.3...klt-v0.8.4) (2023-09-26)
 
 

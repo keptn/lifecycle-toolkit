@@ -79,6 +79,49 @@ spec:
 EOF
 ```
 
+### Setting up Prometheus
+
+**Option 1: Using real data from podtato-head**
+
+The queries provided to these `AnalysisValueTemplates` rely on actual data coming from Prometheus, particularly
+the data for the **podtato-head** application that has been deployed in the [sample-app example](../../sample-app/README.md).
+Also, this example assumes you have prometheus installed in your cluster, which can be done by following the instructions in
+the [observability-example](../observability/README.md).
+
+When you have done so, you also need to make sure that the podtato-head application is monitored by Prometheus by
+creating a Prometheus `ServiceMonitor`. Ths can be done by applying the manifest in `./config/service-monitor.yaml`:
+
+```shell
+kubectl apply -f ./config/service-monitor.yaml
+```
+
+**Option 2: Using Mockserver**
+
+If you do not want to go through the process of deploying an actual application and setting up Prometheus, you can also use
+[MockServer](https://www.mock-server.com) to fake the monitoring data. To deploy the mock server, use the following command:
+
+```shell
+kubectl apply -f ./config/mock-server.yaml
+```
+
+Once the MockServer is up and running, we will adjust the `KeptnMetricsProvider` to retrieve data from there,
+rather than from a real Prometheus instance:
+
+```shell
+cat <<EOF | kubectl apply -f - 
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetricsProvider
+metadata:
+  name: my-provider
+  namespace: analysis-demo
+spec:
+  type: prometheus
+  targetServer: "http://mockserver.analysis-demo.svc.cluster.local:1080"
+EOF
+```
+
+## Defining goals for the metrics 
+
 Now that we have defined our metrics, it is time to describe what we expect from these values. This is done in an
 `AnalysisDefinition`, which looks can be applied using the following command:
 
@@ -115,6 +158,8 @@ spec:
     warningPercentage: 50
 EOF
 ```
+
+## Executing an Analysis
 
 Finally, now that we have all of our metrics and our goals defined, we can apply an instance of the `Analysis` CRD
 to perform an analysis for a specific timeframe

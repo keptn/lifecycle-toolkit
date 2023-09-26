@@ -198,9 +198,9 @@ This command should yield a list of all analyses within our `analysis-demo` name
 together with the current status of the analysis.
 In our case, we will receive one analysis which has already completed and has passed:
 
-**NOTE:** This example uses real data from an actual service monitored by Prometheus, so it could very well be that
-the result of your analysis might be a different one, as those values heavily depend on the environment this example
-is executed in.
+Please note that this example uses real data from an actual service monitored by Prometheus,
+so it could very well be that the result of your analysis might be a different one,
+as those values heavily depend on the environment this example is executed in.
 
 ```shell
 NAME              ANALYSISDEFINITION       STATE       WARNING   PASS

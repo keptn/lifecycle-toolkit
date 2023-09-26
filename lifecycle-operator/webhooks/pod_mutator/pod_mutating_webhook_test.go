@@ -14,6 +14,7 @@ import (
 	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
+	"gomodules.xyz/jsonpatch/v2"
 	admissionv1 "k8s.io/api/admission/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -1174,6 +1175,204 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 
 	require.NotNil(t, resp)
 	require.True(t, resp.Allowed)
+
+	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
+
+	err = fakeClient.Get(context.Background(), types.NamespacedName{
+		Namespace: "default",
+		Name:      "my-workload",
+	}, kacr)
+
+	require.Nil(t, err)
+
+	require.Equal(t, "my-workload", kacr.Spec.AppName)
+	require.Equal(t, string(apicommon.AppTypeSingleService), kacr.Annotations[apicommon.AppTypeAnnotation])
+
+	workload := &klcv1alpha3.KeptnWorkload{}
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: "default",
+		Name:      "my-workload-my-workload",
+	}, workload)
+
+	require.Nil(t, err)
+
+	require.Equal(t, klcv1alpha3.KeptnWorkloadSpec{
+		AppName: kacr.Spec.AppName,
+		Version: "0.1",
+		ResourceReference: klcv1alpha3.ResourceReference{
+			UID:  "1234",
+			Kind: "Deployment",
+			Name: "my-deployment",
+		},
+	}, workload.Spec)
+}
+
+func TestPodMutatingWebhook_Handle_SchedulingGates_GateRemoved(t *testing.T) {
+	pod := &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "example-pod",
+			Namespace: "default",
+			Annotations: map[string]string{
+				apicommon.WorkloadAnnotation:    "my-workload",
+				apicommon.VersionAnnotation:     "0.1",
+				apicommon.SchedulingGateRemoved: "true",
+			},
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					APIVersion: "v1",
+					Kind:       "Deployment",
+					Name:       "my-deployment",
+					UID:        "1234",
+				},
+			},
+		},
+		Spec: corev1.PodSpec{
+			Containers: []corev1.Container{
+				{
+					Name:  "example-container",
+					Image: "nginx",
+				},
+			},
+		},
+	}
+	ns := &corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "default",
+			Annotations: map[string]string{
+				apicommon.NamespaceEnabledAnnotation: "enabled",
+			},
+		},
+	}
+	fakeClient := fakeclient.NewClient(ns, pod)
+
+	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+		return ctx, trace.SpanFromContext(ctx)
+	}}
+
+	decoder := admission.NewDecoder(runtime.NewScheme())
+
+	wh := &PodMutatingWebhook{
+		SchedulingGatesEnabled: true,
+		Client:                 fakeClient,
+		Tracer:                 tr,
+		Decoder:                decoder,
+		EventSender:            controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		Log:                    testr.New(t),
+	}
+
+	// Convert the Pod object to a byte array
+	podBytes, err := json.Marshal(pod)
+	require.Nil(t, err)
+
+	// Create an AdmissionRequest object
+	request := admissionv1.AdmissionRequest{
+		UID:       "12345",
+		Kind:      metav1.GroupVersionKind{Group: "", Version: "v1", Kind: "Pod"},
+		Operation: admissionv1.Create,
+		Object: runtime.RawExtension{
+			Raw: podBytes,
+		},
+		Namespace: "default",
+	}
+
+	resp := wh.Handle(context.TODO(), admission.Request{
+		AdmissionRequest: request,
+	})
+
+	require.NotNil(t, resp)
+	require.True(t, resp.Allowed)
+
+	// no changes to the pod are expected
+	require.Len(t, resp.Patches, 0)
+}
+
+func TestPodMutatingWebhook_Handle_SchedulingGates(t *testing.T) {
+	pod := &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "example-pod",
+			Namespace: "default",
+			Annotations: map[string]string{
+				apicommon.WorkloadAnnotation: "my-workload",
+				apicommon.VersionAnnotation:  "0.1",
+			},
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					APIVersion: "v1",
+					Kind:       "Deployment",
+					Name:       "my-deployment",
+					UID:        "1234",
+				},
+			},
+		},
+		Spec: corev1.PodSpec{
+			Containers: []corev1.Container{
+				{
+					Name:  "example-container",
+					Image: "nginx",
+				},
+			},
+		},
+	}
+	ns := &corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "default",
+			Annotations: map[string]string{
+				apicommon.NamespaceEnabledAnnotation: "enabled",
+			},
+		},
+	}
+	fakeClient := fakeclient.NewClient(ns, pod)
+
+	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+		return ctx, trace.SpanFromContext(ctx)
+	}}
+
+	decoder := admission.NewDecoder(runtime.NewScheme())
+
+	wh := &PodMutatingWebhook{
+		SchedulingGatesEnabled: true,
+		Client:                 fakeClient,
+		Tracer:                 tr,
+		Decoder:                decoder,
+		EventSender:            controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		Log:                    testr.New(t),
+	}
+
+	// Convert the Pod object to a byte array
+	podBytes, err := json.Marshal(pod)
+	require.Nil(t, err)
+
+	// Create an AdmissionRequest object
+	request := admissionv1.AdmissionRequest{
+		UID:       "12345",
+		Kind:      metav1.GroupVersionKind{Group: "", Version: "v1", Kind: "Pod"},
+		Operation: admissionv1.Create,
+		Object: runtime.RawExtension{
+			Raw: podBytes,
+		},
+		Namespace: "default",
+	}
+
+	resp := wh.Handle(context.TODO(), admission.Request{
+		AdmissionRequest: request,
+	})
+
+	require.NotNil(t, resp)
+	require.True(t, resp.Allowed)
+
+	op := jsonpatch.Operation{
+		Operation: "add",
+		Path:      "/spec/schedulingGates",
+		Value:     []interface{}{map[string]interface{}{"name": apicommon.KeptnGate}},
+	}
+
+	require.Len(t, resp.Patches, 2)
+	if resp.Patches[0].Path == "/spec/schedulingGates" {
+		require.Equal(t, op, resp.Patches[0])
+	} else {
+		require.Equal(t, op, resp.Patches[1])
+	}
 
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
 

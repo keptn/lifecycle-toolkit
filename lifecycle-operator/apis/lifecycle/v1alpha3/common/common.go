@@ -23,6 +23,7 @@ const K8sRecommendedAppAnnotations = "app.kubernetes.io/part-of"
 const K8sRecommendedManagedByAnnotations = "app.kubernetes.io/managed-by"
 const PreDeploymentEvaluationAnnotation = "keptn.sh/pre-deployment-evaluations"
 const PostDeploymentEvaluationAnnotation = "keptn.sh/post-deployment-evaluations"
+const SchedulingGateRemoved = "keptn.sh/scheduling-gate-removed"
 const TaskNameAnnotation = "keptn.sh/task-name"
 const NamespaceEnabledAnnotation = "keptn.sh/lifecycle-toolkit"
 const CreateAppTaskSpanName = "create_%s_app_task"
@@ -30,8 +31,9 @@ const CreateWorkloadTaskSpanName = "create_%s_deployment_task"
 const CreateAppEvalSpanName = "create_%s_app_evaluation"
 const CreateWorkloadEvalSpanName = "create_%s_deployment_evaluation"
 const AppTypeAnnotation = "keptn.sh/app-type"
+const KeptnGate = "keptn-prechecks-gate"
 
-const MinKLTNameLen = 80
+const MinKeptnNameLen = 80
 const MaxK8sObjectLength = 253
 
 type AppType string
@@ -176,17 +178,17 @@ const (
 
 func GenerateTaskName(checkType CheckType, taskName string) string {
 	randomId := rand.Intn(99_999-10_000) + 10000
-	return operatorcommon.CreateResourceName(MaxK8sObjectLength, MinKLTNameLen, string(checkType), taskName, strconv.Itoa(randomId))
+	return operatorcommon.CreateResourceName(MaxK8sObjectLength, MinKeptnNameLen, string(checkType), taskName, strconv.Itoa(randomId))
 }
 
 func GenerateJobName(taskName string) string {
 	randomId := rand.Intn(99_999-10_000) + 10000
-	return operatorcommon.CreateResourceName(MaxK8sObjectLength, MinKLTNameLen, taskName, strconv.Itoa(randomId))
+	return operatorcommon.CreateResourceName(MaxK8sObjectLength, MinKeptnNameLen, taskName, strconv.Itoa(randomId))
 }
 
 func GenerateEvaluationName(checkType CheckType, evalName string) string {
 	randomId := rand.Intn(99_999-10_000) + 10000
-	return operatorcommon.CreateResourceName(MaxK8sObjectLength, MinKLTNameLen, string(checkType), evalName, strconv.Itoa(randomId))
+	return operatorcommon.CreateResourceName(MaxK8sObjectLength, MinKeptnNameLen, string(checkType), evalName, strconv.Itoa(randomId))
 }
 
 // MergeMaps merges two maps into a new map. If a key exists in both maps, the

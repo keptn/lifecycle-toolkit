@@ -184,7 +184,7 @@ func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv
 	lastResultErr = nil
 	for i := app.Generation - 1; i > 0; i-- {
 		deprecatedAppVersion := &klcv1alpha3.KeptnAppVersion{}
-		appVersionName := operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKLTNameLen, app.Name, app.Spec.Version, common.Hash(i))
+		appVersionName := operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKeptnNameLen, app.Name, app.Spec.Version, common.Hash(i))
 		if err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: appVersionName}, deprecatedAppVersion); err != nil {
 			if !errors.IsNotFound(err) {
 				r.Log.Error(err, fmt.Sprintf("Could not get KeptnAppVersion: %s", appVersionName))

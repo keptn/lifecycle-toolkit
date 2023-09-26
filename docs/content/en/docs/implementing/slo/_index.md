@@ -67,9 +67,6 @@ The total score shows that this analysis should overall score  90% of all object
 Since the objective is one only, this means that we either will pass with 100% (response time is less than 600) or fail with 0%(slower response time)
 
 The objective points to the corresponding AnalysisValueTemplate:
-
-
-
 {{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysisvaluetemplate.yaml" >}}
 
 This template tell us that we will query a provider called prometheus using this query:
@@ -77,13 +74,13 @@ This template tell us that we will query a provider called prometheus using this
  sum(kube_pod_container_resource_limits{node='{{.nodename}}'}) - sum(kube_node_status_capacity{node='{{.nodename}}'})
 ```
 
-at runtime the metrics operator will try to substitute everything in '{{. }}' format with a key-value pair in the Analysis resource,
+at runtime the metrics operator will try to substitute everything in `{{. }}` format with a key-value pair in the Analysis resource,
 so in this case the query would become:
 
 ```shell
  sum(kube_pod_container_resource_limits{node='test'}) - sum(kube_node_status_capacity{node='test'})
 ```
-
+The other key-value pairs such as 'project' and 'stage' are just examples of how one could pass to the provider information similar to old Keptn v1 objectives.
 For a working example you can check [here](https://github.com/keptn/lifecycle-toolkit/tree/main/test/integration/analysis-controller-multiple-providers)
 
 ## Accessing Analysis

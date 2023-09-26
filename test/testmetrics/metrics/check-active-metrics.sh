@@ -9,5 +9,4 @@ metrics_url="http://lifecycle-operator-metrics-service.keptn-lifecycle-toolkit-s
 # Fetch keptn_lifecycle_active metrics
 metrics=$(curl -s $metrics_url | grep "${component_name}")
 
-echo "Metrics for $component_name:"
 echo "$metrics"

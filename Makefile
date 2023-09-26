@@ -51,6 +51,26 @@ install-prometheus:
 	kubectl wait --for=condition=available deployment/kube-state-metrics -n monitoring --timeout=120s
 	kubectl wait pod/prometheus-k8s-0 --for=condition=ready --timeout=120s -n monitoring
 
+.PHONY: metrics-operator-test
+metrics-operator-test:
+	$(MAKE) -C metrics-operator test
+
+.PHONY: certmanager-test
+certmanager-test:
+	$(MAKE) -C klt-cert-manager test
+
+.PHONY: operator-test
+operator-test:
+	$(MAKE) -C lifecycle-operator test
+
+.PHONY: scheduler-test
+scheduler-test:
+	$(MAKE) -C scheduler test
+
+#command(make test) to run all tests 
+.PHONY: test
+test: metrics-operator-test certmanager-test operator-test scheduler-test integration-test
+
 .PHONY: cleanup-manifests
 cleanup-manifests:
 	rm -rf manifests
@@ -101,3 +121,25 @@ include docs/Makefile
 
 yamllint:
 	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .
+
+##Run lint for the subfiles
+.PHONY: metrics-operator-lint
+metrics-operator-lint:
+	$(MAKE) -C metrics-operator lint
+
+.PHONY: certmanager-lint
+certmanager-lint:
+	$(MAKE) -C klt-cert-manager lint
+
+.PHONY: operator-lint
+operator-lint:
+	$(MAKE) -C lifecycle-operator lint
+
+.PHONY: scheduler-lint
+scheduler-lint:
+	$(MAKE) -C scheduler lint
+
+.PHONY: lint
+lint: 
+	go install -v github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	metrics-operator-lint certmanager-lint operator-lint scheduler-lint

@@ -42,6 +42,7 @@ certificateOperator:
   topologySpreadConstraints: []
 imagePullSecrets: []
 kubernetesClusterDomain: cluster.local
+schedulingGatesEnabled: false
 lifecycleManagerConfig:
   controllerManagerConfigYaml:
     health:

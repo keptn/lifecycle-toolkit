@@ -6753,6 +6753,7 @@ rules:
   - get
   - list
   - watch
+  - update
 - apiGroups:
   - ""
   resources:
@@ -7915,6 +7916,8 @@ spec:
           value: "0"
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
           value: "0"
+        - name: SCHEDULING_GATES_ENABLED
+          value: "false"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
         image: ghcr.io/keptn/lifecycle-operator:v0.8.2

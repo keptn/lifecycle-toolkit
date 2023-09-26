@@ -58,3 +58,43 @@ jobs:
         with:
           name: logs-integration-tests-${{ inputs.helm-install }}
           path: .github/scripts/logs
+
+  run-integration-test-scheduling-gates:
+    name: Run Integration Tests Scheduling Gates
+    if: ${{ inputs.helm-install == true }}
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Setup cluster
+        uses: ./.github/actions/deploy-klt-on-cluster-scheduling-gates
+        with:
+          runtime_tag: ${{ inputs.runtime_tag }}
+
+      - name: Install and expose Prometheus
+        uses: ./.github/actions/deploy-prometheus-on-cluster
+
+      - name: Download KUTTL
+        env:
+          BASE_URL: "https://github.com/kudobuilder/kuttl/releases"
+        run: |
+          curl -fL "${BASE_URL}/download/${{ env.KUTTL_VERSION }}/kubectl-kuttl_${KUTTL_VERSION#v}_linux_x86_64" -o kubectl-kuttl
+          chmod +x kubectl-kuttl
+          mv kubectl-kuttl /usr/local/bin
+
+      - name: Run Integration Tests
+        working-directory: .
+        run: make integration-test-scheduling-gates && make integration-test
+
+      - name: Create reports
+        if: always()
+        working-directory: ./.github/scripts
+        run: ./create-reports-full.sh
+
+      - name: Upload cluster logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs-integration-tests-scheduling-gates
+          path: .github/scripts/logs

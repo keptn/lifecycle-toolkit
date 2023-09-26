@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
   {{- include "chart.labels" . | nindent 4 }}
+{{- if not .Values.schedulingGatesEnabled }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -17,6 +18,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
   {{- include "chart.labels" . | nindent 4 }}
+{{- end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -202,6 +204,9 @@ spec:
             | quote }}
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
           value: {{ .Values.lifecycleOperator.manager.env.optionsControllerLogLevel | quote
+            }}
+        - name: SCHEDULING_GATES_ENABLED
+          value: {{ .Values.schedulingGatesEnabled | quote
             }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
@@ -406,6 +411,7 @@ spec:
       tolerations: {{- include "tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
 {{- end }}
 
+{{- if not .Values.schedulingGatesEnabled }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -492,4 +498,5 @@ spec:
 {{- end }}
 {{- if .Values.tolerations }}
       tolerations: {{- include "tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
+{{- end }}
 {{- end }}

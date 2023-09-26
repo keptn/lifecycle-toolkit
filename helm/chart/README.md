@@ -158,7 +158,8 @@ as well as the concept of application health checks
 
 ### Global
 
-| Name                      | Description                            | Value           |
-| ------------------------- | -------------------------------------- | --------------- |
-| `kubernetesClusterDomain` | overrides domain.local                 | `cluster.local` |
-| `imagePullSecrets`        | global value for image registry secret | `[]`            |
+| Name                      | Description                                                                                                                                     | Value           |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `kubernetesClusterDomain` | overrides domain.local                                                                                                                          | `cluster.local` |
+| `imagePullSecrets`        | global value for image registry secret                                                                                                          | `[]`            |
+| `schedulingGatesEnabled`  | enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version | `false`         |

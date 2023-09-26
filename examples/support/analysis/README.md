@@ -228,9 +228,3 @@ status:
   raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"greaterThan":{"fixedValue":"500m"}},"fulfilled":false},"warnResult":{"operator":{"greaterThan":{"fixedValue":"300m"}},"fulfilled":false},"warning":false,"pass":true},"objective":{"analysisValueTemplateRef":{"name":"response-time-p95"},"target":{"failure":{"greaterThan":{"fixedValue":"500m"}},"warning":{"greaterThan":{"fixedValue":"300m"}}},"weight":1},"value":0.00475,"score":1},{"result":{"failResult":{"operator":{"greaterThan":{"fixedValue":"0"}},"fulfilled":false},"warnResult":{"operator":{},"fulfilled":false},"warning":false,"pass":true},"objective":{"analysisValueTemplateRef":{"name":"error-rate"},"target":{"failure":{"greaterThan":{"fixedValue":"0"}}},"weight":1,"keyObjective":true},"value":0,"score":1}],"totalScore":2,"maximumScore":2,"pass":true,"warning":false}'
   state: Completed
 ```
-
-
-
-
-
-

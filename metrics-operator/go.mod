@@ -8,7 +8,7 @@ require (
 	github.com/go-logr/logr v1.2.4
 	github.com/gorilla/mux v1.8.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230925062752-5efa6502403d
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230926092913-099a4573b273
 	github.com/open-feature/go-sdk v1.7.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.16.0
@@ -75,7 +75,7 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/procfs v0.10.1 // indirect
-	github.com/spf13/afero v1.9.5 // indirect
+	github.com/spf13/afero v1.10.0 // indirect
 	github.com/spf13/cobra v1.7.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect

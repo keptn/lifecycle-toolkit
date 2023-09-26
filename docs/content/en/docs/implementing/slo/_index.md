@@ -1,6 +1,6 @@
 ---
 title: Analysis
-description: Understand Analysis in Keptn and how to use them
+description: Understand Analyses in Keptn and how to use them
 weight: 150
 cascade:
   type: docs

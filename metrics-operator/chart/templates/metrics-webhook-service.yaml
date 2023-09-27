@@ -6,9 +6,9 @@ metadata:
   labels:
   {{- include "chart.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.metricsWebhookService.type }}
+  type: {{ .Values.webhookService.type }}
   selector:
     control-plane: metrics-operator
   {{- include "chart.selectorLabels" . | nindent 4 }}
   ports:
-	{{- .Values.metricsWebhookService.ports | toYaml | nindent 2 -}}
+	{{- .Values.webhookService.ports | toYaml | nindent 2 -}}

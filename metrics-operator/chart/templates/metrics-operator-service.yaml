@@ -7,9 +7,9 @@ metadata:
     control-plane: metrics-operator
   {{- include "chart.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.metricsOperatorService.type }}
+  type: {{ .Values.operatorService.type }}
   selector:
     control-plane: metrics-operator
   {{- include "chart.selectorLabels" . | nindent 4 }}
   ports:
-	{{- .Values.metricsOperatorService.ports | toYaml | nindent 2 -}}
+	{{- .Values.operatorService.ports | toYaml | nindent 2 -}}

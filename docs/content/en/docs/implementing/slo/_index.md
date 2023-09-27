@@ -20,7 +20,7 @@ to migrate towards Keptn Analysis.
 A Keptn Analysis is implemented with three resources:
 
 * [Analysis](https://lifecycle.keptn.sh/docs/crd-ref/metrics/v1alpha3/#analysis) --
-  define the specific configurations and the analysis to report
+  define the specific configurations and the Analysis to report
 * [AnalysisDefinition](https://lifecycle.keptn.sh/docs/crd-ref/metrics/v1alpha3/#analysisdefinition) --
   define the list of SLOs for an Analysis
 * [AnalysisValueTemplate](https://lifecycle.keptn.sh/docs/crd-ref/metrics/v1alpha3/#analysisvaluetemplate) --
@@ -37,12 +37,12 @@ An AnalysisDefinition contains a list of objectives to satisfy.
 Each of these objectives:
 
 * specifies failure or warning target criteria
-* specifies whether the objective is a key objective (its failure would fail the analysis)
-* indicates the weight of the objective on the overall analysis
+* specifies whether the objective is a key objective (its failure would fail the Analysis)
+* indicates the weight of the objective on the overall Analysis
 * refers to an AnalysisValueTemplate that contains the SLIs, defining the data provider from which to gather the data
-  and how to compute the analysis
+  and how to compute the Analysis
 
-In each AnalysisValueTemplate we store the query for the analysis of the SLI.
+In each AnalysisValueTemplate we store the query for the Analysis of the SLI.
 You must define a
 [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md) resource
 for each instance of each data provider you are using.
@@ -55,7 +55,7 @@ Let's consider the following Analysis:
 This CR sets up the timeframe we are interested in
 as between 5 am and 10 am on the 5th of May 2023,
 and adds a few specific key-value pairs that will be substituted in the query.
-For instance, the query could contain a `{{ .nodename }}` and this value will be substituted with `test`
+For instance, the query could contain a `{{.nodename}}` and this value will be substituted with `test`
 
 The definition of this Analysis is referenced by its name and namespace and can be seen here:
 
@@ -68,7 +68,7 @@ failure and warning criteria:
 * the objective will fail if the percentile 95 is less than 600
 * there will be a warning in case the value is between 300 and 500
 
-The total score shows that this analysis should have an overall score of 90% to pass or 75% to get a warning.
+The total score shows that this Analysis should have an overall score of 90% to pass or 75% to get a warning.
 Since the objective is only one, this means that we either will pass with 100% (response time is less than 600) or fail
 with 0% (slower response time).
 
@@ -81,7 +81,7 @@ This template tells us that we will query a provider called `prometheus` using t
  sum(kube_pod_container_resource_limits{node='{{.nodename}}'}) - sum(kube_node_status_capacity{node='{{.nodename}}'})
 ```
 
-At runtime, the metrics operator will try to substitute everything in`{{.variableName }}`
+At runtime, the metrics operator will try to substitute everything in`{{.variableName}}`
 format with a key-value pair in the Analysis resource,
 so in this case the query would become:
 
@@ -92,7 +92,7 @@ so in this case the query would become:
 The other key-value pairs such as 'project' and 'stage' are just examples of how one could pass to the provider
 information similar to Keptn v1 objectives.
 For a working example you can
-check [here](https://github.com/keptn/lifecycle-toolkit/tree/main/test/testanalysis/analysis-controller-multiple-providers).
+check [here](https://github.com/keptn/lifecycle-toolkit/tree/main/test/testAnalysis/analysis-controller-multiple-providers).
 
 ## Accessing Analysis
 
@@ -108,11 +108,11 @@ kubectl get analyses.metrics.keptn.sh -A
 This will return something like
 
 ```shell
-NAMESPACE   NAME              ANALYSISDEFINITION    STATE   WARNING   PASS
+NAMESPACE   NAME              AnalysisDEFINITION    STATE   WARNING   PASS
 default     analysis-sample   ed-my-proj-dev-svc1
 ```
 
-You can then describe the analysis with:
+You can then describe the Analysis with:
 
 ```shell
 kubectl describe analyses.metrics.keptn.sh analysis-sample -n=default

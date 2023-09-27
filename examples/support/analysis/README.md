@@ -346,6 +346,7 @@ It has two sub-objects:
 In this case, it checks if a value is greater than 500 milliseconds, and it hasn't been fulfilled (`fulfilled: false`).
     - **`warnResult`**: Indicates whether the objective has issued a warning.
 It checks if a value is greater than 300 milliseconds, and it hasn't been fulfilled (`fulfilled: false`).
+    <!-- markdownlint-disable-next-line -->
     - **`warning`**: Indicates whether a warning has been issued (false in this case).
     - **`pass`**: Indicates whether the objective has passed (true in this case).
   - **`objective`**: Describes the objective being evaluated.
@@ -376,5 +377,5 @@ There are no warning conditions in this case.
 **`maximumScore`**: Indicates the maximum possible score (maximumScore: 2).
 
 **`pass`**: Indicates whether the overall evaluation has passed (true in this case).
-
+<!-- markdownlint-disable-next-line -->
 **`warning`**: Indicates whether any warnings have been issued during the evaluation (false in this case).

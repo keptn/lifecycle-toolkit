@@ -25,7 +25,7 @@ import (
 // AnalysisSpec defines the desired state of Analysis
 type AnalysisSpec struct {
 	// Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate. Please note that either
-	// a combination of 'from' and 'to' or the 'recent' property may be set. If this is not the case, the Analysis can
+	// a combination of 'from' and 'to' or the 'recent' property may be set. If neither is set, the Analysis can
 	// not be added to the cluster.
 	Timeframe `json:"timeframe"`
 	// Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})".
@@ -86,12 +86,12 @@ type AnalysisList struct {
 }
 
 type Timeframe struct {
-	// From is the time of start for the query, this field follows RFC3339 time format
+	// From is the time of start for the query. This field follows RFC3339 time format
 	From metav1.Time `json:"from,omitempty"`
-	// To is the time of end for the query, this field follows RFC3339 time format
+	// To is the time of end for the query. This field follows RFC3339 time format
 	To metav1.Time `json:"to,omitempty"`
-	// Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' will cause the Analysis
-	// to be performed for the last five minutes
+	// Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' provides an Analysis
+	// for the last five minutes
 	// +optional
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string

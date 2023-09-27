@@ -28,3 +28,23 @@ webhooks:
     resources:
     - keptnmetrics
   sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: 'metrics-webhook-service'
+      namespace: '{{ .Release.Namespace }}'
+      path: /validate-metrics-keptn-sh-v1alpha3-analysisdefinition
+  failurePolicy: Fail
+  name: vanalysisdefinition.kb.io
+  rules:
+  - apiGroups:
+    - metrics.keptn.sh
+    apiVersions:
+    - v1alpha3
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - analysisdefinitions
+  sideEffects: None

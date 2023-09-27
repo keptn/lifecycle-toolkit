@@ -45,7 +45,8 @@ Each of these objectives:
 * refers to an AnalysisValueTemplate that contains the SLIs, defining the data provider from which to gather the data
   and how to compute the analysis
 
-In each AnalysisValueTemplate we store the query for the analysis of the SLI. You must define a
+In each AnalysisValueTemplate we store the query for the analysis of the SLI.
+You must define a
 [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md) resource
 for each instance of each data provider you are using.
 The template refers to that provider and queries it.
@@ -63,7 +64,8 @@ The definition of this Analysis is referenced by its name and namespace and can 
 
 {{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysisdefinition.yaml" >}}
 
-This simple definition contains a single objective, `response-time-p95`. For this objective, there are both
+This simple definition contains a single objective, `response-time-p95`.
+For this objective, there are both
 failure and warning criteria:
 
 * objective will fail if the percentile 95 is less than 600

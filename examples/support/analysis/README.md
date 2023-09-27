@@ -129,7 +129,7 @@ EOF
 ## Defining goals for the metrics
 
 Now that we have defined our metrics, it is time to describe what we expect from these values.
-This is done in an `AnalysisDefinition`, which looks can be applied using the following command:
+This is done in an `AnalysisDefinition`, which can be applied using the following command:
 
 ```shell
 cat <<EOF | kubectl apply -f - 

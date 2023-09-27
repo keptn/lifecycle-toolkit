@@ -5,7 +5,7 @@ define goals for metric values and evaluate them.
 
 ## Difference between `Analysis` and `Evaluations`
 
-`Evaluations` provide an easy way of checking whether the current value a `KeptnMetric` fulfills
+`Evaluations` provide an easy way of checking whether the current value of a `KeptnMetric` fulfills
 a requirement, i.e. is below or above a certain threshold.
 This is ideal for doing simple checks, such as validating that a cluster currently has
 enough resources for the pod of a deployment to be scaled up.

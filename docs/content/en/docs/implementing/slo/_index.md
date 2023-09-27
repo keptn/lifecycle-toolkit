@@ -108,7 +108,7 @@ kubectl get analyses.metrics.keptn.sh -A
 This will return something like
 
 ```shell
-NAMESPACE   NAME              AnalysisDEFINITION    STATE   WARNING   PASS
+NAMESPACE   NAME              ANALYSISDEFINITION    STATE   WARNING   PASS
 default     analysis-sample   ed-my-proj-dev-svc1
 ```
 

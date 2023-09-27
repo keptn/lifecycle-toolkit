@@ -102,7 +102,7 @@ check [here](https://github.com/keptn/lifecycle-toolkit/tree/main/test/integrati
 Use the `kubectl get` command to retrieve all the `Analysis` in your cluster:
 
 ```shell
-$  kubectl get analyses.metrics.keptn.sh -A
+kubectl get analyses.metrics.keptn.sh -A
 
 ```
 

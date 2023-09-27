@@ -20,9 +20,7 @@ and Keptn evaluations.
 > **Note**
 The full SLO capabilities
 provided by Keptn v1 such as weighting and scoring
-are currently under development for Keptn.
-You can follow and participate in the design and implementation process at
-[GitHub Epic 1646](https://github.com/keptn/lifecycle-toolkit/issues/1646).
+have a first implementation in the [Analysis](../../implementing/slo/).
 
 Notice the paradigm differences when implementing Keptn evaluations:
 

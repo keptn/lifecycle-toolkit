@@ -25,7 +25,7 @@ type Error struct {
 }
 
 func getDTSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (string, error) {
-	if !provider.HasSecretDefined() {
+	if !provider.HasSecretDefined() || !provider.HasSecretKeyDefined() {
 		return "", ErrSecretKeyRefNotDefined
 	}
 	dtCredsSecret := &corev1.Secret{}

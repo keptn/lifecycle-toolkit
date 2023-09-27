@@ -75,6 +75,17 @@ func (p *KeptnMetricsProvider) HasSecretDefined() bool {
 	return true
 }
 
+func (p *KeptnMetricsProvider) HasSecretKeyDefined() bool {
+	if p.Spec.SecretKeyRef == (corev1.SecretKeySelector{}) {
+		return false
+	}
+	//if the secret name exists the secret is defined
+	if strings.TrimSpace(p.Spec.SecretKeyRef.Key) == "" {
+		return false
+	}
+	return true
+}
+
 func (p *KeptnMetricsProvider) GetType() string {
 	if p.Spec.Type != "" {
 		return p.Spec.Type

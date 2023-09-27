@@ -19,11 +19,11 @@ to migrate towards Keptn Analysis.
 
 A Keptn Analysis is implemented with three resources:
 
-* [Analysis](https://lifecycle.keptn.sh/docs/crd-ref/metrics/v1alpha3/#analysis) --
+* [Analysis](../../crd-ref/metrics/v1alpha3/#analysis) --
   define the specific configurations and the Analysis to report
-* [AnalysisDefinition](https://lifecycle.keptn.sh/docs/crd-ref/metrics/v1alpha3/#analysisdefinition) --
+* [AnalysisDefinition](../..crd-ref/metrics/v1alpha3/#analysisdefinition) --
   define the list of SLOs for an Analysis
-* [AnalysisValueTemplate](https://lifecycle.keptn.sh/docs/crd-ref/metrics/v1alpha3/#analysisvaluetemplate) --
+* [AnalysisValueTemplate](../../crd-ref/metrics/v1alpha3/#analysisvaluetemplate) --
   define the SLI: the KeptnMetricsProvider and the query to perform for each SLI
 
 ### Define Analysis, Analysis Definition and AnalysisValueTemplate
@@ -92,7 +92,7 @@ so in this case the query would become:
 The other key-value pairs such as 'project' and 'stage' are just examples of how one could pass to the provider
 information similar to Keptn v1 objectives.
 For a working example you can
-check [here](https://github.com/keptn/lifecycle-toolkit/tree/main/test/testAnalysis/analysis-controller-multiple-providers).
+check [here](https://github.com/keptn/lifecycle-toolkit/tree/main/test/testanalysis/analysis-controller-multiple-providers).
 
 ## Accessing Analysis
 

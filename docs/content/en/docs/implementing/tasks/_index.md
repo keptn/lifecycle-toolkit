@@ -124,7 +124,7 @@ You have the following options:
 
 - Use the `inline` syntax for one of the Keptn pre-defined runners
   (either `deno-runtime` or `python-runtime`)
-  to to code the actual calls inline in the `KeptnTaskDefinition` resource.
+  to code the actual calls inline in the `KeptnTaskDefinition` resource.
   See
   [Fields for pre-defined containers](../../yaml-crd-ref/taskdefinition.md/#fields-for-pre-defined-containers)
   for more information.

@@ -1,7 +1,7 @@
 ---
-title: Analysis
+title: Define SLOs/SLIs with Analyses
 description: Understand Analyses in Keptn and how to use them
-weight: 150
+weight: 91
 ---
 
 The Keptn Metrics Operator implements an SLO/SLI feature set inspired by Keptn v1 under the name of Analysis.

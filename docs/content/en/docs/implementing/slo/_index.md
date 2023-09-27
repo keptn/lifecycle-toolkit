@@ -82,7 +82,7 @@ This template tell us that we will query a provider called prometheus using this
  sum(kube_pod_container_resource_limits{node='{{.nodename}}'}) - sum(kube_node_status_capacity{node='{{.nodename}}'})
 ```
 
-at runtime the metrics operator will try to substitute everything in `{{. }}` format with a key-value pair in the
+at runtime the metrics operator will try to substitute everything in `{{.VariableName }}` format with a key-value pair in the
 Analysis resource,
 so in this case the query would become:
 

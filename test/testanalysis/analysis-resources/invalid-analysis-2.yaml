@@ -1,0 +1,15 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: Analysis
+metadata:
+  name: invalid-analysis-2
+spec:
+  timeframe:
+    # using invalid 'recent' value
+    recent: "cinque minuti"
+  args:
+    project: my-project
+    stage: dev
+    service: svc1
+    foo: bar # can be any key/value pair; NOT only project/stage/service
+  analysisDefinition:
+    name: ed-my-proj-dev-svc1

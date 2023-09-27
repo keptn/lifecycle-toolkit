@@ -45,7 +45,7 @@ metadata:
 spec:
   timeframe:
     from: 2023-09-14T07:33:19Z
-    to: 2023-09-14T07:33:19Z
+    to: 2023-09-14T08:33:19Z
   args:
     "ns": "keptn-lifecycle-toolkit-system"
   analysisDefinition:

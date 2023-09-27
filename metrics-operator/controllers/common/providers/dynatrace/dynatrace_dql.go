@@ -31,7 +31,7 @@ type keptnDynatraceDQLProvider struct {
 	clock    clock.Clock
 }
 
-func (d *keptnDynatraceDQLProvider) FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error) {
+func (d *keptnDynatraceDQLProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 	//TODO implement me
 	panic("implement me")
 }

@@ -17,12 +17,16 @@ limitations under the License.
 package v1alpha3
 
 import (
+	"time"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // AnalysisSpec defines the desired state of Analysis
 type AnalysisSpec struct {
-	//Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate
+	// Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate. Please note that either
+	// a combination of 'from' and 'to' or the 'recent' property may be set. If neither is set, the Analysis can
+	// not be added to the cluster.
 	Timeframe `json:"timeframe"`
 	// Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})".
 	Args map[string]string `json:"args,omitempty"`
@@ -42,6 +46,8 @@ type ProviderResult struct {
 
 // AnalysisStatus stores the status of the overall analysis returns also pass or warnings
 type AnalysisStatus struct {
+	// Timeframe describes the time frame which is evaluated by the Analysis
+	Timeframe Timeframe `json:"timeframe"`
 	// Raw contains the raw result of the SLO computation
 	Raw string `json:"raw,omitempty"`
 	// Pass returns whether the SLO is satisfied
@@ -80,10 +86,59 @@ type AnalysisList struct {
 }
 
 type Timeframe struct {
-	// From is the time of start for the query, this field follows RFC3339 time format
-	From metav1.Time `json:"from"`
-	// To is the time of end for the query, this field follows RFC3339 time format
-	To metav1.Time `json:"to"`
+	// From is the time of start for the query. This field follows RFC3339 time format
+	From metav1.Time `json:"from,omitempty"`
+	// To is the time of end for the query. This field follows RFC3339 time format
+	To metav1.Time `json:"to,omitempty"`
+	// Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' provides an Analysis
+	// for the last five minutes
+	// +optional
+	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+	// +kubebuilder:validation:Type:=string
+	// +optional
+	Recent metav1.Duration `json:"recent,omitempty"`
+}
+
+// GetFrom returns the 'from' timestamp from the status of the Analysis.
+// This function has been added to provide a clear way of retrieving the correct timestamp
+// to use, which is the one from the Status.
+func (a *Analysis) GetFrom() time.Time {
+	return a.Status.Timeframe.GetFrom()
+}
+
+// GetTo returns the 'from' timestamp from the status of the Analysis.
+// This function has been added to provide a clear way of retrieving the correct timestamp
+// to use, which is the one from the Status.
+func (a *Analysis) GetTo() time.Time {
+	return a.Status.Timeframe.GetTo()
+}
+
+func (a *Analysis) EnsureTimeframeIsSet() {
+	// make sure the correct time frame is set in the status - once an Analysis with a duration string specifying the
+	// time frame is triggered, the time frame derived from that duration should stay the same and not shift over the course
+	// of multiple reconciliation loops
+	if a.Status.Timeframe.From.IsZero() || a.Status.Timeframe.To.IsZero() {
+		a.Status.Timeframe.From = metav1.Time{
+			Time: a.Spec.GetFrom(),
+		}
+		a.Status.Timeframe.To = metav1.Time{
+			Time: a.Spec.GetTo(),
+		}
+	}
+}
+
+func (t *Timeframe) GetFrom() time.Time {
+	if t.Recent.Duration > 0 {
+		return time.Now().UTC().Add(-t.Recent.Duration)
+	}
+	return t.From.Time
+}
+
+func (t *Timeframe) GetTo() time.Time {
+	if t.Recent.Duration > 0 {
+		return time.Now().UTC()
+	}
+	return t.To.Time
 }
 
 func init() {

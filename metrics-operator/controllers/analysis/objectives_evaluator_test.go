@@ -30,7 +30,7 @@ func TestEvaluate(t *testing.T) {
 			name:         "SuccessfulEvaluation",
 			providerType: "mockProvider",
 			mockProvider: &fake2.KeptnSLIProviderMock{
-				FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error) {
+				FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 					return "10", nil
 				},
 			},
@@ -58,7 +58,7 @@ func TestEvaluate(t *testing.T) {
 			name:         "FailedEvaluation",
 			providerType: "mockProvider",
 			mockProvider: &fake2.KeptnSLIProviderMock{
-				FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.AnalysisSpec, provider *metricsapi.KeptnMetricsProvider) (string, error) {
+				FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 					return "", fmt.Errorf("something bad")
 				},
 			},

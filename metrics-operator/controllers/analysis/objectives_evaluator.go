@@ -33,7 +33,7 @@ func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, providerType string,
 	for o := range obj {
 		value := ""
 		var strErr string
-		value, err = provider.FetchAnalysisValue(ctx, o.Query, oe.Analysis.Spec, o.Provider)
+		value, err = provider.FetchAnalysisValue(ctx, o.Query, *oe.Analysis, o.Provider)
 
 		if err != nil {
 			strErr = err.Error()

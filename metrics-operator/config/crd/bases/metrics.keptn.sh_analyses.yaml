@@ -70,21 +70,26 @@ spec:
                 type: object
               timeframe:
                 description: Timeframe specifies the range for the corresponding query
-                  in the AnalysisValueTemplate
+                  in the AnalysisValueTemplate. Please note that either a combination
+                  of 'from' and 'to' or the 'recent' property may be set. If neither
+                  is set, the Analysis can not be added to the cluster.
                 properties:
                   from:
-                    description: From is the time of start for the query, this field
+                    description: From is the time of start for the query. This field
                       follows RFC3339 time format
                     format: date-time
                     type: string
+                  recent:
+                    description: Recent describes a recent timeframe using a duration
+                      string. E.g. Setting this to '5m' provides an Analysis for the
+                      last five minutes
+                    pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                    type: string
                   to:
-                    description: To is the time of end for the query, this field follows
+                    description: To is the time of end for the query. This field follows
                       RFC3339 time format
                     format: date-time
                     type: string
-                required:
-                - from
-                - to
                 type: object
             required:
             - analysisDefinition
@@ -132,11 +137,33 @@ spec:
                 description: StoredValues contains all analysis values that have already
                   been retrieved successfully
                 type: object
+              timeframe:
+                description: Timeframe describes the time frame which is evaluated
+                  by the Analysis
+                properties:
+                  from:
+                    description: From is the time of start for the query. This field
+                      follows RFC3339 time format
+                    format: date-time
+                    type: string
+                  recent:
+                    description: Recent describes a recent timeframe using a duration
+                      string. E.g. Setting this to '5m' provides an Analysis for the
+                      last five minutes
+                    pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                    type: string
+                  to:
+                    description: To is the time of end for the query. This field follows
+                      RFC3339 time format
+                    format: date-time
+                    type: string
+                type: object
               warning:
                 description: Warning returns whether the analysis returned a warning
                 type: boolean
             required:
             - state
+            - timeframe
             type: object
         type: object
     served: true

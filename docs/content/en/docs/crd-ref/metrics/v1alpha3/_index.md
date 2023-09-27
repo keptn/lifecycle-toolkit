@@ -120,7 +120,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `timeframe` _[Timeframe](#timeframe)_ | Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate |
+| `timeframe` _[Timeframe](#timeframe)_ | Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate. Please note that either a combination of 'from' and 'to' or the 'recent' property may be set. If neither is set, the Analysis can not be added to the cluster. |
 | `args` _object (keys:string, values:string)_ | Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})". |
 | `analysisDefinition` _[ObjectReference](#objectreference)_ | AnalysisDefinition refers to the AnalysisDefinition, a CRD that stores the AnalysisValuesTemplates |
 
@@ -147,6 +147,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
+| `timeframe` _[Timeframe](#timeframe)_ | Timeframe describes the time frame which is evaluated by the Analysis |
 | `raw` _string_ | Raw contains the raw result of the SLO computation |
 | `pass` _boolean_ | Pass returns whether the SLO is satisfied |
 | `warning` _boolean_ | Warning returns whether the analysis returned a warning |
@@ -494,11 +495,13 @@ _Appears in:_
 
 _Appears in:_
 - [AnalysisSpec](#analysisspec)
+- [AnalysisStatus](#analysisstatus)
 
 | Field | Description |
 | --- | --- |
-| `from` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | From is the time of start for the query, this field follows RFC3339 time format |
-| `to` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | To is the time of end for the query, this field follows RFC3339 time format |
+| `from` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | From is the time of start for the query. This field follows RFC3339 time format |
+| `to` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | To is the time of end for the query. This field follows RFC3339 time format |
+| `recent` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ | Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' provides an Analysis for the last five minutes |
 
 
 #### TotalScore

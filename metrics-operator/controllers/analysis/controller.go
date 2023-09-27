@@ -78,12 +78,14 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 		return ctrl.Result{}, nil
 	}
 
+	analysis.EnsureTimeframeIsSet()
+
 	//find AnalysisDefinition to have the collection of Objectives
 	analysisDef, err := a.retrieveAnalysisDefinition(ctx, analysis)
 	if err != nil {
 		// do not return error, as here we should always try to fetch the definition again
 		// in the next reconcile loop
-		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, a.updateStatus(ctx, analysis)
 	}
 
 	if analysis.Status.State.IsPending() {

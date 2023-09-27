@@ -47,8 +47,8 @@ type ISchedulingGatesHandlerMock struct {
 			WorkloadInstance *lfcv1alpha3.KeptnWorkloadInstance
 		}
 	}
-	lockEnabled sync.RWMutex
-	lockRemoveGates         sync.RWMutex
+	lockEnabled     sync.RWMutex
+	lockRemoveGates sync.RWMutex
 }
 
 // Enabled calls EnabledFunc.

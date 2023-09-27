@@ -76,6 +76,7 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 
 	analysis, analysisDef, template, _ := getTestCRDs()
 
+	currentTime := time.Now().Round(time.Minute)
 	analysis2 := metricsapi.Analysis{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-analysis",
@@ -84,10 +85,10 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 		Spec: metricsapi.AnalysisSpec{
 			Timeframe: metricsapi.Timeframe{
 				From: metav1.Time{
-					Time: time.Now(),
+					Time: currentTime,
 				},
 				To: metav1.Time{
-					Time: time.Now(),
+					Time: currentTime,
 				},
 			},
 			Args: map[string]string{
@@ -190,6 +191,10 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
 			wantErr: false,
 			status: &metricsapi.AnalysisStatus{
+				Timeframe: metricsapi.Timeframe{
+					From: analysis.Spec.From,
+					To:   analysis.Spec.To,
+				},
 				State: metricsapi.StatePending,
 			},
 			res:         metricstypes.AnalysisResult{Pass: false},
@@ -200,6 +205,10 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
 			wantErr: false,
 			status: &metricsapi.AnalysisStatus{
+				Timeframe: metricsapi.Timeframe{
+					From: analysis.Spec.From,
+					To:   analysis.Spec.To,
+				},
 				State: metricsapi.StateProgressing,
 			},
 			res: metricstypes.AnalysisResult{Pass: false},
@@ -212,11 +221,19 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 				return ctx, &mymock
 			},
 		}, {
-			name:        "succeeded, status updated",
-			client:      fake2.NewClient(&analysis, &analysisDef, &template),
-			want:        controllerruntime.Result{},
-			wantErr:     false,
-			status:      &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true, State: metricsapi.StateCompleted},
+			name:    "succeeded, status updated",
+			client:  fake2.NewClient(&analysis, &analysisDef, &template),
+			want:    controllerruntime.Result{},
+			wantErr: false,
+			status: &metricsapi.AnalysisStatus{
+				Timeframe: metricsapi.Timeframe{
+					From: analysis.Spec.From,
+					To:   analysis.Spec.To,
+				},
+				Raw:   "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}",
+				Pass:  true,
+				State: metricsapi.StateCompleted,
+			},
 			res:         metricstypes.AnalysisResult{Pass: true},
 			mockFactory: mockFactory,
 		}, {
@@ -225,11 +242,19 @@ func TestAnalysisReconciler_Reconcile_BasicControlLoop(t *testing.T) {
 			want:    controllerruntime.Result{},
 			wantErr: false,
 		}, {
-			name:        "succeeded - analysis in different namespace, status updated",
-			client:      fake2.NewClient(&analysis2, &analysisDef2, &template),
-			want:        controllerruntime.Result{},
-			wantErr:     false,
-			status:      &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true, State: metricsapi.StateCompleted},
+			name:    "succeeded - analysis in different namespace, status updated",
+			client:  fake2.NewClient(&analysis2, &analysisDef2, &template),
+			want:    controllerruntime.Result{},
+			wantErr: false,
+			status: &metricsapi.AnalysisStatus{
+				Timeframe: metricsapi.Timeframe{
+					From: analysis.Spec.From,
+					To:   analysis.Spec.To,
+				},
+				Raw:   "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}",
+				Pass:  true,
+				State: metricsapi.StateCompleted,
+			},
 			res:         metricstypes.AnalysisResult{Pass: true},
 			mockFactory: mockFactory,
 		},
@@ -307,7 +332,15 @@ func TestAnalysisReconciler_ExistingAnalysisStatusIsFlushedWhenEvaluationFinishe
 		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
 	}
 
-	status := &metricsapi.AnalysisStatus{Raw: "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}", Pass: true, State: metricsapi.StateCompleted}
+	status := &metricsapi.AnalysisStatus{
+		Timeframe: metricsapi.Timeframe{
+			From: analysis.Spec.From,
+			To:   analysis.Spec.To,
+		},
+		Raw:   "{\"objectiveResults\":null,\"totalScore\":0,\"maximumScore\":0,\"pass\":true,\"warning\":false}",
+		Pass:  true,
+		State: metricsapi.StateCompleted,
+	}
 
 	got, err := a.Reconcile(context.TODO(), req)
 
@@ -321,7 +354,72 @@ func TestAnalysisReconciler_ExistingAnalysisStatusIsFlushedWhenEvaluationFinishe
 
 }
 
+func TestAnalysisReconciler_AnalysisTimeframeIsDerivedFromDurationString(t *testing.T) {
+	analysis := metricsapi.Analysis{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-analysis",
+			Namespace: "default",
+		},
+		Spec: metricsapi.AnalysisSpec{
+			Timeframe: metricsapi.Timeframe{Recent: metav1.Duration{Duration: 5 * time.Minute}},
+			Args: map[string]string{
+				"good": "good",
+				"dot":  ".",
+			},
+			AnalysisDefinition: metricsapi.ObjectReference{
+				Name:      "my-analysis-def",
+				Namespace: "default",
+			},
+		},
+		Status: metricsapi.AnalysisStatus{
+			State: metricsapi.StatePending,
+		},
+	}
+
+	mockFactory := func(ctx context.Context, analysisMoqParam *metricsapi.Analysis, obj []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool) {
+		mymock := fake.IAnalysisPoolMock{
+			DispatchAndCollectFunc: func(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
+				return map[string]metricsapi.ProviderResult{}, nil
+			},
+		}
+		return ctx, &mymock
+	}
+
+	fclient := fake2.NewClient(&analysis)
+	a := &AnalysisReconciler{
+		Client:                fclient,
+		Scheme:                fclient.Scheme(),
+		Log:                   testr.New(t),
+		MaxWorkers:            2,
+		NewWorkersPoolFactory: mockFactory,
+		IAnalysisEvaluator: &fakeEvaluator.IAnalysisEvaluatorMock{
+			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) metricstypes.AnalysisResult {
+				return metricstypes.AnalysisResult{Pass: true}
+			}},
+	}
+
+	req := controllerruntime.Request{
+		NamespacedName: types.NamespacedName{Namespace: "default", Name: "my-analysis"},
+	}
+
+	got, err := a.Reconcile(context.TODO(), req)
+
+	// expect to be re-queued, since the AnalysisDefinition was not there, but the from/to timestamps should be set
+	// as soon as the reconciliation has started
+	require.Nil(t, err)
+	require.True(t, got.Requeue)
+	resAnalysis := metricsapi.Analysis{}
+	err = fclient.Get(context.TODO(), req.NamespacedName, &resAnalysis)
+	require.Nil(t, err)
+
+	currentTime := time.Now().UTC()
+	require.WithinDuration(t, currentTime, resAnalysis.Status.Timeframe.GetTo(), time.Minute)
+	require.WithinDuration(t, currentTime.Add(-5*time.Minute), resAnalysis.Status.Timeframe.GetFrom(), time.Minute)
+
+}
+
 func getTestCRDs() (metricsapi.Analysis, metricsapi.AnalysisDefinition, metricsapi.AnalysisValueTemplate, metricsapi.KeptnMetricsProvider) {
+	currentTime := time.Now().Round(time.Minute)
 	analysis := metricsapi.Analysis{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-analysis",
@@ -330,10 +428,10 @@ func getTestCRDs() (metricsapi.Analysis, metricsapi.AnalysisDefinition, metricsa
 		Spec: metricsapi.AnalysisSpec{
 			Timeframe: metricsapi.Timeframe{
 				From: metav1.Time{
-					Time: time.Now(),
+					Time: currentTime,
 				},
 				To: metav1.Time{
-					Time: time.Now(),
+					Time: currentTime,
 				},
 			},
 			Args: map[string]string{

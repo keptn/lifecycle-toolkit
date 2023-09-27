@@ -61,7 +61,7 @@ runs:
         done
 
     - name: Install lifecycle-toolkit with manifests
-      if: ${{ inputs.helm-install == 'false' && inputs.scheduling_gates == 'false' }}
+      if: inputs.helm-install == 'false' && inputs.scheduling_gates == 'false'
       shell: bash
       run: |
         echo "Installing Keptn using manifests"
@@ -87,7 +87,7 @@ runs:
         kubectl rollout status deployment lifecycle-operator -n keptn-lifecycle-toolkit-system -w
 
     - name: Install lifecycle-toolkit with helm
-      if: ${{ inputs.helm-install == 'true'  }}
+      if: inputs.helm-install == 'true'
       env:
         RELEASE_REGISTRY: "localhost:5000/keptn"
       shell: bash

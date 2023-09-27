@@ -13,7 +13,7 @@ In other cases however, it may not be enough to just check the current value of 
 available resources), but one may want to evaluate the value of a metric for a specific timeframe.
 For example, one may execute load tests for a service after it has been deployed, and then verify
 if performance-related metrics, such as response time or error rate during the time
-when the tests have been executed meet certain criteria.
+when the tests have been executed, meet certain criteria.
 That is where the `Analysis` capabilities of the `metrics-operator` come in.
 
 ## Defining Metrics

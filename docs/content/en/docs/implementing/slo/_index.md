@@ -27,7 +27,7 @@ A Keptn Analysis is implemented with three resources:
 * [AnalysisDefinition](https://lifecycle.keptn.sh/docs/crd-ref/metrics/v1alpha3/#analysisdefinition) --
   define the list of SLOs for an Analysis
 * [AnalysisValueTemplate](https://lifecycle.keptn.sh/docs/crd-ref/metrics/v1alpha3/#analysisvaluetemplate) --
-  define the SLI: the KeptnMetricsProvider and the Query to perform for each SLI
+  define the SLI: the KeptnMetricsProvider and the query to perform for each SLI
 
 ### Define Analysis, Analysis Definition and AnalysisValueTemplate
 

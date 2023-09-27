@@ -2,9 +2,6 @@
 title: Analysis
 description: Understand Analyses in Keptn and how to use them
 weight: 150
-cascade:
-  type: docs
-  currentversion: main
 ---
 
 The Keptn Metrics Operator implements an SLO/SLI feature set inspired by Keptn v1 under the name of Analysis.
@@ -84,7 +81,7 @@ This template tell us that we will query a provider called prometheus using this
  sum(kube_pod_container_resource_limits{node='{{.nodename}}'}) - sum(kube_node_status_capacity{node='{{.nodename}}'})
 ```
 
-at runtime the metrics operator will try to substitute everything in`{{.variableName }}`
+At runtime, the metrics operator will try to substitute everything in`{{.variableName }}`
 format with a key-value pair in the Analysis resource,
 so in this case the query would become:
 

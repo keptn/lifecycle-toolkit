@@ -21,7 +21,7 @@ That is where the `Analysis` capabilities of the `metrics-operator` come in.
 The first step using this feature is to figure out what it is we want to analyze.
 In our example, we would like to analyze the response time and the error rate for a service.
 Let's assume those metrics are retrieved from Prometheus, so first we're going to create a `KeptnMetricsProvider`.
-Just like when using `KeptnMetrics`, the provider will tell Keptn where to retrieve the values we are interested in from.
+Just like when using `KeptnMetrics`, the provider will tell Keptn where to retrieve the values we are interested in.
 
 To create the provider, execute the following commands from this directory:
 

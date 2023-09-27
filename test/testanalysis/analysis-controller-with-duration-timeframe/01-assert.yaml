@@ -9,4 +9,4 @@ status:
   pass: true
   state: Completed
   # yamllint disable-line rule:line-length
-  raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"lessThan":{"fixedValue":"2"}},"fulfilled":false},"warnResult":{"operator":{"lessThan":{"fixedValue":"3"}},"fulfilled":false},"warning":false,"pass":true},"objective":{"analysisValueTemplateRef":{"name":"ready"},"target":{"failure":{"lessThan":{"fixedValue":"2"}},"warning":{"lessThan":{"fixedValue":"3"}}},"weight":1},"value":4,"score":1}],"totalScore":1,"maximumScore":1,"pass":true,"warning":false}'
+  raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"lessThan":{"fixedValue":"2"}},"fulfilled":false},"warnResult":{"operator":{"lessThan":{"fixedValue":"3"}},"fulfilled":false},"warning":false,"pass":true},"objective":{"analysisValueTemplateRef":{"name":"ready"},"target":{"failure":{"lessThan":{"fixedValue":"2"}},"warning":{"lessThan":{"fixedValue":"3"}}},"weight":1},"value":4,"query":"sum(kube_pod_container_status_ready{namespace=\"keptn-lifecycle-toolkit-system\"})","score":1}],"totalScore":1,"maximumScore":1,"pass":true,"warning":false}'

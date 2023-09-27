@@ -34,6 +34,7 @@ type ObjectiveResult struct {
 	Result    TargetResult       `json:"result"`
 	Objective v1alpha3.Objective `json:"objective"`
 	Value     float64            `json:"value"`
+	Query     string             `json:"query"`
 	Score     float64            `json:"score"`
 	Error     error              `json:"error,omitempty"`
 }

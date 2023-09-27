@@ -10,9 +10,9 @@ At the end of the Analysis the status returns whether your objective failed or p
 
 The Analysis result is exposed as an OpenTelemetry metric and can be displayed on dashboard tools, such as Grafana.
 
-Keptn v1 users may
-use [SLO](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/converter/slo_converter.md#slo-converter)
-and [SLI converters](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/converter/sli_converter.md#sli-converter)
+Keptn v1 users may use converters for
+[SLOs](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/converter/slo_converter.md#slo-converter)
+and [SLIs](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/converter/sli_converter.md#sli-converter)
 to migrate towards Keptn Analysis.
 
 ## Keptn Analysis basics
@@ -28,15 +28,15 @@ A Keptn Analysis is implemented with three resources:
 
 ### Define Analysis, Analysis Definition and AnalysisValueTemplate
 
-An Analysis customizes the templates defined inside an AnalysisDefinition by adding configurations such as:
+An Analysis customizes the templates defined inside an AnalysisDefinition by adding configuration such as:
 
-* a Timeframe that specifies the range for the corresponding query in the AnalysisValueTemplate
+* a timeframe that specifies the range for the corresponding query in the AnalysisValueTemplate
 * a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate
 
 An AnalysisDefinition contains a list of objectives to satisfy.
 Each of these objectives:
 
-* specifies failure or warning target criteria,
+* specifies failure or warning target criteria
 * specifies whether the objective is a key objective (its failure would fail the analysis)
 * indicates the weight of the objective on the overall analysis
 * refers to an AnalysisValueTemplate that contains the SLIs, defining the data provider from which to gather the data
@@ -55,7 +55,7 @@ Let's consider the following Analysis:
 This CR sets up the timeframe we are interested in
 as between 5 am and 10 am on the 5th of May 2023,
 and adds a few specific key-value pairs that will be substituted in the query.
-For instance, the query could contain a `{{.nodename }}` and this value will be substituted by test
+For instance, the query could contain a `{{ .nodename }}` and this value will be substituted with `test`
 
 The definition of this Analysis is referenced by its name and namespace and can be seen here:
 
@@ -65,17 +65,17 @@ This simple definition contains a single objective, `response-time-p95`.
 For this objective, there are both
 failure and warning criteria:
 
-* objective will fail if the percentile 95 is less than 600
-* there will be a warning in case the value is in between 300 and 500
+* the objective will fail if the percentile 95 is less than 600
+* there will be a warning in case the value is between 300 and 500
 
-The total score shows that this analysis should overall score 90% of all objectives to pass or 75 to get a warning.
-Since the objective is one only, this means that we either will pass with 100% (response time is less than 600) or fail
-with 0%(slower response time)
+The total score shows that this analysis should have an overall score of 90% to pass or 75% to get a warning.
+Since the objective is only one, this means that we either will pass with 100% (response time is less than 600) or fail
+with 0% (slower response time).
 
 The objective points to the corresponding AnalysisValueTemplate:
 {{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysisvaluetemplate.yaml" >}}
 
-This template tell us that we will query a provider called prometheus using this query:
+This template tells us that we will query a provider called `prometheus` using this query:
 
 ```shell
  sum(kube_pod_container_resource_limits{node='{{.nodename}}'}) - sum(kube_node_status_capacity{node='{{.nodename}}'})

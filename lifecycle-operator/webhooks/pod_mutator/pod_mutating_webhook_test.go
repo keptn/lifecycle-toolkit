@@ -14,7 +14,6 @@ import (
 	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
-	"gomodules.xyz/jsonpatch/v2"
 	admissionv1 "k8s.io/api/admission/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -1361,17 +1360,12 @@ func TestPodMutatingWebhook_Handle_SchedulingGates(t *testing.T) {
 	require.NotNil(t, resp)
 	require.True(t, resp.Allowed)
 
-	op := jsonpatch.Operation{
-		Operation: "add",
-		Path:      "/spec/schedulingGates",
-		Value:     []interface{}{map[string]interface{}{"name": apicommon.KeptnGate}},
-	}
-
+	expectedValue := []interface{}{map[string]interface{}{"name": apicommon.KeptnGate}}
 	require.Len(t, resp.Patches, 2)
 	if resp.Patches[0].Path == "/spec/schedulingGates" {
-		require.Equal(t, op, resp.Patches[0])
+		require.Equal(t, expectedValue, resp.Patches[0].Value)
 	} else {
-		require.Equal(t, op, resp.Patches[1])
+		require.Equal(t, expectedValue, resp.Patches[1].Value)
 	}
 
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{}

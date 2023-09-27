@@ -135,6 +135,9 @@ spec:
                         required:
                           - name
                         type: object
+                      query:
+                        description: Query represents the executed query
+                        type: string
                       value:
                         description: Value is the value the provider returned
                         type: string

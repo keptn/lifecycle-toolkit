@@ -88,8 +88,8 @@ Keptn can use this feature to substitute the functionality of Keptn scheduler.
 
 As this functionality is still disabled by default, it can be enabled by setting up
 the correct helm values.
-This will lead to Keptn installation without scheduler and
-with scheduling gates feature enablement.
+This will lead to a Keptn installation without a scheduler and
+with scheduling gates feature enabled.
 
 Use the following command sequence
 to install Keptn with scheduling gates enabled:

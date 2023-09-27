@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/onsi/ginkgo/v2 v2.12.0
+	github.com/onsi/ginkgo/v2 v2.12.1
 	github.com/onsi/gomega v1.27.10
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.4
@@ -13,7 +13,7 @@ require (
 	go.opentelemetry.io/otel/exporters/stdout v0.20.0
 	go.opentelemetry.io/otel/sdk v0.20.0
 	go.opentelemetry.io/otel/trace v0.20.0
-	google.golang.org/grpc v1.58.1
+	google.golang.org/grpc v1.58.2
 	k8s.io/api v0.25.14
 	k8s.io/apimachinery v0.25.14
 	k8s.io/apiserver v0.25.14

@@ -103,7 +103,7 @@ func init() {
 }
 
 func (w KeptnWorkload) GetWorkloadInstanceName() string {
-	return operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKLTNameLen, w.Name, w.Spec.Version)
+	return operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKeptnNameLen, w.Name, w.Spec.Version)
 }
 
 func (w KeptnWorkload) SetSpanAttributes(span trace.Span) {

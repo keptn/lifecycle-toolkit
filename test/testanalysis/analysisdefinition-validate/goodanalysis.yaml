@@ -1,0 +1,20 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisDefinition
+metadata:
+  name: ed-my-proj-dev-svc2
+spec:
+  objectives:
+    - analysisValueTemplateRef:
+        name: ready
+      target:
+        failure:
+          lessThan:
+            fixedValue: 2
+        warning:
+          lessThan:
+            fixedValue: 3
+      weight: 1
+      keyObjective: false
+  totalScore:
+    passPercentage: 90
+    warningPercentage: 75

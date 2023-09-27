@@ -9,9 +9,9 @@ require (
 	github.com/cloudevents/sdk-go/v2 v2.14.0
 	github.com/go-logr/logr v1.2.4
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230920065432-f2f3a0c1e09c
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20230926092913-099a4573b273
 	github.com/magiconair/properties v1.8.7
-	github.com/onsi/ginkgo/v2 v2.12.0
+	github.com/onsi/ginkgo/v2 v2.12.1
 	github.com/onsi/gomega v1.27.10
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.16.0
@@ -25,7 +25,8 @@ require (
 	go.opentelemetry.io/otel/sdk/metric v0.41.0
 	go.opentelemetry.io/otel/trace v1.18.0
 	golang.org/x/net v0.15.0
-	google.golang.org/grpc v1.58.1
+	gomodules.xyz/jsonpatch/v2 v2.4.0
+	google.golang.org/grpc v1.58.2
 	k8s.io/api v0.28.2
 	k8s.io/apiextensions-apiserver v0.28.2
 	k8s.io/apimachinery v0.28.2
@@ -70,7 +71,7 @@ require (
 	github.com/prometheus/client_model v0.4.0 // indirect
 	github.com/prometheus/common v0.44.0 // indirect
 	github.com/prometheus/procfs v0.10.1 // indirect
-	github.com/spf13/afero v1.9.5 // indirect
+	github.com/spf13/afero v1.10.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.18.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
@@ -83,7 +84,6 @@ require (
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.12.0 // indirect
-	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230711160842-782d3b101e98 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230711160842-782d3b101e98 // indirect

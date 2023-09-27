@@ -102,7 +102,7 @@ func init() {
 }
 
 func (a KeptnApp) GetAppVersionName() string {
-	return operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKLTNameLen, a.Name, a.Spec.Version, common.Hash(a.Generation))
+	return operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKeptnNameLen, a.Name, a.Spec.Version, common.Hash(a.Generation))
 }
 
 func (a KeptnApp) SetSpanAttributes(span trace.Span) {

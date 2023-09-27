@@ -114,7 +114,7 @@ jobs:
             return releaseMatrix.length > 0 ? { config: releaseMatrix } : {};
 
   build-release:
-    if: needs.release-please.outputs.releases-created == 'true'
+    if: needs.release-please.outputs.releases-created == 'true' && needs.release-please.outputs.build-matrix != '{}'
     needs:
       - release-please
     strategy:

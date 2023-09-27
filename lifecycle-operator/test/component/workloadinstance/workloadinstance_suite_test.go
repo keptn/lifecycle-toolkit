@@ -43,13 +43,14 @@ var _ = BeforeSuite(func() {
 	// //setup controllers here
 	config.Instance().SetDefaultNamespace(KeptnNamespace)
 	controller := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-		Client:        k8sManager.GetClient(),
-		Scheme:        k8sManager.GetScheme(),
-		EventSender:   controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadinstance-controller")),
-		Log:           GinkgoLogr,
-		Meters:        common.InitKeptnMeters(),
-		SpanHandler:   &telemetry.SpanHandler{},
-		TracerFactory: &common.TracerFactory{Tracer: tracer},
+		SchedulingGatesHandler: controllercommon.NewSchedulingGatesHandler(nil, GinkgoLogr, false),
+		Client:                 k8sManager.GetClient(),
+		Scheme:                 k8sManager.GetScheme(),
+		EventSender:            controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadinstance-controller")),
+		Log:                    GinkgoLogr,
+		Meters:                 common.InitKeptnMeters(),
+		SpanHandler:            &telemetry.SpanHandler{},
+		TracerFactory:          &common.TracerFactory{Tracer: tracer},
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 	close(readyToStart)

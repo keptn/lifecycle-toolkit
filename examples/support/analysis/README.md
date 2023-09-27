@@ -247,90 +247,90 @@ The overall evaluation has passed, and no warnings have been issued.
 
 ```json
 {
-	"objectiveResults": [
-		{
-			"result": {
-				"failResult": {
-					"operator": {
-						"greaterThan": {
-							"fixedValue": "500m"
-						}
-					},
-					"fulfilled": false
-				},
-				"warnResult": {
-					"operator": {
-						"greaterThan": {
-							"fixedValue": "300m"
-						}
-					},
-					"fulfilled": false
-				},
-				"warning": false,
-				"pass": true
-			},
-			"objective": {
-				"analysisValueTemplateRef": {
-					"name": "response-time-p95"
-				},
-				"target": {
-					"failure": {
-						"greaterThan": {
-							"fixedValue": "500m"
-						}
-					},
-					"warning": {
-						"greaterThan": {
-							"fixedValue": "300m"
-						}
-					}
-				},
-				"weight": 1
-			},
-			"value": 0.00475,
-			"score": 1
-		},
-		{
-			"result": {
-				"failResult": {
-					"operator": {
-						"greaterThan": {
-							"fixedValue": "0"
-						}
-					},
-					"fulfilled": false
-				},
-				"warnResult": {
-					"operator": {
+    "objectiveResults": [
+        {
+            "result": {
+                "failResult": {
+                    "operator": {
+                        "greaterThan": {
+                            "fixedValue": "500m"
+                        }
+                    },
+                    "fulfilled": false
+                },
+                "warnResult": {
+                    "operator": {
+                        "greaterThan": {
+                            "fixedValue": "300m"
+                        }
+                    },
+                    "fulfilled": false
+                },
+                "warning": false,
+                "pass": true
+            },
+            "objective": {
+                "analysisValueTemplateRef": {
+                    "name": "response-time-p95"
+                },
+                "target": {
+                    "failure": {
+                        "greaterThan": {
+                            "fixedValue": "500m"
+                        }
+                    },
+                    "warning": {
+                        "greaterThan": {
+                            "fixedValue": "300m"
+                        }
+                    }
+                },
+                "weight": 1
+            },
+            "value": 0.00475,
+            "score": 1
+        },
+        {
+            "result": {
+                "failResult": {
+                    "operator": {
+                        "greaterThan": {
+                            "fixedValue": "0"
+                        }
+                    },
+                    "fulfilled": false
+                },
+                "warnResult": {
+                    "operator": {
 
-					},
-					"fulfilled": false
-				},
-				"warning": false,
-				"pass": true
-			},
-			"objective": {
-				"analysisValueTemplateRef": {
-					"name": "error-rate"
-				},
-				"target": {
-					"failure": {
-						"greaterThan": {
-							"fixedValue": "0"
-						}
-					}
-				},
-				"weight": 1,
-				"keyObjective": true
-			},
-			"value": 0,
-			"score": 1
-		}
-	],
-	"totalScore": 2,
-	"maximumScore": 2,
-	"pass": true,
-	"warning": false
+                    },
+                    "fulfilled": false
+                },
+                "warning": false,
+                "pass": true
+            },
+            "objective": {
+                "analysisValueTemplateRef": {
+                    "name": "error-rate"
+                },
+                "target": {
+                    "failure": {
+                        "greaterThan": {
+                            "fixedValue": "0"
+                        }
+                    }
+                },
+                "weight": 1,
+                "keyObjective": true
+            },
+            "value": 0,
+            "score": 1
+        }
+    ],
+    "totalScore": 2,
+    "maximumScore": 2,
+    "pass": true,
+    "warning": false
 }
 ```
 
@@ -340,36 +340,36 @@ The meaning of each of these properties is as follows:
 each representing the results of a specific objective or performance metric.
 
 - The first item in the array:
-    - **`result`**: This object contains information about whether the objective has passed or failed.
+  - **`result`**: This object contains information about whether the objective has passed or failed.
 It has two sub-objects:
-        - **`failResult`**: Indicates whether the objective has failed.
+    - **`failResult`**: Indicates whether the objective has failed.
 In this case, it checks if a value is greater than 500 milliseconds, and it hasn't been fulfilled (`fulfilled: false`).
-        - **`warnResult`**: Indicates whether the objective has issued a warning.
+    - **`warnResult`**: Indicates whether the objective has issued a warning.
 It checks if a value is greater than 300 milliseconds, and it hasn't been fulfilled (`fulfilled: false`).
-        - **`warning`**: Indicates whether a warning has been issued (false in this case).
-        - **`pass`**: Indicates whether the objective has passed (true in this case).
-    - **`objective`**: Describes the objective being evaluated.
+    - **`warning`**: Indicates whether a warning has been issued (false in this case).
+    - **`pass`**: Indicates whether the objective has passed (true in this case).
+  - **`objective`**: Describes the objective being evaluated.
 It includes:
-        - **`analysisValueTemplateRef`**: Refers to the template used for analysis (`response-time-p95`).
-        - **`target`**: Sets the target values for failure and warning conditions.
+    - **`analysisValueTemplateRef`**: Refers to the template used for analysis (`response-time-p95`).
+    - **`target`**: Sets the target values for failure and warning conditions.
 In this case, failure occurs if the value is greater than 500 milliseconds,
 and warning occurs if it's greater than 300 milliseconds.
-        - **`weight`**: Specifies the weight assigned to this objective (weight: 1).
-    - **`value`**: Indicates the actual value measured for this objective (value: 0.00475).
-    - **`score`**: Indicates the score assigned to this objective (score: 1).
+    - **`weight`**: Specifies the weight assigned to this objective (weight: 1).
+  - **`value`**: Indicates the actual value measured for this objective (value: 0.00475).
+  - **`score`**: Indicates the score assigned to this objective (score: 1).
 
 - The second item in the array:
-    - **`result`**: Similar to the first objective, it checks whether a value is
+  - **`result`**: Similar to the first objective, it checks whether a value is
 greater than 0 and has not been fulfilled (`fulfilled: false`).
 There are no warning conditions in this case.
-    - **`objective`**: Describes the objective related to error rate analysis.
-        - **`analysisValueTemplateRef`**: Refers to the template used for analysis (`error-rate`).
-        - **`target`**: Sets the target value for failure (failure occurs if the value is greater than 0).
-        - **`weight`**: Specifies the weight assigned to this objective (weight: 1).
-        - **`keyObjective`**: Indicates that this is a key objective (true).
+  - **`objective`**: Describes the objective related to error rate analysis.
+    - **`analysisValueTemplateRef`**: Refers to the template used for analysis (`error-rate`).
+    - **`target`**: Sets the target value for failure (failure occurs if the value is greater than 0).
+    - **`weight`**: Specifies the weight assigned to this objective (weight: 1).
+    - **`keyObjective`**: Indicates that this is a key objective (true).
 
-    - **`value`**: Indicates the actual value measured for this objective (value: 0).
-    - **`score`**: Indicates the score assigned to this objective (score: 1).
+  - **`value`**: Indicates the actual value measured for this objective (value: 0).
+  - **`score`**: Indicates the score assigned to this objective (score: 1).
 
 **`totalScore`**: Represents the total score achieved based on the objectives evaluated (totalScore: 2).
 

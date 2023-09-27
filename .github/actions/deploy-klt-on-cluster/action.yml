@@ -61,7 +61,7 @@ runs:
         done
 
     - name: Install lifecycle-toolkit with manifests
-      if: ${{ inputs.helm-install == 'false' }} && ${{ inputs.scheduling_gates == 'false' }}
+      if: ${{ inputs.helm-install }} == 'false' && ${{ inputs.scheduling_gates }} == 'false'
       shell: bash
       run: |
         echo "Installing Keptn using manifests"

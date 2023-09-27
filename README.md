@@ -78,6 +78,33 @@ helm repo update
 helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
+### Installation without scheduler
+
+Keptn installed on Kubernetes cluster running Kubernetes >= 1.26
+does not need scheduler for a proper functionality.
+With introduction
+of [Pod scheduling gates](https://kubernetes.io/blog/2022/12/26/pod-scheduling-readiness-alpha/)
+Keptn can use this feature to substitute the functionality of Keptn scheduler.
+
+As this functionality is still disabled by default, it can be enabled by setting up
+the correct helm values.
+This will lead to a Keptn installation without a scheduler and
+with scheduling gates feature enabled.
+
+Use the following command sequence
+to install Keptn with scheduling gates enabled:
+
+```shell
+helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo update
+helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --set schedulingGatesEnabled=true --create-namespace --wait
+```
+
+> **Note**
+Please be aware that scheduling gates functionality in Kubernetes is enabled by default
+in Kubernetes >= 1.27.
+To use it with Kubernetes 1.26, you need to enable it on your cluster.
+
 ## More information
 
 For more info about Keptn, please see our

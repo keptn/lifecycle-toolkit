@@ -83,6 +83,8 @@ spec:
               value: "0"
             - name: OPTIONS_CONTROLLER_LOG_LEVEL
               value: "0"
+            - name: SCHEDULING_GATES_ENABLED
+              value: "false"
           securityContext:
             seccompProfile:
               type: RuntimeDefault

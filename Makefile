@@ -36,6 +36,14 @@ integration-test-local: install-prometheus
 	kubectl kuttl test --start-kind=false ./test/testanalysis/ --config=kuttl-test-local.yaml
 	kubectl kuttl test --start-kind=false ./test/testcertificate/ --config=kuttl-test-local.yaml
 
+.PHONY: integration-test-scheduling-gates #these tests should run on a real cluster!
+integration-test-scheduling-gates:	# to run a single test by name use --test eg. --test=expose-keptn-metric
+	kubectl kuttl test --start-kind=false ./test/scheduling-gates/ --config=kuttl-test.yaml
+
+.PHONY: integration-test-scheduling-gates-local #these tests should run on a real cluster!
+integration-test-scheduling-gates-local: install-prometheus
+	kubectl kuttl test --start-kind=false ./test/scheduling-gates/ --config=kuttl-test-local.yaml
+
 .PHONY: load-test
 load-test:
 	kubectl apply -f ./test/load/assets/templates/namespace.yaml

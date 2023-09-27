@@ -8,7 +8,7 @@ inputs:
     default: "v0.18.0"
   k8s-version:
     required: false
-    description: "Kubernetes that should be used"
+    description: "Kubernetes version that should be used"
     # renovate: datasource=github-releases depName=kubernetes/kubernetes
     default: "v1.27.3"
   runtime_tag:
@@ -20,8 +20,12 @@ inputs:
     default: "test-cluster"
   helm-install:
     required: false
-    description: "Install KLT via helm instead of manifest if true"
+    description: "Install Keptn via helm instead of manifest if true"
     default: "true"
+  scheduling_gates:
+    required: false
+    description: "Use scheduling gates instead of scheduler"
+    default: "false"
 runs:
   using: "composite"
   steps:
@@ -57,10 +61,10 @@ runs:
         done
 
     - name: Install lifecycle-toolkit with manifests
-      if: ${{ inputs.helm-install == 'false' }}
+      if: inputs.helm-install == 'false' && inputs.scheduling_gates == 'false'
       shell: bash
       run: |
-        echo "Installing KLT using manifests"
+        echo "Installing Keptn using manifests"
         sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/lifecycle-operator-manifest-test/release.yaml
         sed -i 's/ghcr.io\/keptn\/deno-runtime:.*/localhost:5000\/keptn\/deno-runtime:${{ inputs.runtime_tag }}/g' \
           ~/download/artifacts/lifecycle-operator-manifest-test/release.yaml
@@ -83,14 +87,15 @@ runs:
         kubectl rollout status deployment lifecycle-operator -n keptn-lifecycle-toolkit-system -w
 
     - name: Install lifecycle-toolkit with helm
-      if: ${{ inputs.helm-install == 'true'  }}
+      if: inputs.helm-install == 'true'
       env:
         RELEASE_REGISTRY: "localhost:5000/keptn"
       shell: bash
       run: |
-        echo "Installing KLT using helm"
+        echo "Installing Keptn using helm"
         helm version
         helm install -n keptn-lifecycle-toolkit-system --create-namespace toolkit ./helm/chart  \
+          --set schedulingGatesEnabled=${{ inputs.scheduling_gates }} \
           --set scheduler.scheduler.imagePullPolicy=Never \
           --set scheduler.scheduler.image.tag=${{ inputs.runtime_tag }} \
           --set scheduler.scheduler.image.repository="localhost:5000/keptn/scheduler" \

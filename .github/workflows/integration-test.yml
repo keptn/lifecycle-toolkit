@@ -68,9 +68,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup cluster
-        uses: ./.github/actions/deploy-klt-on-cluster-scheduling-gates
+        uses: ./.github/actions/deploy-klt-on-cluster
         with:
           runtime_tag: ${{ inputs.runtime_tag }}
+          scheduling_gates: "true"
 
       - name: Install and expose Prometheus
         uses: ./.github/actions/deploy-prometheus-on-cluster

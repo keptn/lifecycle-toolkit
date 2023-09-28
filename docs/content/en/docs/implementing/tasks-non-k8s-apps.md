@@ -34,11 +34,13 @@ where the deployment is running?
 ## Create a KeptnTaskDefinition
 
 When you have Keptn installed, create a
-[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md/)
-YAML file that defines what you want to execute.
+YAML file that defines what you want to execute
+as a `KeptnTaskDefinition` resource..
 See
 [Deployment tasks](../implementing/tasks/)
-for more information.
+and the
+[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md/)
+reference page for more information.
 
 For example, you might create a `test-task-definition.yaml` file
 with the following content:
@@ -58,9 +60,8 @@ spec:
       - 'hello world'
 ```
 
-This example uses the `container-runtime` runner
-because it allows the most flexibility
-but you can also use the `deno-runtime` or `python-runtime` runners.
+This example uses the `container-runtime` runner,
+but you can instead use the `deno-runtime` or `python-runtime` runner.
 
 ## Create and apply a KeptnTask
 
@@ -70,16 +71,12 @@ resource.
 In the standard operating mode, when Keptn is managing workloads,
 the creation of the `KeptnTask` resource is automatic.
 
-Moreover, you must create a new (and uniquely named)
-`KeptnTask` resource
-each time you want to rerun this task
-Each time you want to execute a `KeptnTask` resource,
-you must manually create a
-a new (and uniquely named)
-[KeptnTask](../yaml-crd-ref/task.md)
-YAML file to describe that resource.
+Moreover, each time you want to execute a `KeptnTask` resource,
+you must manually create a a new (and uniquely named) YAML file
+that describes that resource.
 
-The `KeptnTask` references the `KeptnTaskDefinition`
+The `KeptnTask` resource references the `KeptnTaskDefinition`
+that you created above
 in the `spec.taskDefinition` field.
 For example, you might create a `test-task.yaml` file
 with the following content:
@@ -104,10 +101,6 @@ spec:
     workloadVersion: "1.0.0"
 ```
 
-TODO: This file does not match what I see in the API Reference.
-See specific comments in the `KeptnTask` reference page.
-When we resolve those issues, I will modify this file appropriately.
-
 You can then apply this YAML file with the following command:
 
 ```yaml
@@ -129,17 +122,12 @@ kubectl get pods
 
 For subsequent KeptnTask runs,
 the `KeptnTask` name and version fields must be unique,
-so copy the `KeptnTask` file you have and update the following fields:
+so copy the `KeptnTask` yaml file you have and update the
+`metadata.name` field:
 
-- `name`
-- `spec.appVersion`
-- `spec.workloadVersion`
-- `spec.context.appVersion`
-- `spec.context.workloadVersion`
-
-A standard practice is to just increment the values of these fields.
+A standard practice is to just increment the value of is field.
 For example, you could create a `test-task-2.yaml` file
-with the following content:
+with the `metadata.name` field set to `runhelloworld2`:
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1alpha3

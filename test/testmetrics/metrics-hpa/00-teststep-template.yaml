@@ -3,7 +3,7 @@ kind: TestStep
 commands:
   - script: |
       envsubst < mock-server.yaml  | kubectl apply -f - -n $NAMESPACE
-  #  substitutes namespace, making sure they are changed to env var first
+  # substitutes namespace, making sure they are changed to env var first
   # to prevent bad files in case of a test interrupt
   - script: |
       echo "installing podtato-head"

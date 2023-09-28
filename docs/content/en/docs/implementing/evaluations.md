@@ -69,7 +69,7 @@ Note the following:
   are not evaluated.
 * You can define multiple `KeptnEvaluationDefinition` resources
   for each stage (pre- and post-deployment).
-  These evaluations run in parallel so the failure of one `KeptnEvaluationDefinition` resource
+  These evaluations run in parallel so the failure of one evaluation
   has no effect on whether other `KeptnEvaluationDefinition` resources are completed.
 * The results of each `KeptnEvaluationDefinition` execution
   are written to a

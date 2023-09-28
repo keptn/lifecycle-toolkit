@@ -21,4 +21,4 @@ spec:
           name: cpu-throttling
         target:
           type: Value
-          value: "0.05"
+          value:

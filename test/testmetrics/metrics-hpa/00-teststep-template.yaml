@@ -12,5 +12,3 @@ commands:
       envsubst < metric.yaml | kubectl apply -f - -n $NAMESPACE
       echo "configuring HPA"
       envsubst < hpa.yaml | kubectl apply -f - -n $NAMESPACE
-
-      

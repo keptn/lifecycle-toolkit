@@ -70,7 +70,7 @@ Note the following:
 * You can define multiple `KeptnEvaluationDefinition` resources
   for each stage (pre- and post-deployment).
   These evaluations run in parallel so the failure of one evaluation
-  has no effect on whether other `KeptnEvaluationDefinition` resources are completed.
+  has no effect on whether other evaluations are completed.
 * The results of each `KeptnEvaluationDefinition` execution
   are written to a
   [KeptnEvaluation](../crd-ref/lifecycle/v1alpha3/#keptnevaluation)

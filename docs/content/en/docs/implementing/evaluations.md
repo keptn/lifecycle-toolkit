@@ -58,7 +58,7 @@ Note the following:
   available memory, disk space, and other resources
   that are required for the deployment.
 * The `KeptnMetric` resources that are referenced
-  in a `KeptnMetricDefinition` resource
+  in a `KeptnEvaluationDefinition` resource
   * can be defined on different namespaces in the cluster
   * can query different instances of different types of data providers
 * All objectives within a `KeptnEvaluationDefinition` resource

@@ -21,4 +21,3 @@ spec:
         target:
           type: Value
           value: "0.05"
-          

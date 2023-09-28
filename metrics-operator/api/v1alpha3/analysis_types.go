@@ -38,6 +38,8 @@ type AnalysisSpec struct {
 type ProviderResult struct {
 	// Objective store reference to corresponding objective template
 	Objective ObjectReference `json:"objectiveReference,omitempty"`
+	// Query represents the executed query
+	Query string `json:"query,omitempty"`
 	// Value is the value the provider returned
 	Value string `json:"value,omitempty"`
 	// ErrMsg stores any possible error at retrieval time

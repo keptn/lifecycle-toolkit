@@ -539,6 +539,7 @@ func Test_extractMissingObjectives(t *testing.T) {
 	existingValues := map[string]metricsapi.ProviderResult{
 		common.ComputeKey(ad.Spec.Objectives[1].AnalysisValueTemplateRef): {
 			Value: "1.0",
+			Query: "query",
 		},
 		common.ComputeKey(ad.Spec.Objectives[2].AnalysisValueTemplateRef): {
 			ErrMsg: "error",
@@ -551,6 +552,7 @@ func Test_extractMissingObjectives(t *testing.T) {
 	require.Equal(t, needToRetry, todo[1].AnalysisValueTemplateRef)
 	require.Len(t, existing, 1)
 	require.Equal(t, "1.0", existing[common.ComputeKey(done)].Value)
+	require.Equal(t, "query", existing[common.ComputeKey(done)].Query)
 
 	// verify that the analysisDefinition has not been changed
 	require.Len(t, ad.Spec.Objectives, 3)

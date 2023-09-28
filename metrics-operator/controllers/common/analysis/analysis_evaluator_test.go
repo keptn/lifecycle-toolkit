@@ -59,6 +59,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 					{
 						Result: types.TargetResult{},
 						Value:  5.0,
+						Query:  "query",
 						Score:  10.0,
 						Error:  nil,
 					},
@@ -68,6 +69,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				EvaluateFunc: func(values map[string]v1alpha3.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
+						Query:  "query",
 						Value:  5.0,
 						Score:  10.0,
 						Error:  nil,
@@ -103,12 +105,14 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 					{
 						Result: types.TargetResult{},
 						Value:  5.0,
+						Query:  "query",
 						Score:  10.0,
 						Error:  nil,
 					},
 					{
 						Result: types.TargetResult{},
 						Value:  5.0,
+						Query:  "query",
 						Score:  10.0,
 						Error:  nil,
 					},
@@ -119,6 +123,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
+						Query:  "query",
 						Score:  10.0,
 						Error:  nil,
 					}
@@ -149,6 +154,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				ObjectiveResults: []types.ObjectiveResult{
 					{
 						Result: types.TargetResult{},
+						Query:  "query",
 						Value:  5.0,
 						Score:  5.0,
 						Error:  nil,
@@ -159,6 +165,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				EvaluateFunc: func(values map[string]v1alpha3.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
+						Query:  "query",
 						Value:  5.0,
 						Score:  5.0,
 						Error:  nil,
@@ -191,6 +198,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 					{
 						Result: types.TargetResult{},
 						Value:  5.0,
+						Query:  "query",
 						Score:  0.0,
 						Error:  nil,
 					},
@@ -201,6 +209,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
+						Query:  "query",
 						Score:  0.0,
 						Error:  nil,
 					}
@@ -237,12 +246,14 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 					{
 						Result: types.TargetResult{},
 						Value:  5.0,
+						Query:  "query",
 						Score:  10.0,
 						Error:  nil,
 					},
 					{
 						Result: types.TargetResult{},
 						Value:  5.0,
+						Query:  "query",
 						Score:  0.0,
 						Error:  nil,
 					},
@@ -254,6 +265,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 						return types.ObjectiveResult{
 							Result: types.TargetResult{},
 							Value:  5.0,
+							Query:  "query",
 							Score:  0.0,
 							Error:  nil,
 						}
@@ -261,6 +273,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
+						Query:  "query",
 						Score:  10.0,
 						Error:  nil,
 					}

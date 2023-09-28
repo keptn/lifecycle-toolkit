@@ -40,6 +40,7 @@ func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, providerType string,
 		}
 		result := metricsapi.ProviderResult{
 			Objective: o.Objective.AnalysisValueTemplateRef,
+			Query:     o.Query,
 			Value:     value,
 			ErrMsg:    strErr,
 		}

@@ -72,6 +72,6 @@ Note the following:
   These evaluations run in parallel so the failure of one evaluation
   has no effect on whether other evaluations are completed.
 * The results of each evaluation
-  are written to a
+  is written to a
   [KeptnEvaluation](../crd-ref/lifecycle/v1alpha3/#keptnevaluation)
   resource.

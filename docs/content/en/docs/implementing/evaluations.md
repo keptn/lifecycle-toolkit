@@ -61,16 +61,17 @@ Note the following:
   in a `KeptnMetricDefinition` resource
   * can be defined on different namespaces in the cluster
   * can query different instances of different types of data providers
-* Each deployment has a single
-  `KeptnEvaluationDefinition` resource for pre-deployment
-  and another for post-deployment.
 * All objectives within a `KeptnEvaluationDefinition` resource
   are evaluated in order.
   If the evaluation of an objective fails,
   the `KeptnEvaluation` itself fails
   and the objectives listed after the failed objection
   are not evaluated.
-* The results of the `KeptnEvaluationDefinition` executions
+* You can define multiple `KeptnEvaluationDefinition` resources
+  for each stage (pre- and post-deployment).
+  These evaluations run in parallel so the failure of one `KeptnEvaluationDefinition` resource
+  has no effect on whether other `KeptnEvaluationDefinition` resources are completed.
+* The results of each `KeptnEvaluationDefinition` execution
   are written to a
   [KeptnEvaluation](../crd-ref/lifecycle/v1alpha3/#keptnevaluation)
   resource.

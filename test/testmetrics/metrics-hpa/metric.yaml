@@ -1,0 +1,21 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetricsProvider
+metadata:
+  name: my-provider
+  namespace: $NAMESPACE
+spec:
+  type: prometheus
+  targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetric
+metadata:
+  name: cpu-throttling
+  namespace: $NAMESPACE
+spec:
+  provider:
+    name: my-provider
+  query: 'avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-metrics"}))'
+  fetchIntervalSeconds: 10
+  range:
+    interval: "1m"

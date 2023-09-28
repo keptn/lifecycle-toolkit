@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-entry
+  namespace: $NAMESPACE
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-entry
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: podtato-head-entry
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image: ghcr.io/podtato-head/entry:0.2.8
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 5m
+              memory: 128Mi
+            requests:
+              cpu: 1m
+              memory: 64Mi
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-entry
+  namespace: $NAMESPACE
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-entry
+  ports:
+    - name: http
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+  type: ClusterIP

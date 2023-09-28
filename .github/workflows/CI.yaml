@@ -204,6 +204,10 @@ jobs:
       matrix:
         helm: [true, false]
         scheduling-gates: [true, false]
+        # do not run the tests with manifests installation and scheduling gates
+        exclude:
+          - helm: false
+            scheduling-gates: true
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       helm-install: ${{ matrix.helm }}

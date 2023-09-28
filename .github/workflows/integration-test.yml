@@ -25,8 +25,6 @@ defaults:
 jobs:
   run-integration-test:
     name: Run Integration Tests
-    # do not run the tests with manifests installation and scheduling gates
-    if: inputs.helm-install == true || inputs.scheduling-gates == false
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code

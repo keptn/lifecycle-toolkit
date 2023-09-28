@@ -6,7 +6,7 @@ weight: 150
 
 A
 [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
-resource contains a series of `objectives`,
+resource contains a list of `objectives`,
 each of which checks whether a defined `KeptnMetric` resource
 meets a defined target value.
 The example

@@ -18,11 +18,12 @@ The `evaluationTarget` is set to be `>1`,
 so this evaluation ensures that more than 1 CPU is available
 before the workload or application is deployed.
 
-The example
-[metric.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/metric.yaml)
-file defines the
+This evaluation references the
 [KeptnMetric](../yaml-crd-ref/metric.md) resource
-that is named  `available-cpus`:
+that is named  `available-cpus`.
+This is defined in the example
+[metric.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/metric.yaml)
+file:
 {{< embed path="/examples/sample-app/base/metric.yaml" >}}
 
 To run an evaluation on one of your
@@ -34,11 +35,7 @@ or
 [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/),
 you must:
 
-* Annotate your [Workloads](https://kubernetes.io/docs/concepts/workloads/)
-  [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
-  [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
-  and
-  [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+* Annotate your `Workloads`
   to identify the `KeptnEvaluationDefinition` resource you want to run
   pre- and post-deployment for the specific workloads.
 * Manually edit all

@@ -7,7 +7,7 @@ metadata:
     control-plane: certificate-operator
     app.kubernetes.io/name: deployment
     app.kubernetes.io/instance: certificate-operator
-    app.kubernetes.io/component: manager
+    app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     app.kubernetes.io/managed-by: kustomize
@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        kubectl.kubernetes.io/default-container: manager
+        kubectl.kubernetes.io/default-container: certificate-operator
       labels:
         control-plane: certificate-operator
     spec:
@@ -32,7 +32,7 @@ spec:
             - --leader-elect
           image: controller:latest
           imagePullPolicy: Always
-          name: manager
+          name: certificate-operator
           env:
             - name: NAMESPACE
               valueFrom:

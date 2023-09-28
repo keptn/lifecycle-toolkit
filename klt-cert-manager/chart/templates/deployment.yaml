@@ -5,7 +5,7 @@ metadata:
   name: certificate-operator
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/component: cert-manager
+    app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: certificate-operator
   {{- include "cert-manager.labels" . | nindent 4 }}
@@ -21,7 +21,7 @@ spec:
         control-plane: certificate-operator
       {{- include "cert-manager.selectorLabels" . | nindent 8 }}
       annotations:
-        kubectl.kubernetes.io/default-container: manager
+        kubectl.kubernetes.io/default-container: certificate-operator
     spec:
       containers:
         - args:
@@ -42,7 +42,7 @@ spec:
           image: {{ .Values.image.repository }}:{{ .Values.image.tag
           | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
-          name: manager
+          name: certificate-operator
           resources: {{- toYaml .Values.resources | nindent 10
           }}
           securityContext:

@@ -5,8 +5,7 @@ metadata:
   name: certificate-operator
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/component: manager
-    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/component: cert-manager
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: certificate-operator
   {{- include "cert-manager.labels" . | nindent 4 }}

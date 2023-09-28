@@ -1,5 +1,5 @@
 apiVersion: v2
-name: cert-manager
+name: keptn-cert-manager
 description: A Helm chart for Keptn Certificate Manager, a subproject of Keptn
 icon: "https://raw.githubusercontent.com/cncf/artwork/master/projects/keptn/icon/color/keptn-icon-color.svg"
 home: https://keptn.sh

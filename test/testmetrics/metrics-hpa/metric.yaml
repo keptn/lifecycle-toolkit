@@ -2,7 +2,6 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
   name: my-provider
-  namespace: $NAMESPACE
 spec:
   type: prometheus
   targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"
@@ -11,7 +10,6 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetric
 metadata:
   name: cpu-throttling
-  namespace: $NAMESPACE
 spec:
   provider:
     name: my-provider

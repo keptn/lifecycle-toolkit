@@ -2,13 +2,13 @@ apiVersion: kuttl.dev/v1beta1
 kind: TestStep
 commands:
   - script: |
-      envsubst < mock-server.yaml  | kubectl apply -f - -n $NAMESPACE
+      kubectl apply -f mock-server.yaml -n $NAMESPACE
   # substitutes namespace, making sure they are changed to env var first
   # to prevent bad files in case of a test interrupt
   - script: |
       echo "installing podtato-head"
-      envsubst < install.yaml | kubectl apply -f - -n $NAMESPACE
+      kubectl apply -f install.yaml -n $NAMESPACE
       echo "registering the metric"
       envsubst < metric.yaml | kubectl apply -f - -n $NAMESPACE
       echo "configuring HPA"
-      envsubst < hpa.yaml | kubectl apply -f - -n $NAMESPACE
+      kubectl apply -f hpa.yaml -n $NAMESPACE

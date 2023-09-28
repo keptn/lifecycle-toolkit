@@ -142,7 +142,7 @@ to use in the metadata.name field?
 
 For a full example of how to create a `KeptnTask` resource
 to use for a deployment being done outside of Kubernetes, see
-[Keptn for Non-Kubernetes Applications](../implementing/tasks-non-k8s-apps/).
+[Keptn for Non-Kubernetes Applications](../implementing/tasks-non-k8s-apps.md).
 
 ## Files
 

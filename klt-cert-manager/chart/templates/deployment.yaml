@@ -9,18 +9,18 @@ metadata:
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: certificate-operator
-  {{- include "chart.labels" . | nindent 4 }}
+  {{- include "cert-manager.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       control-plane: certificate-operator
-    {{- include "chart.selectorLabels" . | nindent 6 }}
+    {{- include "cert-manager.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
         control-plane: certificate-operator
-      {{- include "chart.selectorLabels" . | nindent 8 }}
+      {{- include "cert-manager.selectorLabels" . | nindent 8 }}
       annotations:
         kubectl.kubernetes.io/default-container: manager
     spec:

@@ -50,7 +50,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
-	api "go.opentelemetry.io/otel/metric"
+	metricsapi "go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/sdk/metric"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -124,7 +124,7 @@ func main() {
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
 	meter := provider.Meter("keptn/task")
 
-	keptnLifecycleActive, err := meter.Int64Counter(KeptnLifecycleActiveMetric, api.WithDescription("signals that Keptn Lifecycle Operator is installed correctly and ready"))
+	keptnLifecycleActive, err := meter.Int64Counter(KeptnLifecycleActiveMetric, metricsapi.WithDescription("signals that Keptn Lifecycle Operator is installed correctly and ready"))
 
 	if err != nil {
 		setupLog.Error(err, "unable to create metric "+KeptnLifecycleActiveMetric)

@@ -10,7 +10,7 @@ on:
         description: "Decides whether to install via helm"
         type: "boolean"
         default: true
-      scheduling_gates:
+      scheduling-gates:
         description: "Decides whether to ue scheduling gates"
         type: "boolean"
         default: false
@@ -26,7 +26,7 @@ jobs:
   run-integration-test:
     name: Run Integration Tests
     # do not run the tests with manifests installation and scheduling gates
-    if: inputs.helm-install == true || inputs.scheduling_gates == false
+    if: inputs.helm-install == true || inputs.scheduling-gates == false
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
@@ -37,7 +37,7 @@ jobs:
         with:
           runtime_tag: ${{ inputs.runtime_tag }}
           helm-install: ${{ inputs.helm-install }}
-          scheduling_gates: ${{ inputs.scheduling_gates }}
+          scheduling-gates: ${{ inputs.scheduling-gates }}
 
       - name: Install and expose Prometheus
         uses: ./.github/actions/deploy-prometheus-on-cluster
@@ -51,7 +51,7 @@ jobs:
           mv kubectl-kuttl /usr/local/bin
 
       - name: Run Scheduling Gates Integration Tests
-        if: inputs.scheduling_gates == true
+        if: inputs.scheduling-gates == true
         working-directory: .
         run: make integration-test-scheduling-gates
 
@@ -68,5 +68,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: logs-integration-tests-helm_${{ inputs.helm-install }}-schedule_${{ inputs.scheduling_gates }}
+          name: logs-integration-tests-helm_${{ inputs.helm-install }}-schedule_${{ inputs.scheduling-gates }}
           path: .github/scripts/logs

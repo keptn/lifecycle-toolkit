@@ -203,11 +203,11 @@ jobs:
     strategy:
       matrix:
         helm: [true, false]
-        scheduling_gates: [true, false]
+        scheduling-gates: [true, false]
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       helm-install: ${{ matrix.helm }}
-      scheduling_gates: ${{ matrix.scheduling_gates }}
+      scheduling-gates: ${{ matrix.scheduling-gates }}
     uses: ./.github/workflows/integration-test.yml
 
   load-tests:

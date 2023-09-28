@@ -44,7 +44,7 @@ you must:
 * Manually edit all
   [KeptnApp](../yaml-crd-ref/app.md) resources
   to specify the `KeptnEvaluationDefinition` to be run
-  pre- and post-deployment for the `KeptnApp` itself.
+  pre- and post-deployment evaluations for the `KeptnApp` itself.
 
 See
 [Pre- and post-deployment checks](../implementing/integrate/#pre--and-post-deployment-checks)

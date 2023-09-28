@@ -1,7 +1,7 @@
-# Keptn
+# Keptn Certificate Manager
 
-Keptn introduces a more cloud-native approach for pre- and post-deployment,
-as well as the concept of application health checks
+Keptn Certificate Manager handles certificates for Keptn but can also handle certs for any other Kubernetes
+resource.
 
 <!-- markdownlint-disable MD012 -->
 ## Parameters

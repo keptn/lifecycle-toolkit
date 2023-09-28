@@ -71,7 +71,7 @@ Note the following:
   for each stage (pre- and post-deployment).
   These evaluations run in parallel so the failure of one evaluation
   has no effect on whether other evaluations are completed.
-* The results of each `KeptnEvaluationDefinition` execution
+* The results of each evaluation
   are written to a
   [KeptnEvaluation](../crd-ref/lifecycle/v1alpha3/#keptnevaluation)
   resource.

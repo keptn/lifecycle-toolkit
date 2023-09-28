@@ -191,10 +191,6 @@ func (d *keptnDynatraceDQLProvider) EvaluateQueryForStep(ctx context.Context, me
 		return nil, nil, err
 	}
 
-	if len(results.Records) == 0 {
-		return nil, nil, ErrInvalidResult
-	}
-
 	r := extractValuesFromRecord(results.Records[0])
 	b, err := json.Marshal(results)
 	if err != nil {

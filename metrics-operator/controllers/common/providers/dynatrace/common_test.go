@@ -12,16 +12,12 @@ import (
 )
 
 func TestGetSecret_NoKeyDefined(t *testing.T) {
-	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte(dtpayload))
-		require.Nil(t, err)
-	}))
-	defer svr.Close()
+
 	fakeClient := fake.NewClient()
 
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: svr.URL,
+			TargetServer: "svr.URL",
 		},
 	}
 	r, e := getDTSecret(context.TODO(), p, fakeClient)
@@ -31,16 +27,11 @@ func TestGetSecret_NoKeyDefined(t *testing.T) {
 }
 
 func TestGetSecret_NoSecret(t *testing.T) {
-	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte(dtpayload))
-		require.Nil(t, err)
-	}))
-	defer svr.Close()
 	fakeClient := fake.NewClient()
 
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: svr.URL,
+			TargetServer: "svr.URL",
 		},
 	}
 	r, e := getDTSecret(context.TODO(), p, fakeClient)

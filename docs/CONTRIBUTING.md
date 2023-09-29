@@ -235,11 +235,11 @@ New writing goes to the `main` branch and can be viewed on the Releases -> devel
 We have staging and production levels for our documentation which are as follows:
 
 * **Latest:** official documentation of the current Keptn release
-   - [link](https://lifecycle.keptn.sh):
+  * [link](https://lifecycle.keptn.sh):
       This is the build of the `page` branch.
-   
+
 * **Development:** documentation being staged for the next Keptn release
-   - [link](https://main.lifecycle.keptn.sh):
+  * [link](https://main.lifecycle.keptn.sh):
    This is the latest build of the `main` branch.
 
 * **Previous versions:** documentation for earlier releases.

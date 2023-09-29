@@ -253,8 +253,10 @@ Let's take a look what happens when your changes are merged in `main` and `page`
 ## Latest -- Official documentation (Production)
 
 This set of documentation pertains to the latest KLT release and resides within an
-isolated branch known as `page`. When a new version of KLT is launched, the contents of the `development`
-branch are rolled into this branch. Additionally, it's important to recognize that any
+isolated branch known as `page`.
+When a new version of KLT is launched, the contents of the `development`
+branch are rolled into this branch.
+Additionally, it's important to recognize that any
 document changes made using the "Edit this page" feature are seamlessly integrated into this branch.
 
 This uses the `latest` label so that links to a doc page

@@ -260,7 +260,7 @@ Additionally, it's important to recognize that any
 document changes made using the "Edit this page" feature are seamlessly integrated into this branch.
 
 This uses the `latest` label so that links to a doc page
-remain valid across software and documentation updates. 
+remain valid across software and documentation updates.
 
 * build: on each push to `page` with documentation changes
 * build-environment: production

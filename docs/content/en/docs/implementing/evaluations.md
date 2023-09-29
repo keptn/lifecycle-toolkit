@@ -62,7 +62,7 @@ Note the following:
   are evaluated in order.
   If the evaluation of any objective fails,
   the `KeptnEvaluation` itself fails.
-* You can define multiple `KeptnEvaluationDefinition` resources
+* You can define multiple evaluations
   for each stage (pre- and post-deployment).
   These evaluations run in parallel so the failure of one evaluation
   has no effect on whether other evaluations are completed.

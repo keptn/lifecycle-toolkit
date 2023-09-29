@@ -45,7 +45,7 @@ and can be displayed on dashboard tools, such as Grafana.
 A Keptn Analysis is implemented with three resources:
 
 * [AnalysisValueTemplate](../../crd-ref/metrics/v1alpha3/#analysisvaluetemplate) --
-  defines the SLI with the
+  defines the SLI with the `KeptnMetricsProvider` (data source)
   and the query to perform for each SLI
 
   Each `AnalysisValueTemplate` resource identifies the data source

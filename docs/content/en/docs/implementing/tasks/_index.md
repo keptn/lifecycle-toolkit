@@ -17,7 +17,7 @@ as part of the pre- and post-deployment phases of a
 - pre-deployment (before the pod is scheduled)
 - post-deployment (after the pod is scheduled)
 
-These `KeptnTest` resources and the
+These `KeptnTask` resources and the
 `KeptnEvaluation` resources (discussed in
 [Evaluations](../evaluations.md))
 are part of the Keptn Release Lifecycle Management.

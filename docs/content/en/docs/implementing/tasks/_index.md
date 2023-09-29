@@ -20,7 +20,7 @@ as part of the pre- and post-deployment phases of a
 These `KeptnTest` resources and the
 `KeptnEvaluation` resources (discussed in
 [Evaluations](../evaluations.md))
-are part of the Keptn Release Lifecycle Management component.
+are part of the Keptn Release Lifecycle Management.
 
 A
 [KeptnTask](../../crd-ref/lifecycle/v1alpha3/#keptntask)

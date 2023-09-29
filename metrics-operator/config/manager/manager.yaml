@@ -13,6 +13,7 @@ metadata:
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: metrics-operator
+    app.kubernetes.io/component: metrics-operator
     keptn.sh/inject-cert: "true"
 spec:
   selector:
@@ -22,7 +23,7 @@ spec:
   template:
     metadata:
       annotations:
-        kubectl.kubernetes.io/default-container: manager
+        kubectl.kubernetes.io/default-container: metrics-operator
       labels:
         control-plane: metrics-operator
     spec:
@@ -52,7 +53,7 @@ spec:
             # Log level for the metrics adapter
             - --v=10
           image: controller:latest
-          name: manager
+          name: metrics-operator
           env:
             - name: POD_NAMESPACE
               valueFrom:

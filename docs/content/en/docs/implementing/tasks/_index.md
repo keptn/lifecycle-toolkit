@@ -15,7 +15,7 @@ as part of the pre- and post-deployment phases of a
 [KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 
 - pre-deployment (before the pod is scheduled)
-- post-deployment (after the Kubernetes deploymet executes)
+- post-deployment (after the pod is scheduled)
 
 These `KeptnTest` resources and the
 `KeptnEvaluation` resources (discussed in

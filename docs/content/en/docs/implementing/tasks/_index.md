@@ -1,5 +1,5 @@
 ---
-title: Working with Keptn tasks
+title: Deployment tasks
 description: Learn how to work with Keptn tasks
 weight: 90
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
@@ -13,6 +13,14 @@ that Keptn runs
 as part of the pre- and post-deployment phases of a
 [KeptnApp](../../yaml-crd-ref/app.md) or
 [KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload).
+
+- pre-deployment (before the pod is scheduled)
+- post-deployment (after the pod is scheduled)
+
+These `KeptnTask` resources and the
+`KeptnEvaluation` resources (discussed in
+[Evaluations](../evaluations.md))
+are part of the Keptn Release Lifecycle Management.
 
 A
 [KeptnTask](../../crd-ref/lifecycle/v1alpha3/#keptntask)
@@ -30,14 +38,16 @@ To implement a `KeptnTask`:
   and the executables to be run
 pre- and post-deployment
 - Apply [basic-annotations](../integrate/#basic-annotations)
-  to your workloads to integrate your task with Kubernetes
+  to your workloads to integrate your task with Kubernetes and,
+  if desired, creates a `KeptnApp` resource
+  that consolidates multiple workloads into a single application
 - Annotate the appropriate
   [KeptnApp](../../yaml-crd-ref/app.md)
   resource to associate your `KeptnTaskDefinition`
-  with the pre- and post-deployment tasks that should run it;
+  with the pre- and post-deployment tasks that should be run;
   see
   [Pre- and post-deployment tasks and checks](../integrate/#pre--and-post-deployment-checks)
-  for more information.
+  for more information
 
 This page provides information to help you create your tasks:
 

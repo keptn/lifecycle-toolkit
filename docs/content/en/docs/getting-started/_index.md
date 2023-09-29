@@ -595,4 +595,4 @@ See [KeptnApp Reference page](../yaml-crd-ref/app.md) for more information. -->
 
 Keptn can run pre and post deployment tasks and SLO evaluations automatically.
 
-Continue the Keptn learning journey by [adding deployment tasks](../tutorials/add-tasks.md).
+Continue the Keptn learning journey by [adding deployment tasks](../implementing/tasks).

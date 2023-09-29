@@ -13,42 +13,42 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 
 ### Keptn Metrics Operator common
 
-| Name                                                               | Description                                                                                                                                                   | Value               |
-|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|
-| `config.replicas`                                                  | customize number of installed metrics operator replicas                                                                                                       | `1`                 |
-| `operatorService.ports[0]`                                         | webhook port (must correspond to Mutating Webhook Configurations)                                                                                             |                     |
-| `operatorService.ports[0].name`                                    |                                                                                                                                                               | `https`             |
-| `operatorService.ports[0].port`                                    |                                                                                                                                                               | `8443`              |
-| `operatorService.ports[0].protocol`                                |                                                                                                                                                               | `TCP`               |
-| `operatorService.ports[0].targetPort`                              |                                                                                                                                                               | `https`             |
-| `operatorService.ports[1]`                                         | port to integrate with the K8s custom metrics API                                                                                                             |                     |
-| `operatorService.ports[1].name`                                    |                                                                                                                                                               | `custom-metrics`    |
-| `operatorService.ports[1].port`                                    |                                                                                                                                                               | `443`               |
-| `operatorService.ports[1].targetPort`                              |                                                                                                                                                               | `custom-metrics`    |
-| `operatorService.ports[2]`                                         | port to integrate with metrics API (e.g. Keda)                                                                                                                |                     |
-| `operatorService.ports[2].name`                                    |                                                                                                                                                               | `metrics`           |
-| `operatorService.ports[2].port`                                    |                                                                                                                                                               | `9999`              |
-| `operatorService.ports[2].protocol`                                |                                                                                                                                                               | `TCP`               |
-| `operatorService.ports[2].targetPort`                              |                                                                                                                                                               | `metrics`           |
-| `operatorService.type`                                             |                                                                                                                                                               | `ClusterIP`         |
-| `config.controllerManagerConfigYaml.health.healthProbeBindAddress` | setup on what address to start the default health handler                                                                                                     | `:8081`             |
-| `config.controllerManagerConfigYaml.leaderElection.leaderElect`    | decides whether to enable leader election with multiple replicas                                                                                              | `true`              |
-| `config.controllerManagerConfigYaml.leaderElection.resourceName`   | defines LeaderElectionID                                                                                                                                      | `3f8532ca.keptn.sh` |
-| `config.controllerManagerConfigYaml.metrics.bindAddress`           | MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving. | `127.0.0.1:8080`    |
-| `config.controllerManagerConfigYaml.webhook.port`                  |                                                                                                                                                               | `9443`              |
-| `Mutating`                                                         | Webhook Configurations for metrics Operator                                                                                                                   |                     |
-| `webhookService.ports[0].port`                                     |                                                                                                                                                               | `443`               |
-| `webhookService.ports[0].protocol`                                 |                                                                                                                                                               | `TCP`               |
-| `webhookService.ports[0].targetPort`                               |                                                                                                                                                               | `9443`              |
-| `webhookService.type`                                              |                                                                                                                                                               | `ClusterIP`         |
-| `config.nodeSelector`                                              | add custom nodes selector to metrics operator                                                                                                                 | `{}`                |
-| `config.tolerations`                                               | add custom tolerations to metrics operator                                                                                                                    | `[]`                |
-| `config.topologySpreadConstraints`                                 | add custom topology constraints to metrics operator                                                                                                           | `[]`                |
+| Name                                   | Description                                                                                                                                                   | Value               |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| `replicas`                             | customize number of installed metrics operator replicas                                                                                                       | `1`                 |
+| `operatorService.ports[0]`             | webhook port (must correspond to Mutating Webhook Configurations)                                                                                             |                     |
+| `operatorService.ports[0].name`        |                                                                                                                                                               | `https`             |
+| `operatorService.ports[0].port`        |                                                                                                                                                               | `8443`              |
+| `operatorService.ports[0].protocol`    |                                                                                                                                                               | `TCP`               |
+| `operatorService.ports[0].targetPort`  |                                                                                                                                                               | `https`             |
+| `operatorService.ports[1]`             | port to integrate with the K8s custom metrics API                                                                                                             |                     |
+| `operatorService.ports[1].name`        |                                                                                                                                                               | `custom-metrics`    |
+| `operatorService.ports[1].port`        |                                                                                                                                                               | `443`               |
+| `operatorService.ports[1].targetPort`  |                                                                                                                                                               | `custom-metrics`    |
+| `operatorService.ports[2]`             | port to integrate with metrics API (e.g. Keda)                                                                                                                |                     |
+| `operatorService.ports[2].name`        |                                                                                                                                                               | `metrics`           |
+| `operatorService.ports[2].port`        |                                                                                                                                                               | `9999`              |
+| `operatorService.ports[2].protocol`    |                                                                                                                                                               | `TCP`               |
+| `operatorService.ports[2].targetPort`  |                                                                                                                                                               | `metrics`           |
+| `operatorService.type`                 |                                                                                                                                                               | `ClusterIP`         |
+| `config.health.healthProbeBindAddress` | setup on what address to start the default health handler                                                                                                     | `:8081`             |
+| `config.leaderElection.leaderElect`    | decides whether to enable leader election with multiple replicas                                                                                              | `true`              |
+| `config.leaderElection.resourceName`   | defines LeaderElectionID                                                                                                                                      | `3f8532ca.keptn.sh` |
+| `config.metrics.bindAddress`           | MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving. | `127.0.0.1:8080`    |
+| `config.webhook.port`                  |                                                                                                                                                               | `9443`              |
+| `Mutating`                             | Webhook Configurations for metrics Operator                                                                                                                   |                     |
+| `webhookService.ports[0].port`         |                                                                                                                                                               | `443`               |
+| `webhookService.ports[0].protocol`     |                                                                                                                                                               | `TCP`               |
+| `webhookService.ports[0].targetPort`   |                                                                                                                                                               | `9443`              |
+| `webhookService.type`                  |                                                                                                                                                               | `ClusterIP`         |
+| `nodeSelector`                         | add custom nodes selector to metrics operator                                                                                                                 | `{}`                |
+| `tolerations`                          | add custom tolerations to metrics operator                                                                                                                    | `[]`                |
+| `topologySpreadConstraints`            | add custom topology constraints to metrics operator                                                                                                           | `[]`                |
 
 ### Keptn Metrics Operator controller
 
 | Name                                                | Description                                       | Value                            |
-|-----------------------------------------------------|---------------------------------------------------|----------------------------------|
+| --------------------------------------------------- | ------------------------------------------------- | -------------------------------- |
 | `containerSecurityContext`                          | Sets security context privileges                  |                                  |
 | `containerSecurityContext.allowPrivilegeEscalation` |                                                   | `false`                          |
 | `containerSecurityContext.capabilities.drop`        |                                                   | `["ALL"]`                        |
@@ -70,6 +70,6 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 ### Global
 
 | Name                      | Description                            | Value           |
-|---------------------------|----------------------------------------|-----------------|
+| ------------------------- | -------------------------------------- | --------------- |
 | `kubernetesClusterDomain` | overrides domain.local                 | `cluster.local` |
 | `imagePullSecrets`        | global value for image registry secret | `[]`            |

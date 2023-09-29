@@ -1,7 +1,7 @@
 
 ## @section Keptn Metrics Operator common
 
-## @param   config.replicas customize number of installed metrics operator replicas
+## @param   replicas customize number of installed metrics operator replicas
 
 ## @extra   operatorService.ports[0] webhook port (must correspond to Mutating Webhook Configurations)
 ## @param   operatorService.ports[0].name
@@ -19,11 +19,11 @@
 ## @param   operatorService.ports[2].targetPort
 ## @param   operatorService.type
 
-## @param      config.controllerManagerConfigYaml.health.healthProbeBindAddress setup on what address to start the default health handler
-## @param      config.controllerManagerConfigYaml.leaderElection.leaderElect decides whether to enable leader election with multiple replicas
-## @param      config.controllerManagerConfigYaml.leaderElection.resourceName defines LeaderElectionID
-## @param      config.controllerManagerConfigYaml.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
-## @param      config.controllerManagerConfigYaml.webhook.port
+## @param      config.health.healthProbeBindAddress setup on what address to start the default health handler
+## @param      config.leaderElection.leaderElect decides whether to enable leader election with multiple replicas
+## @param      config.leaderElection.resourceName defines LeaderElectionID
+## @param      config.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
+## @param      config.webhook.port
 
 ## @extra Mutating Webhook Configurations for metrics Operator
 ## @param     webhookService.ports[0].port
@@ -31,9 +31,9 @@
 ## @param     webhookService.ports[0].targetPort
 ## @param     webhookService.type
 
-## @param    config.nodeSelector add custom nodes selector to metrics operator
-## @param    config.tolerations add custom tolerations to metrics operator
-## @param    config.topologySpreadConstraints add custom topology constraints to metrics operator
+## @param    nodeSelector add custom nodes selector to metrics operator
+## @param    tolerations add custom tolerations to metrics operator
+## @param    topologySpreadConstraints add custom topology constraints to metrics operator
 
 ## @section Keptn Metrics Operator controller
 ## @extra   containerSecurityContext Sets security context privileges

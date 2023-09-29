@@ -58,46 +58,46 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: FUNCTION_RUNNER_IMAGE
-          value: {{ .Values.lifecycleOperator.manager.env.functionRunnerImage | quote }}
+          value: {{ .Values.lifecycleOperator.env.functionRunnerImage | quote }}
         - name: PYTHON_RUNNER_IMAGE
-          value: {{ .Values.lifecycleOperator.manager.env.pythonRunnerImage | quote }}
+          value: {{ .Values.lifecycleOperator.env.pythonRunnerImage | quote }}
         - name: OTEL_COLLECTOR_URL
-          value: {{ .Values.lifecycleOperator.manager.env.otelCollectorUrl | quote }}
+          value: {{ .Values.lifecycleOperator.env.otelCollectorUrl | quote }}
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnAppControllerLogLevel | quote
+          value: {{ .Values.lifecycleOperator.env.keptnAppControllerLogLevel | quote
             }}
         - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnAppCreationRequestControllerLogLevel
+          value: {{ .Values.lifecycleOperator.env.keptnAppCreationRequestControllerLogLevel
             | quote }}
         - name: KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnAppVersionControllerLogLevel
+          value: {{ .Values.lifecycleOperator.env.keptnAppVersionControllerLogLevel
             | quote }}
         - name: KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnEvaluationControllerLogLevel
+          value: {{ .Values.lifecycleOperator.env.keptnEvaluationControllerLogLevel
             | quote }}
         - name: KEPTN_TASK_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnTaskControllerLogLevel | quote
+          value: {{ .Values.lifecycleOperator.env.keptnTaskControllerLogLevel | quote
             }}
         - name: KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnTaskDefinitionControllerLogLevel
+          value: {{ .Values.lifecycleOperator.env.keptnTaskDefinitionControllerLogLevel
             | quote }}
         - name: KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnWorkloadControllerLogLevel
+          value: {{ .Values.lifecycleOperator.env.keptnWorkloadControllerLogLevel
             | quote }}
         - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.keptnWorkloadInstanceControllerLogLevel
+          value: {{ .Values.lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel
             | quote }}
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.manager.env.optionsControllerLogLevel | quote
+          value: {{ .Values.lifecycleOperator.env.optionsControllerLogLevel | quote
             }}
         - name: SCHEDULING_GATES_ENABLED
           value: {{ .Values.schedulingGatesEnabled | quote
             }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.lifecycleOperator.manager.image.repository }}:{{ .Values.lifecycleOperator.manager.image.tag
+        image: {{ .Values.lifecycleOperator.image.repository }}:{{ .Values.lifecycleOperator.image.tag
           | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.lifecycleOperator.manager.imagePullPolicy }}
+        imagePullPolicy: {{ .Values.lifecycleOperator.imagePullPolicy }}
         name: manager
         ports:
         - containerPort: 9443
@@ -106,29 +106,29 @@ spec:
         - containerPort: 2222
           name: metrics
           protocol: TCP
-        resources: {{- toYaml .Values.lifecycleOperator.manager.resources | nindent 10 }}
+        resources: {{- toYaml .Values.lifecycleOperator.resources | nindent 10 }}
         securityContext:
-          allowPrivilegeEscalation: {{ .Values.lifecycleOperator.manager.containerSecurityContext.allowPrivilegeEscalation
+          allowPrivilegeEscalation: {{ .Values.lifecycleOperator.containerSecurityContext.allowPrivilegeEscalation
             }}
-          capabilities: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.manager.containerSecurityContext.capabilities
+          capabilities: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.capabilities
             "context" $) | nindent 12 }}
-          privileged: {{ .Values.lifecycleOperator.manager.containerSecurityContext.privileged
+          privileged: {{ .Values.lifecycleOperator.containerSecurityContext.privileged
             }}
-          runAsGroup: {{ .Values.lifecycleOperator.manager.containerSecurityContext.runAsGroup
+          runAsGroup: {{ .Values.lifecycleOperator.containerSecurityContext.runAsGroup
             }}
-          runAsNonRoot: {{ .Values.lifecycleOperator.manager.containerSecurityContext.runAsNonRoot
+          runAsNonRoot: {{ .Values.lifecycleOperator.containerSecurityContext.runAsNonRoot
             }}
-          runAsUser: {{ .Values.lifecycleOperator.manager.containerSecurityContext.runAsUser
+          runAsUser: {{ .Values.lifecycleOperator.containerSecurityContext.runAsUser
             }}
-          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.manager.containerSecurityContext.seccompProfile
+          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
         volumeMounts:
         - mountPath: /tmp/k8s-webhook-server/serving-certs/
           name: certs-dir
         - mountPath: /tmp/metrics-adapter/serving-certs
           name: adapter-certs-dir
-        {{- if .Values.lifecycleOperator.manager.livenessProbe }}
-        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.manager.livenessProbe "context" $) | nindent 10 }}
+        {{- if .Values.lifecycleOperator.livenessProbe }}
+        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.livenessProbe "context" $) | nindent 10 }}
          {{- else }}
         livenessProbe:
          httpGet:
@@ -137,8 +137,8 @@ spec:
          initialDelaySeconds: 15
          periodSeconds: 20
         {{- end }}
-        {{- if .Values.lifecycleOperator.manager.readinessProbe }}
-        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.manager.readinessProbe "context" $) | nindent 10 }}
+        {{- if .Values.lifecycleOperator.readinessProbe }}
+        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.readinessProbe "context" $) | nindent 10 }}
          {{- else }}
         readinessProbe:
          httpGet:
@@ -195,34 +195,34 @@ spec:
         - --config=/etc/kubernetes/scheduler-config.yaml
         env:
         - name: OTEL_COLLECTOR_URL
-          value: {{ .Values.scheduler.scheduler.env.otelCollectorUrl | quote }}
+          value: {{ .Values.scheduler.env.otelCollectorUrl | quote }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.scheduler.scheduler.image.repository }}:{{ .Values.scheduler.scheduler.image.tag
+        image: {{ .Values.scheduler.image.repository }}:{{ .Values.scheduler.image.tag
           | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.scheduler.scheduler.imagePullPolicy }}
+        imagePullPolicy: {{ .Values.scheduler.imagePullPolicy }}
         name: scheduler
-        resources: {{- toYaml .Values.scheduler.scheduler.resources | nindent 10 }}
+        resources: {{- toYaml .Values.scheduler.resources | nindent 10 }}
         securityContext:
-          allowPrivilegeEscalation: {{ .Values.scheduler.scheduler.containerSecurityContext.allowPrivilegeEscalation
+          allowPrivilegeEscalation: {{ .Values.scheduler.containerSecurityContext.allowPrivilegeEscalation
             }}
-          capabilities: {{- include "tplvalues.render" (dict "value" .Values.scheduler.scheduler.containerSecurityContext.capabilities
+          capabilities: {{- include "tplvalues.render" (dict "value" .Values.scheduler.containerSecurityContext.capabilities
             "context" $) | nindent 12 }}
-          privileged: {{ .Values.scheduler.scheduler.containerSecurityContext.privileged
+          privileged: {{ .Values.scheduler.containerSecurityContext.privileged
             }}
-          readOnlyRootFilesystem: {{ .Values.scheduler.scheduler.containerSecurityContext.readOnlyRootFilesystem
+          readOnlyRootFilesystem: {{ .Values.scheduler.containerSecurityContext.readOnlyRootFilesystem
             }}
-          runAsNonRoot: {{ .Values.scheduler.scheduler.containerSecurityContext.runAsNonRoot
+          runAsNonRoot: {{ .Values.scheduler.containerSecurityContext.runAsNonRoot
             }}
-          runAsUser: {{ .Values.scheduler.scheduler.containerSecurityContext.runAsUser }}
-          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.scheduler.scheduler.containerSecurityContext.seccompProfile
+          runAsUser: {{ .Values.scheduler.containerSecurityContext.runAsUser }}
+          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.scheduler.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
         volumeMounts:
         - mountPath: /etc/kubernetes
           name: scheduler-config
           readOnly: true
-        {{- if .Values.scheduler.scheduler.livenessProbe }}
-        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.scheduler.scheduler.livenessProbe "context" $) | nindent 10 }}
+        {{- if .Values.scheduler.livenessProbe }}
+        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.scheduler.livenessProbe "context" $) | nindent 10 }}
          {{- else }}
         livenessProbe:
          httpGet:
@@ -231,8 +231,8 @@ spec:
            scheme: HTTPS
          initialDelaySeconds: 15
         {{- end }}
-        {{- if .Values.scheduler.scheduler.readinessProbe }}
-        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.scheduler.scheduler.readinessProbe "context" $) | nindent 10 }}
+        {{- if .Values.scheduler.readinessProbe }}
+        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.scheduler.readinessProbe "context" $) | nindent 10 }}
          {{- else }}
         readinessProbe:
          httpGet:

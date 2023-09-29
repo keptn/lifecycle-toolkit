@@ -1,40 +1,40 @@
 # yamllint disable rule:line-length
 ## @section Keptn Scheduler
-## @extra scheduler.scheduler.containerSecurityContext Sets security context
-## @skip scheduler.scheduler.containerSecurityContext.allowPrivilegeEscalation
-## @skip scheduler.scheduler.containerSecurityContext.capabilities.drop
-## @skip scheduler.scheduler.containerSecurityContext.privileged
-## @skip scheduler.scheduler.containerSecurityContext.readOnlyRootFilesystem
-## @skip scheduler.scheduler.containerSecurityContext.runAsNonRoot
-## @skip scheduler.scheduler.containerSecurityContext.runAsUser
-## @skip scheduler.scheduler.containerSecurityContext.seccompProfile.type
+## @extra scheduler.containerSecurityContext Sets security context
+## @skip scheduler.containerSecurityContext.allowPrivilegeEscalation
+## @skip scheduler.containerSecurityContext.capabilities.drop
+## @skip scheduler.containerSecurityContext.privileged
+## @skip scheduler.containerSecurityContext.readOnlyRootFilesystem
+## @skip scheduler.containerSecurityContext.runAsNonRoot
+## @skip scheduler.containerSecurityContext.runAsUser
+## @skip scheduler.containerSecurityContext.seccompProfile.type
 
-## @param scheduler.scheduler.env.otelCollectorUrl sets url for open telemetry collector
+## @param scheduler.env.otelCollectorUrl sets url for open telemetry collector
 
-## @param scheduler.scheduler.image.repository set image repository for scheduler
-## @param scheduler.scheduler.image.tag set image tag for scheduler
-## @param scheduler.scheduler.imagePullPolicy set image pull policy for scheduler
+## @param scheduler.image.repository set image repository for scheduler
+## @param scheduler.image.tag set image tag for scheduler
+## @param scheduler.imagePullPolicy set image pull policy for scheduler
 
-## @extra scheduler.scheduler.livenessProbe customizable liveness probe for the scheduler
-## @skip scheduler.scheduler.livenessProbe.httpGet.path
-## @skip scheduler.scheduler.livenessProbe.httpGet.port
-## @skip scheduler.scheduler.livenessProbe.httpGet.scheme
-## @skip scheduler.scheduler.livenessProbe.initialDelaySeconds
+## @extra scheduler.livenessProbe customizable liveness probe for the scheduler
+## @skip scheduler.livenessProbe.httpGet.path
+## @skip scheduler.livenessProbe.httpGet.port
+## @skip scheduler.livenessProbe.httpGet.scheme
+## @skip scheduler.livenessProbe.initialDelaySeconds
 
-## @extra scheduler.scheduler.readinessProbe customizable readiness probe for the scheduler
-## @skip scheduler.scheduler.readinessProbe.httpGet.path
-## @skip scheduler.scheduler.readinessProbe.httpGet.port
-## @skip scheduler.scheduler.readinessProbe.httpGet.scheme
+## @extra scheduler.readinessProbe customizable readiness probe for the scheduler
+## @skip scheduler.readinessProbe.httpGet.path
+## @skip scheduler.readinessProbe.httpGet.port
+## @skip scheduler.readinessProbe.httpGet.scheme
 
-## @extra scheduler.scheduler.resources sets cpu and memory resurces/limits for scheduler
-## @skip scheduler.scheduler.resources.limits.cpu
-## @skip scheduler.scheduler.resources.limits.memory
-## @skip scheduler.scheduler.resources.requests.cpu
-## @skip scheduler.scheduler.resources.requests.memory
+## @extra scheduler.resources sets cpu and memory resurces/limits for scheduler
+## @skip scheduler.resources.limits.cpu
+## @skip scheduler.resources.limits.memory
+## @skip scheduler.resources.requests.cpu
+## @skip scheduler.resources.requests.memory
 
-## @param  schedulerConfig.schedulerConfigYaml.leaderElection.leaderElect enables leader election for multiple replicas of the scheduler
-## @param  schedulerConfig.schedulerConfigYaml.profiles[0].plugins.permit.enabled[0].name enables permit plugin
-## @param  schedulerConfig.schedulerConfigYaml.profiles[0].schedulerName changes scheduler name
+## @param  schedulerConfig.leaderElection.leaderElect enables leader election for multiple replicas of the scheduler
+## @param  schedulerConfig.profiles[0].plugins.permit.enabled[0].name enables permit plugin
+## @param  schedulerConfig.profiles[0].schedulerName changes scheduler name
 
 ## @param scheduler.nodeSelector adds node selectors for scheduler
 ## @param scheduler.replicas modifies replicas
@@ -43,11 +43,11 @@
 
 ## @section Keptn Lifecycle Operator common
 
-## @param    lifecycleManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress setup on what address to start the default health handler
-## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect enable leader election for multiple replicas of the lifecycle operator
-## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName define LeaderElectionID
-## @param    lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
-## @param    lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port setup port for the lifecycle operator admission webhook
+## @param    lifecycleManagerConfig.health.healthProbeBindAddress setup on what address to start the default health handler
+## @param    lifecycleManagerConfig.leaderElection.leaderElect enable leader election for multiple replicas of the lifecycle operator
+## @param    lifecycleManagerConfig.leaderElection.resourceName define LeaderElectionID
+## @param    lifecycleManagerConfig.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
+## @param    lifecycleManagerConfig.webhook.port setup port for the lifecycle operator admission webhook
 
 ## @param   lifecycleOperator.replicas customize number of installed lifecycle operator replicas
 
@@ -69,50 +69,50 @@
 ## @param   lifecycleOperator.topologySpreadConstraints add custom topology constraints to lifecycle operator
 
 ## @section Keptn Lifecycle Operator controller
-## @extra   lifecycleOperator.manager.containerSecurityContext Sets security context privileges
-## @param   lifecycleOperator.manager.containerSecurityContext.allowPrivilegeEscalation
-## @param   lifecycleOperator.manager.containerSecurityContext.capabilities.drop
-## @param   lifecycleOperator.manager.containerSecurityContext.privileged
-## @param   lifecycleOperator.manager.containerSecurityContext.runAsGroup
-## @param   lifecycleOperator.manager.containerSecurityContext.runAsNonRoot
-## @param   lifecycleOperator.manager.containerSecurityContext.runAsUser
-## @param   lifecycleOperator.manager.containerSecurityContext.seccompProfile.type
+## @extra   lifecycleOperator.containerSecurityContext Sets security context privileges
+## @param   lifecycleOperator.containerSecurityContext.allowPrivilegeEscalation
+## @param   lifecycleOperator.containerSecurityContext.capabilities.drop
+## @param   lifecycleOperator.containerSecurityContext.privileged
+## @param   lifecycleOperator.containerSecurityContext.runAsGroup
+## @param   lifecycleOperator.containerSecurityContext.runAsNonRoot
+## @param   lifecycleOperator.containerSecurityContext.runAsUser
+## @param   lifecycleOperator.containerSecurityContext.seccompProfile.type
 
-## @param   lifecycleOperator.manager.env.keptnAppControllerLogLevel sets the log level of Keptn App Controller
-## @param   lifecycleOperator.manager.env.keptnAppCreationRequestControllerLogLevel sets the log level of Keptn App Creation Request Controller
-## @param   lifecycleOperator.manager.env.keptnAppVersionControllerLogLevel sets the log level of Keptn AppVersion Controller
-## @param   lifecycleOperator.manager.env.keptnEvaluationControllerLogLevel sets the log level of Keptn Evaluation Controller
-## @param   lifecycleOperator.manager.env.keptnTaskControllerLogLevel sets the log level of Keptn Task Controller
-## @param   lifecycleOperator.manager.env.keptnTaskDefinitionControllerLogLevel sets the log level of Keptn TaskDefinition Controller
-## @param   lifecycleOperator.manager.env.keptnWorkloadControllerLogLevel sets the log level of Keptn Workload Controller
-## @param   lifecycleOperator.manager.env.keptnWorkloadInstanceControllerLogLevel sets the log level of Keptn WorkloadInstance Controller
-## @param   lifecycleOperator.manager.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
+## @param   lifecycleOperator.env.keptnAppControllerLogLevel sets the log level of Keptn App Controller
+## @param   lifecycleOperator.env.keptnAppCreationRequestControllerLogLevel sets the log level of Keptn App Creation Request Controller
+## @param   lifecycleOperator.env.keptnAppVersionControllerLogLevel sets the log level of Keptn AppVersion Controller
+## @param   lifecycleOperator.env.keptnEvaluationControllerLogLevel sets the log level of Keptn Evaluation Controller
+## @param   lifecycleOperator.env.keptnTaskControllerLogLevel sets the log level of Keptn Task Controller
+## @param   lifecycleOperator.env.keptnTaskDefinitionControllerLogLevel sets the log level of Keptn TaskDefinition Controller
+## @param   lifecycleOperator.env.keptnWorkloadControllerLogLevel sets the log level of Keptn Workload Controller
+## @param   lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel sets the log level of Keptn WorkloadInstance Controller
+## @param   lifecycleOperator.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
 
-## @param   lifecycleOperator.manager.env.otelCollectorUrl Sets the URL for the open telemetry collector
-## @param   lifecycleOperator.manager.env.functionRunnerImage specify image for deno task runtime
-## @param   lifecycleOperator.manager.env.pythonRunnerImage specify image for python task runtime
+## @param   lifecycleOperator.env.otelCollectorUrl Sets the URL for the open telemetry collector
+## @param   lifecycleOperator.env.functionRunnerImage specify image for deno task runtime
+## @param   lifecycleOperator.env.pythonRunnerImage specify image for python task runtime
 
-## @param   lifecycleOperator.manager.image.repository specify registry for manager image
-## @param   lifecycleOperator.manager.image.tag  select tag for manager image
-## @param   lifecycleOperator.manager.imagePullPolicy specify pull policy for manager image
+## @param   lifecycleOperator.image.repository specify registry for manager image
+## @param   lifecycleOperator.image.tag  select tag for manager image
+## @param   lifecycleOperator.imagePullPolicy specify pull policy for manager image
 
-## @extra  lifecycleOperator.manager.livenessProbe custom livenessprobe for manager container
-## @skip   lifecycleOperator.manager.livenessProbe.httpGet.path
-## @skip   lifecycleOperator.manager.livenessProbe.httpGet.port
-## @skip   lifecycleOperator.manager.livenessProbe.initialDelaySeconds
-## @skip   lifecycleOperator.manager.livenessProbe.periodSeconds
+## @extra  lifecycleOperator.livenessProbe custom livenessprobe for manager container
+## @skip   lifecycleOperator.livenessProbe.httpGet.path
+## @skip   lifecycleOperator.livenessProbe.httpGet.port
+## @skip   lifecycleOperator.livenessProbe.initialDelaySeconds
+## @skip   lifecycleOperator.livenessProbe.periodSeconds
 
-## @extra  lifecycleOperator.manager.readinessProbe custom readinessprobe for manager container
-## @skip   lifecycleOperator.manager.readinessProbe.httpGet.path
-## @skip   lifecycleOperator.manager.readinessProbe.httpGet.port
-## @skip   lifecycleOperator.manager.readinessProbe.initialDelaySeconds
-## @skip   lifecycleOperator.manager.readinessProbe.periodSeconds
+## @extra  lifecycleOperator.readinessProbe custom readinessprobe for manager container
+## @skip   lifecycleOperator.readinessProbe.httpGet.path
+## @skip   lifecycleOperator.readinessProbe.httpGet.port
+## @skip   lifecycleOperator.readinessProbe.initialDelaySeconds
+## @skip   lifecycleOperator.readinessProbe.periodSeconds
 
-## @extra  lifecycleOperator.manager.resources specify limits and requests for manager container
-## @skip   lifecycleOperator.manager.resources.limits.cpu
-## @skip   lifecycleOperator.manager.resources.limits.memory
-## @skip   lifecycleOperator.manager.resources.requests.cpu
-## @skip   lifecycleOperator.manager.resources.requests.memory
+## @extra  lifecycleOperator.resources specify limits and requests for manager container
+## @skip   lifecycleOperator.resources.limits.cpu
+## @skip   lifecycleOperator.resources.limits.memory
+## @skip   lifecycleOperator.resources.requests.cpu
+## @skip   lifecycleOperator.resources.requests.memory
 
 ## @section Global
 ## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled

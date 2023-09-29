@@ -16,7 +16,6 @@ keywords:
   - operator
   - pre-deployment
   - post-deployment
-  - evaluation
 annotations:
   artifacthub.io/links: |
     - name: support

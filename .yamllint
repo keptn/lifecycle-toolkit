@@ -16,6 +16,7 @@ ignore: |
   helm/chart
   metrics-operator/chart
   klt-cert-manager/chart
+  lifecycle-operator/chart
   .github/scripts/.helm-tests
 
 rules:

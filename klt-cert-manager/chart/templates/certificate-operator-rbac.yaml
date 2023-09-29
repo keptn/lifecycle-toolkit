@@ -4,7 +4,7 @@ metadata:
   name: certificate-operator-role
   namespace: {{ .Release.Namespace | quote }}
   labels:
-  {{- include "chart.labels" . | nindent 4 }}
+  {{- include "cert-manager.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - ""
@@ -31,7 +31,7 @@ metadata:
   name: certificate-operator-role
   namespace: {{ .Release.Namespace | quote }}
   labels:
-  {{- include "chart.labels" . | nindent 4 }}
+  {{- include "cert-manager.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - admissionregistration.k8s.io
@@ -81,7 +81,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-  {{- include "chart.labels" . | nindent 4 }}
+  {{- include "cert-manager.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

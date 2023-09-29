@@ -31,3 +31,4 @@ load-report.*
 .dccache*
 
 config/rendered/release.yaml
+chart/rendered.yaml

@@ -26,48 +26,25 @@ as well as the concept of application health checks
 | `scheduler.tolerations`                                                          | adds tolerations for scheduler                                 | `[]`                      |
 | `scheduler.topologySpreadConstraints`                                            | add topology constraints for scheduler                         | `[]`                      |
 
-### Keptn Certificate Operator common
+### Keptn Lifecycle Operator common
 
 | Name                                                                               | Description                                                                                                                                                   | Value               |
 | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
-| `certificateOperator.replicas`                                                     | customize number of replicas                                                                                                                                  | `1`                 |
-| `certificateOperator.nodeSelector`                                                 | specify custom node selectors for cert manager                                                                                                                | `{}`                |
-| `certificateOperator.tolerations`                                                  | customize tolerations for cert manager                                                                                                                        | `[]`                |
-| `certificateOperator.topologySpreadConstraints`                                    | add topology constraints for cert manager                                                                                                                     | `[]`                |
 | `lifecycleManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress` | setup on what address to start the default health handler                                                                                                     | `:8081`             |
 | `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect`    | enable leader election for multiple replicas of the lifecycle operator                                                                                        | `true`              |
 | `lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName`   | define LeaderElectionID                                                                                                                                       | `6b866dd9.keptn.sh` |
 | `lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress`           | MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving. | `127.0.0.1:8080`    |
 | `lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port`                  | setup port for the lifecycle operator admission webhook                                                                                                       | `9443`              |
-
-### Keptn Certificate Operator controller
-
-| Name                                                   | Description                                                               | Value                                |
-| ------------------------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------ |
-| `certificateOperator.manager.containerSecurityContext` | Sets security context for the cert manager                                |                                      |
-| `certificateOperator.manager.image.repository`         | specify repo for manager image                                            | `ghcr.io/keptn/certificate-operator` |
-| `certificateOperator.manager.image.tag`                | select tag for manager container                                          | `v1.1.0`                             |
-| `certificateOperator.manager.imagePullPolicy`          | select image pull policy for manager container                            | `Always`                             |
-| `certificateOperator.manager.env.labelSelectorKey`     | specify the label selector to find resources to generate certificates for | `keptn.sh/inject-cert`               |
-| `certificateOperator.manager.env.labelSelectorValue`   | specify the value for the label selector                                  | `true`                               |
-| `certificateOperator.manager.livenessProbe`            | custom RBAC proxy liveness probe                                          |                                      |
-| `certificateOperator.manager.readinessProbe`           | custom manager readiness probe                                            |                                      |
-| `certificateOperator.manager.resources`                | custom limits and requests for manager container                          |                                      |
-
-### Keptn Lifecycle Operator common
-
-| Name                                          | Description                                                                    | Value       |
-| --------------------------------------------- | ------------------------------------------------------------------------------ | ----------- |
-| `lifecycleOperator.replicas`                  | customize number of installed lifecycle operator replicas                      | `1`         |
-| `lifecycleOperatorMetricsService`             | Adjust settings here to change the k8s service for scraping Prometheus metrics |             |
-| `lifecycleWebhookService`                     | Mutating Webhook Configurations for lifecycle Operator                         |             |
-| `lifecycleWebhookService.ports[0].port`       |                                                                                | `443`       |
-| `lifecycleWebhookService.ports[0].protocol`   |                                                                                | `TCP`       |
-| `lifecycleWebhookService.ports[0].targetPort` |                                                                                | `9443`      |
-| `lifecycleWebhookService.type`                |                                                                                | `ClusterIP` |
-| `lifecycleOperator.nodeSelector`              | add custom nodes selector to lifecycle operator                                | `{}`        |
-| `lifecycleOperator.tolerations`               | add custom tolerations to lifecycle operator                                   | `[]`        |
-| `lifecycleOperator.topologySpreadConstraints` | add custom topology constraints to lifecycle operator                          | `[]`        |
+| `lifecycleOperator.replicas`                                                       | customize number of installed lifecycle operator replicas                                                                                                     | `1`                 |
+| `lifecycleOperatorMetricsService`                                                  | Adjust settings here to change the k8s service for scraping Prometheus metrics                                                                                |                     |
+| `lifecycleWebhookService`                                                          | Mutating Webhook Configurations for lifecycle Operator                                                                                                        |                     |
+| `lifecycleWebhookService.ports[0].port`                                            |                                                                                                                                                               | `443`               |
+| `lifecycleWebhookService.ports[0].protocol`                                        |                                                                                                                                                               | `TCP`               |
+| `lifecycleWebhookService.ports[0].targetPort`                                      |                                                                                                                                                               | `9443`              |
+| `lifecycleWebhookService.type`                                                     |                                                                                                                                                               | `ClusterIP`         |
+| `lifecycleOperator.nodeSelector`                                                   | add custom nodes selector to lifecycle operator                                                                                                               | `{}`                |
+| `lifecycleOperator.tolerations`                                                    | add custom tolerations to lifecycle operator                                                                                                                  | `[]`                |
+| `lifecycleOperator.topologySpreadConstraints`                                      | add custom topology constraints to lifecycle operator                                                                                                         | `[]`                |
 
 ### Keptn Lifecycle Operator controller
 

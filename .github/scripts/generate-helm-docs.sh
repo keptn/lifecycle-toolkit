@@ -27,5 +27,10 @@ fi
 echo "Generating readme now..."
 cat ./helm/chart/values.yaml ./helm/chart/doc.yaml > ./helm/chart/rendered.yaml
 readme-generator --values=./helm/chart/rendered.yaml --readme=./helm/chart/README.md
+rm ./helm/chart/rendered.yaml
+
+cat ./klt-cert-manager/chart/values.yaml ./klt-cert-manager/chart/doc.yaml > ./klt-cert-manager/chart/rendered.yaml
+readme-generator --values=./klt-cert-manager/chart/rendered.yaml --readme=./klt-cert-manager/chart/README.md
+rm ./klt-cert-manager/chart/rendered.yaml
 
 # Please be aware, the readme file needs to exist and needs to have a Parameters section, as only this section will be re-generated

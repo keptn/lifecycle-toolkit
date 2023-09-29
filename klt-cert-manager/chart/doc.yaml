@@ -1,0 +1,47 @@
+# yamllint disable rule:line-length
+## @section Keptn Certificate Operator common
+
+## @param     replicas customize number of replicas
+
+## @param     nodeSelector specify custom node selectors for cert manager
+## @param     tolerations customize tolerations for cert manager
+## @param     topologySpreadConstraints add topology constraints for cert manager
+
+## @section Keptn Certificate Operator controller
+## @extra    containerSecurityContext Sets security context for the cert manager
+## @skip     containerSecurityContext.allowPrivilegeEscalation
+## @skip     containerSecurityContext.capabilities.drop
+## @skip     containerSecurityContext.readOnlyRootFilesystem
+## @skip     containerSecurityContext.runAsGroup
+## @skip     containerSecurityContext.runAsUser
+## @skip     containerSecurityContext.seccompProfile.type
+
+## @param     image.repository specify repo for manager image
+## @param     image.tag select tag for manager container
+## @param     imagePullPolicy select image pull policy for manager container
+
+## @param     env.labelSelectorKey specify the label selector to find resources to generate certificates for
+## @param     env.labelSelectorValue specify the value for the label selector
+
+## @extra     livenessProbe custom RBAC proxy liveness probe
+## @skip     livenessProbe.httpGet.path
+## @skip     livenessProbe.httpGet.port
+## @skip     livenessProbe.initialDelaySeconds
+## @skip     livenessProbe.periodSeconds
+
+## @extra    readinessProbe custom manager readiness probe
+## @skip     readinessProbe.httpGet.path
+## @skip     readinessProbe.httpGet.port
+## @skip     readinessProbe.initialDelaySeconds
+## @skip     readinessProbe.periodSeconds
+
+## @extra    resources custom limits and requests for manager container
+## @skip     resources.limits.cpu
+## @skip     resources.limits.memory
+## @skip     resources.requests.cpu
+## @skip     resources.requests.memory
+
+## @section Global
+## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled
+## @param  kubernetesClusterDomain overrides domain.local
+## @param  imagePullSecrets global value for image registry secret

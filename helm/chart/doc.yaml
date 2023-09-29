@@ -41,56 +41,13 @@
 ## @param scheduler.tolerations adds tolerations for scheduler
 ## @param scheduler.topologySpreadConstraints add topology constraints for scheduler
 
-## @section Keptn Certificate Operator common
-
-## @param     certificateOperator.replicas customize number of replicas
-
-## @param     certificateOperator.nodeSelector specify custom node selectors for cert manager
-## @param     certificateOperator.tolerations customize tolerations for cert manager
-## @param     certificateOperator.topologySpreadConstraints add topology constraints for cert manager
+## @section Keptn Lifecycle Operator common
 
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.health.healthProbeBindAddress setup on what address to start the default health handler
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.leaderElect enable leader election for multiple replicas of the lifecycle operator
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.leaderElection.resourceName define LeaderElectionID
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
 ## @param    lifecycleManagerConfig.controllerManagerConfigYaml.webhook.port setup port for the lifecycle operator admission webhook
-
-
-## @section Keptn Certificate Operator controller
-## @extra    certificateOperator.manager.containerSecurityContext Sets security context for the cert manager
-## @skip     certificateOperator.manager.containerSecurityContext.allowPrivilegeEscalation
-## @skip     certificateOperator.manager.containerSecurityContext.capabilities.drop
-## @skip     certificateOperator.manager.containerSecurityContext.readOnlyRootFilesystem
-## @skip     certificateOperator.manager.containerSecurityContext.runAsGroup
-## @skip     certificateOperator.manager.containerSecurityContext.runAsUser
-## @skip     certificateOperator.manager.containerSecurityContext.seccompProfile.type
-
-## @param     certificateOperator.manager.image.repository specify repo for manager image
-## @param     certificateOperator.manager.image.tag select tag for manager container
-## @param     certificateOperator.manager.imagePullPolicy select image pull policy for manager container
-
-## @param     certificateOperator.manager.env.labelSelectorKey specify the label selector to find resources to generate certificates for
-## @param     certificateOperator.manager.env.labelSelectorValue specify the value for the label selector
-
-## @extra     certificateOperator.manager.livenessProbe custom RBAC proxy liveness probe
-## @skip     certificateOperator.manager.livenessProbe.httpGet.path
-## @skip     certificateOperator.manager.livenessProbe.httpGet.port
-## @skip     certificateOperator.manager.livenessProbe.initialDelaySeconds
-## @skip     certificateOperator.manager.livenessProbe.periodSeconds
-
-## @extra    certificateOperator.manager.readinessProbe custom manager readiness probe
-## @skip     certificateOperator.manager.readinessProbe.httpGet.path
-## @skip     certificateOperator.manager.readinessProbe.httpGet.port
-## @skip     certificateOperator.manager.readinessProbe.initialDelaySeconds
-## @skip     certificateOperator.manager.readinessProbe.periodSeconds
-
-## @extra    certificateOperator.manager.resources custom limits and requests for manager container
-## @skip     certificateOperator.manager.resources.limits.cpu
-## @skip     certificateOperator.manager.resources.limits.memory
-## @skip     certificateOperator.manager.resources.requests.cpu
-## @skip     certificateOperator.manager.resources.requests.memory
-
-## @section Keptn Lifecycle Operator common
 
 ## @param   lifecycleOperator.replicas customize number of installed lifecycle operator replicas
 

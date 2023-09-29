@@ -3,23 +3,6 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: certificate-operator
-  namespace: "helmtests"
-  labels:
-    app.kuberentes.io/instance: certificate-operator
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
----
-# Source: klt/templates/deployment.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
@@ -6445,58 +6428,6 @@ spec:
     subresources:
       status: {}
 ---
-# Source: klt/templates/certificate-operator-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: certificate-operator-role
-  namespace: "helmtests"
-  labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-rules:
-- apiGroups:
-  - admissionregistration.k8s.io
-  resources:
-  - mutatingwebhookconfigurations
-  verbs:
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - admissionregistration.k8s.io
-  resources:
-  - validatingwebhookconfigurations
-  verbs:
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - apiextensions.k8s.io
-  resources:
-  - customresourcedefinitions
-  verbs:
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - deployments
-  verbs:
-  - get
-  - list
-  - watch
----
 # Source: klt/templates/keptn-scheduler-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -7213,30 +7144,6 @@ rules:
   verbs:
   - '*'
 ---
-# Source: klt/templates/certificate-operator-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: certificate-operator-rolebinding
-  namespace: "helmtests"
-  labels:
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: 'certificate-operator-role'
-subjects:
-- kind: ServiceAccount
-  name: 'certificate-operator'
-  namespace: 'helmtests'
----
 # Source: klt/templates/hpa-controller-keptn-metrics-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -7362,38 +7269,6 @@ subjects:
 - kind: ServiceAccount
   name: 'metrics-operator'
   namespace: 'helmtests'
----
-# Source: klt/templates/certificate-operator-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: certificate-operator-role
-  namespace: "helmtests"
-  labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - create
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resourceNames:
-  - klt-certs
-  resources:
-  - secrets
-  verbs:
-  - get
-  - patch
-  - update
 ---
 # Source: klt/templates/leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -7532,54 +7407,6 @@ rules:
   verbs:
   - create
   - patch
----
-# Source: klt/templates/certificate-operator-leader-election-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: certificate-operator-leader-election-rolebinding
-  namespace: "helmtests"
-  labels:
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: 'leader-election-role'
-subjects:
-- kind: ServiceAccount
-  name: 'certificate-operator'
-  namespace: 'helmtests'
----
-# Source: klt/templates/certificate-operator-role-binding-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: certificate-operator-role-binding
-  namespace: "helmtests"
-  labels:
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: 'certificate-operator-role'
-subjects:
-- kind: ServiceAccount
-  name: 'certificate-operator'
-  namespace: 'helmtests'
 ---
 # Source: klt/templates/extension-apiserver-authentication-reader-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -7788,92 +7615,6 @@ spec:
   - port: 443
     protocol: TCP
     targetPort: 9443
----
-# Source: klt/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: certificate-operator
-  namespace: "helmtests"
-  labels:
-    app.kubernetes.io/component: manager
-    app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    control-plane: certificate-operator
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      control-plane: certificate-operator
-      app.kubernetes.io/name: klt
-      app.kubernetes.io/instance: release-name
-  template:
-    metadata:
-      labels:
-        control-plane: certificate-operator
-        app.kubernetes.io/name: klt
-        app.kubernetes.io/instance: release-name
-      annotations:
-        kubectl.kubernetes.io/default-container: manager
-    spec:
-      containers:
-      - args:
-        - --leader-elect
-        command:
-        - /manager
-        env:
-        - name: NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: LABEL_SELECTOR_KEY
-          value: "keptn.sh/inject-cert"
-        - name: LABEL_SELECTOR_VALUE
-          value: "true"
-        - name: KUBERNETES_CLUSTER_DOMAIN
-          value: cluster.local
-        image: ghcr.io/keptn/certificate-operator:v1.1.0
-        imagePullPolicy: Always
-        name: manager
-        resources:
-          limits:
-            cpu: 25m
-            memory: 64Mi
-          requests:
-            cpu: 5m
-            memory: 16Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsGroup: 65532
-          runAsUser: 65532
-          seccompProfile:
-            type: RuntimeDefault
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 8081
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          httpGet:
-            path: /readyz
-            port: 8081
-          initialDelaySeconds: 5
-          periodSeconds: 10
-      imagePullSecrets: []
-      securityContext:
-        runAsNonRoot: true
-      serviceAccountName: certificate-operator
-      terminationGracePeriodSeconds: 10
 ---
 # Source: klt/templates/deployment.yaml
 apiVersion: apps/v1

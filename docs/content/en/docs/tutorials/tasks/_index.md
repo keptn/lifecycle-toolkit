@@ -5,7 +5,7 @@ weight: 10
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-> This tutorial assumes you have already completed the [getting started guide](../getting-started/).
+> This tutorial assumes you have already completed the [getting started guide](../../getting-started/).
 > Please ensure you've finished that before attempting this guide.
 
 ## Keptn Pre and Post Deployment Tasks
@@ -16,7 +16,7 @@ When Keptn is successfully monitoring your deployments, it can also run arbitrar
 - post-deployment (after the post is scheduled)
 
 > Pre and post deployments can also run on a KeptnApp level.
-> See [annotations to KeptnApp](../implementing/integrate/_index.md#annotations-to-keptnapp)
+> See [annotations to KeptnApp](../../implementing/integrate/_index.md#annotations-to-keptnapp)
 
 ## Prerequisites: Deploy webhook sink
 
@@ -48,7 +48,7 @@ Open a browser and go to `http://localhost:8084`
 
 You should see a page like this with a unique URL (your ID will be different).
 
-![webhook.site page](assets/webhook.site.1.png)
+![webhook.site page](../assets/webhook.site.1.png)
 
 Make a note of that unique URL.
 
@@ -59,7 +59,7 @@ The page should remain blank, but when toggling back to `http://localhost:8084`,
 
 Every request sent to that unique URL will be logged here.
 
-![webhook.site entry](assets/webhook.site.2.png)
+![webhook.site entry](../assets/webhook.site.2.png)
 
 ## Add a Post Deployment Task
 
@@ -131,9 +131,9 @@ runsendevent1-*****   1/1           6s         2m
 
 The webhook sync should show this:
 
-![webhook sync](assets/webhook.site.3.png)
+![webhook sync](../assets/webhook.site.3.png)
 
-Incidentally, this is exactly how you can use Keptn with [applications deployed outside of Kubernetes](../implementing/tasks-non-k8s-apps.md).
+Incidentally, this is exactly how you can use Keptn with [applications deployed outside of Kubernetes](../../implementing/tasks-non-k8s-apps.md).
 
 > Note: If you want to trigger this multiple times, you must change the KeptnTask name.
 >
@@ -143,7 +143,7 @@ Incidentally, this is exactly how you can use Keptn with [applications deployed 
 
 Annotate the demo application `Deployment` manifest to have Keptn automatically trigger the task after every deployment.
 
-Recall the `Deployment` from the [getting started guide](../getting-started/_index.md#step-3-deploy-demo-application).
+Recall the `Deployment` from the [getting started guide](../../getting-started/_index.md#step-3-deploy-demo-application).
 
 Add a new label so the `labels` section looks like this:
 
@@ -211,7 +211,7 @@ Do this by using the `keptn.sh/pre-deployment-tasks` label.
 ## Further Information
 
 There is a lot more you can do with KeptnTasks.
-See [pre and post deployment checks page](../implementing/integrate#pre--and-post-deployment-checks) to find out more.
+See [pre and post deployment checks page](../../implementing/integrate#pre--and-post-deployment-checks) to find out more.
 
 ## What's next?
 

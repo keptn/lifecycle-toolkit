@@ -7,7 +7,7 @@ metadata:
     control-plane: certificate-operator
     app.kubernetes.io/name: deployment
     app.kubernetes.io/instance: certificate-operator
-    app.kubernetes.io/component: certificate-operator
+    app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     app.kubernetes.io/managed-by: kustomize

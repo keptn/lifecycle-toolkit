@@ -292,10 +292,10 @@ advanced to `latest` without the need for a software release.
 
 ## Previous Versions
 
-Keptn documentation is versioned. By default, the version for the current Keptn release
-is displayed on the documentation page but users can select other versions from the Releases tab. 
+Keptn documentation is versioned.
+By default, the version for the current Keptn release
+is displayed on the documentation page but users can select other versions from the Releases tab.
 The previous versions of the Keptn Documentation are available [here](https://github.com/keptn/lifecycle-toolkit/tree/page/docs/content/en).
-
 
 ### Developer Certification of Origin (DCO)
 

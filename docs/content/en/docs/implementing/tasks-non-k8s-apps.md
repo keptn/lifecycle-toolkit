@@ -28,7 +28,6 @@ but this can be a very lightweight, single-node KinD cluster; see
 Keptn only triggers on-demand `KeptnTask` resources
 so resource utilization is minimal.
 
-where the deployment is running?
 
 ## Create a KeptnTaskDefinition
 

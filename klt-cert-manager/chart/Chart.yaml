@@ -7,16 +7,7 @@ sources:
   - "https://github.com/keptn/lifecycle-toolkit"
 keywords:
   - cloud-native
-  - lifecycle
-  - lifecycle-management
-  - application-lifecycle
-  - application-lifecycle-management
-  - orchestration
   - keptn
-  - operator
-  - pre-deployment
-  - post-deployment
-  - evaluation
 annotations:
   artifacthub.io/links: |
     - name: support

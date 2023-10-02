@@ -19,11 +19,11 @@ uses [K8s Pod Scheduling Readiness](https://kubernetes.io/docs/concepts/scheduli
 
 ## Keptn Scheduling Gates for K8s 1.27.0 and above
 
-Firstly the Mutating Webhook checks for annotations on Pods to see if it is annotated with
+When you apply a workload to a K8s cluster, the Mutating Webhook checks for annotations on Pods to
+see if it is annotated with
 [Keptn specific annotations](https://main.lifecycle.keptn.sh/docs/implementing/integrate/#basic-annotations).
-If the annotations are present, the Webhook adds a gate to the Pod called "keptn-prechecks-gate", this is a spec that
-tells the
-default scheduler to wait.
+If the annotations are present, the Webhook adds a gate to the Pod called "keptn-prechecks-gate",
+this is a spec that tells the default scheduler to wait for Keptn's checks before assigning the pod to a node.
 
 For instance a pod gated by keptn will look like the following:
 
@@ -40,12 +40,11 @@ spec:
 
 The **WorkloadInstance CRD** contains information about the `pre-deployment` checks that
 need to be performed before the Pod can be scheduled.
-When the Workload Instance controller finishes these
-pre-checks it will decide if the `pre-deployment` checks have finished successfully, to remove the gate from the Pod.
+If the `pre-deployment` checks have finished successfully, the WorkloadInstance Controller removes the gate from the Pod.
 The default scheduler can then allow the Pod to be scheduled to a node.
 If the `pre-deployment` checks have not yet finished, the gate will stay and the Pod will remain pending.
-When removing the gate, the WorkloadInstance controller alo adds the following annotation,
-to avoid gating again the pod in case of a later update:
+When removing the gate, the WorkloadInstance controller also adds the following annotation, so that if there is an update of the spec the 
+Pod will not be gated again:
 
 ```yaml
 apiVersion: v1
@@ -70,7 +69,7 @@ scheduler has (typically CPU and memory values).
 The Keptn Scheduler uses the Kubernetes
 [Scheduler Framework](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/) and is based on the
 [Scheduler Plugins Repository](https://github.com/kubernetes-sigs/scheduler-plugins/tree/master).
-Additionally it registers itself as
+Additionally, it registers itself as
 a [Permit plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit).
 
 ### How does the Keptn Scheduler works
@@ -127,7 +126,7 @@ Also the Keptn Scheduler will not schedule Pods to nodes that have failed `pre-d
 checks in the past.
 This helps to prevent Pods from being scheduled to nodes that are not ready for them.
 
-# Integrating Keptn with your custom scheduler
+## Integrating Keptn with your custom scheduler
 
 Keptn scheduling logics are compatible with
 the [Scheduler Framework](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/).

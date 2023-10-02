@@ -1,13 +1,58 @@
 ---
-title: Keptn Lifecycle Scheduler
-linktitle: Scheduler
+title: Keptn Lifecycle Scheduling
+linktitle: Scheduler and Scheduling Gates
 description: Basic understanding of the Keptn Scheduler
 weight: 80
 cascade:
 ---
 
+On Kubernetes versions older and including 1.26.0, Keptn uses a Scheduler to block applications deployment.
+From Keptn v0.8.4 onward, if you do have a K8s version greater than 1.26.0, instead of a scheduler plugin,
+Keptn
+uses [K8s Pod Scheduling Readiness](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness).  
 The **Keptn Scheduler** is an integral component of Keptn that orchestrates
 the deployment process.
+
+## Keptn Scheduling Gates for K8s 1.27.0 and above
+
+Firstly the Mutating Webhook checks for annotations on Pods to see if it is annotated with
+[Keptn specific annotations](https://main.lifecycle.keptn.sh/docs/implementing/integrate/#basic-annotations).
+If the annotations are present, the Webhook adds a gate to the Pod called "keptn-prechecks-gate", this is a spec that
+tells the
+default scheduler to wait.
+
+For instance a pod gated by keptn will look like the following:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+spec:
+  schedulingGates:
+    - name: "keptn-prechecks-gate"
+
+```
+
+The **WorkloadInstance CRD** contains information about the `pre-deployment` checks that
+need to be performed before the Pod can be scheduled. When the Workload Instance controller finishes these
+pre-checks it will decide if the `pre-deployment` checks have finished successfully, to remove the gate from the Pod.
+The default scheduler can then allow the Pod to be scheduled to a node.
+If the `pre-deployment` checks have not yet finished, the gate will stay and the Pod will remain pending.
+When removing the gate, the WorkloadInstance controller alo adds the following annotation,
+to avoid gating again the pod in case of a later update:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+  annotations:
+    keptn.sh/scheduling-gate-removed: "true"
+```
+
+## Keptn Scheduler for K8s 1.26.0 and lower
+
 The **Keptn Scheduler** works by registering itself as a Permit plugin within the Kubernetes
 scheduling cycle that ensures that Pods are scheduled to a node until and unless the
 pre-deployment checks have finished successfully.
@@ -20,7 +65,8 @@ scheduler has (typically CPU and memory values).
 The Keptn Scheduler uses the Kubernetes
 [Scheduler Framework](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/) and is based on the
 [Scheduler Plugins Repository](https://github.com/kubernetes-sigs/scheduler-plugins/tree/master).
-Additionally it registers itself as a [Permit plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit).
+Additionally it registers itself as
+a [Permit plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit).
 
 ## How does the Keptn Scheduler works
 
@@ -53,7 +99,8 @@ The Keptn Scheduler processes the following information from the WorkloadInstanc
 - The status of the pre-deployment checks.
 - The deadline for the pre-deployment checks to be completed.
 - The Keptn Scheduler checks the status of the `pre-deployment` checks every 10 seconds.
-If the checks have not finished successfully within 5 minutes, the Keptn Scheduler will not allow the Pod to be scheduled.
+  If the checks have not finished successfully within 5 minutes, the Keptn Scheduler will not allow the Pod to be
+  scheduled.
 
 If all of the `pre-deployment` checks have finished successfully and the deadline has not been reached,
 the Keptn Scheduler allows the Pod to be scheduled.

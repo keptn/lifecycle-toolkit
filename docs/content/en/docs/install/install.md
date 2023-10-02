@@ -75,7 +75,7 @@ rather than the full Toolkit
 or if you need to change the size of the installation.
 
 To modify configuration options, download a copy of the
-[helm/chart/values.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/values.yaml)
+[chart/values.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/chart/values.yaml)
 file, modify some values, and use the modified file to install Keptn:
 
 1. Download the `values.yaml` file:
@@ -104,7 +104,7 @@ For more information,see
 
 * The [Helm Get Values](https://helm.sh/docs/helm/helm_get_values/)) document
 
-* The [helm-charts](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/README.md) page
+* The [helm-charts](https://github.com/keptn/lifecycle-toolkit/blob/main/chart/README.md) page
   contains the full list of available values.
 
 ## Use manifests

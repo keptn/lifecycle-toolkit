@@ -18,7 +18,7 @@ type IAnalysisPool interface {
 	DispatchAndCollect(ctx context.Context) (map[string]metricsapi.ProviderResult, error)
 }
 
-const workerPoolTimeout = 10 * time.Second
+const workerPoolTimeout = 2 * time.Minute
 
 type NewWorkersPoolFactory func(ctx context.Context, analysis *metricsapi.Analysis, objectives []metricsapi.Objective, numWorkers int, c client.Client, log logr.Logger, namespace string) (context.Context, IAnalysisPool)
 

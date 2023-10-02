@@ -6128,7 +6128,7 @@ spec:
         app.kubernetes.io/name: keptn-lifecycle-operator
         app.kubernetes.io/instance: release-name
       annotations:
-        kubectl.kubernetes.io/default-container: manager
+        kubectl.kubernetes.io/default-container: lifecycle-operator
         metrics.dynatrace.com/port: "2222"
         metrics.dynatrace.com/scrape: "true"
     spec:
@@ -6176,7 +6176,7 @@ spec:
           value: cluster.local
         image: ghcr.io/keptn/lifecycle-operator:v0.8.2
         imagePullPolicy: Always
-        name: manager
+        name: lifecycle-operator
         ports:
         - containerPort: 9443
           name: webhook-server

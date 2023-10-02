@@ -37,7 +37,8 @@ spec:
 ```
 
 The **WorkloadInstance CRD** contains information about the `pre-deployment` checks that
-need to be performed before the Pod can be scheduled. When the Workload Instance controller finishes these
+need to be performed before the Pod can be scheduled.
+When the Workload Instance controller finishes these
 pre-checks it will decide if the `pre-deployment` checks have finished successfully, to remove the gate from the Pod.
 The default scheduler can then allow the Pod to be scheduled to a node.
 If the `pre-deployment` checks have not yet finished, the gate will stay and the Pod will remain pending.

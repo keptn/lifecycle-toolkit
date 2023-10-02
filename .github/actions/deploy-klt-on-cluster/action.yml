@@ -104,12 +104,14 @@ runs:
           --set lifecycleOperator.image.repository="localhost:5000/keptn/lifecycle-operator" \
           --set lifecycleOperator.env.functionRunnerImage=localhost:5000/keptn/deno-runtime:${{ inputs.runtime_tag }} \
           --set lifecycleOperator.env.pythonRunnerImage=localhost:5000/keptn/python-runtime:${{ inputs.runtime_tag }} \
+          --debug --wait --timeout 1m
 
         helm install -n keptn-lifecycle-toolkit-system --create-namespace cert-manager ./klt-cert-manager/chart \
           --set imagePullPolicy=Never \
           --set image.tag=${{ inputs.runtime_tag }} \
           --set image.repository="localhost:5000/keptn/certificate-operator" \
           --debug --wait --timeout 1m
+
         helm install -n keptn-lifecycle-toolkit-system metrics-operator --create-namespace ./metrics-operator/chart  \
           --set imagePullPolicy=Never \
           --set env.enableKeptnAnalysis="true" \

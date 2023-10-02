@@ -1,6 +1,6 @@
 imagePullSecrets: []
 kubernetesClusterDomain: cluster.local
-lifecycleManagerConfig:
+lifecycleOperatorConfig:
   controllerManagerConfigYaml:
     health:
       healthProbeBindAddress: :8081
@@ -77,17 +77,6 @@ lifecycleWebhookService:
     protocol: TCP
     targetPort: 9443
   type: ClusterIP
-metricsManagerConfig:
-  controllerManagerConfigYaml:
-    health:
-      healthProbeBindAddress: :8081
-    leaderElection:
-      leaderElect: true
-      resourceName: 3f8532ca.keptn.sh
-    metrics:
-      bindAddress: 127.0.0.1:8080
-    webhook:
-      port: 9443
 scheduler:
   nodeSelector: {}
   replicas: 1

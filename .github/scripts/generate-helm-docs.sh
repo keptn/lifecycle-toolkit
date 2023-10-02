@@ -24,10 +24,10 @@ else
   echo "Readme Generator is already installed, continuing..."
 fi
 
-echo "Generating global readme now..."
-cat ./helm/chart/values.yaml ./helm/chart/doc.yaml > ./helm/chart/rendered.yaml
-readme-generator --values=./helm/chart/rendered.yaml --readme=./helm/chart/README.md
-rm ./helm/chart/rendered.yaml
+echo "Generating lifecycle operator readme now..."
+cat ./lifecycle-operator/chart/values.yaml ./lifecycle-operator/chart/doc.yaml > ./lifecycle-operator/chart/rendered.yaml
+readme-generator --values=./lifecycle-operator/chart/rendered.yaml --readme=./lifecycle-operator/chart/README.md
+rm ./lifecycle-operator/chart/rendered.yaml
 
 echo "Generating keptn cert manager readme now..."
 cat ./klt-cert-manager/chart/values.yaml ./klt-cert-manager/chart/doc.yaml > ./klt-cert-manager/chart/rendered.yaml

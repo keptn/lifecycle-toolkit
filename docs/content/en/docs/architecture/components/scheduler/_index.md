@@ -8,9 +8,11 @@ cascade:
 
 Keptn needs to interfere on the Kuberetes scheduling to be able to block
 the deployment of applications that do not satisfy Keptn defined pre-deployment checks.
+
 On Kubernetes versions older and including 1.26.0, Keptn uses a Scheduler to block applications deployment.
 The **Keptn Scheduler** is an integral component of Keptn that orchestrates
 the deployment process.
+
 From Keptn v0.8.4 onward, if you do have a K8s version greater than 1.26.0, instead of a scheduler plugin,
 Keptn
 uses [K8s Pod Scheduling Readiness](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness).

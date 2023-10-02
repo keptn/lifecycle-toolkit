@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics-operator
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/component: metrics-operator
+    control-plane: metrics-operator
+    keptn.sh/inject-cert: "true"
+  {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.config.replicas }}
+  selector:
+    matchLabels:
+      control-plane: metrics-operator
+    {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        control-plane: metrics-operator
+      {{- include "chart.selectorLabels" . | nindent 8 }}
+      annotations:
+        kubectl.kubernetes.io/default-container: metrics-operator
+    spec:
+      containers:
+      - args:
+        - webhook-server
+        - --leader-elect
+        - --adapter-port=6443
+        - --adapter-certs-dir=/tmp/metrics-adapter/serving-certs
+        - --v=10
+        command:
+        - /manager
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: EXPOSE_KEPTN_METRICS
+          value: {{ .Values.env.exposeKeptnMetrics | quote }}
+        - name: ENABLE_ANALYSIS
+          value: {{ .Values.env.enableKeptnAnalysis | quote }}
+        - name: METRICS_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.env.metricsControllerLogLevel | quote
+            }}
+        - name: ANALYSIS_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.env.analysisControllerLogLevel | quote
+            }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ .Values.kubernetesClusterDomain }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag
+          | default .Chart.AppVersion }}
+        name: metrics-operator
+        ports:
+        - containerPort: 9443
+          name: webhook-server
+          protocol: TCP
+        - containerPort: 9999
+          name: metrics
+          protocol: TCP
+        - containerPort: 6443
+          name: custom-metrics
+          protocol: TCP
+        resources: {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          allowPrivilegeEscalation: {{ .Values.containerSecurityContext.allowPrivilegeEscalation
+            }}
+          capabilities: {{- include "tplvalues.render" (dict "value" .Values.containerSecurityContext.capabilities
+            "context" $) | nindent 12 }}
+          privileged: {{ .Values.containerSecurityContext.privileged
+            }}
+          runAsGroup: {{ .Values.containerSecurityContext.runAsGroup
+            }}
+          runAsNonRoot: {{ .Values.containerSecurityContext.runAsNonRoot
+            }}
+          runAsUser: {{ .Values.containerSecurityContext.runAsUser
+            }}
+          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.containerSecurityContext.seccompProfile
+            "context" $) | nindent 12 }}
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs/
+          name: certs-dir
+        - mountPath: /tmp/metrics-adapter/serving-certs
+          name: adapter-certs-dir
+        {{- if .Values.livenessProbe }}
+        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.livenessProbe "context" $) | nindent 10 }}
+         {{- else }}
+        livenessProbe:
+         httpGet:
+           path: /healthz
+           port: 8081
+         initialDelaySeconds: 15
+         periodSeconds: 20
+        {{- end }}
+        {{- if .Values.readinessProbe }}
+        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.readinessProbe "context" $) | nindent 10 }}
+         {{- else }}
+        readinessProbe:
+         httpGet:
+           path: /readyz
+           port: 8081
+         initialDelaySeconds: 5
+         periodSeconds: 10
+        {{- end }}
+      imagePullSecrets: {{ .Values.imagePullSecrets | default list | toJson }}
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: metrics-operator
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - emptyDir: {}
+        name: certs-dir
+      - emptyDir: {}
+        name: adapter-certs-dir
+{{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- include "tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations: {{- include "tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
+{{- end }}

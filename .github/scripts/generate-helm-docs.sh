@@ -24,8 +24,19 @@ else
   echo "Readme Generator is already installed, continuing..."
 fi
 
-echo "Generating readme now..."
+echo "Generating global readme now..."
 cat ./helm/chart/values.yaml ./helm/chart/doc.yaml > ./helm/chart/rendered.yaml
 readme-generator --values=./helm/chart/rendered.yaml --readme=./helm/chart/README.md
+rm ./helm/chart/rendered.yaml
+
+echo "Generating keptn cert manager readme now..."
+cat ./klt-cert-manager/chart/values.yaml ./klt-cert-manager/chart/doc.yaml > ./klt-cert-manager/chart/rendered.yaml
+readme-generator --values=./klt-cert-manager/chart/rendered.yaml --readme=./klt-cert-manager/chart/README.md
+rm ./klt-cert-manager/chart/rendered.yaml
+
+echo "Generating keptn metrics operator readme now..."
+cat ./metrics-operator/chart/values.yaml ./metrics-operator/chart/doc.yaml > ./metrics-operator/chart/rendered.yaml
+readme-generator --values=./metrics-operator/chart/rendered.yaml --readme=./metrics-operator/chart/README.md
+rm ./metrics-operator/chart/rendered.yaml
 
 # Please be aware, the readme file needs to exist and needs to have a Parameters section, as only this section will be re-generated

@@ -26,7 +26,8 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]v1alpha3.ProviderResult
 	}
 
 	// get the value
-	floatVal, err := getValueFromMap(values, ComputeKey(obj.AnalysisValueTemplateRef))
+	floatVal, query, err := getResultFromMap(values, ComputeKey(obj.AnalysisValueTemplateRef))
+	result.Query = query
 	if err != nil {
 		result.Error = err
 		return result
@@ -50,17 +51,17 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]v1alpha3.ProviderResult
 	return result
 }
 
-func getValueFromMap(values map[string]v1alpha3.ProviderResult, key string) (float64, error) {
+func getResultFromMap(values map[string]v1alpha3.ProviderResult, key string) (float64, string, error) {
 	val, ok := values[key]
 	if !ok {
-		return 0.0, fmt.Errorf("required value '%s' not available", key)
+		return 0.0, "", fmt.Errorf("required value '%s' not available", key)
 	}
 	floatVal, err := strconv.ParseFloat(val.Value, 64)
 	if err != nil {
-		return 0.0, err
+		return 0.0, val.Query, err
 	}
 
-	return floatVal, nil
+	return floatVal, val.Query, nil
 }
 
 func ComputeKey(obj v1alpha3.ObjectReference) string {

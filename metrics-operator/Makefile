@@ -86,6 +86,10 @@ vet: ## Run go vet against code.
 unit-test: manifests generate fmt vet envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
 
+#command(make test) to run all tests 
+.PHONY: test
+test: unit-test
+
 ##@ Build
 .PHONY: build
 build: generate ## Build manager binary.
@@ -205,3 +209,8 @@ push-local:
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 ;\
 	fi
 	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+
+##golangci-lint
+.PHONY: lint
+lint:
+	${GOPATH}/bin/golangci-lint run --config ../.golangci.yml -v

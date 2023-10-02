@@ -125,6 +125,10 @@ performance-test: manifests generate envtest ## Run tests.
 e2e-test: manifests generate envtest ## Run tests.
 	go test ./test/e2e -v -coverprofile cover.out --ginkgo.focus="E2E"
 
+#command(make test) to run all tests 
+.PHONY: test
+test: unit-test component-test performance-test e2e-test 
+
 ##@ Build
 .PHONY: build
 build: generate ## Build manager binary.
@@ -244,3 +248,8 @@ push-local:
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 ;\
 	fi
 	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+
+##golangci-lint
+.PHONY: lint
+lint:
+	${GOPATH}/bin/golangci-lint run --config ../.golangci.yml -v

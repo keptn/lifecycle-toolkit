@@ -57,7 +57,7 @@ Keptn makes extensive use of Kubernetes
 It is important to use the related terminology correctly:
 
 * A "Resource Definition (RD)" is the definition (or syntax)
-  of a resource that is part of the Kubernetes core
+  of a resource that is part of the official Kubernetes API
 
 * A "Custom Resource Definition (CRD)" is the definition
   (or syntax) of a resource that Keptn (or some other product)

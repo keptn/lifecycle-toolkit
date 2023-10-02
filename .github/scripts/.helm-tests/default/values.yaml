@@ -1,6 +1,6 @@
 imagePullSecrets: []
 kubernetesClusterDomain: cluster.local
-lifecycleManagerConfig:
+lifecycleOperatorConfig:
   controllerManagerConfigYaml:
     health:
       healthProbeBindAddress: :8081

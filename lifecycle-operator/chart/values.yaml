@@ -1,7 +1,7 @@
 imagePullSecrets: []
 kubernetesClusterDomain: cluster.local
 schedulingGatesEnabled: false
-lifecycleManagerConfig:
+lifecycleOperatorConfig:
   health:
     healthProbeBindAddress: :8081
   leaderElection:

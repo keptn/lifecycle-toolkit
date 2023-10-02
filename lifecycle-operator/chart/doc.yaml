@@ -1,53 +1,11 @@
-# yamllint disable rule:line-length
-## @section Keptn Scheduler
-## @extra scheduler.containerSecurityContext Sets security context
-## @skip scheduler.containerSecurityContext.allowPrivilegeEscalation
-## @skip scheduler.containerSecurityContext.capabilities.drop
-## @skip scheduler.containerSecurityContext.privileged
-## @skip scheduler.containerSecurityContext.readOnlyRootFilesystem
-## @skip scheduler.containerSecurityContext.runAsNonRoot
-## @skip scheduler.containerSecurityContext.runAsUser
-## @skip scheduler.containerSecurityContext.seccompProfile.type
-
-## @param scheduler.env.otelCollectorUrl sets url for open telemetry collector
-
-## @param scheduler.image.repository set image repository for scheduler
-## @param scheduler.image.tag set image tag for scheduler
-## @param scheduler.imagePullPolicy set image pull policy for scheduler
-
-## @extra scheduler.livenessProbe customizable liveness probe for the scheduler
-## @skip scheduler.livenessProbe.httpGet.path
-## @skip scheduler.livenessProbe.httpGet.port
-## @skip scheduler.livenessProbe.httpGet.scheme
-## @skip scheduler.livenessProbe.initialDelaySeconds
-
-## @extra scheduler.readinessProbe customizable readiness probe for the scheduler
-## @skip scheduler.readinessProbe.httpGet.path
-## @skip scheduler.readinessProbe.httpGet.port
-## @skip scheduler.readinessProbe.httpGet.scheme
-
-## @extra scheduler.resources sets cpu and memory resurces/limits for scheduler
-## @skip scheduler.resources.limits.cpu
-## @skip scheduler.resources.limits.memory
-## @skip scheduler.resources.requests.cpu
-## @skip scheduler.resources.requests.memory
-
-## @param  schedulerConfig.leaderElection.leaderElect enables leader election for multiple replicas of the scheduler
-## @param  schedulerConfig.profiles[0].plugins.permit.enabled[0].name enables permit plugin
-## @param  schedulerConfig.profiles[0].schedulerName changes scheduler name
-
-## @param scheduler.nodeSelector adds node selectors for scheduler
-## @param scheduler.replicas modifies replicas
-## @param scheduler.tolerations adds tolerations for scheduler
-## @param scheduler.topologySpreadConstraints add topology constraints for scheduler
 
 ## @section Keptn Lifecycle Operator common
 
-## @param    lifecycleManagerConfig.health.healthProbeBindAddress setup on what address to start the default health handler
-## @param    lifecycleManagerConfig.leaderElection.leaderElect enable leader election for multiple replicas of the lifecycle operator
-## @param    lifecycleManagerConfig.leaderElection.resourceName define LeaderElectionID
-## @param    lifecycleManagerConfig.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
-## @param    lifecycleManagerConfig.webhook.port setup port for the lifecycle operator admission webhook
+## @param    lifecycleOperatorConfig.health.healthProbeBindAddress setup on what address to start the default health handler
+## @param    lifecycleOperatorConfig.leaderElection.leaderElect enable leader election for multiple replicas of the lifecycle operator
+## @param    lifecycleOperatorConfig.leaderElection.resourceName define LeaderElectionID
+## @param    lifecycleOperatorConfig.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
+## @param    lifecycleOperatorConfig.webhook.port setup port for the lifecycle operator admission webhook
 
 ## @param   lifecycleOperator.replicas customize number of installed lifecycle operator replicas
 
@@ -119,3 +77,46 @@
 ## @param  kubernetesClusterDomain overrides domain.local
 ## @param  imagePullSecrets global value for image registry secret
 ## @param  schedulingGatesEnabled enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version
+
+# yamllint disable rule:line-length
+## @section Keptn Scheduler
+## @extra scheduler.containerSecurityContext Sets security context
+## @skip scheduler.containerSecurityContext.allowPrivilegeEscalation
+## @skip scheduler.containerSecurityContext.capabilities.drop
+## @skip scheduler.containerSecurityContext.privileged
+## @skip scheduler.containerSecurityContext.readOnlyRootFilesystem
+## @skip scheduler.containerSecurityContext.runAsNonRoot
+## @skip scheduler.containerSecurityContext.runAsUser
+## @skip scheduler.containerSecurityContext.seccompProfile.type
+
+## @param scheduler.env.otelCollectorUrl sets url for open telemetry collector
+
+## @param scheduler.image.repository set image repository for scheduler
+## @param scheduler.image.tag set image tag for scheduler
+## @param scheduler.imagePullPolicy set image pull policy for scheduler
+
+## @extra scheduler.livenessProbe customizable liveness probe for the scheduler
+## @skip scheduler.livenessProbe.httpGet.path
+## @skip scheduler.livenessProbe.httpGet.port
+## @skip scheduler.livenessProbe.httpGet.scheme
+## @skip scheduler.livenessProbe.initialDelaySeconds
+
+## @extra scheduler.readinessProbe customizable readiness probe for the scheduler
+## @skip scheduler.readinessProbe.httpGet.path
+## @skip scheduler.readinessProbe.httpGet.port
+## @skip scheduler.readinessProbe.httpGet.scheme
+
+## @extra scheduler.resources sets cpu and memory resurces/limits for scheduler
+## @skip scheduler.resources.limits.cpu
+## @skip scheduler.resources.limits.memory
+## @skip scheduler.resources.requests.cpu
+## @skip scheduler.resources.requests.memory
+
+## @param  schedulerConfig.leaderElection.leaderElect enables leader election for multiple replicas of the scheduler
+## @param  schedulerConfig.profiles[0].plugins.permit.enabled[0].name enables permit plugin
+## @param  schedulerConfig.profiles[0].schedulerName changes scheduler name
+
+## @param scheduler.nodeSelector adds node selectors for scheduler
+## @param scheduler.replicas modifies replicas
+## @param scheduler.tolerations adds tolerations for scheduler
+## @param scheduler.topologySpreadConstraints add topology constraints for scheduler

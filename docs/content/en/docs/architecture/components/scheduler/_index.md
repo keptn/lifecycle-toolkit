@@ -15,7 +15,7 @@ From Keptn v0.8.4 onward, if you do have a K8s version greater than 1.26.0, inst
 Keptn
 uses [K8s Pod Scheduling Readiness](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness).
 
-## Keptn Scheduling Gates for K8s 1.27.0 and above
+# Keptn Scheduling Gates for K8s 1.27.0 and above
 
 Firstly the Mutating Webhook checks for annotations on Pods to see if it is annotated with
 [Keptn specific annotations](https://main.lifecycle.keptn.sh/docs/implementing/integrate/#basic-annotations).
@@ -54,7 +54,7 @@ metadata:
     keptn.sh/scheduling-gate-removed: "true"
 ```
 
-## Keptn Scheduler for K8s 1.26.0 and lower
+# Keptn Scheduler for K8s 1.26.0 and lower
 
 The **Keptn Scheduler** works by registering itself as a Permit plugin within the Kubernetes
 scheduling cycle that ensures that Pods are scheduled to a node until and unless the
@@ -125,7 +125,7 @@ Also the Keptn Scheduler will not schedule Pods to nodes that have failed `pre-d
 checks in the past.
 This helps to prevent Pods from being scheduled to nodes that are not ready for them.
 
-### Integrating Keptn with your custom scheduler
+# Integrating Keptn with your custom scheduler
 
 Keptn scheduling logics are compatible with
 the [Scheduler Framework](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/).

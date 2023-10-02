@@ -1,5 +1,5 @@
 apiVersion: v2
-name: klt
+name: keptn-lifecycle-operator
 description: A Helm chart for Keptn Lifecycle Toolkit, a set of tools to enable cloud-native application lifecycle management
 icon: "https://raw.githubusercontent.com/cncf/artwork/master/projects/keptn/icon/color/keptn-icon-color.svg"
 home: https://keptn.sh

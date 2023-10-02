@@ -1,4 +1,4 @@
-{{- if and (le .Capabilities.KubeVersion.Minor "16") (not .Values.schedulingGatesEnabled) }}
+{{- if or (le .Capabilities.KubeVersion.Minor "16") (not .Values.schedulingGatesEnabled) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:

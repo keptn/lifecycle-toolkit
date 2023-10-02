@@ -25,7 +25,7 @@ func NewWorkersPool(ctx context.Context, analysis *metricsapi.Analysis, objectiv
 	if numJobs <= numWorkers { // do not start useless go routines
 		numWorkers = numJobs
 	}
-	_, cancel := context.WithTimeout(ctx, 10*time.Second)
+	childCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	providerChans := make(map[string]chan metricstypes.ProviderRequest, len(providers.SupportedProviders))
 
 	assigner := TaskAssigner{tasks: objectives, numWorkers: numWorkers}
@@ -49,7 +49,7 @@ func NewWorkersPool(ctx context.Context, analysis *metricsapi.Analysis, objectiv
 		providers:            providerChans,
 		cancel:               cancel,
 	}
-	return ctx, WorkersPool{
+	return childCtx, WorkersPool{
 		numWorkers:     numWorkers,
 		numJobs:        numJobs,
 		cancel:         cancel,

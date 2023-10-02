@@ -1,23 +1,23 @@
 ---
-title: Keptn Lifecycle Scheduling
+title: Keptn integration with Scheduling
 linktitle: Scheduler and Scheduling Gates
-description: Basic understanding of the Keptn Scheduler
+description: Basic understanding of how Keptn integrates with Kubernetes Pod Scheduling
 weight: 80
 cascade:
 ---
 
-Keptn needs to interfere on the Kuberetes scheduling to be able to block
+Keptn needs to integrate with Kubernetes scheduling to block
 the deployment of applications that do not satisfy Keptn defined pre-deployment checks.
 
-On Kubernetes versions older and including 1.26.0, Keptn uses a Scheduler to block applications deployment.
+On Kubernetes versions older and including 1.26, Keptn uses a Scheduler to block applications deployment.
 The **Keptn Scheduler** is an integral component of Keptn that orchestrates
 the deployment process.
 
-From Keptn v0.8.4 onward, if you do have a K8s version greater than 1.26.0, instead of a scheduler plugin,
+From Keptn v0.8.4 onward, if you do have a K8s version greater than 1.26,
 Keptn
-uses [K8s Pod Scheduling Readiness](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness).
+uses the [Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness).
 
-## Keptn Scheduling Gates for K8s 1.27.0 and above
+## Keptn Scheduling Gates for K8s 1.27 and above
 
 When you apply a workload to a K8s cluster, the Mutating Webhook checks for annotations on Pods to
 see if it is annotated with
@@ -42,7 +42,7 @@ The **WorkloadInstance CRD** contains information about the `pre-deployment` che
 need to be performed before the Pod can be scheduled.
 If the `pre-deployment` checks have finished successfully, the WorkloadInstance Controller removes the gate from the
 Pod.
-The default scheduler can then allow the Pod to be scheduled to a node.
+The scheduler can then allow the Pod to be scheduled to a node.
 If the `pre-deployment` checks have not yet finished, the gate will stay and the Pod will remain pending.
 When removing the gate, the WorkloadInstance controller also adds the following annotation, so that if there is an
 update of the spec the Pod will not be gated again:
@@ -56,7 +56,7 @@ metadata:
     keptn.sh/scheduling-gate-removed: "true"
 ```
 
-## Keptn Scheduler for K8s 1.26.0 and lower
+## Keptn Scheduler for K8s 1.26 and lower
 
 The **Keptn Scheduler** works by registering itself as a Permit plugin within the Kubernetes
 scheduling cycle that ensures that Pods are scheduled to a node until and unless the

@@ -28,3 +28,6 @@ load-report.*
 *~
 
 .dccache*
+
+*.tgz
+chart/rendered.yaml

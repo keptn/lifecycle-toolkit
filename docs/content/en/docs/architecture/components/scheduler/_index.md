@@ -108,4 +108,4 @@ This helps to prevent Pods from being scheduled to nodes that are not ready for 
 Keptn scheduling logics are compatible with
 the [Scheduler Framework](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/).
 Keptn will not work with a custom scheduler unless it is implemented as
-a [scheduler plugins](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#plugin-configuration).
+a [scheduler plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#plugin-configuration).

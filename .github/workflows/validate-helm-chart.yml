@@ -33,8 +33,9 @@ jobs:
           cd ..
 
       - name: Check if Helm doc is up to date
+        ## TODO: test also other helm docs (metrics-operator, certificate-operator)
         run: |
-          cd ./helm/chart/
+          cd ./lifecycle-operator/chart/
           cp ./README.md ./README-old.md
           cat ./values.yaml ./doc.yaml > ./rendered.yaml
           readme-generator --values=./rendered.yaml --readme=./README.md

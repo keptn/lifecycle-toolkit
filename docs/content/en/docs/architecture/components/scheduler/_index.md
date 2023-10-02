@@ -15,15 +15,17 @@ the deployment process.
 
 From Keptn v0.8.4 onward, if you do have a K8s version greater than 1.26,
 Keptn
-uses the [Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness).
+uses
+the [Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness).
 
 ## Keptn Scheduling Gates for K8s 1.27 and above
 
 When you apply a workload to a K8s cluster, the Mutating Webhook checks for annotations on Pods to
 see if it is annotated with
 [Keptn specific annotations](https://main.lifecycle.keptn.sh/docs/implementing/integrate/#basic-annotations).
-If the annotations are present, the Webhook adds a gate to the Pod called "keptn-prechecks-gate",
-this is a spec that tells the default scheduler to wait for Keptn's checks before assigning the pod to a node.
+If the annotations are present, the Webhook adds a gate to the Pod called `keptn-prechecks-gate`,
+this is a spec that tells the Kubernetes scheduling framework to wait for Keptn's checks before assigning the pod to a
+node.
 
 For instance a pod gated by keptn will look like the following:
 

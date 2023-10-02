@@ -6,12 +6,14 @@ weight: 80
 cascade:
 ---
 
+Keptn needs to interfere on the Kuberetes scheduling to be able to block
+the deployment of applications that do not satisfy Keptn defined pre-deployment checks.
 On Kubernetes versions older and including 1.26.0, Keptn uses a Scheduler to block applications deployment.
-From Keptn v0.8.4 onward, if you do have a K8s version greater than 1.26.0, instead of a scheduler plugin,
-Keptn
-uses [K8s Pod Scheduling Readiness](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness).  
 The **Keptn Scheduler** is an integral component of Keptn that orchestrates
 the deployment process.
+From Keptn v0.8.4 onward, if you do have a K8s version greater than 1.26.0, instead of a scheduler plugin,
+Keptn
+uses [K8s Pod Scheduling Readiness](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness).
 
 ## Keptn Scheduling Gates for K8s 1.27.0 and above
 
@@ -31,7 +33,7 @@ metadata:
 spec:
   schedulingGates:
     - name: "keptn-prechecks-gate"
-
+  ...
 ```
 
 The **WorkloadInstance CRD** contains information about the `pre-deployment` checks that
@@ -74,6 +76,17 @@ Firstly the Mutating Webhook checks for annotations on Pods to see if it is anno
 [Keptn specific annotations](https://main.lifecycle.keptn.sh/docs/implementing/integrate/#basic-annotations).
 If the annotations are present, the Webhook assigns the **Keptn Scheduler** to the Pod.
 This ensures that the Keptn Scheduler only gets Pods that have been annotated for it.
+A Pod `test-pod` modified by the Mutating Webhook will look as follows:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+spec:
+  schedulerName: default-scheduler
+  ...
+```
 
 If the Pod is annotated with Keptn specific annotations, the Keptn Scheduler retrieves
 the WorkloadInstance CRD that is associated with the Pod.

@@ -14,7 +14,8 @@ The **Keptn Scheduler** is an integral component of Keptn that orchestrates
 the deployment process.
 
 If you set Keptn helm chart value `schedulingGatesEnabled` to `true`, and you do have a K8s version greater than 1.26,
-Keptn will not install a scheduler plugin, but it will use
+Keptn does not install a scheduler plugin.
+Instead, it uses
 the [Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness).
 
 ## Keptn Scheduling Gates for K8s 1.27 and above

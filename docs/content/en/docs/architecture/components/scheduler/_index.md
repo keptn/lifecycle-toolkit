@@ -40,11 +40,12 @@ spec:
 
 The **WorkloadInstance CRD** contains information about the `pre-deployment` checks that
 need to be performed before the Pod can be scheduled.
-If the `pre-deployment` checks have finished successfully, the WorkloadInstance Controller removes the gate from the Pod.
+If the `pre-deployment` checks have finished successfully, the WorkloadInstance Controller removes the gate from the
+Pod.
 The default scheduler can then allow the Pod to be scheduled to a node.
 If the `pre-deployment` checks have not yet finished, the gate will stay and the Pod will remain pending.
-When removing the gate, the WorkloadInstance controller also adds the following annotation, so that if there is an update of the spec the 
-Pod will not be gated again:
+When removing the gate, the WorkloadInstance controller also adds the following annotation, so that if there is an
+update of the spec the Pod will not be gated again:
 
 ```yaml
 apiVersion: v1

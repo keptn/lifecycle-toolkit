@@ -1,4 +1,4 @@
-{{- if not .Values.schedulingGatesEnabled }}
+{{- if and (le .Capabilities.KubeVersion.Minor "16") (not .Values.schedulingGatesEnabled) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

@@ -6,45 +6,25 @@ and application health checks
 <!-- markdownlint-disable MD012 -->
 ## Parameters
 
-### Keptn Scheduler
-
-| Name                                                         | Description                                                    | Value                     |
-| ------------------------------------------------------------ | -------------------------------------------------------------- | ------------------------- |
-| `scheduler.containerSecurityContext`                         | Sets security context                                          |                           |
-| `scheduler.env.otelCollectorUrl`                             | sets url for open telemetry collector                          | `otel-collector:4317`     |
-| `scheduler.image.repository`                                 | set image repository for scheduler                             | `ghcr.io/keptn/scheduler` |
-| `scheduler.image.tag`                                        | set image tag for scheduler                                    | `v0.8.2`                  |
-| `scheduler.imagePullPolicy`                                  | set image pull policy for scheduler                            | `Always`                  |
-| `scheduler.livenessProbe`                                    | customizable liveness probe for the scheduler                  |                           |
-| `scheduler.readinessProbe`                                   | customizable readiness probe for the scheduler                 |                           |
-| `scheduler.resources`                                        | sets cpu and memory resurces/limits for scheduler              |                           |
-| `schedulerConfig.leaderElection.leaderElect`                 | enables leader election for multiple replicas of the scheduler | `false`                   |
-| `schedulerConfig.profiles[0].plugins.permit.enabled[0].name` | enables permit plugin                                          | `KLCPermit`               |
-| `schedulerConfig.profiles[0].schedulerName`                  | changes scheduler name                                         | `keptn-scheduler`         |
-| `scheduler.nodeSelector`                                     | adds node selectors for scheduler                              | `{}`                      |
-| `scheduler.replicas`                                         | modifies replicas                                              | `1`                       |
-| `scheduler.tolerations`                                      | adds tolerations for scheduler                                 | `[]`                      |
-| `scheduler.topologySpreadConstraints`                        | add topology constraints for scheduler                         | `[]`                      |
-
 ### Keptn Lifecycle Operator common
 
-| Name                                                   | Description                                                                                                                                                   | Value               |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| Name                                                    | Description                                                                                                                                                   | Value               |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
 | `lifecycleOperatorConfig.health.healthProbeBindAddress` | setup on what address to start the default health handler                                                                                                     | `:8081`             |
 | `lifecycleOperatorConfig.leaderElection.leaderElect`    | enable leader election for multiple replicas of the lifecycle operator                                                                                        | `true`              |
 | `lifecycleOperatorConfig.leaderElection.resourceName`   | define LeaderElectionID                                                                                                                                       | `6b866dd9.keptn.sh` |
 | `lifecycleOperatorConfig.metrics.bindAddress`           | MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving. | `127.0.0.1:8080`    |
 | `lifecycleOperatorConfig.webhook.port`                  | setup port for the lifecycle operator admission webhook                                                                                                       | `9443`              |
-| `lifecycleOperator.replicas`                           | customize number of installed lifecycle operator replicas                                                                                                     | `1`                 |
-| `lifecycleOperatorMetricsService`                      | Adjust settings here to change the k8s service for scraping Prometheus metrics                                                                                |                     |
-| `lifecycleWebhookService`                              | Mutating Webhook Configurations for lifecycle Operator                                                                                                        |                     |
-| `lifecycleWebhookService.ports[0].port`                |                                                                                                                                                               | `443`               |
-| `lifecycleWebhookService.ports[0].protocol`            |                                                                                                                                                               | `TCP`               |
-| `lifecycleWebhookService.ports[0].targetPort`          |                                                                                                                                                               | `9443`              |
-| `lifecycleWebhookService.type`                         |                                                                                                                                                               | `ClusterIP`         |
-| `lifecycleOperator.nodeSelector`                       | add custom nodes selector to lifecycle operator                                                                                                               | `{}`                |
-| `lifecycleOperator.tolerations`                        | add custom tolerations to lifecycle operator                                                                                                                  | `[]`                |
-| `lifecycleOperator.topologySpreadConstraints`          | add custom topology constraints to lifecycle operator                                                                                                         | `[]`                |
+| `lifecycleOperator.replicas`                            | customize number of installed lifecycle operator replicas                                                                                                     | `1`                 |
+| `lifecycleOperatorMetricsService`                       | Adjust settings here to change the k8s service for scraping Prometheus metrics                                                                                |                     |
+| `lifecycleWebhookService`                               | Mutating Webhook Configurations for lifecycle Operator                                                                                                        |                     |
+| `lifecycleWebhookService.ports[0].port`                 |                                                                                                                                                               | `443`               |
+| `lifecycleWebhookService.ports[0].protocol`             |                                                                                                                                                               | `TCP`               |
+| `lifecycleWebhookService.ports[0].targetPort`           |                                                                                                                                                               | `9443`              |
+| `lifecycleWebhookService.type`                          |                                                                                                                                                               | `ClusterIP`         |
+| `lifecycleOperator.nodeSelector`                        | add custom nodes selector to lifecycle operator                                                                                                               | `{}`                |
+| `lifecycleOperator.tolerations`                         | add custom tolerations to lifecycle operator                                                                                                                  | `[]`                |
+| `lifecycleOperator.topologySpreadConstraints`           | add custom topology constraints to lifecycle operator                                                                                                         | `[]`                |
 
 ### Keptn Lifecycle Operator controller
 
@@ -84,3 +64,23 @@ and application health checks
 | `kubernetesClusterDomain` | overrides domain.local                                                                                                                          | `cluster.local` |
 | `imagePullSecrets`        | global value for image registry secret                                                                                                          | `[]`            |
 | `schedulingGatesEnabled`  | enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version | `false`         |
+
+### Keptn Scheduler
+
+| Name                                                         | Description                                                    | Value                     |
+| ------------------------------------------------------------ | -------------------------------------------------------------- | ------------------------- |
+| `scheduler.containerSecurityContext`                         | Sets security context                                          |                           |
+| `scheduler.env.otelCollectorUrl`                             | sets url for open telemetry collector                          | `otel-collector:4317`     |
+| `scheduler.image.repository`                                 | set image repository for scheduler                             | `ghcr.io/keptn/scheduler` |
+| `scheduler.image.tag`                                        | set image tag for scheduler                                    | `v0.8.2`                  |
+| `scheduler.imagePullPolicy`                                  | set image pull policy for scheduler                            | `Always`                  |
+| `scheduler.livenessProbe`                                    | customizable liveness probe for the scheduler                  |                           |
+| `scheduler.readinessProbe`                                   | customizable readiness probe for the scheduler                 |                           |
+| `scheduler.resources`                                        | sets cpu and memory resurces/limits for scheduler              |                           |
+| `schedulerConfig.leaderElection.leaderElect`                 | enables leader election for multiple replicas of the scheduler | `false`                   |
+| `schedulerConfig.profiles[0].plugins.permit.enabled[0].name` | enables permit plugin                                          | `KLCPermit`               |
+| `schedulerConfig.profiles[0].schedulerName`                  | changes scheduler name                                         | `keptn-scheduler`         |
+| `scheduler.nodeSelector`                                     | adds node selectors for scheduler                              | `{}`                      |
+| `scheduler.replicas`                                         | modifies replicas                                              | `1`                       |
+| `scheduler.tolerations`                                      | adds tolerations for scheduler                                 | `[]`                      |
+| `scheduler.topologySpreadConstraints`                        | add topology constraints for scheduler                         | `[]`                      |

@@ -44,7 +44,7 @@ The earlier project is called "Keptn v1".
 
 The Keptn project is a "toolkit" with three use cases, named:
 
-* Custom metrics (or Deployment data access)
+* Metrics (or Deployment data access)
 
 * Observability (or Deployment observability)
 

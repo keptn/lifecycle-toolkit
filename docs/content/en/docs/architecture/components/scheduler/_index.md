@@ -13,9 +13,8 @@ On Kubernetes versions older and including 1.26, Keptn uses a Scheduler to block
 The **Keptn Scheduler** is an integral component of Keptn that orchestrates
 the deployment process.
 
-From Keptn v0.8.4 onward, if you do have a K8s version greater than 1.26,
-Keptn
-uses
+If you set Keptn helm chart value `schedulingGatesEnabled` to `true`, and you do have a K8s version greater than 1.26,
+Keptn will not install a scheduler plugin, but it will use
 the [Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness).
 
 ## Keptn Scheduling Gates for K8s 1.27 and above
@@ -28,17 +27,7 @@ this is a spec that tells the Kubernetes scheduling framework to wait for Keptn'
 node.
 
 For instance a pod gated by keptn will look like the following:
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: test-pod
-spec:
-  schedulingGates:
-    - name: "keptn-prechecks-gate"
-  ...
-```
+{{<embed path="/docs/assets/scheduler-gates/gated.yaml">}}
 
 The **WorkloadInstance CRD** contains information about the `pre-deployment` checks that
 need to be performed before the Pod can be scheduled.
@@ -49,14 +38,7 @@ If the `pre-deployment` checks have not yet finished, the gate will stay and the
 When removing the gate, the WorkloadInstance controller also adds the following annotation, so that if there is an
 update of the spec the Pod will not be gated again:
 
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: test-pod
-  annotations:
-    keptn.sh/scheduling-gate-removed: "true"
-```
+{{<embed path="/docs/assets/scheduler-gates/gate-removed.yaml">}}
 
 ## Keptn Scheduler for K8s 1.26 and lower
 
@@ -83,15 +65,7 @@ If the annotations are present, the Webhook assigns the **Keptn Scheduler** to t
 This ensures that the Keptn Scheduler only gets Pods that have been annotated for it.
 A Pod `test-pod` modified by the Mutating Webhook will look as follows:
 
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: test-pod
-spec:
-  schedulerName: default-scheduler
-  ...
-```
+{{<embed path="/docs/assets/scheduler-gates/scheduler.yaml">}}
 
 If the Pod is annotated with Keptn specific annotations, the Keptn Scheduler retrieves
 the WorkloadInstance CRD that is associated with the Pod.

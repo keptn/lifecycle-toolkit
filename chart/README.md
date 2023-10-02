@@ -1,4 +1,4 @@
-# Keptn
+# Keptn Helm Chart
 
 Keptn provides a “cloud-native” approach for managing the application release lifecycle
 metrics, observability, health checks, with pre- and post-deployment evaluations and tasks.

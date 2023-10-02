@@ -94,6 +94,10 @@ runs:
       run: |
         echo "Installing Keptn using helm"
         helm version
+        
+        helm dependency update
+        helm dependency build
+        
         helm install -n keptn-lifecycle-toolkit-system --create-namespace keptn ./chart \
           --set lifecycleOperator.schedulingGatesEnabled=${{ inputs.scheduling-gates }} \
           --set lifecycleOperator.scheduler.imagePullPolicy=Never \

@@ -1,7 +1,7 @@
 # Keptn
 
 Keptn provides a cloud-native approach for pre- and post-deployment,
-as well as the concept of application health checks
+and application health checks
 
 <!-- markdownlint-disable MD012 -->
 ## Parameters

@@ -9,7 +9,9 @@ cascade:
 Keptn needs to integrate with Kubernetes scheduling to block
 the deployment of applications that do not satisfy Keptn defined pre-deployment checks.
 
-On Kubernetes versions older and including 1.26, Keptn uses a Scheduler to block application deployment.
+On Kubernetes versions 1.26 and older,
+Keptn uses the **Keptn Scheduler** to block application deployment when appropriate
+and orchestrate the deployment process.
 The **Keptn Scheduler** is an integral component of Keptn that orchestrates
 the deployment process.
 

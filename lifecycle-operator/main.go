@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -49,6 +50,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
+	metricsapi "go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/sdk/metric"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -97,6 +99,8 @@ type envConfig struct {
 	KeptnOptionsCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
 
+const KeptnLifecycleActiveMetric = "keptn_lifecycle_active"
+
 //nolint:funlen,gocognit,gocyclo
 func main() {
 	var env envConfig
@@ -121,6 +125,14 @@ func main() {
 	}
 	provider := metric.NewMeterProvider(metric.WithReader(exporter))
 	meter := provider.Meter("keptn/task")
+
+	keptnLifecycleActive, err := meter.Int64Counter(KeptnLifecycleActiveMetric, metricsapi.WithDescription("signals that Keptn Lifecycle Operator is installed correctly and ready"))
+
+	if err != nil {
+		setupLog.Error(err, "unable to create metric "+KeptnLifecycleActiveMetric)
+		os.Exit(1)
+	}
+
 	keptnMeters := telemetry.SetUpKeptnTaskMeters(meter)
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
@@ -350,6 +362,10 @@ func main() {
 		setupLog.Error(err, "unable to set up ready check")
 		os.Exit(1)
 	}
+
+	// Set the metric value as soon as the operator starts
+	setupLog.Info("Keptn lifecycle-operator is alive")
+	keptnLifecycleActive.Add(context.Background(), 1)
 	if !disableWebhook {
 		webhookBuilder = webhookBuilder.SetCertificateWatcher(
 			certificates.NewCertificateWatcher(

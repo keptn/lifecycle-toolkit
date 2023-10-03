@@ -15,7 +15,7 @@ echo "running Helm tests"
   for test in $tests
   do
     echo "Testing $test"
-    ## TODO: test also other helm charts (metrics-operator, certificate-operator)
+    helm dependency build
     helm template keptn-test --namespace helmtests -f $test/values.yaml ./chart > $test/helm_tests_output.yaml
     if [ $? -ne 0 ]
     then

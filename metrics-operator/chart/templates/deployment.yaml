@@ -10,7 +10,7 @@ metadata:
     keptn.sh/inject-cert: "true"
   {{- include "chart.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.config.replicas }}
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       control-plane: metrics-operator

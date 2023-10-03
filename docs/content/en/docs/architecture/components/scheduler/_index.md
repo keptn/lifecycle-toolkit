@@ -29,7 +29,7 @@ This spec tells the Kubernetes scheduling framework
 to wait for  the Keptn checks before assigning the pod to a node.
 
 For instance a pod gated by keptn looks like the following:
-{{<embed path="/docs/assets/scheduler-gates/gated.yaml">}}
+{{< embed path="/docs/assets/scheduler-gates/gated.yaml" >}}
 
 The **WorkloadInstance CRD** contains information about the `pre-deployment` checks that
 need to be performed before the Pod can be scheduled.
@@ -41,7 +41,7 @@ When removing the gate, the WorkloadInstance controller also adds the following 
 if the spec is updated,
 the Pod is not gated again:
 
-{{<embed path="/docs/assets/scheduler-gates/gate-removed.yaml">}}
+{{< embed path="/docs/assets/scheduler-gates/gate-removed.yaml" >}}
 
 ## Keptn Scheduler for K8s 1.26 and earlier
 
@@ -68,7 +68,7 @@ If the annotations are present, the Webhook assigns the **Keptn Scheduler** to t
 This ensures that the Keptn Scheduler only gets Pods that have been annotated for it.
 A Pod `test-pod` modified by the Mutating Webhook looks as follows:
 
-{{<embed path="/docs/assets/scheduler-gates/scheduler.yaml">}}
+{{< embed path="/docs/assets/scheduler-gates/scheduler.yaml" >}}
 
 If the Pod is annotated with Keptn specific annotations, the Keptn Scheduler retrieves
 the WorkloadInstance CRD that is associated with the Pod.

@@ -17,6 +17,7 @@ greater than 1.26, Keptn does not install a scheduler plugin.
 Instead, it uses
 the [Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness) 
 to gate Pods until the required deployment checks pass.
+
 ## Keptn Scheduling Gates for K8s 1.27 and above
 
 When you apply a workload to a K8s cluster,

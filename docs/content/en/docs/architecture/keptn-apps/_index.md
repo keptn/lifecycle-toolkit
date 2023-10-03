@@ -3,7 +3,6 @@ title: KeptnApp and KeptnWorkload resources
 linktitle: Keptn Applications and Keptn Workloads
 description: How Keptn applications work
 weight: 50
-cascade:
 ---
 
 ## Keptn Workloads

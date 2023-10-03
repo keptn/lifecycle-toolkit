@@ -3,7 +3,6 @@ title: Keptn integration with Scheduling
 linktitle: Scheduler and Scheduling Gates
 description: Basic understanding of how Keptn integrates with Kubernetes Pod Scheduling
 weight: 80
-cascade:
 ---
 
 Keptn needs to integrate with Kubernetes scheduling to block
@@ -29,6 +28,7 @@ This spec tells the Kubernetes scheduling framework
 to wait for  the Keptn checks before assigning the pod to a node.
 
 For instance a pod gated by keptn looks like the following:
+
 {{< embed path="/docs/assets/scheduler-gates/gated.yaml" >}}
 
 The **WorkloadInstance CRD** contains information about the `pre-deployment` checks that

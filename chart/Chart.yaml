@@ -54,17 +54,14 @@ appVersion: "v0.8.2" # x-release-please-version
 
 dependencies:
   - name: keptn-cert-manager
-    alias: certManager
     version: 0.1.0
     condition: certManager.enabled
     repository: "file://../klt-cert-manager/chart"
   - name: keptn-lifecycle-operator
-    alias: lifecycleOperator
     version: 0.1.0
     condition: lifecycleOperator.enabled
     repository: "file://../lifecycle-operator/chart"
   - name: keptn-metrics-operator
-    alias: metricsOperator
     version: 0.1.0
     condition: metricsOperator.enabled
     repository: "file://../metrics-operator/chart"

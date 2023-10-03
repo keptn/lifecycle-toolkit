@@ -360,9 +360,10 @@ func main() {
 		os.Exit(1)
 	}
 
+	setupLog.Info("Keptn lifecycle-operator is alive")
+
 	// Set the metric value as soon as the operator starts
 	keptnLifecycleActive.Add(context.Background(), 1)
-	setupLog.Info("Keptn lifecycle-operator is alive")
 	if !disableWebhook {
 		webhookBuilder = webhookBuilder.SetCertificateWatcher(
 			certificates.NewCertificateWatcher(

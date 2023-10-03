@@ -13,11 +13,11 @@ On Kubernetes versions older and including 1.26, Keptn uses a Scheduler to block
 The **Keptn Scheduler** is an integral component of Keptn that orchestrates
 the deployment process.
 
-If the Keptn helm chart value `schedulingGatesEnabled` is set to `true`, and Keptn is running on a Kubernetes version greater than 1.26,
-Keptn does not install a scheduler plugin.
+If the Keptn helm chart value `schedulingGatesEnabled` is set to `true`, and Keptn is running on a Kubernetes version
+greater than 1.26, Keptn does not install a scheduler plugin.
 Instead, it uses
-the [Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness).
-
+the [Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness) 
+to gate Pods until the required deployment checks pass.
 ## Keptn Scheduling Gates for K8s 1.27 and above
 
 When you apply a workload to a K8s cluster, the Mutating Webhook checks for annotations on Pods to

@@ -3,7 +3,6 @@ title: KeptnApp and KeptnWorkload resources
 linktitle: Keptn Applications and Keptn Workloads
 description: How Keptn applications work
 weight: 50
-cascade:
 ---
 
 ## Keptn Workloads
@@ -19,7 +18,7 @@ and run pre- and post-deployment tasks.
 In its state, it tracks the currently active `Workload Instances`,
 (`Pod`, `DaemonSet`, `StatefulSet`, and `ReplicaSet` resources),
 as well as the overall state of the Pre Deployment phase,
-which the scheduler can use to determine
+which Keptn can use to determine
 whether the pods belonging to a workload
 should be created and assigned to a node.
 When it detects that the referenced object has reached its desired state

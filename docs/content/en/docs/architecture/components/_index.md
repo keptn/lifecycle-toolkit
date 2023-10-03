@@ -3,7 +3,6 @@ title: Keptn Components
 linktitle: Components
 description: Basic understanding of Keptn Components
 weight: 20
-cascade:
 ---
 
 ### Keptn Components

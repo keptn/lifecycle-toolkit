@@ -173,7 +173,7 @@ kubectl edit configmap otel-collector-conf \
 ```
 
 When the `otel-collector` pod is up and running,
-restart the `keptn-scheduler` and `lifecycle-operator`
+restart the `keptn-scheduler` (if installed) and `lifecycle-operator`
 so they can pick up the new configuration:
 
 ```shell

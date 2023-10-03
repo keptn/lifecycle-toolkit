@@ -1,4 +1,4 @@
-{{- if not .Values.schedulingGatesEnabled }}
+{{- if or (le .Capabilities.KubeVersion.Minor "26") (not .Values.schedulingGatesEnabled) }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -167,7 +167,7 @@ spec:
       tolerations: {{- include "tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
 {{- end }}
 
-{{- if not .Values.schedulingGatesEnabled }}
+{{- if or (le .Capabilities.KubeVersion.Minor "26") (not .Values.schedulingGatesEnabled) }}
 ---
 apiVersion: apps/v1
 kind: Deployment

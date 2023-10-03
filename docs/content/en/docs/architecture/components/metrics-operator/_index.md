@@ -3,7 +3,6 @@ title: Keptn Metrics Operator
 linktitle: Metrics Operator
 description: Basic understanding of Keptn's Metrics Operator
 weight: 80
-cascade:
 ---
 
 The Keptn Metrics Operator collects, processes,

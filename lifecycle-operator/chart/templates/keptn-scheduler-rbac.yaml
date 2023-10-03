@@ -1,4 +1,4 @@
-{{- if not .Values.schedulingGatesEnabled }}
+{{- if or (le .Capabilities.KubeVersion.Minor "26") (not .Values.schedulingGatesEnabled) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:

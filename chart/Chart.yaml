@@ -65,3 +65,4 @@ dependencies:
     version: 0.1.0
     condition: metricsOperator.enabled
     repository: "file://../metrics-operator/chart"
+# TODO: change repository links to released ones once the charts get their first release

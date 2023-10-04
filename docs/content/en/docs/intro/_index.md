@@ -8,7 +8,8 @@ Keptn integrates seamlessly with cloud-native deployment tools
 such as ArgoCD, Flux, and Gitlab
 to bring application awareness to your Kubernetes cluster.
 Keptn supplements the standard deployment tools
-with facilities to ensure that your deployment is usable.
+with features to help you ensure that your deployments are in
+a healthy state.
 
 For information about the history of the Keptn project,
 see the

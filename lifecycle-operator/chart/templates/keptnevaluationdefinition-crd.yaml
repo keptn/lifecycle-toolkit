@@ -4,7 +4,7 @@ metadata:
   name: keptnevaluationdefinitions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/klt-certs'
+    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh

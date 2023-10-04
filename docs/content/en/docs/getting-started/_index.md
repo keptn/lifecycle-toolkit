@@ -1,10 +1,13 @@
 ---
-title: Getting started with Keptn
-description: Get started with Keptn
+title: Getting started with Keptn Observability
+description: Get started with Keptn Observability
 weight: 20
 ---
 
-Keptn works whether or not you use a GitOps strategy.
+Keptn provides sophisticated observability features
+that enhance your existing cloud-native deployment environment.
+These features are useful whether or not you use a GitOps strategy.
+
 The following is an imperative walkthrough.
 
 ## Prerequisites

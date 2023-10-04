@@ -6,6 +6,11 @@ $primary: #006bb8;
 $secondary: #469bdd;
 $light: #d8e6f4;
 
+.td-navbar-cover {
+  background: $primary !important;
+  opacity: inherit;
+}
+
 #td-cover-block-0 {
   background-size: 100% auto;
   background-position-y: bottom;

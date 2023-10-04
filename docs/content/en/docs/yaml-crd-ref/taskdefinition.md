@@ -375,7 +375,7 @@ All `KeptnTaskDefinition` resources specified to the `KeptnApp` resource
 at the same stage (either pre- or post-deployment) run in parallel.
 You can run multiple executables sequentially
 either by using the `inline` syntax for a pre-defined container image
-or by creating your own Kubernetes container
+or by creating your own image
 and running it in the Keptn `custom-runtime` runner.
 See
 [Executing sequential tasks](../implementing/tasks/#executing-sequential-tasks)

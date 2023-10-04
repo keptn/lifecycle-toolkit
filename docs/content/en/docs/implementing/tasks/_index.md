@@ -113,7 +113,7 @@ a sequence of executables that need to be run in order,
 you can put them all in one `KeptnTaskDefinition` resource,
 which can execute a virtually unlimited number
 of programs, scripts, and functions,
-as long as they all need the same runner.
+as long as they are all using the same runner.
 You have the following options:
 
 - Encode all your steps in the language of your choice

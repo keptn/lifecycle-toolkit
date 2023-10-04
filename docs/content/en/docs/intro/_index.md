@@ -46,7 +46,7 @@ The Keptn metrics server unifies and standardizes
 access to data from various sources,
 simplifying configuration and integration into a single set of metrics.
 
-To learn more:
+To learn more, see:
 
 * [Custom Keptn metrics](usecase_metrics)
 * [Keptn Metrics](../implementing/evaluatemetrics)

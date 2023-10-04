@@ -32,6 +32,15 @@ spec:
 * **kind** -- Resource type.
   Must be set to `AnalysisValueTemplate`
 * **metadata**
+  * **labels** -- The Analysis feature uses the
+    `name` and `part-of` labels that are discussed in
+    [Basic annotations](../implementing/integrate/#basic-annotations)
+    plus the following:
+    * **app.kubernetes.io/instance** analysis-sample
+    * **app.kuberentes.io/managed-by** -- Tool used to manage
+      the operation of the application.
+      Valid values are `helm` and `kustomize`.
+    * **app.kubernetes.io/created-by** metrics-operator
   * **name** -- Unique name of this template.
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
@@ -48,14 +57,12 @@ spec:
       each of which uses a different data source.
   * **query** -- query to be made.
     This is done in the data provider's query language.
-    It can include variables that use the go teplating syntax
+    It can include variables that use the go templating syntax
     to insert a placeholder in the query.
     For example, the query might include `{{.nodename}}'}`;
     the value to substitute for that variable for this Analysis
     is defined in the `spec.args` section of the `AnalysisTemplate` resource,
     which might be set to `nodename: test`.
-
-you can use the go templating syntax to insert a placeholder
 
 ## Usage
 
@@ -71,7 +78,7 @@ you must define a
 resource for each instance of each data provider you are using.
 The template refers to that provider and queries it.
 
-## Examples
+## Example
 
 {{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysisvaluetemplate.yaml" >}}
 
@@ -87,7 +94,7 @@ API reference:
 
 ## Differences between versions
 
-A preliminary release of the Keptn Analysis feature
+Keptn v0.8.3 includes a preliminary release of the Keptn Analysis feature
 but is hidden behind a feature flag.
 To preview these features, set the environment `ENABLE_ANALYSIS` to `true`
 in the `metrics-operator` deployment.

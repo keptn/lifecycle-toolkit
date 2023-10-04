@@ -52,7 +52,7 @@ spec:
         * **failure**
           * **lessThan**
             * **fixedValue** 600
-        > **Warning**
+        * **Warning**
         * **inRange**
           * **lowBound** 300
           * **highBound** 500
@@ -60,7 +60,7 @@ spec:
       * **keyObjective** false
   * **totalScore**
     * **passPercentage** 90
-    > **Warning**Percentage
+    * **Warning**Percentage
 
 ## Usage
 
@@ -109,8 +109,8 @@ guide page.
 
 ## Files
 
+API reference:
 [AnalysisDefinition](../crd-ref/metrics/v1alpha3/#analysisdefinition)
-API reference
 
 ## Differences between versions
 

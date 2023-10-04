@@ -1,5 +1,5 @@
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/service-account.yaml
+# Source: keptn/charts/certManager/templates/service-account.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -8,60 +8,60 @@ metadata:
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: keptn-cert-manager-0.1.0
-    app.kubernetes.io/name: keptn-cert-manager
+    helm.sh/chart: certManager-0.1.0
+    app.kubernetes.io/name: certManager
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/deployment.yaml
+# Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/deployment.yaml
+# Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: lifecycle-operator
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/metrics-operator-service-account.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-service-account.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: metrics-operator
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/lifecycle-manager-config.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-manager-config.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: lifecycle-manager-config
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -79,15 +79,15 @@ data:
     webhook:
       port: 9443
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/scheduler-config.yaml
+# Source: keptn/charts/lifecycleOperator/templates/scheduler-config.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: scheduler-config
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -104,15 +104,15 @@ data:
             - name: KLCPermit
         schedulerName: keptn-scheduler
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/metrics-manager-config.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-manager-config.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: metrics-operator-config
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -130,7 +130,7 @@ data:
     webhook:
       port: 9443
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptnapp-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnapp-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -142,8 +142,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -395,7 +395,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptnappcreationrequest-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnappcreationrequest-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -407,8 +407,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -458,7 +458,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptnappversion-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnappversion-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -470,8 +470,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -1277,7 +1277,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptnconfig-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnconfig-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -1289,8 +1289,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -1347,7 +1347,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptnevaluation-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnevaluation-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -1359,8 +1359,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -1732,7 +1732,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptnevaluationdefinition-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnevaluationdefinition-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -1744,8 +1744,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -1925,7 +1925,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptnevaluationprovider-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnevaluationprovider-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -1937,8 +1937,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -2107,7 +2107,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptntask-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptntask-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -2119,8 +2119,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -2519,7 +2519,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptntaskdefinition-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptntaskdefinition-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -2531,8 +2531,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -4239,7 +4239,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptnworkload-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnworkload-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -4251,8 +4251,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -4531,7 +4531,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptnworkloadinstance-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnworkloadinstance-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -4543,8 +4543,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -5321,7 +5321,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/analysis-crd.yaml
+# Source: keptn/charts/metricsOperator/templates/analysis-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -5333,8 +5333,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -5507,7 +5507,7 @@ spec:
       subresources:
         status: {}
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/analysisdefinition-crd.yaml
+# Source: keptn/charts/metricsOperator/templates/analysisdefinition-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -5519,8 +5519,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -5864,7 +5864,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/analysisvaluetemplate-crd.yaml
+# Source: keptn/charts/metricsOperator/templates/analysisvaluetemplate-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -5876,8 +5876,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -5947,7 +5947,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/keptnmetric-crd.yaml
+# Source: keptn/charts/metricsOperator/templates/keptnmetric-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -5959,8 +5959,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -6302,7 +6302,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/keptnmetricsprovider-crd.yaml
+# Source: keptn/charts/metricsOperator/templates/keptnmetricsprovider-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -6314,8 +6314,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -6443,15 +6443,15 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: certificate-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-cert-manager-0.1.0
-    app.kubernetes.io/name: keptn-cert-manager
+    helm.sh/chart: certManager-0.1.0
+    app.kubernetes.io/name: certManager
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
@@ -6495,15 +6495,15 @@ rules:
   - list
   - watch
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptn-scheduler-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptn-scheduler-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -6686,15 +6686,15 @@ rules:
   - list
   - watch
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/lifecycle-operator-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: lifecycle-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7061,15 +7061,15 @@ rules:
   verbs:
   - get
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/server-resources-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/server-resources-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: keptn-test-keptn-lifecycle-operator-server-resources
+  name: keptn-test-lifecycleOperator-server-resources
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7081,15 +7081,15 @@ rules:
   verbs:
   - '*'
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/metrics-operator-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: metrics-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7189,15 +7189,15 @@ rules:
       - list
       - watch
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/metrics-operator-server-resources-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-server-resources-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: metrics-operator-server-resources
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7211,7 +7211,7 @@ rules:
   - list
   - watch
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -7221,8 +7221,8 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: keptn-cert-manager-0.1.0
-    app.kubernetes.io/name: keptn-cert-manager
+    helm.sh/chart: certManager-0.1.0
+    app.kubernetes.io/name: certManager
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
@@ -7235,15 +7235,15 @@ subjects:
   name: 'certificate-operator'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/keptn-scheduler-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptn-scheduler-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7256,15 +7256,15 @@ subjects:
   name: 'keptn-scheduler'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/lifecycle-operator-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: lifecycle-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7277,15 +7277,15 @@ subjects:
   name: 'lifecycle-operator'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/metrics-operator-hpa-controller-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-hpa-controller-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: metrics-operator-hpa-controller
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7298,15 +7298,15 @@ subjects:
   name: horizontal-pod-autoscaler
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/metrics-operator-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: metrics-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7319,15 +7319,15 @@ subjects:
     name: 'metrics-operator'
     namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/system-auth-delegator-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/system-auth-delegator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: system-auth-delegator
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7340,15 +7340,15 @@ subjects:
   name: 'metrics-operator'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: certificate-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-cert-manager-0.1.0
-    app.kubernetes.io/name: keptn-cert-manager
+    helm.sh/chart: certManager-0.1.0
+    app.kubernetes.io/name: certManager
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
@@ -7372,7 +7372,7 @@ rules:
   - patch
   - update
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/leader-election-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -7382,8 +7382,8 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7420,15 +7420,15 @@ rules:
   - create
   - patch
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/lifecycle-operator-leader-election-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: lifecycle-operator-leader-election-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7465,15 +7465,15 @@ rules:
   - create
   - patch
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/metrics-operator-leader-election-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: metrics-operator-leader-election-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7510,7 +7510,7 @@ rules:
   - create
   - patch
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-leader-election-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -7520,8 +7520,8 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: keptn-cert-manager-0.1.0
-    app.kubernetes.io/name: keptn-cert-manager
+    helm.sh/chart: certManager-0.1.0
+    app.kubernetes.io/name: certManager
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
@@ -7534,7 +7534,7 @@ subjects:
   name: 'certificate-operator'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-role-binding-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-role-binding-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -7544,8 +7544,8 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: keptn-cert-manager-0.1.0
-    app.kubernetes.io/name: keptn-cert-manager
+    helm.sh/chart: certManager-0.1.0
+    app.kubernetes.io/name: certManager
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
@@ -7558,15 +7558,15 @@ subjects:
   name: 'certificate-operator'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/extension-apiserver-authentication-reader-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/extension-apiserver-authentication-reader-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: extension-apiserver-authentication-reader
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7579,15 +7579,15 @@ subjects:
   name: 'keptn-scheduler'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/lifecycle-operator-leader-election-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: lifecycle-operator-leader-election-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7600,15 +7600,15 @@ subjects:
   name: 'lifecycle-operator'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/lifecycle-operator-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: lifecycle-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7621,15 +7621,15 @@ subjects:
   name: 'lifecycle-operator'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/metrics-operator-leader-election-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: metrics-operator-leader-election-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7642,15 +7642,15 @@ subjects:
   name: 'metrics-operator'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/metrics-operator-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: metrics-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7663,7 +7663,7 @@ subjects:
     name: 'metrics-operator'
     namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/lifecycle-operator-metrics-service.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-metrics-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -7671,8 +7671,8 @@ metadata:
   namespace: "helmtests"
   labels:
     control-plane: lifecycle-operator
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7680,7 +7680,7 @@ spec:
   type: ClusterIP
   selector:
     control-plane: lifecycle-operator
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
   ports:
   - name: metrics
@@ -7688,15 +7688,15 @@ spec:
     protocol: TCP
     targetPort: metrics
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/lifecycle-webhook-service.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-webhook-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: lifecycle-webhook-service
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7704,14 +7704,14 @@ spec:
   type: ClusterIP
   selector:
     control-plane: lifecycle-operator
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
   ports:
   - port: 443
     protocol: TCP
     targetPort: 9443
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/metrics-operator-service.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -7719,8 +7719,8 @@ metadata:
   namespace: "helmtests"
   labels:
     control-plane: metrics-operator
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7728,7 +7728,7 @@ spec:
   type: ClusterIP
   selector:
     control-plane: metrics-operator
-    app.kubernetes.io/name: keptn-metrics-operator
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
   ports:
   - name: https
@@ -7743,15 +7743,15 @@ spec:
     protocol: TCP
     targetPort: metrics
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/metrics-webhook-service.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-webhook-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: metrics-webhook-service
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7759,14 +7759,14 @@ spec:
   type: ClusterIP
   selector:
     control-plane: metrics-operator
-    app.kubernetes.io/name: keptn-metrics-operator
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
   ports:
   - port: 443
     protocol: TCP
     targetPort: 9443
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/deployment.yaml
+# Source: keptn/charts/certManager/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7776,8 +7776,8 @@ metadata:
     app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: certificate-operator
-    helm.sh/chart: keptn-cert-manager-0.1.0
-    app.kubernetes.io/name: keptn-cert-manager
+    helm.sh/chart: certManager-0.1.0
+    app.kubernetes.io/name: certManager
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
@@ -7786,13 +7786,13 @@ spec:
   selector:
     matchLabels:
       control-plane: certificate-operator
-      app.kubernetes.io/name: keptn-cert-manager
+      app.kubernetes.io/name: certManager
       app.kubernetes.io/instance: keptn-test
   template:
     metadata:
       labels:
         control-plane: certificate-operator
-        app.kubernetes.io/name: keptn-cert-manager
+        app.kubernetes.io/name: certManager
         app.kubernetes.io/instance: keptn-test
       annotations:
         kubectl.kubernetes.io/default-container: certificate-operator
@@ -7851,7 +7851,7 @@ spec:
       serviceAccountName: certificate-operator
       terminationGracePeriodSeconds: 10
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/deployment.yaml
+# Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7861,8 +7861,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: lifecycle-operator
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -7871,13 +7871,13 @@ spec:
   selector:
     matchLabels:
       control-plane: lifecycle-operator
-      app.kubernetes.io/name: keptn-lifecycle-operator
+      app.kubernetes.io/name: lifecycleOperator
       app.kubernetes.io/instance: keptn-test
   template:
     metadata:
       labels:
         control-plane: lifecycle-operator
-        app.kubernetes.io/name: keptn-lifecycle-operator
+        app.kubernetes.io/name: lifecycleOperator
         app.kubernetes.io/instance: keptn-test
       annotations:
         kubectl.kubernetes.io/default-container: lifecycle-operator
@@ -7982,7 +7982,7 @@ spec:
       - emptyDir: {}
         name: adapter-certs-dir
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/deployment.yaml
+# Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7990,8 +7990,8 @@ metadata:
   namespace: "helmtests"
   labels:
     component: scheduler
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -8000,13 +8000,13 @@ spec:
   selector:
     matchLabels:
       component: scheduler
-      app.kubernetes.io/name: keptn-lifecycle-operator
+      app.kubernetes.io/name: lifecycleOperator
       app.kubernetes.io/instance: keptn-test
   template:
     metadata:
       labels:
         component: scheduler
-        app.kubernetes.io/name: keptn-lifecycle-operator
+        app.kubernetes.io/name: lifecycleOperator
         app.kubernetes.io/instance: keptn-test
     spec:
       containers:
@@ -8061,7 +8061,7 @@ spec:
           name: scheduler-config
         name: scheduler-config
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/deployment.yaml
+# Source: keptn/charts/metricsOperator/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -8072,8 +8072,8 @@ metadata:
     app.kubernetes.io/component: metrics-operator
     control-plane: metrics-operator
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -8082,13 +8082,13 @@ spec:
   selector:
     matchLabels:
       control-plane: metrics-operator
-      app.kubernetes.io/name: keptn-metrics-operator
+      app.kubernetes.io/name: metricsOperator
       app.kubernetes.io/instance: keptn-test
   template:
     metadata:
       labels:
         control-plane: metrics-operator
-        app.kubernetes.io/name: keptn-metrics-operator
+        app.kubernetes.io/name: metricsOperator
         app.kubernetes.io/instance: keptn-test
       annotations:
         kubectl.kubernetes.io/default-container: metrics-operator
@@ -8179,15 +8179,15 @@ spec:
       - emptyDir: {}
         name: adapter-certs-dir
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/v1beta1.custom.metrics.k8s.io.yaml
+# Source: keptn/charts/metricsOperator/templates/v1beta1.custom.metrics.k8s.io.yaml
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
   name: v1beta1.custom.metrics.k8s.io
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -8201,15 +8201,15 @@ spec:
   version: v1beta1
   versionPriority: 100
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/v1beta2.custom.metrics.k8s.io.yaml
+# Source: keptn/charts/metricsOperator/templates/v1beta2.custom.metrics.k8s.io.yaml
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
   name: v1beta2.custom.metrics.k8s.io
   namespace: "helmtests"
   labels:
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -8223,7 +8223,7 @@ spec:
   version: v1beta2
   versionPriority: 200
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/lifecycle-mutating-webhook-configuration.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-mutating-webhook-configuration.yaml
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
@@ -8233,8 +8233,8 @@ metadata:
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn-lifecycle-toolkit"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -8280,7 +8280,7 @@ webhooks:
     - pods
   sideEffects: None
 ---
-# Source: keptn/charts/keptn-lifecycle-operator/templates/lifecycle-validating-webhook-configuration.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-validating-webhook-configuration.yaml
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
@@ -8289,8 +8289,8 @@ metadata:
     cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
   labels:
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-lifecycle-operator-0.1.0
-    app.kubernetes.io/name: keptn-lifecycle-operator
+    helm.sh/chart: lifecycleOperator-0.1.0
+    app.kubernetes.io/name: lifecycleOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
@@ -8316,7 +8316,7 @@ webhooks:
     - keptntaskdefinitions
   sideEffects: None
 ---
-# Source: keptn/charts/keptn-metrics-operator/templates/metrics-validating-webhook-configuration.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-validating-webhook-configuration.yaml
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
@@ -8325,8 +8325,8 @@ metadata:
     cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
   labels:
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: keptn-metrics-operator-0.1.0
-    app.kubernetes.io/name: keptn-metrics-operator
+    helm.sh/chart: metricsOperator-0.1.0
+    app.kubernetes.io/name: metricsOperator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm

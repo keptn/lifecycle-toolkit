@@ -55,14 +55,17 @@ appVersion: "v0.8.2" # x-release-please-version
 dependencies:
   - name: keptn-cert-manager
     version: 0.1.0
+    alias: certManager
     condition: certManager.enabled
     repository: "file://../klt-cert-manager/chart"
   - name: keptn-lifecycle-operator
     version: 0.1.0
+    alias: lifecycleOperator
     condition: lifecycleOperator.enabled
     repository: "file://../lifecycle-operator/chart"
   - name: keptn-metrics-operator
     version: 0.1.0
+    alias: metricsOperator
     condition: metricsOperator.enabled
     repository: "file://../metrics-operator/chart"
 # TODO: change repository links to released ones once the charts get their first release

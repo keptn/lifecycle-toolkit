@@ -584,14 +584,6 @@ However, you can override this automatic behaviour by creating a custom `KeptnAp
 In this way, you are in full control of what constitutes a Keptn Application.
 See [KeptnApp Reference page](../yaml-crd-ref/app.md) for more information.
 
-<!-- The lifecycle toolkit automatically groups workloads into `KeptnApp`s by looking for matching
-`app.kubernetes.io/part-of` annotations. -->
-<!-- Any workloads with the same `part-of` annotation are said to be `part-of` the same `KeptnApp`. -->
-
-<!-- However, you can override this automatic behaviour by creating a custom `KeptnApp` CRD.
-In this way, you are in full control of what constitutes a Keptn Application.
-See [KeptnApp Reference page](../yaml-crd-ref/app.md) for more information. -->
-
 ## What's next?
 
 Keptn can run pre and post deployment tasks and SLO evaluations automatically.

@@ -12,11 +12,14 @@ echo "running Helm tests"
   successful=0
   failures=""
 
+  cd ./chart
+  helm dependency build
+  cd ..
+
   for test in $tests
   do
     echo "Testing $test"
-    ## TODO: test also other helm charts (metrics-operator, certificate-operator)
-    helm template --namespace helmtests -f $test/values.yaml ./lifecycle-operator/chart > $test/helm_tests_output.yaml
+    helm template keptn-test --namespace helmtests -f $test/values.yaml ./chart > $test/helm_tests_output.yaml
     if [ $? -ne 0 ]
     then
       echo "Error: helm template failed for test in $test"

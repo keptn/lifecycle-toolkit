@@ -8,18 +8,18 @@ metadata:
     app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: certificate-operator
-  {{- include "cert-manager.labels" . | nindent 4 }}
+  {{- include "chart.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       control-plane: certificate-operator
-    {{- include "cert-manager.selectorLabels" . | nindent 6 }}
+    {{- include "chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
         control-plane: certificate-operator
-      {{- include "cert-manager.selectorLabels" . | nindent 8 }}
+      {{- include "chart.selectorLabels" . | nindent 8 }}
       annotations:
         kubectl.kubernetes.io/default-container: certificate-operator
     spec:
@@ -43,13 +43,12 @@ spec:
           | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           name: certificate-operator
-          resources: {{- toYaml .Values.resources | nindent 10
-          }}
+          resources: {{- toYaml .Values.resources | nindent 12 }}
           securityContext:
             allowPrivilegeEscalation: {{ .Values.containerSecurityContext.allowPrivilegeEscalation
             }}
             capabilities: {{- include "tplvalues.render" (dict "value" .Values.containerSecurityContext.capabilities
-            "context" $) | nindent 12 }}
+            "context" $) | nindent 14 }}
             readOnlyRootFilesystem: {{ .Values.containerSecurityContext.readOnlyRootFilesystem
             }}
             runAsGroup: {{ .Values.containerSecurityContext.runAsGroup
@@ -57,9 +56,9 @@ spec:
             runAsUser: {{ .Values.containerSecurityContext.runAsUser
             }}
             seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.containerSecurityContext.seccompProfile
-            "context" $) | nindent 12 }}
+            "context" $) | nindent 14 }}
         {{- if .Values.livenessProbe }}
-          livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.livenessProbe "context" $) | nindent 10 }}
+          livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.livenessProbe "context" $) | nindent 12 }}
          {{- else }}
           livenessProbe:
             httpGet:
@@ -69,7 +68,7 @@ spec:
             periodSeconds: 20
         {{- end }}
         {{- if .Values.readinessProbe }}
-          readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.readinessProbe "context" $) | nindent 10 }}
+          readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.readinessProbe "context" $) | nindent 12 }}
          {{- else }}
           readinessProbe:
             httpGet:

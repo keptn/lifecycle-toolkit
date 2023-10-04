@@ -38,7 +38,7 @@ The earlier project is called "Keptn v1".
   Use `keptn` if it is part of a command name, pathname,
   an argument to a command or function, etc.
 
-* As a project name that may be trademarked,
+* As a project name that is trademarked,
   you should not use an apostrophe-s to make it a possessive ("Keptn's")
   or hyphentate it (as in "Keptn-specific").
 

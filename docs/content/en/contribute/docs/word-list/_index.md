@@ -53,7 +53,7 @@ The Keptn project is a "toolkit" with three use cases, named:
 ## CRD, resource, etc
 
 Keptn makes extensive use of Kubernetes
-[Custom resources](https://developers.google.com/style/word-list).
+[Custom resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/).
 It is important to use the related terminology correctly:
 
 * A "Resource Definition (RD)" is the definition (or syntax)

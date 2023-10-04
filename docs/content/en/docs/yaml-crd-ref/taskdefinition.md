@@ -381,7 +381,7 @@ See
 [Executing sequential tasks](../implementing/tasks/#executing-sequential-tasks)
 for more information.
 
-## Examples for a custom-runtime container
+## Examples for a container-runtime
 
 For an example of a `KeptnTaskDefinition` that defines a custom container.
  see

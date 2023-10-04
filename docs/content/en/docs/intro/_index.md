@@ -88,7 +88,7 @@ to ensure that your deployments are observable.
 To learn more, see:
 
 * [Getting started with Keptn Observability](../getting-started)
-* [Standardize observability](../intro/usecase-observability/)
+* [Standardize observability](usecase-observability/)
 * [Dora metrics](../implementing/dora) guide
 * [OpenTelemetry observability](../implementing/otel) guide
 

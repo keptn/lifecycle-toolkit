@@ -24,7 +24,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
@@ -54,12 +53,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	ctx, span := a.Tracer.Start(ctx, "annotate_pod", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
 	defer span.End()
 
-	logger := log.FromContext(ctx).WithValues("webhook", "/mutate-v1-pod", "object", map[string]interface{}{
-		"name":      req.Name,
-		"namespace": req.Namespace,
-		"kind":      req.Kind,
-	})
-	logger.Info("webhook for pod called")
+	a.Log.Info("webhook for pod called")
 
 	pod := &corev1.Pod{}
 
@@ -71,12 +65,12 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	// check if Lifecycle Operator is enabled for this namespace
 	namespace := &corev1.Namespace{}
 	if err = a.Client.Get(ctx, types.NamespacedName{Name: req.Namespace}, namespace); err != nil {
-		logger.Error(err, "could not get namespace", "namespace", req.Namespace)
+		a.Log.Error(err, "could not get namespace", "namespace", req.Namespace)
 		return admission.Errored(http.StatusInternalServerError, err)
 	}
 
 	if namespace.GetAnnotations()[apicommon.NamespaceEnabledAnnotation] != "enabled" {
-		logger.Info("namespace is not enabled for lifecycle operator", "namespace", req.Namespace)
+		a.Log.Info("namespace is not enabled for lifecycle operator", "namespace", req.Namespace)
 		return admission.Allowed("namespace is not enabled for lifecycle operator")
 	}
 
@@ -85,37 +79,37 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	if ownerRef.Kind == "" {
 		msg := "owner of pod is not supported by lifecycle operator"
-		logger.Info(msg, "namespace", req.Namespace, "pod", req.Name)
+		a.Log.Info(msg, "namespace", req.Namespace, "pod", req.Name)
 		return admission.Allowed(msg)
 	}
 
-	logger.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
+	a.Log.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
 	podIsAnnotated := isPodAnnotated(pod)
 	if !podIsAnnotated {
-		logger.Info("Pod is not annotated, check for parent annotations...")
+		a.Log.Info("Pod is not annotated, check for parent annotations...")
 		podIsAnnotated = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
 	}
 
 	if podIsAnnotated {
-		logger.Info("Resource is annotated with Keptn annotations")
+		a.Log.Info("Resource is annotated with Keptn annotations")
 
-		if scheduled := handleScheduling(a, logger, pod); scheduled {
+		if scheduled := handleScheduling(a, a.Log, pod); scheduled {
 			return admission.Allowed("gate of the pod already removed")
 		}
 
-		logger.Info("Annotations", "annotations", pod.Annotations)
+		a.Log.Info("Annotations", "annotations", pod.Annotations)
 		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
-		logger.Info("Attributes from annotations set")
+		a.Log.Info("Attributes from annotations set")
 
-		if err := a.handleWorkload(ctx, logger, pod, req.Namespace); err != nil {
-			logger.Error(err, "Could not handle Workload")
+		if err := a.handleWorkload(ctx, pod, req.Namespace); err != nil {
+			a.Log.Error(err, "Could not handle Workload")
 			span.SetStatus(codes.Error, err.Error())
 			return admission.Errored(http.StatusBadRequest, err)
 		}
 
-		if err := a.handleApp(ctx, logger, pod, req.Namespace); err != nil {
-			logger.Error(err, "Could not handle App")
+		if err := a.handleApp(ctx, pod, req.Namespace); err != nil {
+			a.Log.Error(err, "Could not handle App")
 			span.SetStatus(codes.Error, err.Error())
 			return admission.Errored(http.StatusBadRequest, err)
 		}
@@ -143,7 +137,7 @@ func handleScheduling(a *PodMutatingWebhook, logger logr.Logger, pod *corev1.Pod
 			},
 		}
 	} else {
-		logger.Info("SchedulingGates disabled, using keptn-scheduler")
+		a.Log.Info("SchedulingGates disabled, using keptn-scheduler")
 		pod.Spec.SchedulerName = "keptn-scheduler"
 	}
 	return false
@@ -234,7 +228,7 @@ func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *c
 }
 
 //nolint:dupl
-func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
+func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, pod *corev1.Pod, namespace string) error {
 
 	ctx, span := a.Tracer.Start(ctx, "create_workload", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
@@ -243,16 +237,16 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 
 	newWorkload.SetSpanAttributes(span)
 
-	logger.Info("Searching for workload")
+	a.Log.Info("Searching for workload")
 
 	workload := &klcv1alpha3.KeptnWorkload{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newWorkload.Name}, workload)
 	if errors.IsNotFound(err) {
-		logger.Info("Creating workload", "workload", workload.Name)
+		a.Log.Info("Creating workload", "workload", workload.Name)
 		workload = newWorkload
 		err = a.Client.Create(ctx, workload)
 		if err != nil {
-			logger.Error(err, "Could not create Workload")
+			a.Log.Error(err, "Could not create Workload")
 			a.EventSender.Emit(apicommon.PhaseCreateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not create KeptnWorkload", workload.Spec.Version)
 			span.SetStatus(codes.Error, err.Error())
 			return err
@@ -267,16 +261,16 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 	}
 
 	if reflect.DeepEqual(workload.Spec, newWorkload.Spec) {
-		logger.Info("Pod not changed, not updating anything")
+		a.Log.Info("Pod not changed, not updating anything")
 		return nil
 	}
 
-	logger.Info("Pod changed, updating workload")
+	a.Log.Info("Pod changed, updating workload")
 	workload.Spec = newWorkload.Spec
 
 	err = a.Client.Update(ctx, workload)
 	if err != nil {
-		logger.Error(err, "Could not update Workload")
+		a.Log.Error(err, "Could not update Workload")
 		a.EventSender.Emit(apicommon.PhaseUpdateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not update KeptnWorkload", workload.Spec.Version)
 		span.SetStatus(codes.Error, err.Error())
 		return err
@@ -286,7 +280,7 @@ func (a *PodMutatingWebhook) handleWorkload(ctx context.Context, logger logr.Log
 }
 
 //nolint:dupl
-func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, pod *corev1.Pod, namespace string) error {
+func (a *PodMutatingWebhook) handleApp(ctx context.Context, pod *corev1.Pod, namespace string) error {
 
 	ctx, span := a.Tracer.Start(ctx, "create_app", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
@@ -295,16 +289,16 @@ func (a *PodMutatingWebhook) handleApp(ctx context.Context, logger logr.Logger, 
 
 	newAppCreationRequest.SetSpanAttributes(span)
 
-	logger.Info("Searching for AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name)
+	a.Log.Info("Searching for AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name)
 
 	appCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newAppCreationRequest.Name}, appCreationRequest)
 	if errors.IsNotFound(err) {
-		logger.Info("Creating app creation request", "appCreationRequest", appCreationRequest.Name)
+		a.Log.Info("Creating app creation request", "appCreationRequest", appCreationRequest.Name)
 		appCreationRequest = newAppCreationRequest
 		err = a.Client.Create(ctx, appCreationRequest)
 		if err != nil {
-			logger.Error(err, "Could not create AppCreationRequest")
+			a.Log.Error(err, "Could not create AppCreationRequest")
 			a.EventSender.Emit(apicommon.PhaseCreateAppCreationRequest, "Warning", appCreationRequest, apicommon.PhaseStateFailed, "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
 			span.SetStatus(codes.Error, err.Error())
 			return err

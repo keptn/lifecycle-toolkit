@@ -1,4 +1,4 @@
-package pod_mutator
+package handlers
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func getLabelOrAnnotation(resource *metav1.ObjectMeta, primaryAnnotation string, secondaryAnnotation string) (string, bool) {
+func GetLabelOrAnnotation(resource *metav1.ObjectMeta, primaryAnnotation string, secondaryAnnotation string) (string, bool) {
 	if resource.Annotations[primaryAnnotation] != "" {
 		return resource.Annotations[primaryAnnotation], true
 	}
@@ -35,22 +35,22 @@ func getLabelOrAnnotation(resource *metav1.ObjectMeta, primaryAnnotation string,
 }
 
 func getWorkloadName(meta *metav1.ObjectMeta) string {
-	workloadName, _ := getLabelOrAnnotation(meta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
-	applicationName, _ := getLabelOrAnnotation(meta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+	workloadName, _ := GetLabelOrAnnotation(meta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
+	applicationName, _ := GetLabelOrAnnotation(meta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 	return operatorcommon.CreateResourceName(apicommon.MaxK8sObjectLength, apicommon.MinKeptnNameLen, applicationName, workloadName)
 }
 
 func getAppName(meta *metav1.ObjectMeta) string {
-	applicationName, _ := getLabelOrAnnotation(meta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+	applicationName, _ := GetLabelOrAnnotation(meta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 	return strings.ToLower(applicationName)
 }
 
 func getVersion(meta *metav1.ObjectMeta) string {
-	version, _ := getLabelOrAnnotation(meta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
+	version, _ := GetLabelOrAnnotation(meta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
 	return strings.ToLower(version)
 }
 
-func getOwnerReference(resource *metav1.ObjectMeta) metav1.OwnerReference {
+func GetOwnerReference(resource *metav1.ObjectMeta) metav1.OwnerReference {
 	reference := metav1.OwnerReference{}
 	if len(resource.OwnerReferences) != 0 {
 		for _, owner := range resource.OwnerReferences {
@@ -75,8 +75,8 @@ func setMapKey(myMap map[string]string, key, value string) {
 }
 
 func isPodAnnotated(pod *corev1.Pod) bool {
-	_, gotWorkloadAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
-	_, gotVersionAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
+	_, gotWorkloadAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
+	_, gotVersionAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
 
 	if gotWorkloadAnnotation {
 		if !gotVersionAnnotation {
@@ -91,7 +91,7 @@ func isPodAnnotated(pod *corev1.Pod) bool {
 }
 
 func isAppAnnotationPresent(pod *corev1.Pod) bool {
-	_, gotAppAnnotation := getLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+	_, gotAppAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 
 	if gotAppAnnotation {
 		return true
@@ -100,7 +100,7 @@ func isAppAnnotationPresent(pod *corev1.Pod) bool {
 	if len(pod.Annotations) == 0 {
 		pod.Annotations = make(map[string]string)
 	}
-	pod.Annotations[apicommon.AppAnnotation], _ = getLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
+	pod.Annotations[apicommon.AppAnnotation], _ = GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	return false
 }
 

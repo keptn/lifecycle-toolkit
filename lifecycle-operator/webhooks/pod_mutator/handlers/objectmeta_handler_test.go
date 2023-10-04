@@ -1,4 +1,4 @@
-package pod_mutator
+package handlers
 
 import (
 	"reflect"
@@ -176,7 +176,7 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := getLabelOrAnnotation(tt.args.resource, tt.args.primaryAnnotation, tt.args.secondaryAnnotation)
+			got, got1 := GetLabelOrAnnotation(tt.args.resource, tt.args.primaryAnnotation, tt.args.secondaryAnnotation)
 			if got != tt.want {
 				t.Errorf("getLabelOrAnnotation() got = %v, want %v", got, tt.want)
 			}
@@ -334,7 +334,7 @@ func Test_getOwnerReference(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := getOwnerReference(&tt.args.resource); !reflect.DeepEqual(got, tt.want) {
+			if got := GetOwnerReference(&tt.args.resource); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("getOwnerReference() = %v, want %v", got, tt.want)
 			}
 		})

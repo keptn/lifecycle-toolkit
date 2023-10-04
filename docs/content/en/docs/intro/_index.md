@@ -134,7 +134,7 @@ or a
 [KeptnApp](https://lifecycle.keptn.sh/docs/yaml-crd-ref/app/) resource,
 which is a single, cohesive unit that groups multiple workloads.
 
-To learn more:
+To learn more, see:
 
 * [Getting started with release lifecycle management](../tutorials/tasks/)
 * [Manage release lifecycle](usecase-orchestrate)

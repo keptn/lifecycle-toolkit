@@ -8,7 +8,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 The Release Lifecycle Management tools run
 pre- and post-deployment tasks and checks
 for your existing cloud-native deployments
-to make deployments more robust.
+to make them more robust.
 This tutorial introduces these tools.
 
 > This tutorial assumes you have already completed the

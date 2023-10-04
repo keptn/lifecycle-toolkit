@@ -31,7 +31,7 @@ differentiated by the `spec` section:
   See
   [Synopsis for container-runtime](#synopsis-for-container-runtime)
   and
-  [Examples for a custom-runtime container](#examples-for-a-custom-runtime-container).
+  [Examples for a container-runtime container](#examples-for-a-custom-runtime-container).
 * Pre-defined containers
 
   * Use the pre-defined `deno-runtime` runner

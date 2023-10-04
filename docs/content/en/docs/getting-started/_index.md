@@ -538,23 +538,23 @@ If used, these fields must be populated manually:
 - **preDeploymentTasks** -- list each task
     to be run as part of the pre-deployment stage.
     Task names must match the value of the `metadata.name` field
-    for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
+    for the associated [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md) resource.
 - **postDeploymentTasks** -- list each task
     to be run as part of the post-deployment stage.
     Task names must match the value of the `metadata.name` field
     for the associated
-    [KeptnTaskDefinition](taskdefinition.md)
+    [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
     resource.
 - **preDeploymentEvaluations** -- list each evaluation to be run
     as part of the pre-deployment stage.
     Evaluation names must match the value of the `metadata.name` field
     for the associated
-    [KeptnEvaluationDefinition](evaluationdefinition.md)
+    [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
     resource.
 - **postDeploymentEvaluations** -- list each evaluation to be run
     as part of the post-deployment stage.
     Evaluation names must match the value of the `metadata.name` field
-    for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
+    for the associated [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
     resource.
 
 ## Example

@@ -14,7 +14,7 @@ Copy this template to create a new CRD reference page.
 
 ## Synopsis
 
-## Parameters
+## Fields
 
 <!-- Detailed description of each field/parameter -->
 

@@ -24,6 +24,9 @@ else
   echo "Readme Generator is already installed, continuing..."
 fi
 
+echo "Generating Keptn readme now..."
+readme-generator --values=./chart/values.yaml --readme=./chart/README.md
+
 echo "Generating lifecycle operator readme now..."
 cat ./lifecycle-operator/chart/values.yaml ./lifecycle-operator/chart/doc.yaml > ./lifecycle-operator/chart/rendered.yaml
 readme-generator --values=./lifecycle-operator/chart/rendered.yaml --readme=./lifecycle-operator/chart/README.md

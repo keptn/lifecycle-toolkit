@@ -55,6 +55,8 @@ type KeptnTaskDefinitionSpec struct {
 	// +kubebuilder:validation:Type:=string
 	// +optional
 	Timeout metav1.Duration `json:"timeout,omitempty"`
+	// Service Account to be used in jobs to authenticate with the Kubernetes API and access cluster resources.
+	ServiceAccount *ServiceAccountSpec `json:"serviceAccount,omitempty"`
 }
 
 type RuntimeSpec struct {
@@ -102,6 +104,10 @@ type HttpReference struct {
 
 type ContainerSpec struct {
 	*v1.Container `json:",inline"`
+}
+
+type ServiceAccountSpec struct {
+	Name string `json:"name,omitempty"`
 }
 
 // KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition

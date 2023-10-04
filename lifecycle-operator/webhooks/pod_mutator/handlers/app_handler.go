@@ -53,7 +53,21 @@ func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace 
 	return kacr
 }
 
-func (a *AppHandler) HandleApp(ctx context.Context, pod *corev1.Pod, namespace string) error {
+func isAppAnnotationPresent(pod *corev1.Pod) bool {
+	_, gotAppAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+
+	if gotAppAnnotation {
+		return true
+	}
+
+	if len(pod.Annotations) == 0 {
+		pod.Annotations = make(map[string]string)
+	}
+	pod.Annotations[apicommon.AppAnnotation], _ = GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
+	return false
+}
+
+func (a *AppHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace string) error {
 
 	ctx, span := a.Tracer.Start(ctx, "create_app", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()

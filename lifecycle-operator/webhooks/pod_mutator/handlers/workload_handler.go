@@ -81,7 +81,7 @@ func generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *k
 	}
 }
 
-func (a *WorkloadHandler) HandleWorkload(ctx context.Context, pod *corev1.Pod, namespace string) error {
+func (a *WorkloadHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace string) error {
 
 	ctx, span := a.Tracer.Start(ctx, "create_workload", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()

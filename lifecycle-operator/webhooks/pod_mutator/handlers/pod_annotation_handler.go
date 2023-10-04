@@ -14,15 +14,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-type K8sHandler interface {
-}
-
-type PodHandler struct {
+type PodAnnotationHandler struct {
 	Client client.Client
 	Log    logr.Logger
 }
 
-func (a *PodHandler) PodIsAnnotated(ctx context.Context, req admission.Request, pod *corev1.Pod) bool {
+func (a *PodAnnotationHandler) PodIsAnnotated(ctx context.Context, req admission.Request, pod *corev1.Pod) bool {
 	podIsAnnotated := isPodAnnotated(pod)
 	if !podIsAnnotated {
 		a.Log.Info("Pod is not annotated, check for parent annotations...")
@@ -31,7 +28,7 @@ func (a *PodHandler) PodIsAnnotated(ctx context.Context, req admission.Request, 
 	return podIsAnnotated
 }
 
-func (a *PodHandler) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) bool {
+func (a *PodAnnotationHandler) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) bool {
 	podOwner := GetOwnerReference(&pod.ObjectMeta)
 	if podOwner.UID == "" {
 		return false
@@ -68,7 +65,7 @@ func (a *PodHandler) copyAnnotationsIfParentAnnotated(ctx context.Context, req *
 	}
 }
 
-func (a *PodHandler) fetchParentObjectAndCopyLabels(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) bool {
+func (a *PodAnnotationHandler) fetchParentObjectAndCopyLabels(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) bool {
 	if err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: name}, objectContainer); err != nil {
 		return false
 	}
@@ -110,6 +107,22 @@ func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *c
 		setMapKey(targetPod.Annotations, apicommon.PreDeploymentEvaluationAnnotation, preEvaluationChecks)
 		setMapKey(targetPod.Annotations, apicommon.PostDeploymentEvaluationAnnotation, postEvaluationChecks)
 
+		return true
+	}
+	return false
+}
+
+func isPodAnnotated(pod *corev1.Pod) bool {
+	_, gotWorkloadAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
+	_, gotVersionAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
+
+	if gotWorkloadAnnotation {
+		if !gotVersionAnnotation {
+			if len(pod.Annotations) == 0 {
+				pod.Annotations = make(map[string]string)
+			}
+			pod.Annotations[apicommon.VersionAnnotation] = calculateVersion(pod)
+		}
 		return true
 	}
 	return false

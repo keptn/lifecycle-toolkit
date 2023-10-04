@@ -31,9 +31,9 @@ type PodMutatingWebhook struct {
 	EventSender            controllercommon.IEvent
 	Log                    logr.Logger
 	SchedulingGatesEnabled bool
-	handlers.PodHandler
-	handlers.WorkloadHandler
-	handlers.AppHandler
+	handlers.PodAnnotationHandler
+	Workload handlers.K8sHandler
+	App      handlers.K8sHandler
 }
 
 const InvalidAnnotationMessage = "Invalid annotations"
@@ -90,13 +90,13 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
 		a.Log.Info("Attributes from annotations set")
 
-		if err := a.HandleWorkload(ctx, pod, req.Namespace); err != nil {
+		if err := a.Workload.Handle(ctx, pod, req.Namespace); err != nil {
 			a.Log.Error(err, "Could not handle Workload")
 			span.SetStatus(codes.Error, err.Error())
 			return admission.Errored(http.StatusBadRequest, err)
 		}
 
-		if err := a.HandleApp(ctx, pod, req.Namespace); err != nil {
+		if err := a.App.Handle(ctx, pod, req.Namespace); err != nil {
 			a.Log.Error(err, "Could not handle App")
 			span.SetStatus(codes.Error, err.Error())
 			return admission.Errored(http.StatusBadRequest, err)

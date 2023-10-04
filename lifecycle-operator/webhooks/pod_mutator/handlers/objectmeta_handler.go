@@ -74,36 +74,6 @@ func setMapKey(myMap map[string]string, key, value string) {
 	}
 }
 
-func isPodAnnotated(pod *corev1.Pod) bool {
-	_, gotWorkloadAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
-	_, gotVersionAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
-
-	if gotWorkloadAnnotation {
-		if !gotVersionAnnotation {
-			if len(pod.Annotations) == 0 {
-				pod.Annotations = make(map[string]string)
-			}
-			pod.Annotations[apicommon.VersionAnnotation] = calculateVersion(pod)
-		}
-		return true
-	}
-	return false
-}
-
-func isAppAnnotationPresent(pod *corev1.Pod) bool {
-	_, gotAppAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
-
-	if gotAppAnnotation {
-		return true
-	}
-
-	if len(pod.Annotations) == 0 {
-		pod.Annotations = make(map[string]string)
-	}
-	pod.Annotations[apicommon.AppAnnotation], _ = GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
-	return false
-}
-
 func calculateVersion(pod *corev1.Pod) string {
 	name := ""
 

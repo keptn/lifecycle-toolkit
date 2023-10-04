@@ -27,7 +27,7 @@ If release name contains chart name it will be used as a full name.
 Create chart name and version as used by the chart label.
 */}}
 {{- define "keptn.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-%s" (kebabcase .Chart.Name) .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -46,7 +46,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Selector labels
 */}}
 {{- define "keptn.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "keptn.name" . }}
+app.kubernetes.io/name: {{ kebabcase (include "keptn.name" .) }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

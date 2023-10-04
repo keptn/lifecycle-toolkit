@@ -118,7 +118,7 @@ You have the following options:
 
 - Encode all your steps in the language of your choice
   and build an image
-  that Keptn executes in a `custom-runtime` runner.
+  that Keptn executes in a `container-runtime` runner.
   This is often the best solution if you need to execute complex sequences
   because it gives you the most flexibility..
 

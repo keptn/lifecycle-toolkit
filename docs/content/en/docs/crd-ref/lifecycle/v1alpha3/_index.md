@@ -586,6 +586,7 @@ _Appears in:_
 | `container` _[ContainerSpec](#containerspec)_ | Container contains the definition for the container that is to be used in Job based on the KeptnTaskDefinitions. |
 | `retries` _integer_ | Retries specifies how many times a job executing the KeptnTaskDefinition should be restarted in the case of an unsuccessful attempt. |
 | `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ | Timeout specifies the maximum time to wait for the task to be completed successfully. If the task does not complete successfully within this time frame, it will be considered to be failed. |
+| `serviceAccount` _[ServiceAccountSpec](#serviceaccountspec)_ | Service Account to be used in jobs to authenticate with the Kubernetes API and access cluster resources. |
 
 
 #### KeptnTaskDefinitionStatus
@@ -892,6 +893,20 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `secret` _string_ | Secret contains the parameters that will be made available to the job executing the KeptnTask via the 'SECRET_DATA' environment variable. The 'SECRET_DATA'  environment variable's content will the same as value of the 'SECRET_DATA' key of the referenced secret. |
+
+
+#### ServiceAccountSpec
+
+
+
+
+
+_Appears in:_
+- [KeptnTaskDefinitionSpec](#keptntaskdefinitionspec)
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ |  |
 
 
 #### TaskContext

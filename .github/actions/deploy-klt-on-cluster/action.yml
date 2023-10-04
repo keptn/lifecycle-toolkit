@@ -100,20 +100,20 @@ runs:
         helm dependency build
 
         helm install -n keptn-lifecycle-toolkit-system --create-namespace keptn ./ \
-          --set keptn-lifecycle-operator.schedulingGatesEnabled=${{ inputs.scheduling-gates }} \
-          --set keptn-lifecycle-operator.scheduler.imagePullPolicy=Never \
-          --set keptn-lifecycle-operator.scheduler.image.tag=${{ inputs.runtime_tag }} \
-          --set keptn-lifecycle-operator.scheduler.image.repository="localhost:5000/keptn/scheduler" \
-          --set keptn-lifecycle-operator.lifecycleOperator.imagePullPolicy=Never \
-          --set keptn-lifecycle-operator.lifecycleOperator.image.tag=${{ inputs.runtime_tag }} \
-          --set keptn-lifecycle-operator.lifecycleOperator.image.repository="localhost:5000/keptn/lifecycle-operator" \
-          --set keptn-lifecycle-operator.lifecycleOperator.env.functionRunnerImage=localhost:5000/keptn/deno-runtime:${{ inputs.runtime_tag }} \
-          --set keptn-lifecycle-operator.lifecycleOperator.env.pythonRunnerImage=localhost:5000/keptn/python-runtime:${{ inputs.runtime_tag }} \
-          --set keptn-cert-manager.imagePullPolicy=Never \
-          --set keptn-cert-manager.image.tag=${{ inputs.runtime_tag }} \
-          --set keptn-cert-manager.image.repository="localhost:5000/keptn/certificate-operator" \
-          --set keptn-metrics-operator.imagePullPolicy=Never \
-          --set keptn-metrics-operator.env.enableKeptnAnalysis="true" \
-          --set keptn-metrics-operator.image.tag=${{ inputs.runtime_tag }} \
-          --set keptn-metrics-operator.image.repository="localhost:5000/keptn/metrics-operator" \
+          --set lifecycleOperator.schedulingGatesEnabled=${{ inputs.scheduling-gates }} \
+          --set lifecycleOperator.scheduler.imagePullPolicy=Never \
+          --set lifecycleOperator.scheduler.image.tag=${{ inputs.runtime_tag }} \
+          --set lifecycleOperator.scheduler.image.repository="localhost:5000/keptn/scheduler" \
+          --set lifecycleOperator.lifecycleOperator.imagePullPolicy=Never \
+          --set lifecycleOperator.lifecycleOperator.image.tag=${{ inputs.runtime_tag }} \
+          --set lifecycleOperator.lifecycleOperator.image.repository="localhost:5000/keptn/lifecycle-operator" \
+          --set lifecycleOperator.lifecycleOperator.env.functionRunnerImage=localhost:5000/keptn/deno-runtime:${{ inputs.runtime_tag }} \
+          --set lifecycleOperator.lifecycleOperator.env.pythonRunnerImage=localhost:5000/keptn/python-runtime:${{ inputs.runtime_tag }} \
+          --set certManager.imagePullPolicy=Never \
+          --set certManager.image.tag=${{ inputs.runtime_tag }} \
+          --set certManager.image.repository="localhost:5000/keptn/certificate-operator" \
+          --set metricsOperator.imagePullPolicy=Never \
+          --set metricsOperator.env.enableKeptnAnalysis="true" \
+          --set metricsOperator.image.tag=${{ inputs.runtime_tag }} \
+          --set metricsOperator.image.repository="localhost:5000/keptn/metrics-operator" \
           --debug --wait --timeout 1m

@@ -28,9 +28,9 @@ Package v1alpha3 contains API Schema definitions for the lifecycle v1alpha3 API 
 - [KeptnTaskDefinitionList](#keptntaskdefinitionlist)
 - [KeptnTaskList](#keptntasklist)
 - [KeptnWorkload](#keptnworkload)
+- [KeptnWorkloadList](#keptnworkloadlist)
 - [KeptnWorkloadVersion](#keptnworkloadversion)
 - [KeptnWorkloadVersionList](#keptnworkloadversionlist)
-- [KeptnWorkloadList](#keptnworkloadlist)
 
 
 
@@ -675,6 +675,74 @@ _Appears in:_
 | `status` _[KeptnWorkloadStatus](#keptnworkloadstatus)_ | Status describes the current state of the KeptnWorkload. |
 
 
+#### KeptnWorkloadList
+
+
+
+KeptnWorkloadList contains a list of KeptnWorkload
+
+
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
+| `kind` _string_ | `KeptnWorkloadList`
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `items` _[KeptnWorkload](#keptnworkload) array_ |  |
+
+
+#### KeptnWorkloadRef
+
+
+
+KeptnWorkloadRef refers to a KeptnWorkload that is part of a KeptnApp
+
+_Appears in:_
+- [KeptnAppSpec](#keptnappspec)
+- [KeptnAppVersionSpec](#keptnappversionspec)
+- [WorkloadStatus](#workloadstatus)
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the KeptnWorkload. |
+| `version` _string_ | Version is the version of the KeptnWorkload. |
+
+
+#### KeptnWorkloadSpec
+
+
+
+KeptnWorkloadSpec defines the desired state of KeptnWorkload
+
+_Appears in:_
+- [KeptnWorkload](#keptnworkload)
+- [KeptnWorkloadVersionSpec](#keptnworkloadversionspec)
+
+| Field | Description |
+| --- | --- |
+| `app` _string_ | AppName is the name of the KeptnApp containing the KeptnWorkload. |
+| `version` _string_ | Version defines the version of the KeptnWorkload. |
+| `preDeploymentTasks` _string array_ | PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. |
+| `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. |
+| `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed during the pre-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. |
+| `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed during the post-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. |
+| `resourceReference` _[ResourceReference](#resourcereference)_ | ResourceReference is a reference to the Kubernetes resource (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing. |
+
+
+#### KeptnWorkloadStatus
+
+
+
+KeptnWorkloadStatus defines the observed state of KeptnWorkload
+
+_Appears in:_
+- [KeptnWorkload](#keptnworkload)
+
+| Field | Description |
+| --- | --- |
+| `currentVersion` _string_ | CurrentVersion indicates the version that is currently deployed or being reconciled. |
+
+
 #### KeptnWorkloadVersion
 
 
@@ -759,74 +827,6 @@ _Appears in:_
 | `status` _KeptnState_ | Status represents the overall status of the KeptnWorkloadVersion. |
 
 
-#### KeptnWorkloadList
-
-
-
-KeptnWorkloadList contains a list of KeptnWorkload
-
-
-
-| Field | Description |
-| --- | --- |
-| `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
-| `kind` _string_ | `KeptnWorkloadList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
-| `items` _[KeptnWorkload](#keptnworkload) array_ |  |
-
-
-#### KeptnWorkloadRef
-
-
-
-KeptnWorkloadRef refers to a KeptnWorkload that is part of a KeptnApp
-
-_Appears in:_
-- [KeptnAppSpec](#keptnappspec)
-- [KeptnAppVersionSpec](#keptnappversionspec)
-- [WorkloadStatus](#workloadstatus)
-
-| Field | Description |
-| --- | --- |
-| `name` _string_ | Name is the name of the KeptnWorkload. |
-| `version` _string_ | Version is the version of the KeptnWorkload. |
-
-
-#### KeptnWorkloadSpec
-
-
-
-KeptnWorkloadSpec defines the desired state of KeptnWorkload
-
-_Appears in:_
-- [KeptnWorkload](#keptnworkload)
-- [KeptnWorkloadVersionSpec](#keptnworkloadversionspec)
-
-| Field | Description |
-| --- | --- |
-| `app` _string_ | AppName is the name of the KeptnApp containing the KeptnWorkload. |
-| `version` _string_ | Version defines the version of the KeptnWorkload. |
-| `preDeploymentTasks` _string array_ | PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. |
-| `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. |
-| `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed during the pre-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. |
-| `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed during the post-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. |
-| `resourceReference` _[ResourceReference](#resourcereference)_ | ResourceReference is a reference to the Kubernetes resource (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing. |
-
-
-#### KeptnWorkloadStatus
-
-
-
-KeptnWorkloadStatus defines the observed state of KeptnWorkload
-
-_Appears in:_
-- [KeptnWorkload](#keptnworkload)
-
-| Field | Description |
-| --- | --- |
-| `currentVersion` _string_ | CurrentVersion indicates the version that is currently deployed or being reconciled. |
-
-
 #### Objective
 
 
@@ -849,8 +849,8 @@ _Appears in:_
 
 
 _Appears in:_
-- [KeptnWorkloadVersionSpec](#keptnworkloadversionspec)
 - [KeptnWorkloadSpec](#keptnworkloadspec)
+- [KeptnWorkloadVersionSpec](#keptnworkloadversionspec)
 
 | Field | Description |
 | --- | --- |

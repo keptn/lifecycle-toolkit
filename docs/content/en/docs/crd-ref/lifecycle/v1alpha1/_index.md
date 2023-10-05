@@ -26,9 +26,9 @@ Package v1alpha1 contains API Schema definitions for the lifecycle v1alpha1 API 
 - [KeptnTaskDefinitionList](#keptntaskdefinitionlist)
 - [KeptnTaskList](#keptntasklist)
 - [KeptnWorkload](#keptnworkload)
+- [KeptnWorkloadList](#keptnworkloadlist)
 - [KeptnWorkloadVersion](#keptnworkloadversion)
 - [KeptnWorkloadVersionList](#keptnworkloadversionlist)
-- [KeptnWorkloadList](#keptnworkloadlist)
 
 
 
@@ -589,6 +589,74 @@ _Appears in:_
 | `status` _[KeptnWorkloadStatus](#keptnworkloadstatus)_ |  |
 
 
+#### KeptnWorkloadList
+
+
+
+KeptnWorkloadList contains a list of KeptnWorkload
+
+
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1`
+| `kind` _string_ | `KeptnWorkloadList`
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `items` _[KeptnWorkload](#keptnworkload) array_ |  |
+
+
+#### KeptnWorkloadRef
+
+
+
+
+
+_Appears in:_
+- [KeptnAppSpec](#keptnappspec)
+- [KeptnAppVersionSpec](#keptnappversionspec)
+- [WorkloadStatus](#workloadstatus)
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ |  |
+| `version` _string_ |  |
+
+
+#### KeptnWorkloadSpec
+
+
+
+KeptnWorkloadSpec defines the desired state of KeptnWorkload
+
+_Appears in:_
+- [KeptnWorkload](#keptnworkload)
+- [KeptnWorkloadVersionSpec](#keptnworkloadversionspec)
+
+| Field | Description |
+| --- | --- |
+| `app` _string_ |  |
+| `version` _string_ |  |
+| `preDeploymentTasks` _string array_ |  |
+| `postDeploymentTasks` _string array_ |  |
+| `preDeploymentEvaluations` _string array_ |  |
+| `postDeploymentEvaluations` _string array_ |  |
+| `resourceReference` _[ResourceReference](#resourcereference)_ |  |
+
+
+#### KeptnWorkloadStatus
+
+
+
+KeptnWorkloadStatus defines the observed state of KeptnWorkload
+
+_Appears in:_
+- [KeptnWorkload](#keptnworkload)
+
+| Field | Description |
+| --- | --- |
+| `currentVersion` _string_ |  |
+
+
 #### KeptnWorkloadVersion
 
 
@@ -673,74 +741,6 @@ _Appears in:_
 | `status` _KeptnState_ |  |
 
 
-#### KeptnWorkloadList
-
-
-
-KeptnWorkloadList contains a list of KeptnWorkload
-
-
-
-| Field | Description |
-| --- | --- |
-| `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1`
-| `kind` _string_ | `KeptnWorkloadList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
-| `items` _[KeptnWorkload](#keptnworkload) array_ |  |
-
-
-#### KeptnWorkloadRef
-
-
-
-
-
-_Appears in:_
-- [KeptnAppSpec](#keptnappspec)
-- [KeptnAppVersionSpec](#keptnappversionspec)
-- [WorkloadStatus](#workloadstatus)
-
-| Field | Description |
-| --- | --- |
-| `name` _string_ |  |
-| `version` _string_ |  |
-
-
-#### KeptnWorkloadSpec
-
-
-
-KeptnWorkloadSpec defines the desired state of KeptnWorkload
-
-_Appears in:_
-- [KeptnWorkload](#keptnworkload)
-- [KeptnWorkloadVersionSpec](#keptnworkloadversionspec)
-
-| Field | Description |
-| --- | --- |
-| `app` _string_ |  |
-| `version` _string_ |  |
-| `preDeploymentTasks` _string array_ |  |
-| `postDeploymentTasks` _string array_ |  |
-| `preDeploymentEvaluations` _string array_ |  |
-| `postDeploymentEvaluations` _string array_ |  |
-| `resourceReference` _[ResourceReference](#resourcereference)_ |  |
-
-
-#### KeptnWorkloadStatus
-
-
-
-KeptnWorkloadStatus defines the observed state of KeptnWorkload
-
-_Appears in:_
-- [KeptnWorkload](#keptnworkload)
-
-| Field | Description |
-| --- | --- |
-| `currentVersion` _string_ |  |
-
-
 #### Objective
 
 
@@ -764,8 +764,8 @@ _Appears in:_
 
 
 _Appears in:_
-- [KeptnWorkloadVersionSpec](#keptnworkloadversionspec)
 - [KeptnWorkloadSpec](#keptnworkloadspec)
+- [KeptnWorkloadVersionSpec](#keptnworkloadversionspec)
 
 | Field | Description |
 | --- | --- |

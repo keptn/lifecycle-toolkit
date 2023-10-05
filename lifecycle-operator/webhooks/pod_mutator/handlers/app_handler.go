@@ -65,8 +65,6 @@ func (a *AppHandler) createApp(ctx context.Context, newAppCreationRequest *klcv1
 
 func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha3.KeptnAppCreationRequest {
 
-	appName := getAppName(&pod.ObjectMeta)
-
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
@@ -74,32 +72,32 @@ func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace 
 
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        appName,
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
-			AppName: appName,
-		},
+	}
+	if !isAppAnnotationPresent(&pod.ObjectMeta) {
+		if len(kacr.Annotations) == 0 {
+			kacr.Annotations = make(map[string]string)
+		}
+		kacr.Annotations[apicommon.AppTypeAnnotation] = string(apicommon.AppTypeSingleService)
 	}
 
-	if !isAppAnnotationPresent(pod) {
-		kacr.Annotations[apicommon.AppTypeAnnotation] = string(apicommon.AppTypeSingleService)
+	appName := getAppName(&pod.ObjectMeta)
+	kacr.ObjectMeta.Name = appName
+	kacr.Spec = klcv1alpha3.KeptnAppCreationRequestSpec{
+		AppName: appName,
 	}
 
 	return kacr
 }
 
-func isAppAnnotationPresent(pod *corev1.Pod) bool {
-	_, gotAppAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+func isAppAnnotationPresent(meta *metav1.ObjectMeta) bool {
+	_, gotAppAnnotation := GetLabelOrAnnotation(meta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 
 	if gotAppAnnotation {
 		return true
 	}
 
-	if len(pod.Annotations) == 0 {
-		pod.Annotations = make(map[string]string)
-	}
-	pod.Annotations[apicommon.AppAnnotation], _ = GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	return false
 }

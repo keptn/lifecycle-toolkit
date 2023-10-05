@@ -402,14 +402,15 @@ func TestPodMutatingWebhook_Handle_SchedulingGates(t *testing.T) {
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
-	wh := &PodMutatingWebhook{
-		SchedulingGatesEnabled: true,
-		Client:                 fakeClient,
-		Tracer:                 tr,
-		Decoder:                decoder,
-		EventSender:            controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		Log:                    testr.New(t),
-	}
+	wh :=
+		NewPodMutator(
+			fakeClient,
+			tr,
+			decoder,
+			controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+			testr.New(t),
+			true,
+		)
 
 	// Convert the Pod object to a byte array
 	podBytes, err := json.Marshal(pod)
@@ -504,13 +505,13 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
-	wh := &PodMutatingWebhook{
-		Client:      fakeClient,
-		Tracer:      tr,
-		Decoder:     decoder,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		Log:         testr.New(t),
-	}
+	wh := NewPodMutator(fakeClient,
+		tr,
+		decoder,
+		controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		testr.New(t),
+		false,
+	)
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
@@ -611,13 +612,14 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
-	wh := &PodMutatingWebhook{
-		Client:      fakeClient,
-		Tracer:      tr,
-		Decoder:     decoder,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		Log:         testr.New(t),
-	}
+	wh := NewPodMutator(
+		fakeClient,
+		tr,
+		decoder,
+		controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		testr.New(t),
+		false,
+	)
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{

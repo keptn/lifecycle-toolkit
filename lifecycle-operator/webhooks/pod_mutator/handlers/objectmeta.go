@@ -12,6 +12,7 @@ import (
 )
 
 func GetLabelOrAnnotation(resource *metav1.ObjectMeta, primaryAnnotation string, secondaryAnnotation string) (string, bool) {
+
 	if resource.Annotations[primaryAnnotation] != "" {
 		return resource.Annotations[primaryAnnotation], true
 	}
@@ -34,14 +35,18 @@ func GetLabelOrAnnotation(resource *metav1.ObjectMeta, primaryAnnotation string,
 	return "", false
 }
 
-func getWorkloadName(meta *metav1.ObjectMeta) string {
+func getWorkloadName(meta *metav1.ObjectMeta, applicationName string) string {
 	workloadName, _ := GetLabelOrAnnotation(meta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
-	applicationName, _ := GetLabelOrAnnotation(meta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 	return operatorcommon.CreateResourceName(apicommon.MaxK8sObjectLength, apicommon.MinKeptnNameLen, applicationName, workloadName)
 }
 
 func getAppName(meta *metav1.ObjectMeta) string {
-	applicationName, _ := GetLabelOrAnnotation(meta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+	var applicationName string
+	if !isAppAnnotationPresent(meta) {
+		applicationName, _ = GetLabelOrAnnotation(meta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
+	} else {
+		applicationName, _ = GetLabelOrAnnotation(meta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+	}
 	return strings.ToLower(applicationName)
 }
 

@@ -87,13 +87,11 @@ func (a *WorkloadHandler) createWorkload(ctx context.Context, newWorkload *klcv1
 
 func generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha3.KeptnWorkload {
 	version := getVersion(&pod.ObjectMeta)
-	applicationName := getAppName(&pod.ObjectMeta)
-
 	preDeploymentTasks := getAnnotations(&pod.ObjectMeta, apicommon.PreDeploymentTaskAnnotation)
 	postDeploymentTasks := getAnnotations(&pod.ObjectMeta, apicommon.PostDeploymentTaskAnnotation)
 	preDeploymentEvaluation := getAnnotations(&pod.ObjectMeta, apicommon.PreDeploymentEvaluationAnnotation)
 	postDeploymentEvaluation := getAnnotations(&pod.ObjectMeta, apicommon.PostDeploymentEvaluationAnnotation)
-
+	applicationName := getAppName(&pod.ObjectMeta)
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
@@ -103,7 +101,7 @@ func generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *k
 
 	return &klcv1alpha3.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        getWorkloadName(&pod.ObjectMeta),
+			Name:        getWorkloadName(&pod.ObjectMeta, applicationName),
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
 			OwnerReferences: []metav1.OwnerReference{

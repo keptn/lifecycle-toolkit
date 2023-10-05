@@ -398,3 +398,91 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 		})
 	}
 }
+
+func Test_isPodAnnotated(t *testing.T) {
+	type args struct {
+		pod *corev1.Pod
+	}
+	tests := []struct {
+		name      string
+		args      args
+		want      bool
+		wantedPod *corev1.Pod
+	}{
+		{
+			name: "Test return true when pod has workload annotation",
+			args: args{
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							apicommon.WorkloadAnnotation: "some-workload-name",
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "Test return true and initialize annotations when labels are set",
+			args: args{
+				pod: &corev1.Pod{
+					Spec: corev1.PodSpec{
+						Containers: []corev1.Container{
+							{
+								Image: "some-image:v1",
+							},
+						},
+					},
+					ObjectMeta: metav1.ObjectMeta{
+						Labels: map[string]string{
+							apicommon.WorkloadAnnotation: "some-workload-name",
+						},
+					},
+				},
+			},
+			want: true,
+			wantedPod: &corev1.Pod{
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{
+							Image: "some-image:v1",
+						},
+					},
+				},
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: map[string]string{
+						apicommon.WorkloadAnnotation: "some-workload-name",
+					},
+					Annotations: map[string]string{
+						apicommon.VersionAnnotation: "v1",
+					},
+				},
+			},
+		},
+		{
+			name: "Test return false when annotations and labels are not set",
+			args: args{
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Labels: map[string]string{
+							"some-other-label": "some-value",
+						},
+					},
+				},
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			got := isPodAnnotated(tt.args.pod)
+			if got != tt.want {
+				t.Errorf("isPodAnnotated() got = %v, want %v", got, tt.want)
+			}
+			if tt.wantedPod != nil {
+				require.Equal(t, tt.wantedPod, tt.args.pod)
+			}
+		})
+	}
+}

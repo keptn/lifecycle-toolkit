@@ -76,7 +76,9 @@ func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace 
 			Annotations: traceContextCarrier,
 		},
 	}
+
 	if !isAppAnnotationPresent(&pod.ObjectMeta) {
+		inheritWorkloadAnnotation(&pod.ObjectMeta)
 		if len(kacr.Annotations) == 0 {
 			kacr.Annotations = make(map[string]string)
 		}
@@ -100,4 +102,8 @@ func isAppAnnotationPresent(meta *metav1.ObjectMeta) bool {
 	}
 
 	return false
+}
+
+func inheritWorkloadAnnotation(meta *metav1.ObjectMeta) {
+	meta.Annotations[apicommon.AppAnnotation] = meta.Annotations[apicommon.WorkloadAnnotation]
 }

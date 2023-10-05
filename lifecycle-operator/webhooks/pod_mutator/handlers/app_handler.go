@@ -26,6 +26,43 @@ type AppHandler struct {
 	EventSender controllercommon.IEvent
 }
 
+func (a *AppHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace string) error {
+
+	ctx, span := a.Tracer.Start(ctx, "create_app", trace.WithSpanKind(trace.SpanKindProducer))
+	defer span.End()
+
+	newAppCreationRequest := generateAppCreationRequest(ctx, pod, namespace)
+	newAppCreationRequest.SetSpanAttributes(span)
+
+	a.Log.Info("Searching for AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name)
+
+	appCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{}
+	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newAppCreationRequest.Name}, appCreationRequest)
+	if errors.IsNotFound(err) {
+		return a.createApp(ctx, newAppCreationRequest, span)
+	}
+
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return fmt.Errorf("could not fetch AppCreationRequest"+": %+v", err)
+	}
+
+	return nil
+}
+
+func (a *AppHandler) createApp(ctx context.Context, newAppCreationRequest *klcv1alpha3.KeptnAppCreationRequest, span trace.Span) error {
+	a.Log.Info("Creating app creation request", "appCreationRequest", newAppCreationRequest.Name)
+	err := a.Client.Create(ctx, newAppCreationRequest)
+	if err != nil {
+		a.Log.Error(err, "Could not create AppCreationRequest")
+		a.EventSender.Emit(apicommon.PhaseCreateAppCreationRequest, "Warning", newAppCreationRequest, apicommon.PhaseStateFailed, "could not create KeptnAppCreationRequest", newAppCreationRequest.Spec.AppName)
+		span.SetStatus(codes.Error, err.Error())
+		return err
+	}
+
+	return nil
+}
+
 func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha3.KeptnAppCreationRequest {
 
 	appName := getAppName(&pod.ObjectMeta)
@@ -65,39 +102,4 @@ func isAppAnnotationPresent(pod *corev1.Pod) bool {
 	}
 	pod.Annotations[apicommon.AppAnnotation], _ = GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	return false
-}
-
-func (a *AppHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace string) error {
-
-	ctx, span := a.Tracer.Start(ctx, "create_app", trace.WithSpanKind(trace.SpanKindProducer))
-	defer span.End()
-
-	newAppCreationRequest := generateAppCreationRequest(ctx, pod, namespace)
-
-	newAppCreationRequest.SetSpanAttributes(span)
-
-	a.Log.Info("Searching for AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name)
-
-	appCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{}
-	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newAppCreationRequest.Name}, appCreationRequest)
-	if errors.IsNotFound(err) {
-		a.Log.Info("Creating app creation request", "appCreationRequest", appCreationRequest.Name)
-		appCreationRequest = newAppCreationRequest
-		err = a.Client.Create(ctx, appCreationRequest)
-		if err != nil {
-			a.Log.Error(err, "Could not create AppCreationRequest")
-			a.EventSender.Emit(apicommon.PhaseCreateAppCreationRequest, "Warning", appCreationRequest, apicommon.PhaseStateFailed, "could not create KeptnAppCreationRequest", appCreationRequest.Spec.AppName)
-			span.SetStatus(codes.Error, err.Error())
-			return err
-		}
-
-		return nil
-	}
-
-	if err != nil {
-		span.SetStatus(codes.Error, err.Error())
-		return fmt.Errorf("could not fetch AppCreationRequest"+": %+v", err)
-	}
-
-	return nil
 }

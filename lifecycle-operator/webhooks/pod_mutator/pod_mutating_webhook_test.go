@@ -191,14 +191,13 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 	}}
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
+	log := testr.New(t)
 
-	wh := &PodMutatingWebhook{
-		Client:      fakeClient,
-		Tracer:      tr,
-		Decoder:     decoder,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		Log:         testr.New(t),
-	}
+	wh := NewPodMutator(fakeClient,
+		tr,
+		decoder,
+		controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		log, false)
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{

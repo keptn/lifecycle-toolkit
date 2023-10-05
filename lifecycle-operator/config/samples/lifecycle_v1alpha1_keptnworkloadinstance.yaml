@@ -1,6 +1,6 @@
 apiVersion: lifecycle.keptn.sh/v1alpha1
-kind: KeptnWorkloadInstance
+kind: KeptnWorkloadVersion
 metadata:
-  name: keptnworkloadinstance-sample
+  name: keptnworkloadversion-sample
 spec:
 # TODO(user): Add fields here

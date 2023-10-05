@@ -14,7 +14,7 @@
 
 ### Bug Fixes
 
-* **lifecycle-operator:** avoid setting the overall state of an App or WorkloadInstance between state transitions ([#1871](https://github.com/keptn/lifecycle-toolkit/issues/1871)) ([ee0b085](https://github.com/keptn/lifecycle-toolkit/commit/ee0b085b05b2b9781457eba34d5d1050b3c7a604))
+* **lifecycle-operator:** avoid setting the overall state of an App or WorkloadVersion between state transitions ([#1871](https://github.com/keptn/lifecycle-toolkit/issues/1871)) ([ee0b085](https://github.com/keptn/lifecycle-toolkit/commit/ee0b085b05b2b9781457eba34d5d1050b3c7a604))
 
 
 ### Other

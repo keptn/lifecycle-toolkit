@@ -21,7 +21,7 @@ and apply the updated `KeptnApp` manifest
 to create a new revision of the `KeptnApp`
 without modifying the `version`.
 
-Afterwards, all related `KeptnWorkloadInstances`
+Afterwards, all related `KeptnWorkloadVersions`
 automatically refer to the newly created revision of the `KeptnAppVersion`
 to determine whether they are allowed
 to enter their respective deployment phases.

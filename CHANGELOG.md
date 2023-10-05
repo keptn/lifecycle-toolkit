@@ -261,7 +261,7 @@
 * **operator:** make use of status.jobName when searching for job in KeptnTask controller ([#1436](https://github.com/keptn/lifecycle-toolkit/issues/1436)) ([28dd6b7](https://github.com/keptn/lifecycle-toolkit/commit/28dd6b77c4cacd038539e30ac8275d6f63d39155))
 * **operator:** refactor KeptnTask controller logic ([#1536](https://github.com/keptn/lifecycle-toolkit/issues/1536)) ([ed85fc9](https://github.com/keptn/lifecycle-toolkit/commit/ed85fc972cd676ca0be05dae10aabf90e969d503))
 * **operator:** refactor keptntaskcontroller to use builder interface ([#1450](https://github.com/keptn/lifecycle-toolkit/issues/1450)) ([a3f5e5b](https://github.com/keptn/lifecycle-toolkit/commit/a3f5e5bc3fc8bd8073d264c30c39a38fc09d364e))
-* **operator:** use List() when fetching KeptnWorkloadInstances for KeptnAppVersion ([#1456](https://github.com/keptn/lifecycle-toolkit/issues/1456)) ([ecd8c48](https://github.com/keptn/lifecycle-toolkit/commit/ecd8c487b22b11bea0646a3c5b2a1f9a22c80d2f))
+* **operator:** use List() when fetching KeptnWorkloadVersions for KeptnAppVersion ([#1456](https://github.com/keptn/lifecycle-toolkit/issues/1456)) ([ecd8c48](https://github.com/keptn/lifecycle-toolkit/commit/ecd8c487b22b11bea0646a3c5b2a1f9a22c80d2f))
 * remove code duplication ([#1372](https://github.com/keptn/lifecycle-toolkit/issues/1372)) ([da66c80](https://github.com/keptn/lifecycle-toolkit/commit/da66c80653b4a992fd94e49b067f4a21bdf3978b))
 * remove decoder injector interface from webhook ([#1563](https://github.com/keptn/lifecycle-toolkit/issues/1563)) ([7850766](https://github.com/keptn/lifecycle-toolkit/commit/785076613942995fdda8882dcbb74b4b1963675e))
 * remove space in python sample folder ([#1550](https://github.com/keptn/lifecycle-toolkit/issues/1550)) ([53443ac](https://github.com/keptn/lifecycle-toolkit/commit/53443ac4042e5f78e402df7378770fd163b5167c))
@@ -790,7 +790,7 @@
 
 ### ⚠ BREAKING CHANGES
 
-* Evaluation and Task statuses in KeptnWorkloadInstance/KeptnAppVersion use the same structure
+* Evaluation and Task statuses in KeptnWorkloadVersion/KeptnAppVersion use the same structure
 * **operator:** With API version `v1alpha2`, `KeptnEvaluationProvider` uses a Secret Selector instead of `SecretName`.
 * We are introducing scarf.sh for download tracking to have valuable information that will show us adoption rates for the toolkit.
 
@@ -812,7 +812,7 @@
 
 ### Bug Fixes
 
-* **dashboards:** use fixed color mode for succeeded AppVersion/WorkloadInstance tiles ([#515](https://github.com/keptn/lifecycle-toolkit/issues/515)) ([8cdb23e](https://github.com/keptn/lifecycle-toolkit/commit/8cdb23ee61cc7ee22be2b7326bbf202ee3ddf09f))
+* **dashboards:** use fixed color mode for succeeded AppVersion/WorkloadVersion tiles ([#515](https://github.com/keptn/lifecycle-toolkit/issues/515)) ([8cdb23e](https://github.com/keptn/lifecycle-toolkit/commit/8cdb23ee61cc7ee22be2b7326bbf202ee3ddf09f))
 
 
 ### Dependency Updates
@@ -945,7 +945,7 @@
 * Add Dashboards for Applications and Workloads ([#219](https://github.com/keptn/lifecycle-toolkit/issues/219)) ([48589e2](https://github.com/keptn/lifecycle-toolkit/commit/48589e2a521df0ff7c607a9fb74f47c06f81d3bf))
 * Bootstrap webhook/component/integration/performance tests ([#225](https://github.com/keptn/lifecycle-toolkit/issues/225)) ([dbe08c0](https://github.com/keptn/lifecycle-toolkit/commit/dbe08c0a5947a3fbe42aa94660352c3ef6357f14))
 * **operator:** Add additional metrics for Deployment duration and interval ([#220](https://github.com/keptn/lifecycle-toolkit/issues/220)) ([71383c0](https://github.com/keptn/lifecycle-toolkit/commit/71383c0680cd17bec96b01155376cff683034d24))
-* **operator:** Add information about current phase in workloadinstances and appversions ([#200](https://github.com/keptn/lifecycle-toolkit/issues/200)) ([55fa4e9](https://github.com/keptn/lifecycle-toolkit/commit/55fa4e97c62aec7bd1a45f85d47cfaca48f3dd8f))
+* **operator:** Add information about current phase in workloadversions and appversions ([#200](https://github.com/keptn/lifecycle-toolkit/issues/200)) ([55fa4e9](https://github.com/keptn/lifecycle-toolkit/commit/55fa4e97c62aec7bd1a45f85d47cfaca48f3dd8f))
 * **operator:** Add separate trace for Deployment ([#222](https://github.com/keptn/lifecycle-toolkit/issues/222)) ([6966e3d](https://github.com/keptn/lifecycle-toolkit/commit/6966e3d467e058471f15e90159ed749490bc30b2))
 * **operator:** Improve state and phase information ([#211](https://github.com/keptn/lifecycle-toolkit/issues/211)) ([6982074](https://github.com/keptn/lifecycle-toolkit/commit/6982074cae4e8147c4643aae821c284614d542b3))
 * **operator:** Use Async Gauges for active KLC Entities ([#206](https://github.com/keptn/lifecycle-toolkit/issues/206)) ([9d61ab2](https://github.com/keptn/lifecycle-toolkit/commit/9d61ab2664d5f3339ed5af4e1303eacf2fc89dec))
@@ -997,9 +997,9 @@
 
 ### ⚠ BREAKING CHANGES
 
-* **operator:** Modified behavior of KeptnAppVersion and KeptnWorkloadInstance to support pre and post deployment evaluation checks with Prometheus montoring
+* **operator:** Modified behavior of KeptnAppVersion and KeptnWorkloadVersion to support pre and post deployment evaluation checks with Prometheus montoring
 * **operator:** now the namespaces have to be annotated/labeled with keptn.sh/lifecycle-toolkit=enabled when the lifecycle controller should be used
-* **operator:** Implementation of the KeptnApp CRD and Controller. This modifies the behaviour of the KeptnWorkloadInstance and Keptn MutatingWebhook
+* **operator:** Implementation of the KeptnApp CRD and Controller. This modifies the behaviour of the KeptnWorkloadVersion and Keptn MutatingWebhook
 
 ### Features
 
@@ -1009,7 +1009,7 @@
 * **operator:** Added minimal context information ([#170](https://github.com/keptn/lifecycle-toolkit/issues/170)) ([eebe420](https://github.com/keptn/lifecycle-toolkit/commit/eebe4200aac74a7c2cbc73720d1d9ac6a0c1fc72))
 * **operator:** Allow pre- and post-deployment tasks as labels or annotations ([#181](https://github.com/keptn/lifecycle-toolkit/issues/181)) ([4241fe7](https://github.com/keptn/lifecycle-toolkit/commit/4241fe7cfab91aa6d38309eacf5712436a6e8327))
 * **operator:** Bootstrap evaluation CRD from app ([#184](https://github.com/keptn/lifecycle-toolkit/issues/184)) ([74c3dbc](https://github.com/keptn/lifecycle-toolkit/commit/74c3dbc7b6d78d8ca7eafbac50abb8c3473701eb))
-* **operator:** Bootstrap evaluation CRD from WorkloadInstance ([#188](https://github.com/keptn/lifecycle-toolkit/issues/188)) ([95e206b](https://github.com/keptn/lifecycle-toolkit/commit/95e206b4165b0277f5acbc67fc78a8e28f06741b))
+* **operator:** Bootstrap evaluation CRD from WorkloadVersion ([#188](https://github.com/keptn/lifecycle-toolkit/issues/188)) ([95e206b](https://github.com/keptn/lifecycle-toolkit/commit/95e206b4165b0277f5acbc67fc78a8e28f06741b))
 * **operator:** Bootstrap KeptnEvaluationProvider and KeptnEvaluation Definition CRDs ([#165](https://github.com/keptn/lifecycle-toolkit/issues/165)) ([03d2346](https://github.com/keptn/lifecycle-toolkit/commit/03d234610fd8ef9f21e756450c7f503cb236f302))
 * **operator:** Fix phase naming ([#197](https://github.com/keptn/lifecycle-toolkit/issues/197)) ([3739127](https://github.com/keptn/lifecycle-toolkit/commit/3739127d2794d75c489a6af04acf57b82920ca46))
 * **operator:** Introduce KeptnEvaluation Controller + CRD ([#168](https://github.com/keptn/lifecycle-toolkit/issues/168)) ([1ce044a](https://github.com/keptn/lifecycle-toolkit/commit/1ce044a3470f815597d725d424a5491f828f2c4c))
@@ -1044,7 +1044,7 @@
 * **operator:** Added metrics ([#55](https://github.com/keptn/lifecycle-toolkit/issues/55)) ([f8a3cee](https://github.com/keptn/lifecycle-toolkit/commit/f8a3ceea6d1628750e7c3a7c9cd3372642bd0611))
 * **operator:** Introduce OTel tracing for Task controller ([#128](https://github.com/keptn/lifecycle-toolkit/issues/128)) ([0baf7a9](https://github.com/keptn/lifecycle-toolkit/commit/0baf7a9d8058877247bc264eb6fdb645b0a77a60))
 * **operator:** Introduce OTel tracing for Workload controller ([#125](https://github.com/keptn/lifecycle-toolkit/issues/125)) ([bc03709](https://github.com/keptn/lifecycle-toolkit/commit/bc03709b744d61ad966b5fba9f70dbeaffa10119))
-* **operator:** Introduce OTel tracing for WorkloadInstance controller ([#131](https://github.com/keptn/lifecycle-toolkit/issues/131)) ([a195614](https://github.com/keptn/lifecycle-toolkit/commit/a1956141fe80e5b1afd79fb33198313e1dbff7fa))
+* **operator:** Introduce OTel tracing for WorkloadVersion controller ([#131](https://github.com/keptn/lifecycle-toolkit/issues/131)) ([a195614](https://github.com/keptn/lifecycle-toolkit/commit/a1956141fe80e5b1afd79fb33198313e1dbff7fa))
 * **scheduler:** Add OTel Resource Attributes ([#147](https://github.com/keptn/lifecycle-toolkit/issues/147)) ([b952156](https://github.com/keptn/lifecycle-toolkit/commit/b9521568e95e7855ee4fef5d55559376e2d398d9))
 * **scheduler:** Add support for OTel collector ([#146](https://github.com/keptn/lifecycle-toolkit/issues/146)) ([9fd210d](https://github.com/keptn/lifecycle-toolkit/commit/9fd210d0355e5d17316f5daa8a8e289a03755d46))
 * **scheduler:** Add tracing support ([#129](https://github.com/keptn/lifecycle-toolkit/issues/129)) ([60651d1](https://github.com/keptn/lifecycle-toolkit/commit/60651d15c78f9e0aa786d4dd4836c9ae828b14f3))

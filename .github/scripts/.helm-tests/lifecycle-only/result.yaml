@@ -4477,11 +4477,11 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/lifecycleOperator/templates/keptnworkloadinstance-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnworkloadversion-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: keptnworkloadinstances.lifecycle.keptn.sh
+  name: keptnworkloadversions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
@@ -4507,12 +4507,12 @@ spec:
       - v1
   group: lifecycle.keptn.sh
   names:
-    kind: KeptnWorkloadInstance
-    listKind: KeptnWorkloadInstanceList
-    plural: keptnworkloadinstances
+    kind: KeptnWorkloadVersion
+    listKind: KeptnWorkloadVersionList
+    plural: keptnworkloadversions
     shortNames:
     - kwi
-    singular: keptnworkloadinstance
+    singular: keptnworkloadversion
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -4551,7 +4551,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KeptnWorkloadInstance is the Schema for the keptnworkloadinstances
+        description: KeptnWorkloadVersion is the Schema for the keptnworkloadversions
           API
         properties:
           apiVersion:
@@ -4567,7 +4567,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnWorkloadInstanceSpec defines the desired state of KeptnWorkloadInstance
+            description: KeptnWorkloadVersionSpec defines the desired state of KeptnWorkloadVersion
             properties:
               app:
                 type: string
@@ -4621,8 +4621,8 @@ spec:
             - workloadName
             type: object
           status:
-            description: KeptnWorkloadInstanceStatus defines the observed state of
-              KeptnWorkloadInstance
+            description: KeptnWorkloadVersionStatus defines the observed state of
+              KeptnWorkloadVersion
             properties:
               currentPhase:
                 type: string
@@ -4774,7 +4774,7 @@ spec:
     name: v1alpha2
     schema:
       openAPIV3Schema:
-        description: KeptnWorkloadInstance is the Schema for the keptnworkloadinstances
+        description: KeptnWorkloadVersion is the Schema for the keptnworkloadversions
           API
         properties:
           apiVersion:
@@ -4790,7 +4790,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: KeptnWorkloadInstanceSpec defines the desired state of KeptnWorkloadInstance
+            description: KeptnWorkloadVersionSpec defines the desired state of KeptnWorkloadVersion
             properties:
               app:
                 type: string
@@ -4844,8 +4844,8 @@ spec:
             - workloadName
             type: object
           status:
-            description: KeptnWorkloadInstanceStatus defines the observed state of
-              KeptnWorkloadInstance
+            description: KeptnWorkloadVersionStatus defines the observed state of
+              KeptnWorkloadVersion
             properties:
               currentPhase:
                 type: string
@@ -5003,7 +5003,7 @@ spec:
     name: v1alpha3
     schema:
       openAPIV3Schema:
-        description: KeptnWorkloadInstance is the Schema for the keptnworkloadinstances
+        description: KeptnWorkloadVersion is the Schema for the keptnworkloadversions
           API
         properties:
           apiVersion:
@@ -5019,7 +5019,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: Spec describes the desired state of the KeptnWorkloadInstance.
+            description: Spec describes the desired state of the KeptnWorkloadVersion.
             properties:
               app:
                 description: AppName is the name of the KeptnApp containing the KeptnWorkload.
@@ -5100,21 +5100,21 @@ spec:
             - workloadName
             type: object
           status:
-            description: Status describes the current state of the KeptnWorkloadInstance.
+            description: Status describes the current state of the KeptnWorkloadVersion.
             properties:
               currentPhase:
-                description: 'CurrentPhase indicates the current phase of the KeptnWorkloadInstance.
+                description: 'CurrentPhase indicates the current phase of the KeptnWorkloadVersion.
                   This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment
                   - PostDeploymentTasks - PostDeploymentEvaluations'
                 type: string
               deploymentStatus:
                 default: Pending
                 description: DeploymentStatus indicates the current status of the
-                  KeptnWorkloadInstance's Deployment phase.
+                  KeptnWorkloadVersion's Deployment phase.
                 type: string
               endTime:
                 description: EndTime represents the time at which the deployment of
-                  the KeptnWorkloadInstance finished.
+                  the KeptnWorkloadVersion finished.
                 format: date-time
                 type: string
               phaseTraceIDs:
@@ -5125,16 +5125,16 @@ spec:
                     in memory as a storage medium for propagated key-value pairs.
                   type: object
                 description: PhaseTraceIDs contains the trace IDs of the OpenTelemetry
-                  spans of each phase of the KeptnWorkloadInstance
+                  spans of each phase of the KeptnWorkloadVersion
                 type: object
               postDeploymentEvaluationStatus:
                 default: Pending
                 description: PostDeploymentEvaluationStatus indicates the current
-                  status of the KeptnWorkloadInstance's PostDeploymentEvaluation phase.
+                  status of the KeptnWorkloadVersion's PostDeploymentEvaluation phase.
                 type: string
               postDeploymentEvaluationTaskStatus:
                 description: PostDeploymentEvaluationTaskStatus indicates the current
-                  state of each postDeploymentEvaluation of the KeptnWorkloadInstance.
+                  state of each postDeploymentEvaluation of the KeptnWorkloadVersion.
                 items:
                   properties:
                     definitionName:
@@ -5161,11 +5161,11 @@ spec:
               postDeploymentStatus:
                 default: Pending
                 description: PostDeploymentStatus indicates the current status of
-                  the KeptnWorkloadInstance's PostDeployment phase.
+                  the KeptnWorkloadVersion's PostDeployment phase.
                 type: string
               postDeploymentTaskStatus:
                 description: PostDeploymentTaskStatus indicates the current state
-                  of each postDeploymentTask of the KeptnWorkloadInstance.
+                  of each postDeploymentTask of the KeptnWorkloadVersion.
                 items:
                   properties:
                     definitionName:
@@ -5192,11 +5192,11 @@ spec:
               preDeploymentEvaluationStatus:
                 default: Pending
                 description: PreDeploymentEvaluationStatus indicates the current status
-                  of the KeptnWorkloadInstance's PreDeploymentEvaluation phase.
+                  of the KeptnWorkloadVersion's PreDeploymentEvaluation phase.
                 type: string
               preDeploymentEvaluationTaskStatus:
                 description: PreDeploymentEvaluationTaskStatus indicates the current
-                  state of each preDeploymentEvaluation of the KeptnWorkloadInstance.
+                  state of each preDeploymentEvaluation of the KeptnWorkloadVersion.
                 items:
                   properties:
                     definitionName:
@@ -5223,11 +5223,11 @@ spec:
               preDeploymentStatus:
                 default: Pending
                 description: PreDeploymentStatus indicates the current status of the
-                  KeptnWorkloadInstance's PreDeployment phase.
+                  KeptnWorkloadVersion's PreDeployment phase.
                 type: string
               preDeploymentTaskStatus:
                 description: PreDeploymentTaskStatus indicates the current state of
-                  each preDeploymentTask of the KeptnWorkloadInstance.
+                  each preDeploymentTask of the KeptnWorkloadVersion.
                 items:
                   properties:
                     definitionName:
@@ -5253,12 +5253,12 @@ spec:
                 type: array
               startTime:
                 description: StartTime represents the time at which the deployment
-                  of the KeptnWorkloadInstance started.
+                  of the KeptnWorkloadVersion started.
                 format: date-time
                 type: string
               status:
                 default: Pending
-                description: Status represents the overall status of the KeptnWorkloadInstance.
+                description: Status represents the overall status of the KeptnWorkloadVersion.
                 type: string
             type: object
         type: object
@@ -5444,7 +5444,7 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnworkloadinstances
+  - keptnworkloadversions
   verbs:
   - get
   - list
@@ -5761,7 +5761,7 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnworkloadinstances
+  - keptnworkloadversions
   verbs:
   - create
   - delete
@@ -5773,13 +5773,13 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnworkloadinstances/finalizers
+  - keptnworkloadversions/finalizers
   verbs:
   - update
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnworkloadinstances/status
+  - keptnworkloadversions/status
   verbs:
   - get
   - patch

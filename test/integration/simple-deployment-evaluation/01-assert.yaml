@@ -6,7 +6,7 @@ metadata:
 ---
 
 apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnWorkloadInstance
+kind: KeptnWorkloadVersion
 metadata:
   name: waiter-waiter-0.4
 status:

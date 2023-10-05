@@ -183,7 +183,7 @@ CreateTask
 CreateApp
 CreateAppVersion
 CreateWorkload
-CreateWorkloadInstance
+CreateWorkloadVersion
 Completed
 Deprecated
 WorkloadDeployReconcile

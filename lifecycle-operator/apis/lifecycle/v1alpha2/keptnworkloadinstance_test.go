@@ -12,13 +12,13 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func TestKeptnWorkloadInstance(t *testing.T) {
-	workload := &KeptnWorkloadInstance{
+func TestKeptnWorkloadVersion(t *testing.T) {
+	workload := &KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "workload",
 			Namespace: "namespace",
 		},
-		Status: KeptnWorkloadInstanceStatus{
+		Status: KeptnWorkloadVersionStatus{
 			PreDeploymentStatus:            common.StateFailed,
 			PreDeploymentEvaluationStatus:  common.StateFailed,
 			PostDeploymentStatus:           common.StateFailed,
@@ -55,7 +55,7 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 			},
 			CurrentPhase: common.PhaseAppDeployment.ShortName,
 		},
-		Spec: KeptnWorkloadInstanceSpec{
+		Spec: KeptnWorkloadVersionSpec{
 			KeptnWorkloadSpec: KeptnWorkloadSpec{
 				PreDeploymentTasks:        []string{"task1", "task2"},
 				PostDeploymentTasks:       []string{"task3", "task4"},
@@ -217,17 +217,17 @@ func TestKeptnWorkloadInstance(t *testing.T) {
 	}, workload.GetSpanAttributes())
 
 	require.Equal(t, map[string]string{
-		"appName":              "appname",
-		"workloadName":         "workloadname",
-		"workloadVersion":      "version",
-		"workloadInstanceName": "workload",
+		"appName":             "appname",
+		"workloadName":        "workloadname",
+		"workloadVersion":     "version",
+		"workloadVersionName": "workload",
 	}, workload.GetEventAnnotations())
 }
 
 //nolint:dupl
-func TestKeptnWorkloadInstance_DeprecateRemainingPhases(t *testing.T) {
-	workloadInstance := KeptnWorkloadInstance{
-		Status: KeptnWorkloadInstanceStatus{
+func TestKeptnWorkloadVersion_DeprecateRemainingPhases(t *testing.T) {
+	workloadVersion := KeptnWorkloadVersion{
+		Status: KeptnWorkloadVersionStatus{
 			PreDeploymentStatus:            common.StatePending,
 			PreDeploymentEvaluationStatus:  common.StatePending,
 			PostDeploymentStatus:           common.StatePending,
@@ -238,15 +238,15 @@ func TestKeptnWorkloadInstance_DeprecateRemainingPhases(t *testing.T) {
 	}
 
 	tests := []struct {
-		workloadInstance KeptnWorkloadInstance
-		phase            common.KeptnPhaseType
-		want             KeptnWorkloadInstance
+		workloadVersion KeptnWorkloadVersion
+		phase           common.KeptnPhaseType
+		want            KeptnWorkloadVersion
 	}{
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseWorkloadPostEvaluation,
-			want: KeptnWorkloadInstance{
-				Status: KeptnWorkloadInstanceStatus{
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseWorkloadPostEvaluation,
+			want: KeptnWorkloadVersion{
+				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StatePending,
@@ -257,10 +257,10 @@ func TestKeptnWorkloadInstance_DeprecateRemainingPhases(t *testing.T) {
 			},
 		},
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseWorkloadPostDeployment,
-			want: KeptnWorkloadInstance{
-				Status: KeptnWorkloadInstanceStatus{
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseWorkloadPostDeployment,
+			want: KeptnWorkloadVersion{
+				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StatePending,
@@ -271,10 +271,10 @@ func TestKeptnWorkloadInstance_DeprecateRemainingPhases(t *testing.T) {
 			},
 		},
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseWorkloadDeployment,
-			want: KeptnWorkloadInstance{
-				Status: KeptnWorkloadInstanceStatus{
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseWorkloadDeployment,
+			want: KeptnWorkloadVersion{
+				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StateDeprecated,
@@ -285,10 +285,10 @@ func TestKeptnWorkloadInstance_DeprecateRemainingPhases(t *testing.T) {
 			},
 		},
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseWorkloadPreEvaluation,
-			want: KeptnWorkloadInstance{
-				Status: KeptnWorkloadInstanceStatus{
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseWorkloadPreEvaluation,
+			want: KeptnWorkloadVersion{
+				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StateDeprecated,
@@ -299,10 +299,10 @@ func TestKeptnWorkloadInstance_DeprecateRemainingPhases(t *testing.T) {
 			},
 		},
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseWorkloadPreDeployment,
-			want: KeptnWorkloadInstance{
-				Status: KeptnWorkloadInstanceStatus{
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseWorkloadPreDeployment,
+			want: KeptnWorkloadVersion{
+				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StateDeprecated,
 					PostDeploymentStatus:           common.StateDeprecated,
@@ -313,10 +313,10 @@ func TestKeptnWorkloadInstance_DeprecateRemainingPhases(t *testing.T) {
 			},
 		},
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseDeprecated,
-			want: KeptnWorkloadInstance{
-				Status: KeptnWorkloadInstanceStatus{
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseDeprecated,
+			want: KeptnWorkloadVersion{
+				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StateDeprecated,
 					PreDeploymentEvaluationStatus:  common.StateDeprecated,
 					PostDeploymentStatus:           common.StateDeprecated,
@@ -327,10 +327,10 @@ func TestKeptnWorkloadInstance_DeprecateRemainingPhases(t *testing.T) {
 			},
 		},
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseAppPreDeployment,
-			want: KeptnWorkloadInstance{
-				Status: KeptnWorkloadInstanceStatus{
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseAppPreDeployment,
+			want: KeptnWorkloadVersion{
+				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StatePending,
@@ -344,23 +344,23 @@ func TestKeptnWorkloadInstance_DeprecateRemainingPhases(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
-			tt.workloadInstance.DeprecateRemainingPhases(tt.phase)
-			require.Equal(t, tt.want, tt.workloadInstance)
+			tt.workloadVersion.DeprecateRemainingPhases(tt.phase)
+			require.Equal(t, tt.want, tt.workloadVersion)
 		})
 	}
 }
 
-func TestKeptnWorkloadInstance_SetPhaseTraceID(t *testing.T) {
-	app := KeptnWorkloadInstance{
-		Status: KeptnWorkloadInstanceStatus{},
+func TestKeptnWorkloadVersion_SetPhaseTraceID(t *testing.T) {
+	app := KeptnWorkloadVersion{
+		Status: KeptnWorkloadVersionStatus{},
 	}
 
 	app.SetPhaseTraceID(common.PhaseAppDeployment.ShortName, propagation.MapCarrier{
 		"name3": "trace3",
 	})
 
-	require.Equal(t, KeptnWorkloadInstance{
-		Status: KeptnWorkloadInstanceStatus{
+	require.Equal(t, KeptnWorkloadVersion{
+		Status: KeptnWorkloadVersionStatus{
 			PhaseTraceIDs: common.PhaseTraceID{
 				common.PhaseAppDeployment.ShortName: propagation.MapCarrier{
 					"name3": "trace3",
@@ -373,8 +373,8 @@ func TestKeptnWorkloadInstance_SetPhaseTraceID(t *testing.T) {
 		"name2": "trace2",
 	})
 
-	require.Equal(t, KeptnWorkloadInstance{
-		Status: KeptnWorkloadInstanceStatus{
+	require.Equal(t, KeptnWorkloadVersion{
+		Status: KeptnWorkloadVersionStatus{
 			PhaseTraceIDs: common.PhaseTraceID{
 				common.PhaseAppDeployment.ShortName: propagation.MapCarrier{
 					"name3": "trace3",
@@ -387,9 +387,9 @@ func TestKeptnWorkloadInstance_SetPhaseTraceID(t *testing.T) {
 	}, app)
 }
 
-func TestKeptnWorkloadInstanceList(t *testing.T) {
-	list := KeptnWorkloadInstanceList{
-		Items: []KeptnWorkloadInstance{
+func TestKeptnWorkloadVersionList(t *testing.T) {
+	list := KeptnWorkloadVersionList{
+		Items: []KeptnWorkloadVersion{
 			{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "obj1",

@@ -44,7 +44,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptntask"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkload"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadinstance"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadversion"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/options"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -91,7 +91,7 @@ type envConfig struct {
 	KeptnTaskControllerLogLevel               int `envconfig:"KEPTN_TASK_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnTaskDefinitionControllerLogLevel     int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadControllerLogLevel           int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadInstanceControllerLogLevel   int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadVersionControllerLogLevel    int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
 	SchedulingGatesEnabled bool `envconfig:"SCHEDULING_GATES_ENABLED" default:"false"`
@@ -270,20 +270,20 @@ func main() {
 		os.Exit(1)
 	}
 
-	workloadInstanceLogger := ctrl.Log.WithName("KeptnWorkloadInstance Controller").V(env.KeptnWorkloadInstanceControllerLogLevel)
-	workloadInstanceRecorder := mgr.GetEventRecorderFor("keptnworkloadinstance-controller")
-	workloadInstanceReconciler := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
-		SchedulingGatesHandler: controllercommon.NewSchedulingGatesHandler(mgr.GetClient(), workloadInstanceLogger, env.SchedulingGatesEnabled),
+	workloadVersionLogger := ctrl.Log.WithName("KeptnWorkloadVersion Controller").V(env.KeptnWorkloadVersionControllerLogLevel)
+	workloadVersionRecorder := mgr.GetEventRecorderFor("keptnworkloadversion-controller")
+	workloadVersionReconciler := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
+		SchedulingGatesHandler: controllercommon.NewSchedulingGatesHandler(mgr.GetClient(), workloadVersionLogger, env.SchedulingGatesEnabled),
 		Client:                 mgr.GetClient(),
 		Scheme:                 mgr.GetScheme(),
-		Log:                    workloadInstanceLogger,
-		EventSender:            controllercommon.NewEventMultiplexer(workloadInstanceLogger, workloadInstanceRecorder, ceClient),
+		Log:                    workloadVersionLogger,
+		EventSender:            controllercommon.NewEventMultiplexer(workloadVersionLogger, workloadVersionRecorder, ceClient),
 		Meters:                 keptnMeters,
 		TracerFactory:          telemetry.GetOtelInstance(),
 		SpanHandler:            spanHandler,
 	}
-	if err = (workloadInstanceReconciler).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadInstance")
+	if err = (workloadVersionReconciler).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadVersion")
 		os.Exit(1)
 	}
 
@@ -342,8 +342,8 @@ func main() {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnAppVersion")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1alpha3.KeptnWorkloadInstance{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
+	if err = (&lifecyclev1alpha3.KeptnWorkloadVersion{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadVersion")
 		os.Exit(1)
 	}
 	if err = (&lifecyclev1alpha3.KeptnTaskDefinition{}).SetupWebhookWithManager(mgr); err != nil {

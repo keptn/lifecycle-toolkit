@@ -294,7 +294,7 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnworkloadinstances
+  - keptnworkloadversions
   verbs:
   - create
   - delete
@@ -306,13 +306,13 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnworkloadinstances/finalizers
+  - keptnworkloadversions/finalizers
   verbs:
   - update
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnworkloadinstances/status
+  - keptnworkloadversions/status
   verbs:
   - get
   - patch

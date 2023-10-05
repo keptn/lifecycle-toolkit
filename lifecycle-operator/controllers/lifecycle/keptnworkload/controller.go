@@ -55,9 +55,9 @@ type KeptnWorkloadReconciler struct {
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads/finalizers,verbs=update
-// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances/finalizers,verbs=update
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -90,22 +90,22 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name)
 
-	workloadInstance := &klcv1alpha3.KeptnWorkloadInstance{}
+	workloadVersion := &klcv1alpha3.KeptnWorkloadVersion{}
 
 	// Try to find the workload instance
-	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workload.GetWorkloadInstanceName()}, workloadInstance)
+	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workload.GetWorkloadVersionName()}, workloadVersion)
 	// If the workload instance does not exist, create it
 	if errors.IsNotFound(err) {
-		workloadInstance, err := r.createWorkloadInstance(ctx, workload)
+		workloadVersion, err := r.createWorkloadVersion(ctx, workload)
 		if err != nil {
 			span.SetStatus(codes.Error, err.Error())
 			return reconcile.Result{}, err
 		}
-		err = r.Client.Create(ctx, workloadInstance)
+		err = r.Client.Create(ctx, workloadVersion)
 		if err != nil {
-			r.Log.Error(err, "could not create WorkloadInstance")
+			r.Log.Error(err, "could not create WorkloadVersion")
 			span.SetStatus(codes.Error, err.Error())
-			r.EventSender.Emit(apicommon.PhaseCreateWorklodInstance, "Warning", workloadInstance, apicommon.PhaseStateFailed, "could not create KeptnWorkloadInstance ", workloadInstance.Spec.Version)
+			r.EventSender.Emit(apicommon.PhaseCreateWorklodInstance, "Warning", workloadVersion, apicommon.PhaseStateFailed, "could not create KeptnWorkloadVersion ", workloadVersion.Spec.Version)
 			return ctrl.Result{}, err
 		}
 		workload.Status.CurrentVersion = workload.Spec.Version
@@ -116,7 +116,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return ctrl.Result{}, nil
 	}
 	if err != nil {
-		r.Log.Error(err, "could not get WorkloadInstance")
+		r.Log.Error(err, "could not get WorkloadVersion")
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{}, err
 	}
@@ -137,7 +137,7 @@ func (r *KeptnWorkloadReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, workload *klcv1alpha3.KeptnWorkload) (*klcv1alpha3.KeptnWorkloadInstance, error) {
+func (r *KeptnWorkloadReconciler) createWorkloadVersion(ctx context.Context, workload *klcv1alpha3.KeptnWorkload) (*klcv1alpha3.KeptnWorkloadVersion, error) {
 	ctx, span := r.getTracer().Start(ctx, "create_workload_instance", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
@@ -153,13 +153,13 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, wo
 		previousVersion = workload.Status.CurrentVersion
 	}
 
-	workloadInstance := workload.GenerateWorkloadInstance(previousVersion, traceContextCarrier)
-	err := controllerutil.SetControllerReference(workload, &workloadInstance, r.Scheme)
+	workloadVersion := workload.GenerateWorkloadVersion(previousVersion, traceContextCarrier)
+	err := controllerutil.SetControllerReference(workload, &workloadVersion, r.Scheme)
 	if err != nil {
-		r.Log.Error(err, "could not set controller reference for WorkloadInstance: "+workloadInstance.Name)
+		r.Log.Error(err, "could not set controller reference for WorkloadVersion: "+workloadVersion.Name)
 	}
 
-	return &workloadInstance, err
+	return &workloadVersion, err
 }
 
 func (r *KeptnWorkloadReconciler) getTracer() telemetry.ITracer {

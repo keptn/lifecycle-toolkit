@@ -164,17 +164,17 @@ func checkPending(pod *apiv1.Pod) {
 }
 
 func checkWorkload(workloadname string, pod apiv1.Pod, status common3.KeptnState) {
-	workloadinstance := initWorkloadInstance(workloadname)
+	workloadversion := initWorkloadVersion(workloadname)
 
-	err := k8sClient.Create(ctx, workloadinstance)
+	err := k8sClient.Create(ctx, workloadversion)
 	Expect(ignoreAlreadyExists(err)).To(BeNil())
 
 	Eventually(func() error {
-		err := k8sClient.Get(ctx, types.NamespacedName{Namespace: pod.Namespace, Name: workloadname}, workloadinstance)
+		err := k8sClient.Get(ctx, types.NamespacedName{Namespace: pod.Namespace, Name: workloadname}, workloadversion)
 		return err
 	}).Should(Succeed())
-	workloadinstance.Status.PreDeploymentEvaluationStatus = status
-	err = k8sClient.Status().Update(ctx, workloadinstance)
+	workloadversion.Status.PreDeploymentEvaluationStatus = status
+	err = k8sClient.Status().Update(ctx, workloadversion)
 
 	Expect(err).To(BeNil())
 	assertion := assertScheduled(pod)
@@ -185,8 +185,8 @@ func checkWorkload(workloadname string, pod apiv1.Pod, status common3.KeptnState
 		assertion.Should(Succeed())
 	}
 
-	err = k8sClient.Delete(ctx, workloadinstance)
-	Expect(err).NotTo(HaveOccurred(), "could not remove workloadinstance")
+	err = k8sClient.Delete(ctx, workloadversion)
+	Expect(err).NotTo(HaveOccurred(), "could not remove workloadversion")
 }
 
 func assertScheduled(pod apiv1.Pod) types2.AsyncAssertion {
@@ -195,20 +195,20 @@ func assertScheduled(pod apiv1.Pod) types2.AsyncAssertion {
 	}).WithTimeout(time.Second * 60).WithPolling(3 * time.Second)
 }
 
-func initWorkloadInstance(name string) *testv1alpha3.KeptnWorkloadInstance {
+func initWorkloadVersion(name string) *testv1alpha3.KeptnWorkloadVersion {
 
-	var fakeInstance = testv1alpha3.KeptnWorkloadInstance{
+	var fakeInstance = testv1alpha3.KeptnWorkloadVersion{
 		TypeMeta: metav1.TypeMeta{
-			Kind:       "KeptnWorkloadInstance",
+			Kind:       "KeptnWorkloadVersion",
 			APIVersion: "lifecycle.keptn.sh/v1alpha3",
 		},
 		ObjectMeta: metav1.ObjectMeta{Name: name, Namespace: "default"},
-		Spec: testv1alpha3.KeptnWorkloadInstanceSpec{
+		Spec: testv1alpha3.KeptnWorkloadVersionSpec{
 			KeptnWorkloadSpec: testv1alpha3.KeptnWorkloadSpec{
 				ResourceReference: testv1alpha3.ResourceReference{Name: "myfakeres"},
 			},
 		},
-		Status: testv1alpha3.KeptnWorkloadInstanceStatus{},
+		Status: testv1alpha3.KeptnWorkloadVersionStatus{},
 	}
 
 	return &fakeInstance

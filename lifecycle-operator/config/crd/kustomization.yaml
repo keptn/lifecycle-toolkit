@@ -6,7 +6,7 @@ resources:
   - bases/lifecycle.keptn.sh_keptntasks.yaml
   - bases/lifecycle.keptn.sh_keptnapps.yaml
   - bases/lifecycle.keptn.sh_keptnworkloads.yaml
-  - bases/lifecycle.keptn.sh_keptnworkloadinstances.yaml
+  - bases/lifecycle.keptn.sh_keptnworkloadversions.yaml
   - bases/lifecycle.keptn.sh_keptnappversions.yaml
   - bases/lifecycle.keptn.sh_keptnevaluationdefinitions.yaml
   - bases/lifecycle.keptn.sh_keptnevaluationproviders.yaml
@@ -28,7 +28,7 @@ labels:
       keptn.sh/inject-cert: "true"
 patches:
   - path: patches/webhook_in_lifecycle_keptnapps.yaml
-  - path: patches/webhook_in_lifecycle_keptnworkloadinstances.yaml
+  - path: patches/webhook_in_lifecycle_keptnworkloadversions.yaml
   - path: patches/webhook_in_lifecycle_keptnappversions.yaml
   - path: patches/webhook_in_lifecycle_keptnevaluationproviders.yaml
 # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix.

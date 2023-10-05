@@ -18,16 +18,16 @@ import (
 	"k8s.io/klog/v2"
 )
 
-var workloadInstanceResource = schema.GroupVersionResource{Group: "lifecycle.keptn.sh", Version: "v1alpha3", Resource: "keptnworkloadinstances"}
+var workloadVersionResource = schema.GroupVersionResource{Group: "lifecycle.keptn.sh", Version: "v1alpha3", Resource: "keptnworkloadversions"}
 
 type Status string
 
 const (
-	WorkloadInstanceStatusNotSpecified Status = "Workload run status not specified"
-	WorkloadInstanceNotFound           Status = "Workload run not found"
-	Success                            Status = "Success"
-	Failure                            Status = "Failure"
-	Wait                               Status = "Wait"
+	WorkloadVersionStatusNotSpecified Status = "Workload run status not specified"
+	WorkloadVersionNotFound           Status = "Workload run not found"
+	Success                           Status = "Success"
+	Failure                           Status = "Failure"
+	Wait                              Status = "Wait"
 )
 
 type KeptnState string
@@ -71,20 +71,20 @@ func NewWorkloadManager(d dynamic.Interface) *WorkloadManager {
 }
 
 func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status {
-	//List workloadInstance run CRDs
+	//List workloadVersion run CRDs
 	name := getCRDName(pod)
 	crd, err := sMgr.GetCRD(ctx, pod.Namespace, name)
 
 	if err != nil {
-		klog.Infof("[Keptn Permit Plugin] could not find workloadInstance crd %s, err:%s", name, err.Error())
-		return WorkloadInstanceNotFound
+		klog.Infof("[Keptn Permit Plugin] could not find workloadVersion crd %s, err:%s", name, err.Error())
+		return WorkloadVersionNotFound
 	}
 
 	_, span := sMgr.getSpan(ctx, crd, pod)
 
 	//check CRD status
 	phase, found, err := unstructured.NestedString(crd.UnstructuredContent(), "status", "preDeploymentEvaluationStatus")
-	klog.Infof("[Keptn Permit Plugin] workloadInstance crd %s, found %s with phase %s ", crd, found, phase)
+	klog.Infof("[Keptn Permit Plugin] workloadVersion crd %s, found %s with phase %s ", crd, found, phase)
 	if err == nil && found {
 		span.AddEvent("StatusEvaluation", trace.WithAttributes(tracing.Status.String(phase)))
 		switch KeptnState(phase) {
@@ -105,13 +105,13 @@ func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status
 			return Wait
 		}
 	}
-	return WorkloadInstanceStatusNotSpecified
+	return WorkloadVersionStatusNotSpecified
 }
 
 // GetCRD returns unstructured to avoid tight coupling with the CRD resource
 func (sMgr *WorkloadManager) GetCRD(ctx context.Context, namespace string, name string) (*unstructured.Unstructured, error) {
-	// GET /apis/lifecycle.keptn.sh/v1/namespaces/{namespace}/workloadinstance/name
-	return sMgr.dynamicClient.Resource(workloadInstanceResource).Namespace(namespace).Get(ctx, name, metav1.GetOptions{})
+	// GET /apis/lifecycle.keptn.sh/v1/namespaces/{namespace}/workloadversion/name
+	return sMgr.dynamicClient.Resource(workloadVersionResource).Namespace(namespace).Get(ctx, name, metav1.GetOptions{})
 }
 
 func (sMgr *WorkloadManager) getSpan(ctx context.Context, crd *unstructured.Unstructured, pod *corev1.Pod) (context.Context, trace.Span) {
@@ -130,7 +130,7 @@ func (sMgr *WorkloadManager) getSpan(ctx context.Context, crd *unstructured.Unst
 // If it does not match, it reduces the subparts, starting with the first
 // one (but leaving its length at least in minSubstrLen so it's not deleted
 // completely) adn continuing with the rest if needed.
-// Let's take WorkloadInstance as an example (3 parts: app, workload, version).
+// Let's take WorkloadVersion as an example (3 parts: app, workload, version).
 // First the app name is reduced if needed (only to minSubstrLen),
 // afterwards workload and the version is not reduced at all. This pattern is
 // chosen to not reduce only one part of the name (that can be completely gone

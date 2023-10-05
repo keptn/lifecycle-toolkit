@@ -243,7 +243,7 @@ since it implements a scheduler plugin based on the
 [scheduling framework]( https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/).
 For each pod, at the very end of the scheduling cycle,
 the plugin verifies that the pre deployment checks have terminated
-by retrieving the current status of the WorkloadInstance.
+by retrieving the current status of the WorkloadVersion.
 Only when that is successful is the pod bound to a node.
 
 ## Install a dev build

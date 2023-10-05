@@ -14,18 +14,18 @@ import (
 	v2 "sigs.k8s.io/controller-runtime/pkg/webhook/conversion/testdata/api/v2"
 )
 
-func TestKeptnWorkloadInstance_ConvertFrom(t *testing.T) {
+func TestKeptnWorkloadVersion_ConvertFrom(t *testing.T) {
 	tests := []struct {
 		name    string
-		srcObj  *v1alpha3.KeptnWorkloadInstance
+		srcObj  *v1alpha3.KeptnWorkloadVersion
 		wantErr bool
-		wantObj *KeptnWorkloadInstance
+		wantObj *KeptnWorkloadVersion
 	}{
 		{
 			name: "Test that conversion from v1alpha2 to v1alpha3 works",
-			srcObj: &v1alpha3.KeptnWorkloadInstance{
+			srcObj: &v1alpha3.KeptnWorkloadVersion{
 				TypeMeta: v1.TypeMeta{
-					Kind:       "KeptnWorkloadInstance",
+					Kind:       "KeptnWorkloadVersion",
 					APIVersion: "lifecycle.keptn.sh/v1alpha2",
 				},
 				ObjectMeta: v1.ObjectMeta{
@@ -38,7 +38,7 @@ func TestKeptnWorkloadInstance_ConvertFrom(t *testing.T) {
 						"some-annotation": "some-annotation-value",
 					},
 				},
-				Spec: v1alpha3.KeptnWorkloadInstanceSpec{
+				Spec: v1alpha3.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: v1alpha3.KeptnWorkloadSpec{
 						Version: "1.2.3",
 						ResourceReference: v1alpha3.ResourceReference{
@@ -67,7 +67,7 @@ func TestKeptnWorkloadInstance_ConvertFrom(t *testing.T) {
 						"key2": "value2",
 					},
 				},
-				Status: v1alpha3.KeptnWorkloadInstanceStatus{
+				Status: v1alpha3.KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            v1alpha3common.StateFailed,
 					PostDeploymentStatus:           v1alpha3common.StateFailed,
 					PreDeploymentEvaluationStatus:  v1alpha3common.StateFailed,
@@ -136,7 +136,7 @@ func TestKeptnWorkloadInstance_ConvertFrom(t *testing.T) {
 				},
 			},
 			wantErr: false,
-			wantObj: &KeptnWorkloadInstance{
+			wantObj: &KeptnWorkloadVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "some-keptn-app-name",
 					Namespace: "",
@@ -147,7 +147,7 @@ func TestKeptnWorkloadInstance_ConvertFrom(t *testing.T) {
 						"some-annotation": "some-annotation-value",
 					},
 				},
-				Spec: KeptnWorkloadInstanceSpec{
+				Spec: KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: KeptnWorkloadSpec{
 						Version: "1.2.3",
 						ResourceReference: ResourceReference{
@@ -176,7 +176,7 @@ func TestKeptnWorkloadInstance_ConvertFrom(t *testing.T) {
 						"key2": "value2",
 					},
 				},
-				Status: KeptnWorkloadInstanceStatus{
+				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StateFailed,
 					PostDeploymentStatus:           common.StateFailed,
 					PreDeploymentEvaluationStatus:  common.StateFailed,
@@ -248,11 +248,11 @@ func TestKeptnWorkloadInstance_ConvertFrom(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			dst := &KeptnWorkloadInstance{
+			dst := &KeptnWorkloadVersion{
 				TypeMeta:   v1.TypeMeta{},
 				ObjectMeta: v1.ObjectMeta{},
-				Spec:       KeptnWorkloadInstanceSpec{},
-				Status:     KeptnWorkloadInstanceStatus{},
+				Spec:       KeptnWorkloadVersionSpec{},
+				Status:     KeptnWorkloadVersionStatus{},
 			}
 			if err := dst.ConvertFrom(tt.srcObj); (err != nil) != tt.wantErr {
 				t.Errorf("ConvertFrom() error = %v, wantErr %v", err, tt.wantErr)
@@ -264,18 +264,18 @@ func TestKeptnWorkloadInstance_ConvertFrom(t *testing.T) {
 	}
 }
 
-func TestKeptnWorkloadInstance_ConvertTo(t *testing.T) {
+func TestKeptnWorkloadVersion_ConvertTo(t *testing.T) {
 	tests := []struct {
 		name    string
-		src     *KeptnWorkloadInstance
+		src     *KeptnWorkloadVersion
 		wantErr bool
-		wantObj *v1alpha3.KeptnWorkloadInstance
+		wantObj *v1alpha3.KeptnWorkloadVersion
 	}{
 		{
 			name: "Test that conversion from v1alpha3 to v1alpha2 works",
-			src: &KeptnWorkloadInstance{
+			src: &KeptnWorkloadVersion{
 				TypeMeta: v1.TypeMeta{
-					Kind:       "KeptnWorkloadInstance",
+					Kind:       "KeptnWorkloadVersion",
 					APIVersion: "lifecycle.keptn.sh/v1alpha3",
 				},
 				ObjectMeta: v1.ObjectMeta{
@@ -288,7 +288,7 @@ func TestKeptnWorkloadInstance_ConvertTo(t *testing.T) {
 						"some-annotation": "some-annotation-value",
 					},
 				},
-				Spec: KeptnWorkloadInstanceSpec{
+				Spec: KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: KeptnWorkloadSpec{
 						Version: "1.2.3",
 						ResourceReference: ResourceReference{
@@ -317,7 +317,7 @@ func TestKeptnWorkloadInstance_ConvertTo(t *testing.T) {
 						"key2": "value2",
 					},
 				},
-				Status: KeptnWorkloadInstanceStatus{
+				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StateFailed,
 					PostDeploymentStatus:           common.StateFailed,
 					PreDeploymentEvaluationStatus:  common.StateFailed,
@@ -386,7 +386,7 @@ func TestKeptnWorkloadInstance_ConvertTo(t *testing.T) {
 				},
 			},
 			wantErr: false,
-			wantObj: &v1alpha3.KeptnWorkloadInstance{
+			wantObj: &v1alpha3.KeptnWorkloadVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "some-keptn-app-name",
 					Namespace: "",
@@ -397,7 +397,7 @@ func TestKeptnWorkloadInstance_ConvertTo(t *testing.T) {
 						"some-annotation": "some-annotation-value",
 					},
 				},
-				Spec: v1alpha3.KeptnWorkloadInstanceSpec{
+				Spec: v1alpha3.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: v1alpha3.KeptnWorkloadSpec{
 						Version: "1.2.3",
 						ResourceReference: v1alpha3.ResourceReference{
@@ -426,7 +426,7 @@ func TestKeptnWorkloadInstance_ConvertTo(t *testing.T) {
 						"key2": "value2",
 					},
 				},
-				Status: v1alpha3.KeptnWorkloadInstanceStatus{
+				Status: v1alpha3.KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            v1alpha3common.StateFailed,
 					PostDeploymentStatus:           v1alpha3common.StateFailed,
 					PreDeploymentEvaluationStatus:  v1alpha3common.StateFailed,
@@ -498,11 +498,11 @@ func TestKeptnWorkloadInstance_ConvertTo(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			dst := v1alpha3.KeptnWorkloadInstance{
+			dst := v1alpha3.KeptnWorkloadVersion{
 				TypeMeta:   v1.TypeMeta{},
 				ObjectMeta: v1.ObjectMeta{},
-				Spec:       v1alpha3.KeptnWorkloadInstanceSpec{},
-				Status:     v1alpha3.KeptnWorkloadInstanceStatus{},
+				Spec:       v1alpha3.KeptnWorkloadVersionSpec{},
+				Status:     v1alpha3.KeptnWorkloadVersionStatus{},
 			}
 			if err := tt.src.ConvertTo(&dst); (err != nil) != tt.wantErr {
 				t.Errorf("ConvertTo() error = %v, wantErr %v", err, tt.wantErr)
@@ -514,26 +514,26 @@ func TestKeptnWorkloadInstance_ConvertTo(t *testing.T) {
 	}
 }
 
-func TestKeptnWorkloadInstance_ConvertFrom_Errorcase(t *testing.T) {
+func TestKeptnWorkloadVersion_ConvertFrom_Errorcase(t *testing.T) {
 	// A random different object is used here to simulate a different API version
 	testObj := v2.ExternalJob{}
 
-	dst := &KeptnWorkloadInstance{
+	dst := &KeptnWorkloadVersion{
 		TypeMeta:   v1.TypeMeta{},
 		ObjectMeta: v1.ObjectMeta{},
-		Spec:       KeptnWorkloadInstanceSpec{},
-		Status:     KeptnWorkloadInstanceStatus{},
+		Spec:       KeptnWorkloadVersionSpec{},
+		Status:     KeptnWorkloadVersionStatus{},
 	}
 
 	if err := dst.ConvertFrom(&testObj); err == nil {
 		t.Errorf("ConvertFrom() error = %v", err)
 	} else {
-		require.ErrorIs(t, err, common.ErrCannotCastKeptnWorkloadInstance)
+		require.ErrorIs(t, err, common.ErrCannotCastKeptnWorkloadVersion)
 	}
 }
 
-func TestKeptnWorkloadInstance_ConvertTo_Errorcase(t *testing.T) {
-	testObj := KeptnWorkloadInstance{}
+func TestKeptnWorkloadVersion_ConvertTo_Errorcase(t *testing.T) {
+	testObj := KeptnWorkloadVersion{}
 
 	// A random different object is used here to simulate a different API version
 	dst := v2.ExternalJob{}
@@ -541,6 +541,6 @@ func TestKeptnWorkloadInstance_ConvertTo_Errorcase(t *testing.T) {
 	if err := testObj.ConvertTo(&dst); err == nil {
 		t.Errorf("ConvertTo() error = %v", err)
 	} else {
-		require.ErrorIs(t, err, common.ErrCannotCastKeptnWorkloadInstance)
+		require.ErrorIs(t, err, common.ErrCannotCastKeptnWorkloadVersion)
 	}
 }

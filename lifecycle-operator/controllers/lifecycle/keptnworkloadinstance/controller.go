@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package keptnworkloadinstance
+package keptnworkloadversion
 
 import (
 	"context"
@@ -41,10 +41,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
-const traceComponentName = "keptn/lifecycle-operator/workloadinstance"
+const traceComponentName = "keptn/lifecycle-operator/workloadversion"
 
-// KeptnWorkloadInstanceReconciler reconciles a KeptnWorkloadInstance object
-type KeptnWorkloadInstanceReconciler struct {
+// KeptnWorkloadVersionReconciler reconciles a KeptnWorkloadVersion object
+type KeptnWorkloadVersionReconciler struct {
 	client.Client
 	Scheme                 *runtime.Scheme
 	EventSender            controllercommon.IEvent
@@ -55,9 +55,9 @@ type KeptnWorkloadInstanceReconciler struct {
 	SchedulingGatesHandler controllercommon.ISchedulingGatesHandler
 }
 
-// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances/finalizers,verbs=update
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions/finalizers,verbs=update
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks/finalizers,verbs=update
@@ -73,29 +73,29 @@ type KeptnWorkloadInstanceReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 //
 //nolint:gocyclo,gocognit
-func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("Searching for KeptnWorkloadInstance")
+func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	r.Log.Info("Searching for KeptnWorkloadVersion")
 
 	// retrieve workload instance
-	workloadInstance := &klcv1alpha3.KeptnWorkloadInstance{}
-	err := r.Get(ctx, req.NamespacedName, workloadInstance)
+	workloadVersion := &klcv1alpha3.KeptnWorkloadVersion{}
+	err := r.Get(ctx, req.NamespacedName, workloadVersion)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
 	}
 
 	if err != nil {
-		r.Log.Error(err, "WorkloadInstance not found")
-		return reconcile.Result{}, fmt.Errorf(controllererrors.ErrCannotRetrieveWorkloadInstancesMsg, err)
+		r.Log.Error(err, "WorkloadVersion not found")
+		return reconcile.Result{}, fmt.Errorf(controllererrors.ErrCannotRetrieveWorkloadVersionsMsg, err)
 	}
 
-	ctx, span, endSpan := r.setupSpansContexts(ctx, workloadInstance)
-	defer endSpan(span, workloadInstance)
+	ctx, span, endSpan := r.setupSpansContexts(ctx, workloadVersion)
+	defer endSpan(span, workloadVersion)
 
-	if requeue, err := r.checkPreEvaluationStatusOfApp(ctx, workloadInstance, span); requeue {
+	if requeue, err := r.checkPreEvaluationStatusOfApp(ctx, workloadVersion, span); requeue {
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
 
-	appTraceContextCarrier := propagation.MapCarrier(workloadInstance.Spec.TraceId)
+	appTraceContextCarrier := propagation.MapCarrier(workloadVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
 
 	// Wait for pre-deployment checks of Workload
@@ -107,21 +107,21 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 		SpanHandler: r.SpanHandler,
 	}
 
-	// this will be the parent span for all phases of the WorkloadInstance
-	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), workloadInstance, "")
+	// this will be the parent span for all phases of the WorkloadVersion
+	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), workloadVersion, "")
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}
 
-	if workloadInstance.Status.CurrentPhase == "" {
-		spanWorkloadTrace.AddEvent("WorkloadInstance Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
+	if workloadVersion.Status.CurrentPhase == "" {
+		spanWorkloadTrace.AddEvent("WorkloadVersion Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 	}
 
-	if !workloadInstance.IsPreDeploymentSucceeded() {
+	if !workloadVersion.IsPreDeploymentSucceeded() {
 		reconcilePre := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
-			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, apicommon.PreDeploymentCheckType)
+			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadVersion, apicommon.PreDeploymentCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadInstance, phase, span, reconcilePre)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadVersion, phase, span, reconcilePre)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -129,11 +129,11 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	// Wait for pre-evaluation checks of Workload
 	phase = apicommon.PhaseWorkloadPreEvaluation
-	if !workloadInstance.IsPreDeploymentEvaluationSucceeded() {
+	if !workloadVersion.IsPreDeploymentEvaluationSucceeded() {
 		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
-			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, apicommon.PreDeploymentEvaluationCheckType)
+			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadVersion, apicommon.PreDeploymentEvaluationCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadInstance, phase, span, reconcilePreEval)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadVersion, phase, span, reconcilePreEval)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -141,7 +141,7 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	if r.SchedulingGatesHandler.Enabled() {
 		// pre-evaluation checks done at this moment, we can remove the gate
-		if err := r.SchedulingGatesHandler.RemoveGates(ctx, workloadInstance); err != nil {
+		if err := r.SchedulingGatesHandler.RemoveGates(ctx, workloadVersion); err != nil {
 			r.Log.Error(err, "could not remove SchedulingGates")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
@@ -149,11 +149,11 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	// Wait for deployment of Workload
 	phase = apicommon.PhaseWorkloadDeployment
-	if !workloadInstance.IsDeploymentSucceeded() {
-		reconcileWorkloadInstance := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
-			return r.reconcileDeployment(ctx, workloadInstance)
+	if !workloadVersion.IsDeploymentSucceeded() {
+		reconcileWorkloadVersion := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+			return r.reconcileDeployment(ctx, workloadVersion)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadInstance, phase, span, reconcileWorkloadInstance)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadVersion, phase, span, reconcileWorkloadVersion)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -161,11 +161,11 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	// Wait for post-deployment checks of Workload
 	phase = apicommon.PhaseWorkloadPostDeployment
-	if !workloadInstance.IsPostDeploymentSucceeded() {
+	if !workloadVersion.IsPostDeploymentSucceeded() {
 		reconcilePostDeployment := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
-			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadInstance, apicommon.PostDeploymentCheckType)
+			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadVersion, apicommon.PostDeploymentCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadInstance, phase, span, reconcilePostDeployment)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadVersion, phase, span, reconcilePostDeployment)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -173,133 +173,133 @@ func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctr
 
 	// Wait for post-evaluation checks of Workload
 	phase = apicommon.PhaseWorkloadPostEvaluation
-	if !workloadInstance.IsPostDeploymentEvaluationSucceeded() {
+	if !workloadVersion.IsPostDeploymentEvaluationSucceeded() {
 		reconcilePostEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
-			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadInstance, apicommon.PostDeploymentEvaluationCheckType)
+			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadVersion, apicommon.PostDeploymentEvaluationCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadInstance, phase, span, reconcilePostEval)
+		result, err := phaseHandler.HandlePhase(ctx, ctxWorkloadTrace, r.getTracer(), workloadVersion, phase, span, reconcilePostEval)
 		if !result.Continue {
 			return result.Result, err
 		}
 	}
 
-	// WorkloadInstance is completed at this place
-	return r.finishKeptnWorkloadInstanceReconcile(ctx, workloadInstance, spanWorkloadTrace, span, phase)
+	// WorkloadVersion is completed at this place
+	return r.finishKeptnWorkloadVersionReconcile(ctx, workloadVersion, spanWorkloadTrace, span, phase)
 }
 
-func (r *KeptnWorkloadInstanceReconciler) finishKeptnWorkloadInstanceReconcile(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance, spanWorkloadTrace trace.Span, span trace.Span, phase apicommon.KeptnPhaseType) (ctrl.Result, error) {
-	if !workloadInstance.IsEndTimeSet() {
-		workloadInstance.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
-		workloadInstance.Status.Status = apicommon.StateSucceeded
-		workloadInstance.SetEndTime()
+func (r *KeptnWorkloadVersionReconciler) finishKeptnWorkloadVersionReconcile(ctx context.Context, workloadVersion *klcv1alpha3.KeptnWorkloadVersion, spanWorkloadTrace trace.Span, span trace.Span, phase apicommon.KeptnPhaseType) (ctrl.Result, error) {
+	if !workloadVersion.IsEndTimeSet() {
+		workloadVersion.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
+		workloadVersion.Status.Status = apicommon.StateSucceeded
+		workloadVersion.SetEndTime()
 	}
 
-	err := r.Client.Status().Update(ctx, workloadInstance)
+	err := r.Client.Status().Update(ctx, workloadVersion)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err
 	}
 
-	r.EventSender.Emit(apicommon.PhaseWorkloadCompleted, "Normal", workloadInstance, apicommon.PhaseStateFinished, "has finished", workloadInstance.GetVersion())
+	r.EventSender.Emit(apicommon.PhaseWorkloadCompleted, "Normal", workloadVersion, apicommon.PhaseStateFinished, "has finished", workloadVersion.GetVersion())
 
-	attrs := workloadInstance.GetMetricsAttributes()
+	attrs := workloadVersion.GetMetricsAttributes()
 
 	// metrics: add deployment duration
-	duration := workloadInstance.Status.EndTime.Time.Sub(workloadInstance.Status.StartTime.Time)
+	duration := workloadVersion.Status.EndTime.Time.Sub(workloadVersion.Status.StartTime.Time)
 	r.Meters.DeploymentDuration.Record(ctx, duration.Seconds(), metric.WithAttributes(attrs...))
 
-	spanWorkloadTrace.AddEvent(workloadInstance.Name + " has finished")
+	spanWorkloadTrace.AddEvent(workloadVersion.Name + " has finished")
 	spanWorkloadTrace.SetStatus(codes.Ok, "Finished")
 	spanWorkloadTrace.End()
-	if err := r.SpanHandler.UnbindSpan(workloadInstance, ""); err != nil {
-		r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, workloadInstance.Name)
+	if err := r.SpanHandler.UnbindSpan(workloadVersion, ""); err != nil {
+		r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, workloadVersion.Name)
 	}
 
 	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *KeptnWorkloadInstanceReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &klcv1alpha3.KeptnWorkloadInstance{}, "spec.app", func(rawObj client.Object) []string {
-		workloadInstance := rawObj.(*klcv1alpha3.KeptnWorkloadInstance)
-		return []string{workloadInstance.Spec.AppName}
+func (r *KeptnWorkloadVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &klcv1alpha3.KeptnWorkloadVersion{}, "spec.app", func(rawObj client.Object) []string {
+		workloadVersion := rawObj.(*klcv1alpha3.KeptnWorkloadVersion)
+		return []string{workloadVersion.Spec.AppName}
 	}); err != nil {
 		return err
 	}
 	return ctrl.NewControllerManagedBy(mgr).
 		// predicate disabling the auto reconciliation after updating the object status
-		For(&klcv1alpha3.KeptnWorkloadInstance{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		For(&klcv1alpha3.KeptnWorkloadVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }
 
-func (r *KeptnWorkloadInstanceReconciler) sendUnfinishedPreEvaluationEvents(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) {
+func (r *KeptnWorkloadVersionReconciler) sendUnfinishedPreEvaluationEvents(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadVersion *klcv1alpha3.KeptnWorkloadVersion) {
 	if appPreEvalStatus.IsFailed() {
-		r.EventSender.Emit(phase, "Warning", workloadInstance, apicommon.PhaseStateFailed, "has failed since app has failed", workloadInstance.GetVersion())
+		r.EventSender.Emit(phase, "Warning", workloadVersion, apicommon.PhaseStateFailed, "has failed since app has failed", workloadVersion.GetVersion())
 	}
 }
 
-func (r *KeptnWorkloadInstanceReconciler) setupSpansContexts(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) (context.Context, trace.Span, func(span trace.Span, workloadInstance *klcv1alpha3.KeptnWorkloadInstance)) {
-	workloadInstance.SetStartTime()
+func (r *KeptnWorkloadVersionReconciler) setupSpansContexts(ctx context.Context, workloadVersion *klcv1alpha3.KeptnWorkloadVersion) (context.Context, trace.Span, func(span trace.Span, workloadVersion *klcv1alpha3.KeptnWorkloadVersion)) {
+	workloadVersion.SetStartTime()
 
-	traceContextCarrier := propagation.MapCarrier(workloadInstance.Annotations)
+	traceContextCarrier := propagation.MapCarrier(workloadVersion.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
 	ctx, span := r.getTracer().Start(ctx, "reconcile_workload_instance", trace.WithSpanKind(trace.SpanKindConsumer))
 
-	endFunc := func(span trace.Span, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) {
-		if workloadInstance.IsEndTimeSet() {
+	endFunc := func(span trace.Span, workloadVersion *klcv1alpha3.KeptnWorkloadVersion) {
+		if workloadVersion.IsEndTimeSet() {
 			r.Log.Info("Increasing deployment count")
-			attrs := workloadInstance.GetMetricsAttributes()
+			attrs := workloadVersion.GetMetricsAttributes()
 			r.Meters.DeploymentCount.Add(ctx, 1, metric.WithAttributes(attrs...))
 		}
 		span.End()
 	}
 
-	workloadInstance.SetSpanAttributes(span)
+	workloadVersion.SetSpanAttributes(span)
 	return ctx, span, endFunc
 }
 
-func (r *KeptnWorkloadInstanceReconciler) checkPreEvaluationStatusOfApp(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance, span trace.Span) (bool, error) {
+func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx context.Context, workloadVersion *klcv1alpha3.KeptnWorkloadVersion, span trace.Span) (bool, error) {
 	// Wait for pre-evaluation checks of App
 	// Only check if we have not begun with the first phase of the workload instance, to avoid retrieving the KeptnAppVersion
 	// in each reconciliation loop
-	if workloadInstance.GetCurrentPhase() != "" {
+	if workloadVersion.GetCurrentPhase() != "" {
 		return false, nil
 	}
 	phase := apicommon.PhaseAppPreEvaluation
-	found, appVersion, err := r.getAppVersionForWorkloadInstance(ctx, workloadInstance)
+	found, appVersion, err := r.getAppVersionForWorkloadVersion(ctx, workloadVersion)
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
-		r.EventSender.Emit(phase, "Warning", workloadInstance, "GetAppVersionFailed", "has failed since app could not be retrieved", workloadInstance.GetVersion())
-		return true, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionForWorkloadInstanceMsg + err.Error())
+		r.EventSender.Emit(phase, "Warning", workloadVersion, "GetAppVersionFailed", "has failed since app could not be retrieved", workloadVersion.GetVersion())
+		return true, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionForWorkloadVersionMsg + err.Error())
 	} else if !found {
 		span.SetStatus(codes.Error, "app could not be found")
-		r.EventSender.Emit(phase, "Warning", workloadInstance, "AppVersionNotFound", "has failed since app could not be found", workloadInstance.GetVersion())
-		return true, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionForWorkloadInstanceMsg)
+		r.EventSender.Emit(phase, "Warning", workloadVersion, "AppVersionNotFound", "has failed since app could not be found", workloadVersion.GetVersion())
+		return true, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionForWorkloadVersionMsg)
 	}
 
 	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
 	if !appPreEvalStatus.IsSucceeded() {
-		r.sendUnfinishedPreEvaluationEvents(appPreEvalStatus, phase, workloadInstance)
+		r.sendUnfinishedPreEvaluationEvents(appPreEvalStatus, phase, workloadVersion)
 		return true, nil
 	}
 
 	// set the App trace id if not already set
-	if len(workloadInstance.Spec.TraceId) < 1 {
+	if len(workloadVersion.Spec.TraceId) < 1 {
 		appDeploymentTraceID := appVersion.Status.PhaseTraceIDs[apicommon.PhaseAppDeployment.ShortName]
 		if appDeploymentTraceID != nil {
-			workloadInstance.Spec.TraceId = appDeploymentTraceID
+			workloadVersion.Spec.TraceId = appDeploymentTraceID
 		} else {
-			workloadInstance.Spec.TraceId = appVersion.Spec.TraceId
+			workloadVersion.Spec.TraceId = appVersion.Spec.TraceId
 		}
-		if err := r.Update(ctx, workloadInstance); err != nil {
+		if err := r.Update(ctx, workloadVersion); err != nil {
 			return true, err
 		}
 	}
 	return false, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx context.Context, wli *klcv1alpha3.KeptnWorkloadInstance) (bool, klcv1alpha3.KeptnAppVersion, error) {
+func (r *KeptnWorkloadVersionReconciler) getAppVersionForWorkloadVersion(ctx context.Context, wli *klcv1alpha3.KeptnWorkloadVersion) (bool, klcv1alpha3.KeptnAppVersion, error) {
 	apps := &klcv1alpha3.KeptnAppVersionList{}
 
 	// TODO add label selector for looking up by name?
@@ -313,7 +313,7 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 
 	workloadFound, latestVersion, err := getLatestAppVersion(apps, wli)
 	if err != nil {
-		r.Log.Error(err, "could not look up KeptnAppVersion for WorkloadInstance")
+		r.Log.Error(err, "could not look up KeptnAppVersion for WorkloadVersion")
 		return false, latestVersion, err
 	}
 
@@ -324,11 +324,11 @@ func (r *KeptnWorkloadInstanceReconciler) getAppVersionForWorkloadInstance(ctx c
 	return true, latestVersion, nil
 }
 
-func (r *KeptnWorkloadInstanceReconciler) getTracer() telemetry.ITracer {
+func (r *KeptnWorkloadVersionReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
 }
 
-func getLatestAppVersion(apps *klcv1alpha3.KeptnAppVersionList, wli *klcv1alpha3.KeptnWorkloadInstance) (bool, klcv1alpha3.KeptnAppVersion, error) {
+func getLatestAppVersion(apps *klcv1alpha3.KeptnAppVersionList, wli *klcv1alpha3.KeptnWorkloadVersion) (bool, klcv1alpha3.KeptnAppVersion, error) {
 	latestVersion := klcv1alpha3.KeptnAppVersion{}
 
 	workloadFound := false
@@ -352,6 +352,6 @@ func isNewer(app klcv1alpha3.KeptnAppVersion, latestVersion klcv1alpha3.KeptnApp
 	return app.ObjectMeta.CreationTimestamp.Time.After(latestVersion.ObjectMeta.CreationTimestamp.Time) || latestVersion.CreationTimestamp.Time.IsZero()
 }
 
-func workloadMatchesApp(appWorkload klcv1alpha3.KeptnWorkloadRef, wli *klcv1alpha3.KeptnWorkloadInstance, app klcv1alpha3.KeptnAppVersion) bool {
+func workloadMatchesApp(appWorkload klcv1alpha3.KeptnWorkloadRef, wli *klcv1alpha3.KeptnWorkloadVersion, app klcv1alpha3.KeptnAppVersion) bool {
 	return appWorkload.Version == wli.Spec.Version && app.GetWorkloadNameOfApp(appWorkload.Name) == wli.Spec.WorkloadName
 }

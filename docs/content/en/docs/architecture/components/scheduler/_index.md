@@ -32,13 +32,13 @@ For instance a pod gated by keptn looks like the following:
 
 {{< embed path="/docs/assets/scheduler-gates/gated.yaml" >}}
 
-The **WorkloadInstance CRD** contains information about the `pre-deployment` checks that
+The **WorkloadVersion CRD** contains information about the `pre-deployment` checks that
 need to be performed before the Pod can be scheduled.
-If the `pre-deployment` checks have finished successfully, the WorkloadInstance Controller removes the gate from the
+If the `pre-deployment` checks have finished successfully, the WorkloadVersion Controller removes the gate from the
 Pod.
 The scheduler can then allow the Pod to be scheduled to a node.
 If the `pre-deployment` checks have not yet finished, the gate stays and the Pod remains in the pending state.
-When removing the gate, the WorkloadInstance controller also adds the following annotation so that,
+When removing the gate, the WorkloadVersion controller also adds the following annotation so that,
 if the spec is updated,
 the Pod is not gated again:
 
@@ -72,11 +72,11 @@ A Pod `test-pod` modified by the Mutating Webhook looks as follows:
 {{< embed path="/docs/assets/scheduler-gates/scheduler.yaml" >}}
 
 If the Pod is annotated with Keptn specific annotations, the Keptn Scheduler retrieves
-the WorkloadInstance CRD that is associated with the Pod.
-The **WorkloadInstance CRD** contains information about the `pre-deployment` checks that
+the WorkloadVersion CRD that is associated with the Pod.
+The **WorkloadVersion CRD** contains information about the `pre-deployment` checks that
 need to be performed before the Pod can be scheduled.
 
-The Keptn Scheduler then checks the status of the WorkloadInstance CRD to see
+The Keptn Scheduler then checks the status of the WorkloadVersion CRD to see
 if the `pre-deployment` checks have finished successfully.
 If the pre-deployment checks have finished successfully, the **Keptn Scheduler** allows
 the Pod to be scheduled to a node.
@@ -89,7 +89,7 @@ For example, if there is not enough capacity on any node to schedule the Pod,
 the Keptn Scheduler will not be able to schedule it, even if the `pre-deployment`
 checks have finished successfully.
 
-The Keptn Scheduler processes the following information from the WorkloadInstance CRD:
+The Keptn Scheduler processes the following information from the WorkloadVersion CRD:
 
 - The name of the pre-deployment checks that need to be performed.
 - The status of the pre-deployment checks.

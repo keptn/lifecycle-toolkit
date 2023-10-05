@@ -35,7 +35,7 @@ const MaxVersionLength = 12
 var ErrCannotCastKeptnEvaluationProvider = errors.New("cannot cast KeptnEvaluationDefinition to v1alpha3")
 var ErrCannotCastKeptnAppVersion = errors.New("cannot cast KeptnAppVersion to v1alpha3")
 var ErrCannotCastKeptnApp = errors.New("cannot cast KeptnApp to v1alpha3")
-var ErrCannotCastKeptnWorkloadInstance = errors.New("cannot cast KeptnWorkloadInstance to v1alpha3")
+var ErrCannotCastKeptnWorkloadVersion = errors.New("cannot cast KeptnWorkloadVersion to v1alpha3")
 
 type KeptnState string
 

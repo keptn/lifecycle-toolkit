@@ -18,12 +18,6 @@ that are used in the `AnalysisDefinition` query.
 apiVersion: metrics.keptn.sh/v1alpha3
 kind: Analysis
 metadata:
-  labels:
-    app.kubernetes.io/name: <name-of-generated-`KeptnWorkload` resource>
-    app.kubernetes.io/instance: analysis-sample
-    app.kubernetes.io/part-of: <name-of-associated-KeptnApp-resource>
-    app.kuberentes.io/managed-by: kustomize | ??
-    app.kubernetes.io/created-by: metrics-operator
   name: analysis-sample
 spec:
   timeframe: from: <start-time> to: <end-time> | `recent`
@@ -42,26 +36,6 @@ spec:
 * **kind** -- Resource type.
    Must be set to `Analysis`
 * **metadata**
-  * **labels** -- The Analysis feature uses the
-    `name` and `part-of` labels that are discussed in
-    [Basic annotations](../implementing/integrate/#basic-annotations)
-    plus the following:
-    * **app.kubernetes.io/instance** analysis-sample
-    * **app.kuberentes.io/managed-by** kustomize
-    * **app.kubernetes.io/created-by** metrics-operator
-
-    TODO: In your example, `name` is set to analysis.
-    Does this mean that your workload is called `analysis`
-    or is this label here meant to refer to the analysis resource or feature??
-    Maybe better to use `my-analysis` for the example?
-
-    TODO: Need descriptions of `instance`, `managed-by` and `created-by`
-    as well as valid values.
-    Especially alternatives to `kustomize` for `managed-by`
-
-    TODO: Are there Keptn equivalents or annotations (Keptn or k8s)?
-    If not, can you mix Keptn and k8s labels/annotations?
-
   * **name** -- Unique name of this analysis.
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)

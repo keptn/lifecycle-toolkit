@@ -21,7 +21,7 @@ metadata:
 spec:
   taskDefinition: <name-of-KeptnTaskDefinition resource>
   context:
-    appName: "<name-of-KeptnApp-resource>""
+    appName: "<name-of-KeptnApp-resource>"
     appVersion: "1.0.0"
     objectType: ""
     taskType: ""
@@ -62,11 +62,6 @@ spec:
   * **appVersion** - Version of the `KeptnApp` resource
       for which the `KeptnTask` is being executed.
 
-      TODO: So I can create a `KeptnApp` resource that lists multiple workloads
-      to be processed?
-      Do I need to annotate the Workloads
-      and can I autocreate the `KeptnApp` or do I need to do it manually?
-
   * **taskDefinition** - Name of the corresponding `KeptnTaskDefinition` resource.
     This `KeptnTaskDefinition` can be located in the same namespace
     or in the `Keptn` name space.
@@ -76,11 +71,6 @@ spec:
       for which the `KeptnTask` is being executed.
     * **appVersion** - Version of the `KeptnApp` resource
       for which the `KeptnTask` is being executed.
-
-      TODO: So I can create a `KeptnApp` resource that lists multiple workloads
-      to be processed?
-      Do I need to annotate the Workloads
-      and can I autocreate the `KeptnApp` or do I need to do it manually?
 
     * **objectType** - Indicates whether this `KeptnTask`
       is being executed for a `KeptnApp` or a `KeptnWorkload` resource.
@@ -136,9 +126,6 @@ Each time you want to rerun the `KeptnTask` resource,
 you must update the value of the `metadata.name` field.
 A common practice is to just increment the value incrementally,
 so `helloworldtask-1` becomes `helloworldtask-2`, etc.
-
-TODO: Is there a way to capture the commit number or something
-to use in the metadata.name field?
 
 For a full example of how to create a `KeptnTask` resource
 to use for a deployment being done outside of Kubernetes, see

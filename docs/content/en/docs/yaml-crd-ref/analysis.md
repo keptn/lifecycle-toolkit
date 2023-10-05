@@ -46,7 +46,10 @@ spec:
     This can be populated as one of the following:
 
     * A combination of ‘from’ and ’to’
-      to specify the start and stop times for the analysis
+      to specify the start and stop times for the analysis.
+      These fields follow the
+      [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt)
+      timestamp format.
     * Set the ‘recent’ property.
 
     If neither is set, the Analysis can not be added to the cluster.
@@ -54,8 +57,8 @@ spec:
     to substitute variables in the `AnalysisValueTemplate` query.
   * **analysisDefinition** -- Identify the `AnalysisDefinition` resource
     that stores the `AnalysisValuesTemplate` associated with this `Analysis`
-    * **name: Name of the `AnalysisDefinition` resource
-    * **namespace: Namespace of the `AnalysisDefinition` resource.
+    * **name** -- Name of the `AnalysisDefinition` resource
+    * **namespace** -- Namespace of the `AnalysisDefinition` resource.
 
 ## Usage
 

@@ -335,7 +335,7 @@ metadata:
   name: podtato-head
   namespace: podtato-kubectl
   annotations:
-    app.kubernetes.io/managed-by: "klt"
+    app.kubernetes.io/managed-by: "keptn"
 spec:
   version: "<version string based on a hash of all containing workloads>"
   workloads:

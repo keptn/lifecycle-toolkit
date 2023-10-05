@@ -37,7 +37,8 @@ import (
 )
 
 const (
-	managedByKLT = "klt"
+	managedByKLT   = "klt" //TODO deprecate and remove in the next version
+	managedByKeptn = "keptn"
 )
 
 // KeptnAppCreationRequestReconciler reconciles a KeptnAppCreationRequest object
@@ -100,7 +101,7 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 	}
 
 	// if the found app has not been created by this controller, we are done at this point - we don't want to mess with what the user has created
-	if appFound && keptnApp.Labels[common.K8sRecommendedManagedByAnnotations] != managedByKLT {
+	if appFound && !appIsManagedByKeptn(keptnApp) {
 		r.Log.Info("User defined KeptnApp found for KeptnAppCreationRequest", "KeptnAppCreationRequest", creationRequest)
 		if err := r.Delete(ctx, creationRequest); err != nil {
 			r.Log.Error(err, "Could not delete KeptnAppCreationRequest", "KeptnAppCreationRequest", creationRequest)
@@ -242,7 +243,7 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 			Name:      creationRequest.Spec.AppName,
 			Namespace: creationRequest.Namespace,
 			Labels: map[string]string{
-				common.K8sRecommendedManagedByAnnotations: managedByKLT,
+				common.K8sRecommendedManagedByAnnotations: managedByKeptn,
 			},
 			// pass through the annotations since those contain the trace context
 			Annotations: creationRequest.Annotations,
@@ -286,4 +287,9 @@ func computeVersionFromWorkloads(workloads []lifecycle.KeptnWorkload) string {
 	hashValue := fmt.Sprintf("%x", hash.Sum(nil))
 
 	return common.TruncateString(hashValue, 10)
+}
+
+func appIsManagedByKeptn(keptnApp *lifecycle.KeptnApp) bool {
+	annotation := common.K8sRecommendedManagedByAnnotations
+	return keptnApp.Labels[annotation] == managedByKLT || keptnApp.Labels[annotation] == managedByKeptn
 }

@@ -91,6 +91,7 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 				},
 				Spec: corev1.PodSpec{
 					RestartPolicy: "OnFailure",
+					ServiceAccountName: definition.Spec.ServiceAccount.Name,
 				},
 			},
 			BackoffLimit:          task.Spec.Retries,

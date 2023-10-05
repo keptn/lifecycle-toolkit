@@ -1686,6 +1686,13 @@ spec:
                   attempt.
                 format: int32
                 type: integer
+              serviceAccount:
+                description: Service Account to be used in jobs to authenticate with
+                  the Kubernetes API and access cluster resources.
+                properties:
+                  name:
+                    type: string
+                type: object     
               timeout:
                 default: 5m
                 description: Timeout specifies the maximum time to wait for the task

@@ -233,12 +233,12 @@ func TestKeptnWorkloadVersion_CancelRemainingPhases(t *testing.T) {
 
 	tests := []struct {
 		workloadVersion KeptnWorkloadVersion
-		phase            common.KeptnPhaseType
-		want             KeptnWorkloadVersion
+		phase           common.KeptnPhaseType
+		want            KeptnWorkloadVersion
 	}{
 		{
 			workloadVersion: workloadVersion,
-			phase:            common.PhaseWorkloadPostEvaluation,
+			phase:           common.PhaseWorkloadPostEvaluation,
 			want: KeptnWorkloadVersion{
 				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
@@ -252,7 +252,7 @@ func TestKeptnWorkloadVersion_CancelRemainingPhases(t *testing.T) {
 		},
 		{
 			workloadVersion: workloadVersion,
-			phase:            common.PhaseAppPreEvaluation,
+			phase:           common.PhaseAppPreEvaluation,
 			want: KeptnWorkloadVersion{
 				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StateCancelled,
@@ -266,7 +266,7 @@ func TestKeptnWorkloadVersion_CancelRemainingPhases(t *testing.T) {
 		},
 		{
 			workloadVersion: workloadVersion,
-			phase:            common.PhaseWorkloadPreEvaluation,
+			phase:           common.PhaseWorkloadPreEvaluation,
 			want: KeptnWorkloadVersion{
 				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,

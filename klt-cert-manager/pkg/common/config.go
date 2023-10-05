@@ -8,7 +8,7 @@ import (
 
 const (
 	SuccessDuration            = 3 * time.Hour
-	SecretName                 = "klt-certs"
+	SecretName                 = "keptn-certs"
 	CertificatesSecretEmptyErr = "certificates secret is empty"
 )
 

@@ -5,7 +5,7 @@ kind: KeptnApp
 metadata:
   name: my-app
   labels:
-    app.kubernetes.io/managed-by: "klt"
+    app.kubernetes.io/managed-by: "keptn"
 spec:
   workloads:
     - name: my-workload

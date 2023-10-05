@@ -59,12 +59,12 @@ This returns something like:
 
 ```shell
 NAME                        TYPE                 DATA   AGE
-klt-certs                   Opaque               5      4d23h
+keptn-certs                   Opaque               5      4d23h
 ```
 
-Specify the `NAME` of the Keptn certificate (`klt-certs` in this case)
+Specify the `NAME` of the Keptn certificate (`keptn-certs` in this case)
 to delete the Keptn certificate:
 
 ```shell
-kubectl delete secret klt-certs -n keptn-lifecycle-toolkit-system
+kubectl delete secret keptn-certs -n keptn-lifecycle-toolkit-system
 ```

@@ -240,8 +240,8 @@ github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1
 github.com/jstemmer/go-junit-report v0.9.1/go.mod h1:Brl9GWCQeLvo8nXZwPNNblvFj/XSXhF0NWZEnDohbsk=
 github.com/kelseyhightower/envconfig v1.4.0 h1:Im6hONhd3pLkfDFsbRgu68RDNkGF1r3dvMUtDTo2cv8=
 github.com/kelseyhightower/envconfig v1.4.0/go.mod h1:cccZRl6mQpaq41TPp5QxidR+Sa3axMbJDNb//FQX6Gg=
-github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20231005051601-a656512e6a8d h1:a+mNQzFMHV24Z+RFfLHufqhfM9NzH3ddPpGSB/4Oe6I=
-github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20231005051601-a656512e6a8d/go.mod h1:GjJFB+g1DuBYrOXSgF4kzR9Phb+W5t3obFt4UHqz9OM=
+github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20231004144748-2363c9ca439a h1:En7I6X4VaBQSzYpZNAbIDcqS6p0jdQh5MyElU0c9PDs=
+github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20231004144748-2363c9ca439a/go.mod h1:GjJFB+g1DuBYrOXSgF4kzR9Phb+W5t3obFt4UHqz9OM=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/kr/fs v0.1.0/go.mod h1:FFnZGqtBN9Gxj7eW1uZ42v5BccTP0vu6NEaFoC2HwRg=

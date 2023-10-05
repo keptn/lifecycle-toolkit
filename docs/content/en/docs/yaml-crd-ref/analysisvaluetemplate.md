@@ -8,7 +8,7 @@ hide: true
 An `AnalysisValueTemplate` resource
 defines a Service Level Indicator (SLI),
 which identifies the data to be analyzed
-by data source and query.
+by data source to use and query to issue.
 One Analysis can use data from multiple instances
 of multiple types of data provider.
 
@@ -41,6 +41,8 @@ spec:
       the operation of the application.
       Valid values are `helm` and `kustomize`.
     * **app.kubernetes.io/created-by** metrics-operator
+
+      TODO: Need to clarify how to use these annotations
   * **name** -- Unique name of this template.
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
@@ -74,6 +76,7 @@ The `AnalysisValueTemplate` refers to that provider and queries it.
 One `Analysis` can use data from multiple instances
 of multiple types of data provider;
 you must define a
+<<<<<<< HEAD
 [KeptnMetricsProvider](metricsprovider.md)
 resource for each instance of each data provider you are using.
 The template refers to that provider and queries it.

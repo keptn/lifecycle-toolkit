@@ -15,20 +15,20 @@ import (
 )
 
 type PodAnnotationHandler struct {
-	Client client.Client
+	Client client.Reader
 	Log    logr.Logger
 }
 
-func (a *PodAnnotationHandler) PodIsAnnotated(ctx context.Context, req admission.Request, pod *corev1.Pod) bool {
+func (p *PodAnnotationHandler) PodIsAnnotated(ctx context.Context, req admission.Request, pod *corev1.Pod) bool {
 	podIsAnnotated := isPodAnnotated(pod)
 	if !podIsAnnotated {
-		a.Log.Info("Pod is not annotated, check for parent annotations...")
-		podIsAnnotated = a.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
+		p.Log.Info("Pod is not annotated, check for parent annotations...")
+		podIsAnnotated = p.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
 	}
 	return podIsAnnotated
 }
 
-func (a *PodAnnotationHandler) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) bool {
+func (p *PodAnnotationHandler) copyAnnotationsIfParentAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) bool {
 	podOwner := GetOwnerReference(&pod.ObjectMeta)
 	if podOwner.UID == "" {
 		return false
@@ -37,10 +37,10 @@ func (a *PodAnnotationHandler) copyAnnotationsIfParentAnnotated(ctx context.Cont
 	switch podOwner.Kind {
 	case "ReplicaSet":
 		rs := &appsv1.ReplicaSet{}
-		if err := a.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, rs); err != nil {
+		if err := p.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, rs); err != nil {
 			return false
 		}
-		a.Log.Info("Done fetching RS")
+		p.Log.Info("Done fetching RS")
 
 		rsOwner := GetOwnerReference(&rs.ObjectMeta)
 		if rsOwner.UID == "" {
@@ -49,24 +49,24 @@ func (a *PodAnnotationHandler) copyAnnotationsIfParentAnnotated(ctx context.Cont
 
 		if rsOwner.Kind == "Rollout" {
 			ro := &argov1alpha1.Rollout{}
-			return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ro)
+			return p.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ro)
 		}
 		dp := &appsv1.Deployment{}
-		return a.fetchParentObjectAndCopyLabels(ctx, rsOwner.Name, req.Namespace, pod, dp)
+		return p.fetchParentObjectAndCopyLabels(ctx, rsOwner.Name, req.Namespace, pod, dp)
 
 	case "StatefulSet":
 		sts := &appsv1.StatefulSet{}
-		return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, sts)
+		return p.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, sts)
 	case "DaemonSet":
 		ds := &appsv1.DaemonSet{}
-		return a.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ds)
+		return p.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ds)
 	default:
 		return false
 	}
 }
 
-func (a *PodAnnotationHandler) fetchParentObjectAndCopyLabels(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) bool {
-	if err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: name}, objectContainer); err != nil {
+func (p *PodAnnotationHandler) fetchParentObjectAndCopyLabels(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) bool {
+	if err := p.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: name}, objectContainer); err != nil {
 		return false
 	}
 	objectContainerMetaData := metav1.ObjectMeta{

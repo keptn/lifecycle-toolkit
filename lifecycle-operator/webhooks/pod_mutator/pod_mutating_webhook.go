@@ -36,9 +36,22 @@ type PodMutatingWebhook struct {
 	App      handlers.K8sHandler
 }
 
-const InvalidAnnotationMessage = "Invalid annotations"
-
-var ErrTooLongAnnotations = fmt.Errorf("too long annotations, maximum length for app and workload is 25 characters, for version 12 characters")
+func NewPodMutator(client client.Client,
+	tracer trace.Tracer,
+	decoder *admission.Decoder,
+	eventSender controllercommon.IEvent,
+	log logr.Logger,
+	schedulingGatesEnabled bool) *PodMutatingWebhook {
+	return &PodMutatingWebhook{
+		SchedulingGatesEnabled: schedulingGatesEnabled,
+		Client:                 client,
+		Tracer:                 tracer,
+		EventSender:            eventSender,
+		Decoder:                decoder,
+		Log:                    log,
+		App:                    handlers.AppHandler{Log: log, Client: client},
+	}
+}
 
 // Handle inspects incoming Pods and injects the Keptn scheduler if they contain the Keptn lifecycle annotations.
 //

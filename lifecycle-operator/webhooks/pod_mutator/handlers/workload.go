@@ -28,30 +28,73 @@ type WorkloadHandler struct {
 	EventSender controllercommon.IEvent
 }
 
+func (a *WorkloadHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace string) error {
+
+	ctx, span := a.Tracer.Start(ctx, "create_workload", trace.WithSpanKind(trace.SpanKindProducer))
+	defer span.End()
+
+	newWorkload := generateWorkload(ctx, pod, namespace)
+
+	newWorkload.SetSpanAttributes(span)
+
+	a.Log.Info("Searching for workload")
+
+	workload := &klcv1alpha3.KeptnWorkload{}
+	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newWorkload.Name}, workload)
+	if errors.IsNotFound(err) {
+		return a.createWorkload(ctx, workload, newWorkload, err, span)
+	}
+
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+		return fmt.Errorf("could not fetch Workload"+": %+v", err)
+	}
+
+	return a.updateWorkload(ctx, workload, newWorkload, err, span)
+}
+
+func (a *WorkloadHandler) updateWorkload(ctx context.Context, workload *klcv1alpha3.KeptnWorkload, newWorkload *klcv1alpha3.KeptnWorkload, err error, span trace.Span) error {
+	if reflect.DeepEqual(workload.Spec, newWorkload.Spec) {
+		a.Log.Info("Pod not changed, not updating anything")
+		return nil
+	}
+
+	a.Log.Info("Pod changed, updating workload")
+	workload.Spec = newWorkload.Spec
+
+	err = a.Client.Update(ctx, workload)
+	if err != nil {
+		a.Log.Error(err, "Could not update Workload")
+		a.EventSender.Emit(apicommon.PhaseUpdateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not update KeptnWorkload", workload.Spec.Version)
+		span.SetStatus(codes.Error, err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (a *WorkloadHandler) createWorkload(ctx context.Context, workload *klcv1alpha3.KeptnWorkload, newWorkload *klcv1alpha3.KeptnWorkload, err error, span trace.Span) error {
+	a.Log.Info("Creating workload", "workload", workload.Name)
+	workload = newWorkload
+	err = a.Client.Create(ctx, workload)
+	if err != nil {
+		a.Log.Error(err, "Could not create Workload")
+		a.EventSender.Emit(apicommon.PhaseCreateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not create KeptnWorkload", workload.Spec.Version)
+		span.SetStatus(codes.Error, err.Error())
+		return err
+	}
+
+	return nil
+}
+
 func generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha3.KeptnWorkload {
 	version := getVersion(&pod.ObjectMeta)
 	applicationName := getAppName(&pod.ObjectMeta)
 
-	var preDeploymentTasks []string
-	var postDeploymentTasks []string
-	var preDeploymentEvaluation []string
-	var postDeploymentEvaluation []string
-
-	if annotations, found := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.PreDeploymentTaskAnnotation, ""); found {
-		preDeploymentTasks = strings.Split(annotations, ",")
-	}
-
-	if annotations, found := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.PostDeploymentTaskAnnotation, ""); found {
-		postDeploymentTasks = strings.Split(annotations, ",")
-	}
-
-	if annotations, found := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.PreDeploymentEvaluationAnnotation, ""); found {
-		preDeploymentEvaluation = strings.Split(annotations, ",")
-	}
-
-	if annotations, found := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.PostDeploymentEvaluationAnnotation, ""); found {
-		postDeploymentEvaluation = strings.Split(annotations, ",")
-	}
+	preDeploymentTasks := getAnnotations(&pod.ObjectMeta, apicommon.PreDeploymentTaskAnnotation)
+	postDeploymentTasks := getAnnotations(&pod.ObjectMeta, apicommon.PostDeploymentTaskAnnotation)
+	preDeploymentEvaluation := getAnnotations(&pod.ObjectMeta, apicommon.PreDeploymentEvaluationAnnotation)
+	postDeploymentEvaluation := getAnnotations(&pod.ObjectMeta, apicommon.PostDeploymentEvaluationAnnotation)
 
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
@@ -81,53 +124,9 @@ func generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *k
 	}
 }
 
-func (a *WorkloadHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace string) error {
-
-	ctx, span := a.Tracer.Start(ctx, "create_workload", trace.WithSpanKind(trace.SpanKindProducer))
-	defer span.End()
-
-	newWorkload := generateWorkload(ctx, pod, namespace)
-
-	newWorkload.SetSpanAttributes(span)
-
-	a.Log.Info("Searching for workload")
-
-	workload := &klcv1alpha3.KeptnWorkload{}
-	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newWorkload.Name}, workload)
-	if errors.IsNotFound(err) {
-		a.Log.Info("Creating workload", "workload", workload.Name)
-		workload = newWorkload
-		err = a.Client.Create(ctx, workload)
-		if err != nil {
-			a.Log.Error(err, "Could not create Workload")
-			a.EventSender.Emit(apicommon.PhaseCreateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not create KeptnWorkload", workload.Spec.Version)
-			span.SetStatus(codes.Error, err.Error())
-			return err
-		}
-
-		return nil
+func getAnnotations(objMeta *metav1.ObjectMeta, annotationKey string) []string {
+	if annotations, found := GetLabelOrAnnotation(objMeta, annotationKey, ""); found {
+		return strings.Split(annotations, ",")
 	}
-
-	if err != nil {
-		span.SetStatus(codes.Error, err.Error())
-		return fmt.Errorf("could not fetch Workload"+": %+v", err)
-	}
-
-	if reflect.DeepEqual(workload.Spec, newWorkload.Spec) {
-		a.Log.Info("Pod not changed, not updating anything")
-		return nil
-	}
-
-	a.Log.Info("Pod changed, updating workload")
-	workload.Spec = newWorkload.Spec
-
-	err = a.Client.Update(ctx, workload)
-	if err != nil {
-		a.Log.Error(err, "Could not update Workload")
-		a.EventSender.Emit(apicommon.PhaseUpdateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not update KeptnWorkload", workload.Spec.Version)
-		span.SetStatus(codes.Error, err.Error())
-		return err
-	}
-
 	return nil
 }

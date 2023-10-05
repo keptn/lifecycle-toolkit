@@ -64,8 +64,7 @@ but you can instead use the `deno-runtime` or `python-runtime` runner.
 ## Create and apply a KeptnTask
 
 You must manually create the
-[KeptnTask](../yaml-crd-ref/task.md)
-resource.
+[KeptnTask](../yaml-crd-ref/task.md) resource.
 In the standard operating mode, when Keptn is managing workloads,
 the creation of the `KeptnTask` resource is automatic.
 

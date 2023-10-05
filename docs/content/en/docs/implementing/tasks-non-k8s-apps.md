@@ -28,7 +28,6 @@ but this can be a very lightweight, single-node KinD cluster; see
 Keptn only triggers on-demand `KeptnTask` resources
 so resource utilization is minimal.
 
-
 ## Create a KeptnTaskDefinition
 
 When you have Keptn installed, create a

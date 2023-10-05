@@ -114,7 +114,7 @@ rules:
 - apiGroups:
   - ""
   resourceNames:
-  - klt-certs
+  - keptn-certs
   resources:
   - secrets
   verbs:

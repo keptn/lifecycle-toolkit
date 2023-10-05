@@ -31,9 +31,9 @@ type PodMutatingWebhook struct {
 	EventSender            controllercommon.IEvent
 	Log                    logr.Logger
 	SchedulingGatesEnabled bool
-	handlers.PodAnnotationHandler
-	Workload handlers.K8sHandler
-	App      handlers.K8sHandler
+	Pod                    handlers.PodAnnotationHandler
+	Workload               handlers.K8sHandler
+	App                    handlers.K8sHandler
 }
 
 func NewPodMutator(client client.Client,
@@ -49,13 +49,13 @@ func NewPodMutator(client client.Client,
 		EventSender:            eventSender,
 		Decoder:                decoder,
 		Log:                    log,
-		App:                    handlers.AppHandler{Log: log, Client: client},
+		Pod:                    handlers.PodAnnotationHandler{Client: client, Log: log},
+		App:                    &handlers.AppHandler{Log: log, Client: client, EventSender: eventSender, Tracer: tracer},
+		Workload:               &handlers.WorkloadHandler{Log: log, Client: client, EventSender: eventSender, Tracer: tracer},
 	}
 }
 
 // Handle inspects incoming Pods and injects the Keptn scheduler if they contain the Keptn lifecycle annotations.
-//
-//nolint:gocyclo
 func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) admission.Response {
 
 	ctx, span := a.Tracer.Start(ctx, "annotate_pod", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
@@ -92,7 +92,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	a.Log.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
-	if a.PodIsAnnotated(ctx, req, pod) {
+	if a.Pod.IsAnnotated(ctx, req, pod) {
 		a.Log.Info("Resource is annotated with Keptn annotations")
 
 		if scheduled := handleScheduling(a.SchedulingGatesEnabled, a.Log, pod); scheduled {

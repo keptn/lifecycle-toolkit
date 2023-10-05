@@ -381,14 +381,13 @@ func main() {
 		webhookRecorder := mgr.GetEventRecorderFor("keptn/webhook")
 		webhookBuilder.Register(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
-				Handler: &pod_mutator.PodMutatingWebhook{
-					SchedulingGatesEnabled: env.SchedulingGatesEnabled,
-					Client:                 mgr.GetClient(),
-					Tracer:                 otel.Tracer("keptn/webhook"),
-					EventSender:            controllercommon.NewEventMultiplexer(webhookLogger, webhookRecorder, ceClient),
-					Decoder:                admission.NewDecoder(mgr.GetScheme()),
-					Log:                    webhookLogger,
-				},
+				Handler: pod_mutator.NewPodMutator(
+					mgr.GetClient(),
+					otel.Tracer("keptn/webhook"),
+					admission.NewDecoder(mgr.GetScheme()),
+					controllercommon.NewEventMultiplexer(webhookLogger, webhookRecorder, ceClient),
+					webhookLogger,
+					env.SchedulingGatesEnabled),
 			},
 		})
 		setupLog.Info("starting webhook")

@@ -15,11 +15,11 @@ import (
 )
 
 type PodAnnotationHandler struct {
-	Client client.Reader
+	Client client.Client
 	Log    logr.Logger
 }
 
-func (p *PodAnnotationHandler) PodIsAnnotated(ctx context.Context, req admission.Request, pod *corev1.Pod) bool {
+func (p *PodAnnotationHandler) IsAnnotated(ctx context.Context, req admission.Request, pod *corev1.Pod) bool {
 	podIsAnnotated := isPodAnnotated(pod)
 	if !podIsAnnotated {
 		p.Log.Info("Pod is not annotated, check for parent annotations...")

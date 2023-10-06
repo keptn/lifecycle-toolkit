@@ -50,7 +50,7 @@ func NewPodMutator(client client.Client,
 		Decoder:                decoder,
 		Log:                    log,
 		Pod:                    handlers.PodAnnotationHandler{Client: client, Log: log},
-		App:                    &handlers.AppHandler{Log: log, Client: client, EventSender: eventSender, Tracer: tracer},
+		App:                    &handlers.AppCreationRequestHandler{Log: log, Client: client, EventSender: eventSender, Tracer: tracer},
 		Workload:               &handlers.WorkloadHandler{Log: log, Client: client, EventSender: eventSender, Tracer: tracer},
 	}
 }

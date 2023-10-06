@@ -125,7 +125,7 @@ func TestAppHandlerHandle(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			appHandler := &AppHandler{
+			appHandler := &AppCreationRequestHandler{
 				Client:      tt.client,
 				Log:         log,
 				EventSender: mockEventSender,
@@ -158,7 +158,7 @@ func TestAppHandlerCreateAppSucceeds(t *testing.T) {
 	tracer := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
-	appHandler := &AppHandler{
+	appHandler := &AppCreationRequestHandler{
 		Client:      fakeClient,
 		Log:         logger,
 		Tracer:      tracer,
@@ -186,7 +186,7 @@ func TestAppHandlerCreateAppFails(t *testing.T) {
 	tracer := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
-	appHandler := &AppHandler{
+	appHandler := &AppCreationRequestHandler{
 		Client:      fakeClient,
 		Log:         logger,
 		Tracer:      tracer,

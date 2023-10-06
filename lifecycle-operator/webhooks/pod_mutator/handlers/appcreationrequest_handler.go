@@ -19,14 +19,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-type AppHandler struct {
+type AppCreationRequestHandler struct {
 	Client      client.Client
 	Log         logr.Logger
 	Tracer      trace.Tracer
 	EventSender controllercommon.IEvent
 }
 
-func (a *AppHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace string) error {
+func (a *AppCreationRequestHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace string) error {
 
 	ctx, span := a.Tracer.Start(ctx, "create_app", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
@@ -50,7 +50,7 @@ func (a *AppHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace stri
 	return nil
 }
 
-func (a *AppHandler) createApp(ctx context.Context, newAppCreationRequest *klcv1alpha3.KeptnAppCreationRequest, span trace.Span) error {
+func (a *AppCreationRequestHandler) createApp(ctx context.Context, newAppCreationRequest *klcv1alpha3.KeptnAppCreationRequest, span trace.Span) error {
 	a.Log.Info("Creating app creation request", "appCreationRequest", newAppCreationRequest.Name, "namespace:", newAppCreationRequest.Namespace)
 
 	err := a.Client.Create(ctx, newAppCreationRequest)

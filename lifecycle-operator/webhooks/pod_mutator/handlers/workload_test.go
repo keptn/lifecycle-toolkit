@@ -22,7 +22,7 @@ import (
 
 const namespace = "test-namespace"
 
-func Test_Handle(t *testing.T) {
+func TestHandle(t *testing.T) {
 
 	mockEventSender := controllercommon.NewK8sSender(record.NewFakeRecorder(100))
 	log := testr.New(t)
@@ -115,7 +115,7 @@ func Test_Handle(t *testing.T) {
 	}
 }
 
-func Test_updateWorkload_no_spec_changes(t *testing.T) {
+func TestUpdateWorkloadNoSpecChanges(t *testing.T) {
 	mockEventSender := controllercommon.NewK8sSender(record.NewFakeRecorder(100))
 	log := testr.New(t)
 	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {

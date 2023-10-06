@@ -22,7 +22,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 )
 
-func TestAppHandler_Handle(t *testing.T) {
+func TestAppHandlerHandle(t *testing.T) {
 
 	mockEventSender := common.NewK8sSender(record.NewFakeRecorder(100))
 	log := testr.New(t)
@@ -109,7 +109,7 @@ func TestAppHandler_Handle(t *testing.T) {
 	}
 }
 
-func TestAppHandler_createApp_succeeds(t *testing.T) {
+func TestAppHandlerCreateAppSucceeds(t *testing.T) {
 	fakeClient := fake.NewClient()
 	logger := logr.Discard()
 	eventSender := common.NewK8sSender(record.NewFakeRecorder(100))
@@ -137,7 +137,7 @@ func TestAppHandler_createApp_succeeds(t *testing.T) {
 
 }
 
-func TestAppHandler_createApp_fails(t *testing.T) {
+func TestAppHandlerCreateAppFails(t *testing.T) {
 	fakeClient := fake.NewClient()
 	logger := logr.Discard()
 	eventSender := common.NewK8sSender(record.NewFakeRecorder(100))

@@ -28,7 +28,7 @@ const postEval = "some-post-deployment-evaluation"
 const version = "v1.0.0"
 const uid = "this-is-the-pod-uid"
 
-func Test_copyAnnotationsIfParentAnnotated(t *testing.T) {
+func TestCopyAnnotationsIfParentAnnotated(t *testing.T) {
 	testNamespace := "test-namespace"
 	rsUidWithDpOwner := types.UID("this-is-the-replicaset-with-dp-owner")
 	rsUidWithNoOwner := types.UID("this-is-the-replicaset-with-no-owner")
@@ -261,7 +261,7 @@ func Test_copyAnnotationsIfParentAnnotated(t *testing.T) {
 	}
 }
 
-func Test_copyResourceLabelsIfPresent(t *testing.T) {
+func TestCopyResourceLabelsIfPresent(t *testing.T) {
 
 	type args struct {
 		sourceResource *metav1.ObjectMeta
@@ -409,7 +409,7 @@ func Test_copyResourceLabelsIfPresent(t *testing.T) {
 	}
 }
 
-func Test_IsPodAnnotated(t *testing.T) {
+func TestIsPodAnnotated(t *testing.T) {
 	type args struct {
 		pod *corev1.Pod
 	}

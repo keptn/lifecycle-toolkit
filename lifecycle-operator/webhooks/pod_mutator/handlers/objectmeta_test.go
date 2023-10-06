@@ -9,7 +9,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func Test_getWorkloadName(t *testing.T) {
+func TestGetWorkloadName(t *testing.T) {
 
 	type args struct {
 		pod *corev1.Pod
@@ -76,7 +76,7 @@ func Test_getWorkloadName(t *testing.T) {
 	}
 }
 
-func Test_getLabelOrAnnotation(t *testing.T) {
+func TestGetLabelOrAnnotation(t *testing.T) {
 	type args struct {
 		resource            *metav1.ObjectMeta
 		primaryAnnotation   string
@@ -186,7 +186,7 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 	}
 }
 
-func Test_calculateVersion(t *testing.T) {
+func TestCalculateVersion(t *testing.T) {
 
 	tests := []struct {
 		name string
@@ -222,7 +222,7 @@ func Test_calculateVersion(t *testing.T) {
 	}
 }
 
-func Test_getAppName(t *testing.T) {
+func TestGetAppName(t *testing.T) {
 
 	tests := []struct {
 		name string
@@ -281,7 +281,7 @@ func Test_getAppName(t *testing.T) {
 	}
 }
 
-func Test_getOwnerReference(t *testing.T) {
+func TestGetOwnerReference(t *testing.T) {
 
 	ownerRef := metav1.OwnerReference{
 		UID:  "the-replicaset-uid",

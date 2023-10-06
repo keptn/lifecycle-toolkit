@@ -22,7 +22,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-func TestPodMutatingWebhook_Handle_DisabledNamespace(t *testing.T) {
+func TestPodMutatingWebhookHandleDisabledNamespace(t *testing.T) {
 	fakeClient := fakeclient.NewClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "default",
@@ -81,7 +81,7 @@ func TestPodMutatingWebhook_Handle_DisabledNamespace(t *testing.T) {
 	require.True(t, resp.Allowed)
 }
 
-func TestPodMutatingWebhook_Handle_UnsupportedOwner(t *testing.T) {
+func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
 	fakeClient := fakeclient.NewClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "default",
@@ -176,7 +176,7 @@ func TestPodMutatingWebhook_Handle_UnsupportedOwner(t *testing.T) {
 	require.True(t, errors.IsNotFound(err))
 }
 
-func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
+func TestPodMutatingWebhookHandleSingleService(t *testing.T) {
 	fakeClient := fakeclient.NewClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "default",
@@ -280,7 +280,7 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 	}, workload.Spec)
 }
 
-func TestPodMutatingWebhook_Handle_SchedulingGates_GateRemoved(t *testing.T) {
+func TestPodMutatingWebhookHandleSchedulingGatesGateRemoved(t *testing.T) {
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "example-pod",
@@ -359,7 +359,7 @@ func TestPodMutatingWebhook_Handle_SchedulingGates_GateRemoved(t *testing.T) {
 	require.Len(t, resp.Patches, 0)
 }
 
-func TestPodMutatingWebhook_Handle_SchedulingGates(t *testing.T) {
+func TestPodMutatingWebhookHandleSchedulingGates(t *testing.T) {
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "example-pod",
@@ -474,7 +474,7 @@ func TestPodMutatingWebhook_Handle_SchedulingGates(t *testing.T) {
 	}, workload.Spec)
 }
 
-func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresent(t *testing.T) {
+func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t *testing.T) {
 	fakeClient := fakeclient.NewClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "default",
@@ -596,7 +596,7 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 	}, workload.Spec)
 }
 
-func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
+func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
 	fakeClient := fakeclient.NewClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "default",

@@ -11,7 +11,11 @@ on:
         type: "boolean"
         default: true
       scheduling-gates:
-        description: "Decides whether to ue scheduling gates"
+        description: "Decides whether to use scheduling gates"
+        type: "boolean"
+        default: false
+      allowed-namespaces:
+        description: "Decides whether to allow only certain namespaces"
         type: "boolean"
         default: false
 env:
@@ -36,6 +40,7 @@ jobs:
           runtime_tag: ${{ inputs.runtime_tag }}
           helm-install: ${{ inputs.helm-install }}
           scheduling-gates: ${{ inputs.scheduling-gates }}
+          allowed-namespaces: ${{ inputs.allowed-namespaces }}
 
       - name: Install and expose Prometheus
         uses: ./.github/actions/deploy-prometheus-on-cluster

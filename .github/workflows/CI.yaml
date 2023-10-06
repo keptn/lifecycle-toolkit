@@ -204,10 +204,17 @@ jobs:
       matrix:
         helm: [true, false]
         scheduling-gates: [true, false]
-        # do not run the tests with manifests installation and scheduling gates
+        allowed-namespaces: [true, false]
         exclude:
           - helm: false
             scheduling-gates: true
+            allowed-namespaces: true
+          - helm: false
+            scheduling-gates: false
+            allowed-namespaces: true
+          - helm: false
+            scheduling-gates: true
+            allowed-namespaces: false
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       helm-install: ${{ matrix.helm }}

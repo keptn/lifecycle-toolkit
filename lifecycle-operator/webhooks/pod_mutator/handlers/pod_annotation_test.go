@@ -18,6 +18,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+const lowerAppName = "some-app-name"
+const workloadName = "some-workload-name"
+const preDep = "some-pre-deployment-task"
+const postDep = "some-post-deployment-task"
+const preEval = "some-pre-deployment-evaluation"
+const postEval = "some-post-deployment-evaluation"
+const version = "v1.0.0"
+
 func Test_copyAnnotationsIfParentAnnotated(t *testing.T) {
 	testNamespace := "test-namespace"
 	rsUidWithDpOwner := types.UID("this-is-the-replicaset-with-dp-owner")
@@ -269,13 +277,13 @@ func Test_copyResourceLabelsIfPresent(t *testing.T) {
 				sourceResource: &metav1.ObjectMeta{
 					Name: "testSourceObject",
 					Annotations: map[string]string{
-						apicommon.WorkloadAnnotation:                 "some-workload-name",
-						apicommon.AppAnnotation:                      "some-app-name",
-						apicommon.VersionAnnotation:                  "v1.0.0",
-						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+						apicommon.WorkloadAnnotation:                 workloadName,
+						apicommon.AppAnnotation:                      lowerAppName,
+						apicommon.VersionAnnotation:                  version,
+						apicommon.PreDeploymentTaskAnnotation:        preDep,
+						apicommon.PostDeploymentTaskAnnotation:       postDep,
+						apicommon.PreDeploymentEvaluationAnnotation:  preEval,
+						apicommon.PostDeploymentEvaluationAnnotation: postEval,
 					},
 				},
 				targetPod: &corev1.Pod{
@@ -290,13 +298,13 @@ func Test_copyResourceLabelsIfPresent(t *testing.T) {
 				TypeMeta: metav1.TypeMeta{},
 				ObjectMeta: metav1.ObjectMeta{
 					Annotations: map[string]string{
-						apicommon.WorkloadAnnotation:                 "some-workload-name",
-						apicommon.AppAnnotation:                      "some-app-name",
-						apicommon.VersionAnnotation:                  "v1.0.0",
-						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+						apicommon.WorkloadAnnotation:                 workloadName,
+						apicommon.AppAnnotation:                      lowerAppName,
+						apicommon.VersionAnnotation:                  version,
+						apicommon.PreDeploymentTaskAnnotation:        preDep,
+						apicommon.PostDeploymentTaskAnnotation:       postDep,
+						apicommon.PreDeploymentEvaluationAnnotation:  preEval,
+						apicommon.PostDeploymentEvaluationAnnotation: postEval,
 					},
 				},
 			},
@@ -307,13 +315,13 @@ func Test_copyResourceLabelsIfPresent(t *testing.T) {
 				sourceResource: &metav1.ObjectMeta{
 					Name: "testSourceObject",
 					Labels: map[string]string{
-						apicommon.WorkloadAnnotation:                 "some-workload-name",
-						apicommon.AppAnnotation:                      "some-app-name",
-						apicommon.VersionAnnotation:                  "v1.0.0",
-						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+						apicommon.WorkloadAnnotation:                 workloadName,
+						apicommon.AppAnnotation:                      lowerAppName,
+						apicommon.VersionAnnotation:                  version,
+						apicommon.PreDeploymentTaskAnnotation:        preDep,
+						apicommon.PostDeploymentTaskAnnotation:       postDep,
+						apicommon.PreDeploymentEvaluationAnnotation:  preEval,
+						apicommon.PostDeploymentEvaluationAnnotation: postEval,
 					},
 				},
 				targetPod: &corev1.Pod{},
@@ -323,13 +331,13 @@ func Test_copyResourceLabelsIfPresent(t *testing.T) {
 				TypeMeta: metav1.TypeMeta{},
 				ObjectMeta: metav1.ObjectMeta{
 					Annotations: map[string]string{
-						apicommon.WorkloadAnnotation:                 "some-workload-name",
-						apicommon.AppAnnotation:                      "some-app-name",
-						apicommon.VersionAnnotation:                  "v1.0.0",
-						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+						apicommon.WorkloadAnnotation:                 workloadName,
+						apicommon.AppAnnotation:                      lowerAppName,
+						apicommon.VersionAnnotation:                  version,
+						apicommon.PreDeploymentTaskAnnotation:        preDep,
+						apicommon.PostDeploymentTaskAnnotation:       postDep,
+						apicommon.PreDeploymentEvaluationAnnotation:  preEval,
+						apicommon.PostDeploymentEvaluationAnnotation: postEval,
 					},
 				},
 			},
@@ -340,12 +348,12 @@ func Test_copyResourceLabelsIfPresent(t *testing.T) {
 				sourceResource: &metav1.ObjectMeta{
 					Name: "testSourceObject",
 					Labels: map[string]string{
-						apicommon.WorkloadAnnotation:                 "some-workload-name",
-						apicommon.AppAnnotation:                      "some-app-name",
-						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+						apicommon.WorkloadAnnotation:                 workloadName,
+						apicommon.AppAnnotation:                      lowerAppName,
+						apicommon.PreDeploymentTaskAnnotation:        preDep,
+						apicommon.PostDeploymentTaskAnnotation:       postDep,
+						apicommon.PreDeploymentEvaluationAnnotation:  preEval,
+						apicommon.PostDeploymentEvaluationAnnotation: postEval,
 					},
 				},
 				targetPod: &corev1.Pod{
@@ -366,13 +374,13 @@ func Test_copyResourceLabelsIfPresent(t *testing.T) {
 				TypeMeta: metav1.TypeMeta{},
 				ObjectMeta: metav1.ObjectMeta{
 					Annotations: map[string]string{
-						apicommon.WorkloadAnnotation:                 "some-workload-name",
-						apicommon.AppAnnotation:                      "some-app-name",
-						apicommon.VersionAnnotation:                  "v1.0.0",
-						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
+						apicommon.WorkloadAnnotation:                 workloadName,
+						apicommon.AppAnnotation:                      lowerAppName,
+						apicommon.VersionAnnotation:                  version,
+						apicommon.PreDeploymentTaskAnnotation:        preDep,
+						apicommon.PostDeploymentTaskAnnotation:       postDep,
+						apicommon.PreDeploymentEvaluationAnnotation:  preEval,
+						apicommon.PostDeploymentEvaluationAnnotation: postEval,
 					},
 				},
 				Spec: corev1.PodSpec{
@@ -415,7 +423,7 @@ func Test_IsPodAnnotated(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							apicommon.WorkloadAnnotation: "some-workload-name",
+							apicommon.WorkloadAnnotation: workloadName,
 						},
 					},
 				},
@@ -435,7 +443,7 @@ func Test_IsPodAnnotated(t *testing.T) {
 					},
 					ObjectMeta: metav1.ObjectMeta{
 						Labels: map[string]string{
-							apicommon.WorkloadAnnotation: "some-workload-name",
+							apicommon.WorkloadAnnotation: workloadName,
 						},
 					},
 				},
@@ -451,7 +459,7 @@ func Test_IsPodAnnotated(t *testing.T) {
 				},
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						apicommon.WorkloadAnnotation: "some-workload-name",
+						apicommon.WorkloadAnnotation: workloadName,
 					},
 					Annotations: map[string]string{
 						apicommon.VersionAnnotation: "v1",

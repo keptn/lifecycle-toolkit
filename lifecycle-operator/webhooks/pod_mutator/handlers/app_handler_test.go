@@ -2,15 +2,18 @@ package handlers
 
 import (
 	"context"
-	"reflect"
 	"testing"
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -31,9 +34,7 @@ func TestAppHandler_Handle(t *testing.T) {
 		fields  fields
 		args    args
 		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			a := &AppHandler{
@@ -49,96 +50,53 @@ func TestAppHandler_Handle(t *testing.T) {
 	}
 }
 
-func TestAppHandler_createApp(t *testing.T) {
-	type fields struct {
-		Client      client.Client
-		Log         logr.Logger
-		Tracer      trace.Tracer
-		EventSender common.IEvent
+func TestAppHandler_createApp_succeeds(t *testing.T) {
+	fakeClient := fake.NewClient()
+	logger := logr.Discard()
+	eventSender := common.NewK8sSender(record.NewFakeRecorder(100))
+	tracer := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+		return ctx, trace.SpanFromContext(ctx)
+	}}
+	appHandler := &AppHandler{
+		Client:      fakeClient,
+		Log:         logger,
+		Tracer:      tracer,
+		EventSender: eventSender,
 	}
-	type args struct {
-		ctx                   context.Context
-		newAppCreationRequest *klcv1alpha3.KeptnAppCreationRequest
-		span                  trace.Span
+
+	ctx := context.TODO()
+	name := "myappcreationreq"
+	newAppCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{
+		ObjectMeta: metav1.ObjectMeta{Name: name},
 	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			a := &AppHandler{
-				Client:      tt.fields.Client,
-				Log:         tt.fields.Log,
-				Tracer:      tt.fields.Tracer,
-				EventSender: tt.fields.EventSender,
-			}
-			if err := a.createApp(tt.args.ctx, tt.args.newAppCreationRequest, tt.args.span); (err != nil) != tt.wantErr {
-				t.Errorf("createApp() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
+	err := appHandler.createApp(ctx, newAppCreationRequest, trace.SpanFromContext(ctx))
+
+	require.Nil(t, err)
+	creationReq := &klcv1alpha3.KeptnAppCreationRequest{}
+	err = fakeClient.Get(ctx, types.NamespacedName{Name: name}, creationReq)
+	require.Nil(t, err)
+
 }
 
-func Test_generateAppCreationRequest(t *testing.T) {
-	type args struct {
-		ctx       context.Context
-		pod       *corev1.Pod
-		namespace string
+func TestAppHandler_createApp_fails(t *testing.T) {
+	fakeClient := fake.NewClient()
+	logger := logr.Discard()
+	eventSender := common.NewK8sSender(record.NewFakeRecorder(100))
+	tracer := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+		return ctx, trace.SpanFromContext(ctx)
+	}}
+	appHandler := &AppHandler{
+		Client:      fakeClient,
+		Log:         logger,
+		Tracer:      tracer,
+		EventSender: eventSender,
 	}
-	tests := []struct {
-		name string
-		args args
-		want *klcv1alpha3.KeptnAppCreationRequest
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := generateAppCreationRequest(tt.args.ctx, tt.args.pod, tt.args.namespace); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("generateAppCreationRequest() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
-func Test_inheritWorkloadAnnotation(t *testing.T) {
-	type args struct {
-		meta *metav1.ObjectMeta
+	ctx := context.TODO()
+	newAppCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{
+		ObjectMeta: metav1.ObjectMeta{},
 	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			inheritWorkloadAnnotation(tt.args.meta)
-		})
-	}
-}
+	err := appHandler.createApp(ctx, newAppCreationRequest, trace.SpanFromContext(ctx))
+	require.Error(t, err)
 
-func Test_isAppAnnotationPresent(t *testing.T) {
-	type args struct {
-		meta *metav1.ObjectMeta
-	}
-	tests := []struct {
-		name string
-		args args
-		want bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := isAppAnnotationPresent(tt.args.meta); got != tt.want {
-				t.Errorf("isAppAnnotationPresent() = %v, want %v", got, tt.want)
-			}
-		})
-	}
 }

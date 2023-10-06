@@ -9,6 +9,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const appname = "SOME-APP-NAME"
+
 func Test_getWorkloadName(t *testing.T) {
 
 	type args struct {
@@ -25,7 +27,7 @@ func Test_getWorkloadName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
-							apicommon.AppAnnotation:      "SOME-APP-NAME",
+							apicommon.AppAnnotation:      appname,
 							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
 						},
 					},
@@ -39,7 +41,7 @@ func Test_getWorkloadName(t *testing.T) {
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
 						Labels: map[string]string{
-							apicommon.AppAnnotation:      "SOME-APP-NAME",
+							apicommon.AppAnnotation:      appname,
 							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
 						},
 					},
@@ -93,13 +95,13 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 			args: args{
 				resource: &metav1.ObjectMeta{
 					Annotations: map[string]string{
-						apicommon.AppAnnotation: "some-app-name",
+						apicommon.AppAnnotation: appname,
 					},
 				},
 				primaryAnnotation:   apicommon.AppAnnotation,
 				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
 			},
-			want:  "some-app-name",
+			want:  appname,
 			want1: true,
 		},
 		{
@@ -107,13 +109,13 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 			args: args{
 				resource: &metav1.ObjectMeta{
 					Annotations: map[string]string{
-						apicommon.K8sRecommendedAppAnnotations: "some-app-name",
+						apicommon.K8sRecommendedAppAnnotations: appname,
 					},
 				},
 				primaryAnnotation:   apicommon.AppAnnotation,
 				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
 			},
-			want:  "some-app-name",
+			want:  appname,
 			want1: true,
 		},
 		{
@@ -121,13 +123,13 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 			args: args{
 				resource: &metav1.ObjectMeta{
 					Labels: map[string]string{
-						apicommon.AppAnnotation: "some-app-name",
+						apicommon.AppAnnotation: appname,
 					},
 				},
 				primaryAnnotation:   apicommon.AppAnnotation,
 				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
 			},
-			want:  "some-app-name",
+			want:  appname,
 			want1: true,
 		},
 		{
@@ -135,13 +137,13 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 			args: args{
 				resource: &metav1.ObjectMeta{
 					Labels: map[string]string{
-						apicommon.K8sRecommendedAppAnnotations: "some-app-name",
+						apicommon.K8sRecommendedAppAnnotations: appname,
 					},
 				},
 				primaryAnnotation:   apicommon.AppAnnotation,
 				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
 			},
-			want:  "some-app-name",
+			want:  appname,
 			want1: true,
 		},
 		{
@@ -149,7 +151,7 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 			args: args{
 				resource: &metav1.ObjectMeta{
 					Annotations: map[string]string{
-						"some-other-annotation": "some-app-name",
+						"some-other-annotation": appname,
 					},
 				},
 				primaryAnnotation:   apicommon.AppAnnotation,
@@ -163,7 +165,7 @@ func Test_getLabelOrAnnotation(t *testing.T) {
 			args: args{
 				resource: &metav1.ObjectMeta{
 					Annotations: map[string]string{
-						"some-other-annotation": "some-app-name",
+						"some-other-annotation": appname,
 					},
 				},
 				primaryAnnotation:   apicommon.AppAnnotation,
@@ -235,12 +237,12 @@ func Test_getAppName(t *testing.T) {
 			pod: &corev1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
 					Annotations: map[string]string{
-						apicommon.AppAnnotation: "SOME-APP-NAME",
+						apicommon.AppAnnotation: appname,
 					},
 				},
 			},
 
-			want: "some-app-name",
+			want: appname,
 		},
 		{
 			name: "Return keptn app name in lower case when label is set",
@@ -248,12 +250,12 @@ func Test_getAppName(t *testing.T) {
 			pod: &corev1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						apicommon.AppAnnotation: "SOME-APP-NAME",
+						apicommon.AppAnnotation: appname,
 					},
 				},
 			},
 
-			want: "some-app-name",
+			want: appname,
 		},
 		{
 			name: "Return keptn app name from annotation in lower case when annotation and label is set",
@@ -283,6 +285,12 @@ func Test_getAppName(t *testing.T) {
 
 func Test_getOwnerReference(t *testing.T) {
 
+	ownerRef := metav1.OwnerReference{
+		UID:  "the-replicaset-uid",
+		Kind: "ReplicaSet",
+		Name: "some-name",
+	}
+
 	type args struct {
 		resource metav1.ObjectMeta
 	}
@@ -297,19 +305,11 @@ func Test_getOwnerReference(t *testing.T) {
 				resource: metav1.ObjectMeta{
 					UID: "the-pod-uid",
 					OwnerReferences: []metav1.OwnerReference{
-						{
-							Kind: "ReplicaSet",
-							UID:  "the-replicaset-uid",
-							Name: "some-name",
-						},
+						ownerRef,
 					},
 				},
 			},
-			want: metav1.OwnerReference{
-				UID:  "the-replicaset-uid",
-				Kind: "ReplicaSet",
-				Name: "some-name",
-			},
+			want: ownerRef,
 		},
 		{
 			name: "Test return is input argument if owner is not found",

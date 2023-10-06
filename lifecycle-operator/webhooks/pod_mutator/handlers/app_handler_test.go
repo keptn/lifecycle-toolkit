@@ -40,20 +40,43 @@ func TestAppHandlerHandle(t *testing.T) {
 			},
 		}}
 
-	// Define test cases
+	singleServiceCreationReq := &klcv1alpha3.KeptnAppCreationRequest{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "KeptnAppCreationRequest",
+			APIVersion: "lifecycle.keptn.sh/v1alpha3",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:            "my-workload",
+			Namespace:       namespace,
+			ResourceVersion: "1",
+			Annotations: map[string]string{
+				"keptn.sh/app-type": "single-service",
+			},
+		},
+		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{AppName: "my-workload"},
+	}
+
 	tests := []struct {
 		name    string
 		client  client.Client
 		pod     *corev1.Pod
 		wanterr string
+		wantReq *klcv1alpha3.KeptnAppCreationRequest
 	}{
 		{
-			name:   "Create App inherit from workload",
-			pod:    pod,
-			client: fake.NewClient(),
+			name:    "Create AppCreationRequest inherit from workload",
+			pod:     pod,
+			client:  fake.NewClient(),
+			wantReq: singleServiceCreationReq,
 		},
 		{
-			name: "Create App",
+			name:    "AppCreationRequest already exists",
+			pod:     pod,
+			client:  fake.NewClient(singleServiceCreationReq),
+			wantReq: singleServiceCreationReq,
+		},
+		{
+			name: "Create AppCreationRequest",
 			pod: &corev1.Pod{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "example-pod",
@@ -65,9 +88,21 @@ func TestAppHandlerHandle(t *testing.T) {
 					},
 				}},
 			client: fake.NewClient(),
+			wantReq: &klcv1alpha3.KeptnAppCreationRequest{
+				TypeMeta: metav1.TypeMeta{
+					Kind:       "KeptnAppCreationRequest",
+					APIVersion: "lifecycle.keptn.sh/v1alpha3",
+				},
+				ObjectMeta: metav1.ObjectMeta{
+					Name:            "my-app",
+					Namespace:       namespace,
+					ResourceVersion: "1",
+				},
+				Spec: klcv1alpha3.KeptnAppCreationRequestSpec{AppName: "my-app"},
+			},
 		},
 		{
-			name: "Error Fetching App",
+			name: "Error Fetching AppCreationRequest",
 			pod:  &corev1.Pod{},
 			client: k8sfake.NewClientBuilder().WithInterceptorFuncs(interceptor.Funcs{
 				Get: func(ctx context.Context, client client.WithWatch, key client.ObjectKey, obj client.Object, opts ...client.GetOption) error {
@@ -77,7 +112,7 @@ func TestAppHandlerHandle(t *testing.T) {
 			wanterr: "could not fetch AppCreationRequest: bad",
 		},
 		{
-			name: "Error Creating App",
+			name: "Error Creating AppCreationRequest",
 			pod:  pod,
 			client: k8sfake.NewClientBuilder().WithInterceptorFuncs(interceptor.Funcs{
 				Create: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.CreateOption) error {
@@ -103,6 +138,13 @@ func TestAppHandlerHandle(t *testing.T) {
 				require.Contains(t, err.Error(), tt.wanterr)
 			} else {
 				require.Nil(t, err)
+			}
+
+			if tt.wantReq != nil {
+				creationReq := &klcv1alpha3.KeptnAppCreationRequest{}
+				err = tt.client.Get(context.TODO(), types.NamespacedName{Name: tt.wantReq.Name, Namespace: tt.wantReq.Namespace}, creationReq)
+				require.Nil(t, err)
+				require.Equal(t, tt.wantReq, creationReq)
 			}
 
 		})

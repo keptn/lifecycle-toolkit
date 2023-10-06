@@ -9,72 +9,72 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-//func Test_getWorkloadName(t *testing.T) {
-//
-//	type args struct {
-//		pod *corev1.Pod
-//	}
-//	tests := []struct {
-//		name string
-//		args args
-//		want string
-//	}{
-//		{
-//			name: "Return concatenated app name and workload name in lower case when annotations are set",
-//			args: args{
-//				pod: &corev1.Pod{
-//					ObjectMeta: metav1.ObjectMeta{
-//						Annotations: map[string]string{
-//							apicommon.AppAnnotation:      "SOME-APP-NAME",
-//							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
-//						},
-//					},
-//				},
-//			},
-//			want: "some-app-name-some-workload-name",
-//		},
-//		{
-//			name: "Return concatenated app name and workload name in lower case when labels are set",
-//			args: args{
-//				pod: &corev1.Pod{
-//					ObjectMeta: metav1.ObjectMeta{
-//						Labels: map[string]string{
-//							apicommon.AppAnnotation:      "SOME-APP-NAME",
-//							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
-//						},
-//					},
-//				},
-//			},
-//			want: "some-app-name-some-workload-name",
-//		},
-//		{
-//			name: "Return concatenated keptn app name and workload name from annotation in lower case when annotations and labels are set",
-//			args: args{
-//				pod: &corev1.Pod{
-//					ObjectMeta: metav1.ObjectMeta{
-//						Annotations: map[string]string{
-//							apicommon.AppAnnotation:      "SOME-APP-NAME-ANNOTATION",
-//							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME-ANNOTATION",
-//						},
-//						Labels: map[string]string{
-//							apicommon.AppAnnotation:      "SOME-APP-NAME-LABEL",
-//							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME-LABEL",
-//						},
-//					},
-//				},
-//			},
-//			want: "some-app-name-annotation-some-workload-name-annotation",
-//		},
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//
-//			if got := getWorkloadName(&tt.args.pod.ObjectMeta); got != tt.want {
-//				t.Errorf("getWorkloadName() = %v, want %v", got, tt.want)
-//			}
-//		})
-//	}
-//}
+func Test_getWorkloadName(t *testing.T) {
+
+	type args struct {
+		pod *corev1.Pod
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "Return concatenated app name and workload name in lower case when annotations are set",
+			args: args{
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							apicommon.AppAnnotation:      "SOME-APP-NAME",
+							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
+						},
+					},
+				},
+			},
+			want: "some-app-name-some-workload-name",
+		},
+		{
+			name: "Return concatenated app name and workload name in lower case when labels are set",
+			args: args{
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Labels: map[string]string{
+							apicommon.AppAnnotation:      "SOME-APP-NAME",
+							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
+						},
+					},
+				},
+			},
+			want: "some-app-name-some-workload-name",
+		},
+		{
+			name: "Return concatenated keptn app name and workload name from annotation in lower case when annotations and labels are set",
+			args: args{
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							apicommon.AppAnnotation:      "SOME-APP-NAME-ANNOTATION",
+							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME-ANNOTATION",
+						},
+						Labels: map[string]string{
+							apicommon.AppAnnotation:      "SOME-APP-NAME-LABEL",
+							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME-LABEL",
+						},
+					},
+				},
+			},
+			want: "some-app-name-annotation-some-workload-name-annotation",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			if got := getWorkloadName(&tt.args.pod.ObjectMeta, getAppName(&tt.args.pod.ObjectMeta)); got != tt.want {
+				t.Errorf("getWorkloadName() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
 func Test_getLabelOrAnnotation(t *testing.T) {
 	type args struct {

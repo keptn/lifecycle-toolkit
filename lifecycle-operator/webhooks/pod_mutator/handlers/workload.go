@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"reflect"
-	"strings"
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
@@ -118,11 +117,4 @@ func generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *k
 			PostDeploymentEvaluations: postDeploymentEvaluation,
 		},
 	}
-}
-
-func getAnnotations(objMeta *metav1.ObjectMeta, annotationKey string) []string {
-	if annotations, found := GetLabelOrAnnotation(objMeta, annotationKey, ""); found {
-		return strings.Split(annotations, ",")
-	}
-	return nil
 }

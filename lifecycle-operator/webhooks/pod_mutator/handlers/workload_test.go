@@ -20,7 +20,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 )
 
-func TestWorkloadHandler_Handle(t *testing.T) {
+const namespace = "test-namespace"
+
+func Test_Handle(t *testing.T) {
 
 	mockEventSender := controllercommon.NewK8sSender(record.NewFakeRecorder(100))
 	log := testr.New(t)
@@ -30,9 +32,19 @@ func TestWorkloadHandler_Handle(t *testing.T) {
 	workload := &klcv1alpha3.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-workload-my-workload",
-			Namespace: "test-namespace",
+			Namespace: namespace,
 		},
 	}
+
+	pod := &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "example-pod",
+			Namespace: namespace,
+			Annotations: map[string]string{
+				apicommon.WorkloadAnnotation: "my-workload",
+				apicommon.VersionAnnotation:  "0.1",
+			},
+		}}
 	// Define test cases
 	tests := []struct {
 		name    string
@@ -41,31 +53,13 @@ func TestWorkloadHandler_Handle(t *testing.T) {
 		wanterr string
 	}{
 		{
-			name: "Create Workload",
-			pod: &corev1.Pod{
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      "example-pod",
-					Namespace: "test-namespace",
-					Annotations: map[string]string{
-						apicommon.WorkloadAnnotation: "my-workload",
-						apicommon.VersionAnnotation:  "0.1",
-					},
-				},
-			},
+			name:   "Create Workload",
+			pod:    pod,
 			client: fake.NewClient(),
 		},
 		{
-			name: "Update Workload",
-			pod: &corev1.Pod{
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      "example-pod",
-					Namespace: "test-namespace",
-					Annotations: map[string]string{
-						apicommon.WorkloadAnnotation: "my-workload",
-						apicommon.VersionAnnotation:  "0.1",
-					},
-				},
-			},
+			name:   "Update Workload",
+			pod:    pod,
 			client: fake.NewClient(workload),
 		},
 		{
@@ -80,14 +74,7 @@ func TestWorkloadHandler_Handle(t *testing.T) {
 		},
 		{
 			name: "Error Creating Workload",
-			pod: &corev1.Pod{ObjectMeta: metav1.ObjectMeta{
-				Name:      "example-pod",
-				Namespace: "test-namespace",
-				Annotations: map[string]string{
-					apicommon.WorkloadAnnotation: "my-workload",
-					apicommon.VersionAnnotation:  "0.1",
-				},
-			}},
+			pod:  pod,
 			client: k8sfake.NewClientBuilder().WithInterceptorFuncs(interceptor.Funcs{
 				Create: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.CreateOption) error {
 					return errors.New("badcreate")
@@ -97,14 +84,7 @@ func TestWorkloadHandler_Handle(t *testing.T) {
 		},
 		{
 			name: "Error Updating Workload",
-			pod: &corev1.Pod{ObjectMeta: metav1.ObjectMeta{
-				Name:      "example-pod",
-				Namespace: "test-namespace",
-				Annotations: map[string]string{
-					apicommon.WorkloadAnnotation: "my-workload",
-					apicommon.VersionAnnotation:  "0.1",
-				},
-			}},
+			pod:  pod,
 			client: k8sfake.NewClientBuilder().WithInterceptorFuncs(interceptor.Funcs{
 				Update: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.UpdateOption) error {
 					return errors.New("badupdate")
@@ -133,4 +113,28 @@ func TestWorkloadHandler_Handle(t *testing.T) {
 
 		})
 	}
+}
+
+func Test_updateWorkload_no_spec_changes(t *testing.T) {
+	mockEventSender := controllercommon.NewK8sSender(record.NewFakeRecorder(100))
+	log := testr.New(t)
+	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+		return ctx, trace.SpanFromContext(ctx)
+	}}
+
+	workload := &klcv1alpha3.KeptnWorkload{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-workload-my-workload",
+			Namespace: namespace,
+		},
+	}
+	a := &WorkloadHandler{
+		Client:      nil,
+		Log:         log,
+		Tracer:      tr,
+		EventSender: mockEventSender,
+	}
+	err := a.updateWorkload(context.TODO(), workload, workload, nil)
+	require.Nil(t, err)
+
 }

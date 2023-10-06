@@ -251,7 +251,7 @@ func Test_copyAnnotationsIfParentAnnotated(t *testing.T) {
 	}
 }
 
-func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
+func Test_copyResourceLabelsIfPresent(t *testing.T) {
 
 	type args struct {
 		sourceResource *metav1.ObjectMeta
@@ -399,7 +399,7 @@ func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
 	}
 }
 
-func Test_isPodAnnotated(t *testing.T) {
+func Test_IsPodAnnotated(t *testing.T) {
 	type args struct {
 		pod *corev1.Pod
 	}

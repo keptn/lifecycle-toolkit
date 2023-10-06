@@ -50,6 +50,13 @@ func getAppName(meta *metav1.ObjectMeta) string {
 	return strings.ToLower(applicationName)
 }
 
+func getAnnotations(objMeta *metav1.ObjectMeta, annotationKey string) []string {
+	if annotations, found := GetLabelOrAnnotation(objMeta, annotationKey, ""); found {
+		return strings.Split(annotations, ",")
+	}
+	return nil
+}
+
 func getVersion(meta *metav1.ObjectMeta) string {
 	version, _ := GetLabelOrAnnotation(meta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
 	return strings.ToLower(version)
@@ -77,6 +84,16 @@ func setMapKey(myMap map[string]string, key, value string) {
 	if value != "" {
 		myMap[key] = value
 	}
+}
+
+func isAppAnnotationPresent(meta *metav1.ObjectMeta) bool {
+	_, gotAppAnnotation := GetLabelOrAnnotation(meta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
+
+	if gotAppAnnotation {
+		return true
+	}
+
+	return false
 }
 
 func calculateVersion(pod *corev1.Pod) string {

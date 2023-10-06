@@ -94,16 +94,6 @@ func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace 
 	return kacr
 }
 
-func isAppAnnotationPresent(meta *metav1.ObjectMeta) bool {
-	_, gotAppAnnotation := GetLabelOrAnnotation(meta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
-
-	if gotAppAnnotation {
-		return true
-	}
-
-	return false
-}
-
 func inheritWorkloadAnnotation(meta *metav1.ObjectMeta) {
 	meta.Annotations[apicommon.AppAnnotation] = meta.Annotations[apicommon.WorkloadAnnotation]
 }

@@ -28,7 +28,7 @@ const postEval = "some-post-deployment-evaluation"
 const version = "v1.0.0"
 const uid = "this-is-the-pod-uid"
 
-func TestCopyAnnotationsIfParentAnnotated(t *testing.T) {
+func TestIsAnnotated(t *testing.T) {
 	testNamespace := "test-namespace"
 	rsUidWithDpOwner := types.UID("this-is-the-replicaset-with-dp-owner")
 	rsUidWithNoOwner := types.UID("this-is-the-replicaset-with-no-owner")
@@ -253,7 +253,7 @@ func TestCopyAnnotationsIfParentAnnotated(t *testing.T) {
 				Client: tt.fields.Client,
 				Log:    tt.fields.Log,
 			}
-			got := a.copyAnnotationsIfParentAnnotated(tt.args.ctx, tt.args.req, tt.args.pod)
+			got := a.IsAnnotated(tt.args.ctx, tt.args.req, tt.args.pod)
 			if got != tt.want {
 				t.Errorf("copyAnnotationsIfParentAnnotated() got = %v, want %v", got, tt.want)
 			}

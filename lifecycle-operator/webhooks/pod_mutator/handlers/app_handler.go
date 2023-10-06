@@ -34,7 +34,7 @@ func (a *AppHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace stri
 	newAppCreationRequest := generateAppCreationRequest(ctx, pod, namespace)
 	newAppCreationRequest.SetSpanAttributes(span)
 
-	a.Log.Info("Searching for AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name)
+	a.Log.Info("Searching for AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name, "namespace:", newAppCreationRequest.Namespace)
 
 	appCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newAppCreationRequest.Name}, appCreationRequest)
@@ -46,12 +46,13 @@ func (a *AppHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace stri
 		span.SetStatus(codes.Error, err.Error())
 		return fmt.Errorf("could not fetch AppCreationRequest"+": %+v", err)
 	}
-
+	a.Log.Info("Found AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name, "namespace:", newAppCreationRequest.Namespace)
 	return nil
 }
 
 func (a *AppHandler) createApp(ctx context.Context, newAppCreationRequest *klcv1alpha3.KeptnAppCreationRequest, span trace.Span) error {
-	a.Log.Info("Creating app creation request", "appCreationRequest", newAppCreationRequest.Name)
+	a.Log.Info("Creating app creation request", "appCreationRequest", newAppCreationRequest.Name, "namespace:", newAppCreationRequest.Namespace)
+
 	err := a.Client.Create(ctx, newAppCreationRequest)
 	if err != nil {
 		a.Log.Error(err, "Could not create AppCreationRequest")
@@ -78,7 +79,10 @@ func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace 
 	}
 
 	if !isAppAnnotationPresent(&pod.ObjectMeta) {
+		// at this point if the pod does not have an app annotation it means we create the app
+		// and it will have a single workload
 		inheritWorkloadAnnotation(&pod.ObjectMeta)
+		// so we can mark the app request as single service type
 		kacr.Annotations[apicommon.AppTypeAnnotation] = string(apicommon.AppTypeSingleService)
 	}
 

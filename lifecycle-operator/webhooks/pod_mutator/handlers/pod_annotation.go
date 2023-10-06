@@ -19,11 +19,11 @@ type PodAnnotationHandler struct {
 	Log    logr.Logger
 }
 
-func (p *PodAnnotationHandler) IsAnnotated(ctx context.Context, req admission.Request, pod *corev1.Pod) bool {
+func (p *PodAnnotationHandler) IsAnnotated(ctx context.Context, req *admission.Request, pod *corev1.Pod) bool {
 	podIsAnnotated := isPodAnnotated(pod)
 	if !podIsAnnotated {
 		p.Log.Info("Pod is not annotated, check for parent annotations...")
-		podIsAnnotated = p.copyAnnotationsIfParentAnnotated(ctx, &req, pod)
+		podIsAnnotated = p.copyAnnotationsIfParentAnnotated(ctx, req, pod)
 	}
 	return podIsAnnotated
 }
@@ -49,36 +49,43 @@ func (p *PodAnnotationHandler) copyAnnotationsIfParentAnnotated(ctx context.Cont
 
 		if rsOwner.Kind == "Rollout" {
 			ro := &argov1alpha1.Rollout{}
-			return p.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ro)
+			objectContainerMetaData := p.fetchParent(ctx, podOwner.Name, req.Namespace, pod, ro)
+			return copyResourceLabelsIfPresent(objectContainerMetaData, pod)
 		}
 		dp := &appsv1.Deployment{}
-		return p.fetchParentObjectAndCopyLabels(ctx, rsOwner.Name, req.Namespace, pod, dp)
+		objectContainerMetaData := p.fetchParent(ctx, rsOwner.Name, req.Namespace, pod, dp)
+		return copyResourceLabelsIfPresent(objectContainerMetaData, pod)
 
 	case "StatefulSet":
 		sts := &appsv1.StatefulSet{}
-		return p.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, sts)
+		objectContainerMetaData := p.fetchParent(ctx, podOwner.Name, req.Namespace, pod, sts)
+		return copyResourceLabelsIfPresent(objectContainerMetaData, pod)
 	case "DaemonSet":
 		ds := &appsv1.DaemonSet{}
-		return p.fetchParentObjectAndCopyLabels(ctx, podOwner.Name, req.Namespace, pod, ds)
+		objectContainerMetaData := p.fetchParent(ctx, podOwner.Name, req.Namespace, pod, ds)
+		return copyResourceLabelsIfPresent(objectContainerMetaData, pod)
 	default:
 		return false
 	}
 }
 
-func (p *PodAnnotationHandler) fetchParentObjectAndCopyLabels(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) bool {
+func (p *PodAnnotationHandler) fetchParent(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) *metav1.ObjectMeta {
 	if err := p.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: name}, objectContainer); err != nil {
-		return false
+		return nil
 	}
 	objectContainerMetaData := metav1.ObjectMeta{
 		Labels:      objectContainer.GetLabels(),
 		Annotations: objectContainer.GetAnnotations(),
 	}
-	return copyResourceLabelsIfPresent(&objectContainerMetaData, pod)
+	return &objectContainerMetaData
 }
 
 func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) bool {
 	var workloadName, appName, version, preDeploymentChecks, postDeploymentChecks, preEvaluationChecks, postEvaluationChecks string
 	var gotWorkloadName, gotVersion bool
+	if sourceResource == nil {
+		return false
+	}
 
 	workloadName, gotWorkloadName = GetLabelOrAnnotation(sourceResource, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	appName, _ = GetLabelOrAnnotation(sourceResource, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)

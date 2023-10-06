@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -212,6 +213,16 @@ func TestCalculateVersion(t *testing.T) {
 				}},
 			want: "1.0.0",
 		},
+		{
+			name: "multiple containers",
+			pod: &corev1.Pod{
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{Image: "ciao"}, {Image: "peppe"},
+					},
+				}},
+			want: "927078041", //the hash of ciaopeppe
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -334,6 +345,49 @@ func TestGetOwnerReference(t *testing.T) {
 			if got := GetOwnerReference(&tt.args.resource); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("getOwnerReference() = %v, want %v", got, tt.want)
 			}
+		})
+	}
+}
+
+func TestSetMapKey(t *testing.T) {
+	testCases := []struct {
+		testName       string
+		inputMap       map[string]string
+		key            string
+		value          string
+		expectedOutput map[string]string
+	}{
+		{
+			testName: "Set key with non-empty value",
+			inputMap: map[string]string{"existingKey": "existingValue"},
+			key:      "newKey",
+			value:    "newValue",
+			expectedOutput: map[string]string{
+				"existingKey": "existingValue",
+				"newKey":      "newValue",
+			},
+		},
+		{
+			testName:       "Set key with empty value",
+			inputMap:       map[string]string{"existingKey": "existingValue"},
+			key:            "newKey",
+			value:          "",
+			expectedOutput: map[string]string{"existingKey": "existingValue"},
+		},
+		{
+			testName:       "Set key in nil map",
+			inputMap:       nil,
+			key:            "newKey",
+			value:          "",
+			expectedOutput: nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.testName, func(t *testing.T) {
+			setMapKey(tc.inputMap, tc.key, tc.value)
+
+			require.Equal(t, tc.expectedOutput, tc.inputMap)
 		})
 	}
 }

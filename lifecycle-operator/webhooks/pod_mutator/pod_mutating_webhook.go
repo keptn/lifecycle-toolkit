@@ -92,7 +92,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	a.Log.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
-	if a.Pod.IsAnnotated(ctx, req, pod) {
+	if a.Pod.IsAnnotated(ctx, &req, pod) {
 		a.Log.Info("Resource is annotated with Keptn annotations")
 
 		if scheduled := handleScheduling(a.SchedulingGatesEnabled, a.Log, pod); scheduled {

@@ -47,19 +47,16 @@ func getAppName(meta *metav1.ObjectMeta) string {
 	} else {
 		applicationName, _ = GetLabelOrAnnotation(meta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
 	}
-	return strings.ToLower(applicationName)
+	return operatorcommon.CreateResourceName(apicommon.MaxK8sObjectLength, apicommon.MinKeptnNameLen, applicationName)
 }
 
-func getAnnotations(objMeta *metav1.ObjectMeta, annotationKey string) []string {
+// getValuesForAnnotations returns the value of an annotation,
+// if this has multiple separated by a comma it splits them
+func getValuesForAnnotations(objMeta *metav1.ObjectMeta, annotationKey string) []string {
 	if annotations, found := GetLabelOrAnnotation(objMeta, annotationKey, ""); found {
 		return strings.Split(annotations, ",")
 	}
 	return nil
-}
-
-func getVersion(meta *metav1.ObjectMeta) string {
-	version, _ := GetLabelOrAnnotation(meta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
-	return strings.ToLower(version)
 }
 
 func GetOwnerReference(resource *metav1.ObjectMeta) metav1.OwnerReference {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
@@ -85,11 +86,12 @@ func (a *WorkloadHandler) createWorkload(ctx context.Context, newWorkload *klcv1
 }
 
 func generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha3.KeptnWorkload {
-	version := getVersion(&pod.ObjectMeta)
-	preDeploymentTasks := getAnnotations(&pod.ObjectMeta, apicommon.PreDeploymentTaskAnnotation)
-	postDeploymentTasks := getAnnotations(&pod.ObjectMeta, apicommon.PostDeploymentTaskAnnotation)
-	preDeploymentEvaluation := getAnnotations(&pod.ObjectMeta, apicommon.PreDeploymentEvaluationAnnotation)
-	postDeploymentEvaluation := getAnnotations(&pod.ObjectMeta, apicommon.PostDeploymentEvaluationAnnotation)
+	version, _ := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
+	version = strings.ToLower(version)
+	preDeploymentTasks := getValuesForAnnotations(&pod.ObjectMeta, apicommon.PreDeploymentTaskAnnotation)
+	postDeploymentTasks := getValuesForAnnotations(&pod.ObjectMeta, apicommon.PostDeploymentTaskAnnotation)
+	preDeploymentEvaluation := getValuesForAnnotations(&pod.ObjectMeta, apicommon.PreDeploymentEvaluationAnnotation)
+	postDeploymentEvaluation := getValuesForAnnotations(&pod.ObjectMeta, apicommon.PostDeploymentEvaluationAnnotation)
 	applicationName := getAppName(&pod.ObjectMeta)
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key

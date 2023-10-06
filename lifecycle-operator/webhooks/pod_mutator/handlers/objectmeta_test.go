@@ -218,10 +218,19 @@ func TestCalculateVersion(t *testing.T) {
 			pod: &corev1.Pod{
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{
-						{Image: "ciao"}, {Image: "peppe"},
+						{
+							Image: "ciao",
+						},
+						{
+							Image: "peppe",
+							Env: []corev1.EnvVar{{
+								Name:  "test",
+								Value: "12",
+							},
+							}},
 					},
 				}},
-			want: "927078041", //the hash of ciaopeppe
+			want: "1253120182", //the hash of ciaopeppetest12
 		},
 	}
 	for _, tt := range tests {

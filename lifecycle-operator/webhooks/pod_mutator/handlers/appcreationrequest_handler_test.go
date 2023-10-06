@@ -201,3 +201,41 @@ func TestAppHandlerCreateAppFails(t *testing.T) {
 	require.Error(t, err)
 
 }
+
+func TestGenerateAppCreationRequest(t *testing.T) {
+	// Mock a context with OpenTelemetry tracer enabled
+	ctx := context.Background()
+
+	// Create a sample Pod
+	pod := &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-pod",
+			Namespace: namespace,
+			Annotations: map[string]string{
+				apicommon.WorkloadAnnotation: workloadName,
+			},
+		},
+	}
+
+	// Test case 1: Pod does not have app annotation
+	t.Run("PodWithoutAppAnnotation", func(t *testing.T) {
+		kacr := generateAppCreationRequest(ctx, pod, namespace)
+
+		require.Equal(t, namespace, kacr.Namespace)
+		require.Equal(t, string(apicommon.AppTypeSingleService), kacr.Annotations[apicommon.AppTypeAnnotation])
+		require.Equal(t, workloadName, kacr.Name)
+		require.Equal(t, workloadName, kacr.Spec.AppName)
+	})
+
+	// Test case 2: Pod has app annotation
+	t.Run("PodWithAppAnnotation", func(t *testing.T) {
+		// Add app annotation to the Pod
+		pod.ObjectMeta.Annotations[apicommon.AppAnnotation] = lowerAppName
+		kacr := generateAppCreationRequest(ctx, pod, namespace)
+
+		require.Equal(t, namespace, kacr.Namespace)
+		require.Empty(t, kacr.Annotations[apicommon.AppTypeAnnotation]) // No app type annotation
+		require.Equal(t, lowerAppName, kacr.Name)
+		require.Equal(t, lowerAppName, kacr.Spec.AppName)
+	})
+}

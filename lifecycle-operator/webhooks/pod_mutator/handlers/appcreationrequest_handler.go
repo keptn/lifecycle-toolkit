@@ -79,9 +79,10 @@ func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace 
 	}
 
 	if !isAppAnnotationPresent(&pod.ObjectMeta) {
+		initEmptyAnnotations(&pod.ObjectMeta)
 		// at this point if the pod does not have an app annotation it means we create the app
 		// and it will have a single workload
-		inheritWorkloadAnnotation(&pod.ObjectMeta)
+		pod.ObjectMeta.Annotations[apicommon.AppAnnotation] = pod.ObjectMeta.Annotations[apicommon.WorkloadAnnotation]
 		// so we can mark the app request as single service type
 		kacr.Annotations[apicommon.AppTypeAnnotation] = string(apicommon.AppTypeSingleService)
 	}
@@ -93,9 +94,4 @@ func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace 
 	}
 
 	return kacr
-}
-
-func inheritWorkloadAnnotation(meta *metav1.ObjectMeta) {
-	initEmptyAnnotations(meta)
-	meta.Annotations[apicommon.AppAnnotation] = meta.Annotations[apicommon.WorkloadAnnotation]
 }

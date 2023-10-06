@@ -14,6 +14,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
@@ -21,6 +22,7 @@ import (
 )
 
 const namespace = "test-namespace"
+const myworkload = "my-workload"
 
 func TestHandle(t *testing.T) {
 
@@ -36,31 +38,50 @@ func TestHandle(t *testing.T) {
 		},
 	}
 
+	wantWorkload := &klcv1alpha3.KeptnWorkload{
+		TypeMeta: metav1.TypeMeta{Kind: "KeptnWorkload", APIVersion: "lifecycle.keptn.sh/v1alpha3"},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-workload-my-workload",
+			Namespace: namespace,
+			OwnerReferences: []metav1.OwnerReference{
+				{},
+			},
+			ResourceVersion: "1",
+		},
+		Spec: klcv1alpha3.KeptnWorkloadSpec{
+			AppName: myworkload,
+			Version: "0.1",
+		},
+	}
+
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "example-pod",
 			Namespace: namespace,
 			Annotations: map[string]string{
-				apicommon.WorkloadAnnotation: "my-workload",
+				apicommon.WorkloadAnnotation: myworkload,
 				apicommon.VersionAnnotation:  "0.1",
 			},
 		}}
 	// Define test cases
 	tests := []struct {
-		name    string
-		client  client.Client
-		pod     *corev1.Pod
-		wanterr string
+		name         string
+		client       client.Client
+		pod          *corev1.Pod
+		wanterr      string
+		wantWorkload *klcv1alpha3.KeptnWorkload
 	}{
 		{
-			name:   "Create Workload",
-			pod:    pod,
-			client: fake.NewClient(),
+			name:         "Create Workload",
+			pod:          pod,
+			client:       fake.NewClient(),
+			wantWorkload: wantWorkload,
 		},
 		{
-			name:   "Update Workload",
-			pod:    pod,
-			client: fake.NewClient(workload),
+			name:         "Update Workload",
+			pod:          pod,
+			client:       fake.NewClient(wantWorkload),
+			wantWorkload: wantWorkload,
 		},
 		{
 			name: "Error Fetching Workload",
@@ -109,6 +130,13 @@ func TestHandle(t *testing.T) {
 				require.Contains(t, err.Error(), tt.wanterr)
 			} else {
 				require.Nil(t, err)
+			}
+
+			if tt.wantWorkload != nil {
+				actualWorkload := &klcv1alpha3.KeptnWorkload{}
+				err = tt.client.Get(context.TODO(), types.NamespacedName{Name: tt.wantWorkload.Name, Namespace: tt.wantWorkload.Namespace}, actualWorkload)
+				require.Nil(t, err)
+				require.Equal(t, tt.wantWorkload, actualWorkload)
 			}
 
 		})

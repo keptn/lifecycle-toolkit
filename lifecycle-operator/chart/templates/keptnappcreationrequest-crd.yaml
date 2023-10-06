@@ -1,0 +1,57 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: keptnappcreationrequests.lifecycle.keptn.sh
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.13.0
+    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: lifecycle.keptn.sh
+    keptn.sh/inject-cert: "true"
+  {{- include "chart.labels" . | nindent 4 }}
+spec:
+  group: lifecycle.keptn.sh
+  names:
+    kind: KeptnAppCreationRequest
+    listKind: KeptnAppCreationRequestList
+    plural: keptnappcreationrequests
+    singular: keptnappcreationrequest
+  scope: Namespaced
+  versions:
+  - name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: KeptnAppCreationRequest is the Schema for the keptnappcreationrequests
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec describes the desired state of the KeptnAppCreationRequest.
+            properties:
+              appName:
+                description: AppName is the name of the KeptnApp the KeptnAppCreationRequest
+                  should create if no user-defined object with that name is found.
+                type: string
+            required:
+            - appName
+            type: object
+          status:
+            description: Status describes the current state of the KeptnAppCreationRequest.
+            type: string
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -3,7 +3,7 @@ kind: KeptnApp
 metadata:
   name: podtato-head
   labels:
-    app.kubernetes.io/managed-by: "klt"
+    app.kubernetes.io/managed-by: "keptn"
 spec:
   revision: 1
   version: '95a0b0ddca'

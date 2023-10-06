@@ -79,7 +79,7 @@ type KeptnWebhookCertificateReconciler struct {
 // +kubebuilder:rbac:groups="apps",resources=deployments,verbs=get;list;watch;
 
 //role
-// +kubebuilder:rbac:groups="",namespace=keptn-lifecycle-toolkit-system,resources=secrets,verbs=get;update;patch,resourceNames=klt-certs
+// +kubebuilder:rbac:groups="",namespace=keptn-lifecycle-toolkit-system,resources=secrets,verbs=get;update;patch,resourceNames=keptn-certs
 // +kubebuilder:rbac:groups="",namespace=keptn-lifecycle-toolkit-system,resources=secrets,verbs=create;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to

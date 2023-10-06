@@ -1122,6 +1122,85 @@ func TestGetDQLEmptyPayload_EvaluateQueryForStep(t *testing.T) {
 	require.Equal(t, []string(nil), result)
 }
 
+func Test_keptnDynatraceDQLProvider_FetchAnalysisValue(t *testing.T) {
+	mockClient := &fake.DTAPIClientMock{}
+
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
+		require.Contains(t, path, "query:execute")
+		return []byte(dqlPayload), 200, nil
+	}
+
+	dqlProvider := NewKeptnDynatraceDQLProvider(
+		nil,
+		WithDTAPIClient(mockClient),
+		WithLogger(logr.New(klog.NewKlogr().GetSink())),
+	)
+
+	result, err := dqlProvider.FetchAnalysisValue(context.TODO(), "timeseries (dt.host.cpu)",
+		metricsapi.Analysis{
+			Status: metricsapi.AnalysisStatus{},
+		},
+		&metricsapi.KeptnMetricsProvider{
+			Spec: metricsapi.KeptnMetricsProviderSpec{},
+		},
+	)
+
+	require.Nil(t, err)
+	require.Equal(t, "20.417480", result)
+}
+
+func Test_keptnDynatraceDQLProvider_FetchAnalysisValue_ReceiveUnexpectedError(t *testing.T) {
+	mockClient := &fake.DTAPIClientMock{}
+
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
+		return nil, 0, ErrUnexpected
+	}
+
+	dqlProvider := NewKeptnDynatraceDQLProvider(
+		nil,
+		WithDTAPIClient(mockClient),
+		WithLogger(logr.New(klog.NewKlogr().GetSink())),
+	)
+
+	result, err := dqlProvider.FetchAnalysisValue(context.TODO(), "timeseries (dt.host.cpu)",
+		metricsapi.Analysis{
+			Status: metricsapi.AnalysisStatus{},
+		},
+		&metricsapi.KeptnMetricsProvider{
+			Spec: metricsapi.KeptnMetricsProviderSpec{},
+		},
+	)
+
+	require.NotNil(t, err)
+	require.Empty(t, result)
+}
+
+func Test_keptnDynatraceDQLProvider_FetchAnalysisValue_ReceiveMultipleRecords(t *testing.T) {
+	mockClient := &fake.DTAPIClientMock{}
+
+	mockClient.DoFunc = func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
+		return []byte(dqlPayloadMultipleRecords), 200, nil
+	}
+
+	dqlProvider := NewKeptnDynatraceDQLProvider(
+		nil,
+		WithDTAPIClient(mockClient),
+		WithLogger(logr.New(klog.NewKlogr().GetSink())),
+	)
+
+	result, err := dqlProvider.FetchAnalysisValue(context.TODO(), "timeseries (dt.host.cpu)",
+		metricsapi.Analysis{
+			Status: metricsapi.AnalysisStatus{},
+		},
+		&metricsapi.KeptnMetricsProvider{
+			Spec: metricsapi.KeptnMetricsProviderSpec{},
+		},
+	)
+
+	require.Nil(t, err)
+	require.Equal(t, "20.417480", result)
+}
+
 func TestExtractValuesFromRecord(t *testing.T) {
 	type args struct {
 		records map[string]any
@@ -1215,6 +1294,171 @@ func Test_toFloatArray(t *testing.T) {
 			res, ok := toFloatArray(tt.args.obj)
 			require.Equal(t, tt.wantRes, res)
 			require.Equal(t, tt.wantOk, ok)
+		})
+	}
+}
+
+func Test_newMetricRequestFromMetric(t *testing.T) {
+	type args struct {
+		metric metricsapi.KeptnMetric
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *metricRequest
+		wantErr bool
+	}{
+		{
+			name: "metric with interval",
+			args: args{
+				metric: metricsapi.KeptnMetric{
+					Spec: metricsapi.KeptnMetricSpec{
+						Query: "queryviderci",
+						Range: &metricsapi.RangeSpec{
+							Interval: "5m",
+						},
+					},
+				},
+			},
+			want: &metricRequest{
+				query: "queryviderci",
+				timeframe: &timeframe{
+					from: time.Now().UTC().Add(-5 * time.Minute),
+					to:   time.Now().UTC(),
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "metric with invalid interval",
+			args: args{
+				metric: metricsapi.KeptnMetric{
+					Spec: metricsapi.KeptnMetricSpec{
+						Query: "queryviderci",
+						Range: &metricsapi.RangeSpec{
+							Interval: "5socks",
+						},
+					},
+				},
+			},
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "metric without range",
+			args: args{
+				metric: metricsapi.KeptnMetric{
+					Spec: metricsapi.KeptnMetricSpec{
+						Query: "queryviderci",
+					},
+				},
+			},
+			want: &metricRequest{
+				query:     "queryviderci",
+				timeframe: nil,
+			},
+			wantErr: false,
+		},
+		{
+			name: "metric with empty interval",
+			args: args{
+				metric: metricsapi.KeptnMetric{
+					Spec: metricsapi.KeptnMetricSpec{
+						Query: "queryviderci",
+						Range: &metricsapi.RangeSpec{
+							Interval: "",
+						},
+					},
+				},
+			},
+			want:    nil,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := newMetricRequestFromMetric(tt.args.metric)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("newMetricRequestFromMetric() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if tt.want == nil {
+				require.Nil(t, got)
+				return
+			}
+			require.Equal(t, tt.want.query, got.query)
+
+			if tt.want.timeframe == nil {
+				require.Nil(t, got.timeframe)
+				return
+			}
+			require.NotNil(t, got.timeframe)
+			require.WithinDuration(t, tt.want.timeframe.from, got.timeframe.from, 10*time.Second)
+			require.WithinDuration(t, tt.want.timeframe.to, got.timeframe.to, 10*time.Second)
+		})
+	}
+}
+
+func Test_newMetricRequestFromAnalysis(t *testing.T) {
+	type args struct {
+		query    string
+		analysis metricsapi.Analysis
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *metricRequest
+		wantErr bool
+	}{
+		{
+			name: "from analysis",
+			args: args{
+				query: "my-query",
+				analysis: metricsapi.Analysis{
+					Status: metricsapi.AnalysisStatus{
+						Timeframe: metricsapi.Timeframe{
+							From: metav1.Time{
+								Time: time.Now().Add(-5 * time.Minute),
+							},
+							To: metav1.Time{
+								Time: time.Now(),
+							},
+						},
+					},
+				},
+			},
+			want: &metricRequest{
+				query: "my-query",
+				timeframe: &timeframe{
+					from: time.Now().Add(-5 * time.Minute),
+					to:   time.Now(),
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := newMetricRequestFromAnalysis(tt.args.query, tt.args.analysis)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("newMetricRequestFromMetric() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if tt.want == nil {
+				require.Nil(t, got)
+				return
+			}
+			require.Equal(t, tt.want.query, got.query)
+
+			if tt.want.timeframe == nil {
+				require.Nil(t, got.timeframe)
+				return
+			}
+			require.NotNil(t, got.timeframe)
+			require.WithinDuration(t, tt.want.timeframe.from, got.timeframe.from, 10*time.Second)
+			require.WithinDuration(t, tt.want.timeframe.to, got.timeframe.to, 10*time.Second)
 		})
 	}
 }

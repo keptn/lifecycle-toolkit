@@ -92,6 +92,10 @@ unit-test: manifests fmt vet envtest## Run tests.
 	cat cover-main.out cover-pkg.out >> cover.out
 	rm cover-pkg.out cover-main.out
 
+#command(make test) to run all tests 
+.PHONY: test
+test: e2e-test unit-test
+
 
 .PHONY: kustomize
 kustomize: $(KUSTOMIZE) ## Download kustomize locally if necessary.
@@ -172,3 +176,8 @@ push-local:
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 ;\
 	fi
 	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+
+##golangci-lint
+.PHONY: lint
+lint:
+	${GOPATH}/bin/golangci-lint run --config ../.golangci.yml -v

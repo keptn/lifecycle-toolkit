@@ -14,6 +14,9 @@ ignore: |
   metrics-operator/config/rbac/role.yaml
   klt-cert-manager/config/rbac/role.yaml
   helm/chart
+  metrics-operator/chart
+  klt-cert-manager/chart
+  lifecycle-operator/chart
   .github/scripts/.helm-tests
 
 rules:

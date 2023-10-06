@@ -40,7 +40,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "evaluation passed",
 			values: map[string]v1alpha3.ProviderResult{
-				"name": {Value: "20"},
+				"name": {Value: "20", Query: "qqqqqqqq"},
 			},
 			o: v1alpha3.Objective{
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
@@ -59,6 +59,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Score: 2.0,
 				Error: nil,
 				Value: 20.0,
+				Query: "qqqqqqqq",
 				Result: types.TargetResult{
 					Pass: true,
 				},
@@ -73,7 +74,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "evaluation finished with warning",
 			values: map[string]v1alpha3.ProviderResult{
-				"name": {Value: "20"},
+				"name": {Value: "20", Query: "qqqqqqqq"},
 			},
 			o: v1alpha3.Objective{
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
@@ -93,6 +94,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Score: 1.0,
 				Error: nil,
 				Value: 20.0,
+				Query: "qqqqqqqq",
 				Result: types.TargetResult{
 					Pass:    false,
 					Warning: true,
@@ -108,7 +110,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "evaluation failed",
 			values: map[string]v1alpha3.ProviderResult{
-				"name": {Value: "20"},
+				"name": {Value: "20", Query: "qqqqqqqq"},
 			},
 			o: v1alpha3.Objective{
 				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
@@ -128,6 +130,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Score: 0.0,
 				Error: nil,
 				Value: 20.0,
+				Query: "qqqqqqqq",
 				Result: types.TargetResult{
 					Pass:    false,
 					Warning: false,
@@ -155,44 +158,49 @@ func TestGetValueFromMap(t *testing.T) {
 		values  map[string]v1alpha3.ProviderResult
 		in      string
 		val     float64
+		query   string
 		wantErr bool
 	}{
 		{
 			name: "happy path",
 			values: map[string]v1alpha3.ProviderResult{
-				"key1": {Value: "7"},
+				"key1": {Value: "7", Query: "qqqqqqqq"},
 			},
 			in:      "key1",
 			val:     7.0,
+			query:   "qqqqqqqq",
 			wantErr: false,
 		},
 		{
 			name: "key not found",
 			values: map[string]v1alpha3.ProviderResult{
-				"key1": {Value: "7"},
+				"key1": {Value: "7", Query: "qqqqqqqq"},
 			},
 			in:      "key",
 			val:     0.0,
+			query:   "",
 			wantErr: true,
 		},
 		{
 			name: "value not float",
 			values: map[string]v1alpha3.ProviderResult{
-				"key": {},
+				"key1": {Value: "", Query: "qqqqqqqq"},
 			},
 			in:      "key1",
 			val:     0.0,
+			query:   "qqqqqqqq",
 			wantErr: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res, err := getValueFromMap(tt.values, tt.in)
+			res, query, err := getResultFromMap(tt.values, tt.in)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("error = %v, wantErr %v", err, tt.wantErr)
 			}
 			require.Equal(t, tt.val, res)
+			require.Equal(t, tt.query, query)
 		})
 	}
 }

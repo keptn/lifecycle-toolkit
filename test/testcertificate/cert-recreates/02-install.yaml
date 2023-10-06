@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: klt-certs
+  name: keptn-certs
   namespace: keptn-lifecycle-toolkit-system
   annotations:
     mycert: "true"

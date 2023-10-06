@@ -28,9 +28,13 @@ func TestNewWorkerPool(t *testing.T) {
 	}
 
 	// no objectives to evaluate
-	_, got := NewWorkersPool(context.TODO(), &analysis, []metricsapi.Objective{}, 4, nil, log, "default")
+	ctx, got := NewWorkersPool(context.TODO(), &analysis, []metricsapi.Objective{}, 4, nil, log, "default")
 	require.Equal(t, 0, got.(WorkersPool).numWorkers)
 	require.Equal(t, 0, got.(WorkersPool).numJobs)
+	deadline, ok := ctx.Deadline()
+	require.True(t, ok)
+	// verify that we get a context with a timeout being set
+	require.WithinDuration(t, time.Now().Add(workerPoolTimeout), deadline, 1*time.Second)
 
 	_, got = NewWorkersPool(context.TODO(), &analysis, objs, 4, nil, log, "default")
 	//make sure never to create more workers than needed

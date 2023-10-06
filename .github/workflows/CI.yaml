@@ -203,9 +203,15 @@ jobs:
     strategy:
       matrix:
         helm: [true, false]
+        scheduling-gates: [true, false]
+        # do not run the tests with manifests installation and scheduling gates
+        exclude:
+          - helm: false
+            scheduling-gates: true
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       helm-install: ${{ matrix.helm }}
+      scheduling-gates: ${{ matrix.scheduling-gates }}
     uses: ./.github/workflows/integration-test.yml
 
   load-tests:
@@ -229,10 +235,21 @@ jobs:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/performance-test.yml
 
-  helm_charts_build:
+  helm_charts_publish:
     name: Publish helm chart changes to charts repo
     if: github.event_name == 'push' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
     needs: [prepare_ci_run, build_image]
+    strategy:
+      matrix:
+        config:
+          - name: keptn
+            path: chart
+          - name: keptn-lifecycle-operator
+            path: lifecycle-operator/chart
+          - name: keptn-metrics-operator
+            path: metrics-operator/chart
+          - name: keptn-cert-manager
+            path: klt-cert-manager/chart
     runs-on: ubuntu-22.04
     steps:
       - name: Check out klt repo
@@ -245,19 +262,19 @@ jobs:
           path: ./helm-charts-repository
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
 
-      - name: Copy charts from klt to helm repo
-        run: rsync -av --delete --exclude='charts/*.tgz' ./helm/chart/ ./helm-charts-repository/charts/keptn-lifecycle-toolkit/
+      - name: Copy chart from klt to helm repo
+        run: rsync -av --delete --exclude='charts/*.tgz' ./${{ matrix.config.path }}/ ./helm-charts-repository/charts/${{ matrix.config.name }}/
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
           path: ./helm-charts-repository
-          commit-message: "feat: update KLT chart"
+          commit-message: "feat: update ${{ matrix.config.name }} helm chart"
           signoff: true
-          branch: klt-chart-update-${{ needs.prepare_ci_run.outputs.BRANCH_SLUG }}
+          branch: chart-update-${{ matrix.config.name }}
           delete-branch: true
           base: main
-          title: "Update KLT Helm chart"
+          title: "Update ${{ matrix.config.name }} Helm chart"
           body: |
             :robot: **This is an automated PR for updating and releasing Helm charts from keptn/lifecycle-toolkit!** :robot:

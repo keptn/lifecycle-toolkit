@@ -37,7 +37,7 @@ These are the CRs for `cert-manager.io` to be applied to your cluster:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: klt-certs
+  name: keptn-certs
   namespace: <your-namespace>
 spec:
   dnsNames:
@@ -48,7 +48,7 @@ spec:
   issuerRef:
     kind: Issuer
     name: klt-selfsigned-issuer
-  secretName: klt-certs
+  secretName: keptn-certs
 ---
 apiVersion: cert-manager.io/v1
 kind: Issuer
@@ -63,7 +63,7 @@ Note the following about these fields:
 
 * The `apiVersion` field refers to the API for the cert-manager.
 * The value of the `.spec.secretName` field as well as the `.metadata.name` of the `Certificate` CR
-  must be `klt-certs`.
+  must be `keptn-certs`.
 * Substitute the namespace placeholders with your namespace, where Keptn is installed.
 
 See the [CA Injector](https://cert-manager.io/docs/concepts/ca-injector/)

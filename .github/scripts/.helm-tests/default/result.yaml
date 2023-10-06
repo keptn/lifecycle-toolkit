@@ -1,70 +1,68 @@
 ---
-# Source: klt/templates/deployment.yaml
+# Source: keptn/charts/certManager/templates/service-account.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: certificate-operator
   namespace: "helmtests"
   labels:
-    app.kuberentes.io/instance: certificate-operator
     app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
+    helm.sh/chart: cert-manager-0.1.0
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
 ---
-# Source: klt/templates/deployment.yaml
+# Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
-# Source: klt/templates/deployment.yaml
+# Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: lifecycle-operator
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
-# Source: klt/templates/deployment.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-service-account.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: metrics-operator
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 ---
-# Source: klt/templates/lifecycle-manager-config.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-manager-config.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: lifecycle-manager-config
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 data:
@@ -81,16 +79,41 @@ data:
     webhook:
       port: 9443
 ---
-# Source: klt/templates/metrics-manager-config.yaml
+# Source: keptn/charts/lifecycleOperator/templates/scheduler-config.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: metrics-manager-config
+  name: scheduler-config
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v0.8.2"
+    app.kubernetes.io/managed-by: Helm
+data:
+  scheduler-config.yaml: |
+    apiVersion: kubescheduler.config.k8s.io/v1beta3
+    kind: KubeSchedulerConfiguration
+    leaderElection:
+      leaderElect: false
+    profiles: 
+      - plugins:
+          permit:
+            enabled:
+            - name: KLCPermit
+        schedulerName: keptn-scheduler
+---
+# Source: keptn/charts/metricsOperator/templates/metrics-manager-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: metrics-operator-config
+  namespace: "helmtests"
+  labels:
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 data:
@@ -107,669 +130,21 @@ data:
     webhook:
       port: 9443
 ---
-# Source: klt/templates/scheduler-config.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: scheduler-config
-  namespace: "helmtests"
-  labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-data:
-  scheduler-config.yaml: |
-    apiVersion: kubescheduler.config.k8s.io/v1beta3
-    kind: KubeSchedulerConfiguration
-    leaderElection:
-      leaderElect: false
-    profiles: 
-      - plugins:
-          permit:
-            enabled:
-            - name: KLCPermit
-        schedulerName: keptn-scheduler
----
-# Source: klt/templates/analysis-crd.yaml
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: analyses.metrics.keptn.sh
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
-  labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    crdGroup: metrics.keptn.sh
-    keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  group: metrics.keptn.sh
-  names:
-    kind: Analysis
-    listKind: AnalysisList
-    plural: analyses
-    singular: analysis
-  scope: Namespaced
-  versions:
-    - additionalPrinterColumns:
-        - jsonPath: .spec.analysisDefinition.name
-          name: AnalysisDefinition
-          type: string
-        - jsonPath: .status.state
-          name: State
-          type: string
-        - jsonPath: .status.warning
-          name: Warning
-          type: string
-        - jsonPath: .status.pass
-          name: Pass
-          type: string
-      name: v1alpha3
-      schema:
-        openAPIV3Schema:
-          description: Analysis is the Schema for the analyses API
-          properties:
-            apiVersion:
-              description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-              type: string
-            kind:
-              description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-              type: string
-            metadata:
-              type: object
-            spec:
-              description: AnalysisSpec defines the desired state of Analysis
-              properties:
-                analysisDefinition:
-                  description: AnalysisDefinition refers to the AnalysisDefinition,
-                    a CRD that stores the AnalysisValuesTemplates
-                  properties:
-                    name:
-                      description: Name defines the name of the referenced object
-                      type: string
-                    namespace:
-                      description: Namespace defines the namespace of the referenced
-                        object
-                      type: string
-                  required:
-                    - name
-                  type: object
-                args:
-                  additionalProperties:
-                    type: string
-                  description: Args corresponds to a map of key/value pairs that can
-                    be used to substitute placeholders in the AnalysisValueTemplate
-                    query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:)".
-                  type: object
-                timeframe:
-                  description: Timeframe specifies the range for the corresponding query
-                    in the AnalysisValueTemplate. Please note that either a combination
-                    of 'from' and 'to' or the 'recent' property may be set. If neither
-                    is set, the Analysis can not be added to the cluster.
-                  properties:
-                    from:
-                      description: From is the time of start for the query. This field
-                        follows RFC3339 time format
-                      format: date-time
-                      type: string
-                    recent:
-                      description: Recent describes a recent timeframe using a duration
-                        string. E.g. Setting this to '5m' provides an Analysis for the
-                        last five minutes
-                      pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-                      type: string
-                    to:
-                      description: To is the time of end for the query. This field follows
-                        RFC3339 time format
-                      format: date-time
-                      type: string
-                  type: object
-              required:
-                - analysisDefinition
-                - timeframe
-              type: object
-            status:
-              description: AnalysisStatus stores the status of the overall analysis
-                returns also pass or warnings
-              properties:
-                pass:
-                  description: Pass returns whether the SLO is satisfied
-                  type: boolean
-                raw:
-                  description: Raw contains the raw result of the SLO computation
-                  type: string
-                state:
-                  description: State describes the current state of the Analysis (Pending/Progressing/Completed)
-                  type: string
-                storedValues:
-                  additionalProperties:
-                    description: ProviderResult stores reference of already collected
-                      provider query associated to its objective template
-                    properties:
-                      errMsg:
-                        description: ErrMsg stores any possible error at retrieval time
-                        type: string
-                      objectiveReference:
-                        description: Objective store reference to corresponding objective
-                          template
-                        properties:
-                          name:
-                            description: Name defines the name of the referenced object
-                            type: string
-                          namespace:
-                            description: Namespace defines the namespace of the referenced
-                              object
-                            type: string
-                        required:
-                          - name
-                        type: object
-                      value:
-                        description: Value is the value the provider returned
-                        type: string
-                    type: object
-                  description: StoredValues contains all analysis values that have already
-                    been retrieved successfully
-                  type: object
-                timeframe:
-                  description: Timeframe describes the time frame which is evaluated
-                    by the Analysis
-                  properties:
-                    from:
-                      description: From is the time of start for the query. This field
-                        follows RFC3339 time format
-                      format: date-time
-                      type: string
-                    recent:
-                      description: Recent describes a recent timeframe using a duration
-                        string. E.g. Setting this to '5m' provides an Analysis for the
-                        last five minutes
-                      pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-                      type: string
-                    to:
-                      description: To is the time of end for the query. This field follows
-                        RFC3339 time format
-                      format: date-time
-                      type: string
-                  type: object
-                warning:
-                  description: Warning returns whether the analysis returned a warning
-                  type: boolean
-              required:
-                - state
-                - timeframe
-              type: object
-          type: object
-      served: true
-      storage: true
-      subresources:
-        status: {}
----
-# Source: klt/templates/analysisdefinition-crd.yaml
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: analysisdefinitions.metrics.keptn.sh
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
-  labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    crdGroup: metrics.keptn.sh
-    keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  group: metrics.keptn.sh
-  names:
-    kind: AnalysisDefinition
-    listKind: AnalysisDefinitionList
-    plural: analysisdefinitions
-    singular: analysisdefinition
-  scope: Namespaced
-  versions:
-  - name: v1alpha3
-    schema:
-      openAPIV3Schema:
-        description: AnalysisDefinition is the Schema for the analysisdefinitions
-          APIs
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: AnalysisDefinitionSpec defines the desired state of AnalysisDefinition
-            properties:
-              objectives:
-                description: Objectives defines a list of objectives to evaluate for
-                  an analysis
-                items:
-                  description: Objective defines an objective for analysis
-                  properties:
-                    analysisValueTemplateRef:
-                      description: AnalysisValueTemplateRef refers to the appropriate
-                        AnalysisValueTemplate
-                      properties:
-                        name:
-                          description: Name defines the name of the referenced object
-                          type: string
-                        namespace:
-                          description: Namespace defines the namespace of the referenced
-                            object
-                          type: string
-                      required:
-                      - name
-                      type: object
-                    keyObjective:
-                      default: false
-                      description: KeyObjective defines whether the whole analysis
-                        fails when this objective's target is not met
-                      type: boolean
-                    target:
-                      description: Target defines failure or warning criteria
-                      properties:
-                        failure:
-                          description: Failure defines limits up to which an analysis
-                            fails
-                          properties:
-                            equalTo:
-                              description: EqualTo represents '==' operator
-                              properties:
-                                fixedValue:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: FixedValue defines the value for comparison
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - fixedValue
-                              type: object
-                            greaterThan:
-                              description: GreaterThan represents '>' operator
-                              properties:
-                                fixedValue:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: FixedValue defines the value for comparison
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - fixedValue
-                              type: object
-                            greaterThanOrEqual:
-                              description: GreaterThanOrEqual represents '>=' operator
-                              properties:
-                                fixedValue:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: FixedValue defines the value for comparison
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - fixedValue
-                              type: object
-                            inRange:
-                              description: InRange represents operator checking the
-                                value is inclusively in the defined range, e.g. 2
-                                <= x <= 5
-                              properties:
-                                highBound:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: HighBound defines the higher bound
-                                    of the range
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                lowBound:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: LowBound defines the lower bound of
-                                    the range
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - highBound
-                              - lowBound
-                              type: object
-                            lessThan:
-                              description: LessThan represents '<' operator
-                              properties:
-                                fixedValue:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: FixedValue defines the value for comparison
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - fixedValue
-                              type: object
-                            lessThanOrEqual:
-                              description: LessThanOrEqual represents '<=' operator
-                              properties:
-                                fixedValue:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: FixedValue defines the value for comparison
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - fixedValue
-                              type: object
-                            notInRange:
-                              description: NotInRange represents operator checking
-                                the value is exclusively out of the defined range,
-                                e.g. x < 2 AND x > 5
-                              properties:
-                                highBound:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: HighBound defines the higher bound
-                                    of the range
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                lowBound:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: LowBound defines the lower bound of
-                                    the range
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - highBound
-                              - lowBound
-                              type: object
-                          type: object
-                        warning:
-                          description: Warning defines limits where the result does
-                            not pass or fail
-                          properties:
-                            equalTo:
-                              description: EqualTo represents '==' operator
-                              properties:
-                                fixedValue:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: FixedValue defines the value for comparison
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - fixedValue
-                              type: object
-                            greaterThan:
-                              description: GreaterThan represents '>' operator
-                              properties:
-                                fixedValue:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: FixedValue defines the value for comparison
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - fixedValue
-                              type: object
-                            greaterThanOrEqual:
-                              description: GreaterThanOrEqual represents '>=' operator
-                              properties:
-                                fixedValue:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: FixedValue defines the value for comparison
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - fixedValue
-                              type: object
-                            inRange:
-                              description: InRange represents operator checking the
-                                value is inclusively in the defined range, e.g. 2
-                                <= x <= 5
-                              properties:
-                                highBound:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: HighBound defines the higher bound
-                                    of the range
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                lowBound:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: LowBound defines the lower bound of
-                                    the range
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - highBound
-                              - lowBound
-                              type: object
-                            lessThan:
-                              description: LessThan represents '<' operator
-                              properties:
-                                fixedValue:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: FixedValue defines the value for comparison
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - fixedValue
-                              type: object
-                            lessThanOrEqual:
-                              description: LessThanOrEqual represents '<=' operator
-                              properties:
-                                fixedValue:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: FixedValue defines the value for comparison
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - fixedValue
-                              type: object
-                            notInRange:
-                              description: NotInRange represents operator checking
-                                the value is exclusively out of the defined range,
-                                e.g. x < 2 AND x > 5
-                              properties:
-                                highBound:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: HighBound defines the higher bound
-                                    of the range
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                lowBound:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: LowBound defines the lower bound of
-                                    the range
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - highBound
-                              - lowBound
-                              type: object
-                          type: object
-                      type: object
-                    weight:
-                      default: 1
-                      description: Weight can be used to emphasize the importance
-                        of one Objective over the others
-                      type: integer
-                  required:
-                  - analysisValueTemplateRef
-                  type: object
-                type: array
-              totalScore:
-                description: TotalScore defines the required score for an analysis
-                  to be successful
-                properties:
-                  passPercentage:
-                    description: PassPercentage defines the threshold to reach for
-                      an analysis to pass
-                    maximum: 100
-                    minimum: 0
-                    type: integer
-                  warningPercentage:
-                    description: WarningPercentage defines the threshold to reach
-                      for an analysis to pass with a 'warning' status
-                    maximum: 100
-                    minimum: 0
-                    type: integer
-                required:
-                - passPercentage
-                - warningPercentage
-                type: object
-            required:
-            - totalScore
-            type: object
-          status:
-            description: unused field
-            type: string
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
----
-# Source: klt/templates/analysisvaluetemplate-crd.yaml
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: analysisvaluetemplates.metrics.keptn.sh
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
-  labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    crdGroup: metrics.keptn.sh
-    keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  group: metrics.keptn.sh
-  names:
-    kind: AnalysisValueTemplate
-    listKind: AnalysisValueTemplateList
-    plural: analysisvaluetemplates
-    singular: analysisvaluetemplate
-  scope: Namespaced
-  versions:
-  - additionalPrinterColumns:
-    - jsonPath: .spec.provider.name
-      name: Provider
-      type: string
-    name: v1alpha3
-    schema:
-      openAPIV3Schema:
-        description: AnalysisValueTemplate is the Schema for the analysisvaluetemplates
-          API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: Spec contains the specification for the AnalysisValueTemplate
-            properties:
-              provider:
-                description: Provider refers to the KeptnMetricsProvider which should
-                  be used to retrieve the data
-                properties:
-                  name:
-                    description: Name defines the name of the referenced object
-                    type: string
-                  namespace:
-                    description: Namespace defines the namespace of the referenced
-                      object
-                    type: string
-                required:
-                - name
-                type: object
-              query:
-                description: Query represents the query to be run. It can include
-                  placeholders that are defined using the go template syntax. More
-                  info on go templating - https://pkg.go.dev/text/template
-                type: string
-            required:
-            - provider
-            - query
-            type: object
-          status:
-            description: unused field
-            type: string
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
----
-# Source: klt/templates/keptnapp-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnapp-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: keptnapps.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -1020,21 +395,21 @@ spec:
     subresources:
       status: {}
 ---
-# Source: klt/templates/keptnappcreationrequest-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnappcreationrequest-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: keptnappcreationrequests.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -1083,21 +458,21 @@ spec:
     subresources:
       status: {}
 ---
-# Source: klt/templates/keptnappversion-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnappversion-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: keptnappversions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -1902,21 +1277,21 @@ spec:
     subresources:
       status: {}
 ---
-# Source: klt/templates/keptnconfig-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnconfig-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: keptnconfigs.options.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -1972,21 +1347,21 @@ spec:
     subresources:
       status: {}
 ---
-# Source: klt/templates/keptnevaluation-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnevaluation-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: keptnevaluations.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -2357,21 +1732,21 @@ spec:
     subresources:
       status: {}
 ---
-# Source: klt/templates/keptnevaluationdefinition-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnevaluationdefinition-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: keptnevaluationdefinitions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -2550,21 +1925,21 @@ spec:
     subresources:
       status: {}
 ---
-# Source: klt/templates/keptnevaluationprovider-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnevaluationprovider-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: keptnevaluationproviders.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -2732,517 +2107,21 @@ spec:
     subresources:
       status: {}
 ---
-# Source: klt/templates/keptnmetric-crd.yaml
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: keptnmetrics.metrics.keptn.sh
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
-  labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    crdGroup: metrics.keptn.sh
-    keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: 'metrics-webhook-service'
-          namespace: 'helmtests'
-          path: /convert
-      conversionReviewVersions:
-      - v1
-  group: metrics.keptn.sh
-  names:
-    kind: KeptnMetric
-    listKind: KeptnMetricList
-    plural: keptnmetrics
-    singular: keptnmetric
-  scope: Namespaced
-  versions:
-  - additionalPrinterColumns:
-    - jsonPath: .spec.provider.name
-      name: Provider
-      type: string
-    - jsonPath: .spec.query
-      name: Query
-      type: string
-    - jsonPath: .status.value
-      name: Value
-      type: string
-    name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: KeptnMetric is the Schema for the keptnmetrics API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnMetricSpec defines the desired state of KeptnMetric
-            properties:
-              fetchIntervalSeconds:
-                description: FetchIntervalSeconds represents the update frequency
-                  in seconds that is used to update the metric
-                type: integer
-              provider:
-                description: Provider represents the provider object
-                properties:
-                  name:
-                    description: Name of the provider
-                    type: string
-                required:
-                - name
-                type: object
-              query:
-                description: Query represents the query to be run
-                type: string
-            required:
-            - fetchIntervalSeconds
-            - provider
-            - query
-            type: object
-          status:
-            description: KeptnMetricStatus defines the observed state of KeptnMetric
-            properties:
-              lastUpdated:
-                description: LastUpdated represents the time when the status data
-                  was last updated
-                format: date-time
-                type: string
-              rawValue:
-                description: RawValue represents the resulting value in raw format
-                format: byte
-                type: string
-              value:
-                description: Value represents the resulting value
-                type: string
-            required:
-            - lastUpdated
-            - rawValue
-            - value
-            type: object
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - additionalPrinterColumns:
-    - jsonPath: .spec.provider.name
-      name: Provider
-      type: string
-    - jsonPath: .spec.query
-      name: Query
-      type: string
-    - jsonPath: .status.value
-      name: Value
-      type: string
-    name: v1alpha2
-    schema:
-      openAPIV3Schema:
-        description: KeptnMetric is the Schema for the keptnmetrics API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnMetricSpec defines the desired state of KeptnMetric
-            properties:
-              fetchIntervalSeconds:
-                description: FetchIntervalSeconds represents the update frequency
-                  in seconds that is used to update the metric
-                type: integer
-              provider:
-                description: Provider represents the provider object
-                properties:
-                  name:
-                    description: Name of the provider
-                    type: string
-                required:
-                - name
-                type: object
-              query:
-                description: Query represents the query to be run
-                type: string
-            required:
-            - fetchIntervalSeconds
-            - provider
-            - query
-            type: object
-          status:
-            description: KeptnMetricStatus defines the observed state of KeptnMetric
-            properties:
-              lastUpdated:
-                description: LastUpdated represents the time when the status data
-                  was last updated
-                format: date-time
-                type: string
-              rawValue:
-                description: RawValue represents the resulting value in raw format
-                format: byte
-                type: string
-              value:
-                description: Value represents the resulting value
-                type: string
-            required:
-            - lastUpdated
-            - rawValue
-            - value
-            type: object
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - additionalPrinterColumns:
-    - jsonPath: .spec.provider.name
-      name: Provider
-      type: string
-    - jsonPath: .spec.query
-      name: Query
-      type: string
-    - jsonPath: .spec.range.interval
-      name: Interval
-      type: string
-    - jsonPath: .status.value
-      name: Value
-      type: string
-    name: v1alpha3
-    schema:
-      openAPIV3Schema:
-        description: KeptnMetric is the Schema for the keptnmetrics API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnMetricSpec defines the desired state of KeptnMetric
-            properties:
-              fetchIntervalSeconds:
-                description: FetchIntervalSeconds represents the update frequency
-                  in seconds that is used to update the metric
-                type: integer
-              provider:
-                description: Provider represents the provider object
-                properties:
-                  name:
-                    description: Name of the provider
-                    type: string
-                required:
-                  - name
-                type: object
-              query:
-                description: Query represents the query to be run
-                type: string
-              range:
-                description: Range represents the time range for which data is to
-                  be queried
-                properties:
-                  aggregation:
-                    description: 'Aggregation defines the type of aggregation function
-                      to be applied on the data. Accepted values: p90, p95, p99, max,
-                      min, avg, median'
-                    enum:
-                      - p90
-                      - p95
-                      - p99
-                      - max
-                      - min
-                      - avg
-                      - median
-                    type: string
-                  interval:
-                    default: 5m
-                    description: Interval specifies the duration of the time interval
-                      for the data query
-                    type: string
-                  step:
-                    description: Step represents the query resolution step width for
-                      the data query
-                    type: string
-                  storedResults:
-                    description: StoredResults indicates the upper limit of how many
-                      past results should be stored in the status of a KeptnMetric
-                    maximum: 255
-                    type: integer
-                type: object
-            required:
-              - fetchIntervalSeconds
-              - provider
-              - query
-            type: object
-          status:
-            description: KeptnMetricStatus defines the observed state of KeptnMetric
-            properties:
-              errMsg:
-                description: ErrMsg represents the error details when the query could
-                  not be evaluated
-                type: string
-              intervalResults:
-                description: IntervalResults contain a slice of all the interval results
-                items:
-                  properties:
-                    errMsg:
-                      description: ErrMsg represents the error details when the query
-                        could not be evaluated
-                      type: string
-                    lastUpdated:
-                      description: LastUpdated represents the time when the status
-                        data was last updated
-                      format: date-time
-                      type: string
-                    range:
-                      description: Range represents the time range for which this
-                        data was queried
-                      properties:
-                        aggregation:
-                          description: 'Aggregation defines the type of aggregation
-                            function to be applied on the data. Accepted values: p90,
-                            p95, p99, max, min, avg, median'
-                          enum:
-                            - p90
-                            - p95
-                            - p99
-                            - max
-                            - min
-                            - avg
-                            - median
-                          type: string
-                        interval:
-                          default: 5m
-                          description: Interval specifies the duration of the time
-                            interval for the data query
-                          type: string
-                        step:
-                          description: Step represents the query resolution step width
-                            for the data query
-                          type: string
-                        storedResults:
-                          description: StoredResults indicates the upper limit of
-                            how many past results should be stored in the status of
-                            a KeptnMetric
-                          maximum: 255
-                          type: integer
-                      type: object
-                    value:
-                      description: Value represents the resulting value
-                      type: string
-                  required:
-                    - lastUpdated
-                    - range
-                    - value
-                  type: object
-                type: array
-              lastUpdated:
-                description: LastUpdated represents the time when the status data
-                  was last updated
-                format: date-time
-                type: string
-              rawValue:
-                description: RawValue represents the resulting value in raw format
-                format: byte
-                type: string
-              value:
-                description: Value represents the resulting value
-                type: string
-            type: object
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
----
-# Source: klt/templates/keptnmetricsprovider-crd.yaml
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: keptnmetricsproviders.metrics.keptn.sh
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
-  labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    crdGroup: metrics.keptn.sh
-    keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  group: metrics.keptn.sh
-  names:
-    kind: KeptnMetricsProvider
-    listKind: KeptnMetricsProviderList
-    plural: keptnmetricsproviders
-    shortNames:
-    - kmp
-    singular: keptnmetricsprovider
-  scope: Namespaced
-  versions:
-  - name: v1alpha2
-    schema:
-      openAPIV3Schema:
-        description: KeptnMetricsProvider is the Schema for the keptnmetricsproviders
-          API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
-            properties:
-              secretKeyRef:
-                description: SecretKeySelector selects a key of a Secret.
-                properties:
-                  key:
-                    description: The key of the secret to select from.  Must be a
-                      valid secret key.
-                    type: string
-                  name:
-                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?'
-                    type: string
-                  optional:
-                    description: Specify whether the Secret or its key must be defined
-                    type: boolean
-                required:
-                - key
-                type: object
-                x-kubernetes-map-type: atomic
-              targetServer:
-                type: string
-            required:
-            - targetServer
-            type: object
-          status:
-            description: unused field
-            type: string
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - name: v1alpha3
-    schema:
-      openAPIV3Schema:
-        description: KeptnMetricsProvider is the Schema for the keptnmetricsproviders
-          API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
-            properties:
-              secretKeyRef:
-                description: SecretKeyRef defines an optional secret for access credentials
-                  to the metrics provider.
-                properties:
-                  key:
-                    description: The key of the secret to select from.  Must be a
-                      valid secret key.
-                    type: string
-                  name:
-                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?'
-                    type: string
-                  optional:
-                    description: Specify whether the Secret or its key must be defined
-                    type: boolean
-                required:
-                - key
-                type: object
-                x-kubernetes-map-type: atomic
-              targetServer:
-                description: TargetServer defined the URL at which the metrics provider
-                  is reachable with included port and protocol.
-                type: string
-              type:
-                description: Type represents the provider type. This can be one of
-                  prometheus, dynatrace, datadog, dql.
-                pattern: prometheus|dynatrace|datadog|dql
-                type: string
-            required:
-            - targetServer
-            type: object
-          status:
-            description: unused field
-            type: string
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
----
-# Source: klt/templates/keptntask-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptntask-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: keptntasks.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -3640,21 +2519,21 @@ spec:
     subresources:
       status: {}
 ---
-# Source: klt/templates/keptntaskdefinition-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptntaskdefinition-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: keptntaskdefinitions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -5360,21 +4239,21 @@ spec:
     subresources:
       status: {}
 ---
-# Source: klt/templates/keptnworkload-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnworkload-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: keptnworkloads.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -5652,21 +4531,21 @@ spec:
     subresources:
       status: {}
 ---
-# Source: klt/templates/keptnworkloadinstance-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptnworkloadinstance-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: keptnworkloadinstances.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -6442,17 +5321,1139 @@ spec:
     subresources:
       status: {}
 ---
-# Source: klt/templates/certificate-operator-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/analysis-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: analyses.metrics.keptn.sh
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.13.0
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: metrics.keptn.sh
+    keptn.sh/inject-cert: "true"
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v0.8.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  group: metrics.keptn.sh
+  names:
+    kind: Analysis
+    listKind: AnalysisList
+    plural: analyses
+    singular: analysis
+  scope: Namespaced
+  versions:
+    - additionalPrinterColumns:
+        - jsonPath: .spec.analysisDefinition.name
+          name: AnalysisDefinition
+          type: string
+        - jsonPath: .status.state
+          name: State
+          type: string
+        - jsonPath: .status.warning
+          name: Warning
+          type: string
+        - jsonPath: .status.pass
+          name: Pass
+          type: string
+      name: v1alpha3
+      schema:
+        openAPIV3Schema:
+          description: Analysis is the Schema for the analyses API
+          properties:
+            apiVersion:
+              description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+              type: string
+            kind:
+              description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: AnalysisSpec defines the desired state of Analysis
+              properties:
+                analysisDefinition:
+                  description: AnalysisDefinition refers to the AnalysisDefinition,
+                    a CRD that stores the AnalysisValuesTemplates
+                  properties:
+                    name:
+                      description: Name defines the name of the referenced object
+                      type: string
+                    namespace:
+                      description: Namespace defines the namespace of the referenced
+                        object
+                      type: string
+                  required:
+                    - name
+                  type: object
+                args:
+                  additionalProperties:
+                    type: string
+                  description: Args corresponds to a map of key/value pairs that can
+                    be used to substitute placeholders in the AnalysisValueTemplate
+                    query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:)".
+                  type: object
+                timeframe:
+                  description: Timeframe specifies the range for the corresponding query
+                    in the AnalysisValueTemplate. Please note that either a combination
+                    of 'from' and 'to' or the 'recent' property may be set. If neither
+                    is set, the Analysis can not be added to the cluster.
+                  properties:
+                    from:
+                      description: From is the time of start for the query. This field
+                        follows RFC3339 time format
+                      format: date-time
+                      type: string
+                    recent:
+                      description: Recent describes a recent timeframe using a duration
+                        string. E.g. Setting this to '5m' provides an Analysis for the
+                        last five minutes
+                      pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                      type: string
+                    to:
+                      description: To is the time of end for the query. This field follows
+                        RFC3339 time format
+                      format: date-time
+                      type: string
+                  type: object
+              required:
+                - analysisDefinition
+                - timeframe
+              type: object
+            status:
+              description: AnalysisStatus stores the status of the overall analysis
+                returns also pass or warnings
+              properties:
+                pass:
+                  description: Pass returns whether the SLO is satisfied
+                  type: boolean
+                raw:
+                  description: Raw contains the raw result of the SLO computation
+                  type: string
+                state:
+                  description: State describes the current state of the Analysis (Pending/Progressing/Completed)
+                  type: string
+                storedValues:
+                  additionalProperties:
+                    description: ProviderResult stores reference of already collected
+                      provider query associated to its objective template
+                    properties:
+                      errMsg:
+                        description: ErrMsg stores any possible error at retrieval time
+                        type: string
+                      objectiveReference:
+                        description: Objective store reference to corresponding objective
+                          template
+                        properties:
+                          name:
+                            description: Name defines the name of the referenced object
+                            type: string
+                          namespace:
+                            description: Namespace defines the namespace of the referenced
+                              object
+                            type: string
+                        required:
+                          - name
+                        type: object
+                      query:
+                        description: Query represents the executed query
+                        type: string
+                      value:
+                        description: Value is the value the provider returned
+                        type: string
+                    type: object
+                  description: StoredValues contains all analysis values that have already
+                    been retrieved successfully
+                  type: object
+                timeframe:
+                  description: Timeframe describes the time frame which is evaluated
+                    by the Analysis
+                  properties:
+                    from:
+                      description: From is the time of start for the query. This field
+                        follows RFC3339 time format
+                      format: date-time
+                      type: string
+                    recent:
+                      description: Recent describes a recent timeframe using a duration
+                        string. E.g. Setting this to '5m' provides an Analysis for the
+                        last five minutes
+                      pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                      type: string
+                    to:
+                      description: To is the time of end for the query. This field follows
+                        RFC3339 time format
+                      format: date-time
+                      type: string
+                  type: object
+                warning:
+                  description: Warning returns whether the analysis returned a warning
+                  type: boolean
+              required:
+                - state
+                - timeframe
+              type: object
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}
+---
+# Source: keptn/charts/metricsOperator/templates/analysisdefinition-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: analysisdefinitions.metrics.keptn.sh
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.13.0
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: metrics.keptn.sh
+    keptn.sh/inject-cert: "true"
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v0.8.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  group: metrics.keptn.sh
+  names:
+    kind: AnalysisDefinition
+    listKind: AnalysisDefinitionList
+    plural: analysisdefinitions
+    singular: analysisdefinition
+  scope: Namespaced
+  versions:
+  - name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: AnalysisDefinition is the Schema for the analysisdefinitions
+          APIs
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AnalysisDefinitionSpec defines the desired state of AnalysisDefinition
+            properties:
+              objectives:
+                description: Objectives defines a list of objectives to evaluate for
+                  an analysis
+                items:
+                  description: Objective defines an objective for analysis
+                  properties:
+                    analysisValueTemplateRef:
+                      description: AnalysisValueTemplateRef refers to the appropriate
+                        AnalysisValueTemplate
+                      properties:
+                        name:
+                          description: Name defines the name of the referenced object
+                          type: string
+                        namespace:
+                          description: Namespace defines the namespace of the referenced
+                            object
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    keyObjective:
+                      default: false
+                      description: KeyObjective defines whether the whole analysis
+                        fails when this objective's target is not met
+                      type: boolean
+                    target:
+                      description: Target defines failure or warning criteria
+                      properties:
+                        failure:
+                          description: Failure defines limits up to which an analysis
+                            fails
+                          properties:
+                            equalTo:
+                              description: EqualTo represents '==' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            greaterThan:
+                              description: GreaterThan represents '>' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            greaterThanOrEqual:
+                              description: GreaterThanOrEqual represents '>=' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            inRange:
+                              description: InRange represents operator checking the
+                                value is inclusively in the defined range, e.g. 2
+                                <= x <= 5
+                              properties:
+                                highBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: HighBound defines the higher bound
+                                    of the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                lowBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: LowBound defines the lower bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - highBound
+                              - lowBound
+                              type: object
+                            lessThan:
+                              description: LessThan represents '<' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            lessThanOrEqual:
+                              description: LessThanOrEqual represents '<=' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            notInRange:
+                              description: NotInRange represents operator checking
+                                the value is exclusively out of the defined range,
+                                e.g. x < 2 AND x > 5
+                              properties:
+                                highBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: HighBound defines the higher bound
+                                    of the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                lowBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: LowBound defines the lower bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - highBound
+                              - lowBound
+                              type: object
+                          type: object
+                        warning:
+                          description: Warning defines limits where the result does
+                            not pass or fail
+                          properties:
+                            equalTo:
+                              description: EqualTo represents '==' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            greaterThan:
+                              description: GreaterThan represents '>' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            greaterThanOrEqual:
+                              description: GreaterThanOrEqual represents '>=' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            inRange:
+                              description: InRange represents operator checking the
+                                value is inclusively in the defined range, e.g. 2
+                                <= x <= 5
+                              properties:
+                                highBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: HighBound defines the higher bound
+                                    of the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                lowBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: LowBound defines the lower bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - highBound
+                              - lowBound
+                              type: object
+                            lessThan:
+                              description: LessThan represents '<' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            lessThanOrEqual:
+                              description: LessThanOrEqual represents '<=' operator
+                              properties:
+                                fixedValue:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: FixedValue defines the value for comparison
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - fixedValue
+                              type: object
+                            notInRange:
+                              description: NotInRange represents operator checking
+                                the value is exclusively out of the defined range,
+                                e.g. x < 2 AND x > 5
+                              properties:
+                                highBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: HighBound defines the higher bound
+                                    of the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                lowBound:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: LowBound defines the lower bound of
+                                    the range
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              required:
+                              - highBound
+                              - lowBound
+                              type: object
+                          type: object
+                      type: object
+                    weight:
+                      default: 1
+                      description: Weight can be used to emphasize the importance
+                        of one Objective over the others
+                      type: integer
+                  required:
+                  - analysisValueTemplateRef
+                  type: object
+                type: array
+              totalScore:
+                description: TotalScore defines the required score for an analysis
+                  to be successful
+                properties:
+                  passPercentage:
+                    description: PassPercentage defines the threshold to reach for
+                      an analysis to pass
+                    maximum: 100
+                    minimum: 0
+                    type: integer
+                  warningPercentage:
+                    description: WarningPercentage defines the threshold to reach
+                      for an analysis to pass with a 'warning' status
+                    maximum: 100
+                    minimum: 0
+                    type: integer
+                required:
+                - passPercentage
+                - warningPercentage
+                type: object
+            required:
+            - totalScore
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+# Source: keptn/charts/metricsOperator/templates/analysisvaluetemplate-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: analysisvaluetemplates.metrics.keptn.sh
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.13.0
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: metrics.keptn.sh
+    keptn.sh/inject-cert: "true"
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v0.8.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  group: metrics.keptn.sh
+  names:
+    kind: AnalysisValueTemplate
+    listKind: AnalysisValueTemplateList
+    plural: analysisvaluetemplates
+    singular: analysisvaluetemplate
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.provider.name
+      name: Provider
+      type: string
+    name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: AnalysisValueTemplate is the Schema for the analysisvaluetemplates
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec contains the specification for the AnalysisValueTemplate
+            properties:
+              provider:
+                description: Provider refers to the KeptnMetricsProvider which should
+                  be used to retrieve the data
+                properties:
+                  name:
+                    description: Name defines the name of the referenced object
+                    type: string
+                  namespace:
+                    description: Namespace defines the namespace of the referenced
+                      object
+                    type: string
+                required:
+                - name
+                type: object
+              query:
+                description: Query represents the query to be run. It can include
+                  placeholders that are defined using the go template syntax. More
+                  info on go templating - https://pkg.go.dev/text/template
+                type: string
+            required:
+            - provider
+            - query
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+# Source: keptn/charts/metricsOperator/templates/keptnmetric-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: keptnmetrics.metrics.keptn.sh
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.13.0
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: metrics.keptn.sh
+    keptn.sh/inject-cert: "true"
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v0.8.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  conversion:
+    strategy: Webhook
+    webhook:
+      clientConfig:
+        service:
+          name: 'metrics-webhook-service'
+          namespace: 'helmtests'
+          path: /convert
+      conversionReviewVersions:
+      - v1
+  group: metrics.keptn.sh
+  names:
+    kind: KeptnMetric
+    listKind: KeptnMetricList
+    plural: keptnmetrics
+    singular: keptnmetric
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.provider.name
+      name: Provider
+      type: string
+    - jsonPath: .spec.query
+      name: Query
+      type: string
+    - jsonPath: .status.value
+      name: Value
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: KeptnMetric is the Schema for the keptnmetrics API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnMetricSpec defines the desired state of KeptnMetric
+            properties:
+              fetchIntervalSeconds:
+                description: FetchIntervalSeconds represents the update frequency
+                  in seconds that is used to update the metric
+                type: integer
+              provider:
+                description: Provider represents the provider object
+                properties:
+                  name:
+                    description: Name of the provider
+                    type: string
+                required:
+                - name
+                type: object
+              query:
+                description: Query represents the query to be run
+                type: string
+            required:
+            - fetchIntervalSeconds
+            - provider
+            - query
+            type: object
+          status:
+            description: KeptnMetricStatus defines the observed state of KeptnMetric
+            properties:
+              lastUpdated:
+                description: LastUpdated represents the time when the status data
+                  was last updated
+                format: date-time
+                type: string
+              rawValue:
+                description: RawValue represents the resulting value in raw format
+                format: byte
+                type: string
+              value:
+                description: Value represents the resulting value
+                type: string
+            required:
+            - lastUpdated
+            - rawValue
+            - value
+            type: object
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - additionalPrinterColumns:
+    - jsonPath: .spec.provider.name
+      name: Provider
+      type: string
+    - jsonPath: .spec.query
+      name: Query
+      type: string
+    - jsonPath: .status.value
+      name: Value
+      type: string
+    name: v1alpha2
+    schema:
+      openAPIV3Schema:
+        description: KeptnMetric is the Schema for the keptnmetrics API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnMetricSpec defines the desired state of KeptnMetric
+            properties:
+              fetchIntervalSeconds:
+                description: FetchIntervalSeconds represents the update frequency
+                  in seconds that is used to update the metric
+                type: integer
+              provider:
+                description: Provider represents the provider object
+                properties:
+                  name:
+                    description: Name of the provider
+                    type: string
+                required:
+                - name
+                type: object
+              query:
+                description: Query represents the query to be run
+                type: string
+            required:
+            - fetchIntervalSeconds
+            - provider
+            - query
+            type: object
+          status:
+            description: KeptnMetricStatus defines the observed state of KeptnMetric
+            properties:
+              lastUpdated:
+                description: LastUpdated represents the time when the status data
+                  was last updated
+                format: date-time
+                type: string
+              rawValue:
+                description: RawValue represents the resulting value in raw format
+                format: byte
+                type: string
+              value:
+                description: Value represents the resulting value
+                type: string
+            required:
+            - lastUpdated
+            - rawValue
+            - value
+            type: object
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - additionalPrinterColumns:
+    - jsonPath: .spec.provider.name
+      name: Provider
+      type: string
+    - jsonPath: .spec.query
+      name: Query
+      type: string
+    - jsonPath: .spec.range.interval
+      name: Interval
+      type: string
+    - jsonPath: .status.value
+      name: Value
+      type: string
+    name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: KeptnMetric is the Schema for the keptnmetrics API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnMetricSpec defines the desired state of KeptnMetric
+            properties:
+              fetchIntervalSeconds:
+                description: FetchIntervalSeconds represents the update frequency
+                  in seconds that is used to update the metric
+                type: integer
+              provider:
+                description: Provider represents the provider object
+                properties:
+                  name:
+                    description: Name of the provider
+                    type: string
+                required:
+                  - name
+                type: object
+              query:
+                description: Query represents the query to be run
+                type: string
+              range:
+                description: Range represents the time range for which data is to
+                  be queried
+                properties:
+                  aggregation:
+                    description: 'Aggregation defines the type of aggregation function
+                      to be applied on the data. Accepted values: p90, p95, p99, max,
+                      min, avg, median'
+                    enum:
+                      - p90
+                      - p95
+                      - p99
+                      - max
+                      - min
+                      - avg
+                      - median
+                    type: string
+                  interval:
+                    default: 5m
+                    description: Interval specifies the duration of the time interval
+                      for the data query
+                    type: string
+                  step:
+                    description: Step represents the query resolution step width for
+                      the data query
+                    type: string
+                  storedResults:
+                    description: StoredResults indicates the upper limit of how many
+                      past results should be stored in the status of a KeptnMetric
+                    maximum: 255
+                    type: integer
+                type: object
+            required:
+              - fetchIntervalSeconds
+              - provider
+              - query
+            type: object
+          status:
+            description: KeptnMetricStatus defines the observed state of KeptnMetric
+            properties:
+              errMsg:
+                description: ErrMsg represents the error details when the query could
+                  not be evaluated
+                type: string
+              intervalResults:
+                description: IntervalResults contain a slice of all the interval results
+                items:
+                  properties:
+                    errMsg:
+                      description: ErrMsg represents the error details when the query
+                        could not be evaluated
+                      type: string
+                    lastUpdated:
+                      description: LastUpdated represents the time when the status
+                        data was last updated
+                      format: date-time
+                      type: string
+                    range:
+                      description: Range represents the time range for which this
+                        data was queried
+                      properties:
+                        aggregation:
+                          description: 'Aggregation defines the type of aggregation
+                            function to be applied on the data. Accepted values: p90,
+                            p95, p99, max, min, avg, median'
+                          enum:
+                            - p90
+                            - p95
+                            - p99
+                            - max
+                            - min
+                            - avg
+                            - median
+                          type: string
+                        interval:
+                          default: 5m
+                          description: Interval specifies the duration of the time
+                            interval for the data query
+                          type: string
+                        step:
+                          description: Step represents the query resolution step width
+                            for the data query
+                          type: string
+                        storedResults:
+                          description: StoredResults indicates the upper limit of
+                            how many past results should be stored in the status of
+                            a KeptnMetric
+                          maximum: 255
+                          type: integer
+                      type: object
+                    value:
+                      description: Value represents the resulting value
+                      type: string
+                  required:
+                    - lastUpdated
+                    - range
+                    - value
+                  type: object
+                type: array
+              lastUpdated:
+                description: LastUpdated represents the time when the status data
+                  was last updated
+                format: date-time
+                type: string
+              rawValue:
+                description: RawValue represents the resulting value in raw format
+                format: byte
+                type: string
+              value:
+                description: Value represents the resulting value
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+# Source: keptn/charts/metricsOperator/templates/keptnmetricsprovider-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: keptnmetricsproviders.metrics.keptn.sh
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.13.0
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: metrics.keptn.sh
+    keptn.sh/inject-cert: "true"
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v0.8.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  group: metrics.keptn.sh
+  names:
+    kind: KeptnMetricsProvider
+    listKind: KeptnMetricsProviderList
+    plural: keptnmetricsproviders
+    shortNames:
+    - kmp
+    singular: keptnmetricsprovider
+  scope: Namespaced
+  versions:
+  - name: v1alpha2
+    schema:
+      openAPIV3Schema:
+        description: KeptnMetricsProvider is the Schema for the keptnmetricsproviders
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
+            properties:
+              secretKeyRef:
+                description: SecretKeySelector selects a key of a Secret.
+                properties:
+                  key:
+                    description: The key of the secret to select from.  Must be a
+                      valid secret key.
+                    type: string
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                  optional:
+                    description: Specify whether the Secret or its key must be defined
+                    type: boolean
+                required:
+                - key
+                type: object
+                x-kubernetes-map-type: atomic
+              targetServer:
+                type: string
+            required:
+            - targetServer
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: KeptnMetricsProvider is the Schema for the keptnmetricsproviders
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
+            properties:
+              secretKeyRef:
+                description: SecretKeyRef defines an optional secret for access credentials
+                  to the metrics provider.
+                properties:
+                  key:
+                    description: The key of the secret to select from.  Must be a
+                      valid secret key.
+                    type: string
+                  name:
+                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      TODO: Add other useful fields. apiVersion, kind, uid?'
+                    type: string
+                  optional:
+                    description: Specify whether the Secret or its key must be defined
+                    type: boolean
+                required:
+                - key
+                type: object
+                x-kubernetes-map-type: atomic
+              targetServer:
+                description: TargetServer defined the URL at which the metrics provider
+                  is reachable with included port and protocol.
+                type: string
+              type:
+                description: Type represents the provider type. This can be one of
+                  prometheus, dynatrace, datadog, dql.
+                pattern: prometheus|dynatrace|datadog|dql
+                type: string
+            required:
+            - targetServer
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+# Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: certificate-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
+    helm.sh/chart: cert-manager-0.1.0
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -6494,16 +6495,16 @@ rules:
   - list
   - watch
 ---
-# Source: klt/templates/keptn-scheduler-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptn-scheduler-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
@@ -6685,16 +6686,16 @@ rules:
   - list
   - watch
 ---
-# Source: klt/templates/lifecycle-operator-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: lifecycle-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
@@ -7060,16 +7061,36 @@ rules:
   verbs:
   - get
 ---
-# Source: klt/templates/metrics-operator-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/server-resources-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: keptn-test-lifecycleOperator-server-resources
+  namespace: "helmtests"
+  labels:
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v0.8.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - custom.metrics.k8s.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
+---
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: metrics-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
@@ -7168,16 +7189,16 @@ rules:
       - list
       - watch
 ---
-# Source: klt/templates/metrics-operator-server-resources-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-server-resources-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: metrics-operator-server-resources
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
@@ -7190,27 +7211,7 @@ rules:
   - list
   - watch
 ---
-# Source: klt/templates/server-resources-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: release-name-klt-server-resources
-  namespace: "helmtests"
-  labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-rules:
-- apiGroups:
-  - custom.metrics.k8s.io
-  resources:
-  - '*'
-  verbs:
-  - '*'
----
-# Source: klt/templates/certificate-operator-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -7220,10 +7221,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
+    helm.sh/chart: cert-manager-0.1.0
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7234,37 +7235,16 @@ subjects:
   name: 'certificate-operator'
   namespace: 'helmtests'
 ---
-# Source: klt/templates/hpa-controller-keptn-metrics-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: hpa-controller-keptn-metrics
-  namespace: "helmtests"
-  labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: 'server-resources'
-subjects:
-- kind: ServiceAccount
-  name: horizontal-pod-autoscaler
-  namespace: 'helmtests'
----
-# Source: klt/templates/keptn-scheduler-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/keptn-scheduler-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
@@ -7276,16 +7256,16 @@ subjects:
   name: 'keptn-scheduler'
   namespace: 'helmtests'
 ---
-# Source: klt/templates/lifecycle-operator-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: lifecycle-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
@@ -7297,16 +7277,16 @@ subjects:
   name: 'lifecycle-operator'
   namespace: 'helmtests'
 ---
-# Source: klt/templates/metrics-operator-hpa-controller-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-hpa-controller-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: metrics-operator-hpa-controller
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
@@ -7318,16 +7298,16 @@ subjects:
   name: horizontal-pod-autoscaler
   namespace: 'helmtests'
 ---
-# Source: klt/templates/metrics-operator-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: metrics-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
@@ -7339,16 +7319,16 @@ subjects:
     name: 'metrics-operator'
     namespace: 'helmtests'
 ---
-# Source: klt/templates/system-auth-delegator-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/system-auth-delegator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: system-auth-delegator
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
@@ -7360,17 +7340,17 @@ subjects:
   name: 'metrics-operator'
   namespace: 'helmtests'
 ---
-# Source: klt/templates/certificate-operator-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: certificate-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
+    helm.sh/chart: cert-manager-0.1.0
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -7384,7 +7364,7 @@ rules:
 - apiGroups:
   - ""
   resourceNames:
-  - klt-certs
+  - keptn-certs
   resources:
   - secrets
   verbs:
@@ -7392,7 +7372,7 @@ rules:
   - patch
   - update
 ---
-# Source: klt/templates/leader-election-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -7402,9 +7382,9 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
@@ -7440,16 +7420,16 @@ rules:
   - create
   - patch
 ---
-# Source: klt/templates/lifecycle-operator-leader-election-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: lifecycle-operator-leader-election-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
@@ -7485,16 +7465,16 @@ rules:
   - create
   - patch
 ---
-# Source: klt/templates/metrics-operator-leader-election-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: metrics-operator-leader-election-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 rules:
@@ -7530,7 +7510,7 @@ rules:
   - create
   - patch
 ---
-# Source: klt/templates/certificate-operator-leader-election-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -7540,10 +7520,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
+    helm.sh/chart: cert-manager-0.1.0
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7554,7 +7534,7 @@ subjects:
   name: 'certificate-operator'
   namespace: 'helmtests'
 ---
-# Source: klt/templates/certificate-operator-role-binding-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-role-binding-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -7564,10 +7544,10 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
+    helm.sh/chart: cert-manager-0.1.0
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -7578,16 +7558,16 @@ subjects:
   name: 'certificate-operator'
   namespace: 'helmtests'
 ---
-# Source: klt/templates/extension-apiserver-authentication-reader-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/extension-apiserver-authentication-reader-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: extension-apiserver-authentication-reader
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
@@ -7599,16 +7579,16 @@ subjects:
   name: 'keptn-scheduler'
   namespace: 'helmtests'
 ---
-# Source: klt/templates/lifecycle-operator-leader-election-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: lifecycle-operator-leader-election-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
@@ -7620,16 +7600,16 @@ subjects:
   name: 'lifecycle-operator'
   namespace: 'helmtests'
 ---
-# Source: klt/templates/lifecycle-operator-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: lifecycle-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
@@ -7641,16 +7621,16 @@ subjects:
   name: 'lifecycle-operator'
   namespace: 'helmtests'
 ---
-# Source: klt/templates/metrics-operator-leader-election-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: metrics-operator-leader-election-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
@@ -7662,16 +7642,16 @@ subjects:
   name: 'metrics-operator'
   namespace: 'helmtests'
 ---
-# Source: klt/templates/metrics-operator-rbac.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: metrics-operator-rolebinding
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 roleRef:
@@ -7683,7 +7663,7 @@ subjects:
     name: 'metrics-operator'
     namespace: 'helmtests'
 ---
-# Source: klt/templates/lifecycle-operator-metrics-service.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-metrics-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -7691,47 +7671,47 @@ metadata:
   namespace: "helmtests"
   labels:
     control-plane: lifecycle-operator
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
   selector:
     control-plane: lifecycle-operator
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
   ports:
   - name: metrics
     port: 2222
     protocol: TCP
     targetPort: metrics
 ---
-# Source: klt/templates/lifecycle-webhook-service.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-webhook-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: lifecycle-webhook-service
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
   selector:
     control-plane: lifecycle-operator
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
   ports:
   - port: 443
     protocol: TCP
     targetPort: 9443
 ---
-# Source: klt/templates/metrics-operator-service.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-operator-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -7739,17 +7719,17 @@ metadata:
   namespace: "helmtests"
   labels:
     control-plane: metrics-operator
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
   selector:
     control-plane: metrics-operator
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
   ports:
   - name: https
     port: 8443
@@ -7763,116 +7743,115 @@ spec:
     protocol: TCP
     targetPort: metrics
 ---
-# Source: klt/templates/metrics-webhook-service.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-webhook-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: metrics-webhook-service
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
   selector:
     control-plane: metrics-operator
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
   ports:
   - port: 443
     protocol: TCP
     targetPort: 9443
 ---
-# Source: klt/templates/deployment.yaml
+# Source: keptn/charts/certManager/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: certificate-operator
   namespace: "helmtests"
   labels:
-    app.kubernetes.io/component: manager
-    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: certificate-operator
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
+    helm.sh/chart: cert-manager-0.1.0
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
   selector:
     matchLabels:
       control-plane: certificate-operator
-      app.kubernetes.io/name: klt
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/name: cert-manager
+      app.kubernetes.io/instance: keptn-test
   template:
     metadata:
       labels:
         control-plane: certificate-operator
-        app.kubernetes.io/name: klt
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/name: cert-manager
+        app.kubernetes.io/instance: keptn-test
       annotations:
-        kubectl.kubernetes.io/default-container: manager
+        kubectl.kubernetes.io/default-container: certificate-operator
     spec:
       containers:
-      - args:
-        - --leader-elect
-        command:
-        - /manager
-        env:
-        - name: NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: LABEL_SELECTOR_KEY
-          value: "keptn.sh/inject-cert"
-        - name: LABEL_SELECTOR_VALUE
-          value: "true"
-        - name: KUBERNETES_CLUSTER_DOMAIN
-          value: cluster.local
-        image: ghcr.io/keptn/certificate-operator:v1.1.0
-        imagePullPolicy: Always
-        name: manager
-        resources:
-          limits:
-            cpu: 25m
-            memory: 64Mi
-          requests:
-            cpu: 5m
-            memory: 16Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsGroup: 65532
-          runAsUser: 65532
-          seccompProfile:
-            type: RuntimeDefault
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 8081
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          httpGet:
-            path: /readyz
-            port: 8081
-          initialDelaySeconds: 5
-          periodSeconds: 10
+        - args:
+            - --leader-elect
+          command:
+            - /manager
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: LABEL_SELECTOR_KEY
+              value: "keptn.sh/inject-cert"
+            - name: LABEL_SELECTOR_VALUE
+              value: "true"
+            - name: KUBERNETES_CLUSTER_DOMAIN
+              value: cluster.local
+          image: ghcr.io/keptn/certificate-operator:v1.1.0
+          imagePullPolicy: Always
+          name: certificate-operator
+          resources:
+            limits:
+              cpu: 25m
+              memory: 64Mi
+            requests:
+              cpu: 5m
+              memory: 16Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
       imagePullSecrets: []
       securityContext:
         runAsNonRoot: true
       serviceAccountName: certificate-operator
       terminationGracePeriodSeconds: 10
 ---
-# Source: klt/templates/deployment.yaml
+# Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7882,9 +7861,9 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: lifecycle-operator
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -7892,16 +7871,16 @@ spec:
   selector:
     matchLabels:
       control-plane: lifecycle-operator
-      app.kubernetes.io/name: klt
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/name: lifecycle-operator
+      app.kubernetes.io/instance: keptn-test
   template:
     metadata:
       labels:
         control-plane: lifecycle-operator
-        app.kubernetes.io/name: klt
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/name: lifecycle-operator
+        app.kubernetes.io/instance: keptn-test
       annotations:
-        kubectl.kubernetes.io/default-container: manager
+        kubectl.kubernetes.io/default-container: lifecycle-operator
         metrics.dynatrace.com/port: "2222"
         metrics.dynatrace.com/scrape: "true"
     spec:
@@ -7949,7 +7928,7 @@ spec:
           value: cluster.local
         image: ghcr.io/keptn/lifecycle-operator:v0.8.2
         imagePullPolicy: Always
-        name: manager
+        name: lifecycle-operator
         ports:
         - containerPort: 9443
           name: webhook-server
@@ -8003,7 +7982,86 @@ spec:
       - emptyDir: {}
         name: adapter-certs-dir
 ---
-# Source: klt/templates/deployment.yaml
+# Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduler
+  namespace: "helmtests"
+  labels:
+    component: scheduler
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v0.8.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: scheduler
+      app.kubernetes.io/name: lifecycle-operator
+      app.kubernetes.io/instance: keptn-test
+  template:
+    metadata:
+      labels:
+        component: scheduler
+        app.kubernetes.io/name: lifecycle-operator
+        app.kubernetes.io/instance: keptn-test
+    spec:
+      containers:
+      - command:
+        - /bin/kube-scheduler
+        - --config=/etc/kubernetes/scheduler-config.yaml
+        env:
+        - name: OTEL_COLLECTOR_URL
+          value: "otel-collector:4317"
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: cluster.local
+        image: ghcr.io/keptn/scheduler:v0.8.2
+        imagePullPolicy: Always
+        name: scheduler
+        resources:
+          limits:
+            cpu: 300m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 20Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65532
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /etc/kubernetes
+          name: scheduler-config
+          readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 10259
+            scheme: HTTPS
+          initialDelaySeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 10259
+            scheme: HTTPS
+      imagePullSecrets: []
+      serviceAccountName: keptn-scheduler
+      volumes:
+      - configMap:
+          name: scheduler-config
+        name: scheduler-config
+---
+# Source: keptn/charts/metricsOperator/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -8011,11 +8069,12 @@ metadata:
   namespace: "helmtests"
   labels:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/component: metrics-operator
     control-plane: metrics-operator
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -8023,16 +8082,16 @@ spec:
   selector:
     matchLabels:
       control-plane: metrics-operator
-      app.kubernetes.io/name: klt
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/name: metrics-operator
+      app.kubernetes.io/instance: keptn-test
   template:
     metadata:
       labels:
         control-plane: metrics-operator
-        app.kubernetes.io/name: klt
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/name: metrics-operator
+        app.kubernetes.io/instance: keptn-test
       annotations:
-        kubectl.kubernetes.io/default-container: manager
+        kubectl.kubernetes.io/default-container: metrics-operator
     spec:
       containers:
       - args:
@@ -8063,7 +8122,7 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
         image: ghcr.io/keptn/metrics-operator:v0.8.2
-        name: manager
+        name: metrics-operator
         ports:
         - containerPort: 9443
           name: webhook-server
@@ -8120,95 +8179,16 @@ spec:
       - emptyDir: {}
         name: adapter-certs-dir
 ---
-# Source: klt/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: scheduler
-  namespace: "helmtests"
-  labels:
-    component: scheduler
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.2"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      component: scheduler
-      app.kubernetes.io/name: klt
-      app.kubernetes.io/instance: release-name
-  template:
-    metadata:
-      labels:
-        component: scheduler
-        app.kubernetes.io/name: klt
-        app.kubernetes.io/instance: release-name
-    spec:
-      containers:
-      - command:
-        - /bin/kube-scheduler
-        - --config=/etc/kubernetes/scheduler-config.yaml
-        env:
-        - name: OTEL_COLLECTOR_URL
-          value: "otel-collector:4317"
-        - name: KUBERNETES_CLUSTER_DOMAIN
-          value: cluster.local
-        image: ghcr.io/keptn/scheduler:v0.8.2
-        imagePullPolicy: Always
-        name: scheduler
-        resources:
-          limits:
-            cpu: 300m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 20Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 65532
-          seccompProfile:
-            type: RuntimeDefault
-        volumeMounts:
-        - mountPath: /etc/kubernetes
-          name: scheduler-config
-          readOnly: true
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 10259
-            scheme: HTTPS
-          initialDelaySeconds: 15
-        readinessProbe:
-          httpGet:
-            path: /healthz
-            port: 10259
-            scheme: HTTPS
-      imagePullSecrets: []
-      serviceAccountName: keptn-scheduler
-      volumes:
-      - configMap:
-          name: scheduler-config
-        name: scheduler-config
----
-# Source: klt/templates/v1beta1.custom.metrics.k8s.io.yaml
+# Source: keptn/charts/metricsOperator/templates/v1beta1.custom.metrics.k8s.io.yaml
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
   name: v1beta1.custom.metrics.k8s.io
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -8221,16 +8201,16 @@ spec:
   version: v1beta1
   versionPriority: 100
 ---
-# Source: klt/templates/v1beta2.custom.metrics.k8s.io.yaml
+# Source: keptn/charts/metricsOperator/templates/v1beta2.custom.metrics.k8s.io.yaml
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
   name: v1beta2.custom.metrics.k8s.io
   namespace: "helmtests"
   labels:
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -8243,19 +8223,19 @@ spec:
   version: v1beta2
   versionPriority: 200
 ---
-# Source: klt/templates/lifecycle-mutating-webhook-configuration.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-mutating-webhook-configuration.yaml
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: lifecycle-mutating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn-lifecycle-toolkit"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 webhooks:
@@ -8300,18 +8280,18 @@ webhooks:
     - pods
   sideEffects: None
 ---
-# Source: klt/templates/lifecycle-validating-webhook-configuration.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-validating-webhook-configuration.yaml
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   name: lifecycle-validating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 webhooks:
@@ -8336,18 +8316,18 @@ webhooks:
     - keptntaskdefinitions
   sideEffects: None
 ---
-# Source: klt/templates/metrics-validating-webhook-configuration.yaml
+# Source: keptn/charts/metricsOperator/templates/metrics-validating-webhook-configuration.yaml
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   name: metrics-validating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: 'helmtests/klt-certs'
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     keptn.sh/inject-cert: "true"
-    helm.sh/chart: klt-0.2.6
-    app.kubernetes.io/name: klt
-    app.kubernetes.io/instance: release-name
+    helm.sh/chart: metrics-operator-0.1.0
+    app.kubernetes.io/name: metrics-operator
+    app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/version: "v0.8.2"
     app.kubernetes.io/managed-by: Helm
 webhooks:

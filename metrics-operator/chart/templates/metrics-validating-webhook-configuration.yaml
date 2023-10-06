@@ -1,0 +1,70 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: metrics-validating-webhook-configuration
+  annotations:
+    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
+  labels:
+    keptn.sh/inject-cert: "true"
+  {{- include "chart.labels" . | nindent 4 }}
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: 'metrics-webhook-service'
+      namespace: '{{ .Release.Namespace }}'
+      path: /validate-metrics-keptn-sh-v1alpha3-keptnmetric
+  failurePolicy: Fail
+  name: vkeptnmetric.kb.io
+  rules:
+  - apiGroups:
+    - metrics.keptn.sh
+    apiVersions:
+    - v1alpha3
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - keptnmetrics
+  sideEffects: None
+- admissionReviewVersions:
+    - v1
+  clientConfig:
+    service:
+      name: 'metrics-webhook-service'
+      namespace: '{{ .Release.Namespace }}'
+      path: /validate-metrics-keptn-sh-v1alpha3-analysis
+  failurePolicy: Fail
+  name: vanalysis.kb.io
+  rules:
+    - apiGroups:
+        - metrics.keptn.sh
+      apiVersions:
+        - v1alpha3
+      operations:
+        - CREATE
+        - UPDATE
+      resources:
+        - analyses
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: 'metrics-webhook-service'
+      namespace: '{{ .Release.Namespace }}'
+      path: /validate-metrics-keptn-sh-v1alpha3-analysisdefinition
+  failurePolicy: Fail
+  name: vanalysisdefinition.kb.io
+  rules:
+  - apiGroups:
+    - metrics.keptn.sh
+    apiVersions:
+    - v1alpha3
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - analysisdefinitions
+  sideEffects: None

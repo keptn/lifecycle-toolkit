@@ -3,8 +3,7 @@ package prometheus
 import (
 	"context"
 	"encoding/json"
-	"fmt"      //nolint:gci
-	"net/http" //nolint:gci
+	"fmt"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -12,6 +11,7 @@ import (
 	promapi "github.com/prometheus/client_golang/api"
 	prometheus "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 var errCouldNotCast = fmt.Errorf("could not cast result")
@@ -19,19 +19,27 @@ var errNoValues = fmt.Errorf("no values in query result")
 var errTooManyValues = fmt.Errorf("too many values in query result")
 
 type KeptnPrometheusProvider struct {
-	Log        logr.Logger
-	HttpClient http.Client
+	Log       logr.Logger
+	K8sClient client.Client
+	Getter    IRoundTripper
+}
+
+func NewPrometheusProvider(log logr.Logger, k8sClient client.Client) *KeptnPrometheusProvider {
+	return &KeptnPrometheusProvider{
+		K8sClient: k8sClient,
+		Log:       log,
+		Getter:    RoundTripperRetriever{},
+	}
 }
 
 func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
-
-	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: &r.HttpClient})
+	api, err := r.setupApi(ctx, *provider)
 	if err != nil {
 		return "", err
 	}
-	api := prometheus.NewAPI(client)
+
 	r.Log.Info(fmt.Sprintf(
 		"Running query: /api/v1/query_range?query=%s&start=%d&end=%d",
 		query,
@@ -64,12 +72,12 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: &r.HttpClient})
+	api, err := r.setupApi(ctx, provider)
+
 	if err != nil {
 		return "", nil, err
 	}
 
-	api := prometheus.NewAPI(client)
 	if metric.Spec.Range != nil {
 		result, warnings, err := evaluateQueryWithRange(ctx, metric, r, api)
 		if err != nil {
@@ -96,12 +104,11 @@ func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metr
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	client, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, Client: &r.HttpClient})
+	api, err := r.setupApi(ctx, provider)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	api := prometheus.NewAPI(client)
 	result, warnings, err := evaluateQueryWithRange(ctx, metric, r, api)
 	if err != nil {
 		return nil, nil, err
@@ -110,6 +117,19 @@ func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metr
 		r.Log.Info("Prometheus API returned warnings: " + warnings[0])
 	}
 	return getResultForStepMatrix(result)
+}
+
+func (r *KeptnPrometheusProvider) setupApi(ctx context.Context, provider metricsapi.KeptnMetricsProvider) (prometheus.API, error) {
+	rt, err := r.Getter.GetRoundTripper(ctx, provider, r.K8sClient)
+	if err != nil {
+		return nil, err
+	}
+
+	pClient, err := promapi.NewClient(promapi.Config{Address: provider.Spec.TargetServer, RoundTripper: rt})
+	if err != nil {
+		return nil, err
+	}
+	return prometheus.NewAPI(pClient), nil
 }
 
 func evaluateQueryWithRange(ctx context.Context, metric metricsapi.KeptnMetric, r *KeptnPrometheusProvider, api prometheus.API) (model.Value, prometheus.Warnings, error) {

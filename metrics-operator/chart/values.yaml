@@ -1,0 +1,74 @@
+imagePullSecrets: [ ]
+kubernetesClusterDomain: cluster.local
+config:
+  health:
+    healthProbeBindAddress: :8081
+  leaderElection:
+    leaderElect: true
+    resourceName: 3f8532ca.keptn.sh
+  metrics:
+    bindAddress: 127.0.0.1:8080
+  webhook:
+    port: 9443
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  privileged: false
+  runAsGroup: 65532
+  runAsNonRoot: true
+  runAsUser: 65532
+  seccompProfile:
+    type: RuntimeDefault
+env:
+  exposeKeptnMetrics: "true"
+  enableKeptnAnalysis: "false"
+  metricsControllerLogLevel: "0"
+  analysisControllerLogLevel: "0"
+image:
+  repository: ghcr.io/keptn/metrics-operator
+  tag: v0.8.2
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8081
+  initialDelaySeconds: 15
+  periodSeconds: 20
+readinessProbe:
+  httpGet:
+    path: /readyz
+    port: 8081
+  initialDelaySeconds: 5
+  periodSeconds: 10
+resources:
+  limits:
+    cpu: 500m
+    memory: 128Mi
+  requests:
+    cpu: 10m
+    memory: 64Mi
+nodeSelector: { }
+replicas: 1
+tolerations: [ ]
+topologySpreadConstraints: [ ]
+operatorService:
+  ports:
+    - name: https
+      port: 8443
+      protocol: TCP
+      targetPort: https
+    - name: custom-metrics
+      port: 443
+      targetPort: custom-metrics
+    - name: metrics
+      port: 9999
+      protocol: TCP
+      targetPort: metrics
+  type: ClusterIP
+webhookService:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 9443
+  type: ClusterIP

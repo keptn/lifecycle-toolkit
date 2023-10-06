@@ -435,6 +435,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `objectiveReference` _[ObjectReference](#objectreference)_ | Objective store reference to corresponding objective template |
+| `query` _string_ | Query represents the executed query |
 | `value` _string_ | Value is the value the provider returned |
 | `errMsg` _string_ | ErrMsg stores any possible error at retrieval time |
 

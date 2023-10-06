@@ -55,7 +55,6 @@ func TestIsAnnotated(t *testing.T) {
 			},
 		},
 	}
-	// TODO: fix tests where an RS has a STS or DS as owner. they should not have a RS in between
 	rsWithNoOwner := &appsv1.ReplicaSet{
 		TypeMeta: metav1.TypeMeta{
 			Kind: "ReplicaSet",
@@ -71,9 +70,12 @@ func TestIsAnnotated(t *testing.T) {
 			Kind: "Deployment",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-deployment",
+			Name:      "this-is-the-deployment",
 			UID:       "this-is-the-deployment-uid",
 			Namespace: testNamespace,
+			Annotations: map[string]string{
+				apicommon.WorkloadAnnotation: workloadName,
+			},
 		},
 	}
 	testSts := &appsv1.StatefulSet{
@@ -161,7 +163,7 @@ func TestIsAnnotated(t *testing.T) {
 					},
 				},
 			},
-			want: false,
+			want: true,
 		},
 		{
 			name: "Test fetching of statefulset owner of pod",

@@ -40,7 +40,6 @@ func (p *PodAnnotationHandler) copyAnnotationsIfParentAnnotated(ctx context.Cont
 		if err := p.Client.Get(ctx, types.NamespacedName{Namespace: req.Namespace, Name: podOwner.Name}, rs); err != nil {
 			return false
 		}
-		p.Log.Info("Done fetching RS")
 
 		rsOwner := GetOwnerReference(&rs.ObjectMeta)
 		if rsOwner.UID == "" {
@@ -49,11 +48,11 @@ func (p *PodAnnotationHandler) copyAnnotationsIfParentAnnotated(ctx context.Cont
 
 		if rsOwner.Kind == "Rollout" {
 			ro := &argov1alpha1.Rollout{}
-			objectContainerMetaData := p.fetchParent(ctx, types.NamespacedName{Name: podOwner.Name, Namespace: req.Namespace}, ro)
+			objectContainerMetaData := p.fetchParent(ctx, types.NamespacedName{Name: rsOwner.Name, Namespace: req.Namespace}, ro)
 			return copyResourceLabelsIfPresent(objectContainerMetaData, pod)
 		}
 		dp := &appsv1.Deployment{}
-		objectContainerMetaData := p.fetchParent(ctx, types.NamespacedName{Name: podOwner.Name, Namespace: req.Namespace}, dp)
+		objectContainerMetaData := p.fetchParent(ctx, types.NamespacedName{Name: rsOwner.Name, Namespace: req.Namespace}, dp)
 		return copyResourceLabelsIfPresent(objectContainerMetaData, pod)
 
 	case "StatefulSet":
@@ -86,6 +85,7 @@ func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *c
 	if sourceResource == nil {
 		return false
 	}
+	initEmptyAnnotations(&targetPod.ObjectMeta)
 
 	workloadName, gotWorkloadName = GetLabelOrAnnotation(sourceResource, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	appName, _ = GetLabelOrAnnotation(sourceResource, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
@@ -94,8 +94,6 @@ func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *c
 	postDeploymentChecks, _ = GetLabelOrAnnotation(sourceResource, apicommon.PostDeploymentTaskAnnotation, "")
 	preEvaluationChecks, _ = GetLabelOrAnnotation(sourceResource, apicommon.PreDeploymentEvaluationAnnotation, "")
 	postEvaluationChecks, _ = GetLabelOrAnnotation(sourceResource, apicommon.PostDeploymentEvaluationAnnotation, "")
-
-	initEmptyAnnotations(&targetPod.ObjectMeta)
 
 	if gotWorkloadName {
 		setMapKey(targetPod.Annotations, apicommon.WorkloadAnnotation, workloadName)

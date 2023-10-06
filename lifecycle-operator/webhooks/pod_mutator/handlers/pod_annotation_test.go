@@ -15,6 +15,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
@@ -493,6 +494,93 @@ func TestIsPodAnnotated(t *testing.T) {
 			if tt.wantedPod != nil {
 				require.Equal(t, tt.wantedPod, tt.args.pod)
 			}
+		})
+	}
+}
+
+func TestFetchParent(t *testing.T) {
+	name := types.NamespacedName{Name: workloadName, Namespace: namespace}
+
+	testCases := []struct {
+		testName            string
+		objectType          client.Object
+		expectedLabels      map[string]string
+		expectedAnnotations map[string]string
+		name                types.NamespacedName
+	}{
+		{
+			testName: "Fetch ReplicaSet",
+			objectType: &appsv1.ReplicaSet{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:        workloadName,
+					Namespace:   namespace,
+					Labels:      nil,
+					Annotations: map[string]string{"annotation1": "value1"},
+				},
+			},
+			expectedLabels:      nil,
+			expectedAnnotations: map[string]string{"annotation1": "value1"},
+			name:                name,
+		},
+		{
+			testName: "Fetch DaemonSet",
+			objectType: &appsv1.DaemonSet{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:        workloadName,
+					Namespace:   namespace,
+					Labels:      map[string]string{"label2": "value2", "label1": "value1"},
+					Annotations: map[string]string{"annotation2": "value2"},
+				},
+			},
+			expectedLabels:      map[string]string{"label2": "value2", "label1": "value1"},
+			expectedAnnotations: map[string]string{"annotation2": "value2"},
+			name:                name,
+		},
+		{
+			testName: "Fetch StatefulSet",
+			objectType: &appsv1.StatefulSet{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:        workloadName,
+					Namespace:   namespace,
+					Labels:      map[string]string{"label3": "value3"},
+					Annotations: map[string]string{"annotation3": "value3"},
+				},
+			},
+			expectedLabels:      map[string]string{"label3": "value3"},
+			expectedAnnotations: map[string]string{"annotation3": "value3"},
+			name:                name,
+		},
+		{
+			testName: "Error during fetch",
+			objectType: &appsv1.StatefulSet{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      workloadName,
+					Namespace: namespace},
+			},
+			expectedLabels:      nil,
+			expectedAnnotations: nil,
+			name:                name,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.testName, func(t *testing.T) {
+			// Create a fake client and add the object to the client's cache
+			fakeClient := fake.NewClientBuilder().WithObjects(tc.objectType).Build()
+
+			// Create a PodAnnotationHandler instance with the fake client
+			p := &PodAnnotationHandler{
+				Client: fakeClient,
+			}
+
+			ctx := context.TODO()
+
+			result := p.fetchParent(ctx, tc.name, tc.objectType)
+
+			// Verify the result
+			require.Equal(t, tc.expectedLabels, result.Labels)
+			require.Equal(t, tc.expectedAnnotations, result.Annotations)
+
 		})
 	}
 }

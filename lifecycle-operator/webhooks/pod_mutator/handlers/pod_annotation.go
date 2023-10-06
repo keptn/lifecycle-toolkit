@@ -49,28 +49,28 @@ func (p *PodAnnotationHandler) copyAnnotationsIfParentAnnotated(ctx context.Cont
 
 		if rsOwner.Kind == "Rollout" {
 			ro := &argov1alpha1.Rollout{}
-			objectContainerMetaData := p.fetchParent(ctx, podOwner.Name, req.Namespace, pod, ro)
+			objectContainerMetaData := p.fetchParent(ctx, types.NamespacedName{Name: podOwner.Name, Namespace: req.Namespace}, ro)
 			return copyResourceLabelsIfPresent(objectContainerMetaData, pod)
 		}
 		dp := &appsv1.Deployment{}
-		objectContainerMetaData := p.fetchParent(ctx, rsOwner.Name, req.Namespace, pod, dp)
+		objectContainerMetaData := p.fetchParent(ctx, types.NamespacedName{Name: podOwner.Name, Namespace: req.Namespace}, dp)
 		return copyResourceLabelsIfPresent(objectContainerMetaData, pod)
 
 	case "StatefulSet":
 		sts := &appsv1.StatefulSet{}
-		objectContainerMetaData := p.fetchParent(ctx, podOwner.Name, req.Namespace, pod, sts)
+		objectContainerMetaData := p.fetchParent(ctx, types.NamespacedName{Name: podOwner.Name, Namespace: req.Namespace}, sts)
 		return copyResourceLabelsIfPresent(objectContainerMetaData, pod)
 	case "DaemonSet":
 		ds := &appsv1.DaemonSet{}
-		objectContainerMetaData := p.fetchParent(ctx, podOwner.Name, req.Namespace, pod, ds)
+		objectContainerMetaData := p.fetchParent(ctx, types.NamespacedName{Name: podOwner.Name, Namespace: req.Namespace}, ds)
 		return copyResourceLabelsIfPresent(objectContainerMetaData, pod)
 	default:
 		return false
 	}
 }
 
-func (p *PodAnnotationHandler) fetchParent(ctx context.Context, name string, namespace string, pod *corev1.Pod, objectContainer client.Object) *metav1.ObjectMeta {
-	if err := p.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: name}, objectContainer); err != nil {
+func (p *PodAnnotationHandler) fetchParent(ctx context.Context, name types.NamespacedName, objectContainer client.Object) *metav1.ObjectMeta {
+	if err := p.Client.Get(ctx, name, objectContainer); err != nil {
 		return nil
 	}
 	objectContainerMetaData := metav1.ObjectMeta{

@@ -88,12 +88,7 @@ func setMapKey(myMap map[string]string, key, value string) {
 
 func isAppAnnotationPresent(meta *metav1.ObjectMeta) bool {
 	_, gotAppAnnotation := GetLabelOrAnnotation(meta, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
-
-	if gotAppAnnotation {
-		return true
-	}
-
-	return false
+	return gotAppAnnotation
 }
 
 func initEmptyAnnotations(meta *metav1.ObjectMeta) {

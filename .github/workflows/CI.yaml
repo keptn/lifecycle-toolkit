@@ -219,6 +219,7 @@ jobs:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       helm-install: ${{ matrix.helm }}
       scheduling-gates: ${{ matrix.scheduling-gates }}
+      allowed-namespaces: ${{ matrix.allowed-namespaces }}
     uses: ./.github/workflows/integration-test.yml
 
   load-tests:

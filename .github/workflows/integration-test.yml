@@ -54,11 +54,17 @@ jobs:
           mv kubectl-kuttl /usr/local/bin
 
       - name: Run Scheduling Gates Integration Tests
-        if: inputs.scheduling-gates == true
+        if: inputs.scheduling-gates == true && inputs.allowed-namespaces == false
         working-directory: .
         run: make integration-test-scheduling-gates
 
+      - name: Run Allowed namespaces Integration Tests
+        if: inputs.allowed-namespaces == true
+        working-directory: .
+        run: make integration-test-allowed-namespaces
+
       - name: Run Integration Tests
+        if: inputs.allowed-namespaces == false
         working-directory: .
         run: make integration-test
 
@@ -71,5 +77,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: logs-integration-tests-helm_${{ inputs.helm-install }}-schedule_${{ inputs.scheduling-gates }}
+          name: logs-integration-tests-helm_${{ inputs.helm-install }}-schedule_${{ inputs.scheduling-gates }}-allowed-ns_${{ inputs.allowed-namespaces }}
           path: .github/scripts/logs

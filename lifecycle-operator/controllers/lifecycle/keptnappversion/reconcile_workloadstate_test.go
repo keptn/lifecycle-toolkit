@@ -75,7 +75,7 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 		},
 	}, appVersion.Status.WorkloadStatus)
 
-	// Creating WorkloadInstace that is not part of the App -> should stay Pending
+	// Creating WorkloadVersion that is not part of the App -> should stay Pending
 
 	wi1 := &lfcv1alpha3.KeptnWorkloadVersion{
 		ObjectMeta: v1.ObjectMeta{

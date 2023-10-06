@@ -93,7 +93,7 @@ var (
 	PhaseCreateTask             = KeptnPhaseType{LongName: "Create Task", ShortName: "CreateTask"}
 	PhaseCreateApp              = KeptnPhaseType{LongName: "Create App", ShortName: "CreateApp"}
 	PhaseCreateWorkload         = KeptnPhaseType{LongName: "Create Workload", ShortName: "CreateWorkload"}
-	PhaseCreateWorklodInstance  = KeptnPhaseType{LongName: "Create WorkloadVersion", ShortName: "CreateWorkloadVersion"}
+	PhaseCreateWorkloadVersion  = KeptnPhaseType{LongName: "Create WorkloadVersion", ShortName: "CreateWorkloadVersion"}
 	PhaseCreateAppVersion       = KeptnPhaseType{LongName: "Create AppVersion", ShortName: "CreateAppVersion"}
 	PhaseCompleted              = KeptnPhaseType{LongName: "Completed", ShortName: "Completed"}
 	PhaseDeprecated             = KeptnPhaseType{LongName: "Deprecated", ShortName: "Deprecated"}

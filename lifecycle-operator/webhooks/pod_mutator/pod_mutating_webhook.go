@@ -24,6 +24,10 @@ import (
 // +kubebuilder:rbac:groups=apps,resources=deployments;statefulsets;daemonsets;replicasets,verbs=get
 
 // PodMutatingWebhook annotates Pods
+
+const namespaceKey = "namespace"
+const podKey = "pod"
+
 type PodMutatingWebhook struct {
 	Client                 client.Client
 	Tracer                 trace.Tracer
@@ -72,12 +76,12 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	// check if Lifecycle Operator is enabled for this namespace
 	namespace := &corev1.Namespace{}
 	if err = a.Client.Get(ctx, types.NamespacedName{Name: req.Namespace}, namespace); err != nil {
-		a.Log.Error(err, "could not get namespace", "namespace", req.Namespace)
+		a.Log.Error(err, "could not get namespace", namespaceKey, req.Namespace)
 		return admission.Errored(http.StatusInternalServerError, err)
 	}
 
 	if namespace.GetAnnotations()[apicommon.NamespaceEnabledAnnotation] != "enabled" {
-		a.Log.Info("namespace is not enabled for lifecycle operator", "namespace", req.Namespace)
+		a.Log.Info("namespace is not enabled for lifecycle operator", namespaceKey, req.Namespace)
 		return admission.Allowed("namespace is not enabled for lifecycle operator")
 	}
 
@@ -86,14 +90,14 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 
 	if ownerRef.Kind == "" {
 		msg := "owner of pod is not supported by lifecycle operator"
-		a.Log.Info(msg, "namespace", req.Namespace, "pod", req.Name)
+		a.Log.Info(msg, namespaceKey, req.Namespace, podKey, req.Name)
 		return admission.Allowed(msg)
 	}
 
 	a.Log.Info(fmt.Sprintf("Pod annotations: %v", pod.Annotations))
 
 	if a.Pod.IsAnnotated(ctx, &req, pod) {
-		a.Log.Info("Resource is annotated with Keptn annotations", "namespace", req.Namespace, "pod", req.Name)
+		a.Log.Info("Resource is annotated with Keptn annotations", namespaceKey, req.Namespace, podKey, req.Name)
 
 		if scheduled := handleScheduling(a.SchedulingGatesEnabled, a.Log, pod); scheduled {
 			return admission.Allowed("gate of the pod already removed")

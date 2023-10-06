@@ -22,6 +22,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 )
 
+const testApp = "my-app"
+const testWorkload = "my-workload"
+
 func TestAppHandlerHandle(t *testing.T) {
 
 	mockEventSender := common.NewK8sSender(record.NewFakeRecorder(100))
@@ -35,7 +38,7 @@ func TestAppHandlerHandle(t *testing.T) {
 			Name:      "example-pod",
 			Namespace: namespace,
 			Annotations: map[string]string{
-				apicommon.WorkloadAnnotation: "my-workload",
+				apicommon.WorkloadAnnotation: testWorkload,
 				apicommon.VersionAnnotation:  "0.1",
 			},
 		}}
@@ -46,14 +49,14 @@ func TestAppHandlerHandle(t *testing.T) {
 			APIVersion: "lifecycle.keptn.sh/v1alpha3",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            "my-workload",
+			Name:            testWorkload,
 			Namespace:       namespace,
 			ResourceVersion: "1",
 			Annotations: map[string]string{
 				"keptn.sh/app-type": "single-service",
 			},
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{AppName: "my-workload"},
+		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{AppName: testWorkload},
 	}
 
 	tests := []struct {
@@ -82,8 +85,8 @@ func TestAppHandlerHandle(t *testing.T) {
 					Name:      "example-pod",
 					Namespace: namespace,
 					Annotations: map[string]string{
-						apicommon.AppAnnotation:      "my-app",
-						apicommon.WorkloadAnnotation: "my-workload",
+						apicommon.AppAnnotation:      testApp,
+						apicommon.WorkloadAnnotation: testWorkload,
 						apicommon.VersionAnnotation:  "0.1",
 					},
 				}},
@@ -94,11 +97,11 @@ func TestAppHandlerHandle(t *testing.T) {
 					APIVersion: "lifecycle.keptn.sh/v1alpha3",
 				},
 				ObjectMeta: metav1.ObjectMeta{
-					Name:            "my-app",
+					Name:            testApp,
 					Namespace:       namespace,
 					ResourceVersion: "1",
 				},
-				Spec: klcv1alpha3.KeptnAppCreationRequestSpec{AppName: "my-app"},
+				Spec: klcv1alpha3.KeptnAppCreationRequestSpec{AppName: testApp},
 			},
 		},
 		{

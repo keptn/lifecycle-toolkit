@@ -23,6 +23,7 @@ import (
 
 const namespace = "test-namespace"
 const myworkload = "my-workload"
+const testAppWorkload = "my-workload-my-workload"
 
 func TestHandle(t *testing.T) {
 
@@ -41,7 +42,7 @@ func TestHandle(t *testing.T) {
 	wantWorkload := &klcv1alpha3.KeptnWorkload{
 		TypeMeta: metav1.TypeMeta{Kind: "KeptnWorkload", APIVersion: "lifecycle.keptn.sh/v1alpha3"},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-workload-my-workload",
+			Name:      testAppWorkload,
 			Namespace: namespace,
 			OwnerReferences: []metav1.OwnerReference{
 				{},
@@ -152,7 +153,7 @@ func TestUpdateWorkloadNoSpecChanges(t *testing.T) {
 
 	workload := &klcv1alpha3.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-workload-my-workload",
+			Name:      testAppWorkload,
 			Namespace: namespace,
 		},
 	}

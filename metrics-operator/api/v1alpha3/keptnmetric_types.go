@@ -67,7 +67,7 @@ type RangeSpec struct {
 	Aggregation string `json:"aggregation,omitempty"`
 	// StoredResults indicates the upper limit of how many past results should be stored in the status of a KeptnMetric
 	// +kubebuilder:validation:Maximum:=255
-	StoredResults *uint `json:"storedResults,omitempty"`
+	StoredResults uint `json:"storedResults,omitempty"`
 }
 
 type IntervalResult struct {

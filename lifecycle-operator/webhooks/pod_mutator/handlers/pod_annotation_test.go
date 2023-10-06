@@ -18,6 +18,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+const appname = "SOME-APP-NAME"
 const lowerAppName = "some-app-name"
 const workloadName = "some-workload-name"
 const preDep = "some-pre-deployment-task"
@@ -25,6 +26,7 @@ const postDep = "some-post-deployment-task"
 const preEval = "some-pre-deployment-evaluation"
 const postEval = "some-post-deployment-evaluation"
 const version = "v1.0.0"
+const uid = "this-is-the-pod-uid"
 
 func Test_copyAnnotationsIfParentAnnotated(t *testing.T) {
 	testNamespace := "test-namespace"
@@ -147,7 +149,7 @@ func Test_copyAnnotationsIfParentAnnotated(t *testing.T) {
 				},
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
-						UID: "this-is-the-pod-uid",
+						UID: uid,
 						OwnerReferences: []metav1.OwnerReference{
 							{
 								Name: rsWithDpOwner.Name,
@@ -175,7 +177,7 @@ func Test_copyAnnotationsIfParentAnnotated(t *testing.T) {
 				},
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
-						UID: "this-is-the-pod-uid",
+						UID: uid,
 						OwnerReferences: []metav1.OwnerReference{
 							{
 								Name: testSts.Name,
@@ -203,7 +205,7 @@ func Test_copyAnnotationsIfParentAnnotated(t *testing.T) {
 				},
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
-						UID: "this-is-the-pod-uid",
+						UID: uid,
 						OwnerReferences: []metav1.OwnerReference{
 							{
 								Name: testDs.Name,
@@ -231,7 +233,7 @@ func Test_copyAnnotationsIfParentAnnotated(t *testing.T) {
 				},
 				pod: &corev1.Pod{
 					ObjectMeta: metav1.ObjectMeta{
-						UID: "this-is-the-pod-uid",
+						UID: uid,
 						OwnerReferences: []metav1.OwnerReference{
 							{
 								Name: rsWithNoOwner.Name,

@@ -9,8 +9,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const appname = "SOME-APP-NAME"
-
 func Test_getWorkloadName(t *testing.T) {
 
 	type args struct {
@@ -242,7 +240,7 @@ func Test_getAppName(t *testing.T) {
 				},
 			},
 
-			want: appname,
+			want: lowerAppName,
 		},
 		{
 			name: "Return keptn app name in lower case when label is set",
@@ -255,7 +253,7 @@ func Test_getAppName(t *testing.T) {
 				},
 			},
 
-			want: appname,
+			want: lowerAppName,
 		},
 		{
 			name: "Return keptn app name from annotation in lower case when annotation and label is set",

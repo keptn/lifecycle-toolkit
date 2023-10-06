@@ -79,9 +79,6 @@ func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace 
 
 	if !isAppAnnotationPresent(&pod.ObjectMeta) {
 		inheritWorkloadAnnotation(&pod.ObjectMeta)
-		if len(kacr.Annotations) == 0 {
-			kacr.Annotations = make(map[string]string)
-		}
 		kacr.Annotations[apicommon.AppTypeAnnotation] = string(apicommon.AppTypeSingleService)
 	}
 
@@ -95,5 +92,6 @@ func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace 
 }
 
 func inheritWorkloadAnnotation(meta *metav1.ObjectMeta) {
+	initEmptyAnnotations(meta)
 	meta.Annotations[apicommon.AppAnnotation] = meta.Annotations[apicommon.WorkloadAnnotation]
 }

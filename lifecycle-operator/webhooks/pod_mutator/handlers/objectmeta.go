@@ -96,6 +96,12 @@ func isAppAnnotationPresent(meta *metav1.ObjectMeta) bool {
 	return false
 }
 
+func initEmptyAnnotations(meta *metav1.ObjectMeta) {
+	if len(meta.Annotations) == 0 {
+		meta.Annotations = make(map[string]string)
+	}
+}
+
 func calculateVersion(pod *corev1.Pod) string {
 	name := ""
 

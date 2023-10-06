@@ -88,9 +88,7 @@ func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *c
 	preEvaluationChecks, _ = GetLabelOrAnnotation(sourceResource, apicommon.PreDeploymentEvaluationAnnotation, "")
 	postEvaluationChecks, _ = GetLabelOrAnnotation(sourceResource, apicommon.PostDeploymentEvaluationAnnotation, "")
 
-	if len(targetPod.Annotations) == 0 {
-		targetPod.Annotations = make(map[string]string)
-	}
+	initEmptyAnnotations(&targetPod.ObjectMeta)
 
 	if gotWorkloadName {
 		setMapKey(targetPod.Annotations, apicommon.WorkloadAnnotation, workloadName)
@@ -118,9 +116,7 @@ func isPodAnnotated(pod *corev1.Pod) bool {
 
 	if gotWorkloadAnnotation {
 		if !gotVersionAnnotation {
-			if len(pod.Annotations) == 0 {
-				pod.Annotations = make(map[string]string)
-			}
+			initEmptyAnnotations(&pod.ObjectMeta)
 			pod.Annotations[apicommon.VersionAnnotation] = calculateVersion(pod)
 		}
 		return true

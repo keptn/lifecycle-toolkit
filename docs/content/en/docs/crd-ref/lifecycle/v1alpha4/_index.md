@@ -40,7 +40,7 @@ _Appears in:_
 
 
 
-KeptnWorkloadVersion is the Schema for the keptnworkloadVersions API
+KeptnWorkloadVersion is the Schema for the keptnworkloadversions API
 
 _Appears in:_
 - [KeptnWorkloadVersionList](#keptnworkloadversionlist)

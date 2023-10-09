@@ -12,7 +12,7 @@ spec:
     listKind: KeptnWorkloadVersionList
     plural: keptnworkloadversions
     shortNames:
-    - kwi
+    - kwv
     singular: keptnworkloadversion
   scope: Namespaced
   versions:

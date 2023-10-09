@@ -120,7 +120,7 @@ kubectl annotate ns <your-allowed-namespace> keptn.sh/lifecycle-toolkit='enabled
 ```
 
 > **Note**
-Please be aware that,if this option is set, adding any additional namespace
+Please be aware that, if this option is set, adding any additional namespace
 requires the helm installation to be updated by adding the name of the new namespace to the list.
 
 ### Installation without scheduler

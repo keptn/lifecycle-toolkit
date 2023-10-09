@@ -58,13 +58,14 @@ type KeptnTaskReconciler struct {
 // +kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get;list
 
 func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("Reconciling KeptnTask")
+	controllerInfo := controllercommon.getControllerInfo(req)
+	r.Log.Info("Reconciling KeptnTask", controllerInfo)
 	task := &klcv1alpha3.KeptnTask{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, task); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
-			r.Log.Info("KeptnTask resource not found. Ignoring since object must be deleted")
+			r.Log.Info("KeptnTask resource not found. Ignoring since object must be deleted", controllerInfo)
 			return ctrl.Result{}, nil
 		}
 		r.Log.Error(err, "Failed to get the KeptnTask")
@@ -111,14 +112,14 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
-	r.Log.Info("Finished Reconciling KeptnTask")
+	r.Log.Info("Finished Reconciling KeptnTask", controllerInfo)
 
 	// Task is completed at this place
 	task.SetEndTime()
 
 	attrs := task.GetMetricsAttributes()
 
-	r.Log.Info("Increasing task count")
+	r.Log.Info("Increasing task count", controllerInfo)
 
 	// metrics: increment task counter
 	r.Meters.TaskCount.Add(ctx, 1, metric.WithAttributes(attrs...))

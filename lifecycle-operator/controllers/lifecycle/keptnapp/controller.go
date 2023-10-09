@@ -70,10 +70,8 @@ type KeptnAppReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("Searching for App", map[string]interface{}{
-		"name":      req.Name,
-		"namespace": req.Namespace,
-	})
+	controllerInfo := controllercommon.getControllerInfo(req)
+	r.Log.Info("Searching for App", controllerInfo)
 
 	app := &klcv1alpha3.KeptnApp{}
 	err := r.Get(ctx, req.NamespacedName, app)
@@ -92,10 +90,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	app.SetSpanAttributes(span)
 
-	r.Log.Info("Reconciling Keptn App", "app", app.Name, map[string]interface{}{
-		"name":      req.Name,
-		"namespace": req.Namespace,
-	})
+	r.Log.Info("Reconciling Keptn App", "app", app.Name, controllerInfo)
 
 	appVersion := &klcv1alpha3.KeptnAppVersion{}
 

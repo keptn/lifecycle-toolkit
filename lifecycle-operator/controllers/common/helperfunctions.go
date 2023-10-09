@@ -11,6 +11,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
+	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -104,4 +105,12 @@ func getObject(k8sclient client.Client, log logr.Logger, ctx context.Context, de
 		return err
 	}
 	return nil
+}
+
+func getControllerInfo(req ctrl.Request) map[string]interface{} {
+	info := map[string]interface{}{
+		"name":      req.Name,
+		"namespace": req.Namespace,
+	}
+	return info
 }

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Pod
+status:
+  phase: Completed
+spec:
+  serviceAccount: klt-serviceaccount
+  schedulerName: default-scheduler

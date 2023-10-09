@@ -134,7 +134,7 @@ The process is:
    if you omit it, the yaml file is applied to the default namespace.
 
    ```shell
-   oc apply -f analysis-value-template.yaml -n keptn-lifecycle-poc
+   kubectl apply -f analysis-value-template.yaml -n keptn-lifecycle-poc
    ```
 
 1. Convert the SLO to an `AnalysisDefinition` resource:

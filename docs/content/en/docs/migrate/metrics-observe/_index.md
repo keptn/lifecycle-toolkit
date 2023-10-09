@@ -114,7 +114,7 @@ The process is:
    This command creates an `AnalysisValueTemplate` resource
    for each SLI that is defined in the `sli.yaml` file.
 
-   >**Note:**
+   > **Note**
      The `name` of each `AnalysisValueTemplate` resource
      must adhere to the
      [Kubernetes resource naming rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/).

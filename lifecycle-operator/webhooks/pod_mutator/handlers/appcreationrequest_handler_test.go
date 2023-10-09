@@ -23,7 +23,7 @@ import (
 )
 
 const testApp = "my-app"
-const testWorkload = "my-workload"
+const TestWorkload = "my-workload"
 
 func TestAppHandlerHandle(t *testing.T) {
 
@@ -38,7 +38,7 @@ func TestAppHandlerHandle(t *testing.T) {
 			Name:      "example-pod",
 			Namespace: namespace,
 			Annotations: map[string]string{
-				apicommon.WorkloadAnnotation: testWorkload,
+				apicommon.WorkloadAnnotation: TestWorkload,
 				apicommon.VersionAnnotation:  "0.1",
 			},
 		}}
@@ -49,14 +49,14 @@ func TestAppHandlerHandle(t *testing.T) {
 			APIVersion: "lifecycle.keptn.sh/v1alpha3",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            testWorkload,
+			Name:            TestWorkload,
 			Namespace:       namespace,
 			ResourceVersion: "1",
 			Annotations: map[string]string{
 				"keptn.sh/app-type": "single-service",
 			},
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{AppName: testWorkload},
+		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{AppName: TestWorkload},
 	}
 
 	tests := []struct {
@@ -86,7 +86,7 @@ func TestAppHandlerHandle(t *testing.T) {
 					Namespace: namespace,
 					Annotations: map[string]string{
 						apicommon.AppAnnotation:      testApp,
-						apicommon.WorkloadAnnotation: testWorkload,
+						apicommon.WorkloadAnnotation: TestWorkload,
 						apicommon.VersionAnnotation:  "0.1",
 					},
 				}},

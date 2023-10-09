@@ -22,7 +22,6 @@ import (
 )
 
 const namespace = "test-namespace"
-const myworkload = "my-workload"
 const testAppWorkload = "my-workload-my-workload"
 
 func TestHandle(t *testing.T) {
@@ -50,7 +49,7 @@ func TestHandle(t *testing.T) {
 			ResourceVersion: "1",
 		},
 		Spec: klcv1alpha3.KeptnWorkloadSpec{
-			AppName: myworkload,
+			AppName: TestWorkload,
 			Version: "0.1",
 		},
 	}
@@ -60,7 +59,7 @@ func TestHandle(t *testing.T) {
 			Name:      "example-pod",
 			Namespace: namespace,
 			Annotations: map[string]string{
-				apicommon.WorkloadAnnotation: myworkload,
+				apicommon.WorkloadAnnotation: TestWorkload,
 				apicommon.VersionAnnotation:  "0.1",
 			},
 		}}

@@ -31,7 +31,7 @@ const podKey = "pod"
 type PodMutatingWebhook struct {
 	Client                 client.Client
 	Tracer                 trace.Tracer
-	Decoder                *admission.Decoder
+	Decoder                handlers.Decoder
 	EventSender            controllercommon.IEvent
 	Log                    logr.Logger
 	SchedulingGatesEnabled bool

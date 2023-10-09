@@ -57,7 +57,7 @@ differs from that of Keptn v1 quality gates:
 ## Transfer Keptn v1 SLIs/SLOs to evaluation resources
 
 Simple comparisons of data can be implemented as
-[Keptn Evaluations](../../implementing/evaluations).
+[Keptn Evaluations](../../implementing/evaluations.md).
 To implement this:
 
 * Transfer the information from the Keptn v1

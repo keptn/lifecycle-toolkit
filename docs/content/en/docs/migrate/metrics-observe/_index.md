@@ -210,7 +210,7 @@ The process is:
    apply the `analysis-instance.yaml` file:
 
    ```shell
-   oc apply -f analysis-instance.yaml -n keptn-lifecycle-poc
+   kubectl apply -f analysis-instance.yaml -n keptn-lifecycle-poc
    ```
 
    Retrieve the current status of the Analysis with the following command:

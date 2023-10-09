@@ -87,7 +87,7 @@ so only one `AnalysisDefinition` resource
 (named `my-project-ad`) is created.
 If your Keptn v1 project has multiple SLOs,
 you need to create a separate `AnalysisDefinition`
-with a unique namefor each one.
+with a unique name for each one.
 
 The process is:
 

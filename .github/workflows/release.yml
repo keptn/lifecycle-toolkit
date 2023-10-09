@@ -179,6 +179,7 @@ jobs:
           push: true
           cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
+          network: none
 
       - name: Sign container image
         env:

@@ -152,7 +152,6 @@ release-local.amd64: clean
 		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 \
 		--platform linux/amd64 \
 		--target debug \
-		--network none \
 		.
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-amd64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 
@@ -167,7 +166,6 @@ release-local.arm64: clean
 		-t $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 \
 		--platform linux/arm64 \
 		--target debug \
-		--network none \
 		.
 	docker tag $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
 

@@ -216,7 +216,7 @@ The process is:
    Retrieve the current status of the Analysis with the following command:
 
    ```shell
-   oc get analysis - n keptn-lifecycle-poc
+   kubectl get analysis - n keptn-lifecycle-poc
    ```
 
    This yields an output that looks like the following:

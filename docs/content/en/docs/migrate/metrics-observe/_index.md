@@ -7,11 +7,11 @@ weight: 40
 The SLIs and SLOs used for Keptn v1 quality gates can be ported to
 appropriate Keptn facilities:
 
-* [Keptn Metrics](../../implementing/evaluatemetrics/)
+* [Keptn Metrics](../../implementing/evaluatemetrics.md/)
   allow you to define and view metrics
   from multiple data sources in your Kubernetes cluster.
 * Use
-  [Keptn Evaluations](../../implementing/evaluations)
+  [Keptn Evaluations](../../implementing/evaluations.md)
   to do a simple evaluation of the metrics data you capture.
   To implement this, transfer the information from the Keptn v1
   [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
@@ -133,7 +133,7 @@ The process is:
    Be sure to specify the namespace;
    if you omit it, the yaml file is applied to the default namespace.
 
-   ```
+   ```shell
    oc apply -f analysis-value-template.yaml -n keptn-lifecycle-poc
    ```
 
@@ -142,7 +142,7 @@ The process is:
    The process of converting the Keptn v1
    [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
    files to
-   [AnalysisDefinition](../../yaml-crd-ref/analysisdefinition)
+   [AnalysisDefinition](../../yaml-crd-ref/analysisdefinition.md)
    resources is similar to the process of converting the SLIs.
    Use the following command sequence:
 
@@ -164,7 +164,7 @@ The process is:
    Be sure to add the namespace;
    if you omit it, the yaml file is applied to the default namespace.
 
-   ```
+   ```shell
    oc apply -f analysis-definition.yaml -n keptn-lifecycle-poc
    ```
 
@@ -209,19 +209,19 @@ The process is:
    To perform an Analysis (or "trigger an evaluation" in Keptn v1 jargon),
    apply the `analysis-instance.yaml` file:
 
-   ```
+   ```shell
    oc apply -f analysis-instance.yaml -n keptn-lifecycle-poc
    ```
 
    Retrieve the current status of the Analysis with the following command:
 
-   ```
+   ```shell
    oc get analysis - n keptn-lifecycle-poc
    ```
 
    This yields an output that looks like the following:
 
-   ```
+   ```shell
    NAME                ANALYSISDEFINITION      WARNING   PASS
    analysis-sample-1   my-project-ad             true
    ```
@@ -235,7 +235,7 @@ The process is:
    with the definition of the analysis
    as well as the `status` (results) of the analysis; for example:
 
-   ```
+   ```shell
    oc get analysis - n keptn-lifecycle-poc -oyaml
    ```
 

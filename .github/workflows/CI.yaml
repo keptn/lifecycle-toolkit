@@ -163,7 +163,7 @@ jobs:
           push: false
           cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
-          network: none
+         # network: none
           outputs: type=docker,dest=/tmp/${{ matrix.config.name }}-image.tar
 
       - name: Upload image as artifact

@@ -462,9 +462,9 @@ func (w *KeptnWorkloadVersion) SetPhaseTraceID(phase string, carrier propagation
 
 func (w KeptnWorkloadVersion) GetEventAnnotations() map[string]string {
 	return map[string]string{
-		"appName":              w.Spec.AppName,
-		"workloadName":         w.Spec.WorkloadName,
-		"workloadVersion":      w.Spec.Version,
-		"workloadInstanceName": w.Name,
+		"appName":             w.Spec.AppName,
+		"workloadName":        w.Spec.WorkloadName,
+		"workloadVersion":     w.Spec.Version,
+		"workloadVersionName": w.Name,
 	}
 }

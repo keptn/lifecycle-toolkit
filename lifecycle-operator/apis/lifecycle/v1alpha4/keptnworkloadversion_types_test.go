@@ -255,16 +255,16 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 	}, workload.GetSpanAttributes())
 
 	require.Equal(t, map[string]string{
-		"appName":              "appname",
-		"workloadName":         "workloadname",
-		"workloadVersion":      "version",
-		"workloadInstanceName": "workload",
+		"appName":             "appname",
+		"workloadName":        "workloadname",
+		"workloadVersion":     "version",
+		"workloadVersionName": "workload",
 	}, workload.GetEventAnnotations())
 }
 
 //nolint:dupl
 func TestKeptnWorkloadVersion_DeprecateRemainingPhases(t *testing.T) {
-	workloadInstance := KeptnWorkloadVersion{
+	workloadVersion := KeptnWorkloadVersion{
 		Status: KeptnWorkloadVersionStatus{
 			PreDeploymentStatus:            common.StatePending,
 			PreDeploymentEvaluationStatus:  common.StatePending,
@@ -276,13 +276,13 @@ func TestKeptnWorkloadVersion_DeprecateRemainingPhases(t *testing.T) {
 	}
 
 	tests := []struct {
-		workloadInstance KeptnWorkloadVersion
-		phase            common.KeptnPhaseType
-		want             KeptnWorkloadVersion
+		workloadVersion KeptnWorkloadVersion
+		phase           common.KeptnPhaseType
+		want            KeptnWorkloadVersion
 	}{
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseWorkloadPostEvaluation,
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseWorkloadPostEvaluation,
 			want: KeptnWorkloadVersion{
 				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
@@ -295,8 +295,8 @@ func TestKeptnWorkloadVersion_DeprecateRemainingPhases(t *testing.T) {
 			},
 		},
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseWorkloadPostDeployment,
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseWorkloadPostDeployment,
 			want: KeptnWorkloadVersion{
 				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
@@ -309,8 +309,8 @@ func TestKeptnWorkloadVersion_DeprecateRemainingPhases(t *testing.T) {
 			},
 		},
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseWorkloadDeployment,
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseWorkloadDeployment,
 			want: KeptnWorkloadVersion{
 				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
@@ -323,8 +323,8 @@ func TestKeptnWorkloadVersion_DeprecateRemainingPhases(t *testing.T) {
 			},
 		},
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseWorkloadPreEvaluation,
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseWorkloadPreEvaluation,
 			want: KeptnWorkloadVersion{
 				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
@@ -337,8 +337,8 @@ func TestKeptnWorkloadVersion_DeprecateRemainingPhases(t *testing.T) {
 			},
 		},
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseWorkloadPreDeployment,
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseWorkloadPreDeployment,
 			want: KeptnWorkloadVersion{
 				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
@@ -351,8 +351,8 @@ func TestKeptnWorkloadVersion_DeprecateRemainingPhases(t *testing.T) {
 			},
 		},
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseDeprecated,
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseDeprecated,
 			want: KeptnWorkloadVersion{
 				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StateDeprecated,
@@ -365,8 +365,8 @@ func TestKeptnWorkloadVersion_DeprecateRemainingPhases(t *testing.T) {
 			},
 		},
 		{
-			workloadInstance: workloadInstance,
-			phase:            common.PhaseAppPreDeployment,
+			workloadVersion: workloadVersion,
+			phase:           common.PhaseAppPreDeployment,
 			want: KeptnWorkloadVersion{
 				Status: KeptnWorkloadVersionStatus{
 					PreDeploymentStatus:            common.StatePending,
@@ -382,8 +382,8 @@ func TestKeptnWorkloadVersion_DeprecateRemainingPhases(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
-			tt.workloadInstance.DeprecateRemainingPhases(tt.phase)
-			require.Equal(t, tt.want, tt.workloadInstance)
+			tt.workloadVersion.DeprecateRemainingPhases(tt.phase)
+			require.Equal(t, tt.want, tt.workloadVersion)
 		})
 	}
 }

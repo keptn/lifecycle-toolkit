@@ -60,11 +60,11 @@ Simple comparisons of data can be implemented as
 [Keptn Evaluations](../../implementing/evaluations).
 To implement this:
 
-- Transfer the information from the Keptn v1
+* Transfer the information from the Keptn v1
   [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
   files into
   [KeptnMetric](../../yaml-crd-ref/metric.md) resources
-- Transfer the information from the Keptn v1
+* Transfer the information from the Keptn v1
   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
   files into
   [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
@@ -179,9 +179,9 @@ The process is:
 
    The `KeptnMetricsProvider` resource defines
 
-   - The URL of the server used for your data provider
-   - The namespace where the data provider is located
-   - (optional) Secret information to access a protected data source
+   * The URL of the server used for your data provider
+   * The namespace where the data provider is located
+   * (optional) Secret information to access a protected data source
 
    See the `prometheus-provider` file for an example.
 
@@ -193,11 +193,11 @@ The process is:
    resource that defines the specific analysis you want to run.
    Specify the following:
 
-   - Name of the `AnalysisDefinition` resource that defines the goals
-   - Timeframe for which to retrieve the metrics.
+   * Name of the `AnalysisDefinition` resource that defines the goals
+   * Timeframe for which to retrieve the metrics.
      The `from`/`to` timestamps are added automatically
      to the query defined in the `AnalysisValueTemplate` resource.
-   - (optional) List of `args` that specify values for this analysis
+   * (optional) List of `args` that specify values for this analysis
      that replace variables used in the queries
      in the `AnalysisValueTemplate` resources.
      See
@@ -333,4 +333,4 @@ spec:
 
 This way, you can use the same `AnalysisDefinition`
 and `AnalysisValueTemplates` for multiple services within the same project.
-~           
+~

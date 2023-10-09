@@ -165,7 +165,7 @@ The process is:
    if you omit it, the yaml file is applied to the default namespace.
 
    ```shell
-   oc apply -f analysis-definition.yaml -n keptn-lifecycle-poc
+   kubectl apply -f analysis-definition.yaml -n keptn-lifecycle-poc
    ```
 
 1. Create a `KeptnMetricsProvider` resource

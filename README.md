@@ -78,7 +78,7 @@ helm repo update
 helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
-### Instalation with only certain namespaces allowed
+### Installation with only certain namespaces allowed
 
 Keptn lifecycle orchestration is by default enabled for all namespaces except the following ones:
 
@@ -90,8 +90,8 @@ Keptn lifecycle orchestration is by default enabled for all namespaces except th
 - `observability`
 - `monitoring`
 
-To enable Keptn lifecycle orchestration only to specific namespaces, you need to specify
-those namespaces during instalation via helm values.
+To restrict Keptn lifecycle orchestration to specific namespaces, you must specify
+those namespaces during installation via helm values.
 First you need to create a `values.yaml`
 file
 
@@ -102,7 +102,7 @@ lifecycleOperator:
   - allowed-ns-2
 ```
 
-and add the values file to the helm instalation command:
+and add the values file to the helm installation command:
 
 ```shell
 helm repo add klt https://charts.lifecycle.keptn.sh
@@ -111,7 +111,7 @@ helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --values 
 ```
 
 > **Note**
-Please be aware that you still need to correctly annotate the namespaces, where
+Please be aware that you still need to correctly annotate the namespaces where
 Keptn lifecycle orchestration is allowed.
 > To annotate them, use:
 
@@ -120,9 +120,8 @@ kubectl annotate ns <your-allowed-namespace> keptn.sh/lifecycle-toolkit='enabled
 ```
 
 > **Note**
-Please be aware that if this option is set, adding any additional namespace will
-require the helm installation to be updated with the name of the new namespace
-being added to the list.
+Please be aware that,if this option is set, adding any additional namespace
+requires the helm installation to be updated by adding the name of the new namespace to the list.
 
 ### Installation without scheduler
 

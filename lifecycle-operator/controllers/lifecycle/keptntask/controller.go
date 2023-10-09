@@ -58,7 +58,7 @@ type KeptnTaskReconciler struct {
 // +kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get;list
 
 func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	controllerInfo := controllercommon.getControllerInfo(req)
+	controllerInfo := controllercommon.GetControllerInfo(req)
 	r.Log.Info("Reconciling KeptnTask", controllerInfo)
 	task := &klcv1alpha3.KeptnTask{}
 

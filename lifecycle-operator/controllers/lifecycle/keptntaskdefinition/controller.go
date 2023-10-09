@@ -45,7 +45,7 @@ type KeptnTaskDefinitionReconciler struct {
 // +kubebuilder:rbac:groups=core,resources=configmaps,verbs=create;get;update;list;watch
 
 func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	controllerInfo := controllercommon.getControllerInfo(req)
+	controllerInfo := controllercommon.GetControllerInfo(req)
 	r.Log.Info("Reconciling KeptnTaskDefinition", controllerInfo)
 
 	definition := &klcv1alpha3.KeptnTaskDefinition{}

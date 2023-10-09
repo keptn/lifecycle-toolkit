@@ -71,7 +71,7 @@ type KeptnAppVersionReconciler struct {
 //
 //nolint:gocyclo
 func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	controllerInfo := controllercommon.getControllerInfo(req)
+	controllerInfo := controllercommon.GetControllerInfo(req)
 	r.Log.Info("Searching for Keptn App Version", controllerInfo)
 
 	appVersion := &klcv1alpha3.KeptnAppVersion{}

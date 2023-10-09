@@ -3,7 +3,7 @@ kind: KeptnWorkloadVersion
 metadata:
   annotations:
     traceparent: my-trace-parent
-  name: some-keptn-workload-instance-2
+  name: some-keptn-workload-version
 spec:
   app: podtato-head
   resourceReference:

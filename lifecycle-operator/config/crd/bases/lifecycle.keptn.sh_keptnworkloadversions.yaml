@@ -4,15 +4,15 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: keptnworkloadVersions.lifecycle.keptn.sh
+  name: keptnworkloadversions.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh
   names:
     kind: KeptnWorkloadVersion
     listKind: KeptnWorkloadVersionList
-    plural: keptnworkloadVersions
+    plural: keptnworkloadversions
     shortNames:
-    - kwv
+    - kwi
     singular: keptnworkloadversion
   scope: Namespaced
   versions:
@@ -52,7 +52,7 @@ spec:
     name: v1alpha4
     schema:
       openAPIV3Schema:
-        description: KeptnWorkloadVersion is the Schema for the keptnworkloadVersions
+        description: KeptnWorkloadVersion is the Schema for the keptnworkloadversions
           API
         properties:
           apiVersion:

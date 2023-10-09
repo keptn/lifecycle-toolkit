@@ -97,7 +97,7 @@ type ItemStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=keptnworkloadVersions,shortName=kwi
+// +kubebuilder:resource:path=keptnworkloadversions,shortName=kwi
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
@@ -110,7 +110,7 @@ type ItemStatus struct {
 // +kubebuilder:printcolumn:name="PostDeploymentStatus",type=string,priority=1,JSONPath=`.status.postDeploymentStatus`
 // +kubebuilder:printcolumn:name="PostDeploymentEvaluationStatus",priority=1,type=string,JSONPath=`.status.postDeploymentEvaluationStatus`
 
-// KeptnWorkloadVersion is the Schema for the keptnworkloadVersions API
+// KeptnWorkloadVersion is the Schema for the keptnworkloadversions API
 type KeptnWorkloadVersion struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

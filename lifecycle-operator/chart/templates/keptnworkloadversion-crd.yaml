@@ -15,7 +15,7 @@ spec:
   names:
     kind: KeptnWorkloadVersion
     listKind: KeptnWorkloadVersionList
-    plural: keptnworkloadVersions
+    plural: keptnworkloadversions
     shortNames:
     - kwv
     singular: keptnworkloadversion
@@ -57,7 +57,7 @@ spec:
     name: v1alpha4
     schema:
       openAPIV3Schema:
-        description: KeptnWorkloadVersion is the Schema for the keptnworkloadVersions
+        description: KeptnWorkloadVersion is the Schema for the keptnworkloadversions
           API
         properties:
           apiVersion:

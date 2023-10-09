@@ -236,7 +236,7 @@ The process is:
    as well as the `status` (results) of the analysis; for example:
 
    ```shell
-   oc get analysis - n keptn-lifecycle-poc -oyaml
+   kubectl get analysis - n keptn-lifecycle-poc -oyaml
    ```
 
    ```yaml

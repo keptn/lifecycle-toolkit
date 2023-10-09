@@ -91,7 +91,7 @@ with a unique name for each one.
 
 The process is:
 
-1. Convert the SLIs to AnalysisValueTemplates
+1. Convert the SLIs to `AnalysisValueTemplates` resources
 
    The following command sequence converts a Keptn v1
    [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)

@@ -91,27 +91,11 @@ with a unique name for each one.
 
 The process is:
 
-1. If necessary, rename the SLI to a Kubernetes compatible name
-
-   Keptn requires that all SLI names adhere to the
-   [Kubernetes resource naming rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/).
-   The conversion tools preserve the name of each SLI
-   so you may need to modify your
-   [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
-   and
-   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
-   files to use a name that matches the Kubernetes requirements.
-   For example, the name of the `Response_Time` SLI
-   should be changed to `response-time` in both files.
-
-   We plan to eventually enable the conversion tools
-   to automatically convert the SLI names; see
-   [Issue 2098](https://github.com/keptn/lifecycle-toolkit/issues/2098/).
-
 1. Convert the SLIs to AnalysisValueTemplates
 
-   The following command sequence converts
-   a Keptn v1 `sli.yaml` file to a Keptn
+   The following command sequence converts a Keptn v1
+   [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+   file to a Keptn
    [AnalysisValueTemplate](../../yaml-crd-ref/analysisvaluetemplate.md)
    resource:
 
@@ -128,8 +112,21 @@ The process is:
    ```
 
    This command creates an `AnalysisValueTemplate` resource
-   that is defined in a file called `analysis-value-template.yaml`.
-   You can apply this to your cluster with a command like the following.
+   for each SLI that is defined in the `sli.yaml` file.
+
+   >**Note:**
+     The `name` of each `AnalysisValueTemplate` resource
+     must adhere to the
+     [Kubernetes resource naming rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/).
+     The conversion tools preserve the name of each SLI
+     but modify the names to match the Kubernetes requirements.
+     For example, the `Response_Time` SLI
+     generates an `AnalysisValueTemplate` that is named `response-time`.
+   >
+
+   All the SLIs for a particular `sli.yaml` file
+   are defined in a file called `analysis-value-template.yaml`.
+   Apply this file to your cluster with a command like the following.
    Be sure to specify the namespace;
    if you omit it, the yaml file is applied to the default namespace.
 
@@ -158,9 +155,9 @@ The process is:
      --analysis-definition-name=$ANALYSIS_DEFINITION_NAME > analysis-definition.yaml
    ```
 
-   The result of this command yields an `AnalysisDefinition` yaml file
-   called `analysis-definition.yaml`
-   You can apply this to your Keptn cluster with the following command.
+   The result of this command yields an `AnalysisDefinition` resource
+   that is defined in a file called `analysis-definition.yaml`.
+   Apply this to your Keptn cluster with the following command.
    Be sure to add the namespace;
    if you omit it, the yaml file is applied to the default namespace.
 
@@ -175,9 +172,10 @@ The process is:
    for the `AnalysisValueTemplate` resource are fetched.
    This same resource is used for any metrics and evaluations you are using.
    Note that Keptn supports multiple instances of multiple data providers
-   and each `AnalysisValueTemplate` can reference a different provider,
+   and each `AnalysisValueTemplate` resource
+   can reference a different provider,
 
-   The `KeptnMetricsProvider` resource defines
+   The `KeptnMetricsProvider` resource defines:
 
    * The URL of the server used for your data provider
    * The namespace where the data provider is located

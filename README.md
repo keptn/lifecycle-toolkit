@@ -119,6 +119,11 @@ Keptn lifecycle orchestration is allowed.
 kubectl annotate ns <your-allowed-namespace> keptn.sh/lifecycle-toolkit='enabled'
 ```
 
+> **Note**
+Please be aware that if this option is set, adding any additional namespace will
+require the helm installation to be updated with the name of the new namespace
+being added to the list.
+
 ### Installation without scheduler
 
 Keptn installed on Kubernetes cluster running Kubernetes >= 1.26

@@ -71,13 +71,13 @@ type KeptnEvaluationReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	controllerInfo := controllercommon.GetControllerInfo(req)
-	r.Log.Info("Reconciling KeptnEvaluation", controllerInfo)
+	r.Log.Info("Reconciling KeptnEvaluation", "controllerInfo", controllerInfo)
 	evaluation := &klcv1alpha3.KeptnEvaluation{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, evaluation); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
-			r.Log.Info("KeptnEvaluation resource not found. Ignoring since object must be deleted", controllerInfo)
+			r.Log.Info("KeptnEvaluation resource not found. Ignoring since object must be deleted", "controllerInfo", controllerInfo)
 			return ctrl.Result{}, nil
 		}
 		r.Log.Error(err, "Failed to get the KeptnEvaluation")
@@ -96,7 +96,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		evaluationDefinition, err := controllercommon.GetEvaluationDefinition(r.Client, r.Log, ctx, evaluation.Spec.EvaluationDefinition, req.NamespacedName.Namespace)
 		if err != nil {
 			if errors.IsNotFound(err) {
-				r.Log.Info(err.Error()+", ignoring error since object must be deleted", controllerInfo)
+				r.Log.Info(err.Error()+", ignoring error since object must be deleted", "controllerInfo", controllerInfo)
 				span.SetStatus(codes.Error, err.Error())
 				return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 			}
@@ -116,7 +116,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return ctrl.Result{Requeue: true, RequeueAfter: evaluation.Spec.RetryInterval.Duration}, nil
 	}
 
-	r.Log.Info("Finished Reconciling KeptnEvaluation", controllerInfo)
+	r.Log.Info("Finished Reconciling KeptnEvaluation", "controllerInfo", controllerInfo)
 
 	err := r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
 

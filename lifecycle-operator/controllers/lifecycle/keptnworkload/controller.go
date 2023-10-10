@@ -70,7 +70,7 @@ type KeptnWorkloadReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	controllerInfo := controllercommon.GetControllerInfo(req)
-	r.Log.Info("Searching for workload", controllerInfo)
+	r.Log.Info("Searching for workload", "controllerInfo", controllerInfo)
 
 	workload := &klcv1alpha3.KeptnWorkload{}
 	err := r.Get(ctx, req.NamespacedName, workload)
@@ -89,7 +89,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 	workload.SetSpanAttributes(span)
 
-	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name, controllerInfo)
+	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name, "controllerInfo", controllerInfo)
 
 	workloadInstance := &klcv1alpha3.KeptnWorkloadInstance{}
 

@@ -19,7 +19,7 @@ kind: Analysis
 metadata:
   name: analysis-sample
 spec:
-  timeframe: from: <start-time> to: <end-time> | `recent`
+  timeframe: from: <start-time> to: <end-time> | `recent <timespan>`
   args:
     <variable1>: <value1>
     <variable2>: <value2>
@@ -28,9 +28,10 @@ spec:
     name: <name of associated `analysisDefinition` resource
     namespace: <namespace of associated `analysisDefinition` resource
 status:
-  pass: true
+  pass: true | false
+  warning: true | false
   raw: <JSON object>
-  state: Completed
+  state: Completed | Progressing
 ```
 
 ## Fields
@@ -53,8 +54,10 @@ status:
       These fields follow the
       [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt)
       timestamp format.
-    * Set the ‘recent’ property.
-
+    * Set the ‘recent’ property to a time span.
+      This causes the Analysis to use data going back that amount of time.
+      For example, if `recent: 10m` is set,
+      the Analysis studies data from the last ten minutes.
     If neither is set, the Analysis can not be added to the cluster.
   * **args** -- Map of key/value pairs that can be used
     to substitute variables in the `AnalysisValueTemplate` query.
@@ -64,13 +67,14 @@ status:
     * **namespace** -- Namespace of the `AnalysisDefinition` resource.
   * **status** -- results of this Analysis run,
     added to the resource by Keptn.
-    * **pass** -- Whether the analysis passed or failed
+    * **pass** -- Whether the analysis passed or failed.
+    > **Warning** -- Whether the analysis returned a warning.
     * **raw** --  String-encoded JSON object that reaports the results
       of evaluating one or more objectives or metrics.
       See
       [Interpreting Analysis results](#interpreting-analysis-results)
       for details.
-    * **state** -- Completed
+    * **state** -- Set to `Completed` or `Progressing` as appropriate.
 
 ## Interpreting Analysis results
 

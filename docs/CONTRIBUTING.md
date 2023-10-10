@@ -50,4 +50,4 @@ Please check [Source File Structure](content/en/contribute/docs/source-file-stru
 
 ## Location of published docs
 
-Please check [Published doc structure-](content/en/contribute/docs/publish/_index.md).
+Please check [Published doc structure](content/en/contribute/docs/publish/_index.md).

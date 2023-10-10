@@ -103,7 +103,7 @@ API reference
 ## Differences between versions
 
 A preliminary release of the Keptn Analysis feature
-but is hidden behind a feature flag. 
+but is hidden behind a feature flag.
 To preview these features, set the environment `ENABLE_ANALYSIS` to `true`
 in the `metrics-operator` deployment.
 

@@ -175,52 +175,52 @@ The meaning of each of these properties is as follows:
 **`objectiveResults`**: This is an array containing one or more objects,
 each representing the results of a specific objective or performance metric.
 
-- The first item in the array:
-  - **`result`** -- This object contains information
+* The first item in the array:
+  * **`result`** -- This object contains information
     about whether the objective has passed or failed.
     It has two sub-objects:
-    - **`failResult`** -- Indicates whether the objective has failed.
+    * **`failResult`** -- Indicates whether the objective has failed.
       In this case, it checks if a value is greater than 500 milliseconds
       and it has not been fulfilled (`fulfilled: false`).
-    - **`warnResult`** -- Indicates whether the objective has issued a warning.
+    * **`warnResult`** -- Indicates whether the objective has issued a warning.
       It checks if a value is greater than 300 milliseconds
       and it has not been fulfilled (`fulfilled: false`).
     <!-- markdownlint-disable-next-line -->
     - **`warning`** -- Indicates whether a warning has been issued
       (false in this case).
-    - **`pass`** -- Indicates whether the objective has passed
+    * **`pass`** -- Indicates whether the objective has passed
       (true in this case).
-  - **`objective`** -- Describes the objective being evaluated.
+  * **`objective`** -- Describes the objective being evaluated.
     It includes:
-    - **`analysisValueTemplateRef`** -- Refers to the template
+    * **`analysisValueTemplateRef`** -- Refers to the template
       used for analysis (`response-time-p95`).
-    - **`target`** -- Sets the target values for failure and warning conditions.
+    * **`target`** -- Sets the target values for failure and warning conditions.
       In this case, failure occurs
       if the value is greater than 500 milliseconds
       and warning occurs if it's greater than 300 milliseconds.
-    - **`weight`** -- Specifies the weight assigned to this objective
+    * **`weight`** -- Specifies the weight assigned to this objective
       (weight: 1).
-  - **`value`** -- Indicates the actual value measured for this objective
+  * **`value`** -- Indicates the actual value measured for this objective
     (value: 0.00475).
-  - **`score`** -- Indicates the score assigned to this objective (score: 1).
+  * **`score`** -- Indicates the score assigned to this objective (score: 1).
 
-- The second item in the array:
-  - **`result`** -- Similar to the first objective,
+* The second item in the array:
+  * **`result`** -- Similar to the first objective,
     it checks whether a value is greater than 0 and has not been fulfilled
     (`fulfilled: false`).
     There are no warning conditions in this case.
-  - **`objective`** -- Describes the objective related to error rate analysis.
-    - **`analysisValueTemplateRef`** -- Refers to the template
+  * **`objective`** -- Describes the objective related to error rate analysis.
+    * **`analysisValueTemplateRef`** -- Refers to the template
       used for analysis (`error-rate`).
-    - **`target`** -- Sets the target value for failure
+    * **`target`** -- Sets the target value for failure
       (failure occurs if the value is greater than 0).
-    - **`weight`** -- Specifies the weight assigned to this objective
+    * **`weight`** -- Specifies the weight assigned to this objective
       (weight: 1).
-    - **`keyObjective`** -- Indicates that this is a key objective (true).
+    * **`keyObjective`** -- Indicates that this is a key objective (true).
 
-  - **`value`** -- Indicates the actual value measured for this objective
+  * **`value`** -- Indicates the actual value measured for this objective
       (value: 0).
-  - **`score`** -- Indicates the score assigned to this objective (score: 1).
+  * **`score`** -- Indicates the score assigned to this objective (score: 1).
 
 **`totalScore`** -- Represents the total score achieved
 based on the objectives evaluated (totalScore: 2).
@@ -303,11 +303,11 @@ API reference: [Analysis](../../crd-ref/metrics/v1alpha3/#analysis)
 ## Differences between versions
 
 A preliminary release of the Keptn Analysis feature
-but is hidden behind a feature flag. 
+but is hidden behind a feature flag.
 To preview these features, set the environment `ENABLE_ANALYSIS` to `true`
 in the `metrics-operator` deployment.
 A preliminary release of the Keptn Analysis feature
-but is hidden behind a feature flag. 
+but is hidden behind a feature flag.
 To preview these features, set the environment `ENABLE_ANALYSIS` to `true`
 in the `metrics-operator` deployment.
 

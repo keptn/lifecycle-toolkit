@@ -29,7 +29,7 @@ const postEval = "some-post-deployment-evaluation"
 const version = "v1.0.0"
 const uid = "this-is-the-pod-uid"
 
-func TestIsAnnotated(t *testing.T) {
+func TestCopyAnnotationsIfParentAnnotated(t *testing.T) {
 	testNamespace := "test-namespace"
 	rsUidWithDpOwner := types.UID("this-is-the-replicaset-with-dp-owner")
 	rsUidWithNoOwner := types.UID("this-is-the-replicaset-with-no-owner")
@@ -248,6 +248,157 @@ func TestIsAnnotated(t *testing.T) {
 				},
 			},
 			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			a := &PodAnnotationHandler{
+				Client: tt.fields.Client,
+				Log:    tt.fields.Log,
+			}
+			got := a.copyAnnotationsIfParentAnnotated(tt.args.ctx, tt.args.req, tt.args.pod)
+			if got != tt.want {
+				t.Errorf("copyAnnotationsIfParentAnnotated() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsAnnotated(t *testing.T) {
+	testNamespace := "test-namespace"
+	rsUidWithDpOwner := types.UID("this-is-the-replicaset-with-dp-owner")
+	rsUidWithNoOwner := types.UID("this-is-the-replicaset-with-no-owner")
+
+	rsWithDpOwner := &appsv1.ReplicaSet{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "ReplicaSet",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-replicaset1",
+			UID:       rsUidWithDpOwner,
+			Namespace: testNamespace,
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					Kind: "Deployment",
+					Name: "this-is-the-deployment",
+					UID:  "this-is-the-deployment-uid",
+				},
+			},
+		},
+	}
+	rsWithNoOwner := &appsv1.ReplicaSet{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "ReplicaSet",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-replicaset4",
+			UID:       rsUidWithNoOwner,
+			Namespace: testNamespace,
+		},
+	}
+	testDp := &appsv1.Deployment{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "Deployment",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "this-is-the-deployment",
+			UID:       "this-is-the-deployment-uid",
+			Namespace: testNamespace,
+			Annotations: map[string]string{
+				apicommon.WorkloadAnnotation: workloadName,
+			},
+		},
+	}
+
+	fakeClient := fakeclient.NewClient(rsWithDpOwner, rsWithNoOwner, testDp)
+
+	type fields struct {
+		Client client.Client
+		Log    logr.Logger
+	}
+	type args struct {
+		ctx context.Context
+		req *admission.Request
+		pod *corev1.Pod
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		{
+			name: "Test no parent, no annotations return false",
+			fields: fields{
+				Log:    testr.New(t),
+				Client: fakeClient,
+			},
+			args: args{
+				ctx: context.TODO(),
+				req: &admission.Request{
+					AdmissionRequest: admissionv1.AdmissionRequest{
+						Namespace: testNamespace,
+					},
+				},
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						UID: "some-uid",
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "Test true from parent",
+			fields: fields{
+				Log:    testr.New(t),
+				Client: fakeClient,
+			},
+			args: args{
+				ctx: context.TODO(),
+				req: &admission.Request{
+					AdmissionRequest: admissionv1.AdmissionRequest{
+						Namespace: testNamespace,
+					},
+				},
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						UID: uid,
+						OwnerReferences: []metav1.OwnerReference{
+							{
+								Name: rsWithDpOwner.Name,
+								UID:  rsUidWithDpOwner,
+								Kind: "ReplicaSet",
+							},
+						},
+					},
+				},
+			},
+			want: true,
+		},
+		{
+			name: "Test true from pod",
+			fields: fields{
+				Log:    testr.New(t),
+				Client: fakeClient,
+			},
+			args: args{
+				ctx: context.TODO(),
+				req: &admission.Request{
+					AdmissionRequest: admissionv1.AdmissionRequest{
+						Namespace: testNamespace,
+					},
+				},
+				pod: &corev1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						UID: uid,
+						Annotations: map[string]string{
+							apicommon.WorkloadAnnotation: workloadName,
+						},
+					},
+				},
+			},
+			want: true,
 		},
 	}
 	for _, tt := range tests {

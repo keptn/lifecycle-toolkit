@@ -64,10 +64,8 @@ spec:
   * **namespace** -- Namespace where this template lives
 * **spec**
   * **provider**
-    * **name** prometheus -- The `spec.name` value of the
+    * **name** -- The `spec.name` value of the
       [KeptnMetricsProvider](metricsprovider.md) resource to use.
-n
-    TODO: Can this template use multiple data providers?
   * **query** -- query to be made.
     This is done in the data provider's query language.
     It can include variables in the form `{{.nodename}}'}`;
@@ -77,7 +75,7 @@ n
 ## Usage
 
 You must define a
-[KeptnMetricsProvider](metricsprovider.md]
+[KeptnMetricsProvider](metricsprovider.md)
 for each instance of each data provider you are using.
 The `AnalysisValueTemplate` refers to that provider and queries it.
 
@@ -87,9 +85,6 @@ you must define a
 [KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
 resource for each instance of each data provider you are using.
 The template refers to that provider and queries it.
-
-TODO: Can one `AnalysisValueTemplate` query
-multiple `KeptnMetricProvider` resources?
 
 ## Examples
 
@@ -102,12 +97,15 @@ guide page.
 
 ## Files
 
-[AnalysisValueTemplate](../../crd-ref/metrics/v1alpha3/#analysisvaluetemplate)
+[AnalysisValueTemplate](../crd-ref/metrics/v1alpha3/#analysisvaluetemplate)
 API reference
 
 ## Differences between versions
 
-The Analysis feature was first introduced in Keptn v.0.9.0.
+A preliminary release of the Keptn Analysis feature
+but is hidden behind a feature flag. 
+To preview these features, set the environment `ENABLE_ANALYSIS` to `true`
+in the `metrics-operator` deployment.
 
 ## See also
 

@@ -2,7 +2,6 @@
 title: Analysis
 description: Define specific configurations and the Analysis to report
 weight: 4
-hide: true
 ---
 
 An `Analysis` resource customizes the templates
@@ -28,6 +27,10 @@ spec:
   analysisDefinition:
     name: <name of associated `analysisDefinition` resource
     namespace: <namespace of associated `analysisDefinition` resource
+status:
+  pass: true
+  raw: <JSON object>
+  state: Completed
 ```
 
 ## Fields
@@ -59,8 +62,222 @@ spec:
     that stores the `AnalysisValuesTemplate` associated with this `Analysis`
     * **name** -- Name of the `AnalysisDefinition` resource
     * **namespace** -- Namespace of the `AnalysisDefinition` resource.
+  * **status** -- results of this Analysis run,
+    added to the resource by Keptn.
+    * **pass** -- Whether the analysis passed or failed
+    * **raw** --  String-encoded JSON object that reaports the results
+      of evaluating one or more objectives or metrics.
+      See
+      [Interpreting Analysis results](#interpreting-analysis-results)
+      for details.
+    * **state** -- Completed
+
+## Interpreting Analysis results
+
+The `status.raw` field is a string encoded JSON object object that represents the
+results of evaluating one or more performance objectives or metrics.
+It shows whether these objectives have passed or failed, their actual values, and the associated scores.
+In this example, the objectives include response time and error rate analysis,
+each with its own criteria for passing or failing.
+The overall evaluation has passed, and no warnings have been issued.
+
+```json
+{
+    "objectiveResults": [
+        {
+            "result": {
+                "failResult": {
+                    "operator": {
+                        "greaterThan": {
+                            "fixedValue": "500m"
+                        }
+                    },
+                    "fulfilled": false
+                },
+                "warnResult": {
+                    "operator": {
+                        "greaterThan": {
+                            "fixedValue": "300m"
+                        }
+                    },
+                    "fulfilled": false
+                },
+                "warning": false,
+                "pass": true
+            },
+            "objective": {
+                "analysisValueTemplateRef": {
+                    "name": "response-time-p95"
+                },
+                "target": {
+                    "failure": {
+                        "greaterThan": {
+                            "fixedValue": "500m"
+                        }
+                    },
+                    "warning": {
+                        "greaterThan": {
+                            "fixedValue": "300m"
+                        }
+                    }
+                },
+                "weight": 1
+            },
+            "value": 0.00475,
+            "score": 1
+        },
+        {
+            "result": {
+                "failResult": {
+                    "operator": {
+                        "greaterThan": {
+                            "fixedValue": "0"
+                        }
+                    },
+                    "fulfilled": false
+                },
+                "warnResult": {
+                    "operator": {
+
+                    },
+                    "fulfilled": false
+                },
+                "warning": false,
+                "pass": true
+            },
+            "objective": {
+                "analysisValueTemplateRef": {
+                    "name": "error-rate"
+                },
+                "target": {
+                    "failure": {
+                        "greaterThan": {
+                            "fixedValue": "0"
+                        }
+                    }
+                },
+                "weight": 1,
+                "keyObjective": true
+            },
+            "value": 0,
+            "score": 1
+        }
+    ],
+    "totalScore": 2,
+    "maximumScore": 2,
+    "pass": true,
+    "warning": false
+}
+```
+
+The meaning of each of these properties is as follows:
+
+**`objectiveResults`**: This is an array containing one or more objects,
+each representing the results of a specific objective or performance metric.
+
+- The first item in the array:
+  - **`result`** -- This object contains information
+    about whether the objective has passed or failed.
+    It has two sub-objects:
+    - **`failResult`** -- Indicates whether the objective has failed.
+      In this case, it checks if a value is greater than 500 milliseconds
+      and it has not been fulfilled (`fulfilled: false`).
+    - **`warnResult`** -- Indicates whether the objective has issued a warning.
+      It checks if a value is greater than 300 milliseconds
+      and it has not been fulfilled (`fulfilled: false`).
+    <!-- markdownlint-disable-next-line -->
+    - **`warning`** -- Indicates whether a warning has been issued
+      (false in this case).
+    - **`pass`** -- Indicates whether the objective has passed
+      (true in this case).
+  - **`objective`** -- Describes the objective being evaluated.
+    It includes:
+    - **`analysisValueTemplateRef`** -- Refers to the template
+      used for analysis (`response-time-p95`).
+    - **`target`** -- Sets the target values for failure and warning conditions.
+      In this case, failure occurs
+      if the value is greater than 500 milliseconds
+      and warning occurs if it's greater than 300 milliseconds.
+    - **`weight`** -- Specifies the weight assigned to this objective
+      (weight: 1).
+  - **`value`** -- Indicates the actual value measured for this objective
+    (value: 0.00475).
+  - **`score`** -- Indicates the score assigned to this objective (score: 1).
+
+- The second item in the array:
+  - **`result`** -- Similar to the first objective,
+    it checks whether a value is greater than 0 and has not been fulfilled
+    (`fulfilled: false`).
+    There are no warning conditions in this case.
+  - **`objective`** -- Describes the objective related to error rate analysis.
+    - **`analysisValueTemplateRef`** -- Refers to the template
+      used for analysis (`error-rate`).
+    - **`target`** -- Sets the target value for failure
+      (failure occurs if the value is greater than 0).
+    - **`weight`** -- Specifies the weight assigned to this objective
+      (weight: 1).
+    - **`keyObjective`** -- Indicates that this is a key objective (true).
+
+  - **`value`** -- Indicates the actual value measured for this objective
+      (value: 0).
+  - **`score`** -- Indicates the score assigned to this objective (score: 1).
+
+**`totalScore`** -- Represents the total score achieved
+based on the objectives evaluated (totalScore: 2).
+
+**`maximumScore`** -- Indicates the maximum possible score (maximumScore: 2).
+
+**`pass`** -- Indicates whether the overall evaluation has passed
+(true in this case).
+<!-- markdownlint-disable-next-line -->
+**`warning`** -- Indicates whether any warnings have been issued
+during the evaluation (false in this case).
 
 ## Usage
+
+An `Analysis` resource specifies a single Analysis run.
+It specifies the `AnalysisTemplateValue` resource
+that defines the calculations to use,
+the timeframe for which to report information,
+and values to use for variables for this run.
+
+The result of this analysis stays in the cluster
+until the `Analysis` is deleted.
+That also means that, if another analysis should be performed,
+the new analysis must be given a new, unique name within the namespace.
+
+To perform an Analysis (or "trigger an evaluation" in Keptn v1 jargon),
+apply the `analysis-instance.yaml` file:
+
+```shell
+kubectl apply -f analysis-instance.yaml -n keptn-lifecycle-poc
+```
+
+Retrieve the current status of the Analysis with the following command:
+
+```shell
+kubectl get analysis - n keptn-lifecycle-poc
+```
+
+This yields an output that looks like the following:
+
+```shell
+NAME                ANALYSISDEFINITION      WARNING   PASS
+analysis-sample-1   my-project-ad             true
+```
+
+This shows that the analysis passed successfully.
+
+To get the detailed result of the evaluation,
+use the `-oyaml` argument to inspect the full state of the analysis:
+
+This displays the `Analysis` resource
+with the definition of the analysis
+as well as the `status` (results) of the analysis; for example:
+
+```shell
+kubectl get analysis - n keptn-lifecycle-poc -oyaml
+```
 
 ## Examples
 
@@ -85,7 +302,14 @@ API reference: [Analysis](../../crd-ref/metrics/v1alpha3/#analysis)
 
 ## Differences between versions
 
-The Analysis feature was first introduced in Keptn v.0.9.0.
+A preliminary release of the Keptn Analysis feature
+but is hidden behind a feature flag. 
+To preview these features, set the environment `ENABLE_ANALYSIS` to `true`
+in the `metrics-operator` deployment.
+A preliminary release of the Keptn Analysis feature
+but is hidden behind a feature flag. 
+To preview these features, set the environment `ENABLE_ANALYSIS` to `true`
+in the `metrics-operator` deployment.
 
 ## See also
 

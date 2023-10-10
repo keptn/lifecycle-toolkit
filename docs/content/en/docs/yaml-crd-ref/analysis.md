@@ -6,7 +6,7 @@ weight: 4
 
 An `Analysis` resource customizes the templates
 that are defined in an
-[AnalysisDefinition](analysisdefinition) resource
+[AnalysisDefinition](analysisdefinition.md) resource
 by identifying the time for which the analysis should be done
 and the appropriate values to use for variables
 that are used in the `AnalysisDefinition` query.
@@ -298,7 +298,7 @@ guide page.
 
 ## Files
 
-API reference: [Analysis](../../crd-ref/metrics/v1alpha3/#analysis)
+API reference: [Analysis](../crd-ref/metrics/v1alpha3/#analysis)
 
 ## Differences between versions
 

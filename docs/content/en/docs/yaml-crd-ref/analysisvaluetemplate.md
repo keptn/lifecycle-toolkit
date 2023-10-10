@@ -82,7 +82,7 @@ The `AnalysisValueTemplate` refers to that provider and queries it.
 One `Analysis` can use data from multiple instances
 of multiple types of data provider;
 you must define a
-[KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
+[KeptnMetricsProvider](metricsprovider.md)
 resource for each instance of each data provider you are using.
 The template refers to that provider and queries it.
 
@@ -97,8 +97,8 @@ guide page.
 
 ## Files
 
+API reference:
 [AnalysisValueTemplate](../crd-ref/metrics/v1alpha3/#analysisvaluetemplate)
-API reference
 
 ## Differences between versions
 

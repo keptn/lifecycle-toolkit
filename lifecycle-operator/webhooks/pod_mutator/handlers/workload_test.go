@@ -166,3 +166,91 @@ func TestUpdateWorkloadNoSpecChanges(t *testing.T) {
 	require.Nil(t, err)
 
 }
+
+func TestGenerateWorkload(t *testing.T) {
+	testCases := []struct {
+		name           string
+		podAnnotations map[string]string
+		expected       *klcv1alpha3.KeptnWorkload
+	}{
+		{
+			name: "Pod with annotations",
+			podAnnotations: map[string]string{
+				apicommon.VersionAnnotation:                  "v1",
+				apicommon.PreDeploymentTaskAnnotation:        "task1,task2",
+				apicommon.PostDeploymentTaskAnnotation:       "task3,task4",
+				apicommon.PreDeploymentEvaluationAnnotation:  "eval1,eval2",
+				apicommon.PostDeploymentEvaluationAnnotation: "eval3,eval4",
+				apicommon.K8sRecommendedAppAnnotations:       "my-app",
+			},
+			expected: &klcv1alpha3.KeptnWorkload{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:        getWorkloadName(&metav1.ObjectMeta{}, "my-app"),
+					Namespace:   "my-namespace",
+					Annotations: map[string]string{},
+					OwnerReferences: []metav1.OwnerReference{
+						{
+							UID:        "owner-uid",
+							Kind:       "Deployment",
+							Name:       "deployment-1",
+							APIVersion: "apps/v1",
+						},
+					},
+				},
+				Spec: klcv1alpha3.KeptnWorkloadSpec{
+					AppName:                   "my-app",
+					Version:                   "v1",
+					ResourceReference:         klcv1alpha3.ResourceReference{UID: "owner-uid", Kind: "Deployment", Name: "deployment-1"},
+					PreDeploymentTasks:        []string{"task1", "task2"},
+					PostDeploymentTasks:       []string{"task3", "task4"},
+					PreDeploymentEvaluations:  []string{"eval1", "eval2"},
+					PostDeploymentEvaluations: []string{"eval3", "eval4"},
+				},
+			},
+		},
+		{
+			name:           "Pod with no annotations",
+			podAnnotations: nil,
+			expected: &klcv1alpha3.KeptnWorkload{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:        "-",
+					Namespace:   "my-namespace",
+					Annotations: map[string]string{},
+					OwnerReferences: []metav1.OwnerReference{{
+						APIVersion: "apps/v1",
+						Kind:       "Deployment",
+						Name:       "deployment-1",
+						UID:        "owner-uid",
+					},
+					}},
+				Spec: klcv1alpha3.KeptnWorkloadSpec{
+					ResourceReference: klcv1alpha3.ResourceReference{
+						UID:  "owner-uid",
+						Kind: "Deployment",
+						Name: "deployment-1"}}},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			// Create a sample context and pod object
+			ctx := context.TODO()
+			pod := &corev1.Pod{
+				ObjectMeta: metav1.ObjectMeta{
+					Annotations: tc.podAnnotations,
+					OwnerReferences: []metav1.OwnerReference{
+						{
+							UID:        "owner-uid",
+							Kind:       "Deployment",
+							Name:       "deployment-1",
+							APIVersion: "apps/v1",
+						},
+					},
+				},
+			}
+
+			result := generateWorkload(ctx, pod, "my-namespace")
+			require.Equal(t, tc.expected, result)
+		})
+	}
+}

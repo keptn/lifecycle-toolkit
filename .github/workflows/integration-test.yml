@@ -54,17 +54,17 @@ jobs:
           mv kubectl-kuttl /usr/local/bin
 
       - name: Run Scheduling Gates Integration Tests
-        if: ${{ inputs.scheduling-gates == 'gates_on' }} && ${{ inputs.allowed-namespaces == 'allowed_ns_off' }}
+        if: inputs.scheduling-gates == 'gates_on' && inputs.allowed-namespaces == 'allowed_ns_off'
         working-directory: .
         run: make integration-test-scheduling-gates
 
       - name: Run Allowed namespaces Integration Tests
-        if: ${{ inputs.allowed-namespaces == 'allowed_ns_on' }}
+        if: inputs.allowed-namespaces == 'allowed_ns_on'
         working-directory: .
         run: make integration-test-allowed-namespaces
 
       - name: Run Integration Tests
-        if: ${{ inputs.allowed-namespaces == 'allowed_ns_off' }}
+        if: inputs.allowed-namespaces == 'allowed_ns_off'
         working-directory: .
         run: make integration-test
 

@@ -25,7 +25,7 @@ Let's take a look what happens when your changes are merged in `main` and `page`
 
 ## Latest -- Official documentation (Production)
 
-This set of documentation pertains to the latest KLT release and resides within an
+This set of documentation pertains to the latest Keptn release and resides within an
 isolated branch known as `page`.
 When a new version of Keptn is launched, the contents of the `development`
 branch are rolled into this branch.

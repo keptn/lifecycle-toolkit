@@ -28,9 +28,6 @@ webhooks:
     - key: kubernetes.io/metadata.name
       operator: NotIn
       values:
-      - kube-system
-      - kube-public
-      - kube-node-lease
       - cert-manager
       - keptn-lifecycle-toolkit-system
       - observability
@@ -39,17 +36,14 @@ webhooks:
     - key: kubernetes.io/metadata.name
       operator: In
       values: {{ .Values.allowedNamespaces | default list | toJson }}
-    - key: kubernetes.io/metadata.name
-      operator: NotIn
-      values:
-      - kube-system
-      - kube-public
-      - kube-node-lease
 {{- end }}
     - key: kubernetes.io/metadata.name
       operator: NotIn
       values:
       - '{{ .Release.Namespace }}'
+      - kube-system
+      - kube-public
+      - kube-node-lease
   rules:
   - apiGroups:
     - ""

@@ -8,16 +8,16 @@ on:
         required: true
       helm-install:
         description: "Decides whether to install via helm"
-        type: "boolean"
-        default: true
+        type: "string"
+        default: "helm_on"
       scheduling-gates:
         description: "Decides whether to use scheduling gates"
-        type: "boolean"
-        default: false
+        type: "string"
+        default: "gates_off"
       allowed-namespaces:
         description: "Decides whether to allow only certain namespaces"
-        type: "boolean"
-        default: false
+        type: "string"
+        default: "allowed_ns_off"
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-tags depName=kudobuilder/kuttl
@@ -54,17 +54,17 @@ jobs:
           mv kubectl-kuttl /usr/local/bin
 
       - name: Run Scheduling Gates Integration Tests
-        if: inputs.scheduling-gates == true && inputs.allowed-namespaces == false
+        if: ${{ inputs.scheduling-gates == 'gates_on' }} && ${{ inputs.allowed-namespaces == 'allowed_ns_off' }}
         working-directory: .
         run: make integration-test-scheduling-gates
 
       - name: Run Allowed namespaces Integration Tests
-        if: inputs.allowed-namespaces == true
+        if: ${{ inputs.allowed-namespaces == 'allowed_ns_on' }}
         working-directory: .
         run: make integration-test-allowed-namespaces
 
       - name: Run Integration Tests
-        if: inputs.allowed-namespaces == false
+        if: ${{ inputs.allowed-namespaces == 'allowed_ns_off' }}
         working-directory: .
         run: make integration-test
 
@@ -77,5 +77,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: logs-integration-tests-helm_${{ inputs.helm-install }}-schedule_${{ inputs.scheduling-gates }}-allowed-ns_${{ inputs.allowed-namespaces }}
+          name: logs-integration-tests-${{ inputs.helm-install }}-${{ inputs.scheduling-gates }}-${{ inputs.allowed-namespaces }}
           path: .github/scripts/logs

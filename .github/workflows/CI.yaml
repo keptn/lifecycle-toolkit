@@ -202,19 +202,19 @@ jobs:
       - build_image
     strategy:
       matrix:
-        helm: [true, false]
-        scheduling-gates: [true, false]
-        allowed-namespaces: [true, false]
+        helm: ["helm_on", "helm_off"]
+        scheduling-gates: ["gates_on", "gates_off"]
+        allowed-namespaces: ["allowed_ns_on", "allowed_ns_off"]
         exclude:
-          - helm: false
-            scheduling-gates: true
-            allowed-namespaces: true
-          - helm: false
-            scheduling-gates: false
-            allowed-namespaces: true
-          - helm: false
-            scheduling-gates: true
-            allowed-namespaces: false
+          - helm: "helm_off"
+            scheduling-gates: "gates_on"
+            allowed-namespaces: "allowed_ns_on"
+          - helm: "helm_off"
+            scheduling-gates: "gates_off"
+            allowed-namespaces: "allowed_ns_on"
+          - helm: "helm_off"
+            scheduling-gates: "gates_on"
+            allowed-namespaces: "allowed_ns_off"
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       helm-install: ${{ matrix.helm }}

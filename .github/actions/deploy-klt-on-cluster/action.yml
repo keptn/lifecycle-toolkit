@@ -21,15 +21,15 @@ inputs:
   helm-install:
     required: false
     description: "Install Keptn via helm instead of manifest if true"
-    default: "true"
+    default: "helm_on"
   scheduling-gates:
     required: false
     description: "Use scheduling gates instead of scheduler"
-    default: "false"
+    default: "gates_off"
   allowed-namespaces:
     required: false
     description: "Decides whether to allow only certain namespaces"
-    default: "false"
+    default: "allowed_ns_off"
 runs:
   using: "composite"
   steps:
@@ -65,7 +65,7 @@ runs:
         done
 
     - name: Install lifecycle-toolkit with manifests
-      if: inputs.helm-install == 'false' && inputs.scheduling-gates == 'false'
+      if: ${{  inputs.helm-install == 'helm_off' }}
       shell: bash
       run: |
         echo "Installing Keptn using manifests"
@@ -91,7 +91,7 @@ runs:
         kubectl rollout status deployment lifecycle-operator -n keptn-lifecycle-toolkit-system -w
 
     - name: Install lifecycle-toolkit with helm
-      if: inputs.helm-install == 'true'
+      if: ${{ inputs.helm-install == 'helm_on' }}
       env:
         RELEASE_REGISTRY: "localhost:5000/keptn"
       shell: bash
@@ -104,7 +104,7 @@ runs:
         helm dependency build
 
         touch tmp-values.yaml
-        if [ "${{ inputs.allowed-namespaces }}" == "true" ]; then
+        if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_on" ]; then
           echo "lifecycleOperator:" >> tmp-values.yaml
           echo "  allowedNamespaces: [allowed-ns-test]" >> tmp-values.yaml
         fi

@@ -24,6 +24,9 @@ import (
 const namespace = "test-namespace"
 const testAppWorkload = "my-workload-my-workload"
 
+var errUpdate = errors.New("badupdate")
+var errFetch = errors.New("bad")
+
 func TestHandle(t *testing.T) {
 
 	mockEventSender := controllercommon.NewK8sSender(record.NewFakeRecorder(100))
@@ -68,7 +71,7 @@ func TestHandle(t *testing.T) {
 		name         string
 		client       client.Client
 		pod          *corev1.Pod
-		wanterr      string
+		wanterr      error
 		wantWorkload *klcv1alpha3.KeptnWorkload
 	}{
 		{
@@ -88,30 +91,30 @@ func TestHandle(t *testing.T) {
 			pod:  &corev1.Pod{},
 			client: k8sfake.NewClientBuilder().WithInterceptorFuncs(interceptor.Funcs{
 				Get: func(ctx context.Context, client client.WithWatch, key client.ObjectKey, obj client.Object, opts ...client.GetOption) error {
-					return errors.New("bad")
+					return errFetch
 				},
 			}).Build(),
-			wanterr: "could not fetch Workload: bad",
+			wanterr: errFetch,
 		},
 		{
 			name: "Error Creating Workload",
 			pod:  pod,
 			client: k8sfake.NewClientBuilder().WithInterceptorFuncs(interceptor.Funcs{
 				Create: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.CreateOption) error {
-					return errors.New("badcreate")
+					return errCreate
 				},
 			}).Build(),
-			wanterr: "badcreate",
+			wanterr: errCreate,
 		},
 		{
 			name: "Error Updating Workload",
 			pod:  pod,
 			client: k8sfake.NewClientBuilder().WithInterceptorFuncs(interceptor.Funcs{
 				Update: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.UpdateOption) error {
-					return errors.New("badupdate")
+					return errUpdate
 				},
 			}).WithObjects(workload).Build(),
-			wanterr: "badupdate",
+			wanterr: errUpdate,
 		},
 	}
 
@@ -125,9 +128,9 @@ func TestHandle(t *testing.T) {
 			}
 			err := workloadHandler.Handle(context.TODO(), tt.pod, "test-namespace")
 
-			if tt.wanterr != "" {
+			if tt.wanterr != nil {
 				require.NotNil(t, err)
-				require.Contains(t, err.Error(), tt.wanterr)
+				require.ErrorIs(t, err, tt.wanterr)
 			} else {
 				require.Nil(t, err)
 			}

@@ -730,7 +730,6 @@ func TestFetchParent(t *testing.T) {
 
 			result := p.fetchParent(ctx, tc.name, tc.objectType)
 
-			// Verify the result
 			require.Equal(t, tc.expectedLabels, result.Labels)
 			require.Equal(t, tc.expectedAnnotations, result.Annotations)
 

@@ -28,30 +28,31 @@ type AppCreationRequestHandler struct {
 
 func (a *AppCreationRequestHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace string) error {
 
-	ctx, span := a.Tracer.Start(ctx, "create_app", trace.WithSpanKind(trace.SpanKindProducer))
+	ctx, span := a.Tracer.Start(ctx, "create_appCreationRequest", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
-	newAppCreationRequest := generateAppCreationRequest(ctx, pod, namespace)
+	newAppCreationRequest := generateResource(ctx, pod, namespace)
 	newAppCreationRequest.SetSpanAttributes(span)
 
-	a.Log.Info("Searching for AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name, "namespace:", newAppCreationRequest.Namespace)
+	a.Log.Info("Searching for AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name, "namespace", newAppCreationRequest.Namespace)
 
 	appCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newAppCreationRequest.Name}, appCreationRequest)
 	if errors.IsNotFound(err) {
-		return a.createApp(ctx, newAppCreationRequest, span)
+		return a.createResource(ctx, newAppCreationRequest, span)
 	}
 
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
-		return fmt.Errorf("could not fetch AppCreationRequest"+": %+v", err)
+
+		return fmt.Errorf("could not fetch AppCreationRequest %w", err)
 	}
-	a.Log.Info("Found AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name, "namespace:", newAppCreationRequest.Namespace)
+	a.Log.Info("Found AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name, "namespace", newAppCreationRequest.Namespace)
 	return nil
 }
 
-func (a *AppCreationRequestHandler) createApp(ctx context.Context, newAppCreationRequest *klcv1alpha3.KeptnAppCreationRequest, span trace.Span) error {
-	a.Log.Info("Creating app creation request", "appCreationRequest", newAppCreationRequest.Name, "namespace:", newAppCreationRequest.Namespace)
+func (a *AppCreationRequestHandler) createResource(ctx context.Context, newAppCreationRequest *klcv1alpha3.KeptnAppCreationRequest, span trace.Span) error {
+	a.Log.Info("Creating app creation request", "appCreationRequest", newAppCreationRequest.Name, "namespace", newAppCreationRequest.Namespace)
 
 	err := a.Client.Create(ctx, newAppCreationRequest)
 	if err != nil {
@@ -64,7 +65,7 @@ func (a *AppCreationRequestHandler) createApp(ctx context.Context, newAppCreatio
 	return nil
 }
 
-func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha3.KeptnAppCreationRequest {
+func generateResource(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha3.KeptnAppCreationRequest {
 
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key

@@ -25,6 +25,9 @@ import (
 const testApp = "my-app"
 const TestWorkload = "my-workload"
 
+var errCreate = errors.New("badcreate")
+var errAppCreate = errors.New("bad")
+
 func TestAppHandlerHandle(t *testing.T) {
 
 	mockEventSender := common.NewK8sSender(record.NewFakeRecorder(100))
@@ -63,7 +66,7 @@ func TestAppHandlerHandle(t *testing.T) {
 		name    string
 		client  client.Client
 		pod     *corev1.Pod
-		wanterr string
+		wanterr error
 		wantReq *klcv1alpha3.KeptnAppCreationRequest
 	}{
 		{
@@ -109,20 +112,20 @@ func TestAppHandlerHandle(t *testing.T) {
 			pod:  &corev1.Pod{},
 			client: k8sfake.NewClientBuilder().WithInterceptorFuncs(interceptor.Funcs{
 				Get: func(ctx context.Context, client client.WithWatch, key client.ObjectKey, obj client.Object, opts ...client.GetOption) error {
-					return errors.New("bad")
+					return errAppCreate
 				},
 			}).Build(),
-			wanterr: "could not fetch AppCreationRequest: bad",
+			wanterr: errAppCreate,
 		},
 		{
 			name: "Error Creating AppCreationRequest",
 			pod:  pod,
 			client: k8sfake.NewClientBuilder().WithInterceptorFuncs(interceptor.Funcs{
 				Create: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.CreateOption) error {
-					return errors.New("badcreate")
+					return errCreate
 				},
 			}).Build(),
-			wanterr: "badcreate",
+			wanterr: errCreate,
 		},
 	}
 
@@ -136,9 +139,9 @@ func TestAppHandlerHandle(t *testing.T) {
 			}
 			err := appHandler.Handle(context.TODO(), tt.pod, namespace)
 
-			if tt.wanterr != "" {
+			if tt.wanterr != nil {
 				require.NotNil(t, err)
-				require.Contains(t, err.Error(), tt.wanterr)
+				require.ErrorIs(t, err, tt.wanterr)
 			} else {
 				require.Nil(t, err)
 			}
@@ -173,7 +176,7 @@ func TestAppHandlerCreateAppSucceeds(t *testing.T) {
 	newAppCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{Name: name},
 	}
-	err := appHandler.createApp(ctx, newAppCreationRequest, trace.SpanFromContext(ctx))
+	err := appHandler.createResource(ctx, newAppCreationRequest, trace.SpanFromContext(ctx))
 
 	require.Nil(t, err)
 	creationReq := &klcv1alpha3.KeptnAppCreationRequest{}
@@ -200,7 +203,7 @@ func TestAppHandlerCreateAppFails(t *testing.T) {
 	newAppCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{},
 	}
-	err := appHandler.createApp(ctx, newAppCreationRequest, trace.SpanFromContext(ctx))
+	err := appHandler.createResource(ctx, newAppCreationRequest, trace.SpanFromContext(ctx))
 	require.Error(t, err)
 
 }
@@ -222,7 +225,7 @@ func TestGenerateAppCreationRequest(t *testing.T) {
 
 	// Test case 1: Pod does not have app annotation
 	t.Run("PodWithoutAppAnnotation", func(t *testing.T) {
-		kacr := generateAppCreationRequest(ctx, pod, namespace)
+		kacr := generateResource(ctx, pod, namespace)
 
 		require.Equal(t, namespace, kacr.Namespace)
 		require.Equal(t, string(apicommon.AppTypeSingleService), kacr.Annotations[apicommon.AppTypeAnnotation])
@@ -234,7 +237,7 @@ func TestGenerateAppCreationRequest(t *testing.T) {
 	t.Run("PodWithAppAnnotation", func(t *testing.T) {
 		// Add app annotation to the Pod
 		pod.ObjectMeta.Annotations[apicommon.AppAnnotation] = lowerAppName
-		kacr := generateAppCreationRequest(ctx, pod, namespace)
+		kacr := generateResource(ctx, pod, namespace)
 
 		require.Equal(t, namespace, kacr.Namespace)
 		require.Empty(t, kacr.Annotations[apicommon.AppTypeAnnotation]) // No app type annotation

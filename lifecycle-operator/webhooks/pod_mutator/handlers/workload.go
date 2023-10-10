@@ -46,7 +46,7 @@ func (a *WorkloadHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace
 
 	if err != nil {
 		span.SetStatus(codes.Error, err.Error())
-		return fmt.Errorf("could not fetch Workload"+": %+v", err)
+		return fmt.Errorf("could not fetch Workload %w", err)
 	}
 
 	return a.updateWorkload(ctx, workload, newWorkload, span)

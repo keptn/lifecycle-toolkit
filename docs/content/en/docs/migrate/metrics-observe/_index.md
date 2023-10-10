@@ -47,7 +47,7 @@ differs from that of Keptn v1 quality gates:
   for each instance of each data provider.
   This resource specifies the URL and namespace for the data provider
   and gives it a unique `name` that can be referenced
-  for Keptn Metrics, Evaluations, and Analysis.
+  for Keptn Metrics (which are also used for Evaluations) and Analysis.
 * Queries and objectives that are specified in your Keptn v1
   [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
   and

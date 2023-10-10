@@ -409,7 +409,7 @@ func TestIsAnnotated(t *testing.T) {
 			}
 			got := a.IsAnnotated(tt.args.ctx, tt.args.req, tt.args.pod)
 			if got != tt.want {
-				t.Errorf("copyAnnotationsIfParentAnnotated() got = %v, want %v", got, tt.want)
+				t.Errorf("IsAnnotated() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

@@ -846,7 +846,7 @@ _Appears in:_
 
 
 
-ResourceReference represents the parent resource of Workload
+ResourceReference refers to the associated Kubernetes Workload 
 
 _Appears in:_
 - [KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)

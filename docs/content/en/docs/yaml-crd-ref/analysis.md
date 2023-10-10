@@ -226,6 +226,24 @@ each representing the results of a specific objective or performance metric.
       (value: 0).
   * **`score`** -- Indicates the score assigned to this objective (score: 1).
 
+- The second item in the array:
+  - **`result`** -- Similar to the first objective,
+    it checks whether a value is greater than 0 and has not been fulfilled
+    (`fulfilled: false`).
+    There are no warning conditions in this case.
+  - **`objective`** -- Describes the objective related to error rate analysis.
+    - **`analysisValueTemplateRef`** -- Refers to the template
+      used for analysis (`error-rate`).
+    - **`target`** -- Sets the target value for failure
+      (failure occurs if the value is greater than 0).
+    - **`weight`** -- Specifies the weight assigned to this objective
+      (weight: 1).
+    - **`keyObjective`** -- Indicates that this is a key objective (true).
+
+  - **`value`** -- Indicates the actual value measured for this objective
+      (value: 0).
+  - **`score`** -- Indicates the score assigned to this objective (score: 1).
+
 **`totalScore`** -- Represents the total score achieved
 based on the objectives evaluated (totalScore: 2).
 
@@ -267,7 +285,7 @@ This yields an output that looks like the following:
 
 ```shell
 NAME                ANALYSISDEFINITION      WARNING   PASS
-analysis-sample-1   my-project-ad             true
+analysis-sample-1   my-project-ad                     true
 ```
 
 This shows that the analysis passed successfully.
@@ -282,8 +300,6 @@ as well as the `status` (results) of the analysis; for example:
 ```shell
 kubectl get analysis - n keptn-lifecycle-poc -oyaml
 ```
-
-## Usage
 
 ## Examples
 
@@ -308,11 +324,7 @@ API reference: [Analysis](../crd-ref/metrics/v1alpha3/#analysis)
 
 ## Differences between versions
 
-A preliminary release of the Keptn Analysis feature
-but is hidden behind a feature flag.
-To preview these features, set the environment `ENABLE_ANALYSIS` to `true`
-in the `metrics-operator` deployment.
-A preliminary release of the Keptn Analysis feature
+Keptn v.0.8.3 includes a preliminary release of the Keptn Analysis feature
 but is hidden behind a feature flag.
 To preview these features, set the environment `ENABLE_ANALYSIS` to `true`
 in the `metrics-operator` deployment.

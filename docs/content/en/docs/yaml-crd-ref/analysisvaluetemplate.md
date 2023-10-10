@@ -76,7 +76,6 @@ The `AnalysisValueTemplate` refers to that provider and queries it.
 One `Analysis` can use data from multiple instances
 of multiple types of data provider;
 you must define a
-<<<<<<< HEAD
 [KeptnMetricsProvider](metricsprovider.md)
 resource for each instance of each data provider you are using.
 The template refers to that provider and queries it.

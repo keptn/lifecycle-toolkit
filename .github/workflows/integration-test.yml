@@ -9,15 +9,15 @@ on:
       helm-install:
         description: "Decides whether to install via helm"
         type: "string"
-        default: "helm_on"
+        default: helm_on
       scheduling-gates:
         description: "Decides whether to use scheduling gates"
         type: "string"
-        default: "gates_off"
+        default: gates_off
       allowed-namespaces:
         description: "Decides whether to allow only certain namespaces"
         type: "string"
-        default: "allowed_ns_off"
+        default: allowed_ns_off
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-tags depName=kudobuilder/kuttl

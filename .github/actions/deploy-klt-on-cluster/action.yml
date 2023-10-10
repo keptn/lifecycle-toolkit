@@ -109,9 +109,14 @@ runs:
           echo "  allowedNamespaces: [allowed-ns-test]" >> tmp-values.yaml
         fi
 
+        scheduling-gates-enabled="false"
+        if [ "${{ inputs.scheduling-gates }}" == "gates_on" ]; then
+          scheduling-gates-enabled="true"
+        fi
+
         helm install -n keptn-lifecycle-toolkit-system --create-namespace keptn ./ \
           --values tmp-values.yaml \
-          --set lifecycleOperator.schedulingGatesEnabled=${{ inputs.scheduling-gates }} \
+          --set lifecycleOperator.schedulingGatesEnabled=${{ scheduling-gates_enabled }} \
           --set lifecycleOperator.scheduler.imagePullPolicy=Never \
           --set lifecycleOperator.scheduler.image.tag=${{ inputs.runtime_tag }} \
           --set lifecycleOperator.scheduler.image.repository="localhost:5000/keptn/scheduler" \

@@ -79,11 +79,11 @@ func (p *PodAnnotationHandler) fetchParent(ctx context.Context, name types.Names
 }
 
 func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) bool {
-	var workloadName, appName, version, preDeploymentChecks, postDeploymentChecks, preEvaluationChecks, postEvaluationChecks string
-	var gotWorkloadName, gotVersion bool
-	if sourceResource == nil {
+        if sourceResource == nil {
 		return false
 	}
+	var workloadName, appName, version, preDeploymentChecks, postDeploymentChecks, preEvaluationChecks, postEvaluationChecks string
+	var gotWorkloadName, gotVersion bool
 	initEmptyAnnotations(&targetPod.ObjectMeta)
 
 	workloadName, gotWorkloadName = GetLabelOrAnnotation(sourceResource, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)

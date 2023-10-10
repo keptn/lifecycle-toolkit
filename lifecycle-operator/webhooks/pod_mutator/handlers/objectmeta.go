@@ -95,8 +95,6 @@ func initEmptyAnnotations(meta *metav1.ObjectMeta) {
 }
 
 func calculateVersion(pod *corev1.Pod) string {
-	name := ""
-
 	if len(pod.Spec.Containers) == 1 {
 		image := strings.Split(pod.Spec.Containers[0].Image, ":")
 		lenImg := len(image) - 1
@@ -104,7 +102,8 @@ func calculateVersion(pod *corev1.Pod) string {
 			return image[lenImg]
 		}
 	}
-
+	
+        name := ""
 	for _, item := range pod.Spec.Containers {
 		name = name + item.Name + item.Image
 		for _, e := range item.Env {

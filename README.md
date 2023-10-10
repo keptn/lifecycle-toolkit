@@ -89,7 +89,7 @@ Keptn lifecycle orchestration is by default enabled for all namespaces except th
 - `keptn-lifecycle-toolkit-system`
 - `observability`
 - `monitoring`
-- <Keptn installation namespace>
+- `<Keptn installation namespace>`
 
 To restrict Keptn lifecycle orchestration to specific namespaces, you must specify
 those namespaces during installation via helm values.

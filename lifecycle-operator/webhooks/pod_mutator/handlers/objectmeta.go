@@ -88,9 +88,9 @@ func isAppAnnotationPresent(meta *metav1.ObjectMeta) bool {
 	return gotAppAnnotation
 }
 
-func initEmptyAnnotations(meta *metav1.ObjectMeta) {
+func initEmptyAnnotations(meta *metav1.ObjectMeta, size int) {
 	if len(meta.Annotations) == 0 {
-		meta.Annotations = make(map[string]string)
+		meta.Annotations = make(map[string]string, size)
 	}
 }
 
@@ -102,8 +102,8 @@ func calculateVersion(pod *corev1.Pod) string {
 			return image[lenImg]
 		}
 	}
-	
-        name := ""
+
+	name := ""
 	for _, item := range pod.Spec.Containers {
 		name = name + item.Name + item.Image
 		for _, e := range item.Env {

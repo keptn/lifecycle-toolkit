@@ -400,3 +400,35 @@ func TestSetMapKey(t *testing.T) {
 		})
 	}
 }
+
+func TestGetValuesForAnnotations(t *testing.T) {
+	// Test case 1: No annotations present
+	objMeta := &metav1.ObjectMeta{}
+	annotationKey := "example"
+	result := getValuesForAnnotations(objMeta, annotationKey)
+	// Verify that the result is nil since no annotations are present
+	require.Nil(t, result)
+
+	// Test case 2: Annotations present with a valid annotation key
+	annotations := "value1,value2,value3"
+	objMeta = &metav1.ObjectMeta{
+		Annotations: map[string]string{
+			annotationKey: annotations,
+		},
+	}
+
+	result = getValuesForAnnotations(objMeta, annotationKey)
+	expected := []string{"value1", "value2", "value3"}
+	require.Equal(t, expected, result)
+
+	// Test case 3: Annotations present with a different annotation key
+	otherAnnotationKey := "other"
+	objMeta = &metav1.ObjectMeta{
+		Annotations: map[string]string{
+			otherAnnotationKey: "value1,value2,value3",
+		},
+	}
+
+	result = getValuesForAnnotations(objMeta, annotationKey)
+	require.Nil(t, result)
+}

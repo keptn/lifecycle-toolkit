@@ -79,7 +79,7 @@ func generateAppCreationRequest(ctx context.Context, pod *corev1.Pod, namespace 
 	}
 
 	if !isAppAnnotationPresent(&pod.ObjectMeta) {
-		initEmptyAnnotations(&pod.ObjectMeta)
+		initEmptyAnnotations(&pod.ObjectMeta, 2)
 		// at this point if the pod does not have an app annotation it means we create the app
 		// and it will have a single workload
 		pod.ObjectMeta.Annotations[apicommon.AppAnnotation] = pod.ObjectMeta.Annotations[apicommon.WorkloadAnnotation]

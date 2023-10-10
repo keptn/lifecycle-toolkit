@@ -70,6 +70,7 @@ func (p *PodAnnotationHandler) copyAnnotationsIfParentAnnotated(ctx context.Cont
 
 func (p *PodAnnotationHandler) fetchParent(ctx context.Context, name types.NamespacedName, objectContainer client.Object) *metav1.ObjectMeta {
 	if err := p.Client.Get(ctx, name, objectContainer); err != nil {
+		p.Log.Info("Could not find pod parent")
 		return nil
 	}
 	return &metav1.ObjectMeta{
@@ -79,12 +80,12 @@ func (p *PodAnnotationHandler) fetchParent(ctx context.Context, name types.Names
 }
 
 func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) bool {
-        if sourceResource == nil {
+	if sourceResource == nil {
 		return false
 	}
 	var workloadName, appName, version, preDeploymentChecks, postDeploymentChecks, preEvaluationChecks, postEvaluationChecks string
 	var gotWorkloadName, gotVersion bool
-	initEmptyAnnotations(&targetPod.ObjectMeta)
+	initEmptyAnnotations(&targetPod.ObjectMeta, 7)
 
 	workloadName, gotWorkloadName = GetLabelOrAnnotation(sourceResource, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	appName, _ = GetLabelOrAnnotation(sourceResource, apicommon.AppAnnotation, apicommon.K8sRecommendedAppAnnotations)
@@ -120,7 +121,7 @@ func isPodAnnotated(pod *corev1.Pod) bool {
 
 	if gotWorkloadAnnotation {
 		if !gotVersionAnnotation {
-			initEmptyAnnotations(&pod.ObjectMeta)
+			initEmptyAnnotations(&pod.ObjectMeta, 1)
 			pod.Annotations[apicommon.VersionAnnotation] = calculateVersion(pod)
 		}
 		return true

@@ -116,7 +116,7 @@ runs:
 
         helm install -n keptn-lifecycle-toolkit-system --create-namespace keptn ./ \
           --values tmp-values.yaml \
-          --set lifecycleOperator.schedulingGatesEnabled=${{ scheduling-gates_enabled }} \
+          --set lifecycleOperator.schedulingGatesEnabled=$scheduling-gates_enabled \
           --set lifecycleOperator.scheduler.imagePullPolicy=Never \
           --set lifecycleOperator.scheduler.image.tag=${{ inputs.runtime_tag }} \
           --set lifecycleOperator.scheduler.image.repository="localhost:5000/keptn/scheduler" \

@@ -2,8 +2,8 @@ package keptntask
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"errors"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
@@ -94,7 +94,7 @@ func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namesp
 func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, request ctrl.Request) (*batchv1.Job, error) {
 	serviceAccountName, errsa := getServiceAccount(definition.Spec.ServiceAccount)
 	if errsa != nil {
-		return nil, fmt.Errorf("error: %w", errsa)
+		fmt.Printf("error: %w", errsa)
 	}
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{

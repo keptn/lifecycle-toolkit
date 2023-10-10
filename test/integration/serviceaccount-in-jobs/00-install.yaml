@@ -10,7 +10,7 @@ metadata:
   name: task-serviceaccount
 spec:
   serviceAccount:
-    name : klt-serviceaccount
+    name: klt-serviceaccount
   retries: 0
   timeout: 30s
   container:

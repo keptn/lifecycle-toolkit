@@ -51,7 +51,7 @@ differs from that of Keptn v1 quality gates:
 * Queries and objectives that are specified in your Keptn v1
   [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
   and
-  [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+  [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
   files are transferred/converted into Keptn resources.
 
 ## Transfer Keptn v1 SLIs/SLOs to evaluation resources

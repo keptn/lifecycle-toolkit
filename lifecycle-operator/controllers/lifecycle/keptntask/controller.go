@@ -112,14 +112,14 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
-	r.Log.Info("Finished Reconciling KeptnTask", controllerInfo)
+	r.Log.Info("Finished Reconciling KeptnTask", "controllerInfo", controllerInfo)
 
 	// Task is completed at this place
 	task.SetEndTime()
 
 	attrs := task.GetMetricsAttributes()
 
-	r.Log.Info("Increasing task count", controllerInfo)
+	r.Log.Info("Increasing task count", "controllerInfo", controllerInfo)
 
 	// metrics: increment task counter
 	r.Meters.TaskCount.Add(ctx, 1, metric.WithAttributes(attrs...))

@@ -89,7 +89,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 	workload.SetSpanAttributes(span)
 
-	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name, controllerInfo)
+	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name, "controllerInfo", controllerInfo)
 
 	workloadInstance := &klcv1alpha3.KeptnWorkloadInstance{}
 

@@ -116,7 +116,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return ctrl.Result{Requeue: true, RequeueAfter: evaluation.Spec.RetryInterval.Duration}, nil
 	}
 
-	r.Log.Info("Finished Reconciling KeptnEvaluation", controllerInfo)
+	r.Log.Info("Finished Reconciling KeptnEvaluation", "controllerInfo", controllerInfo)
 
 	err := r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
 

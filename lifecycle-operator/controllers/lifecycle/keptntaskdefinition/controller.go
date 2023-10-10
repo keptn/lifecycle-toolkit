@@ -87,11 +87,11 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 			r.Log.Error(err, "could not update configmap status reference for: "+definition.Name)
 			return ctrl.Result{}, nil
 		}
-		r.Log.Info("updated configmap status reference for: "+definition.Name, controllerInfo)
+		r.Log.Info("updated configmap status reference for: "+definition.Name, "controllerInfo", controllerInfo)
 
 	}
 
-	r.Log.Info("Finished Reconciling KeptnTaskDefinition", controllerInfo)
+	r.Log.Info("Finished Reconciling KeptnTaskDefinition", "controllerInfo", controllerInfo)
 	return ctrl.Result{}, nil
 }
 

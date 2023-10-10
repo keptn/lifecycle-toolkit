@@ -72,11 +72,10 @@ func (p *PodAnnotationHandler) fetchParent(ctx context.Context, name types.Names
 	if err := p.Client.Get(ctx, name, objectContainer); err != nil {
 		return nil
 	}
-	objectContainerMetaData := metav1.ObjectMeta{
+	return &metav1.ObjectMeta{
 		Labels:      objectContainer.GetLabels(),
 		Annotations: objectContainer.GetAnnotations(),
 	}
-	return &objectContainerMetaData
 }
 
 func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *corev1.Pod) bool {

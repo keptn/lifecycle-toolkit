@@ -75,7 +75,7 @@ type KeptnWorkloadInstanceReconciler struct {
 //nolint:gocyclo,gocognit
 func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	controllerInfo := controllercommon.GetControllerInfo(req)
-	r.Log.Info("Searching for KeptnWorkloadInstance", "controllerInfo", controllerInfo)
+	r.Log.Info("Searching for KeptnWorkloadInstance", controllerInfo)
 
 	// retrieve workload instance
 	workloadInstance := &klcv1alpha3.KeptnWorkloadInstance{}

@@ -46,14 +46,14 @@ type KeptnTaskDefinitionReconciler struct {
 
 func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	controllerInfo := controllercommon.GetControllerInfo(req)
-	r.Log.Info("Reconciling KeptnTaskDefinition", "controllerInfo", controllerInfo)
+	r.Log.Info("Reconciling KeptnTaskDefinition", controllerInfo)
 
 	definition := &klcv1alpha3.KeptnTaskDefinition{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, definition); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
-			r.Log.Info("KeptnTaskDefinition resource not found. Ignoring since object must be deleted", "controllerInfo", controllerInfo)
+			r.Log.Info("KeptnTaskDefinition resource not found. Ignoring since object must be deleted", controllerInfo)
 			return ctrl.Result{}, nil
 		}
 		r.Log.Error(err, "Failed to get the KeptnTaskDefinition")
@@ -87,11 +87,11 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 			r.Log.Error(err, "could not update configmap status reference for: "+definition.Name)
 			return ctrl.Result{}, nil
 		}
-		r.Log.Info("updated configmap status reference for: "+definition.Name, "controllerInfo", controllerInfo)
+		r.Log.Info("updated configmap status reference for: "+definition.Name, controllerInfo)
 
 	}
 
-	r.Log.Info("Finished Reconciling KeptnTaskDefinition", "controllerInfo", controllerInfo)
+	r.Log.Info("Finished Reconciling KeptnTaskDefinition", controllerInfo)
 	return ctrl.Result{}, nil
 }
 

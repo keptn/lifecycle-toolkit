@@ -93,9 +93,9 @@ func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namesp
 
 func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, request ctrl.Request) (*batchv1.Job, error) {
 	errsa := getServiceAccount(definition.Spec.ServiceAccount)
-        if errsa != nil {
-                r.Log.Info("Info: ", errsa)
-        }
+	if errsa != nil {
+		r.Log.Info("Info: ", errsa)
+	}
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        apicommon.GenerateJobName(task.Name),
@@ -161,8 +161,8 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 }
 
 func getServiceAccount(serviceAccount *klcv1alpha3.ServiceAccountSpec) error {
-        if serviceAccount == nil {
-                return errors.New("no serviceAccount is configured")
-        }
-        return nil
+	if serviceAccount == nil {
+		return errors.New("no serviceAccount is configured")
+	}
+	return nil
 }

@@ -14,8 +14,8 @@ OPERATOR_API_ROOT='lifecycle-operator/apis/'
 METRICS_API_ROOT='metrics-operator/api/'
 TEMPLATE_DIR='.github/scripts/generate-crd-docs/templates'
 RENDERER='markdown'
-RENDERER_CONFIG_FILE='.github/scripts/generate-crd-docs/crd-docs-generator-config.yaml'
-V1ALPHA4_RENDERER_CONFIG_FILE='.github/scripts/generate-crd-docs/crd-docs-generator-config-v1alpha4.yaml'
+RENDERER_CONFIG_FILE_TEMPLATE_PATH='.github/scripts/generate-crd-docs/crd-docs-generator-config'
+RENDERER_CONFIG_FILE=$RENDERER_CONFIG_FILE_TEMPLATE_PATH'.yaml'
 PATH=$PATH:$(go env GOPATH)/bin
 
 echo "Checking if code generator tool is installed..."
@@ -46,9 +46,9 @@ for api_group in "$OPERATOR_API_ROOT"*; do
 
     OUTPUT_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/$sanitized_api_version"
 
-    renderer_config_file=$RENDERER_CONFIG_FILE
-    if [ "$sanitized_api_version" == "v1alpha4" ]; then
-      renderer_config_file=$V1ALPHA4_RENDERER_CONFIG_FILE
+    renderer_config_file="$RENDERER_CONFIG_FILE_TEMPLATE_PATH-$sanitized_api_group-$sanitized_api_version.yaml"
+    if [ ! -f "$renderer_config_file" ]; then
+      renderer_config_file=$RENDERER_CONFIG_FILE
     fi
 
     echo "Arguments:"

@@ -6953,9 +6953,6 @@ webhooks:
     - key: kubernetes.io/metadata.name
       operator: NotIn
       values:
-      - kube-system
-      - kube-public
-      - kube-node-lease
       - cert-manager
       - keptn-lifecycle-toolkit-system
       - observability
@@ -6964,6 +6961,9 @@ webhooks:
       operator: NotIn
       values:
       - 'helmtests'
+      - kube-system
+      - kube-public
+      - kube-node-lease
   rules:
   - apiGroups:
     - ""

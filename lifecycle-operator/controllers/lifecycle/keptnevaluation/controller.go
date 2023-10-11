@@ -71,7 +71,7 @@ type KeptnEvaluationReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	controllerInfo := controllercommon.GetControllerInfo(req)
-	r.Log.Info("Reconciling KeptnEvaluation", controllerInfo)
+	r.Log.Info("Reconciling KeptnEvaluation", "controllerInfo", controllerInfo)
 	evaluation := &klcv1alpha3.KeptnEvaluation{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, evaluation); err != nil {

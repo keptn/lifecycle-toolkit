@@ -77,7 +77,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	if err := r.Client.Get(ctx, req.NamespacedName, evaluation); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
-			r.Log.Info("KeptnEvaluation resource not found. Ignoring since object must be deleted", controllerInfo)
+			r.Log.Info("KeptnEvaluation resource not found. Ignoring since object must be deleted", "controllerInfo", controllerInfo)
 			return ctrl.Result{}, nil
 		}
 		r.Log.Error(err, "Failed to get the KeptnEvaluation")
@@ -96,7 +96,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		evaluationDefinition, err := controllercommon.GetEvaluationDefinition(r.Client, r.Log, ctx, evaluation.Spec.EvaluationDefinition, req.NamespacedName.Namespace)
 		if err != nil {
 			if errors.IsNotFound(err) {
-				r.Log.Info(err.Error()+", ignoring error since object must be deleted", controllerInfo)
+				r.Log.Info(err.Error()+", ignoring error since object must be deleted", "controllerInfo", controllerInfo)
 				span.SetStatus(codes.Error, err.Error())
 				return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 			}

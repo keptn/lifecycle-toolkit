@@ -59,13 +59,13 @@ type KeptnTaskReconciler struct {
 
 func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	controllerInfo := controllercommon.GetControllerInfo(req)
-	r.Log.Info("Reconciling KeptnTask", controllerInfo)
+	r.Log.Info("Reconciling KeptnTask", "controllerInfo", controllerInfo)
 	task := &klcv1alpha3.KeptnTask{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, task); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
-			r.Log.Info("KeptnTask resource not found. Ignoring since object must be deleted", controllerInfo)
+			r.Log.Info("KeptnTask resource not found. Ignoring since object must be deleted", "controllerInfo", controllerInfo)
 			return ctrl.Result{}, nil
 		}
 		r.Log.Error(err, "Failed to get the KeptnTask")

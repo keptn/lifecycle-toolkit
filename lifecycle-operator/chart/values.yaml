@@ -1,6 +1,7 @@
 imagePullSecrets: []
 kubernetesClusterDomain: cluster.local
 schedulingGatesEnabled: false
+allowedNamespaces: []
 lifecycleOperatorConfig:
   health:
     healthProbeBindAddress: :8081

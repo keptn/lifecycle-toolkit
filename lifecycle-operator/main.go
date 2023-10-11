@@ -33,6 +33,7 @@ import (
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha2"
 	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	lifecyclev1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
@@ -77,6 +78,7 @@ func init() {
 	utilruntime.Must(optionsv1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha3.AddToScheme(scheme))
 	utilruntime.Must(argov1alpha1.AddToScheme(scheme))
+	utilruntime.Must(lifecyclev1alpha4.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 
@@ -381,14 +383,13 @@ func main() {
 		webhookRecorder := mgr.GetEventRecorderFor("keptn/webhook")
 		webhookBuilder.Register(mgr, map[string]*ctrlWebhook.Admission{
 			"/mutate-v1-pod": {
-				Handler: &pod_mutator.PodMutatingWebhook{
-					SchedulingGatesEnabled: env.SchedulingGatesEnabled,
-					Client:                 mgr.GetClient(),
-					Tracer:                 otel.Tracer("keptn/webhook"),
-					EventSender:            controllercommon.NewEventMultiplexer(webhookLogger, webhookRecorder, ceClient),
-					Decoder:                admission.NewDecoder(mgr.GetScheme()),
-					Log:                    webhookLogger,
-				},
+				Handler: pod_mutator.NewPodMutator(
+					mgr.GetClient(),
+					otel.Tracer("keptn/webhook"),
+					admission.NewDecoder(mgr.GetScheme()),
+					controllercommon.NewEventMultiplexer(webhookLogger, webhookRecorder, ceClient),
+					webhookLogger,
+					env.SchedulingGatesEnabled),
 			},
 		})
 		setupLog.Info("starting webhook")

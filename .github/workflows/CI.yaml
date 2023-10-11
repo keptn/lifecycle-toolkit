@@ -202,16 +202,24 @@ jobs:
       - build_image
     strategy:
       matrix:
-        helm: [true, false]
-        scheduling-gates: [true, false]
-        # do not run the tests with manifests installation and scheduling gates
+        helm: [helm_on, helm_off]
+        scheduling-gates: [gates_on, gates_off]
+        allowed-namespaces: [allowed_ns_on, allowed_ns_off]
         exclude:
-          - helm: false
-            scheduling-gates: true
+          - helm: helm_off
+            scheduling-gates: gates_on
+            allowed-namespaces: allowed_ns_on
+          - helm: helm_off
+            scheduling-gates: gates_off
+            allowed-namespaces: allowed_ns_on
+          - helm: helm_off
+            scheduling-gates: gates_on
+            allowed-namespaces: allowed_ns_off
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       helm-install: ${{ matrix.helm }}
       scheduling-gates: ${{ matrix.scheduling-gates }}
+      allowed-namespaces: ${{ matrix.allowed-namespaces }}
     uses: ./.github/workflows/integration-test.yml
 
   load-tests:

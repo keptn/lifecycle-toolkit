@@ -64,6 +64,7 @@ and application health checks
 | `kubernetesClusterDomain` | overrides domain.local                                                                                                                          | `cluster.local` |
 | `imagePullSecrets`        | global value for image registry secret                                                                                                          | `[]`            |
 | `schedulingGatesEnabled`  | enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version | `false`         |
+| `allowedNamespaces`       | specifies the allowed namespaces for the lifecycle orchestration functionality                                                                  | `[]`            |
 
 ### Keptn Scheduler
 

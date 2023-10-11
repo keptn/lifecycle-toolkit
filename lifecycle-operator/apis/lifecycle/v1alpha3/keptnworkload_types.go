@@ -92,6 +92,7 @@ type KeptnWorkloadList struct {
 	Items           []KeptnWorkload `json:"items"`
 }
 
+// ResourceReference represents the parent resource of Workload
 type ResourceReference struct {
 	UID  types.UID `json:"uid"`
 	Kind string    `json:"kind"`

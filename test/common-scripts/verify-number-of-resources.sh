@@ -4,9 +4,10 @@
  SLEEP_TIME=5
  RESOURCE_TYPE=$1
  EXPECTED_NUMBER=$2
+ NS=$3
 
  for i in $(seq 1 $RETRY_COUNT); do
-     NR_RESOURCES=$(kubectl get ${RESOURCE_TYPE} -n ${NAMESPACE} --no-headers | wc -l)
+     NR_RESOURCES=$(kubectl get ${RESOURCE_TYPE} -n ${NS} --no-headers | wc -l)
 
      if [[ ${NR_RESOURCES} -eq ${EXPECTED_NUMBER} ]]; then
        echo "Found expected number of ${RESOURCE_TYPE}: ${EXPECTED_NUMBER}"

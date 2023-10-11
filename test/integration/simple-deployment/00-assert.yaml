@@ -1,3 +1,16 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+timeout: 30
+collectors:
+  - type: pod
+    selector: app=test
+  - type: command
+    command: kubectl logs -l app=test -n $NAMESPACE
+  - type: command
+    command: kubectl describe deployment test -n $NAMESPACE
+  - type: command
+    command: kubectl get crd -n $NAMESPACE
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

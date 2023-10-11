@@ -1,3 +1,16 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+timeout: 30
+collectors:
+  - type: pod
+    selector: app=test
+  - type: command
+    command: kubectl logs -l app=test -n $NAMESPACE
+  - type: pod
+    selector: control-plane=lifecycle-operator
+  - type: command
+    command: kubectl logs -l control-plane=lifecycle-operator -n $NAMESPACE
+---
 apiVersion: v1
 kind: Pod
 metadata:

@@ -1,0 +1,24 @@
+apiVersion: lifecycle.keptn.sh/v1alpha4
+kind: KeptnWorkloadVersion
+metadata:
+  annotations:
+    traceparent: my-trace-parent
+  name: some-keptn-workload-version-1
+spec:
+  app: podtato-head
+  resourceReference:
+    kind: ReplicaSet
+    name: my-replica-set
+    uid: 957f825e-4025-4ea8-ad22-9292877ff7eb
+  traceId:
+    traceparent: my-trace-parent
+  version: 0.2.7
+  preDeploymentTasks:
+    - pre-deployment-task
+  preDeploymentEvaluations:
+    - pre-deployment-evaluation
+  postDeploymentTasks:
+    - post-deployment-task
+  postDeploymentEvaluations:
+    - post-deployment-evaluation
+  workloadName: some-keptn-workload-version-1

@@ -3,955 +3,43 @@ package pod_mutator
 import (
 	"context"
 	"encoding/json"
-	"reflect"
+	"errors"
+	"net/http"
 	"testing"
 
-	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator/handlers"
+	fakehandler "github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator/handlers/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
 	admissionv1 "k8s.io/api/admission/v1"
-	appsv1 "k8s.io/api/apps/v1"
+	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
+	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-func TestPodMutatingWebhook_getOwnerReference(t *testing.T) {
-	type fields struct {
-		Client      client.Client
-		Tracer      trace.Tracer
-		Decoder     *admission.Decoder
-		EventSender controllercommon.IEvent
-		Log         logr.Logger
-	}
-	type args struct {
-		resource metav1.ObjectMeta
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   metav1.OwnerReference
-	}{
-		{
-			name: "Test simple return when UID and Kind is set",
-			args: args{
-				resource: metav1.ObjectMeta{
-					UID: "the-pod-uid",
-					OwnerReferences: []metav1.OwnerReference{
-						{
-							Kind: "ReplicaSet",
-							UID:  "the-replicaset-uid",
-							Name: "some-name",
-						},
-					},
-				},
-			},
-			want: metav1.OwnerReference{
-				UID:  "the-replicaset-uid",
-				Kind: "ReplicaSet",
-				Name: "some-name",
-			},
-		},
-		{
-			name: "Test return is input argument if owner is not found",
-			args: args{
-				resource: metav1.ObjectMeta{
-					UID: "the-pod-uid",
-					OwnerReferences: []metav1.OwnerReference{
-						{
-							Kind: "SomeNonExistentType",
-							UID:  "the-replicaset-uid",
-						},
-					},
-				},
-			},
-			want: metav1.OwnerReference{
-				UID:  "",
-				Kind: "",
-				Name: "",
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			a := &PodMutatingWebhook{
-				Client:      tt.fields.Client,
-				Tracer:      tt.fields.Tracer,
-				Decoder:     tt.fields.Decoder,
-				EventSender: tt.fields.EventSender,
-				Log:         tt.fields.Log,
-			}
-			if got := a.getOwnerReference(tt.args.resource); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("getOwnerReference() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+const testWorkload = "my-workload"
+const testPod = "example-pod"
+const testNamespace = "default"
+const testKeptnWorkload = "my-workload-my-workload"
+const testDeployment = "my-deployment"
 
-func TestPodMutatingWebhook_getAppName(t *testing.T) {
-	type fields struct {
-		Client      client.Client
-		Tracer      trace.Tracer
-		Decoder     *admission.Decoder
-		EventSender controllercommon.IEvent
-		Log         logr.Logger
-	}
-	type args struct {
-		pod *corev1.Pod
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   string
-	}{
-		{
-			name: "Return keptn app name in lower case when annotation is set",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						Annotations: map[string]string{
-							apicommon.AppAnnotation: "SOME-APP-NAME",
-						},
-					},
-				},
-			},
-			want: "some-app-name",
-		},
-		{
-			name: "Return keptn app name in lower case when label is set",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						Labels: map[string]string{
-							apicommon.AppAnnotation: "SOME-APP-NAME",
-						},
-					},
-				},
-			},
-			want: "some-app-name",
-		},
-		{
-			name: "Return keptn app name from annotation in lower case when annotation and label is set",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						Annotations: map[string]string{
-							apicommon.AppAnnotation: "SOME-APP-NAME-ANNOTATION",
-						},
-						Labels: map[string]string{
-							apicommon.AppAnnotation: "SOME-APP-NAME-LABEL",
-						},
-					},
-				},
-			},
-			want: "some-app-name-annotation",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			a := &PodMutatingWebhook{
-				Client:      tt.fields.Client,
-				Tracer:      tt.fields.Tracer,
-				Decoder:     tt.fields.Decoder,
-				EventSender: tt.fields.EventSender,
-				Log:         tt.fields.Log,
-			}
-			if got := a.getAppName(tt.args.pod); got != tt.want {
-				t.Errorf("getAppName() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestPodMutatingWebhook_getWorkloadName(t *testing.T) {
-	type fields struct {
-		Client      client.Client
-		Tracer      trace.Tracer
-		Decoder     *admission.Decoder
-		EventSender controllercommon.IEvent
-		Log         logr.Logger
-	}
-	type args struct {
-		pod *corev1.Pod
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   string
-	}{
-		{
-			name: "Return concatenated app name and workload name in lower case when annotations are set",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						Annotations: map[string]string{
-							apicommon.AppAnnotation:      "SOME-APP-NAME",
-							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
-						},
-					},
-				},
-			},
-			want: "some-app-name-some-workload-name",
-		},
-		{
-			name: "Return concatenated app name and workload name in lower case when labels are set",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						Labels: map[string]string{
-							apicommon.AppAnnotation:      "SOME-APP-NAME",
-							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME",
-						},
-					},
-				},
-			},
-			want: "some-app-name-some-workload-name",
-		},
-		{
-			name: "Return concatenated keptn app name and workload name from annotation in lower case when annotations and labels are set",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						Annotations: map[string]string{
-							apicommon.AppAnnotation:      "SOME-APP-NAME-ANNOTATION",
-							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME-ANNOTATION",
-						},
-						Labels: map[string]string{
-							apicommon.AppAnnotation:      "SOME-APP-NAME-LABEL",
-							apicommon.WorkloadAnnotation: "SOME-WORKLOAD-NAME-LABEL",
-						},
-					},
-				},
-			},
-			want: "some-app-name-annotation-some-workload-name-annotation",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			a := &PodMutatingWebhook{
-				Client:      tt.fields.Client,
-				Tracer:      tt.fields.Tracer,
-				Decoder:     tt.fields.Decoder,
-				EventSender: tt.fields.EventSender,
-				Log:         tt.fields.Log,
-			}
-			if got := a.getWorkloadName(tt.args.pod); got != tt.want {
-				t.Errorf("getWorkloadName() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_getLabelOrAnnotation(t *testing.T) {
-	type args struct {
-		resource            *metav1.ObjectMeta
-		primaryAnnotation   string
-		secondaryAnnotation string
-	}
-	tests := []struct {
-		name  string
-		args  args
-		want  string
-		want1 bool
-	}{
-		{
-			name: "Test if primary annotation is returned from annotations",
-			args: args{
-				resource: &metav1.ObjectMeta{
-					Annotations: map[string]string{
-						apicommon.AppAnnotation: "some-app-name",
-					},
-				},
-				primaryAnnotation:   apicommon.AppAnnotation,
-				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
-			},
-			want:  "some-app-name",
-			want1: true,
-		},
-		{
-			name: "Test if secondary annotation is returned from annotations",
-			args: args{
-				resource: &metav1.ObjectMeta{
-					Annotations: map[string]string{
-						apicommon.K8sRecommendedAppAnnotations: "some-app-name",
-					},
-				},
-				primaryAnnotation:   apicommon.AppAnnotation,
-				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
-			},
-			want:  "some-app-name",
-			want1: true,
-		},
-		{
-			name: "Test if primary annotation is returned from labels",
-			args: args{
-				resource: &metav1.ObjectMeta{
-					Labels: map[string]string{
-						apicommon.AppAnnotation: "some-app-name",
-					},
-				},
-				primaryAnnotation:   apicommon.AppAnnotation,
-				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
-			},
-			want:  "some-app-name",
-			want1: true,
-		},
-		{
-			name: "Test if secondary annotation is returned from labels",
-			args: args{
-				resource: &metav1.ObjectMeta{
-					Labels: map[string]string{
-						apicommon.K8sRecommendedAppAnnotations: "some-app-name",
-					},
-				},
-				primaryAnnotation:   apicommon.AppAnnotation,
-				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
-			},
-			want:  "some-app-name",
-			want1: true,
-		},
-		{
-			name: "Test that empty string is returned when no annotations or labels are found",
-			args: args{
-				resource: &metav1.ObjectMeta{
-					Annotations: map[string]string{
-						"some-other-annotation": "some-app-name",
-					},
-				},
-				primaryAnnotation:   apicommon.AppAnnotation,
-				secondaryAnnotation: apicommon.K8sRecommendedAppAnnotations,
-			},
-			want:  "",
-			want1: false,
-		},
-		{
-			name: "Test that empty string is returned when primary annotation cannot be found and secondary annotation is empty",
-			args: args{
-				resource: &metav1.ObjectMeta{
-					Annotations: map[string]string{
-						"some-other-annotation": "some-app-name",
-					},
-				},
-				primaryAnnotation:   apicommon.AppAnnotation,
-				secondaryAnnotation: "",
-			},
-			want:  "",
-			want1: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := getLabelOrAnnotation(tt.args.resource, tt.args.primaryAnnotation, tt.args.secondaryAnnotation)
-			if got != tt.want {
-				t.Errorf("getLabelOrAnnotation() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("getLabelOrAnnotation() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
-}
-
-func TestPodMutatingWebhook_isPodAnnotated(t *testing.T) {
-	type fields struct {
-		Client      client.Client
-		Tracer      trace.Tracer
-		Decoder     *admission.Decoder
-		EventSender controllercommon.IEvent
-		Log         logr.Logger
-	}
-	type args struct {
-		pod *corev1.Pod
-	}
-	tests := []struct {
-		name      string
-		fields    fields
-		args      args
-		want      bool
-		wantedPod *corev1.Pod
-	}{
-		{
-			name: "Test return true when pod has workload annotation",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						Annotations: map[string]string{
-							apicommon.WorkloadAnnotation: "some-workload-name",
-						},
-					},
-				},
-			},
-			want: true,
-		},
-		{
-			name: "Test return true and initialize annotations when labels are set",
-			args: args{
-				pod: &corev1.Pod{
-					Spec: corev1.PodSpec{
-						Containers: []corev1.Container{
-							{
-								Image: "some-image:v1",
-							},
-						},
-					},
-					ObjectMeta: metav1.ObjectMeta{
-						Labels: map[string]string{
-							apicommon.WorkloadAnnotation: "some-workload-name",
-						},
-					},
-				},
-			},
-			want: true,
-			wantedPod: &corev1.Pod{
-				Spec: corev1.PodSpec{
-					Containers: []corev1.Container{
-						{
-							Image: "some-image:v1",
-						},
-					},
-				},
-				ObjectMeta: metav1.ObjectMeta{
-					Labels: map[string]string{
-						apicommon.WorkloadAnnotation: "some-workload-name",
-					},
-					Annotations: map[string]string{
-						apicommon.VersionAnnotation: "v1",
-					},
-				},
-			},
-		},
-		{
-			name: "Test return false when annotations and labels are not set",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						Labels: map[string]string{
-							"some-other-label": "some-value",
-						},
-					},
-				},
-			},
-			want: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			a := &PodMutatingWebhook{
-				Client:      tt.fields.Client,
-				Tracer:      tt.fields.Tracer,
-				Decoder:     tt.fields.Decoder,
-				EventSender: tt.fields.EventSender,
-				Log:         tt.fields.Log,
-			}
-			got := a.isPodAnnotated(tt.args.pod)
-			if got != tt.want {
-				t.Errorf("isPodAnnotated() got = %v, want %v", got, tt.want)
-			}
-			if tt.wantedPod != nil {
-				require.Equal(t, tt.wantedPod, tt.args.pod)
-			}
-		})
-	}
-}
-
-func TestPodMutatingWebhook_copyAnnotationsIfParentAnnotated(t *testing.T) {
-	testNamespace := "test-namespace"
-	rsUidWithDpOwner := types.UID("this-is-the-replicaset-with-dp-owner")
-	rsUidWithNoOwner := types.UID("this-is-the-replicaset-with-no-owner")
-	testStsUid := types.UID("this-is-the-stateful-set-uid")
-	tstStsName := "test-stateful-set"
-	testDsUid := types.UID("this-is-the-daemon-set-uid")
-	testDsName := "test-daemon-set"
-
-	rsWithDpOwner := &appsv1.ReplicaSet{
-		TypeMeta: metav1.TypeMeta{
-			Kind: "ReplicaSet",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-replicaset1",
-			UID:       rsUidWithDpOwner,
-			Namespace: testNamespace,
-			OwnerReferences: []metav1.OwnerReference{
-				{
-					Kind: "Deployment",
-					Name: "this-is-the-deployment",
-					UID:  "this-is-the-deployment-uid",
-				},
-			},
-		},
-	}
-	// TODO: fix tests where an RS has a STS or DS as owner. they should not have a RS in between
-	rsWithNoOwner := &appsv1.ReplicaSet{
-		TypeMeta: metav1.TypeMeta{
-			Kind: "ReplicaSet",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-replicaset4",
-			UID:       rsUidWithNoOwner,
-			Namespace: testNamespace,
-		},
-	}
-	testDp := &appsv1.Deployment{
-		TypeMeta: metav1.TypeMeta{
-			Kind: "Deployment",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-deployment",
-			UID:       "this-is-the-deployment-uid",
-			Namespace: testNamespace,
-		},
-	}
-	testSts := &appsv1.StatefulSet{
-		TypeMeta: metav1.TypeMeta{
-			Kind: "StatefulSet",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      tstStsName,
-			UID:       testStsUid,
-			Namespace: testNamespace,
-		},
-	}
-	testDs := &appsv1.DaemonSet{
-		TypeMeta: metav1.TypeMeta{
-			Kind: "DaemonSet",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      testDsName,
-			UID:       testDsUid,
-			Namespace: testNamespace,
-		},
-	}
-
-	fakeClient := fakeclient.NewClient(rsWithDpOwner, rsWithNoOwner, testDp, testSts, testDs)
-
-	type fields struct {
-		Client      client.Client
-		Tracer      trace.Tracer
-		Decoder     *admission.Decoder
-		EventSender controllercommon.IEvent
-		Log         logr.Logger
-	}
-	type args struct {
-		ctx context.Context
-		req *admission.Request
-		pod *corev1.Pod
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   bool
-	}{
-		{
-			name: "Test that nothing happens if owner UID is pod UID",
-			fields: fields{
-				Log:    testr.New(t),
-				Client: fakeClient,
-			},
-			args: args{
-				ctx: context.TODO(),
-				req: &admission.Request{
-					AdmissionRequest: admissionv1.AdmissionRequest{
-						Namespace: testNamespace,
-					},
-				},
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						UID: "some-uid",
-					},
-				},
-			},
-			want: false,
-		},
-		{
-			name: "Test fetching of replicaset owner of pod and deployment owner of replicaset",
-			fields: fields{
-				Log:    testr.New(t),
-				Client: fakeClient,
-			},
-			args: args{
-				ctx: context.TODO(),
-				req: &admission.Request{
-					AdmissionRequest: admissionv1.AdmissionRequest{
-						Namespace: testNamespace,
-					},
-				},
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						UID: "this-is-the-pod-uid",
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								Name: rsWithDpOwner.Name,
-								UID:  rsUidWithDpOwner,
-								Kind: "ReplicaSet",
-							},
-						},
-					},
-				},
-			},
-			want: false,
-		},
-		{
-			name: "Test fetching of statefulset owner of pod",
-			fields: fields{
-				Log:    testr.New(t),
-				Client: fakeClient,
-			},
-			args: args{
-				ctx: context.TODO(),
-				req: &admission.Request{
-					AdmissionRequest: admissionv1.AdmissionRequest{
-						Namespace: testNamespace,
-					},
-				},
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						UID: "this-is-the-pod-uid",
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								Name: testSts.Name,
-								UID:  testSts.UID,
-								Kind: testSts.Kind,
-							},
-						},
-					},
-				},
-			},
-			want: false,
-		},
-		{
-			name: "Test fetching of daemonset owner of pod",
-			fields: fields{
-				Log:    testr.New(t),
-				Client: fakeClient,
-			},
-			args: args{
-				ctx: context.TODO(),
-				req: &admission.Request{
-					AdmissionRequest: admissionv1.AdmissionRequest{
-						Namespace: testNamespace,
-					},
-				},
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						UID: "this-is-the-pod-uid",
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								Name: testDs.Name,
-								UID:  testDs.UID,
-								Kind: testDs.Kind,
-							},
-						},
-					},
-				},
-			},
-			want: false,
-		},
-		{
-			name: "Test that method returns without doing anything when we get a pod with replicaset without owner",
-			fields: fields{
-				Log:    testr.New(t),
-				Client: fakeClient,
-			},
-			args: args{
-				ctx: context.TODO(),
-				req: &admission.Request{
-					AdmissionRequest: admissionv1.AdmissionRequest{
-						Namespace: testNamespace,
-					},
-				},
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						UID: "this-is-the-pod-uid",
-						OwnerReferences: []metav1.OwnerReference{
-							{
-								Name: rsWithNoOwner.Name,
-								UID:  rsUidWithNoOwner,
-								Kind: "ReplicaSet",
-							},
-						},
-					},
-				},
-			},
-			want: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			a := &PodMutatingWebhook{
-				Client:      tt.fields.Client,
-				Tracer:      tt.fields.Tracer,
-				Decoder:     tt.fields.Decoder,
-				EventSender: tt.fields.EventSender,
-				Log:         tt.fields.Log,
-			}
-			got := a.copyAnnotationsIfParentAnnotated(tt.args.ctx, tt.args.req, tt.args.pod)
-			if got != tt.want {
-				t.Errorf("copyAnnotationsIfParentAnnotated() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestPodMutatingWebhook_copyResourceLabelsIfPresent(t *testing.T) {
-	type fields struct {
-		Client      client.Client
-		Tracer      trace.Tracer
-		Decoder     *admission.Decoder
-		EventSender controllercommon.IEvent
-		Log         logr.Logger
-	}
-	type args struct {
-		sourceResource *metav1.ObjectMeta
-		targetPod      *corev1.Pod
-	}
-	tests := []struct {
-		name      string
-		fields    fields
-		args      args
-		want      bool
-		wantedPod *corev1.Pod
-	}{
-		{
-			name: "Test that annotations get copied from source to target",
-			args: args{
-				sourceResource: &metav1.ObjectMeta{
-					Name: "testSourceObject",
-					Annotations: map[string]string{
-						apicommon.WorkloadAnnotation:                 "some-workload-name",
-						apicommon.AppAnnotation:                      "some-app-name",
-						apicommon.VersionAnnotation:                  "v1.0.0",
-						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
-					},
-				},
-				targetPod: &corev1.Pod{
-					TypeMeta:   metav1.TypeMeta{},
-					ObjectMeta: metav1.ObjectMeta{},
-					Spec:       corev1.PodSpec{},
-					Status:     corev1.PodStatus{},
-				},
-			},
-			want: true,
-			wantedPod: &corev1.Pod{
-				TypeMeta: metav1.TypeMeta{},
-				ObjectMeta: metav1.ObjectMeta{
-					Annotations: map[string]string{
-						apicommon.WorkloadAnnotation:                 "some-workload-name",
-						apicommon.AppAnnotation:                      "some-app-name",
-						apicommon.VersionAnnotation:                  "v1.0.0",
-						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
-					},
-				},
-			},
-		},
-		{
-			name: "Test that source labels get copied to target annotations",
-			args: args{
-				sourceResource: &metav1.ObjectMeta{
-					Name: "testSourceObject",
-					Labels: map[string]string{
-						apicommon.WorkloadAnnotation:                 "some-workload-name",
-						apicommon.AppAnnotation:                      "some-app-name",
-						apicommon.VersionAnnotation:                  "v1.0.0",
-						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
-					},
-				},
-				targetPod: &corev1.Pod{},
-			},
-			want: true,
-			wantedPod: &corev1.Pod{
-				TypeMeta: metav1.TypeMeta{},
-				ObjectMeta: metav1.ObjectMeta{
-					Annotations: map[string]string{
-						apicommon.WorkloadAnnotation:                 "some-workload-name",
-						apicommon.AppAnnotation:                      "some-app-name",
-						apicommon.VersionAnnotation:                  "v1.0.0",
-						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
-					},
-				},
-			},
-		},
-		{
-			name: "Test that version label is generated correctly and rest is copied",
-			args: args{
-				sourceResource: &metav1.ObjectMeta{
-					Name: "testSourceObject",
-					Labels: map[string]string{
-						apicommon.WorkloadAnnotation:                 "some-workload-name",
-						apicommon.AppAnnotation:                      "some-app-name",
-						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
-					},
-				},
-				targetPod: &corev1.Pod{
-					TypeMeta:   metav1.TypeMeta{},
-					ObjectMeta: metav1.ObjectMeta{},
-					Spec: corev1.PodSpec{
-						Containers: []corev1.Container{
-							{
-								Image: "some-image:v1.0.0",
-							},
-						},
-					},
-					Status: corev1.PodStatus{},
-				},
-			},
-			want: true,
-			wantedPod: &corev1.Pod{
-				TypeMeta: metav1.TypeMeta{},
-				ObjectMeta: metav1.ObjectMeta{
-					Annotations: map[string]string{
-						apicommon.WorkloadAnnotation:                 "some-workload-name",
-						apicommon.AppAnnotation:                      "some-app-name",
-						apicommon.VersionAnnotation:                  "v1.0.0",
-						apicommon.PreDeploymentTaskAnnotation:        "some-pre-deployment-task",
-						apicommon.PostDeploymentTaskAnnotation:       "some-post-deployment-task",
-						apicommon.PreDeploymentEvaluationAnnotation:  "some-pre-deployment-evaluation",
-						apicommon.PostDeploymentEvaluationAnnotation: "some-post-deployment-evaluation",
-					},
-				},
-				Spec: corev1.PodSpec{
-					Containers: []corev1.Container{
-						{
-							Image: "some-image:v1.0.0",
-						},
-					},
-				},
-				Status: corev1.PodStatus{},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			a := &PodMutatingWebhook{
-				Client:      tt.fields.Client,
-				Tracer:      tt.fields.Tracer,
-				Decoder:     tt.fields.Decoder,
-				EventSender: tt.fields.EventSender,
-				Log:         tt.fields.Log,
-			}
-			got := a.copyResourceLabelsIfPresent(tt.args.sourceResource, tt.args.targetPod)
-			if got != tt.want {
-				t.Errorf("copyResourceLabelsIfPresent() got = %v, want %v", got, tt.want)
-			}
-			if tt.wantedPod != nil {
-				require.Equal(t, tt.wantedPod, tt.args.targetPod)
-			}
-		})
-	}
-}
-
-func TestPodMutatingWebhook_isAppAnnotationPresent(t *testing.T) {
-	type fields struct {
-		Client      client.Client
-		Tracer      trace.Tracer
-		Decoder     *admission.Decoder
-		EventSender controllercommon.IEvent
-		Log         logr.Logger
-	}
-	type args struct {
-		pod *corev1.Pod
-	}
-	tests := []struct {
-		name      string
-		fields    fields
-		args      args
-		want      bool
-		wantedPod *corev1.Pod
-	}{
-		{
-			name: "Test return true when app annotation is present",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						Annotations: map[string]string{
-							apicommon.AppAnnotation: "some-app-name",
-						},
-					},
-				},
-			},
-			want: true,
-		},
-		{
-			name: "Test return false when app annotation is not present",
-			args: args{
-				pod: &corev1.Pod{},
-			},
-			want: false,
-		},
-		{
-			name: "Test that app name is copied when only workload name is present",
-			args: args{
-				pod: &corev1.Pod{
-					ObjectMeta: metav1.ObjectMeta{
-						Annotations: map[string]string{
-							apicommon.WorkloadAnnotation: "some-workload-name",
-						},
-					},
-				},
-			},
-			want: false,
-			wantedPod: &corev1.Pod{
-				ObjectMeta: metav1.ObjectMeta{
-					Annotations: map[string]string{
-						apicommon.AppAnnotation:      "some-workload-name",
-						apicommon.WorkloadAnnotation: "some-workload-name",
-					},
-				},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			a := &PodMutatingWebhook{
-				Client:      tt.fields.Client,
-				Tracer:      tt.fields.Tracer,
-				Decoder:     tt.fields.Decoder,
-				EventSender: tt.fields.EventSender,
-				Log:         tt.fields.Log,
-			}
-			got := a.isAppAnnotationPresent(tt.args.pod)
-			if got != tt.want {
-				t.Errorf("isAppAnnotationPresent() got = %v, want %v", got, tt.want)
-			}
-			if tt.wantedPod != nil {
-				require.Equal(t, tt.wantedPod, tt.args.pod)
-			}
-		})
-	}
-}
-
-func TestPodMutatingWebhook_Handle_DisabledNamespace(t *testing.T) {
+func TestPodMutatingWebhookHandleDisabledNamespace(t *testing.T) {
 	fakeClient := fakeclient.NewClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "default",
+			Name: testNamespace,
 		},
 	})
 
@@ -971,8 +59,8 @@ func TestPodMutatingWebhook_Handle_DisabledNamespace(t *testing.T) {
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "example-pod",
-			Namespace: "default",
+			Name:      testPod,
+			Namespace: testNamespace,
 		},
 		Spec: corev1.PodSpec{
 			Containers: []corev1.Container{
@@ -984,20 +72,7 @@ func TestPodMutatingWebhook_Handle_DisabledNamespace(t *testing.T) {
 		},
 	}
 
-	// Convert the Pod object to a byte array
-	podBytes, err := json.Marshal(pod)
-	require.Nil(t, err)
-
-	// Create an AdmissionRequest object
-	request := admissionv1.AdmissionRequest{
-		UID:       "12345",
-		Kind:      metav1.GroupVersionKind{Group: "", Version: "v1", Kind: "Pod"},
-		Operation: admissionv1.Create,
-		Object: runtime.RawExtension{
-			Raw: podBytes,
-		},
-		Namespace: "default",
-	}
+	request := generateRequest(pod, t)
 
 	resp := wh.Handle(context.TODO(), admission.Request{
 		AdmissionRequest: request,
@@ -1007,10 +82,10 @@ func TestPodMutatingWebhook_Handle_DisabledNamespace(t *testing.T) {
 	require.True(t, resp.Allowed)
 }
 
-func TestPodMutatingWebhook_Handle_UnsupportedOwner(t *testing.T) {
+func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
 	fakeClient := fakeclient.NewClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "default",
+			Name: testNamespace,
 			Annotations: map[string]string{
 				apicommon.NamespaceEnabledAnnotation: "enabled",
 			},
@@ -1033,10 +108,10 @@ func TestPodMutatingWebhook_Handle_UnsupportedOwner(t *testing.T) {
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "example-pod",
-			Namespace: "default",
+			Name:      testPod,
+			Namespace: testNamespace,
 			Annotations: map[string]string{
-				apicommon.WorkloadAnnotation: "my-workload",
+				apicommon.WorkloadAnnotation: testWorkload,
 				apicommon.VersionAnnotation:  "0.1",
 			},
 			OwnerReferences: []metav1.OwnerReference{
@@ -1058,20 +133,7 @@ func TestPodMutatingWebhook_Handle_UnsupportedOwner(t *testing.T) {
 		},
 	}
 
-	// Convert the Pod object to a byte array
-	podBytes, err := json.Marshal(pod)
-	require.Nil(t, err)
-
-	// Create an AdmissionRequest object
-	request := admissionv1.AdmissionRequest{
-		UID:       "12345",
-		Kind:      metav1.GroupVersionKind{Group: "", Version: "v1", Kind: "Pod"},
-		Operation: admissionv1.Create,
-		Object: runtime.RawExtension{
-			Raw: podBytes,
-		},
-		Namespace: "default",
-	}
+	request := generateRequest(pod, t)
 
 	resp := wh.Handle(context.TODO(), admission.Request{
 		AdmissionRequest: request,
@@ -1083,29 +145,29 @@ func TestPodMutatingWebhook_Handle_UnsupportedOwner(t *testing.T) {
 	// if we get an unsupported owner for the pod, we expect not to have any KLT resources to have been created
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
 
-	err = fakeClient.Get(context.Background(), types.NamespacedName{
-		Namespace: "default",
-		Name:      "my-workload",
+	err := fakeClient.Get(context.Background(), types.NamespacedName{
+		Namespace: testNamespace,
+		Name:      testWorkload,
 	}, kacr)
 
 	require.NotNil(t, err)
-	require.True(t, errors.IsNotFound(err))
+	require.True(t, k8serrors.IsNotFound(err))
 
 	workload := &klcv1alpha3.KeptnWorkload{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
-		Namespace: "default",
-		Name:      "my-workload-my-workload",
+		Namespace: testNamespace,
+		Name:      testKeptnWorkload,
 	}, workload)
 
 	require.NotNil(t, err)
-	require.True(t, errors.IsNotFound(err))
+	require.True(t, k8serrors.IsNotFound(err))
 }
 
-func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
+func TestPodMutatingWebhookHandleSingleService(t *testing.T) {
 	fakeClient := fakeclient.NewClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "default",
+			Name: testNamespace,
 			Annotations: map[string]string{
 				apicommon.NamespaceEnabledAnnotation: "enabled",
 			},
@@ -1117,28 +179,27 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 	}}
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
+	log := testr.New(t)
 
-	wh := &PodMutatingWebhook{
-		Client:      fakeClient,
-		Tracer:      tr,
-		Decoder:     decoder,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		Log:         testr.New(t),
-	}
+	wh := NewPodMutator(fakeClient,
+		tr,
+		decoder,
+		controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		log, false)
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "example-pod",
-			Namespace: "default",
+			Name:      testPod,
+			Namespace: testNamespace,
 			Annotations: map[string]string{
-				apicommon.WorkloadAnnotation: "my-workload",
+				apicommon.WorkloadAnnotation: testWorkload,
 				apicommon.VersionAnnotation:  "0.1",
 			},
 			OwnerReferences: []metav1.OwnerReference{
 				{
 					APIVersion: "v1",
 					Kind:       "Deployment",
-					Name:       "my-deployment",
+					Name:       testDeployment,
 					UID:        "1234",
 				},
 			},
@@ -1153,20 +214,7 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 		},
 	}
 
-	// Convert the Pod object to a byte array
-	podBytes, err := json.Marshal(pod)
-	require.Nil(t, err)
-
-	// Create an AdmissionRequest object
-	request := admissionv1.AdmissionRequest{
-		UID:       "12345",
-		Kind:      metav1.GroupVersionKind{Group: "", Version: "v1", Kind: "Pod"},
-		Operation: admissionv1.Create,
-		Object: runtime.RawExtension{
-			Raw: podBytes,
-		},
-		Namespace: "default",
-	}
+	request := generateRequest(pod, t)
 
 	resp := wh.Handle(context.TODO(), admission.Request{
 		AdmissionRequest: request,
@@ -1177,21 +225,21 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
 
-	err = fakeClient.Get(context.Background(), types.NamespacedName{
-		Namespace: "default",
-		Name:      "my-workload",
+	err := fakeClient.Get(context.Background(), types.NamespacedName{
+		Namespace: testNamespace,
+		Name:      testWorkload,
 	}, kacr)
 
 	require.Nil(t, err)
 
-	require.Equal(t, "my-workload", kacr.Spec.AppName)
+	require.Equal(t, testWorkload, kacr.Spec.AppName)
 	require.Equal(t, string(apicommon.AppTypeSingleService), kacr.Annotations[apicommon.AppTypeAnnotation])
 
 	workload := &klcv1alpha3.KeptnWorkload{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
-		Namespace: "default",
-		Name:      "my-workload-my-workload",
+		Namespace: testNamespace,
+		Name:      testKeptnWorkload,
 	}, workload)
 
 	require.Nil(t, err)
@@ -1202,18 +250,18 @@ func TestPodMutatingWebhook_Handle_SingleService(t *testing.T) {
 		ResourceReference: klcv1alpha3.ResourceReference{
 			UID:  "1234",
 			Kind: "Deployment",
-			Name: "my-deployment",
+			Name: testDeployment,
 		},
 	}, workload.Spec)
 }
 
-func TestPodMutatingWebhook_Handle_SchedulingGates_GateRemoved(t *testing.T) {
+func TestPodMutatingWebhookHandleSchedulingGatesGateRemoved(t *testing.T) {
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "example-pod",
-			Namespace: "default",
+			Name:      testPod,
+			Namespace: testNamespace,
 			Annotations: map[string]string{
-				apicommon.WorkloadAnnotation:    "my-workload",
+				apicommon.WorkloadAnnotation:    testWorkload,
 				apicommon.VersionAnnotation:     "0.1",
 				apicommon.SchedulingGateRemoved: "true",
 			},
@@ -1221,7 +269,7 @@ func TestPodMutatingWebhook_Handle_SchedulingGates_GateRemoved(t *testing.T) {
 				{
 					APIVersion: "v1",
 					Kind:       "Deployment",
-					Name:       "my-deployment",
+					Name:       testDeployment,
 					UID:        "1234",
 				},
 			},
@@ -1237,7 +285,7 @@ func TestPodMutatingWebhook_Handle_SchedulingGates_GateRemoved(t *testing.T) {
 	}
 	ns := &corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "default",
+			Name: testNamespace,
 			Annotations: map[string]string{
 				apicommon.NamespaceEnabledAnnotation: "enabled",
 			},
@@ -1260,20 +308,7 @@ func TestPodMutatingWebhook_Handle_SchedulingGates_GateRemoved(t *testing.T) {
 		Log:                    testr.New(t),
 	}
 
-	// Convert the Pod object to a byte array
-	podBytes, err := json.Marshal(pod)
-	require.Nil(t, err)
-
-	// Create an AdmissionRequest object
-	request := admissionv1.AdmissionRequest{
-		UID:       "12345",
-		Kind:      metav1.GroupVersionKind{Group: "", Version: "v1", Kind: "Pod"},
-		Operation: admissionv1.Create,
-		Object: runtime.RawExtension{
-			Raw: podBytes,
-		},
-		Namespace: "default",
-	}
+	request := generateRequest(pod, t)
 
 	resp := wh.Handle(context.TODO(), admission.Request{
 		AdmissionRequest: request,
@@ -1286,20 +321,20 @@ func TestPodMutatingWebhook_Handle_SchedulingGates_GateRemoved(t *testing.T) {
 	require.Len(t, resp.Patches, 0)
 }
 
-func TestPodMutatingWebhook_Handle_SchedulingGates(t *testing.T) {
+func TestPodMutatingWebhookHandleSchedulingGates(t *testing.T) {
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "example-pod",
-			Namespace: "default",
+			Name:      testPod,
+			Namespace: testNamespace,
 			Annotations: map[string]string{
-				apicommon.WorkloadAnnotation: "my-workload",
+				apicommon.WorkloadAnnotation: testWorkload,
 				apicommon.VersionAnnotation:  "0.1",
 			},
 			OwnerReferences: []metav1.OwnerReference{
 				{
 					APIVersion: "v1",
 					Kind:       "Deployment",
-					Name:       "my-deployment",
+					Name:       testDeployment,
 					UID:        "1234",
 				},
 			},
@@ -1315,7 +350,7 @@ func TestPodMutatingWebhook_Handle_SchedulingGates(t *testing.T) {
 	}
 	ns := &corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "default",
+			Name: testNamespace,
 			Annotations: map[string]string{
 				apicommon.NamespaceEnabledAnnotation: "enabled",
 			},
@@ -1329,29 +364,17 @@ func TestPodMutatingWebhook_Handle_SchedulingGates(t *testing.T) {
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
-	wh := &PodMutatingWebhook{
-		SchedulingGatesEnabled: true,
-		Client:                 fakeClient,
-		Tracer:                 tr,
-		Decoder:                decoder,
-		EventSender:            controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		Log:                    testr.New(t),
-	}
+	wh :=
+		NewPodMutator(
+			fakeClient,
+			tr,
+			decoder,
+			controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+			testr.New(t),
+			true,
+		)
 
-	// Convert the Pod object to a byte array
-	podBytes, err := json.Marshal(pod)
-	require.Nil(t, err)
-
-	// Create an AdmissionRequest object
-	request := admissionv1.AdmissionRequest{
-		UID:       "12345",
-		Kind:      metav1.GroupVersionKind{Group: "", Version: "v1", Kind: "Pod"},
-		Operation: admissionv1.Create,
-		Object: runtime.RawExtension{
-			Raw: podBytes,
-		},
-		Namespace: "default",
-	}
+	request := generateRequest(pod, t)
 
 	resp := wh.Handle(context.TODO(), admission.Request{
 		AdmissionRequest: request,
@@ -1370,21 +393,21 @@ func TestPodMutatingWebhook_Handle_SchedulingGates(t *testing.T) {
 
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
 
-	err = fakeClient.Get(context.Background(), types.NamespacedName{
-		Namespace: "default",
-		Name:      "my-workload",
+	err := fakeClient.Get(context.Background(), types.NamespacedName{
+		Namespace: testNamespace,
+		Name:      testWorkload,
 	}, kacr)
 
 	require.Nil(t, err)
 
-	require.Equal(t, "my-workload", kacr.Spec.AppName)
+	require.Equal(t, testWorkload, kacr.Spec.AppName)
 	require.Equal(t, string(apicommon.AppTypeSingleService), kacr.Annotations[apicommon.AppTypeAnnotation])
 
 	workload := &klcv1alpha3.KeptnWorkload{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
-		Namespace: "default",
-		Name:      "my-workload-my-workload",
+		Namespace: testNamespace,
+		Name:      testKeptnWorkload,
 	}, workload)
 
 	require.Nil(t, err)
@@ -1395,15 +418,15 @@ func TestPodMutatingWebhook_Handle_SchedulingGates(t *testing.T) {
 		ResourceReference: klcv1alpha3.ResourceReference{
 			UID:  "1234",
 			Kind: "Deployment",
-			Name: "my-deployment",
+			Name: testDeployment,
 		},
 	}, workload.Spec)
 }
 
-func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresent(t *testing.T) {
+func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t *testing.T) {
 	fakeClient := fakeclient.NewClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "default",
+			Name: testNamespace,
 			Annotations: map[string]string{
 				apicommon.NamespaceEnabledAnnotation: "enabled",
 			},
@@ -1411,8 +434,8 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 	}, &klcv1alpha3.KeptnAppCreationRequest{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "my-workload",
-			Namespace: "default",
+			Name:      testWorkload,
+			Namespace: testNamespace,
 			Annotations: map[string]string{
 				apicommon.AppTypeAnnotation: string(apicommon.AppTypeSingleService),
 			},
@@ -1421,7 +444,7 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 			},
 		},
 		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
-			AppName: "my-workload",
+			AppName: testWorkload,
 		},
 	})
 
@@ -1431,27 +454,27 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
-	wh := &PodMutatingWebhook{
-		Client:      fakeClient,
-		Tracer:      tr,
-		Decoder:     decoder,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		Log:         testr.New(t),
-	}
+	wh := NewPodMutator(fakeClient,
+		tr,
+		decoder,
+		controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		testr.New(t),
+		false,
+	)
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "example-pod",
-			Namespace: "default",
+			Name:      testPod,
+			Namespace: testNamespace,
 			Annotations: map[string]string{
-				apicommon.WorkloadAnnotation: "my-workload",
+				apicommon.WorkloadAnnotation: testWorkload,
 				apicommon.VersionAnnotation:  "0.1",
 			},
 			OwnerReferences: []metav1.OwnerReference{
 				{
 					APIVersion: "v1",
 					Kind:       "Deployment",
-					Name:       "my-deployment",
+					Name:       testDeployment,
 					UID:        "1234",
 				},
 			},
@@ -1466,20 +489,7 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 		},
 	}
 
-	// Convert the Pod object to a byte array
-	podBytes, err := json.Marshal(pod)
-	require.Nil(t, err)
-
-	// Create an AdmissionRequest object
-	request := admissionv1.AdmissionRequest{
-		UID:       "12345",
-		Kind:      metav1.GroupVersionKind{Group: "", Version: "v1", Kind: "Pod"},
-		Operation: admissionv1.Create,
-		Object: runtime.RawExtension{
-			Raw: podBytes,
-		},
-		Namespace: "default",
-	}
+	request := generateRequest(pod, t)
 
 	resp := wh.Handle(context.TODO(), admission.Request{
 		AdmissionRequest: request,
@@ -1490,14 +500,14 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
 
-	err = fakeClient.Get(context.Background(), types.NamespacedName{
-		Namespace: "default",
-		Name:      "my-workload",
+	err := fakeClient.Get(context.Background(), types.NamespacedName{
+		Namespace: testNamespace,
+		Name:      testWorkload,
 	}, kacr)
 
 	require.Nil(t, err)
 
-	require.Equal(t, "my-workload", kacr.Spec.AppName)
+	require.Equal(t, testWorkload, kacr.Spec.AppName)
 	require.Equal(t, string(apicommon.AppTypeSingleService), kacr.Annotations[apicommon.AppTypeAnnotation])
 	// verify that the previously created KACR has not been changed
 	require.Equal(t, "true", kacr.Labels["donotchange"])
@@ -1505,8 +515,8 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 	workload := &klcv1alpha3.KeptnWorkload{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
-		Namespace: "default",
-		Name:      "my-workload-my-workload",
+		Namespace: testNamespace,
+		Name:      testKeptnWorkload,
 	}, workload)
 
 	require.Nil(t, err)
@@ -1517,77 +527,33 @@ func TestPodMutatingWebhook_Handle_SingleService_AppCreationRequestAlreadyPresen
 		ResourceReference: klcv1alpha3.ResourceReference{
 			UID:  "1234",
 			Kind: "Deployment",
-			Name: "my-deployment",
+			Name: testDeployment,
 		},
 	}, workload.Spec)
 }
 
-func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
+func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
 	fakeClient := fakeclient.NewClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "default",
+			Name: testNamespace,
 			Annotations: map[string]string{
 				apicommon.NamespaceEnabledAnnotation: "enabled",
 			},
 		},
 	})
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
+	pod, _, _, tr, decoder := setupTestData()
 
-	decoder := admission.NewDecoder(runtime.NewScheme())
+	wh := NewPodMutator(
+		fakeClient,
+		tr,
+		decoder,
+		controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		testr.New(t),
+		false,
+	)
 
-	wh := &PodMutatingWebhook{
-		Client:      fakeClient,
-		Tracer:      tr,
-		Decoder:     decoder,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		Log:         testr.New(t),
-	}
-
-	pod := &corev1.Pod{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "example-pod",
-			Namespace: "default",
-			Annotations: map[string]string{
-				apicommon.WorkloadAnnotation: "my-workload",
-				apicommon.VersionAnnotation:  "V0.1",
-				apicommon.AppAnnotation:      "my-App",
-			},
-			OwnerReferences: []metav1.OwnerReference{
-				{
-					APIVersion: "v1",
-					Kind:       "Deployment",
-					Name:       "my-deployment",
-					UID:        "1234",
-				},
-			},
-		},
-		Spec: corev1.PodSpec{
-			Containers: []corev1.Container{
-				{
-					Name:  "example-container",
-					Image: "nginx",
-				},
-			},
-		},
-	}
-
-	// Convert the Pod object to a byte array
-	podBytes, err := json.Marshal(pod)
-	require.Nil(t, err)
-
-	// Create an AdmissionRequest object
-	request := admissionv1.AdmissionRequest{
-		UID:       "12345",
-		Kind:      metav1.GroupVersionKind{Group: "", Version: "v1", Kind: "Pod"},
-		Operation: admissionv1.Create,
-		Object: runtime.RawExtension{
-			Raw: podBytes,
-		},
-		Namespace: "default",
-	}
+	request := generateRequest(pod, t)
 
 	resp := wh.Handle(context.TODO(), admission.Request{
 		AdmissionRequest: request,
@@ -1598,8 +564,8 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
 
-	err = fakeClient.Get(context.Background(), types.NamespacedName{
-		Namespace: "default",
+	err := fakeClient.Get(context.Background(), types.NamespacedName{
+		Namespace: testNamespace,
 		Name:      "my-app",
 	}, kacr)
 
@@ -1612,7 +578,7 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 	workload := &klcv1alpha3.KeptnWorkload{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
-		Namespace: "default",
+		Namespace: testNamespace,
 		Name:      "my-app-my-workload",
 	}, workload)
 
@@ -1624,44 +590,163 @@ func TestPodMutatingWebhook_Handle_MultiService(t *testing.T) {
 		ResourceReference: klcv1alpha3.ResourceReference{
 			UID:  "1234",
 			Kind: "Deployment",
-			Name: "my-deployment",
+			Name: testDeployment,
 		},
 	}, workload.Spec)
 }
 
-func TestPodMutatingWebhook_calculateVersion(t *testing.T) {
+func TestPodMutatingWebhookHandleErrorPaths(t *testing.T) {
+
+	pod, dp, ns, tr, decoder := setupTestData()
 
 	tests := []struct {
-		name string
-		pod  *corev1.Pod
-		want string
+		name            string
+		workloadHandler handlers.K8sHandler
+		appHandler      handlers.K8sHandler
+		client          client.Client
+		decoder         handlers.Decoder
+		message         string
+		errorCode       int
 	}{
 		{
-			name: "simple tag",
-			pod: &corev1.Pod{
-				Spec: corev1.PodSpec{
-					Containers: []corev1.Container{
-						{Image: "ciao:1.0.0"},
-					},
+			name:    "DecoderError",
+			message: "bad decode",
+			decoder: &fakehandler.MockDecoder{DecodeFunc: func(req admission.Request, into runtime.Object) error {
+				return k8serrors.NewResourceExpired("bad decode")
+			}},
+			errorCode: http.StatusBadRequest,
+		},
+		{
+			name:    "NamespaceError",
+			message: "could not get",
+			client: k8sfake.NewClientBuilder().WithInterceptorFuncs(interceptor.Funcs{
+				Get: func(ctx context.Context, client client.WithWatch, key client.ObjectKey, obj client.Object, opts ...client.GetOption) error {
+					return errors.New("could not get")
+				},
+			}).Build(),
+			decoder: &fakehandler.MockDecoder{
+				DecodeFunc: func(req admission.Request, into runtime.Object) error {
+					return nil
 				}},
-			want: "1.0.0",
-		}, {
-			name: "local registry",
-			pod: &corev1.Pod{
-				Spec: corev1.PodSpec{
-					Containers: []corev1.Container{
-						{Image: "localhost:5000/node-web-app:1.0.0"},
-					},
-				}},
-			want: "1.0.0",
+			errorCode: http.StatusInternalServerError,
+		},
+		{
+			name: "WorkloadError",
+			workloadHandler: &fakehandler.MockHandler{
+				HandleFunc: func(ctx context.Context, pod *corev1.Pod, namespace string) error {
+					return errors.New("bad workload")
+				},
+			},
+			message:   "bad workload",
+			client:    fakeclient.NewClient(pod, dp, ns),
+			decoder:   decoder,
+			errorCode: http.StatusBadRequest,
+		},
+		{
+			name: "AppError",
+			workloadHandler: &fakehandler.MockHandler{
+				HandleFunc: func(ctx context.Context, pod *corev1.Pod, namespace string) error {
+					return nil
+				},
+			},
+			appHandler: &fakehandler.MockHandler{
+				HandleFunc: func(ctx context.Context, pod *corev1.Pod, namespace string) error {
+					return errors.New("bad app")
+				},
+			},
+			message:   "bad app",
+			decoder:   decoder,
+			client:    fakeclient.NewClient(pod, dp, ns),
+			errorCode: http.StatusBadRequest,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			a := &PodMutatingWebhook{}
-			if got := a.calculateVersion(tt.pod); got != tt.want {
-				t.Errorf("calculateVersion() = %v, want %v", got, tt.want)
+
+			wh := PodMutatingWebhook{
+				Decoder:  tt.decoder,
+				Tracer:   tr,
+				Log:      testr.New(t),
+				Client:   tt.client,
+				Workload: tt.workloadHandler,
+				App:      tt.appHandler,
 			}
+
+			// Create an AdmissionRequest object
+			request := generateRequest(pod, t)
+
+			resp := wh.Handle(context.TODO(), admission.Request{
+				AdmissionRequest: request,
+			})
+
+			require.NotNil(t, resp)
+			require.False(t, resp.Allowed)
+			require.Equal(t, tt.message, resp.Result.Message)
+			require.Equal(t, tt.errorCode, int(resp.Result.Code))
 		})
 	}
+
+}
+
+func generateRequest(pod *corev1.Pod, t *testing.T) admissionv1.AdmissionRequest {
+	// Convert the Pod object to a byte array
+	podBytes, err := json.Marshal(pod)
+	require.Nil(t, err)
+
+	return admissionv1.AdmissionRequest{
+		UID:       "12345",
+		Kind:      metav1.GroupVersionKind{Group: "", Version: "v1", Kind: "Pod"},
+		Operation: admissionv1.Create,
+		Object: runtime.RawExtension{
+			Raw: podBytes,
+		},
+		Namespace: testNamespace,
+	}
+}
+
+func setupTestData() (*corev1.Pod, *v1.Deployment, *corev1.Namespace, *fakeclient.ITracerMock, *admission.Decoder) {
+	pod := &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testPod,
+			Namespace: testNamespace,
+			Annotations: map[string]string{
+				apicommon.WorkloadAnnotation: testWorkload,
+				apicommon.VersionAnnotation:  "V0.1",
+				apicommon.AppAnnotation:      "my-App",
+			},
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					APIVersion: "v1",
+					Kind:       "Deployment",
+					Name:       testDeployment,
+					UID:        "1234",
+				},
+			},
+		},
+	}
+
+	dp := &v1.Deployment{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "Deployment",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name: testDeployment, Namespace: testNamespace,
+			UID: "1234"},
+	}
+
+	ns := &corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: testNamespace,
+			Annotations: map[string]string{
+				apicommon.NamespaceEnabledAnnotation: "enabled",
+			},
+		},
+	}
+
+	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+		return ctx, trace.SpanFromContext(ctx)
+	}}
+	decoder := admission.NewDecoder(runtime.NewScheme())
+	return pod, dp, ns, tr, decoder
 }

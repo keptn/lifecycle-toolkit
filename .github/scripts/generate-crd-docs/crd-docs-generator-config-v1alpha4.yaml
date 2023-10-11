@@ -1,0 +1,18 @@
+processor:
+  useRawDocstring: true
+  ignoreTypes:
+    - "EmptyStatus$"
+    - "KeptnEvaluationProvider$"
+    - "KeptnEvaluationProviderList$"
+  ignoreFields:
+    - "TypeMeta$"
+    - "EmptyStatus$"
+render:
+  kubernetesVersion: 1.24
+  knownTypes:
+    - name: ResourceReference
+      package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3
+      link: ../v1alpha3/#resourcereference
+    - name: ItemStatus
+      package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3
+      link: ../v1alpha3/#itemstatus

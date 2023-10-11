@@ -277,23 +277,49 @@ and multiple instances of each data provider for your SLIs
 whereas Keptn v1 only allows you to use one SLI per project.
 
 The queries defined for the Keptn v1 SLIs
-should be translated into
-[KeptnMetric](../../yaml-crd-ref/metric.md)
-resources.
+should be translated into an appropriate Keptn resource:
+
+* [KeptnMetric](../../yaml-crd-ref/metric.md)
+resources
+  to do
+  [evaluations](../../implementing/evaluations.md)
+  with
+  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
+  resources.
+* [AnalysisValueTemplate](../../yaml-crd-ref/analysisvaluetemplate.md)
+  resources to do
+  [analyses](../../implementing/slo)
+  with
+  [AnalysisDefinition](../../yaml-crd-ref/analysisdefinition.md)
+  resources.
+  Tools are provided to convert Keptn v1 SLIs and SLOs
+  to Keptn resources; see
+  [Convert Keptn v1 SLIs/SLOs to Analysis resources](../metrics-observe/#convert-keptn-v1-slisslos-to-analysis-resources)
+  for more information.
 
 ### SLOs
 
-Keptn at this time does not support the full range
-of Quality Gates evaluations that are represented by
+Keptn v1
 [SLOs](https://keptn.sh/docs/1.0.x/reference/files/slo/).
-Facilities such as weighting of SLIs and scoring of the evaluation
-do not currently exist.
-This functionality is under development; see
-[Epic 1646](https://github.com/keptn/lifecycle-toolkit/issues/1646).
+can be implemented on Keptn as evaluations or analyses:
 
-However, simple evaluations of an SLI can be defined as
-[KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
-resources.
+* Simple evaluations of an SLI can be implemented as
+  [Evaluations](../../implementing/evaluations.md)
+  which are defined as
+  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
+  resources.
+
+* Complex analyses that use weighting and scoring
+  and analyze the value over a specified time frame
+  can be implemented as
+  [Analyses](../../implementing/slo)
+  that are defined in
+  [AnalysisDefinition](../../yaml-crd-ref/analysisdefinition.md)
+  resources.
+  Tools are provided to convert Keptn v1 SLIs and SLOs
+  to Keptn resources; see
+  [Convert Keptn v1 SLIs/SLOs to Analysis resources](../metrics-observe/#convert-keptn-v1-slisslos-to-analysis-resources)
+  for more information.
 
 ### Remediation
 

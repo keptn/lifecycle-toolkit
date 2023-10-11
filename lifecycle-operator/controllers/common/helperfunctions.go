@@ -107,8 +107,8 @@ func getObject(k8sclient client.Client, log logr.Logger, ctx context.Context, de
 	return nil
 }
 
-func GetControllerInfo(req ctrl.Request) map[string]interface{} {
-	info := map[string]interface{}{
+func GetControllerInfo(req ctrl.Request) map[string]string {
+	info := map[string]string{
 		"name":      req.Name,
 		"namespace": req.Namespace,
 	}

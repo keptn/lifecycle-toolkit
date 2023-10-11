@@ -92,10 +92,10 @@ func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namesp
 }
 
 func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, request ctrl.Request) (*batchv1.Job, error) {
-	serviceAccountName, errsa := getServiceAccount(definition.Spec.ServiceAccount)
-	if errsa != nil {
-		fmt.Printf("error: %v", errsa)
-	}
+	errsa := getServiceAccount(definition.Spec.ServiceAccount)
+        if errsa != nil {
+                r.Log.Info("Info: ", errsa)
+        }
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        apicommon.GenerateJobName(task.Name),
@@ -111,7 +111,7 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 				},
 				Spec: corev1.PodSpec{
 					RestartPolicy:      "OnFailure",
-					ServiceAccountName: serviceAccountName,
+					ServiceAccountName: definition.Spec.ServiceAccount.Name,
 				},
 			},
 			BackoffLimit:          task.Spec.Retries,
@@ -160,9 +160,9 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 	return job, nil
 }
 
-func getServiceAccount(serviceAccount *klcv1alpha3.ServiceAccountSpec) (string, error) {
-	if serviceAccount == nil {
-		return "", errors.New("ServiceAccount is missing")
-	}
-	return serviceAccount.Name, nil
+func getServiceAccount(serviceAccount *klcv1alpha3.ServiceAccountSpec) error {
+        if serviceAccount == nil {
+                return errors.New("no serviceAccount is configured")
+        }
+        return nil
 }

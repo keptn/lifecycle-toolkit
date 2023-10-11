@@ -270,4 +270,12 @@ resources:
   kind: KeptnAppCreationRequest
   path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3
   version: v1alpha3
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnWorkloadVersion
+  path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4
+  version: v1alpha4
 version: "3"

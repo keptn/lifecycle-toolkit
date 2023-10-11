@@ -5267,6 +5267,334 @@ spec:
     subresources:
       status: {}
 ---
+# Source: keptn/charts/lifecycleOperator/templates/keptnworkloadversion-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: keptnworkloadversions.lifecycle.keptn.sh
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.13.0
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+  labels:
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    crdGroup: lifecycle.keptn.sh
+    keptn.sh/inject-cert: "true"
+    helm.sh/chart: lifecycle-operator-0.1.0
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/version: "v0.8.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  group: lifecycle.keptn.sh
+  names:
+    kind: KeptnWorkloadVersion
+    listKind: KeptnWorkloadVersionList
+    plural: keptnworkloadversions
+    shortNames:
+    - kwv
+    singular: keptnworkloadversion
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.app
+      name: AppName
+      type: string
+    - jsonPath: .spec.workloadName
+      name: WorkloadName
+      type: string
+    - jsonPath: .spec.version
+      name: WorkloadVersion
+      type: string
+    - jsonPath: .status.currentPhase
+      name: Phase
+      type: string
+    - jsonPath: .status.preDeploymentStatus
+      name: PreDeploymentStatus
+      priority: 1
+      type: string
+    - jsonPath: .status.preDeploymentEvaluationStatus
+      name: PreDeploymentEvaluationStatus
+      priority: 1
+      type: string
+    - jsonPath: .status.deploymentStatus
+      name: DeploymentStatus
+      priority: 1
+      type: string
+    - jsonPath: .status.postDeploymentStatus
+      name: PostDeploymentStatus
+      priority: 1
+      type: string
+    - jsonPath: .status.postDeploymentEvaluationStatus
+      name: PostDeploymentEvaluationStatus
+      priority: 1
+      type: string
+    name: v1alpha4
+    schema:
+      openAPIV3Schema:
+        description: KeptnWorkloadVersion is the Schema for the keptnworkloadversions
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec describes the desired state of the KeptnWorkloadVersion.
+            properties:
+              app:
+                description: AppName is the name of the KeptnApp containing the KeptnWorkload.
+                type: string
+              postDeploymentEvaluations:
+                description: PostDeploymentEvaluations is a list of all evaluations
+                  to be performed during the post-deployment phase of the KeptnWorkload.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnWorkload, or in the Keptn
+                  namespace.
+                items:
+                  type: string
+                type: array
+              postDeploymentTasks:
+                description: PostDeploymentTasks is a list of all tasks to be performed
+                  during the post-deployment phase of the KeptnWorkload. The items
+                  of this list refer to the names of KeptnTaskDefinitions located
+                  in the same namespace as the KeptnWorkload, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              preDeploymentEvaluations:
+                description: PreDeploymentEvaluations is a list of all evaluations
+                  to be performed during the pre-deployment phase of the KeptnWorkload.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnWorkload, or in the Keptn
+                  namespace.
+                items:
+                  type: string
+                type: array
+              preDeploymentTasks:
+                description: PreDeploymentTasks is a list of all tasks to be performed
+                  during the pre-deployment phase of the KeptnWorkload. The items
+                  of this list refer to the names of KeptnTaskDefinitions located
+                  in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              previousVersion:
+                description: PreviousVersion is the version of the KeptnWorkload that
+                  has been deployed prior to this version.
+                type: string
+              resourceReference:
+                description: ResourceReference is a reference to the Kubernetes resource
+                  (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload
+                  is representing.
+                properties:
+                  kind:
+                    type: string
+                  name:
+                    type: string
+                  uid:
+                    description: UID is a type that holds unique ID values, including
+                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to
+                      string.  Being a type captures intent and helps make sure that
+                      UIDs and names do not get conflated.
+                    type: string
+                required:
+                - kind
+                - name
+                - uid
+                type: object
+              traceId:
+                additionalProperties:
+                  type: string
+                description: TraceId contains the OpenTelemetry trace ID.
+                type: object
+              version:
+                description: Version defines the version of the KeptnWorkload.
+                type: string
+              workloadName:
+                description: WorkloadName is the name of the KeptnWorkload.
+                type: string
+            required:
+            - app
+            - resourceReference
+            - version
+            - workloadName
+            type: object
+          status:
+            description: Status describes the current state of the KeptnWorkloadVersion.
+            properties:
+              currentPhase:
+                description: 'CurrentPhase indicates the current phase of the KeptnWorkloadVersion.
+                  This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment
+                  - PostDeploymentTasks - PostDeploymentEvaluations'
+                type: string
+              deploymentStatus:
+                default: Pending
+                description: DeploymentStatus indicates the current status of the
+                  KeptnWorkloadVersion's Deployment phase.
+                type: string
+              endTime:
+                description: EndTime represents the time at which the deployment of
+                  the KeptnWorkloadVersion finished.
+                format: date-time
+                type: string
+              phaseTraceIDs:
+                additionalProperties:
+                  additionalProperties:
+                    type: string
+                  description: MapCarrier is a TextMapCarrier that uses a map held
+                    in memory as a storage medium for propagated key-value pairs.
+                  type: object
+                description: PhaseTraceIDs contains the trace IDs of the OpenTelemetry
+                  spans of each phase of the KeptnWorkloadVersion
+                type: object
+              postDeploymentEvaluationStatus:
+                default: Pending
+                description: PostDeploymentEvaluationStatus indicates the current
+                  status of the KeptnWorkloadVersion's PostDeploymentEvaluation phase.
+                type: string
+              postDeploymentEvaluationTaskStatus:
+                description: PostDeploymentEvaluationTaskStatus indicates the current
+                  state of each postDeploymentEvaluation of the KeptnWorkloadVersion.
+                items:
+                  properties:
+                    definitionName:
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
+                      type: string
+                    endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
+                      format: date-time
+                      type: string
+                    name:
+                      description: Name is the name of the Evaluation/Task
+                      type: string
+                    startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      type: string
+                  type: object
+                type: array
+              postDeploymentStatus:
+                default: Pending
+                description: PostDeploymentStatus indicates the current status of
+                  the KeptnWorkloadVersion's PostDeployment phase.
+                type: string
+              postDeploymentTaskStatus:
+                description: PostDeploymentTaskStatus indicates the current state
+                  of each postDeploymentTask of the KeptnWorkloadVersion.
+                items:
+                  properties:
+                    definitionName:
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
+                      type: string
+                    endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
+                      format: date-time
+                      type: string
+                    name:
+                      description: Name is the name of the Evaluation/Task
+                      type: string
+                    startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      type: string
+                  type: object
+                type: array
+              preDeploymentEvaluationStatus:
+                default: Pending
+                description: PreDeploymentEvaluationStatus indicates the current status
+                  of the KeptnWorkloadVersion's PreDeploymentEvaluation phase.
+                type: string
+              preDeploymentEvaluationTaskStatus:
+                description: PreDeploymentEvaluationTaskStatus indicates the current
+                  state of each preDeploymentEvaluation of the KeptnWorkloadVersion.
+                items:
+                  properties:
+                    definitionName:
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
+                      type: string
+                    endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
+                      format: date-time
+                      type: string
+                    name:
+                      description: Name is the name of the Evaluation/Task
+                      type: string
+                    startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      type: string
+                  type: object
+                type: array
+              preDeploymentStatus:
+                default: Pending
+                description: PreDeploymentStatus indicates the current status of the
+                  KeptnWorkloadVersion's PreDeployment phase.
+                type: string
+              preDeploymentTaskStatus:
+                description: PreDeploymentTaskStatus indicates the current state of
+                  each preDeploymentTask of the KeptnWorkloadVersion.
+                items:
+                  properties:
+                    definitionName:
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
+                      type: string
+                    endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
+                      format: date-time
+                      type: string
+                    name:
+                      description: Name is the name of the Evaluation/Task
+                      type: string
+                    startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      type: string
+                  type: object
+                type: array
+              startTime:
+                description: StartTime represents the time at which the deployment
+                  of the KeptnWorkloadVersion started.
+                format: date-time
+                type: string
+              status:
+                default: Pending
+                description: Status represents the overall status of the KeptnWorkloadVersion.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
 # Source: keptn/charts/lifecycleOperator/templates/keptn-scheduler-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -5780,6 +6108,32 @@ rules:
   - lifecycle.keptn.sh
   resources:
   - keptnworkloadinstances/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnworkloadversions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnworkloadversions/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnworkloadversions/status
   verbs:
   - get
   - patch

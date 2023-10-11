@@ -94,6 +94,7 @@ type envConfig struct {
 	KeptnTaskDefinitionControllerLogLevel     int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadControllerLogLevel           int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadVersionControllerLogLevel    int `envconfig:"KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadInstanceControllerLogLevel   int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
 	SchedulingGatesEnabled bool `envconfig:"SCHEDULING_GATES_ENABLED" default:"false"`
@@ -272,7 +273,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	workloadVersionLogger := ctrl.Log.WithName("KeptnWorkloadVersion Controller").V(env.KeptnWorkloadVersionControllerLogLevel)
+	workloadVersionLogger := ctrl.Log.WithName("KeptnWorkloadVersion Controller").V(determineWorkloadVersionControllerLogLevel(env.KeptnWorkloadVersionControllerLogLevel, env.KeptnWorkloadInstanceControllerLogLevel))
 	workloadVersionRecorder := mgr.GetEventRecorderFor("keptnworkloadversion-controller")
 	workloadVersionReconciler := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
 		SchedulingGatesHandler: controllercommon.NewSchedulingGatesHandler(mgr.GetClient(), workloadVersionLogger, env.SchedulingGatesEnabled),
@@ -412,4 +413,14 @@ func serveMetrics() {
 		fmt.Printf("error serving http: %v", err)
 		return
 	}
+}
+
+func determineWorkloadVersionControllerLogLevel(version int, instance int) int {
+	// if deprecated env.KeptnWorkloadInstanceControllerLogLevel is set and
+	// env.KeptnWorkloadVersionControllerLogLevel has default value (not set)
+	if instance != 0 && version == 0 {
+		return instance
+	}
+
+	return version
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -524,4 +525,35 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 
 		})
 	}
+}
+
+//nolint:dupl
+func TestGetControllerInfo(t *testing.T) {
+	// Test case 1: Request with name and namespace
+	req1 := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Name:      "example",
+			Namespace: "test-namespace",
+		}}
+
+	info1 := GetControllerInfo(req1)
+	expected1 := map[string]string{
+		"name":      "example",
+		"namespace": "test-namespace",
+	}
+	require.Equal(t, expected1, info1)
+
+	// Test case 2: Request with empty name and namespace
+	req2 := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Name:      "",
+			Namespace: "",
+		}}
+
+	info2 := GetControllerInfo(req2)
+	expected2 := map[string]string{
+		"name":      "",
+		"namespace": "",
+	}
+	require.Equal(t, expected2, info2)
 }

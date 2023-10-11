@@ -1,12 +1,7 @@
 processor:
   useRawDocstring: true
-  ignoreTypes:
-    - "EmptyStatus$"
-    - "KeptnEvaluationProvider$"
-    - "KeptnEvaluationProviderList$"
   ignoreFields:
     - "TypeMeta$"
-    - "EmptyStatus$"
 render:
   kubernetesVersion: 1.24
   knownTypes:

@@ -1,0 +1,25 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkload
+metadata:
+  name: waiter-waiter
+  namespace: allowed-ns-test
+---
+
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkloadInstance
+metadata:
+  name: waiter-waiter-0.4
+  namespace: allowed-ns-test
+status:
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  postDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: pre-deployment-hello
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: pre-deployment-hello

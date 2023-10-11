@@ -77,6 +77,7 @@
 ## @param  kubernetesClusterDomain overrides domain.local
 ## @param  imagePullSecrets global value for image registry secret
 ## @param  schedulingGatesEnabled enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version
+## @param  allowedNamespaces specifies the allowed namespaces for the lifecycle orchestration functionality
 
 # yamllint disable rule:line-length
 ## @section Keptn Scheduler

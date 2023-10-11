@@ -6522,6 +6522,8 @@ spec:
           value: "0"
         - name: KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL
           value: "0"
+        - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
+          value: "0"
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: SCHEDULING_GATES_ENABLED

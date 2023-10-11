@@ -1,4 +1,4 @@
-package workloadinstance_test
+package workloadversion_test
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadinstance"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadversion"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -21,9 +21,9 @@ import (
 	// +kubebuilder:scaffold:imports
 )
 
-func TestWorkloadinstance(t *testing.T) {
+func TestWorkloadVersion(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Workloadinstance Suite")
+	RunSpecs(t, "WorkloadVersion Suite")
 }
 
 var (
@@ -42,11 +42,11 @@ var _ = BeforeSuite(func() {
 
 	// //setup controllers here
 	config.Instance().SetDefaultNamespace(KeptnNamespace)
-	controller := &keptnworkloadinstance.KeptnWorkloadInstanceReconciler{
+	controller := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
 		SchedulingGatesHandler: controllercommon.NewSchedulingGatesHandler(nil, GinkgoLogr, false),
 		Client:                 k8sManager.GetClient(),
 		Scheme:                 k8sManager.GetScheme(),
-		EventSender:            controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadinstance-controller")),
+		EventSender:            controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller")),
 		Log:                    GinkgoLogr,
 		Meters:                 common.InitKeptnMeters(),
 		SpanHandler:            &telemetry.SpanHandler{},
@@ -57,7 +57,7 @@ var _ = BeforeSuite(func() {
 })
 
 var _ = ReportAfterSuite("custom report", func(report Report) {
-	f, err := os.Create("report.workloadinstance-lifecycle-operator")
+	f, err := os.Create("report.workloadversion-lifecycle-operator")
 	Expect(err).ToNot(HaveOccurred(), "failed to generate report")
 	for _, specReport := range report.SpecReports {
 		common.WriteReport(specReport, f)

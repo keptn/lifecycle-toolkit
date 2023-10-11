@@ -21,7 +21,6 @@ import (
 	"strings"
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	operatorcommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/common"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -103,27 +102,8 @@ func init() {
 	SchemeBuilder.Register(&KeptnWorkload{}, &KeptnWorkloadList{})
 }
 
-func (w KeptnWorkload) GetWorkloadInstanceName() string {
-	return operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKeptnNameLen, w.Name, w.Spec.Version)
-}
-
 func (w KeptnWorkload) SetSpanAttributes(span trace.Span) {
 	span.SetAttributes(w.GetSpanAttributes()...)
-}
-
-func (w KeptnWorkload) GenerateWorkloadInstance(previousVersion string, traceContextCarrier map[string]string) KeptnWorkloadInstance {
-	return KeptnWorkloadInstance{
-		ObjectMeta: metav1.ObjectMeta{
-			Annotations: traceContextCarrier,
-			Name:        w.GetWorkloadInstanceName(),
-			Namespace:   w.Namespace,
-		},
-		Spec: KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: w.Spec,
-			WorkloadName:      w.Name,
-			PreviousVersion:   previousVersion,
-		},
-	}
 }
 
 func (w KeptnWorkload) GetSpanAttributes() []attribute.KeyValue {

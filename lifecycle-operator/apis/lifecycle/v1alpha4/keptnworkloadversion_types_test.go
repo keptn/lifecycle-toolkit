@@ -26,28 +26,28 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 			PostDeploymentEvaluationStatus: common.StateFailed,
 			DeploymentStatus:               common.StateFailed,
 			Status:                         common.StateFailed,
-			PreDeploymentTaskStatus: []ItemStatus{
+			PreDeploymentTaskStatus: []v1alpha3.ItemStatus{
 				{
 					DefinitionName: "defname",
 					Status:         common.StateFailed,
 					Name:           "taskname",
 				},
 			},
-			PostDeploymentTaskStatus: []ItemStatus{
+			PostDeploymentTaskStatus: []v1alpha3.ItemStatus{
 				{
 					DefinitionName: "defname2",
 					Status:         common.StateFailed,
 					Name:           "taskname2",
 				},
 			},
-			PreDeploymentEvaluationTaskStatus: []ItemStatus{
+			PreDeploymentEvaluationTaskStatus: []v1alpha3.ItemStatus{
 				{
 					DefinitionName: "defname3",
 					Status:         common.StateFailed,
 					Name:           "taskname3",
 				},
 			},
-			PostDeploymentEvaluationTaskStatus: []ItemStatus{
+			PostDeploymentEvaluationTaskStatus: []v1alpha3.ItemStatus{
 				{
 					DefinitionName: "defname4",
 					Status:         common.StateFailed,
@@ -129,7 +129,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 	require.Equal(t, []string{"task5", "task6"}, workload.GetPreDeploymentEvaluations())
 	require.Equal(t, []string{"task7", "task8"}, workload.GetPostDeploymentEvaluations())
 
-	require.Equal(t, []ItemStatus{
+	require.Equal(t, []v1alpha3.ItemStatus{
 		{
 			DefinitionName: "defname",
 			Status:         common.StateFailed,
@@ -137,7 +137,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 		},
 	}, workload.GetPreDeploymentTaskStatus())
 
-	require.Equal(t, []ItemStatus{
+	require.Equal(t, []v1alpha3.ItemStatus{
 		{
 			DefinitionName: "defname2",
 			Status:         common.StateFailed,
@@ -145,7 +145,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 		},
 	}, workload.GetPostDeploymentTaskStatus())
 
-	require.Equal(t, []ItemStatus{
+	require.Equal(t, []v1alpha3.ItemStatus{
 		{
 			DefinitionName: "defname3",
 			Status:         common.StateFailed,
@@ -153,7 +153,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 		},
 	}, workload.GetPreDeploymentEvaluationTaskStatus())
 
-	require.Equal(t, []ItemStatus{
+	require.Equal(t, []v1alpha3.ItemStatus{
 		{
 			DefinitionName: "defname4",
 			Status:         common.StateFailed,

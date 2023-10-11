@@ -171,7 +171,7 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnworkloadinstances
+  - keptnworkloadversions
   verbs:
   - get
   - list

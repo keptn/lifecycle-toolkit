@@ -74,8 +74,10 @@ done
 ## Due to not adding KeptnWorkload resource into v1alpha4, there is a problem to generate CRD docs
 ## in KeptnWorkloadVersion we are using KeptnWorkloadSpec from v1alpha3, which leads to using
 ## ResourceReference struct from v1alpha3 -> CRD docs generator generates the docs, but it
-## refers to ResourceReference from v1alpha3, as if it is present in v1alpha4
+## refers to ResourceReference from v1alpha3, as if it is present in v1alpha4.
+## Same problem is present with ItemStatus
 sed -i 's|#resourcereference|../v1alpha3/#resourcereference|' docs/content/en/docs/crd-ref/lifecycle/v1alpha4/_index.md
+sed -i 's|#itemstatus|../v1alpha3/#itemstatus|' docs/content/en/docs/crd-ref/lifecycle/v1alpha4/_index.md
 
 # Metrics API
 

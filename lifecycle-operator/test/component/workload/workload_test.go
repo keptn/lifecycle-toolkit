@@ -6,6 +6,7 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -30,10 +31,10 @@ var _ = Describe("Workload", Ordered, func() {
 		// when creating you can use ignoreAlreadyExists(err error)
 		version = "1.0.0"
 	})
-	Describe("Creation of WorkloadInstance from a new Workload", func() {
+	Describe("Creation of WorkloadVersion from a new Workload", func() {
 		var (
-			workload         *klcv1alpha3.KeptnWorkload
-			workloadInstance *klcv1alpha3.KeptnWorkloadInstance
+			workload        *klcv1alpha3.KeptnWorkload
+			workloadVersion *klcv1alpha4.KeptnWorkloadVersion
 		)
 
 		BeforeEach(func() {
@@ -41,18 +42,18 @@ var _ = Describe("Workload", Ordered, func() {
 		})
 
 		Context("with a new Workload CRD", func() {
-			It("should update the spans and create WorkloadInstance", func() {
-				By("Check if WorkloadInstance was created")
+			It("should update the spans and create WorkloadVersion", func() {
+				By("Check if WorkloadVersion was created")
 
-				workloadInstance = &klcv1alpha3.KeptnWorkloadInstance{}
+				workloadVersion = &klcv1alpha4.KeptnWorkloadVersion{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: namespace,
 						Name:      fmt.Sprintf("%s-%s", workload.Name, workload.Spec.Version),
-					}, workloadInstance)
+					}, workloadVersion)
 					g.Expect(err).To(BeNil())
-					g.Expect(workloadInstance.Spec.WorkloadName).To(Equal(workload.Name))
-					g.Expect(workloadInstance.Spec.KeptnWorkloadSpec).To(Equal(workload.Spec))
+					g.Expect(workloadVersion.Spec.WorkloadName).To(Equal(workload.Name))
+					g.Expect(workloadVersion.Spec.KeptnWorkloadSpec).To(Equal(workload.Spec))
 
 				}, "30s").Should(Succeed())
 
@@ -68,7 +69,7 @@ var _ = Describe("Workload", Ordered, func() {
 				Expect(spans[0].Attributes()).To(ContainElement(apicommon.WorkloadVersion.String(workload.Spec.Version)))
 				Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppName.String(workload.Spec.AppName)))
 
-				Expect(spans[1].Name()).To(Equal("create_workload_instance"))
+				Expect(spans[1].Name()).To(Equal("create_workload_version"))
 				Expect(spans[1].Attributes()).To(ContainElement(apicommon.WorkloadName.String(workload.Name)))
 				Expect(spans[1].Attributes()).To(ContainElement(apicommon.WorkloadVersion.String(workload.Spec.Version)))
 				Expect(spans[1].Attributes()).To(ContainElement(apicommon.AppName.String(workload.Spec.AppName)))
@@ -79,8 +80,8 @@ var _ = Describe("Workload", Ordered, func() {
 			By("Cleaning Up KeptnWorkload CRD")
 			err := k8sClient.Delete(ctx, workload)
 			common.LogErrorIfPresent(err)
-			By("Cleaning Up KeptnWorkloadInstance CRD")
-			err = k8sClient.Delete(ctx, workloadInstance)
+			By("Cleaning Up KeptnWorkloadVersion CRD")
+			err = k8sClient.Delete(ctx, workloadVersion)
 			common.LogErrorIfPresent(err)
 		})
 

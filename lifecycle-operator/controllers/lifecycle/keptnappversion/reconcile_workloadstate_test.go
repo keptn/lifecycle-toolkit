@@ -6,6 +6,7 @@ import (
 
 	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	lfcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -55,7 +56,7 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 	}
 	r, _, _, _ := setupReconciler(appVersion)
 
-	// No workloadInstances are created yet, should stay in Pending state
+	// No workloadVersions are created yet, should stay in Pending state
 
 	state, err := r.reconcileWorkloads(context.TODO(), appVersion)
 	require.Nil(t, err)
@@ -77,12 +78,12 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 
 	// Creating WorkloadInstace that is not part of the App -> should stay Pending
 
-	wi1 := &lfcv1alpha3.KeptnWorkloadInstance{
+	wi1 := &lfcv1alpha4.KeptnWorkloadVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "workload",
 			Namespace: "default",
 		},
-		Spec: lfcv1alpha3.KeptnWorkloadInstanceSpec{
+		Spec: lfcv1alpha4.KeptnWorkloadVersionSpec{
 			KeptnWorkloadSpec: lfcv1alpha3.KeptnWorkloadSpec{
 				AppName: "app2",
 			},
@@ -110,14 +111,14 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 		},
 	}, appVersion.Status.WorkloadStatus)
 
-	// Creating WorkloadInstance of App with progressing state -> appVersion should be Progressing
+	// Creating WorkloadVersion of App with progressing state -> appVersion should be Progressing
 
-	wi2 := &lfcv1alpha3.KeptnWorkloadInstance{
+	wi2 := &lfcv1alpha4.KeptnWorkloadVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "app-workload-ver1",
 			Namespace: "default",
 		},
-		Spec: lfcv1alpha3.KeptnWorkloadInstanceSpec{
+		Spec: lfcv1alpha4.KeptnWorkloadVersionSpec{
 			KeptnWorkloadSpec: lfcv1alpha3.KeptnWorkloadSpec{
 				AppName: "app",
 			},
@@ -152,7 +153,7 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 		},
 	}, appVersion.Status.WorkloadStatus)
 
-	// Updating WorkloadInstance of App with succeeded state -> appVersion should be Succeeded
+	// Updating WorkloadVersion of App with succeeded state -> appVersion should be Succeeded
 
 	err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: wi2.Namespace, Name: wi2.Name}, wi2)
 	require.Nil(t, err)
@@ -181,7 +182,7 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 }
 
 //nolint:dogsled
-func TestKeptnAppVersionReconciler_handleUnaccessibleWorkloadInstanceList(t *testing.T) {
+func TestKeptnAppVersionReconciler_handleUnaccessibleWorkloadVersionList(t *testing.T) {
 	appVersion := &lfcv1alpha3.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "appversion",
@@ -201,7 +202,7 @@ func TestKeptnAppVersionReconciler_handleUnaccessibleWorkloadInstanceList(t *tes
 	}
 	r, _, _, _ := setupReconciler(appVersion)
 
-	err := r.handleUnaccessibleWorkloadInstanceList(context.TODO(), appVersion)
+	err := r.handleUnaccessibleWorkloadVersionList(context.TODO(), appVersion)
 	require.Nil(t, err)
 
 	err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: appVersion.Namespace, Name: appVersion.Name}, appVersion)

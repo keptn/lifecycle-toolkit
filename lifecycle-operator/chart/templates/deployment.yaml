@@ -84,8 +84,8 @@ spec:
         - name: KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL
           value: {{ .Values.lifecycleOperator.env.keptnWorkloadControllerLogLevel
             | quote }}
-        - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel
+        - name: KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL
+          value: {{ .Values.lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel
             | quote }}
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
           value: {{ .Values.lifecycleOperator.env.optionsControllerLogLevel | quote

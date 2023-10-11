@@ -45,7 +45,7 @@ and application health checks
 | `lifecycleOperator.env.keptnTaskControllerLogLevel`                   | sets the log level of Keptn Task Controller                 | `0`                                   |
 | `lifecycleOperator.env.keptnTaskDefinitionControllerLogLevel`         | sets the log level of Keptn TaskDefinition Controller       | `0`                                   |
 | `lifecycleOperator.env.keptnWorkloadControllerLogLevel`               | sets the log level of Keptn Workload Controller             | `0`                                   |
-| `lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel`       | sets the log level of Keptn WorkloadInstance Controller     | `0`                                   |
+| `lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel`        | sets the log level of Keptn WorkloadVersion Controller      | `0`                                   |
 | `lifecycleOperator.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller              | `0`                                   |
 | `lifecycleOperator.env.otelCollectorUrl`                              | Sets the URL for the open telemetry collector               | `otel-collector:4317`                 |
 | `lifecycleOperator.env.functionRunnerImage`                           | specify image for deno task runtime                         | `ghcr.io/keptn/deno-runtime:v1.0.1`   |

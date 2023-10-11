@@ -64,7 +64,7 @@ rules:
     resources: ["podgroups", "elasticquotas"]
     verbs: ["get", "list", "watch", "create", "delete", "update", "patch"]
   - apiGroups: ["lifecycle.keptn.sh"]
-    resources: ["keptnworkloadinstances"]
+    resources: ["keptnworkloadversions"]
     verbs: ["get", "list", "watch"]
   - apiGroups: [""]
     resources: ["configmaps"]

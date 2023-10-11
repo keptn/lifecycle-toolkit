@@ -252,7 +252,7 @@ Afterward, you can monitor the status of the deployment using
 a command like the following:
 
 ```shell
-kubectl get keptnworkloadinstance -n podtato-kubectl -w
+kubectl get keptnworkloadversion -n podtato-kubectl -w
 ```
 
 The generated `KeptnApp` file includes `metadata`
@@ -370,7 +370,7 @@ kubectl apply -f .
 Afterward, you can monitor the status of the deployment using
 
 ```shell
-kubectl get keptnworkloadinstance -n podtato-kubectl -w
+kubectl get keptnworkloadversion -n podtato-kubectl -w
 ```
 
 The deployment for a Workload stays in a `Pending`

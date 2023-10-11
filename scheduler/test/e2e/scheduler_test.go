@@ -5,6 +5,7 @@ import (
 
 	testv1alpha3 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha3"
 	common3 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha3/common"
+	testv1alpha4 "github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha4"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	types2 "github.com/onsi/gomega/types"
@@ -55,11 +56,11 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 
 		Context("a new Pod ", func() {
 
-			It("should stay pending if no workload instance is available", func() {
+			It("should stay pending if no workload version is available", func() {
 				checkPending(pod)
 			})
 
-			It("should be scheduled when workload instance pre-evaluation checks are done", func() {
+			It("should be scheduled when workload version pre-evaluation checks are done", func() {
 				checkWorkload("myapp-myworkload-1.0.0", *pod, "Succeeded")
 			})
 		})
@@ -110,14 +111,14 @@ var _ = Describe("[E2E] KeptnScheduler", Ordered, func() {
 		})
 
 		Context("a new Pod ", func() {
-			It("should stay pending if no workload instance is available", func() {
+			It("should stay pending if no workload version is available", func() {
 				checkPending(pod1)
 			})
-			It("should be scheduled when workload instance pre-evaluation checks are done", func() {
+			It("should be scheduled when workload version pre-evaluation checks are done", func() {
 				checkWorkload("mylabeledapp-myworkload-1.0.1", *pod1, "Succeeded")
 			})
 
-			It("should NOT be scheduled when workload instance pre-evaluation checks fails", func() {
+			It("should NOT be scheduled when workload version pre-evaluation checks fails", func() {
 				checkWorkload("mylabeledapp-myworkload-1.0.2", *pod2, "Failed")
 			})
 		})
@@ -164,17 +165,17 @@ func checkPending(pod *apiv1.Pod) {
 }
 
 func checkWorkload(workloadname string, pod apiv1.Pod, status common3.KeptnState) {
-	workloadinstance := initWorkloadInstance(workloadname)
+	workloadVersion := initWorkloadVersion(workloadname)
 
-	err := k8sClient.Create(ctx, workloadinstance)
+	err := k8sClient.Create(ctx, workloadVersion)
 	Expect(ignoreAlreadyExists(err)).To(BeNil())
 
 	Eventually(func() error {
-		err := k8sClient.Get(ctx, types.NamespacedName{Namespace: pod.Namespace, Name: workloadname}, workloadinstance)
+		err := k8sClient.Get(ctx, types.NamespacedName{Namespace: pod.Namespace, Name: workloadname}, workloadVersion)
 		return err
 	}).Should(Succeed())
-	workloadinstance.Status.PreDeploymentEvaluationStatus = status
-	err = k8sClient.Status().Update(ctx, workloadinstance)
+	workloadVersion.Status.PreDeploymentEvaluationStatus = status
+	err = k8sClient.Status().Update(ctx, workloadVersion)
 
 	Expect(err).To(BeNil())
 	assertion := assertScheduled(pod)
@@ -185,8 +186,8 @@ func checkWorkload(workloadname string, pod apiv1.Pod, status common3.KeptnState
 		assertion.Should(Succeed())
 	}
 
-	err = k8sClient.Delete(ctx, workloadinstance)
-	Expect(err).NotTo(HaveOccurred(), "could not remove workloadinstance")
+	err = k8sClient.Delete(ctx, workloadVersion)
+	Expect(err).NotTo(HaveOccurred(), "could not remove workloadVersion")
 }
 
 func assertScheduled(pod apiv1.Pod) types2.AsyncAssertion {
@@ -195,20 +196,20 @@ func assertScheduled(pod apiv1.Pod) types2.AsyncAssertion {
 	}).WithTimeout(time.Second * 60).WithPolling(3 * time.Second)
 }
 
-func initWorkloadInstance(name string) *testv1alpha3.KeptnWorkloadInstance {
+func initWorkloadVersion(name string) *testv1alpha4.KeptnWorkloadVersion {
 
-	var fakeInstance = testv1alpha3.KeptnWorkloadInstance{
+	var fakeInstance = testv1alpha4.KeptnWorkloadVersion{
 		TypeMeta: metav1.TypeMeta{
-			Kind:       "KeptnWorkloadInstance",
-			APIVersion: "lifecycle.keptn.sh/v1alpha3",
+			Kind:       "KeptnWorkloadVersion",
+			APIVersion: "lifecycle.keptn.sh/v1alpha4",
 		},
 		ObjectMeta: metav1.ObjectMeta{Name: name, Namespace: "default"},
-		Spec: testv1alpha3.KeptnWorkloadInstanceSpec{
+		Spec: testv1alpha4.KeptnWorkloadVersionSpec{
 			KeptnWorkloadSpec: testv1alpha3.KeptnWorkloadSpec{
 				ResourceReference: testv1alpha3.ResourceReference{Name: "myfakeres"},
 			},
 		},
-		Status: testv1alpha3.KeptnWorkloadInstanceStatus{},
+		Status: testv1alpha4.KeptnWorkloadVersionStatus{},
 	}
 
 	return &fakeInstance

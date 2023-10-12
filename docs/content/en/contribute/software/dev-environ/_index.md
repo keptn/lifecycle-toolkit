@@ -151,7 +151,7 @@ Study these errors, modify your code, and rerun the test until it passes.
 1. Run the integration tests from the root directory of your clone:
 
    ```shell
-   make run integration-test-local
+   make integration-test-local
    ```
 
    `integration-test-local` cleans up after the test.

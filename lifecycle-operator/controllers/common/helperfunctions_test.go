@@ -527,7 +527,6 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 	}
 }
 
-//nolint:dupl
 func TestGetRequestInfo(t *testing.T) {
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{

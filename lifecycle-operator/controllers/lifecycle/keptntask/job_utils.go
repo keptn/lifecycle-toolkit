@@ -2,8 +2,8 @@ package keptntask
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"log"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
@@ -92,10 +92,7 @@ func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namesp
 }
 
 func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, request ctrl.Request) (*batchv1.Job, error) {
-	errsa := getServiceAccount(definition.Spec.ServiceAccount)
-	if errsa != nil {
-		r.Log.Info("Info: ", errsa)
-	}
+	serviceAccountName := getServiceAccount(definition.Spec.ServiceAccount)
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        apicommon.GenerateJobName(task.Name),
@@ -111,7 +108,7 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 				},
 				Spec: corev1.PodSpec{
 					RestartPolicy:      "OnFailure",
-					ServiceAccountName: definition.Spec.ServiceAccount.Name,
+					ServiceAccountName: serviceAccountName,
 				},
 			},
 			BackoffLimit:          task.Spec.Retries,
@@ -160,9 +157,10 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 	return job, nil
 }
 
-func getServiceAccount(serviceAccount *klcv1alpha3.ServiceAccountSpec) error {
+func getServiceAccount(serviceAccount *klcv1alpha3.ServiceAccountSpec) string {
 	if serviceAccount == nil {
-		return errors.New("no serviceAccount is configured")
+		log.Print("no service account is configured")
+		return ""
 	}
-	return nil
+	return serviceAccount.Name
 }

@@ -33,7 +33,7 @@ To prepare to contribute to the Keptn project, we recommend that you:
 * Study the material in
   [Technologies and concepts you should know](../../general/technologies).
 * Create an account for yourself on
-  [github.com](github.com)
+  [GitHub](https://github.com)
   if you do not already have an account.
 * Set up a fork of the [lifecycle-toolkit](https://github.com/keptn/lifecycle-toolkit) repository to use with your development.
 

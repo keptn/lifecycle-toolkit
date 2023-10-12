@@ -165,7 +165,7 @@ Study these errors, modify your code, and rerun the test until it passes.
 1. From the `lifecycle-operator` directory, run the end-to-end tests:
 
    ```shell
-   make run e2d-test
+   make e2e-test
    ```
 
 ## Create and manage the PR

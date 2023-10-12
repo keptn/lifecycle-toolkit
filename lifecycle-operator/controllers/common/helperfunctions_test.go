@@ -529,7 +529,6 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 
 //nolint:dupl
 func TestGetRequestInfo(t *testing.T) {
-	// Test case 1: Request with name and namespace
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
 			Name:      "example",

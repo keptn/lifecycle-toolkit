@@ -42,7 +42,7 @@ for working with and contributing to Keptn.
   are written in the Go language.
   * [ ] [Go web page](https://go.dev/)
   has tutorials and documentation.
-  * [ ] [Ginko library](https://github.com/onsi/ginkgo/blob/master/README.md)
+  * [ ] [Ginkgo library](https://github.com/onsi/ginkgo/blob/master/README.md)
     is used with the
     [Gomega matcher](https://onsi.github.io/gomega/)
     to implement component tests and end-to-end tests.

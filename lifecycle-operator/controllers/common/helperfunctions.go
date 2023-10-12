@@ -109,9 +109,8 @@ func getObject(k8sclient client.Client, log logr.Logger, ctx context.Context, de
 
 // GetRequestInfo extracts name and namespace from a controller request.
 func GetRequestInfo(req ctrl.Request) map[string]string {
-	info := map[string]string{
+	return map[string]string{
 		"name":      req.Name,
 		"namespace": req.Namespace,
 	}
-	return info
 }

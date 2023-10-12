@@ -9,6 +9,8 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus"
 	"github.com/stretchr/testify/require"
+	"k8s.io/apimachinery/pkg/types"
+	ctrl "sigs.k8s.io/controller-runtime"
 )
 
 func TestFactory(t *testing.T) {
@@ -54,4 +56,19 @@ func TestFactory(t *testing.T) {
 		})
 
 	}
+}
+
+func TestGetRequestInfo(t *testing.T) {
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Name:      "example",
+			Namespace: "test-namespace",
+		}}
+
+	info := GetRequestInfo(req)
+	expected := map[string]string{
+		"name":      "example",
+		"namespace": "test-namespace",
+	}
+	require.Equal(t, expected, info)
 }

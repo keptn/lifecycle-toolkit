@@ -127,7 +127,7 @@ You are now ready to make your changes to the source code.
    For example, if your modifications are to the `metrics-operator`, run:
 
    ```shell
-   make build deploy-metrics-operator RELEASE_REGISTRY=docker.io/exampleuser TAG=main
+   make build-deploy-metrics-operator RELEASE_REGISTRY=docker.io/exampleuser TAG=my-feature
    ```
 
 ## Testing

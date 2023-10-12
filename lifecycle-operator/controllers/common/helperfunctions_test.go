@@ -530,16 +530,16 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 //nolint:dupl
 func TestGetRequestInfo(t *testing.T) {
 	// Test case 1: Request with name and namespace
-	req1 := ctrl.Request{
+	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
 			Name:      "example",
 			Namespace: "test-namespace",
 		}}
 
-	info1 := GetRequestInfo(req1)
-	expected1 := map[string]string{
+	info := GetRequestInfo(req)
+	expected := map[string]string{
 		"name":      "example",
 		"namespace": "test-namespace",
 	}
-	require.Equal(t, expected1, info1)
+	require.Equal(t, expected, info)
 }

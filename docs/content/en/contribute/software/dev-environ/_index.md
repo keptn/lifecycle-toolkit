@@ -21,10 +21,10 @@ To prepare to contribute to the Keptn project, we recommend that you:
   Keptn software and documentation.
   In particular, study the sections for the four main Keptn components:
   
-  - [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator)
-  - [metrics-operator](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator)
-  - [scheduler](https://github.com/keptn/lifecycle-toolkit/tree/main/scheduler)
-  - [klt-cert-manager](https://github.com/keptn/lifecycle-toolkit/tree/main/klt-cert-manager)
+  * [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator)
+  * [metrics-operator](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator)
+  * [scheduler](https://github.com/keptn/lifecycle-toolkit/tree/main/scheduler)
+  * [klt-cert-manager](https://github.com/keptn/lifecycle-toolkit/tree/main/klt-cert-manager)
 
   Each of these is described in the
   [Architecture](../../../docs/architecture/)
@@ -170,7 +170,7 @@ Study these errors, modify your code, and rerun the test until it passes.
 
 ## Create and manage the PR
 
-When all the tests have passed, 
+When all the tests have passed,
 you can follow the instructions in
 [Create PR](../../general/git/pr-create/)
 to create your PR.

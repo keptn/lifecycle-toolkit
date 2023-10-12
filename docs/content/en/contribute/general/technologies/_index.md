@@ -1,10 +1,8 @@
 ---
-title: Technologies to get familiar
+title: Technologies and concepts you should know
 description: Technologies to get familiar before working with Keptn
 weight: 100
 ---
-
-### Related Technologies
 
 You should understand some related technologies
 to effectively use and contribute to Keptn.
@@ -13,7 +11,11 @@ The information has been gathered from the community and is subject to alteratio
 If you have suggestions about additional content that should be included in this list,
 please submit an issue.
 
-### Kubernetes
+## Kubernetes
+
+Keptn runs on Kubernetes and primarily works with deployments that run on Kubernetes
+so a good understanding of Kubernetes is essential
+for working with and contributing to Keptn.
 
 * **Understand the basics of Kubernetes**
   * [ ] [Kubernetes official documentation](https://kubernetes.io/docs/concepts/overview/)
@@ -33,7 +35,27 @@ please submit an issue.
   * [ ] [Is it Observable?
     with Henrik Rexed](https://www.youtube.com/watch?v=aMwk2qo0v40)
 
-### Understanding SLO, SLA, SLIs
+## Development tools
+
+* **Go language**
+  Most of the Keptn software and many of the test tools
+  are written in the Go language.
+  * [ ] [Go web page](https://go.dev/)
+  has tutorials and documentation.
+  * [ ] [Ginko library](https://github.com/onsi/ginkgo/blob/master/README.md)
+    is used with the
+    [Gomega matcher](https://onsi.github.io/gomega/)
+    to implement component tests and end-to-end tests.
+* **KUTTL (KUbernetes Test TooL)**
+  Some test tools are written in KUTTL
+  * [ ] [KUTTL web page](https://kuttl.dev/)
+  has information to get you started
+* **Markdown**
+  Keptn documentation is authored in Markdown
+  and processed with Hugo using the `docsy` theme.
+  * [ ] [Markdown Guide](https://www.markdownguide.org/)
+
+## Understanding SLO, SLA, SLIs
 
 * **Overview**
   * [ ] [Overview](https://www.youtube.com/watch?v=tEylFyxbDLE)

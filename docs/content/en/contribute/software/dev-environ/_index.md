@@ -139,7 +139,7 @@ before you create a PR with your changes.
 
 If your change introduces a new feature,
 you may need to update the test suites to cover your changes.
-These tests use basic go-library tests and KUTTL.
+These tests use basic go-library, Ginkgo or KUTTL tests.
 You can ask the maintainers to tell you where to put your additional test data.
 
 Tests are run on your local machine.

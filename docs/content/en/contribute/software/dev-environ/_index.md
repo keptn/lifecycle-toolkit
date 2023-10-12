@@ -159,7 +159,7 @@ Study these errors, modify your code, and rerun the test until it passes.
 1. From the `lifecycle-operator` directory, run the component test:
 
    ```shell
-   make run component-test
+   make component-test
    ```
 
 1. From the `lifecycle-operator` directory, run the end-to-end tests:

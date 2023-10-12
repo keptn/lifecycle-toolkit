@@ -72,7 +72,7 @@ you need to install the following on your system:
   Kubernetes-in-Docker(KinD) cluster.
   This is adequate for developing software for Keptn.
   See
-  [Kubernetes cluster](../../../../../docs/install/k8s.md/#create-local-kubernetes-cluster)
+  [Kubernetes cluster](../../../docs/install/k8s.md/#create-local-kubernetes-cluster)
   for instructions.
 * [**kubectl**](https://kubernetes.io/docs/tasks/tools/):
   a command-line interface tool used for deploying

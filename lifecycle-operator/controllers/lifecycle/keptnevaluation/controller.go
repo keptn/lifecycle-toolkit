@@ -96,7 +96,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		evaluationDefinition, err := controllercommon.GetEvaluationDefinition(r.Client, r.Log, ctx, evaluation.Spec.EvaluationDefinition, req.NamespacedName.Namespace)
 		if err != nil {
 			if errors.IsNotFound(err) {
-				r.Log.Info(err.Error()+", ignoring error since object must be deleted", "controllerInfo", controllerInfo)
+				r.Log.Info("KeptnEvaluation not found, ignoring error since object must be deleted", "controllerInfo", controllerInfo)
 				span.SetStatus(codes.Error, err.Error())
 				return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 			}

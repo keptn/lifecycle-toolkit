@@ -135,7 +135,7 @@ You are now ready to make your changes to the source code.
 Keptn includes a set of tests that are run on each PR that is submitted.
 We require that all changes pass
 unit tests, component tests, end-to-end tests, and integration tests
-before you push the PR with your changes,
+before you create a PR with your changes.
 
 If your change introduces a new feature,
 you may need to update the test suites to cover your changes.

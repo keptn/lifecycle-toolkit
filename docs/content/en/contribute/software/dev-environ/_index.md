@@ -99,7 +99,7 @@ you need to install the following on your system:
    and pushes the image to the `docker.io/exampleuser` github repository:
 
    ```shell
-   make build deploy dev-environment RELEASE_REGISTRY=docker.io/exampleuser TAG=main
+   make build-deploy-dev-environment RELEASE_REGISTRY=docker.io/exampleuser TAG=main
    ```
 
    The build commands are defined in the

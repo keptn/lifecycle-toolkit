@@ -7,6 +7,8 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/api/resource"
+	apitypes "k8s.io/apimachinery/pkg/types"
+	ctrl "sigs.k8s.io/controller-runtime"
 )
 
 func TestOperatorEvaluator_Evaluate(t *testing.T) {
@@ -271,4 +273,19 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 			require.Equal(t, tt.want, oe.Evaluate(tt.val, &tt.o))
 		})
 	}
+}
+
+func TestGetRequestInfo(t *testing.T) {
+	req := ctrl.Request{
+		NamespacedName: apitypes.NamespacedName{
+			Name:      "example",
+			Namespace: "test-namespace",
+		}}
+
+	info := GetRequestInfo(req)
+	expected := map[string]string{
+		"name":      "example",
+		"namespace": "test-namespace",
+	}
+	require.Equal(t, expected, info)
 }

@@ -26,6 +26,7 @@ import (
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/aggregation"
+	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -64,7 +65,7 @@ type KeptnMetricReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	requestInfo := providers.GetRequestInfo(req)
+	requestInfo := common.GetRequestInfo(req)
 	r.Log.Info("Reconciling Metric", "requestInfo", requestInfo)
 	metric := &metricsapi.KeptnMetric{}
 

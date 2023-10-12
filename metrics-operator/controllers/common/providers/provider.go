@@ -11,7 +11,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/datadog"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus"
-	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -51,13 +50,5 @@ func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) 
 		}, nil
 	default:
 		return nil, fmt.Errorf("provider %s not supported", providerType)
-	}
-}
-
-// GetRequestInfo extracts name and namespace from a controller request.
-func GetRequestInfo(req ctrl.Request) map[string]string {
-	return map[string]string{
-		"name":      req.Name,
-		"namespace": req.Namespace,
 	}
 }

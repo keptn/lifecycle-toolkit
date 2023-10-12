@@ -74,14 +74,9 @@ type KeptnWorkloadVersionReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 //
 //nolint:gocyclo,gocognit
-<<<<<<< HEAD:lifecycle-operator/controllers/lifecycle/keptnworkloadinstance/controller.go
-func (r *KeptnWorkloadInstanceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	requestInfo := controllercommon.GetRequestInfo(req)
-	r.Log.Info("Searching for KeptnWorkloadInstance", "requestInfo", requestInfo)
-=======
 func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("Searching for KeptnWorkloadVersion")
->>>>>>> feat(lifecycle-operator): adapt code to use KeptnWorkloadVersion instead of KeptnWorkloadInstance:lifecycle-operator/controllers/lifecycle/keptnworkloadversion/controller.go
+	requestInfo := controllercommon.GetRequestInfo(req)
+	r.Log.Info("Searching for KeptnWorkloadVersion", "requestInfo", requestInfo)
 
 	// retrieve workload version
 	workloadVersion := &klcv1alpha4.KeptnWorkloadVersion{}

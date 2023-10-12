@@ -59,9 +59,9 @@ type KeptnWorkloadReconciler struct {
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads/finalizers,verbs=update
-// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadVersions,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadVersions/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadVersions/finalizers,verbs=update
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.

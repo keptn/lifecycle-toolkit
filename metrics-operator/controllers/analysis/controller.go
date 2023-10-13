@@ -25,6 +25,7 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	ctrlcommon "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	evalType "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"golang.org/x/exp/maps"
@@ -60,7 +61,7 @@ type AnalysisReconciler struct {
 // For more details, check Reconcile and its AnalysisResult here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	requestInfo := common.GetRequestInfo(req)
+	requestInfo := ctrlcommon.GetRequestInfo(req)
 	a.Log.Info("Reconciling Analysis", "requestInfo", requestInfo)
 	analysis := &metricsapi.Analysis{}
 

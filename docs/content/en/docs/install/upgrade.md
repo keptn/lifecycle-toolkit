@@ -26,47 +26,24 @@ If you installed your Keptn instance from the Manifest,
 additional steps are required to use the Helm Chart to upgrade.
 Contact us on Slack for assistance.
 
-## Upgrade from installation via manifests using Helm
+## Upgrade to Helm from a manifest installation
+
+> **Warning**
+Upgrade to Helm from a manifest installation can cause data loss.
 
 Keptn v.0.7.0 and later can be installed with Helm charts;
 Keptn v.0.8.3 can only be installed with Helm.
 If you previously installed Keptn from manifests,
-you can not directly upgrade to with Helm but must back up your Keptn data,
-then reinstall Keptn from a Helm chart.
+you can not directly upgrade with Helm but must back up your manifests,
+then reinstall Keptn from a Helm chart and re-apply your manifests.
 
-To not loose all of your data, we encourage you to do a backup of the Keptn CRs,
-`Namespaces`, `Secrets` and `ConfigMaps`.
-Your applications (`Pods`, `Deployments`,
-`StatefulSets`, `DeamonSets`,...) won't be part of the backup and you should do
-it manually.
+To start the upgrade process, follow the steps below:
 
-To do this, copy the following code into `backup-script.sh` file:
-
-```shell
-#!/bin/bash
-
-kubectl get ns -oyaml >> backup.yaml
-kubectl get configmaps -A -oyaml >> backup.yaml
-kubectl get secrets -A -oyaml >> backup.yaml
-
-resources=$(kubectl get crd -n keptn-lifecycle-toolkit-system --no-headers -o custom-columns=NAME:.metadata.name)
-
-for name in "${resources[@]}"; do
-   kubectl get $name -A -oyaml >> backup.yaml
-done
-```
-
-Then make your file executable and execute the script:
-
-```shell
-chmod +x backup-script.sh && ./backup-script.sh
-```
-
-This creates a manifest called `backup.yaml` that includes all the CRs, `Namespaces`, `Secrets`
-and `ConfigMaps`.
-
-> **Note** This only backs up you Keptn configuration data.
-   Use standard Kuberetes tools and practices to back up your entire cluster.
+1. To not loose all of your data, we encourage you to do a backup of the manifests,
+which you applied to the cluster (`Pods`, `Deployments`,
+`StatefulSets`, `DeamonSets`, `KeptnApps`,... ).
+After the re-installation of Keptn with Helm, you can re-apply
+these manifests and restart the Keptn deployment process.
 
 1. Completely remove your Keptn installation with the following command sequence:
 
@@ -87,15 +64,10 @@ helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-
 For information about  advanced installation options, refer to
 [Modify Helm configuration options](install.md).
 
-After the installation finishes, restore the Keptn resources from your backup:
-To apply them execute:
+1. After the installation finishes, restore the manifests from you backup
 
-```shell
-kubectl apply -f backup.yaml
-```
-
-> **Note** Please be aware that some Keptn applications may start the deployment from the
-beginning (if the `Deployments` are in place) and the system is not guaranteed to return
+> **Warning** Please be aware that Keptn applications will start the deployment process from the
+beginning and the system is not guaranteed to return
 to the exact state it was in before re-installation, even if you created the backup correctly.
 
 ## Migrate from v0.6.0 to v0.7.0

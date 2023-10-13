@@ -94,9 +94,9 @@ To apply them execute:
 kubectl apply -f backup.yaml
 ```
 
-> **Note** Please be aware that some Keptn applications may start the deployment from the beginning (if the `Deployments` are in place) and
-the system is not guaranteed to return to the exact state it was in before re-installation,
-even if you created the backup correctly.
+> **Note** Please be aware that some Keptn applications may start the deployment from the
+beginning (if the `Deployments` are in place) and the system is not guaranteed to return
+to the exact state it was in before re-installation, even if you created the backup correctly.
 
 ## Migrate from v0.6.0 to v0.7.0
 

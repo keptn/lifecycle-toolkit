@@ -9,6 +9,7 @@ import (
 
 	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	lfcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
@@ -289,13 +290,13 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 		UnbindSpanFunc: func(reconcileObject client.Object, phase string) error { return nil },
 	}
 
-	workloadInstanceIndexer := func(obj client.Object) []string {
-		workloadInstance, _ := obj.(*lfcv1alpha3.KeptnWorkloadInstance)
-		return []string{workloadInstance.Spec.AppName}
+	workloadVersionIndexer := func(obj client.Object) []string {
+		workloadVersion, _ := obj.(*lfcv1alpha4.KeptnWorkloadVersion)
+		return []string{workloadVersion.Spec.AppName}
 	}
 
 	fake.SetupSchemes()
-	fakeClient := k8sfake.NewClientBuilder().WithObjects(objs...).WithStatusSubresource(objs...).WithScheme(scheme.Scheme).WithObjects().WithIndex(&lfcv1alpha3.KeptnWorkloadInstance{}, "spec.app", workloadInstanceIndexer).Build()
+	fakeClient := k8sfake.NewClientBuilder().WithObjects(objs...).WithStatusSubresource(objs...).WithScheme(scheme.Scheme).WithObjects().WithIndex(&lfcv1alpha4.KeptnWorkloadVersion{}, "spec.app", workloadVersionIndexer).Build()
 
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppVersionReconciler{

@@ -6,13 +6,14 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func TestSpanHandler_GetAndUnbindSpan_WorkloadInstance(t *testing.T) {
-	wi := &v1alpha3.KeptnWorkloadInstance{}
+func TestSpanHandler_GetAndUnbindSpan_WorkloadVersion(t *testing.T) {
+	wi := &v1alpha4.KeptnWorkloadVersion{}
 	wi.Spec.TraceId = make(map[string]string, 1)
 	wi.Spec.TraceId["test"] = "test"
 	wi.Spec.AppName = "test"
@@ -49,7 +50,7 @@ func doAssert(t *testing.T, obj client.Object) {
 }
 
 func TestSpanHandler_GetSpan(t *testing.T) {
-	wi := &v1alpha3.KeptnWorkloadInstance{}
+	wi := &v1alpha4.KeptnWorkloadVersion{}
 	wi.Spec.TraceId = make(map[string]string, 1)
 	wi.Spec.TraceId["traceparent"] = "test-parent"
 	wi.Spec.AppName = "test"
@@ -72,7 +73,7 @@ func TestSpanHandler_GetSpan(t *testing.T) {
 	require.Equal(t, ctx, ctx2)
 	require.Equal(t, span, span2)
 
-	wi2 := &v1alpha3.KeptnWorkloadInstance{}
+	wi2 := &v1alpha4.KeptnWorkloadVersion{}
 	wi2.Spec.TraceId = make(map[string]string, 1)
 	wi2.Spec.TraceId["traceparent"] = "test-parent2"
 	wi2.Spec.AppName = "test2"

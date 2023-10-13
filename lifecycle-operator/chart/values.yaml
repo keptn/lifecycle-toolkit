@@ -33,6 +33,7 @@ lifecycleOperator:
     keptnTaskControllerLogLevel: "0"
     keptnTaskDefinitionControllerLogLevel: "0"
     keptnWorkloadControllerLogLevel: "0"
+    keptnWorkloadVersionControllerLogLevel: "0"
     keptnWorkloadInstanceControllerLogLevel: "0"
     optionsControllerLogLevel: "0"
     otelCollectorUrl: otel-collector:4317

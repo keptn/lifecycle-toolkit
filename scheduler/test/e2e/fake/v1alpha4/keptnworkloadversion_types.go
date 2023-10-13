@@ -20,10 +20,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/scheduler/test/e2e/fake/v1alpha3/common"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -76,8 +75,6 @@ type KeptnWorkloadVersionStatus struct {
 	// - PostDeploymentTasks
 	// - PostDeploymentEvaluations
 	CurrentPhase string `json:"currentPhase,omitempty"`
-	// PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadVersion
-	PhaseTraceIDs common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
 	// Status represents the overall status of the KeptnWorkloadVersion.
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`
@@ -317,51 +314,6 @@ func (w KeptnWorkloadVersion) GetVersion() string {
 	return w.Spec.Version
 }
 
-func (w KeptnWorkloadVersion) GenerateTask(taskDefinition v1alpha3.KeptnTaskDefinition, checkType common.CheckType) v1alpha3.KeptnTask {
-	return v1alpha3.KeptnTask{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:        common.GenerateTaskName(checkType, taskDefinition.Name),
-			Namespace:   w.Namespace,
-			Labels:      taskDefinition.Labels,
-			Annotations: taskDefinition.Annotations,
-		},
-		Spec: v1alpha3.KeptnTaskSpec{
-			Context: v1alpha3.TaskContext{
-				WorkloadName:    w.GetParentName(),
-				AppName:         w.GetAppName(),
-				WorkloadVersion: w.GetVersion(),
-				TaskType:        string(checkType),
-				ObjectType:      "Workload",
-			},
-			TaskDefinition:   taskDefinition.Name,
-			Parameters:       v1alpha3.TaskParameters{},
-			SecureParameters: v1alpha3.SecureParameters{},
-			Type:             checkType,
-			Retries:          taskDefinition.Spec.Retries,
-			Timeout:          taskDefinition.Spec.Timeout,
-		},
-	}
-}
-
-func (w KeptnWorkloadVersion) GenerateEvaluation(evaluationDefinition v1alpha3.KeptnEvaluationDefinition, checkType common.CheckType) v1alpha3.KeptnEvaluation {
-	return v1alpha3.KeptnEvaluation{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      common.GenerateEvaluationName(checkType, evaluationDefinition.Name),
-			Namespace: w.Namespace,
-		},
-		Spec: v1alpha3.KeptnEvaluationSpec{
-			AppName:              w.GetAppName(),
-			WorkloadVersion:      w.GetVersion(),
-			Workload:             w.GetParentName(),
-			EvaluationDefinition: evaluationDefinition.Name,
-			Type:                 checkType,
-			RetryInterval: metav1.Duration{
-				Duration: 5 * time.Second,
-			},
-		},
-	}
-}
-
 func (w KeptnWorkloadVersion) GetSpanAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
 		common.AppName.String(w.Spec.AppName),
@@ -384,55 +336,6 @@ func (w KeptnWorkloadVersion) GetSpanName(phase string) string {
 
 func (w KeptnWorkloadVersion) SetSpanAttributes(span trace.Span) {
 	span.SetAttributes(w.GetSpanAttributes()...)
-}
-
-//nolint:dupl
-func (w *KeptnWorkloadVersion) DeprecateRemainingPhases(phase common.KeptnPhaseType) {
-	// no need to deprecate anything when post-eval tasks fail
-	if phase == common.PhaseWorkloadPostEvaluation {
-		return
-	}
-	// deprecate post evaluation when post tasks failed
-	if phase == common.PhaseWorkloadPostDeployment {
-		w.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
-	}
-	// deprecate post evaluation and tasks when app deployment failed
-	if phase == common.PhaseWorkloadDeployment {
-		w.Status.PostDeploymentStatus = common.StateDeprecated
-		w.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
-	}
-	// deprecate app deployment, post tasks and evaluations if app pre-eval failed
-	if phase == common.PhaseWorkloadPreEvaluation {
-		w.Status.PostDeploymentStatus = common.StateDeprecated
-		w.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
-		w.Status.DeploymentStatus = common.StateDeprecated
-	}
-	// deprecate pre evaluations, app deployment and post tasks and evaluations when pre-tasks failed
-	if phase == common.PhaseWorkloadPreDeployment {
-		w.Status.PostDeploymentStatus = common.StateDeprecated
-		w.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
-		w.Status.DeploymentStatus = common.StateDeprecated
-		w.Status.PreDeploymentEvaluationStatus = common.StateDeprecated
-	}
-	// deprecate completely everything
-	if phase == common.PhaseDeprecated {
-		w.Status.PostDeploymentStatus = common.StateDeprecated
-		w.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
-		w.Status.DeploymentStatus = common.StateDeprecated
-		w.Status.PreDeploymentEvaluationStatus = common.StateDeprecated
-		w.Status.PreDeploymentStatus = common.StateDeprecated
-		w.Status.Status = common.StateDeprecated
-		return
-	}
-
-	w.Status.Status = common.StateFailed
-}
-
-func (w *KeptnWorkloadVersion) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
-	if w.Status.PhaseTraceIDs == nil {
-		w.Status.PhaseTraceIDs = common.PhaseTraceID{}
-	}
-	w.Status.PhaseTraceIDs[common.GetShortPhaseName(phase)] = carrier
 }
 
 func (w KeptnWorkloadVersion) GetEventAnnotations() map[string]string {

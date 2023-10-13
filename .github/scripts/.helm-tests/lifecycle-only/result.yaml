@@ -5772,7 +5772,7 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnworkloadinstances
+  - keptnworkloadversions
   verbs:
   - get
   - list
@@ -6519,6 +6519,8 @@ spec:
         - name: KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL
+          value: "0"
+        - name: KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
           value: "0"

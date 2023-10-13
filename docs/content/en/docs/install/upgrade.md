@@ -35,7 +35,8 @@ you can not directly upgrade to with Helm but must back up your Keptn data,
 then reinstall Keptn from a Helm chart.
 
 To not loose all of your data, we encourage you to do a backup of the Keptn CRs,
-`Namespaces`, `Secrets` and `ConfigMaps`. Your applications (`Pods`, `Deployments`,
+`Namespaces`, `Secrets` and `ConfigMaps`.
+Your applications (`Pods`, `Deployments`,
 `StatefulSets`, `DeamonSets`,...) won't be part of the backup and you should do
 it manually.
 
@@ -75,7 +76,7 @@ kubectl delete -f \
      https://github.com/keptn/lifecycle-toolkit/releases/download/$your-keptn-version/manifest.yaml
 ```
 
-1.  Use Helm to install a clean version of Keptn:
+1. Use Helm to install a clean version of Keptn:
 
 ```shell
 helm repo add klt https://charts.lifecycle.keptn.sh

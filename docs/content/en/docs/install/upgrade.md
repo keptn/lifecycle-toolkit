@@ -39,7 +39,9 @@ There is a need to uninstall Keptn
 and install it afterwards via Helm.
 
 To not loose all of your data, we encourage you to do a backup of the Keptn CRs,
-`Namespaces`, `Secrets` and `ConfigMaps`.
+`Namespaces`, `Secrets` and `ConfigMaps`. Your applications (`Pods`, `Deployments`,
+`StatefulSets`, `DeamonSets`,...) won't be part of the backup and you should do
+it manually.
 
 To create a backup, copy the following code into `backup-script.sh` file:
 

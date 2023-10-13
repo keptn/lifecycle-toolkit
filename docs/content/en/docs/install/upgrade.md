@@ -28,22 +28,18 @@ Contact us on Slack for assistance.
 
 ## Upgrade from installation via manifests using Helm
 
-If you are trying to upgrade Keptn installed via manifests to a version
-which does not anymore support manifests installation (>= 0.8.3) or any
-other version which supports installation via Helm (>= 0.7.0) you should
-be aware that there might be a certain loose of data.
-
-Unfortunatelly, there is no straight way how to upgrade Keptn installed via
-manifests to a higher version via Helm.
-There is a need to uninstall Keptn
-and install it afterwards via Helm.
+Keptn v.0.7.0 and later can be installed with Helm charts;
+Keptn v.0.8.3 can only be installed with Helm.
+If you previously installed Keptn from manifests,
+you can not directly upgrade to with Helm but must back up your Keptn data,
+then reinstall Keptn from a Helm chart.
 
 To not loose all of your data, we encourage you to do a backup of the Keptn CRs,
 `Namespaces`, `Secrets` and `ConfigMaps`. Your applications (`Pods`, `Deployments`,
 `StatefulSets`, `DeamonSets`,...) won't be part of the backup and you should do
 it manually.
 
-To create a backup, copy the following code into `backup-script.sh` file:
+To do this, copy the following code into `backup-script.sh` file:
 
 ```shell
 #!/bin/bash
@@ -59,26 +55,27 @@ for name in "${resources[@]}"; do
 done
 ```
 
-next enable execution bit of your file and execute the script:
+Then make your file executable and execute the script:
 
 ```shell
 chmod +x backup-script.sh && ./backup-script.sh
 ```
 
-This will create a manifest `backup.yaml` with all the CRs, `Namespaces`, `Secrets`
+This creates a manifest called `backup.yaml` that includes all the CRs, `Namespaces`, `Secrets`
 and `ConfigMaps`.
 
-> **Note** Please be aware that this is not a backup of your whole cluster and this part
-you should hadle by yourself.
+> **Note** This only backs up you Keptn configuration data.
+   Use standard Kuberetes tools and practices to back up your entire cluster.
 
-To proceed with the upgrade, you need to completely remove your Keptn installation:
+1. Completely remove your Keptn installation with the following command sequence:
 
 ```shell
 your-keptn-version=<your-keptn-version>
-kubectl delete -f https://github.com/keptn/lifecycle-toolkit/releases/download/$your-keptn-version/manifest.yaml
+kubectl delete -f \
+     https://github.com/keptn/lifecycle-toolkit/releases/download/$your-keptn-version/manifest.yaml
 ```
 
-and create a new clean installation of Keptn via Helm:
+1.  Use Helm to install a clean version of Keptn:
 
 ```shell
 helm repo add klt https://charts.lifecycle.keptn.sh
@@ -86,7 +83,8 @@ helm repo update
 helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
-To check advanced installation options, refer to the [installation section](install.md).
+For information about  advanced installation options, refer to
+[Modify Helm configuration options](install.md).
 
 After finishing your installation, your system is clean and prepared to accept the
 resources from your backup.

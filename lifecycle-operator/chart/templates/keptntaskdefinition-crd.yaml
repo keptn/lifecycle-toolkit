@@ -1693,7 +1693,7 @@ spec:
                 properties:
                   name:
                     type: string
-                type: object     
+                type: object
               timeout:
                 default: 5m
                 description: Timeout specifies the maximum time to wait for the task

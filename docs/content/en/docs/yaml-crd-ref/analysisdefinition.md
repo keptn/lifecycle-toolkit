@@ -52,7 +52,8 @@ spec:
         * **failure**
           * **lessThan**
             * **fixedValue** 600
-        * **Warning**
+        <!-- markdownlint-disable -->
+        * **warning**
           * **inRange**
             * **lowBound** 300
             * **highBound** 500
@@ -60,7 +61,8 @@ spec:
       * **keyObjective** false
   * **totalScore**
     * **passPercentage** 90
-    * **WarningPercentage**
+    <!-- markdownlint-disable -->
+    * **warningPercentage**
 
 ## Usage
 

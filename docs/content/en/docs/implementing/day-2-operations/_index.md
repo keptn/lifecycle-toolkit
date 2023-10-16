@@ -12,6 +12,7 @@ Tasks that fall under this category could be:
 
 * Updating the version of one or more workloads that are part of
 the same application.
+* Adding a new workload to an existing application
 * Monitoring the health of your application using `KeptnMetrics`
 * Optimizing the resource usage of your applications by integrating
 `KeptnMetrics` into a
@@ -211,3 +212,82 @@ NAMESPACE         NAME                          APPNAME        VERSION   PHASE
 podtato-kubectl   podtato-head-0.1.0-6bch3iak   podtato-head   0.1.0     Completed
 podtato-kubectl   podtato-head-0.1.0-hf52kauz   podtato-head   0.1.0     Completed
 ```
+
+## Adding a new Workload to an Application
+
+To add a new workload (e.g. a new deployment) to an existing app,
+you will need to:
+* Make sure the
+`keptn.sh/app`/`app.kubernetes.io/part-of` label/annotation is present
+on the new workload
+* Add the new workload to the `KeptnApp`, if you have defined the `KeptnApp`
+yourself previously.
+If the application has been discovered automatically, this step is not needed.
+
+For example, to add the deployment `podtato-head-left-leg` to the
+`podtato-head` application, the configuration for that new deployment
+would look like this, with the required label being set:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-left-leg
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: podtato-head-left-leg
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/version: 0.1.0
+    spec:
+      containers:
+        - name: podtato-head-frontend
+          image: podtato-head-left-leg:a
+```
+
+The `KeptnApp`, if defined by the user, should contain the
+reference to the newly added workload.
+This is mandatory, as the workload itself will not be able to
+progress if it is not part of a `KeptnApp`.
+For automatically discovered apps this will be done
+automatically.
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnApp
+metadata:
+  name: podtato-head
+  namespace: podtato-kubectl
+spec:
+  version: "0.1.0"
+  preDeploymentTasks:
+    - wait-for-prometheus
+  postDeploymentTasks:
+    - post-deployment-loadtests
+  workloads:
+  - name: podtato-head-frontend
+    version: 0.1.0
+  - name: podtato-head-hat
+    version: 1.1.1
+  - name: podtato-head-left-leg # The newly added workload
+    version: 0.1.0
+```
+
+After applying the updated manifests, you can monitor the status
+of the application and related workloads using the following commands:
+
+```shell
+$ kubectl get keptnworkloadversion -n podtato-kubectl
+
+NAMESPACE   NAME                                             APPNAME         WORKLOADNAME                         WORKLOADVERSION      PHASE
+podtato-kubectl   podtato-head-podtato-head-frontend-0.1.0   podtato-head    podtato-head-podtato-head-frontend   0.1.0                Completed
+podtato-kubectl   podtato-head-podtato-head-hat-0.1.1        podtato-head    podtato-head-podtato-head-hat        0.1.1                Completed
+podtato-kubectl   podtato-head-podtato-head-left-leg-0.1.0   podtato-head    podtato-head-podtato-head-left-leg   0.1.0                Completed
+```
+
+As can be seen in the output of the command, in addition
+to the previous `KeptnWorkloadVersions`, the newly created
+`KeptnWorkloadVersion` `podtato-head-podtato-head-left-leg-0.1.0` has been added
+to the results.

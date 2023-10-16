@@ -127,10 +127,7 @@ Use the `container-runtime` to specify your own
 [Kubernetes container](https://kubernetes.io/docs/concepts/containers/)
 and define the task you want to execute.
 
-You can code a sequence of executables here
-that need to be run in order
-as long as they are executables that are part of the lifecycle workflow.
-Task sequences that are not part of the lifecycle workflow
+Task sequences that are not part of the lifecycle workflow and
 should be handled by the pipeline engine tools being used
 such as Jenkins, Argo Workflows, Flux, and Tekton.
 

@@ -1,20 +1,18 @@
 ---
-title: <crd-name>
+title: template for new files in this directory
 description: <one-line description of CRD>
 weight: <assign weight to create alphabetical order>
-hide: true
 ---
 
 Copy this template to create a new CRD reference page.
 
 1. Replace the variable text in metadata with information for this page
-1. Delete the `hidden: true` line
 1. Delete these instructions from your file
 1. Populate the page with appropriate content
 
 ## Synopsis
 
-## Parameters
+## Fields
 
 <!-- Detailed description of each field/parameter -->
 

@@ -3,7 +3,6 @@ package keptntask
 import (
 	"context"
 	"fmt"
-	"log"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
@@ -159,7 +158,6 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 
 func getServiceAccount(serviceAccount *klcv1alpha3.ServiceAccountSpec) string {
 	if serviceAccount == nil {
-		log.Print("no service account is configured")
 		return ""
 	}
 	return serviceAccount.Name

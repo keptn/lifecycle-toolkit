@@ -48,8 +48,8 @@ simplifying configuration and integration into a single set of metrics.
 
 To learn more, see:
 
-* [Custom Keptn metrics](usecase_metrics)
-* [Keptn Metrics](../implementing/evaluatemetrics)
+* [Custom Keptn metrics](usecase_metrics.md)
+* [Keptn Metrics](../implementing/evaluatemetrics.md)
 
 ## Observability
 
@@ -88,9 +88,9 @@ to ensure that your deployments are observable.
 To learn more, see:
 
 * [Getting started with Keptn Observability](../getting-started)
-* [Standardize observability](usecase-observability/)
+* [Standardize observability](usecase-observability.md/)
 * [DORA metrics](../implementing/dora) guide
-* [OpenTelemetry observability](../implementing/otel) guide
+* [OpenTelemetry observability](../implementing/otel.md) guide
 
 ## Release lifecycle management
 

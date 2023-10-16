@@ -118,7 +118,7 @@ kubectl get pods
 For subsequent KeptnTask runs,
 the `KeptnTask` name and version fields must be unique,
 so copy the `KeptnTask` yaml file you have and update the
-`metadata.name` field:
+`metadata.name` field.
 
 A standard practice is to just increment the value of is field.
 For example, you could create a `test-task-2.yaml` file

@@ -20,8 +20,6 @@ To do this:
 
 You must still
 [install](../install/install.md/#use-helm-chart)
-and
-[enable](../install/install.md/#enable-keptn-for-your-cluster)
 Keptn on a Kubernetes cluster,
 but this can be a very lightweight, single-node KinD cluster; see
 [Create local Kubernetes cluster](../install/k8s.md/#create-local-kubernetes-cluster).

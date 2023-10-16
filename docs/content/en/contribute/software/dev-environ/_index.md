@@ -46,7 +46,7 @@ each of which is discussed in the Architecture
 [Architecture](../../../docs/architecture/)
 documentation:
 
-* Two Kubernetes operators, `metrics-operator` and `lifecycle-operatory`
+* Two Kubernetes operators, `metrics-operator` and `lifecycle-operator`
 * Keptn `scheduler`
 * Keptn `cert-manager`
 

@@ -98,7 +98,7 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	// load the provider
 	provider, err2 := r.ProviderFactory(metricProvider.GetType(), r.Log, r.Client)
 	if err2 != nil {
-		r.Log.Error(err2, "Failed to get the correct Metric Provider")
+		r.Log.Error(err2, "Failed to get the correct Metric Provider", "requestInfo", requestInfo)
 		return ctrl.Result{Requeue: false}, err2
 	}
 	reconcile := ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}
@@ -118,7 +118,7 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	if err := r.Client.Status().Update(ctx, metric); err != nil {
-		r.Log.Error(err, "Failed to update the Metric status")
+		r.Log.Error(err, "Failed to update the Metric status", "requestInfo", requestInfo)
 		return ctrl.Result{}, err
 	}
 

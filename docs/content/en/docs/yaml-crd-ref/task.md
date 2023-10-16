@@ -64,7 +64,7 @@ spec:
 
   * **taskDefinition** - Name of the corresponding `KeptnTaskDefinition` resource.
     This `KeptnTaskDefinition` can be located in the same namespace
-    or in the `Keptn` name space.
+    or in the Keptn installation namespace.
   * **context** - Contextual information about the task execution
     * **appName** - Name of the
       [KeptnApp](../yaml-crd-ref/app.md) resource

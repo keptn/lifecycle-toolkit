@@ -49,7 +49,7 @@ spec:
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
-* **spec** - Defines the desired state of this `KeptnTask` resource
+* **spec** - Defines the speficication of this `KeptnTask` resource
   * **workload** - Name of the
       [KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload)
       resource for which the `KeptnTask` is being executed.

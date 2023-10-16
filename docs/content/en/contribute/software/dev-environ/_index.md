@@ -46,9 +46,11 @@ each of which is discussed in the Architecture
 [Architecture](../../../docs/architecture/)
 documentation:
 
-* Two Kubernetes operators, `metrics-operator` and `lifecycle-operator`
+* Three Kubernetes operators
+  * `metrics-operator`
+  * `lifecycle-operatory`
+  * `cert-manager`
 * Keptn `scheduler`
-* Keptn `cert-manager`
 
 At the top level of the repository,
 you also see the `runtimes` directory.

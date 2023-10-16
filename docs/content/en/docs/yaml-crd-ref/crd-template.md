@@ -27,5 +27,3 @@ Copy this template to create a new CRD reference page.
 ## Differences between versions
 
 ## See also
-
-

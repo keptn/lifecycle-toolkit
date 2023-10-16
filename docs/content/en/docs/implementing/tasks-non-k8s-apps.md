@@ -109,8 +109,8 @@ in the associated `KeptnTaskDefinition` resource.
 Use the following commands to show the current status of the jobs:
 
 ```shell
-kubectl get keptntasks 
-kubectl get pods
+kubectl get keptntasks -n my-keptn-annotated-namespace
+kubectl get pods -n my-keptn-annotated-namespace
 ```
 
 ## Re-run the KeptnTask

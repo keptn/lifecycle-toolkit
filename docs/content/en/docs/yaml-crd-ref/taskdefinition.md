@@ -31,7 +31,7 @@ differentiated by the `spec` section:
   See
   [Synopsis for container-runtime](#synopsis-for-container-runtime)
   and
-  [Examples for a container-runtime container](#examples-for-a-custom-runtime-container).
+  [Examples for a container-runtime container](#examples-for-a-container-runtime-container).
 * Pre-defined containers
 
   * Use the pre-defined `deno-runtime` runner
@@ -71,12 +71,6 @@ spec:
   retries: <integer>
   timeout: <duration-in-seconds>
 ```
-
-TODO: The API ref points to
-[Kubernetes doc](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)
-where I don't find a direct hit
-but timeouts seem to be measured in seconds.
-Please verify
 
 ### Fields used for all containers
 

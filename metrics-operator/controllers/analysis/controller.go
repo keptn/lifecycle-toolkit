@@ -72,7 +72,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			a.Log.Info("Analysis resource not found. Ignoring since object must be deleted", "requestInfo", requestInfo)
 			return ctrl.Result{}, nil
 		}
-		a.Log.Error(err, "Failed to get the Analysis")
+		a.Log.Error(err, "Failed to get the Analysis", "requestInfo", requestInfo)
 		return ctrl.Result{}, err
 	}
 
@@ -105,7 +105,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	res, err := wp.DispatchAndCollect(childCtx)
 	if err != nil {
-		a.Log.Error(err, "Failed to collect all values required for the Analysis, caching collected values")
+		a.Log.Error(err, "Failed to collect all values required for the Analysis, caching collected values", "requestInfo", requestInfo)
 		analysis.Status.StoredValues = res
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, a.updateStatus(ctx, analysis)
 	}

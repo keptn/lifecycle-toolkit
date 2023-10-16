@@ -52,15 +52,15 @@ spec:
         * **failure**
           * **lessThan**
             * **fixedValue** 600
-        > **Warning**
-        * **inRange**
-          * **lowBound** 300
-          * **highBound** 500
+        * **Warning**
+          * **inRange**
+            * **lowBound** 300
+            * **highBound** 500
       * **weight** 1
       * **keyObjective** false
   * **totalScore**
     * **passPercentage** 90
-    > **Warning**Percentage
+    * **WarningPercentage**
 
 ## Usage
 
@@ -75,7 +75,7 @@ Each of these objectives must specify:
   defining the data provider from which to gather the data
   and how to compute the Analysis
 
-## Examples
+## Example
 
 ```yaml
 apiVersion: metrics.keptn.sh/v1alpha3

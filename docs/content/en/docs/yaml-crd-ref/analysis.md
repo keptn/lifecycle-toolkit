@@ -68,7 +68,7 @@ status:
   * **status** -- results of this Analysis run,
     added to the resource by Keptn.
     * **pass** -- Whether the analysis passed or failed.
-    > **Warning** -- Whether the analysis returned a warning.
+    * **Warning** -- Whether the analysis returned a warning.
     * **raw** --  String-encoded JSON object that reaports the results
       of evaluating one or more objectives or metrics.
       See

@@ -147,5 +147,5 @@ spec:
 You can then apply this file with the following command:
 
 ```yaml
-kubectl --apply test-task-2.yaml
+kubectl apply -f test-task-2.yaml -n my-keptn-annotated-namespace
 ```

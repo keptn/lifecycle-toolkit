@@ -31,7 +31,7 @@ differentiated by the `spec` section:
   See
   [Synopsis for container-runtime](#synopsis-for-container-runtime)
   and
-  [Examples for a container-runtime container](#examples-for-a-container-runtime-container).
+  [Examples for a container-runtime runner](#examples-for-a-container-runtime-runner).
 * Pre-defined containers
 
   * Use the pre-defined `deno-runtime` runner
@@ -372,7 +372,7 @@ See
 [Executing sequential tasks](../implementing/tasks/#executing-sequential-tasks)
 for more information.
 
-## Examples for a container-runtime
+## Examples for a container-runtime runner
 
 For an example of a `KeptnTaskDefinition` that defines a custom container.
  see

@@ -21,26 +21,6 @@ func TestKeptnWorkload(t *testing.T) {
 		},
 	}
 
-	workloadInstanceName := workload.GetWorkloadInstanceName()
-	require.Equal(t, "workload-version", workloadInstanceName)
-
-	workloadInstance := workload.GenerateWorkloadInstance("prev", map[string]string{})
-	require.Equal(t, KeptnWorkloadInstance{
-		ObjectMeta: metav1.ObjectMeta{
-			Annotations: map[string]string{},
-			Name:        "workload-version",
-			Namespace:   "namespace",
-		},
-		Spec: KeptnWorkloadInstanceSpec{
-			KeptnWorkloadSpec: KeptnWorkloadSpec{
-				Version: "version",
-				AppName: "app",
-			},
-			WorkloadName:    "workload",
-			PreviousVersion: "prev",
-		},
-	}, workloadInstance)
-
 	require.Equal(t, []attribute.KeyValue{
 		common.AppName.String("app"),
 		common.WorkloadName.String("workload"),

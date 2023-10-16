@@ -14,7 +14,8 @@ OPERATOR_API_ROOT='lifecycle-operator/apis/'
 METRICS_API_ROOT='metrics-operator/api/'
 TEMPLATE_DIR='.github/scripts/generate-crd-docs/templates'
 RENDERER='markdown'
-RENDERER_CONFIG_FILE='.github/scripts/generate-crd-docs/crd-docs-generator-config.yaml'
+RENDERER_CONFIG_FILE_TEMPLATE_PATH='.github/scripts/generate-crd-docs/crd-docs-generator-config'
+RENDERER_CONFIG_FILE=$RENDERER_CONFIG_FILE_TEMPLATE_PATH'.yaml'
 PATH=$PATH:$(go env GOPATH)/bin
 
 echo "Checking if code generator tool is installed..."
@@ -45,13 +46,18 @@ for api_group in "$OPERATOR_API_ROOT"*; do
 
     OUTPUT_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/$sanitized_api_version"
 
+    renderer_config_file="$RENDERER_CONFIG_FILE_TEMPLATE_PATH-$sanitized_api_group-$sanitized_api_version.yaml"
+    if [ ! -f "$renderer_config_file" ]; then
+      renderer_config_file=$RENDERER_CONFIG_FILE
+    fi
+
     echo "Arguments:"
     echo "TEMPLATE_DIR: $TEMPLATE_DIR"
     echo "OPERATOR_API_ROOT: $OPERATOR_API_ROOT"
     echo "API_GROUP: $sanitized_api_group"
     echo "API_VERSION: $sanitized_api_version"
     echo "RENDERER: $RENDERER"
-    echo "RENDERER_CONFIG_FILE: $RENDERER_CONFIG_FILE"
+    echo "RENDERER_CONFIG_FILE: $renderer_config_file"
     echo "OUTPUT_PATH: $OUTPUT_PATH/_index.md"
 
     echo "Creating docs folder $OUTPUT_PATH..."
@@ -63,19 +69,12 @@ for api_group in "$OPERATOR_API_ROOT"*; do
       --templates-dir "$TEMPLATE_DIR" \
       --source-path="./$api_version" \
       --renderer="$RENDERER" \
-      --config "$RENDERER_CONFIG_FILE" \
+      --config "$renderer_config_file" \
       --max-depth 10 \
       --output-path "$OUTPUT_PATH/_index.md"
     echo "---------------------"
   done
 done
-
-## Hack: sorry :(
-## Due to not adding KeptnWorkload resource into v1alpha4, there is a problem to generate CRD docs
-## in KeptnWorkloadVersion we are using KeptnWorkloadSpec from v1alpha3, which leads to using
-## ResourceReference struct from v1alpha3 -> CRD docs generator generates the docs, but it
-## refers to ResourceReference from v1alpha3, as if it is present in v1alpha4
-sed -i 's|#resourcereference|../v1alpha3/#resourcereference|' docs/content/en/docs/crd-ref/lifecycle/v1alpha4/_index.md
 
 # Metrics API
 

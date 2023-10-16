@@ -10,6 +10,7 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1alpha3"
 	. "github.com/onsi/ginkgo/v2"
@@ -170,6 +171,8 @@ func InitSuite() (context.Context, ctrl.Manager, *otelsdk.TracerProvider, *sdkte
 
 	// +kubebuilder:scaffold:scheme
 	err = klcv1alpha3.AddToScheme(scheme.Scheme)
+	Expect(err).NotTo(HaveOccurred())
+	err = klcv1alpha4.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 	err = metricsapi.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())

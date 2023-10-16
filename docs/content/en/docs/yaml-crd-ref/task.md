@@ -83,8 +83,8 @@ spec:
     * **taskType** Indicates whether this `KeptnTask`
       is part of the pre- or post-deployment phase.
       When populating this resource manually
-      to run a task for a non-Kubernetes deployment,,
-u     set this value to `""`:
+      to run a task for a non-Kubernetes deployment,
+      set this value to `""`:
       Keptn populates this field based on annotations
       to the `KeptnWorkload` and `KeptnApp` resources.
 

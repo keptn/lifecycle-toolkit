@@ -68,8 +68,7 @@ In the standard operating mode, when Keptn is managing workloads,
 the creation of the `KeptnTask` resource is automatic.
 
 Moreover, each time you want to execute a `KeptnTask` resource,
-you must manually create a a new (and uniquely named) YAML file
-that describes that resource.
+you must manually create a a new (and uniquely named) `KeptnTask` resource.
 
 The `KeptnTask` resource references the `KeptnTaskDefinition`
 that you created above

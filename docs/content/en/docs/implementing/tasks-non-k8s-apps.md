@@ -98,7 +98,7 @@ spec:
 
 You can then apply this YAML file with the following command:
 
-```yaml
+```shell
 kubectl apply -f test-task.yaml -n my-keptn-annotated-namespace
 ```
 

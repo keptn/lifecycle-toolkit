@@ -1,4 +1,5 @@
 ---
+title: template for new files in this directory
 description: <one-line description of CRD>
 weight: <assign weight to create alphabetical order>
 ---

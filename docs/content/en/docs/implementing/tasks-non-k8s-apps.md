@@ -59,6 +59,9 @@ spec:
 
 This example uses the `container-runtime` runner,
 but you can instead use the `deno-runtime` or `python-runtime` runner.
+See
+[Runners and containers](tasks/#runners-and-containers)
+for more information.
 
 ## Create and apply a KeptnTask
 

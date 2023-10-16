@@ -89,9 +89,9 @@ spec:
       to the `KeptnWorkload` and `KeptnApp` resources.
 
     * **workloadName** - Name of the `KeptnWorkload`
-      for which the `KeptnTask` is being executed
+      for which the `KeptnTask` is being executed.
     * **workloadVersion** - Version of the `KeptnWorkload`
-      for which the `KeptnTask` is being executed
+      for which the `KeptnTask` is being executed.
   * **parameters** (optional) -- Parameters that are passed to the job
     that executes the `KeptnTask`.
   * **secureParameters** (optional) -- Secure parameters that are passed

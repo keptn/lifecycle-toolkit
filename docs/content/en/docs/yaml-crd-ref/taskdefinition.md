@@ -69,7 +69,7 @@ spec:
   deno | python | container
   ...
   retries: <integer>
-  timeout: <duration-in-seconds>
+  timeout: <duration>
 ```
 
 ### Fields used for all containers
@@ -110,8 +110,10 @@ spec:
   * **retries** (optional) -- specifies the number of times
     a job executing the `KeptnTaskDefinition`
     should be restarted if an attempt is unsuccessful.
-  * **timeout** (optional) -- specifies the maximum time, in seconds,
+  * **timeout** (optional) -- specifies the maximum time
     to wait for the task to be completed successfully.
+    The value supplied should specify the unit of measurement;
+    for example, `5s` indicates 5 seconds and `5m` indicates 5 minutes.
     If the task does not complete successfully within this time frame,
     it is considered to be failed.
 

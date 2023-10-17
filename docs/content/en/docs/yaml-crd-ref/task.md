@@ -6,7 +6,7 @@ weight: 85
 
 When using Keptn to run tasks for software
 that is deployed outside of Kubernetes,
-you must create the `KeptnTask` definition manually
+you must create the `KeptnTask` resource manually
 and modify it manually for each new run.
 Keptn automatically populates the `KeptnTask` resource
 for tasks that deploy software on Kubernetes.

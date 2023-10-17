@@ -11,8 +11,7 @@ Keptn supplements the standard deployment tools
 with features to help you ensure that your deployments are in
 a healthy state.
 
-For information about the history of the Keptn project,
-see the
+For information about the history of the Keptn project, see the
 [Keptn Lifecycle Toolkit is now Keptn!](https://medium.com/keptn/keptn-lifecycle-toolkit-is-now-keptn-e0812217bf46)
 blog.
 

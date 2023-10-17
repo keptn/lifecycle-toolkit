@@ -48,7 +48,7 @@ simplifying configuration and integration into a single set of metrics.
 To learn more, see:
 
 * [Custom Keptn metrics](usecase_metrics.md)
-* [Keptn Metrics](../implementing/evaluatemetrics.md)
+* [Keptn Metrics](../implementing/evaluatemetrics.md) guide
 
 ## Observability
 

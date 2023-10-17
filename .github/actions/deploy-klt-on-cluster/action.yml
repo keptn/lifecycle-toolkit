@@ -99,7 +99,19 @@ runs:
         echo "Installing Keptn using helm"
         helm version
 
-        cd ./chart
+        cd ./lifecycle-operator/chart 
+        helm dependency update
+        helm dependency build 
+        
+        cd ../../metrics-operator/chart 
+        helm dependency update
+        helm dependency build 
+        
+        cd ../../klt-cert-manager/chart 
+        helm dependency update
+        helm dependency build
+        
+        cd ../../chart
         helm dependency update
         helm dependency build
 

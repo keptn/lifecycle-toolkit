@@ -76,7 +76,7 @@ func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status
 	crd, err := sMgr.GetCRD(ctx, pod.Namespace, name)
 
 	if err != nil {
-		klog.Infof("[Keptn Permit Plugin] could not find workloadVersion crd %s, err:%s", name, err.Error())
+		klog.Infof("[Keptn Permit Plugin] could not find workloadVersion crd %s, err:%s", name, err.Error(), pod.GetObjectMeta().GetName(), pod.GetObjectMeta().GetNamespace())
 		return WorkloadVersionNotFound
 	}
 

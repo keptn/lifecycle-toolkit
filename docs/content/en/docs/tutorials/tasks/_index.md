@@ -1,11 +1,19 @@
 ---
-title: Add Deployment Tasks
+title: Getting started with Release Lifecycle Management
 description: Add KeptnTasks to deployments
-weight: 10
+weight: 25
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-> This tutorial assumes you have already completed the [getting started guide](../../getting-started/).
+The Release Lifecycle Management tools run
+pre- and post-deployment tasks and checks
+for your existing cloud-native deployments
+to make them more robust.
+This tutorial introduces these tools.
+
+> This tutorial assumes you have already completed the
+[Getting started with Keptn Observability](../../getting-started/)
+exercise.
 > Please ensure you've finished that before attempting this guide.
 
 ## Keptn Pre and Post Deployment Tasks

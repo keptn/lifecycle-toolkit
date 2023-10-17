@@ -37,7 +37,7 @@ remain valid across software and documentation updates.
 
 * build: on each push to `page` with documentation changes
 * build-environment: production
-* config folder: [production](https://github.com/keptn/lifecycle-toolkit/docs/config/production)
+* config folder: [production](https://github.com/keptn/lifecycle-toolkit/tree/main/docs/config/production)
 
 A new version is generated when we push the `main` branch to production to release a new version of the docs page.
 This means, that the content of the old version on the `page` branch will be copied over
@@ -54,7 +54,7 @@ It is built regularly and can be easily accessed from the `Releases` tab on the 
 * build: on each push to `main` with documentation changes
    from a user's local branch, from the github editor, or from codespaces
 * build-environment: main
-* config folder: [staging](https://github.com/keptn/lifecycle-toolkit/docs/config/staging)
+* config folder: [staging](https://github.com/keptn/lifecycle-toolkit/tree/main/docs/config/staging)
 
 This version represents the pre-release iteration of the documentation for the upcoming Keptn release.
 Pull requests originating from a user's local branch, the GitHub editor, or codespaces are merged into this branch.

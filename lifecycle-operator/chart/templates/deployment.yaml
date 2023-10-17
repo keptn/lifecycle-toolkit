@@ -6,7 +6,7 @@ metadata:
   name: keptn-scheduler
   namespace: {{ .Release.Namespace | quote }}
   labels:
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 {{- end }}
 ---
 apiVersion: v1
@@ -15,7 +15,7 @@ metadata:
   name: lifecycle-operator
   namespace: {{ .Release.Namespace | quote }}
   labels:
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -26,18 +26,18 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: lifecycle-operator
     keptn.sh/inject-cert: "true"
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 spec:
   replicas: {{ .Values.lifecycleOperator.replicas }}
   selector:
     matchLabels:
       control-plane: lifecycle-operator
-    {{- include "chart.selectorLabels" . | nindent 6 }}
+    {{- include "common.selectorLabels"  ( dict "context" . ) | nindent 6 }}
   template:
     metadata:
       labels:
         control-plane: lifecycle-operator
-      {{- include "chart.selectorLabels" . | nindent 8 }}
+      {{- include "common.selectorLabels"  ( dict "context" . )  | nindent 8 }}
       annotations:
         kubectl.kubernetes.io/default-container: lifecycle-operator
         metrics.dynatrace.com/port: "2222"
@@ -98,8 +98,7 @@ spec:
             }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.lifecycleOperator.image.repository }}:{{ .Values.lifecycleOperator.image.tag
-          | default .Chart.AppVersion }}
+        image: {{ include "common.images.image" ( dict "imageRoot" .Values.lifecycleOperator.image "global" .Values.global ) }}
         imagePullPolicy: {{ .Values.lifecycleOperator.imagePullPolicy }}
         name: lifecycle-operator
         ports:
@@ -113,7 +112,7 @@ spec:
         securityContext:
           allowPrivilegeEscalation: {{ .Values.lifecycleOperator.containerSecurityContext.allowPrivilegeEscalation
             }}
-          capabilities: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.capabilities
+          capabilities: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.capabilities
             "context" $) | nindent 12 }}
           privileged: {{ .Values.lifecycleOperator.containerSecurityContext.privileged
             }}
@@ -123,7 +122,7 @@ spec:
             }}
           runAsUser: {{ .Values.lifecycleOperator.containerSecurityContext.runAsUser
             }}
-          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.seccompProfile
+          seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
         volumeMounts:
         - mountPath: /tmp/k8s-webhook-server/serving-certs/
@@ -131,7 +130,7 @@ spec:
         - mountPath: /tmp/metrics-adapter/serving-certs
           name: adapter-certs-dir
         {{- if .Values.lifecycleOperator.livenessProbe }}
-        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.livenessProbe "context" $) | nindent 10 }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.livenessProbe "context" $) | nindent 10 }}
          {{- else }}
         livenessProbe:
          httpGet:
@@ -141,7 +140,7 @@ spec:
          periodSeconds: 20
         {{- end }}
         {{- if .Values.lifecycleOperator.readinessProbe }}
-        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.readinessProbe "context" $) | nindent 10 }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.readinessProbe "context" $) | nindent 10 }}
          {{- else }}
         readinessProbe:
          httpGet:
@@ -150,7 +149,7 @@ spec:
          initialDelaySeconds: 5
          periodSeconds: 10
         {{- end }}
-      imagePullSecrets: {{ .Values.imagePullSecrets | default list | toJson }}
+      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
       securityContext:
         runAsNonRoot: true
       serviceAccountName: lifecycle-operator
@@ -161,13 +160,13 @@ spec:
       - emptyDir: {}
         name: adapter-certs-dir
 {{- if .Values.lifecycleOperator.topologySpreadConstraints }}
-      topologySpreadConstraints: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.topologySpreadConstraints "context" $) | nindent 8 }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.topologySpreadConstraints "context" $) | nindent 8 }}
 {{- end }}
 {{- if .Values.lifecycleOperator.nodeSelector }}
-      nodeSelector: {{- include "tplvalues.render" ( dict "value" .Values.lifecycleOperator.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.lifecycleOperator.nodeSelector "context" $) | nindent 8 }}
 {{- end }}
 {{- if .Values.lifecycleOperator.tolerations }}
-      tolerations: {{- include "tplvalues.render" (dict "value" .Values.lifecycleOperator.tolerations "context" .) | nindent 8 }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.tolerations "context" .) | nindent 8 }}
 {{- end }}
 
 {{- if or (le .Capabilities.KubeVersion.Minor "26") (not .Values.schedulingGatesEnabled) }}
@@ -179,18 +178,18 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
     component: scheduler
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 spec:
   replicas: {{ .Values.scheduler.replicas }}
   selector:
     matchLabels:
       component: scheduler
-    {{- include "chart.selectorLabels" . | nindent 6 }}
+    {{- include "common.selectorLabels"  ( dict "context" . ) | nindent 6 }}
   template:
     metadata:
       labels:
         component: scheduler
-      {{- include "chart.selectorLabels" . | nindent 8 }}
+      {{- include "common.selectorLabels"  ( dict "context" . )  | nindent 8 }}
     spec:
       containers:
       - command:
@@ -201,15 +200,14 @@ spec:
           value: {{ .Values.scheduler.env.otelCollectorUrl | quote }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.scheduler.image.repository }}:{{ .Values.scheduler.image.tag
-          | default .Chart.AppVersion }}
+        image: {{ include "common.images.image" ( dict "imageRoot" .Values.scheduler.image "global" .Values.global ) }}
         imagePullPolicy: {{ .Values.scheduler.imagePullPolicy }}
         name: scheduler
         resources: {{- toYaml .Values.scheduler.resources | nindent 10 }}
         securityContext:
           allowPrivilegeEscalation: {{ .Values.scheduler.containerSecurityContext.allowPrivilegeEscalation
             }}
-          capabilities: {{- include "tplvalues.render" (dict "value" .Values.scheduler.containerSecurityContext.capabilities
+          capabilities: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.containerSecurityContext.capabilities
             "context" $) | nindent 12 }}
           privileged: {{ .Values.scheduler.containerSecurityContext.privileged
             }}
@@ -218,14 +216,14 @@ spec:
           runAsNonRoot: {{ .Values.scheduler.containerSecurityContext.runAsNonRoot
             }}
           runAsUser: {{ .Values.scheduler.containerSecurityContext.runAsUser }}
-          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.scheduler.containerSecurityContext.seccompProfile
+          seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
         volumeMounts:
         - mountPath: /etc/kubernetes
           name: scheduler-config
           readOnly: true
         {{- if .Values.scheduler.livenessProbe }}
-        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.scheduler.livenessProbe "context" $) | nindent 10 }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.livenessProbe "context" $) | nindent 10 }}
          {{- else }}
         livenessProbe:
          httpGet:
@@ -235,7 +233,7 @@ spec:
          initialDelaySeconds: 15
         {{- end }}
         {{- if .Values.scheduler.readinessProbe }}
-        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.scheduler.readinessProbe "context" $) | nindent 10 }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.readinessProbe "context" $) | nindent 10 }}
          {{- else }}
         readinessProbe:
          httpGet:
@@ -243,19 +241,19 @@ spec:
            port: 10259
            scheme: HTTPS
         {{- end }}
-      imagePullSecrets: {{ .Values.imagePullSecrets | default list | toJson }}
+      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
       serviceAccountName: keptn-scheduler
       volumes:
       - configMap:
           name: scheduler-config
         name: scheduler-config
 {{- if .Values.scheduler.topologySpreadConstraints }}
-      topologySpreadConstraints: {{- include "tplvalues.render" (dict "value" .Values.scheduler.topologySpreadConstraints "context" $) | nindent 8 }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.topologySpreadConstraints "context" $) | nindent 8 }}
 {{- end }}
 {{- if .Values.scheduler.nodeSelector }}
-      nodeSelector: {{- include "tplvalues.render" ( dict "value" .Values.scheduler.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.scheduler.nodeSelector "context" $) | nindent 8 }}
 {{- end }}
 {{- if .Values.scheduler.tolerations }}
-      tolerations: {{- include "tplvalues.render" (dict "value" .Values.scheduler.tolerations "context" .) | nindent 8 }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.tolerations "context" .) | nindent 8 }}
 {{- end }}
 {{- end }}

@@ -4,7 +4,7 @@ metadata:
   name: metrics-operator-role
   namespace: {{ .Release.Namespace | quote }}
   labels:
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 rules:
   - apiGroups:
       - ""
@@ -107,7 +107,7 @@ metadata:
   name: metrics-operator-rolebinding
   namespace: {{ .Release.Namespace | quote }}
   labels:
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -123,7 +123,7 @@ metadata:
   name: metrics-operator-rolebinding
   namespace: {{ .Release.Namespace | quote }}
   labels:
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

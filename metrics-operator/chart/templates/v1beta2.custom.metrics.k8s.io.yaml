@@ -4,7 +4,7 @@ metadata:
   name: v1beta2.custom.metrics.k8s.io
   namespace: {{ .Release.Namespace | quote }}
   labels:
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 spec:
   group: custom.metrics.k8s.io
   groupPriorityMinimum: 100

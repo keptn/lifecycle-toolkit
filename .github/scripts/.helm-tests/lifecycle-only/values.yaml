@@ -2,5 +2,16 @@ certManager:
   enabled: false
 lifecycleOperator:
   enabled: true
+
 metricsOperator:
   enabled: false
+
+global:
+  repository: "testreg"
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+  storageClass: ""
+  namespaceOverride: ""

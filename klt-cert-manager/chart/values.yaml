@@ -1,3 +1,21 @@
+## @section Global parameters
+## Global Docker image parameters
+## Please, note that this will override the image parameters, including dependencies, configured to use the global value
+## Current available global Docker image parameters: imageRegistry, imagePullSecrets and storageClass
+##
+
+## @param global.imageRegistry Global Docker image registry
+## @param global.imagePullSecrets Global Docker registry secret names as an array
+##
+global:
+  imageRegistry: ""
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+
+
 # yamllint disable rule:line-length
 ## @section Keptn Certificate Operator common
 ## @param     nodeSelector specify custom node selectors for cert manager
@@ -17,6 +35,8 @@ topologySpreadConstraints: []
 ## @skip     containerSecurityContext.runAsGroup
 ## @skip     containerSecurityContext.runAsUser
 ## @skip     containerSecurityContext.seccompProfile.type
+
+
 containerSecurityContext:
   allowPrivilegeEscalation: false
   capabilities:
@@ -76,10 +96,3 @@ resources:
   requests:
     cpu: 5m
     memory: 16Mi
-
-## @section Global
-## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled
-## @param  imagePullSecrets global value for image registry secret
-imagePullSecrets: []
-## @param  kubernetesClusterDomain overrides domain.local
-kubernetesClusterDomain: cluster.local

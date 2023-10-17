@@ -8,18 +8,18 @@ metadata:
     app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: certificate-operator
-  {{- include "chart.labels" . | nindent 4 }}
+    {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       control-plane: certificate-operator
-    {{- include "chart.selectorLabels" . | nindent 6 }}
+    {{- include "common.selectorLabels"  ( dict "context" . ) | nindent 6 }}
   template:
     metadata:
       labels:
         control-plane: certificate-operator
-      {{- include "chart.selectorLabels" . | nindent 8 }}
+        {{- include "common.selectorLabels"  ( dict "context" . ) | nindent 6 }}
       annotations:
         kubectl.kubernetes.io/default-container: certificate-operator
     spec:
@@ -39,26 +39,24 @@ spec:
               value: {{ .Values.env.labelSelectorValue | quote }}
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: {{ .Values.kubernetesClusterDomain }}
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag
-          | default .Chart.AppVersion }}
+          image: {{- include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) | indent 1}}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           name: certificate-operator
           resources: {{- toYaml .Values.resources | nindent 12 }}
           securityContext:
             allowPrivilegeEscalation: {{ .Values.containerSecurityContext.allowPrivilegeEscalation
             }}
-            capabilities: {{- include "tplvalues.render" (dict "value" .Values.containerSecurityContext.capabilities
-            "context" $) | nindent 14 }}
+            capabilities: {{- include "common.tplvalues.render" (dict "value" .Values.containerSecurityContext.capabilities "context" $) | nindent 14 }}
             readOnlyRootFilesystem: {{ .Values.containerSecurityContext.readOnlyRootFilesystem
             }}
             runAsGroup: {{ .Values.containerSecurityContext.runAsGroup
             }}
             runAsUser: {{ .Values.containerSecurityContext.runAsUser
             }}
-            seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.containerSecurityContext.seccompProfile
+            seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.containerSecurityContext.seccompProfile
             "context" $) | nindent 14 }}
         {{- if .Values.livenessProbe }}
-          livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.livenessProbe "context" $) | nindent 12 }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.livenessProbe "context" $) | nindent 12 }}
          {{- else }}
           livenessProbe:
             httpGet:
@@ -68,7 +66,7 @@ spec:
             periodSeconds: 20
         {{- end }}
         {{- if .Values.readinessProbe }}
-          readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.readinessProbe "context" $) | nindent 12 }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.readinessProbe "context" $) | nindent 12 }}
          {{- else }}
           readinessProbe:
             httpGet:
@@ -77,17 +75,17 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
         {{- end }}
-      imagePullSecrets: {{ .Values.imagePullSecrets | default list | toJson }}
+      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
       securityContext:
         runAsNonRoot: true
       serviceAccountName: certificate-operator
       terminationGracePeriodSeconds: 10
 {{- if .Values.topologySpreadConstraints }}
-      topologySpreadConstraints: {{- include "tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
 {{- end }}
 {{- if .Values.nodeSelector }}
-      nodeSelector: {{- include "tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
 {{- end }}
 {{- if .Values.tolerations }}
-      tolerations: {{- include "tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
 {{- end }}

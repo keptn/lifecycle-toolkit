@@ -38,3 +38,7 @@ version: 0.1.0
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "v1.1.0" # x-release-please-version
+dependencies:
+  - name: common
+    repository: "file://../../common"
+    version: 0.1.x

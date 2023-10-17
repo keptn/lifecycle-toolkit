@@ -4,3 +4,16 @@ lifecycleOperator:
   enabled: false
 metricsOperator:
   enabled: false
+
+global:
+  imageRegistry: "testreg"
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+  storageClass: ""
+  namespaceOverride: ""
+  commonLabels:
+    mamma : "test"
+    app.kubernetes.io/version: vmyversion

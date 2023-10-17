@@ -8,18 +8,18 @@ metadata:
     app.kubernetes.io/component: metrics-operator
     control-plane: metrics-operator
     keptn.sh/inject-cert: "true"
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       control-plane: metrics-operator
-    {{- include "chart.selectorLabels" . | nindent 6 }}
+    {{- include "common.selectorLabels"  ( dict "context" . ) | nindent 6 }}
   template:
     metadata:
       labels:
         control-plane: metrics-operator
-      {{- include "chart.selectorLabels" . | nindent 8 }}
+      {{- include "common.selectorLabels"  ( dict "context" . )  | nindent 8 }}
       annotations:
         kubectl.kubernetes.io/default-container: metrics-operator
     spec:
@@ -70,7 +70,7 @@ spec:
         securityContext:
           allowPrivilegeEscalation: {{ .Values.containerSecurityContext.allowPrivilegeEscalation
             }}
-          capabilities: {{- include "tplvalues.render" (dict "value" .Values.containerSecurityContext.capabilities
+          capabilities: {{- include "common.tplvalues.render" (dict "value" .Values.containerSecurityContext.capabilities
             "context" $) | nindent 12 }}
           privileged: {{ .Values.containerSecurityContext.privileged
             }}
@@ -80,7 +80,7 @@ spec:
             }}
           runAsUser: {{ .Values.containerSecurityContext.runAsUser
             }}
-          seccompProfile: {{- include "tplvalues.render" (dict "value" .Values.containerSecurityContext.seccompProfile
+          seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
         volumeMounts:
         - mountPath: /tmp/k8s-webhook-server/serving-certs/
@@ -88,7 +88,7 @@ spec:
         - mountPath: /tmp/metrics-adapter/serving-certs
           name: adapter-certs-dir
         {{- if .Values.livenessProbe }}
-        livenessProbe: {{- include "tplvalues.render" (dict "value" .Values.livenessProbe "context" $) | nindent 10 }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.livenessProbe "context" $) | nindent 10 }}
          {{- else }}
         livenessProbe:
          httpGet:
@@ -98,7 +98,7 @@ spec:
          periodSeconds: 20
         {{- end }}
         {{- if .Values.readinessProbe }}
-        readinessProbe: {{- include "tplvalues.render" (dict "value" .Values.readinessProbe "context" $) | nindent 10 }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.readinessProbe "context" $) | nindent 10 }}
          {{- else }}
         readinessProbe:
          httpGet:
@@ -107,7 +107,7 @@ spec:
          initialDelaySeconds: 5
          periodSeconds: 10
         {{- end }}
-      imagePullSecrets: {{ .Values.imagePullSecrets | default list | toJson }}
+      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
       securityContext:
         runAsNonRoot: true
       serviceAccountName: metrics-operator
@@ -118,11 +118,11 @@ spec:
       - emptyDir: {}
         name: adapter-certs-dir
 {{- if .Values.topologySpreadConstraints }}
-      topologySpreadConstraints: {{- include "tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
 {{- end }}
 {{- if .Values.nodeSelector }}
-      nodeSelector: {{- include "tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
 {{- end }}
 {{- if .Values.tolerations }}
-      tolerations: {{- include "tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
 {{- end }}

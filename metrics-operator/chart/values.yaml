@@ -28,6 +28,24 @@ operatorService:
       targetPort: metrics
 ## @param   operatorService.type
   type: ClusterIP
+## @section Global parameters
+## Global Docker image parameters
+## Please, note that this will override the image parameters, including dependencies, configured to use the global value
+## Current available global Docker image parameters: imageRegistry, imagePullSecrets and storageClass
+##
+
+## @param global.imageRegistry Global Docker image registry
+## @param global.imagePullSecrets Global Docker registry secret names as an array
+##
+global:
+  imageRegistry: ""
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+
+kubernetesClusterDomain: cluster.local
 config:
   health:
 ## @param      config.health.healthProbeBindAddress setup on what address to start the default health handler

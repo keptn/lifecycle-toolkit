@@ -34,14 +34,6 @@ global:
   ##
   commonAnnotations: { }
 
-## @section Common parameters
-##
 
-## @param nameOverride String to partially override keptn.fullname template (will maintain the release name)
-##
-nameOverride: ""
 
-## @param kubeVersion Force target Kubernetes version (using Helm capabilities if not set)
-##
-kubeVersion: ""
 

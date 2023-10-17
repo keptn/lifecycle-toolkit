@@ -12,10 +12,9 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  storageClass: ""
-  namespaceOverride: ""
   commonAnnotations:
     ciao: commonannotation
   commonLabels:
     mamma : "test"
     app.kubernetes.io/version: vmyversion
+

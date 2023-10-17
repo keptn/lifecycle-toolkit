@@ -13,5 +13,3 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  storageClass: ""
-  namespaceOverride: ""

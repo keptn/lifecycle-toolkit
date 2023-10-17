@@ -31,16 +31,16 @@ func (pl *Permit) Name() string {
 
 func (pl *Permit) Permit(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) (*framework.Status, time.Duration) {
 
-	klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on %s", p.GetObjectMeta().GetName(), p.GetObjectMeta().GetNamespace())
+	klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on %s in namespace %s", p.GetObjectMeta().GetName(), p.GetObjectMeta().GetNamespace())
 
 	// check the permit immediately, to fail early in case the pod cannot be queued
 	switch pl.workloadManager.Permit(ctx, p) {
 
 	case Success:
-		klog.Infof("[Keptn Permit Plugin] passed pre-deployment checks on %s", p.GetObjectMeta().GetName(), p.GetObjectMeta().GetNamespace())
+		klog.Infof("[Keptn Permit Plugin] passed pre-deployment checks on %s in namespace %s", p.GetObjectMeta().GetName(), p.GetObjectMeta().GetNamespace())
 		return framework.NewStatus(framework.Success), 0 * time.Second
 	default:
-		klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on %s to succeed", p.GetObjectMeta().GetName(), p.GetObjectMeta().GetNamespace())
+		klog.Infof("[Keptn Permit Plugin] waiting for pre-deployment checks on %s in namespace %s to succeed", p.GetObjectMeta().GetName(), p.GetObjectMeta().GetNamespace())
 		go func() {
 			// create a new context since we are in a new goroutine
 			ctx2, cancel := context.WithCancel(context.Background())

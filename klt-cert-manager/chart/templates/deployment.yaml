@@ -9,6 +9,10 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: certificate-operator
     {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+  {{- if or .Values.annotations .Values.global.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.annotations .Values.global.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
@@ -22,6 +26,9 @@ spec:
 {{- include "common.selectorLabels"  ( dict "context" . ) | nindent 8 }}
       annotations:
         kubectl.kubernetes.io/default-container: certificate-operator
+        {{- if .Values.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
     spec:
       containers:
         - args:

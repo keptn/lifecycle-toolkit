@@ -21,17 +21,16 @@ metricsOperator:
 ## @param global.namespaceOverride Override the namespace for resource deployed by the chart, but can itself be overridden by the local namespaceOverride
 ##
 global:
-  imageRegistry: "testreg"
+  imageRegistry: ""
   ## E.g.
   ## imagePullSecrets:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  namespaceOverride: ""
   ## @param commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
   ##
   commonLabels: { }
-  ## @param commonAnnotations Common annotations to add to all Mongo resources (sub-charts are not considered). Evaluated as a template
+  ## @param commonAnnotations Common annotations to add to all Mongo resources. Evaluated as a template
   ##
   commonAnnotations: { }
 

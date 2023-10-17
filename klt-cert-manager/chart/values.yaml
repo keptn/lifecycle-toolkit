@@ -14,6 +14,12 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
+  ## @param commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
+  ##
+  commonLabels: {}
+  ## @param commonAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
+  ##
+  commonAnnotations: {}
 
 
 # yamllint disable rule:line-length
@@ -26,6 +32,9 @@ replicas: 1
 tolerations: []
 ## @param     topologySpreadConstraints add topology constraints for cert manager
 topologySpreadConstraints: []
+kubernetesClusterDomain: cluster.local
+annotations: {}
+podAnnotations: {}
 
 ## @section Keptn Certificate Operator controller
 ## @extra    containerSecurityContext Sets security context for the cert manager

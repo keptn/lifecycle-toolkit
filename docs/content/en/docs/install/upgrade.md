@@ -29,7 +29,8 @@ Contact us on Slack for assistance.
 ## Upgrade to Helm from a manifest installation
 
 > **Warning**
-Upgrade to Helm from a manifest installation can cause data loss.
+Upgrade to Helm from a manifest installation can cause loss
+of Keptn custom resources.
 
 Keptn v.0.7.0 and later can be installed with Helm charts;
 Keptn v.0.8.3 can only be installed with Helm.

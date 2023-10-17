@@ -115,6 +115,13 @@ for either a Kubernetes workload (single service) resource
 or a
 [KeptnApp](https://lifecycle.keptn.sh/docs/yaml-crd-ref/app/) resource,
 which is a single, cohesive unit that groups multiple workloads.
+For more information, see:
+
+* [Keptn tasks](../implementing/tasks)
+* [Evaluations](../implementing/evaluations)
+* [KeptnApp and KeptnWorkflow resources](../architecture/keptn-apps)
+
+## Next steps
 
 To familiarize yourself with how Keptn works, refer to the
 [Getting started with Keptn](../getting-started/)

@@ -14,12 +14,12 @@ spec:
   selector:
     matchLabels:
       control-plane: certificate-operator
-      {{- include "common.selectorLabels"  ( dict "context" . ) | nindent 6 }}
+{{- include "common.selectorLabels"  ( dict "context" . ) | nindent 6 }}
   template:
     metadata:
       labels:
         control-plane: certificate-operator
-        {{- include "common.selectorLabels"  ( dict "context" . ) | nindent 6 }}
+{{- include "common.selectorLabels"  ( dict "context" . ) | nindent 8 }}
       annotations:
         kubectl.kubernetes.io/default-container: certificate-operator
     spec:

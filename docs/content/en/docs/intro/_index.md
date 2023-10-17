@@ -136,6 +136,6 @@ which is a single, cohesive unit that groups multiple workloads.
 To learn more, see:
 
 * [Getting started with release lifecycle management](../tutorials/tasks/)
-* [Manage release lifecycle](usecase-orchestrate)
+* [Manage release lifecycle](usecase-orchestrate.md)
 * [Deployment tasks](../implementing/tasks)
-* [Evaluations](../implementing/evaluations)
+* [Evaluations](../implementing/evaluations.md)

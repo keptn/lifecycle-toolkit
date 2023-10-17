@@ -6,6 +6,7 @@ metadata:
   labels:
     control-plane: lifecycle-operator
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include  "common.annotations"  ( dict "context" . ) }}
 spec:
   type: {{ .Values.lifecycleOperatorMetricsService.type }}
   selector:

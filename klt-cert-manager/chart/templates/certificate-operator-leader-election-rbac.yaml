@@ -8,10 +8,7 @@ metadata:
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     {{- include "common.labels.standard" (dict "context" .) | nindent 4 }}
-{{- if or .Values.annotations .Values.global.commonAnnotations }}
- {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.annotations .Values.global.commonAnnotations ) "context" . ) }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
- {{- end }}
+    {{- include  "common.annotations"  ( dict "context" . ) }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

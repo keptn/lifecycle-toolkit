@@ -5,10 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
   {{- include "common.labels.standard" (dict "context" . ) | nindent 4 }}
- {{- if or .Values.annotations .Values.global.commonAnnotations }}
-  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.annotations .Values.global.commonAnnotations ) "context" . ) }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
-  {{- end }}
+  {{- include  "common.annotations"  ( dict "context" . ) }}
 rules:
 - apiGroups:
   - ""

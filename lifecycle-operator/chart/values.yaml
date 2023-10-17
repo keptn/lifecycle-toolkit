@@ -15,11 +15,20 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
+  ## @param commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
+  ##
+  commonLabels: { }
+  ## @param commonAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
+  ##
+  commonAnnotations: { }
 
 imagePullSecrets: []
 kubernetesClusterDomain: cluster.local
 schedulingGatesEnabled: false
 allowedNamespaces: []
+annotations: {}
+podAnnotations: {}
+
 lifecycleOperatorConfig:
   health:
 ## @param    lifecycleOperatorConfig.health.healthProbeBindAddress setup on what address to start the default health handler

@@ -7,6 +7,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include  "common.annotations"  ( dict "context" . ) }}
 {{- end }}
 ---
 apiVersion: v1
@@ -16,6 +17,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include  "common.annotations"  ( dict "context" . ) }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -27,6 +29,7 @@ metadata:
     control-plane: lifecycle-operator
     keptn.sh/inject-cert: "true"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include  "common.annotations"  ( dict "context" . ) }}
 spec:
   replicas: {{ .Values.lifecycleOperator.replicas }}
   selector:
@@ -42,6 +45,9 @@ spec:
         kubectl.kubernetes.io/default-container: lifecycle-operator
         metrics.dynatrace.com/port: "2222"
         metrics.dynatrace.com/scrape: "true"
+        {{- if .Values.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
     spec:
       containers:
       - args:
@@ -179,6 +185,7 @@ metadata:
   labels:
     component: scheduler
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include  "common.annotations"  ( dict "context" . ) }}
 spec:
   replicas: {{ .Values.scheduler.replicas }}
   selector:

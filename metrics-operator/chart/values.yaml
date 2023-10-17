@@ -44,8 +44,21 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
+  ## @param commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
+  ##
+  commonLabels: { }
+  ## @param commonAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
+  ##
+  commonAnnotations: { }
 
 kubernetesClusterDomain: cluster.local
+nodeSelector: { }
+replicas: 1
+tolerations: [ ]
+topologySpreadConstraints: [ ]
+annotations: {}
+podAnnotations: {}
+
 config:
   health:
 ## @param      config.health.healthProbeBindAddress setup on what address to start the default health handler
@@ -151,6 +164,26 @@ resources:
   requests:
     cpu: 10m
     memory: 64Mi
+operatorService:
+  ports:
+    - name: https
+      port: 8443
+      protocol: TCP
+      targetPort: https
+    - name: custom-metrics
+      port: 443
+      targetPort: custom-metrics
+    - name: metrics
+      port: 9999
+      protocol: TCP
+      targetPort: metrics
+  type: ClusterIP
+webhookService:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 9443
+  type: ClusterIP
 
 ## @section Global
 ## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled

@@ -9,6 +9,7 @@ metadata:
     control-plane: metrics-operator
     keptn.sh/inject-cert: "true"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include  "common.annotations"  ( dict "context" . ) }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
@@ -22,6 +23,9 @@ spec:
       {{- include "common.selectorLabels"  ( dict "context" . )  | nindent 8 }}
       annotations:
         kubectl.kubernetes.io/default-container: metrics-operator
+        {{- if .Values.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
     spec:
       containers:
       - args:

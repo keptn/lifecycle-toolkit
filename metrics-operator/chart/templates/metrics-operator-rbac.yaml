@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include  "common.annotations"  ( dict "context" . ) }}
 rules:
   - apiGroups:
       - ""
@@ -108,6 +109,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include  "common.annotations"  ( dict "context" . ) }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -124,6 +126,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include  "common.annotations"  ( dict "context" . ) }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

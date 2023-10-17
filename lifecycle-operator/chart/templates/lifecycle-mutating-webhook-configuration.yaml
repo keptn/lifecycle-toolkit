@@ -8,6 +8,7 @@ metadata:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn-lifecycle-toolkit"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include  "common.annotations"  ( dict "context" . ) }}
 webhooks:
 - admissionReviewVersions:
   - v1

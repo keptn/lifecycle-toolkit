@@ -1,3 +1,7 @@
+## @section Keptn
+## @param certManager.enabled Enable this value to install Keptn Certificate Manager
+## @param lifecycleOperator.enabled Enable this value to install Keptn Lifecycle Operator
+## @param metricsOperator.enabled Enable this value to install Keptn Metrics Operator
 certManager:
   enabled: true
 lifecycleOperator:

@@ -50,18 +50,6 @@ spec:
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
 * **spec** - Defines the speficication of this `KeptnTask` resource
-  * **workload** - Name of the
-      [KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload)
-      resource for which the `KeptnTask` is being executed.
-
-  * **workloadVersion** - `KeptnWorkload` version
-      for which the `KeptnTask` is being executed.
-  * **appName** - Name of the
-      [KeptnApp](../yaml-crd-ref/app.md) resource
-      for which the `KeptnTask` is being executed.
-  * **appVersion** - Version of the `KeptnApp` resource
-      for which the `KeptnTask` is being executed.
-
   * **taskDefinition** - Name of the corresponding `KeptnTaskDefinition` resource.
     This `KeptnTaskDefinition` can be located in the same namespace
     or in the Keptn installation namespace.

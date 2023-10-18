@@ -76,11 +76,16 @@ spec:
   keptnAppCreationRequestTimeoutSeconds: 30
 ```
 
-Apply the file and restart Keptn to pick up the new config:
+Apply the file and wait for Keptn to pick up the new config:
 
 ```shell
 kubectl apply -f collectorconfig.yaml
 ```
+
+By default, Keptn checks this configuration every 30 seconds.
+The interval is configurable; see the
+[KeptnConfig](../yaml-crd-ref/config.md)
+reference page for details.
 
 ## Step 2: Create Namespace for Demo Application
 

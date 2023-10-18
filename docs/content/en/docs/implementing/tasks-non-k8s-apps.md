@@ -21,7 +21,7 @@ To do this:
 
 You must enable a Kubernetes cluster and
 [install](../install/install.md/#use-helm-chart)
-Keptn on a Kubernetes cluster,
+Keptn on it,
 but this can be a very lightweight, single-node KinD cluster; see
 [Create local Kubernetes cluster](../install/k8s.md/#create-local-kubernetes-cluster).
 Keptn only triggers on-demand `KeptnTask` resources

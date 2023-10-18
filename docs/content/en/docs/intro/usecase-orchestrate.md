@@ -62,7 +62,7 @@ You may want to complete the other exercises before doing this exercise
 although that is not required:
 
 * In the
-  [Getting started with Keptn metrics](usecase_metrics.md)
+  [Getting started with Keptn metrics](../getting-started/usecase_metrics.md)
   exercise, you learn how to define and use Keptn metrics.
 * In [Standardize observability](usecase-observability.md),
   you learn how to standardize access

@@ -47,7 +47,7 @@ This is the second of three exercises in the
 series:
 
 - In the
-  [Getting started with Keptn metrics](usecase_metrics.md)
+  [Getting started with Keptn metrics](../getting-started/usecase_metrics.md)
   exercise, you learn how to define and use Keptn metrics.
   You may want to complete that exercise before doing this exercise
   although that is not required.

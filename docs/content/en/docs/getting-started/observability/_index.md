@@ -585,7 +585,7 @@ You may have noticed that the `KeptnApp` Custom Resources are created automatica
 
 However, you can override this automatic behaviour by creating a custom `KeptnApp` CRD.
 In this way, you are in full control of what constitutes a Keptn Application.
-See [KeptnApp Reference page](../yaml-crd-ref/app.md) for more information.
+See [KeptnApp Reference page](../../yaml-crd-ref/app.md) for more information.
 
 ## What's next?
 

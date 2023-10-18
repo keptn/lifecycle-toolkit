@@ -134,15 +134,15 @@ or a
 which is a single, cohesive unit that groups multiple workloads.
 For more information, see:
 
-* [Keptn tasks](../implementing/tasks)
-* [Evaluations](../implementing/evaluations.md)
+* [Keptn tasks](../implementing/tasks) guide
+* [Evaluations](../implementing/evaluations.md) guide
 * [KeptnApp and KeptnWorkflow resources](../architecture/keptn-apps)
 
 ## Next steps
 
 To learn more, see:
 
-* [Getting started with release lifecycle management](tasks/)
+* [Getting started with release lifecycle management](../getting-started/tasks/)
 * [Manage release lifecycle](usecase-orchestrate.md)
-* [Deployment tasks](../implementing/tasks)
-* [Evaluations](../implementing/evaluations.md)
+* [Deployment tasks](../implementing/tasks) guide
+* [Evaluations](../implementing/evaluations.md) guide

@@ -8,7 +8,9 @@ import (
 
 	"github.com/go-logr/logr"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
+	fakeconfig "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -18,8 +20,6 @@ import (
 )
 
 func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
-	reconciler := setupReconciler()
-
 	// set up logger
 	opts := zap.Options{
 		Development: true,
@@ -31,11 +31,14 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 		req ctrl.Request
 	}
 	tests := []struct {
-		name              string
-		args              args
-		lastAppliedConfig *optionsv1alpha1.KeptnConfigSpec
-		want              ctrl.Result
-		wantErr           bool
+		name                             string
+		args                             args
+		lastAppliedConfig                *optionsv1alpha1.KeptnConfigSpec
+		reconcileConfig                  *optionsv1alpha1.KeptnConfig
+		want                             ctrl.Result
+		wantErr                          bool
+		wantCreationRequestTimeoutConfig time.Duration
+		wantCloudEventsEndpointConfig    string
 	}{
 		{
 			name: "test 1",
@@ -46,6 +49,15 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 						Namespace: "keptn-lifecycle-toolkit-system",
 						Name:      "empty-config",
 					},
+				},
+			},
+			reconcileConfig: &optionsv1alpha1.KeptnConfig{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "empty-config",
+					Namespace: "keptn-lifecycle-toolkit-system",
+				},
+				Spec: optionsv1alpha1.KeptnConfigSpec{
+					OTelCollectorUrl: "",
 				},
 			},
 			lastAppliedConfig: &optionsv1alpha1.KeptnConfigSpec{},
@@ -63,6 +75,15 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 					},
 				},
 			},
+			reconcileConfig: &optionsv1alpha1.KeptnConfig{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "empty-config",
+					Namespace: "keptn-lifecycle-toolkit-system",
+				},
+				Spec: optionsv1alpha1.KeptnConfigSpec{
+					OTelCollectorUrl: "",
+				},
+			},
 			want:    ctrl.Result{},
 			wantErr: false,
 		},
@@ -75,6 +96,15 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 						Namespace: "keptn-lifecycle-toolkit-system",
 						Name:      "not-found-config",
 					},
+				},
+			},
+			reconcileConfig: &optionsv1alpha1.KeptnConfig{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "empty-config",
+					Namespace: "keptn-lifecycle-toolkit-system",
+				},
+				Spec: optionsv1alpha1.KeptnConfigSpec{
+					OTelCollectorUrl: "",
 				},
 			},
 			want:    ctrl.Result{},
@@ -94,12 +124,26 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			lastAppliedConfig: &optionsv1alpha1.KeptnConfigSpec{
 				OTelCollectorUrl: "some-url",
 			},
-			want:    ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second},
-			wantErr: true,
+			reconcileConfig: &optionsv1alpha1.KeptnConfig{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "config1",
+					Namespace: "keptn-lifecycle-toolkit-system",
+				},
+				Spec: optionsv1alpha1.KeptnConfigSpec{
+					OTelCollectorUrl:                      "url1",
+					KeptnAppCreationRequestTimeoutSeconds: 10,
+					CloudEventsEndpoint:                   "ce-endpoint",
+				},
+			},
+			want:                             ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			wantCloudEventsEndpointConfig:    "ce-endpoint",
+			wantCreationRequestTimeoutConfig: 10 * time.Second,
+			wantErr:                          true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			reconciler := setupReconciler(tt.reconcileConfig)
 			reconciler.LastAppliedSpec = tt.lastAppliedConfig
 			got, err := reconciler.Reconcile(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
@@ -108,6 +152,17 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Reconcile() got = %v, want %v", got, tt.want)
+			}
+
+			mockConfig := reconciler.config.(*fakeconfig.MockConfig)
+
+			if tt.wantCreationRequestTimeoutConfig > 0 {
+				require.Len(t, mockConfig.SetCreationRequestTimeoutCalls(), 1)
+				require.Equal(t, tt.wantCreationRequestTimeoutConfig, mockConfig.SetCreationRequestTimeoutCalls()[0].Value)
+			}
+			if tt.wantCloudEventsEndpointConfig != "" {
+				require.Len(t, mockConfig.SetCloudEventsEndpointCalls(), 1)
+				require.Equal(t, tt.wantCloudEventsEndpointConfig, mockConfig.SetCloudEventsEndpointCalls()[0].Endpoint)
 			}
 		})
 	}
@@ -233,47 +288,24 @@ func TestKeptnConfigReconciler_reconcileOtelCollectorUrl(t *testing.T) {
 	}
 }
 
-func setupReconciler() *KeptnConfigReconciler {
-	emptyConfig := &optionsv1alpha1.KeptnConfig{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "empty-config",
-			Namespace: "keptn-lifecycle-toolkit-system",
-		},
-		Spec: optionsv1alpha1.KeptnConfigSpec{
-			OTelCollectorUrl: "",
-		},
-	}
-	config1 := &optionsv1alpha1.KeptnConfig{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "config1",
-			Namespace: "keptn-lifecycle-toolkit-system",
-		},
-		Spec: optionsv1alpha1.KeptnConfigSpec{
-			OTelCollectorUrl: "url1",
-		},
-	}
-	config2 := &optionsv1alpha1.KeptnConfig{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "config2",
-			Namespace: "keptn-lifecycle-toolkit-system",
-		},
-		Spec: optionsv1alpha1.KeptnConfigSpec{
-			OTelCollectorUrl: "url2",
-		},
-	}
-
+func setupReconciler(withConfig *optionsv1alpha1.KeptnConfig) *KeptnConfigReconciler {
 	// setup logger
 	opts := zap.Options{
 		Development: true,
 	}
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
-	fakeClient := fake.NewClient(emptyConfig, config1, config2)
+	fakeClient := fake.NewClient(withConfig)
 
-	r := &KeptnConfigReconciler{
-		Client: fakeClient,
-		Scheme: fakeClient.Scheme(),
-		Log:    ctrl.Log.WithName("test-keptnconfig-controller"),
+	r := NewReconciler(
+		fakeClient,
+		fakeClient.Scheme(),
+		ctrl.Log.WithName("test-keptnconfig-controller"),
+		"",
+	)
+	r.config = &fakeconfig.MockConfig{
+		SetCloudEventsEndpointFunc:    func(endpoint string) {},
+		SetCreationRequestTimeoutFunc: func(value time.Duration) {},
 	}
 	return r
 }

@@ -4,12 +4,12 @@ description: Define a run of a KeptnTaskDefinition
 weight: 85
 ---
 
-When using Keptn to run tasks for software
+Keptn automatically populates the `KeptnTask` resource
+for tasks that deploy software on Kubernetes.
+However, when using Keptn to run tasks for software
 that is deployed outside of Kubernetes,
 you must create the `KeptnTask` resource manually
 and modify it manually for each new run.
-Keptn automatically populates the `KeptnTask` resource
-for tasks that deploy software on Kubernetes.
 
 ## Synopsis
 
@@ -37,9 +37,9 @@ spec:
 ## Fields
 
 * **apiVersion** -- API version being used.
-`
+
 * **kind** -- Resource type.
-   Must be set to `KeptnTask`
+  Must be set to `KeptnTask`
 
 * **metadata**
   * **name** -- Unique name of this run of the task.

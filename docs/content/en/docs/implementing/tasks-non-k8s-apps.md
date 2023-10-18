@@ -4,21 +4,22 @@ description: Using Keptn with Non-Kubernetes Applications
 weight: 95
 ---
 
-Keptn Tasks can be triggered for workloads and applications
+Keptn Tasks running on a Kubernetes cluster
+can be triggered for workloads and applications
 that are deployed outside of Kubernetes.
 For example, Keptn could trigger load and performance tests
 for an application that is deployed on a virtual machine.
 
 To do this:
 
-1. [Install and enable a Kubernetes cluster](#install-and-enable-a-kubernetes-cluster)
+1. [Install Keptn on a Kubernetes cluster](#install-keptn-on-a-kubernetes-cluster)
 1. [Create a KeptnTaskDefinition](#create-a-keptntaskdefinition)
 1. [Create and apply a KeptnTask](#create-and-apply-a-keptntask)
 1. [Re-run the KeptnTask](#re-run-the-keptntask)
 
-## Install and enable a Kubernetes cluster
+## Install Keptn on a Kubernetes cluster
 
-You must still
+You must enable a Kubernetes cluster and
 [install](../install/install.md/#use-helm-chart)
 Keptn on a Kubernetes cluster,
 but this can be a very lightweight, single-node KinD cluster; see
@@ -30,7 +31,7 @@ so resource utilization is minimal.
 
 When you have Keptn installed, create a
 YAML file that defines what you want to execute
-as a `KeptnTaskDefinition` resource..
+as a `KeptnTaskDefinition` resource.
 See
 [Deployment tasks](../implementing/tasks/)
 and the
@@ -69,7 +70,7 @@ In the standard operating mode, when Keptn is managing workloads,
 the creation of the `KeptnTask` resource is automatic.
 
 Moreover, each time you want to execute a `KeptnTask`,
-you must manually create a a new (and uniquely named) `KeptnTask` resource.
+you must manually create a new (and uniquely named) `KeptnTask` resource.
 
 The `KeptnTask` resource references the `KeptnTaskDefinition`
 that you created above

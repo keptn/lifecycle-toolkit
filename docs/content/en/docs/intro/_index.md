@@ -130,8 +130,15 @@ run in sequential order.
 Keptn tasks and evaluations can be run
 for either a Kubernetes workload (single service) resource
 or a
-[KeptnApp](https://lifecycle.keptn.sh/docs/yaml-crd-ref/app/) resource,
+[KeptnApp](../yaml-crd-ref/app.md) resource,
 which is a single, cohesive unit that groups multiple workloads.
+For more information, see:
+
+* [Keptn tasks](../implementing/tasks)
+* [Evaluations](../implementing/evaluations.md)
+* [KeptnApp and KeptnWorkflow resources](../architecture/keptn-apps)
+
+## Next steps
 
 To learn more, see:
 

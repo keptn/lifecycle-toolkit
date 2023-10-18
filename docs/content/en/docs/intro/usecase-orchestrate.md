@@ -29,7 +29,7 @@ and can do the following:
 * Validate any Keptn metric,
   either pre- or post-deployment,
   using the metrics from the Keptn Metrics Server introduced in
-  [Getting started with Keptn metrics](usecase_metrics.md).
+  [Getting started with Keptn metrics](../getting-started/usecase_metrics.md).
 
 This means that you can be sure that the environment is healthy
 and has adequate resources before you begin the deployment.

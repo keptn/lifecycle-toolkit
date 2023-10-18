@@ -150,7 +150,8 @@ Incidentally, this is exactly how you can use Keptn with [applications deployed 
 
 Annotate the demo application `Deployment` manifest to have Keptn automatically trigger the task after every deployment.
 
-Recall the `Deployment` from the [getting started guide](../../getting-started/_index.md#step-3-deploy-demo-application).
+Recall the `Deployment` from the [Observability](../../getting-started/observability/_index.md#step-3-deploy-demo-application)
+Getting started guide.
 
 Add a new label so the `labels` section looks like this:
 

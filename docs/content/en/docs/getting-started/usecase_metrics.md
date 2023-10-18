@@ -48,11 +48,11 @@ series.
 After completing this exercise,
 you may want to do the other exercises:
 
-- In [Standardize observability](usecase-observability.md),
+- In [Standardize observability](../intro/usecase-observability.md),
   you learn how to standardize access
   to the observability data for your cluster.
 - In
-  [Manage release lifecycle](usecase-orchestrate.md),
+  [Manage release lifecycle](../intro/usecase-orchestrate.md),
   you learn how to implement
   pre- and post-deployment tasks and evaluations
   to orchestrate the flow of all the `workloads`

@@ -47,7 +47,7 @@ simplifying configuration and integration into a single set of metrics.
 
 To learn more, see:
 
-* [Custom Keptn metrics](usecase_metrics.md)
+* [Keptn metrics](../getting-started/usecase_metrics.md) getting started guide
 * [Keptn Metrics](../implementing/evaluatemetrics.md) guide
 
 ## Observability
@@ -86,7 +86,7 @@ to ensure that your deployments are observable.
 
 To learn more, see:
 
-* [Getting started with Keptn Observability](../getting-started)
+* [Getting started with Keptn Observability](../getting-started/observability)
 * [Standardize observability](usecase-observability.md/)
 * [DORA metrics](../implementing/dora) guide
 * [OpenTelemetry observability](../implementing/otel.md) guide
@@ -142,7 +142,7 @@ For more information, see:
 
 To learn more, see:
 
-* [Getting started with release lifecycle management](../tutorials/tasks/)
+* [Getting started with release lifecycle management](tasks/)
 * [Manage release lifecycle](usecase-orchestrate.md)
 * [Deployment tasks](../implementing/tasks)
 * [Evaluations](../implementing/evaluations.md)

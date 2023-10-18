@@ -156,5 +156,5 @@ spec:
 * [KeptnEvaluationDefinition](evaluationdefinition.md)
 * [KeptnMetricsProvider](metricsprovider.md)
 * Implementing [Keptn Metrics](../implementing/evaluatemetrics.md)
-* [Getting started with Keptn metrics](../intro/usecase_metrics.md)
+* [Getting started with Keptn metrics](../getting-started/usecase_metrics.md)
 * Architecture of the [Keptn Metrics Operator](../architecture/components/metrics-operator/_index.md)

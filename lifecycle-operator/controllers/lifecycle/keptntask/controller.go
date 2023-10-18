@@ -25,11 +25,7 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -72,14 +68,6 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
-	traceContextCarrier := propagation.MapCarrier(task.Annotations)
-	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
-
-	ctx, span := r.getTracer().Start(ctx, "reconcile_task", trace.WithSpanKind(trace.SpanKindConsumer))
-	defer span.End()
-
-	task.SetSpanAttributes(span)
-
 	task.SetStartTime()
 
 	defer func() {
@@ -92,14 +80,12 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	job, err := r.getJob(ctx, task.Status.JobName, req.Namespace)
 	if err != nil && !errors.IsNotFound(err) {
 		r.Log.Error(err, "Could not check if job is running")
-		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
 	if job == nil {
 		err = r.createJob(ctx, req, task)
 		if err != nil {
-			span.SetStatus(codes.Error, err.Error())
 			r.Log.Error(err, "could not create Job")
 		} else {
 			task.Status.Status = apicommon.StateProgressing

@@ -27,12 +27,7 @@ import (
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/providers/keptnmetric"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
-	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -84,11 +79,10 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return ctrl.Result{}, nil
 	}
 
-	ctx, span := r.setupEvaluationSpans(ctx, evaluation)
-	defer span.End()
+	evaluation.SetStartTime()
 
 	if evaluation.Status.RetryCount >= evaluation.Spec.Retries {
-		r.handleEvaluationExceededRetries(ctx, evaluation, span)
+		r.handleEvaluationExceededRetries(ctx, evaluation)
 		return ctrl.Result{}, nil
 	}
 
@@ -97,11 +91,9 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		if err != nil {
 			if errors.IsNotFound(err) {
 				r.Log.Info("KeptnEvaluation not found, ignoring error since object must be deleted", "requestInfo", requestInfo)
-				span.SetStatus(codes.Error, err.Error())
 				return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 			}
 			r.Log.Error(err, "Failed to retrieve a resource")
-			span.SetStatus(codes.Error, err.Error())
 			return ctrl.Result{}, nil
 		}
 
@@ -110,7 +102,7 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	if !evaluation.Status.OverallStatus.IsSucceeded() {
-		if err := r.handleEvaluationIncomplete(ctx, evaluation, span); err != nil {
+		if err := r.handleEvaluationIncomplete(ctx, evaluation); err != nil {
 			return ctrl.Result{Requeue: true}, err
 		}
 		return ctrl.Result{Requeue: true, RequeueAfter: evaluation.Spec.RetryInterval.Duration}, nil
@@ -118,28 +110,17 @@ func (r *KeptnEvaluationReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	r.Log.Info("Finished Reconciling KeptnEvaluation", "requestInfo", requestInfo)
 
-	err := r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
+	err := r.updateFinishedEvaluationMetrics(ctx, evaluation)
 
 	return ctrl.Result{}, err
 
 }
 
-func (r *KeptnEvaluationReconciler) setupEvaluationSpans(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation) (context.Context, trace.Span) {
-	traceContextCarrier := propagation.MapCarrier(evaluation.Annotations)
-	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
-	ctx, span := r.getTracer().Start(ctx, "reconcile_evaluation", trace.WithSpanKind(trace.SpanKindConsumer))
-	evaluation.SetSpanAttributes(span)
-	evaluation.SetStartTime()
-
-	return ctx, span
-}
-
-func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, span trace.Span) error {
+func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation) error {
 	// Evaluation is uncompleted, update status anyway this avoids updating twice in case of completion
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
 		r.EventSender.Emit(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileError, "could not update status", "")
-		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
@@ -147,14 +128,12 @@ func (r *KeptnEvaluationReconciler) handleEvaluationIncomplete(ctx context.Conte
 
 }
 
-func (r *KeptnEvaluationReconciler) handleEvaluationExceededRetries(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, span trace.Span) {
+func (r *KeptnEvaluationReconciler) handleEvaluationExceededRetries(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation) {
 	r.EventSender.Emit(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileTimeout, "retryCount exceeded", "")
-	err := controllererrors.ErrRetryCountExceeded
-	span.SetStatus(codes.Error, err.Error())
 	evaluation.Status.OverallStatus = apicommon.StateFailed
-	err2 := r.updateFinishedEvaluationMetrics(ctx, evaluation, span)
-	if err2 != nil {
-		r.Log.Error(err2, "failed to update finished evaluation metrics")
+	err := r.updateFinishedEvaluationMetrics(ctx, evaluation)
+	if err != nil {
+		r.Log.Error(err, "failed to update finished evaluation metrics")
 	}
 }
 
@@ -231,12 +210,11 @@ func updateStatusSummary(statusSummary apicommon.StatusSummary, statusItem *klcv
 	return newStatus, statusSummary
 }
 
-func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation, span trace.Span) error {
+func (r *KeptnEvaluationReconciler) updateFinishedEvaluationMetrics(ctx context.Context, evaluation *klcv1alpha3.KeptnEvaluation) error {
 	evaluation.SetEndTime()
 
 	err := r.Client.Status().Update(ctx, evaluation)
 	if err != nil {
-		span.SetStatus(codes.Error, err.Error())
 		r.EventSender.Emit(apicommon.PhaseReconcileEvaluation, "Warning", evaluation, apicommon.PhaseStateReconcileError, "could not update status", "")
 		return err
 	}

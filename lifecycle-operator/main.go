@@ -322,12 +322,12 @@ func main() {
 	}
 
 	configLogger := ctrl.Log.WithName("KeptnConfig Controller").V(env.KeptnOptionsControllerLogLevel)
-	configReconciler := &controlleroptions.KeptnConfigReconciler{
-		Client:              mgr.GetClient(),
-		Scheme:              mgr.GetScheme(),
-		Log:                 configLogger,
-		DefaultCollectorURL: env.KeptnOptionsCollectorURL,
-	}
+	configReconciler := controlleroptions.NewReconciler(
+		mgr.GetClient(),
+		mgr.GetScheme(),
+		configLogger,
+		env.KeptnOptionsCollectorURL,
+	)
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")
 		os.Exit(1)

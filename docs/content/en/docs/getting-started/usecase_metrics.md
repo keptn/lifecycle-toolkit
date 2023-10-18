@@ -1,10 +1,10 @@
 ---
-title: Custom Keptn metrics
+title: Keptn metrics
 description: Enhance your deployment with custom Keptn metrics
 weight: 30
 ---
 
-The Custom Keptn metrics component
+The Keptn metrics component
 allows you to define any type of metric
 from multiple instances
 of any type of data source in your Kubernetes cluster.
@@ -29,7 +29,7 @@ Each has plugins but it is difficult to maintain them,
 especially if you are using multiple tools,
 and multiple observability platforms,
 and multiple instances of some tools or observability platforms.
-The Custom Keptn metrics feature unites all these metrics
+The Keptn metrics feature unites all these metrics
 integrates metrics from all these sources into a single set of metrics.
 
 ## Using this exercise

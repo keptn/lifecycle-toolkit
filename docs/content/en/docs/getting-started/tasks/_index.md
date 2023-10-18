@@ -1,8 +1,7 @@
 ---
-title: Getting started with Release Lifecycle Management
+title: Release Lifecycle Management
 description: Add KeptnTasks to deployments
-weight: 25
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
+weight: 50
 ---
 
 The Release Lifecycle Management tools run

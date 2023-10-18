@@ -1,108 +1,102 @@
 ## @section Keptn Metrics Operator common
 ## @extra   operatorService.ports[0] webhook port (must correspond to Mutating Webhook Configurations)
-## @param   operatorService.ports[0].name
-## @param   operatorService.ports[0].port
-## @param   operatorService.ports[0].protocol
-## @param   operatorService.ports[0].targetPort
 ## @extra   operatorService.ports[1] port to integrate with the K8s custom metrics API
-## @param   operatorService.ports[1].name
-## @param   operatorService.ports[1].port
-## @param   operatorService.ports[1].targetPort
 ## @extra   operatorService.ports[2] port to integrate with metrics API (e.g. Keda)
-## @param   operatorService.ports[2].name
-## @param   operatorService.ports[2].port
-## @param   operatorService.ports[2].protocol
-## @param   operatorService.ports[2].targetPort
-## @param   operatorService.type
 operatorService:
   ports:
+## @param   operatorService.ports[0].name
     - name: https
+## @param   operatorService.ports[0].port
       port: 8443
+## @param   operatorService.ports[0].protocol
       protocol: TCP
+## @param   operatorService.ports[0].targetPort
       targetPort: https
+## @param   operatorService.ports[1].name
     - name: custom-metrics
+## @param   operatorService.ports[1].port
       port: 443
+## @param   operatorService.ports[1].targetPort
       targetPort: custom-metrics
+## @param   operatorService.ports[2].name
     - name: metrics
+## @param   operatorService.ports[2].port
       port: 9999
+## @param   operatorService.ports[2].protocol
       protocol: TCP
+## @param   operatorService.ports[2].targetPort
       targetPort: metrics
+## @param   operatorService.type
   type: ClusterIP
-
-## @param      config.health.healthProbeBindAddress setup on what address to start the default health handler
-## @param      config.leaderElection.leaderElect decides whether to enable leader election with multiple replicas
-## @param      config.leaderElection.resourceName defines LeaderElectionID
-## @param      config.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
-## @param      config.webhook.port
 config:
   health:
+## @param      config.health.healthProbeBindAddress setup on what address to start the default health handler
     healthProbeBindAddress: :8081
   leaderElection:
+## @param      config.leaderElection.leaderElect decides whether to enable leader election with multiple replicas
     leaderElect: true
+## @param      config.leaderElection.resourceName defines LeaderElectionID
     resourceName: 3f8532ca.keptn.sh
   metrics:
+## @param      config.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
     bindAddress: 127.0.0.1:8080
   webhook:
+## @param      config.webhook.port
     port: 9443
-
 ## @extra Mutating Webhook Configurations for metrics Operator
-## @param     webhookService.ports[0].port
-## @param     webhookService.ports[0].protocol
-## @param     webhookService.ports[0].targetPort
-## @param     webhookService.type
 webhookService:
   ports:
+## @param     webhookService.ports[0].port
     - port: 443
+## @param     webhookService.ports[0].protocol
       protocol: TCP
+## @param     webhookService.ports[0].targetPort
       targetPort: 9443
+## @param     webhookService.type
   type: ClusterIP
-
 ## @param    nodeSelector add custom nodes selector to metrics operator
-## @param   replicas customize number of installed metrics operator replicas
-## @param    tolerations add custom tolerations to metrics operator
-## @param    topologySpreadConstraints add custom topology constraints to metrics operator
 nodeSelector: { }
+## @param   replicas customize number of installed metrics operator replicas
 replicas: 1
+## @param    tolerations add custom tolerations to metrics operator
 tolerations: [ ]
+## @param    topologySpreadConstraints add custom topology constraints to metrics operator
 topologySpreadConstraints: [ ]
 
 ## @section Keptn Metrics Operator controller
 ## @extra   containerSecurityContext Sets security context privileges
-## @param   containerSecurityContext.allowPrivilegeEscalation
-## @param   containerSecurityContext.capabilities.drop
-## @param   containerSecurityContext.privileged
-## @param   containerSecurityContext.runAsGroup
-## @param   containerSecurityContext.runAsNonRoot
-## @param   containerSecurityContext.runAsUser
-## @param   containerSecurityContext.seccompProfile.type
 containerSecurityContext:
+## @param   containerSecurityContext.allowPrivilegeEscalation
   allowPrivilegeEscalation: false
   capabilities:
+## @param   containerSecurityContext.capabilities.drop
     drop:
       - ALL
+## @param   containerSecurityContext.privileged
   privileged: false
+## @param   containerSecurityContext.runAsGroup
   runAsGroup: 65532
+## @param   containerSecurityContext.runAsNonRoot
   runAsNonRoot: true
+## @param   containerSecurityContext.runAsUser
   runAsUser: 65532
   seccompProfile:
+## @param   containerSecurityContext.seccompProfile.type
     type: RuntimeDefault
-
-## @param   env.exposeKeptnMetrics enable metrics exporter
-## @param   env.enableKeptnAnalysis  enables/disables the analysis feature
-## @param   env.metricsControllerLogLevel sets the log level of Metrics Controller
-## @param   env.analysisControllerLogLevel  sets the log level of Analysis Controller
 env:
+## @param   env.exposeKeptnMetrics enable metrics exporter
   exposeKeptnMetrics: "true"
+## @param   env.enableKeptnAnalysis  enables/disables the analysis feature
   enableKeptnAnalysis: "false"
+## @param   env.metricsControllerLogLevel sets the log level of Metrics Controller
   metricsControllerLogLevel: "0"
+## @param   env.analysisControllerLogLevel  sets the log level of Analysis Controller
   analysisControllerLogLevel: "0"
-
-## @param   image.repository specify registry for manager image
-## @param   image.tag select tag for manager image
 image:
+## @param   image.repository specify registry for manager image
   repository: ghcr.io/keptn/metrics-operator
+## @param   image.tag select tag for manager image
   tag: v0.8.2
-
 ## @extra  livenessProbe custom livenessprobe for manager container
 ## @skip   livenessProbe.httpGet.path
 ## @skip   livenessProbe.httpGet.port
@@ -143,6 +137,6 @@ resources:
 ## @section Global
 ## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled
 ## @param  imagePullSecrets global value for image registry secret
-## @param  kubernetesClusterDomain overrides domain.local
 imagePullSecrets: [ ]
+## @param  kubernetesClusterDomain overrides domain.local
 kubernetesClusterDomain: cluster.local

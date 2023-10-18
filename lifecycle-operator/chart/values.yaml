@@ -1,118 +1,113 @@
 ## @section Keptn Lifecycle Operator common
-## @param    lifecycleOperatorConfig.health.healthProbeBindAddress setup on what address to start the default health handler
-## @param    lifecycleOperatorConfig.leaderElection.leaderElect enable leader election for multiple replicas of the lifecycle operator
-## @param    lifecycleOperatorConfig.leaderElection.resourceName define LeaderElectionID
-## @param    lifecycleOperatorConfig.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
-## @param    lifecycleOperatorConfig.webhook.port setup port for the lifecycle operator admission webhook
 lifecycleOperatorConfig:
   health:
+## @param    lifecycleOperatorConfig.health.healthProbeBindAddress setup on what address to start the default health handler
     healthProbeBindAddress: :8081
   leaderElection:
+## @param    lifecycleOperatorConfig.leaderElection.leaderElect enable leader election for multiple replicas of the lifecycle operator
     leaderElect: true
+## @param    lifecycleOperatorConfig.leaderElection.resourceName define LeaderElectionID
     resourceName: 6b866dd9.keptn.sh
   metrics:
+## @param    lifecycleOperatorConfig.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
     bindAddress: 127.0.0.1:8080
   webhook:
+## @param    lifecycleOperatorConfig.webhook.port setup port for the lifecycle operator admission webhook
     port: 9443
-
 ## @extra    lifecycleWebhookService Mutating Webhook Configurations for lifecycle Operator
-## @param    lifecycleWebhookService.ports[0].port
-## @param    lifecycleWebhookService.ports[0].protocol
-## @param    lifecycleWebhookService.ports[0].targetPort
-## @param    lifecycleWebhookService.type
 lifecycleWebhookService:
   ports:
+## @param    lifecycleWebhookService.ports[0].port
   - port: 443
+## @param    lifecycleWebhookService.ports[0].protocol
     protocol: TCP
+## @param    lifecycleWebhookService.ports[0].targetPort
     targetPort: 9443
+## @param    lifecycleWebhookService.type
   type: ClusterIP
 
 ## @section Keptn Lifecycle Operator controller
 ## @extra   lifecycleOperator.containerSecurityContext Sets security context privileges
+lifecycleOperator:
+  containerSecurityContext:
 ## @param   lifecycleOperator.containerSecurityContext.allowPrivilegeEscalation
+    allowPrivilegeEscalation: false
+    capabilities:
 ## @param   lifecycleOperator.containerSecurityContext.capabilities.drop
+      drop:
+      - ALL
 ## @param   lifecycleOperator.containerSecurityContext.privileged
+    privileged: false
 ## @param   lifecycleOperator.containerSecurityContext.runAsGroup
+    runAsGroup: 65532
 ## @param   lifecycleOperator.containerSecurityContext.runAsNonRoot
+    runAsNonRoot: true
 ## @param   lifecycleOperator.containerSecurityContext.runAsUser
+    runAsUser: 65532
+    seccompProfile:
 ## @param   lifecycleOperator.containerSecurityContext.seccompProfile.type
+      type: RuntimeDefault
 ## @param   lifecycleOperator.env.functionRunnerImage specify image for deno task runtime
+  env:
+    functionRunnerImage: ghcr.io/keptn/deno-runtime:v1.0.1
 ## @param   lifecycleOperator.env.keptnAppControllerLogLevel sets the log level of Keptn App Controller
+    keptnAppControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnAppCreationRequestControllerLogLevel sets the log level of Keptn App Creation Request Controller
+    keptnAppCreationRequestControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnAppVersionControllerLogLevel sets the log level of Keptn AppVersion Controller
+    keptnAppVersionControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnEvaluationControllerLogLevel sets the log level of Keptn Evaluation Controller
+    keptnEvaluationControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnTaskControllerLogLevel sets the log level of Keptn Task Controller
+    keptnTaskControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnTaskDefinitionControllerLogLevel sets the log level of Keptn TaskDefinition Controller
+    keptnTaskDefinitionControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnWorkloadControllerLogLevel sets the log level of Keptn Workload Controller
+    keptnWorkloadControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel sets the log level of Keptn WorkloadVersion Controller
+    keptnWorkloadVersionControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel Deprecated: Use keptnWorkloadVersionControllerLogLevel instead. Sets the log level of Keptn WorkloadVersion Controller
+    keptnWorkloadInstanceControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
+    optionsControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.otelCollectorUrl Sets the URL for the open telemetry collector
+    otelCollectorUrl: otel-collector:4317
 ## @param   lifecycleOperator.env.pythonRunnerImage specify image for python task runtime
+    pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.0
+  image:
 ## @param   lifecycleOperator.image.repository specify registry for manager image
+    repository: ghcr.io/keptn/lifecycle-operator
 ## @param   lifecycleOperator.image.tag  select tag for manager image
+    tag: v0.8.2
 ## @param   lifecycleOperator.imagePullPolicy specify pull policy for manager image
+  imagePullPolicy: Always
 ## @extra  lifecycleOperator.livenessProbe custom livenessprobe for manager container
 ## @skip   lifecycleOperator.livenessProbe.httpGet.path
 ## @skip   lifecycleOperator.livenessProbe.httpGet.port
 ## @skip   lifecycleOperator.livenessProbe.initialDelaySeconds
 ## @skip   lifecycleOperator.livenessProbe.periodSeconds
-## @extra  lifecycleOperator.readinessProbe custom readinessprobe for manager container
-## @skip   lifecycleOperator.readinessProbe.httpGet.path
-## @skip   lifecycleOperator.readinessProbe.httpGet.port
-## @skip   lifecycleOperator.readinessProbe.initialDelaySeconds
-## @skip   lifecycleOperator.readinessProbe.periodSeconds
-## @extra  lifecycleOperator.resources specify limits and requests for manager container
-## @skip   lifecycleOperator.resources.limits.cpu
-## @skip   lifecycleOperator.resources.limits.memory
-## @skip   lifecycleOperator.resources.requests.cpu
-## @skip   lifecycleOperator.resources.requests.memory
-## @param   lifecycleOperator.nodeSelector add custom nodes selector to lifecycle operator
-## @param   lifecycleOperator.replicas customize number of installed lifecycle operator replicas
-## @param   lifecycleOperator.tolerations add custom tolerations to lifecycle operator
-## @param   lifecycleOperator.topologySpreadConstraints add custom topology constraints to lifecycle operator
-lifecycleOperator:
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-      - ALL
-    privileged: false
-    runAsGroup: 65532
-    runAsNonRoot: true
-    runAsUser: 65532
-    seccompProfile:
-      type: RuntimeDefault
-  env:
-    functionRunnerImage: ghcr.io/keptn/deno-runtime:v1.0.1
-    keptnAppControllerLogLevel: "0"
-    keptnAppCreationRequestControllerLogLevel: "0"
-    keptnAppVersionControllerLogLevel: "0"
-    keptnEvaluationControllerLogLevel: "0"
-    keptnTaskControllerLogLevel: "0"
-    keptnTaskDefinitionControllerLogLevel: "0"
-    keptnWorkloadControllerLogLevel: "0"
-    keptnWorkloadVersionControllerLogLevel: "0"
-    keptnWorkloadInstanceControllerLogLevel: "0"
-    optionsControllerLogLevel: "0"
-    otelCollectorUrl: otel-collector:4317
-    pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.0
-  image:
-    repository: ghcr.io/keptn/lifecycle-operator
-    tag: v0.8.2
-  imagePullPolicy: Always
   livenessProbe:
     httpGet:
       path: /healthz
       port: 8081
     initialDelaySeconds: 15
     periodSeconds: 20
+## @extra  lifecycleOperator.readinessProbe custom readinessprobe for manager container
+## @skip   lifecycleOperator.readinessProbe.httpGet.path
+## @skip   lifecycleOperator.readinessProbe.httpGet.port
+## @skip   lifecycleOperator.readinessProbe.initialDelaySeconds
+## @skip   lifecycleOperator.readinessProbe.periodSeconds
   readinessProbe:
     httpGet:
       path: /readyz
       port: 8081
     initialDelaySeconds: 5
     periodSeconds: 10
+## @extra  lifecycleOperator.resources specify limits and requests for manager container
+## @skip   lifecycleOperator.resources.limits.cpu
+## @skip   lifecycleOperator.resources.limits.memory
+## @skip   lifecycleOperator.resources.requests.cpu
+## @skip   lifecycleOperator.resources.requests.memory
   resources:
     limits:
       cpu: 500m
@@ -120,11 +115,14 @@ lifecycleOperator:
     requests:
       cpu: 5m
       memory: 64Mi
+## @param   lifecycleOperator.nodeSelector add custom nodes selector to lifecycle operator
   nodeSelector: {}
+## @param   lifecycleOperator.replicas customize number of installed lifecycle operator replicas
   replicas: 1
+## @param   lifecycleOperator.tolerations add custom tolerations to lifecycle operator
   tolerations: []
+## @param   lifecycleOperator.topologySpreadConstraints add custom topology constraints to lifecycle operator
   topologySpreadConstraints: []
-
 ## @extra   lifecycleOperatorMetricsService Adjust settings here to change the k8s service for scraping Prometheus metrics
 ## @skip    lifecycleOperatorMetricsService.ports[0].name
 ## @skip    lifecycleOperatorMetricsService.ports[0].port
@@ -142,18 +140,21 @@ lifecycleOperatorMetricsService:
 ## @section Global
 ## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled
 ## @param  imagePullSecrets global value for image registry secret
-## @param  kubernetesClusterDomain overrides domain.local
-## @param  schedulingGatesEnabled enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version
-## @param  allowedNamespaces specifies the allowed namespaces for the lifecycle orchestration functionality
 imagePullSecrets: []
+## @param  kubernetesClusterDomain overrides domain.local
 kubernetesClusterDomain: cluster.local
+## @param  schedulingGatesEnabled enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version
 schedulingGatesEnabled: false
+## @param  allowedNamespaces specifies the allowed namespaces for the lifecycle orchestration functionality
 allowedNamespaces: []
 
 # yamllint disable rule:line-length
 ## @section Keptn Scheduler
+scheduler:
 ## @param scheduler.nodeSelector adds node selectors for scheduler
+  nodeSelector: {}
 ## @param scheduler.replicas modifies replicas
+  replicas: 1
 ## @extra scheduler.containerSecurityContext Sets security context
 ## @skip scheduler.containerSecurityContext.allowPrivilegeEscalation
 ## @skip scheduler.containerSecurityContext.capabilities.drop
@@ -162,29 +163,6 @@ allowedNamespaces: []
 ## @skip scheduler.containerSecurityContext.runAsNonRoot
 ## @skip scheduler.containerSecurityContext.runAsUser
 ## @skip scheduler.containerSecurityContext.seccompProfile.type
-## @param scheduler.env.otelCollectorUrl sets url for open telemetry collector
-## @param scheduler.image.repository set image repository for scheduler
-## @param scheduler.image.tag set image tag for scheduler
-## @param scheduler.imagePullPolicy set image pull policy for scheduler
-## @extra scheduler.livenessProbe customizable liveness probe for the scheduler
-## @skip scheduler.livenessProbe.httpGet.path
-## @skip scheduler.livenessProbe.httpGet.port
-## @skip scheduler.livenessProbe.httpGet.scheme
-## @skip scheduler.livenessProbe.initialDelaySeconds
-## @extra scheduler.readinessProbe customizable readiness probe for the scheduler
-## @skip scheduler.readinessProbe.httpGet.path
-## @skip scheduler.readinessProbe.httpGet.port
-## @skip scheduler.readinessProbe.httpGet.scheme
-## @extra scheduler.resources sets cpu and memory resurces/limits for scheduler
-## @skip scheduler.resources.limits.cpu
-## @skip scheduler.resources.limits.memory
-## @skip scheduler.resources.requests.cpu
-## @skip scheduler.resources.requests.memory
-## @param scheduler.tolerations adds tolerations for scheduler
-## @param scheduler.topologySpreadConstraints add topology constraints for scheduler
-scheduler:
-  nodeSelector: {}
-  replicas: 1
   containerSecurityContext:
     allowPrivilegeEscalation: false
     capabilities:
@@ -197,22 +175,40 @@ scheduler:
     seccompProfile:
       type: RuntimeDefault
   env:
+## @param scheduler.env.otelCollectorUrl sets url for open telemetry collector
     otelCollectorUrl: otel-collector:4317
   image:
+## @param scheduler.image.repository set image repository for scheduler
     repository: ghcr.io/keptn/scheduler
+## @param scheduler.image.tag set image tag for scheduler
     tag: v0.8.2
+## @param scheduler.imagePullPolicy set image pull policy for scheduler
   imagePullPolicy: Always
+## @extra scheduler.livenessProbe customizable liveness probe for the scheduler
+## @skip scheduler.livenessProbe.httpGet.path
+## @skip scheduler.livenessProbe.httpGet.port
+## @skip scheduler.livenessProbe.httpGet.scheme
+## @skip scheduler.livenessProbe.initialDelaySeconds
   livenessProbe:
     httpGet:
       path: /healthz
       port: 10259
       scheme: HTTPS
     initialDelaySeconds: 15
+## @extra scheduler.readinessProbe customizable readiness probe for the scheduler
+## @skip scheduler.readinessProbe.httpGet.path
+## @skip scheduler.readinessProbe.httpGet.port
+## @skip scheduler.readinessProbe.httpGet.scheme
   readinessProbe:
     httpGet:
       path: /healthz
       port: 10259
       scheme: HTTPS
+## @extra scheduler.resources sets cpu and memory resurces/limits for scheduler
+## @skip scheduler.resources.limits.cpu
+## @skip scheduler.resources.limits.memory
+## @skip scheduler.resources.requests.cpu
+## @skip scheduler.resources.requests.memory
   resources:
     limits:
       cpu: 300m
@@ -221,17 +217,18 @@ scheduler:
       cpu: 100m
       memory: 20Mi
   tolerations: []
+## @param scheduler.topologySpreadConstraints add topology constraints for scheduler
   topologySpreadConstraints: []
-
-## @param  schedulerConfig.leaderElection.leaderElect enables leader election for multiple replicas of the scheduler
-## @param  schedulerConfig.profiles[0].plugins.permit.enabled[0].name enables permit plugin
 ## @param  schedulerConfig.profiles[0].schedulerName changes scheduler name
 schedulerConfig:
   leaderElection:
+## @param  schedulerConfig.leaderElection.leaderElect enables leader election for multiple replicas of the scheduler
     leaderElect: false
   profiles:
   - plugins:
       permit:
         enabled:
+## @param  schedulerConfig.profiles[0].plugins.permit.enabled[0].name enables permit plugin
         - name: KLCPermit
+## @param scheduler.tolerations adds tolerations for scheduler
     schedulerName: keptn-scheduler

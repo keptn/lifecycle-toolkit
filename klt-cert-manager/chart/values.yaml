@@ -1,14 +1,12 @@
 # yamllint disable rule:line-length
 ## @section Keptn Certificate Operator common
-
-## @param     replicas customize number of replicas
-
 ## @param     nodeSelector specify custom node selectors for cert manager
-## @param     tolerations customize tolerations for cert manager
-## @param     topologySpreadConstraints add topology constraints for cert manager
 nodeSelector: {}
+## @param     replicas customize number of replicas
 replicas: 1
+## @param     tolerations customize tolerations for cert manager
 tolerations: []
+## @param     topologySpreadConstraints add topology constraints for cert manager
 topologySpreadConstraints: []
 
 ## @section Keptn Certificate Operator controller
@@ -19,31 +17,6 @@ topologySpreadConstraints: []
 ## @skip     containerSecurityContext.runAsGroup
 ## @skip     containerSecurityContext.runAsUser
 ## @skip     containerSecurityContext.seccompProfile.type
-
-## @param     image.repository specify repo for manager image
-## @param     image.tag select tag for manager container
-## @param     imagePullPolicy select image pull policy for manager container
-
-## @param     env.labelSelectorKey specify the label selector to find resources to generate certificates for
-## @param     env.labelSelectorValue specify the value for the label selector
-
-## @extra     livenessProbe custom RBAC proxy liveness probe
-## @skip     livenessProbe.httpGet.path
-## @skip     livenessProbe.httpGet.port
-## @skip     livenessProbe.initialDelaySeconds
-## @skip     livenessProbe.periodSeconds
-
-## @extra    readinessProbe custom manager readiness probe
-## @skip     readinessProbe.httpGet.path
-## @skip     readinessProbe.httpGet.port
-## @skip     readinessProbe.initialDelaySeconds
-## @skip     readinessProbe.periodSeconds
-
-## @extra    resources custom limits and requests for manager container
-## @skip     resources.limits.cpu
-## @skip     resources.limits.memory
-## @skip     resources.requests.cpu
-## @skip     resources.requests.memory
 containerSecurityContext:
   allowPrivilegeEscalation: false
   capabilities:
@@ -55,24 +28,47 @@ containerSecurityContext:
   seccompProfile:
     type: RuntimeDefault
 env:
+## @param     env.labelSelectorKey specify the label selector to find resources to generate certificates for
   labelSelectorKey: keptn.sh/inject-cert
+## @param     env.labelSelectorValue specify the value for the label selector
   labelSelectorValue: "true"
 image:
+## @param     image.repository specify repo for manager image
   repository: ghcr.io/keptn/certificate-operator
+## @param     image.tag select tag for manager container
   tag: v1.1.0
+## @param     imagePullPolicy select image pull policy for manager container
 imagePullPolicy: Always
+
+## @extra     livenessProbe custom RBAC proxy liveness probe
+## @skip     livenessProbe.httpGet.path
+## @skip     livenessProbe.httpGet.port
+## @skip     livenessProbe.initialDelaySeconds
+## @skip     livenessProbe.periodSeconds
 livenessProbe:
   httpGet:
     path: /healthz
     port: 8081
   initialDelaySeconds: 15
   periodSeconds: 20
+
+## @extra    readinessProbe custom manager readiness probe
+## @skip     readinessProbe.httpGet.path
+## @skip     readinessProbe.httpGet.port
+## @skip     readinessProbe.initialDelaySeconds
+## @skip     readinessProbe.periodSeconds
 readinessProbe:
   httpGet:
     path: /readyz
     port: 8081
   initialDelaySeconds: 5
   periodSeconds: 10
+
+## @extra    resources custom limits and requests for manager container
+## @skip     resources.limits.cpu
+## @skip     resources.limits.memory
+## @skip     resources.requests.cpu
+## @skip     resources.requests.memory
 resources:
   limits:
     cpu: 25m
@@ -83,7 +79,7 @@ resources:
 
 ## @section Global
 ## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled
-## @param  kubernetesClusterDomain overrides domain.local
 ## @param  imagePullSecrets global value for image registry secret
 imagePullSecrets: []
+## @param  kubernetesClusterDomain overrides domain.local
 kubernetesClusterDomain: cluster.local

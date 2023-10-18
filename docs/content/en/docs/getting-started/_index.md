@@ -486,16 +486,16 @@ spec:
   workloads:
   - name: <workload1-name>
     version: <version-string>
-  - name: <workload2-name>
-    version: <version-string>
-  preDeploymentTasks:
-  - <list of tasks>
-  postDeploymentTasks:
-  - <list of tasks>
-  preDeploymentEvaluations:
-  - <list of evaluations>
-  postDeploymentEvaluations:
-  - <list of evaluations>
+# - name: <workload2-name>
+#   version: <version-string>
+# preDeploymentTasks:
+# - <list of tasks>
+# postDeploymentTasks:
+# - <list of tasks>
+# preDeploymentEvaluations:
+# - <list of evaluations>
+# postDeploymentEvaluations:
+# - <list of evaluations>
 ```
 
 ## Fields

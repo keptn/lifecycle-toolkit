@@ -217,6 +217,7 @@ podtato-kubectl   podtato-head-0.1.0-hf52kauz   podtato-head   0.1.0     Complet
 
 To add a new workload (e.g. a new deployment) to an existing app,
 you will need to:
+
 * Make sure the
 `keptn.sh/app`/`app.kubernetes.io/part-of` label/annotation is present
 on the new workload

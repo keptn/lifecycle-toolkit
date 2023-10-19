@@ -54,6 +54,7 @@ type KeptnWorkloadVersionReconciler struct {
 	SpanHandler            *telemetry.SpanHandler
 	TracerFactory          telemetry.TracerFactory
 	SchedulingGatesHandler controllercommon.ISchedulingGatesHandler
+	EvaluationHandler      controllercommon.EvaluationHandlerInterface
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions,verbs=get;list;watch;create;update;patch;delete

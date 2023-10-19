@@ -11,21 +11,14 @@ import (
 )
 
 func (r *KeptnWorkloadVersionReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
-	evaluationHandler := controllercommon.EvaluationHandler{
-		Client:      r.Client,
-		EventSender: r.EventSender,
-		Log:         r.Log,
-		Tracer:      r.getTracer(),
-		Scheme:      r.Scheme,
-		SpanHandler: r.SpanHandler,
-	}
 
 	evaluationCreateAttributes := controllercommon.CreateEvaluationAttributes{
 		SpanName:  fmt.Sprintf(apicommon.CreateWorkloadEvalSpanName, checkType),
 		CheckType: checkType,
 	}
 
-	newStatus, state, err := evaluationHandler.ReconcileEvaluations(ctx, phaseCtx, workloadVersion, evaluationCreateAttributes)
+	controllercommon.NewEvaluationHandler(r.Client, r.EventSender, r.Log, r.getTracer(), r.Scheme, r.SpanHandler)
+	newStatus, state, err := r.EvaluationHandler.ReconcileEvaluations(ctx, phaseCtx, workloadVersion, evaluationCreateAttributes)
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}

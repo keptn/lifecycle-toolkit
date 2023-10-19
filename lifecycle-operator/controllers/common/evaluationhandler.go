@@ -20,8 +20,13 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
+type EvaluationHandlerInterface interface {
+	ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error)
+	CreateKeptnEvaluation(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) (string, error)
+}
+
 type EvaluationHandler struct {
-	client.Client
+	Client      client.Client
 	EventSender IEvent
 	Log         logr.Logger
 	Tracer      trace.Tracer
@@ -33,6 +38,18 @@ type CreateEvaluationAttributes struct {
 	SpanName   string
 	Definition klcv1alpha3.KeptnEvaluationDefinition
 	CheckType  apicommon.CheckType
+}
+
+// NewEvaluationHandler creates a new instance of the EvaluationHandler.
+func NewEvaluationHandler(client client.Client, eventSender IEvent, log logr.Logger, tracer trace.Tracer, scheme *runtime.Scheme, spanHandler telemetry.ISpanHandler) EvaluationHandler {
+	return EvaluationHandler{
+		Client:      client,
+		EventSender: eventSender,
+		Log:         log,
+		Tracer:      tracer,
+		Scheme:      scheme,
+		SpanHandler: spanHandler,
+	}
 }
 
 //nolint:gocognit,gocyclo

@@ -17,7 +17,6 @@ func (r *KeptnWorkloadVersionReconciler) reconcilePrePostEvaluation(ctx context.
 		CheckType: checkType,
 	}
 
-	controllercommon.NewEvaluationHandler(r.Client, r.EventSender, r.Log, r.getTracer(), r.Scheme, r.SpanHandler)
 	newStatus, state, err := r.EvaluationHandler.ReconcileEvaluations(ctx, phaseCtx, workloadVersion, evaluationCreateAttributes)
 	if err != nil {
 		return apicommon.StateUnknown, err

@@ -73,7 +73,20 @@ type KeptnWorkloadVersionReconciler struct {
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
-//
+func NewReconciler(client client.Client, scheme *runtime.Scheme, iEvent controllercommon.IEvent, log logr.Logger, keptnMeters apicommon.KeptnMeters, spanHandler *telemetry.SpanHandler, tracerFactory telemetry.TracerFactory, iSchedulingGatesHandler controllercommon.ISchedulingGatesHandler, tracer trace.Tracer) *KeptnWorkloadVersionReconciler {
+	return &KeptnWorkloadVersionReconciler{
+		Client:                 client,
+		Scheme:                 scheme,
+		EventSender:            iEvent,
+		Log:                    log,
+		Meters:                 keptnMeters,
+		SpanHandler:            spanHandler,
+		TracerFactory:          tracerFactory,
+		SchedulingGatesHandler: iSchedulingGatesHandler,
+		EvaluationHandler:      controllercommon.NewEvaluationHandler(client, iEvent, log, tracer, scheme, spanHandler),
+	}
+}
+
 //nolint:gocyclo,gocognit
 func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	requestInfo := controllercommon.GetRequestInfo(req)

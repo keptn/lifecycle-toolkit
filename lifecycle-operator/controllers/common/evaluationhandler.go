@@ -26,7 +26,7 @@ type EvaluationHandlerInterface interface {
 }
 
 type EvaluationHandler struct {
-	Client      client.Client
+	client      client.Client
 	EventSender IEvent
 	Log         logr.Logger
 	Tracer      trace.Tracer

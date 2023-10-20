@@ -11,6 +11,8 @@ metadata:
 spec:
   serviceAccount:
     name: klt-serviceaccount
+  automountServiceAccountToken:
+    type: false
   retries: 0
   timeout: 30s
   container:

@@ -92,6 +92,7 @@ func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namesp
 
 func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, request ctrl.Request) (*batchv1.Job, error) {
 	serviceAccountName := getServiceAccount(definition.Spec.ServiceAccount)
+	automountServiceAccountToken := getAutomountServiceAccountToken(definition.Spec.AutomountServiceAccountToken)
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        apicommon.GenerateJobName(task.Name),
@@ -106,8 +107,9 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 					Annotations: task.Annotations,
 				},
 				Spec: corev1.PodSpec{
-					RestartPolicy:      "OnFailure",
-					ServiceAccountName: serviceAccountName,
+					RestartPolicy:                "OnFailure",
+					ServiceAccountName:           serviceAccountName,
+					AutomountServiceAccountToken: automountServiceAccountToken,
 				},
 			},
 			BackoffLimit:          task.Spec.Retries,
@@ -161,4 +163,11 @@ func getServiceAccount(serviceAccount *klcv1alpha3.ServiceAccountSpec) string {
 		return ""
 	}
 	return serviceAccount.Name
+}
+
+func getAutomountServiceAccountToken(automountServiceAccountToken *klcv1alpha3.AutomountServiceAccountTokenSpec) *bool {
+	if automountServiceAccountToken == nil {
+		return nil
+	}
+	return automountServiceAccountToken.Type
 }

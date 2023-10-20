@@ -15,6 +15,7 @@ import (
 	. "github.com/onsi/gomega"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
+	"go.opentelemetry.io/otel/trace"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	// nolint:gci
@@ -34,11 +35,18 @@ var (
 	spanRecorder *sdktest.SpanRecorder
 )
 
-const KeptnNamespace = "keptnlifecycle"
+const (
+	KeptnNamespace     = "keptnlifecycle"
+	traceComponentName = "keptn/lifecycle-operator/workloadversion"
+)
 
 var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
+
+	TracerFactory := &common.TracerFactory{Tracer: tracer}
+	EvaluationHandler := controllercommon.NewEvaluationHandler(k8sManager.GetClient(), controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller")), GinkgoLogr,
+		TracerFactory.GetTracer(traceComponentName), k8sManager.GetScheme(), &telemetry.SpanHandler{})
 
 	// //setup controllers here
 	config.Instance().SetDefaultNamespace(KeptnNamespace)
@@ -51,6 +59,7 @@ var _ = BeforeSuite(func() {
 		Meters:                 common.InitKeptnMeters(),
 		SpanHandler:            &telemetry.SpanHandler{},
 		TracerFactory:          &common.TracerFactory{Tracer: tracer},
+		EvaluationHandler:      EvaluationHandler,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 	close(readyToStart)

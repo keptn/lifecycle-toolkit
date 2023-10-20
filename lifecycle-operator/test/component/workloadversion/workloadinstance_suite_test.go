@@ -15,7 +15,6 @@ import (
 	. "github.com/onsi/gomega"
 	otelsdk "go.opentelemetry.io/otel/sdk/trace"
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
-	"go.opentelemetry.io/otel/trace"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	// nolint:gci

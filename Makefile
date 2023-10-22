@@ -1,7 +1,7 @@
 # Image URL to use all building/pushing image targets
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v5.1.1
+KUSTOMIZE_VERSION?=v5.2.1
 CHART_APPVERSION ?= v0.8.2 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint

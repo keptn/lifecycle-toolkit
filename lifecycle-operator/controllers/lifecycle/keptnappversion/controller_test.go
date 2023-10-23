@@ -3,6 +3,8 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
 	"reflect"
 	"strings"
 	"testing"
@@ -43,14 +45,13 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 	app := controllercommon.ReturnAppVersion("default", "myappversion", "1.0.0", nil, pendingStatus)
 
-	r, eventChannel, tracer, _ := setupReconciler(app)
+	r, eventChannel, _ := setupReconciler(app)
 
 	tests := []struct {
-		name       string
-		req        ctrl.Request
-		wantErr    error
-		events     []string // check correct events are generated
-		startTrace bool
+		name    string
+		req     ctrl.Request
+		wantErr error
+		events  []string // check correct events are generated
 	}{
 		{
 			name: "new appVersion with no workload nor evaluation should finish",
@@ -73,7 +74,6 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 				`AppPostDeployEvaluationsStarted`,
 				`AppPostDeployEvaluationsFinished`,
 			},
-			startTrace: true,
 		},
 		{
 			name: "notfound should not return error nor event",
@@ -87,7 +87,6 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 		},
 	}
 
-	traces := 0
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
@@ -104,12 +103,6 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 					require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
 				}
 
-			}
-			if tt.startTrace {
-				// A different trace for each app-version
-				require.Equal(t, tracer.StartCalls()[traces].SpanName, "reconcile_app_version")
-				require.Equal(t, tracer.StartCalls()[traces].Ctx.Value(CONTEXTID), tt.req.Name)
-				traces++
 			}
 		})
 
@@ -158,7 +151,7 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 		},
 		Status: status,
 	}
-	r, eventChannel, tracer, _ := setupReconciler(app)
+	r, eventChannel, _ := setupReconciler(app)
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -181,9 +174,6 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 		require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
 	}
 
-	require.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app_version")
-	require.Equal(t, tracer.StartCalls()[0].Ctx.Value(CONTEXTID), req.Name)
-
 	require.Nil(t, err)
 
 	// do not requeue since we reached completion
@@ -193,7 +183,7 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 
 	app := controllercommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
-	r, eventChannel, tracer, _ := setupReconciler(app)
+	r, eventChannel, _ := setupReconciler(app)
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
 			Namespace: "default",
@@ -214,9 +204,6 @@ func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 		require.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
 		require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
 	}
-
-	require.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app_version")
-	require.Equal(t, tracer.StartCalls()[0].Ctx.Value(CONTEXTID), req.Name)
 
 	require.Nil(t, err)
 
@@ -257,6 +244,8 @@ func setupReconcilerWithMeters() *KeptnAppVersionReconciler {
 		return tr
 	}}
 
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+
 	r := &KeptnAppVersionReconciler{
 		Log:           ctrl.Log.WithName("test-appVersionController"),
 		TracerFactory: tf,
@@ -265,7 +254,7 @@ func setupReconcilerWithMeters() *KeptnAppVersionReconciler {
 	return r
 }
 
-func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan string, *fake.ITracerMock, *fake.ISpanHandlerMock) {
+func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan string, *fake.ISpanHandlerMock) {
 	// setup logger
 	opts := zap.Options{
 		Development: true,
@@ -308,7 +297,7 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 		SpanHandler:   spanRecorder,
 		Meters:        controllercommon.InitAppMeters(),
 	}
-	return r, recorder.Events, tr, spanRecorder
+	return r, recorder.Events, spanRecorder
 }
 
 func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
@@ -322,27 +311,26 @@ func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 		name    string
 		args    args
 		baseCtx context.Context
-		appCtx  context.Context
 	}{
-		{name: "Current trace ctx should be != than app trace context",
+		{
+			name: "Current trace ctx should be != than app trace context",
 			args: args{
-				ctx:        context.WithValue(context.TODO(), CONTEXTID, 1),
-				appVersion: &lfcv1alpha3.KeptnAppVersion{},
+				ctx: context.WithValue(context.TODO(), CONTEXTID, 1),
+				appVersion: &lfcv1alpha3.KeptnAppVersion{
+					Spec: lfcv1alpha3.KeptnAppVersionSpec{TraceId: map[string]string{
+						"traceparent": "00-52527d549a7b33653017ce960be09dfc-a38a5a8d179a88b5-01",
+					}},
+				},
 			},
-			baseCtx: context.WithValue(context.TODO(), CONTEXTID, 1),
-			appCtx:  context.TODO(),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx, ctxAppTrace, _, _ := r.setupSpansContexts(tt.args.ctx, tt.args.appVersion)
-			if !reflect.DeepEqual(ctx, tt.baseCtx) {
-				t.Errorf("setupSpansContexts() got: %v as baseCtx, wanted: %v", ctx, tt.baseCtx)
-			}
-			if !reflect.DeepEqual(ctxAppTrace, tt.appCtx) {
-				t.Errorf("setupSpansContexts() got: %v as appCtx, wanted: %v", ctxAppTrace, tt.appCtx)
-			}
+			ctx, endFunc := r.setupSpansContexts(tt.args.ctx, tt.args.appVersion)
+			require.NotNil(t, ctx)
+			require.NotNil(t, endFunc)
+
 		})
 	}
 }

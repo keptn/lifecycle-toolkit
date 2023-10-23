@@ -111,7 +111,7 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 }
 
 //nolint:dupl
-func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) (string, error) {
+func (r EvaluationHandler) CreateKeptnEvaluation(ctx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) (string, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return "", err
@@ -163,7 +163,7 @@ func (r EvaluationHandler) setupEvaluations(evaluationCreateAttributes CreateEva
 
 func (r EvaluationHandler) handleEvaluationNotExists(ctx context.Context, phaseCtx context.Context, evaluationCreateAttributes CreateEvaluationAttributes, evaluationName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, evaluation *klcv1alpha3.KeptnEvaluation, evaluationStatus *klcv1alpha3.ItemStatus) error {
 	evaluationCreateAttributes.Definition.Name = evaluationName
-	evaluationName, err := r.CreateKeptnEvaluation(ctx, piWrapper.GetNamespace(), reconcileObject, evaluationCreateAttributes)
+	evaluationName, err := r.CreateKeptnEvaluation(ctx, reconcileObject, evaluationCreateAttributes)
 	if err != nil {
 		return err
 	}

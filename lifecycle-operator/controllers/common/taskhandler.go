@@ -108,12 +108,7 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 				continue
 			}
 		} else {
-			r.handleTaskExists(
-				phaseCtx,
-				piWrapper,
-				task,
-				&taskStatus,
-			)
+			r.handleTaskExists(phaseCtx, task, &taskStatus)
 		}
 		// Update state of the Check
 		newStatus = append(newStatus, taskStatus)
@@ -189,7 +184,7 @@ func (r TaskHandler) handleTaskNotExists(ctx context.Context, phaseCtx context.C
 	return nil
 }
 
-func (r TaskHandler) handleTaskExists(phaseCtx context.Context, piWrapper *interfaces.PhaseItemWrapper, task *klcv1alpha3.KeptnTask, taskStatus *klcv1alpha3.ItemStatus) {
+func (r TaskHandler) handleTaskExists(phaseCtx context.Context, task *klcv1alpha3.KeptnTask, taskStatus *klcv1alpha3.ItemStatus) {
 	_, spanTaskTrace, err := r.SpanHandler.GetSpan(phaseCtx, r.Tracer, task, "")
 	if err != nil {
 		r.Log.Error(err, "could not get span")

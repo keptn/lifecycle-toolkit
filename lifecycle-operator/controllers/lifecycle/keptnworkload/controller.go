@@ -43,8 +43,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
-const traceComponentName = "keptn/lifecycle-operator/workload"
-
 // KeptnWorkloadReconciler reconciles a KeptnWorkload object
 type KeptnWorkloadReconciler struct {
 	client.Client
@@ -151,10 +149,6 @@ func (r *KeptnWorkloadReconciler) createWorkloadVersion(ctx context.Context, wor
 	}
 
 	return &workloadVersion, err
-}
-
-func (r *KeptnWorkloadReconciler) getTracer() telemetry.ITracer {
-	return r.TracerFactory.GetTracer(traceComponentName)
 }
 
 func generateWorkloadVersion(previousVersion string, traceContextCarrier map[string]string, w *klcv1alpha3.KeptnWorkload) klcv1alpha4.KeptnWorkloadVersion {

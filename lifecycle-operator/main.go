@@ -209,12 +209,11 @@ func main() {
 	taskLogger := ctrl.Log.WithName("KeptnTask Controller").V(env.KeptnTaskControllerLogLevel)
 	taskRecorder := mgr.GetEventRecorderFor("keptntask-controller")
 	taskReconciler := &keptntask.KeptnTaskReconciler{
-		Client:        mgr.GetClient(),
-		Scheme:        mgr.GetScheme(),
-		Log:           taskLogger,
-		EventSender:   controllercommon.NewEventMultiplexer(taskLogger, taskRecorder, ceClient),
-		Meters:        keptnMeters,
-		TracerFactory: telemetry.GetOtelInstance(),
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		Log:         taskLogger,
+		EventSender: controllercommon.NewEventMultiplexer(taskLogger, taskRecorder, ceClient),
+		Meters:      keptnMeters,
 	}
 	if err = (taskReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")
@@ -309,12 +308,11 @@ func main() {
 	evaluationLogger := ctrl.Log.WithName("KeptnEvaluation Controller").V(env.KeptnEvaluationControllerLogLevel)
 	evaluationRecorder := mgr.GetEventRecorderFor("keptnevaluation-controller")
 	evaluationReconciler := &keptnevaluation.KeptnEvaluationReconciler{
-		Client:        mgr.GetClient(),
-		Scheme:        mgr.GetScheme(),
-		Log:           evaluationLogger,
-		EventSender:   controllercommon.NewEventMultiplexer(evaluationLogger, evaluationRecorder, ceClient),
-		TracerFactory: telemetry.GetOtelInstance(),
-		Meters:        keptnMeters,
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		Log:         evaluationLogger,
+		EventSender: controllercommon.NewEventMultiplexer(evaluationLogger, evaluationRecorder, ceClient),
+		Meters:      keptnMeters,
 	}
 	if err = (evaluationReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnEvaluation")

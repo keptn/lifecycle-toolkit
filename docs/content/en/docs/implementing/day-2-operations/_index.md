@@ -1,14 +1,14 @@
 ---
 title: Day 2 Operations with Keptn
 description: How to operate and maintain your Keptn Apps
-weight: 20
+weight: 500
 ---
 
 After you have successfully rolled out your application by following
 the instructions in the [integration guide](../integrate),
 Keptn also assists you with day 2 operations for your application.
 
-Tasks that fall under this category could be:
+Tasks that fall under this category include:
 
 * Updating the version of one or more workloads that are part of
 the same application.
@@ -21,23 +21,23 @@ the same application.
 ## Updating Workload Versions
 
 After a first successful deployment of your application with Keptn,
-you will eventually have the need for updating the version of one or
+you will eventually need to update the version of one or
 more workloads that are part of the application.
-This will usually involve updating the image of a deployment,
-but also a change in the configuration of a deployment
-(e.g. using a different service account name for a pod) could be seen as
-an update.
-Regardless of that however, it is the user who decides what Keptn
-will see as a version bump in the application by setting the value of
+This usually involves updating the image of a deployment
+and changing the configuration of a deployment.
+For example, using a different service account name for a pod
+could be seen as an update.
+Regardless of that, however, it is the user who decides what Keptn
+sees as a version bump in the application by setting the value of
 the `keptn.sh/version` or `app.kubernetes.io/version` labels/annotations
 in their workloads.
 
-Only when this changes, Keptn will interpret a change as a new version
-and will thus re-run the pre- and post-tasks/evaluations for the application.
+When this changes, Keptn interprets a change as a new version
+and thus re-runs the pre- and post-tasks and evaluations for the application.
 
-If the version label/annotation does not change, Keptn will not consider
-a change of a workload configuration as an update, and therefore no pre-
-and post-tasks/evaluations will be executed as those have already been
+If the version label/annotation does not change, Keptn does not consider
+a change of a workload configuration to be an update, and therefore no pre-
+and post-tasks/evaluations are executed because they have already been
 completed for the related `WorkloadVersion`.
 
 To illustrate the update of a workload,
@@ -93,15 +93,15 @@ spec:
 ```
 
 Now, let's assume that the configuration of that workload needs to be changed.
-In this example we will assume that the image of that workload
+In this example we assume that the image of that workload
 should be updated, but a configuration change is not limited to that.
 From here, you essentially have two options:
 
 * **Only update the configuration *without* updating the `app.kubernetes.io/version`
-label:** This can be of use when the change in the configuration should happen regardless
-of the result of any task or evaluation, e.g., when there was a critical
-vulnerability in the previously used image and the image needs to be updated as quickly as possible.
-If you wish to do that, then the `podtato-head-frontend` would be changed as follows:
+label:** This can be useful when the change in the configuration should happen regardless
+of the result of any task or evaluation, e.g., when the previously used image has a critical vulnerability
+and the image must be updated as quickly as possible.
+To do that, change `podtato-head-frontend` as follows:
 
 ```yaml
 apiVersion: apps/v1
@@ -124,11 +124,12 @@ spec:
           image: podtato-head-frontend:b # Only the image tag has been updated from 'a' to 'b'
 ```
 
-* **Update the configuration *and* the version label:** Doing so will cause the
-`KeptnWorkload`, that is associated to the `podtato-head-frontend` deployment,
-to be updated, and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`
-will be executed before the updated pods will be scheduled.
-In this case, the deployment would be changed as follows:
+* **Update the configuration *and* the version label:** 
+   Doing so causes the`KeptnWorkload` that is associated
+    with the `podtato-head-frontend` deployment to be updated,
+    and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`
+    are executed before the updated pods are scheduled.
+In this case, the deployment should be changed as follows:
 
 ```yaml
 apiVersion: apps/v1
@@ -152,9 +153,9 @@ spec:
 ```
 
 If you have defined the related `KeptnApp` resource yourself,
-this will also need to be updated to refer to the updated `KeptnWorkload`.
+this must also be updated to refer to the updated `KeptnWorkload`.
 This is a mandatory step, since the `KeptnWorkload` associated with
-this updated deployment will not be able to progress otherwise.
+this updated deployment is not able to progress otherwise.
 Therefore, make sure that the version of `podtato-head-frontend`
 is updated accordingly:
 
@@ -177,13 +178,13 @@ spec:
     version: 1.1.1
 ```
 
-Updating the `KeptnApp` will also result in all pre-/post-tasks/evaluations
-of the `KeptnApp` being executed again.
-In this example, this would mean that the tasks `wait-for-prometheus`,
+Updating the `KeptnApp` also causes all pre-/post-tasks/evaluations
+of the `KeptnApp` to be executed again.
+In this example, this means that the tasks `wait-for-prometheus`,
 and `post-deployment-loadtests` will run again.
 
 If you are using the [automatic app discovery](../integrate#use-keptn-automatic-app-discovery),
-updating the `KeptnApp` resource is not needed.
+you do not need to update the `KeptnApp` resource.
 
 After applying the updated manifests, you can monitor the status
 of the application and related workloads using the following commands:
@@ -216,13 +217,13 @@ podtato-kubectl   podtato-head-0.1.0-hf52kauz   podtato-head   0.1.0     Complet
 ## Adding a new Workload to an Application
 
 To add a new workload (e.g. a new deployment) to an existing app,
-you will need to:
+you must:
 
 * Make sure the
 `keptn.sh/app`/`app.kubernetes.io/part-of` label/annotation is present
 on the new workload
-* Add the new workload to the `KeptnApp`, if you have defined the `KeptnApp`
-yourself previously.
+* Add the new workload to the `KeptnApp`,
+if you have previously defined the `KeptnApp resource manually.
 If the application has been discovered automatically, this step is not needed.
 
 For example, to add the deployment `podtato-head-left-leg` to the
@@ -250,9 +251,9 @@ spec:
 
 The `KeptnApp`, if defined by the user, should contain the
 reference to the newly added workload.
-This is mandatory, as the workload itself will not be able to
+This is mandatory, as the workload itself is not be able to
 progress if it is not part of a `KeptnApp`.
-For automatically discovered apps this will be done
+For automatically discovered apps this is done
 automatically.
 
 ```yaml
@@ -290,5 +291,5 @@ podtato-kubectl   podtato-head-podtato-head-left-leg-0.1.0   podtato-head    pod
 
 As can be seen in the output of the command, in addition
 to the previous `KeptnWorkloadVersions`, the newly created
-`KeptnWorkloadVersion` `podtato-head-podtato-head-left-leg-0.1.0` has been added
+`KeptnWorkloadVersion`, `podtato-head-podtato-head-left-leg-0.1.0` has been added
 to the results.

@@ -9,7 +9,7 @@
 # Node >=16
 
 # renovate: datasource=github-releases depName=bitnami-labs/readme-generator-for-helm
-GENERATOR_VERSION="2.5.2"
+GENERATOR_VERSION="2.6.0"
 
 echo "Checking if readme generator is installed already..."
 if [[ $(npm list -g | grep -c "readme-generator-for-helm@${GENERATOR_VERSION}") -eq 0 ]]; then

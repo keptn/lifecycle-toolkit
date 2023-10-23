@@ -25,6 +25,7 @@ import (
 
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	ctrlcommon "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/aggregation"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -64,39 +65,40 @@ type KeptnMetricReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("Reconciling Metric")
+	requestInfo := ctrlcommon.GetRequestInfo(req)
+	r.Log.Info("Reconciling Metric", "requestInfo", requestInfo)
 	metric := &metricsapi.KeptnMetric{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, metric); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
-			r.Log.Info("Metric resource not found. Ignoring since object must be deleted")
+			r.Log.Info("Metric resource not found. Ignoring since object must be deleted", "requestInfo", requestInfo)
 			return ctrl.Result{}, nil
 		}
-		r.Log.Error(err, "Failed to get the Metric")
+		r.Log.Error(err, "Failed to get the Metric", "requestInfo", requestInfo)
 		return ctrl.Result{}, nil
 	}
 
 	fetchTime := metric.Status.LastUpdated.Add(time.Second * time.Duration(metric.Spec.FetchIntervalSeconds))
 	if time.Now().Before(fetchTime) {
 		diff := time.Until(fetchTime)
-		r.Log.Info("Metric has not been updated for the configured interval. Skipping")
+		r.Log.Info("Metric has not been updated for the configured interval. Skipping", "requestInfo", requestInfo)
 		return ctrl.Result{Requeue: true, RequeueAfter: diff}, nil
 	}
 
 	metricProvider, err := r.fetchProvider(ctx, types.NamespacedName{Name: metric.Spec.Provider.Name, Namespace: metric.Namespace})
 	if err != nil {
 		if errors.IsNotFound(err) {
-			r.Log.Info(err.Error() + ", ignoring error since object must be deleted")
+			r.Log.Info(err.Error()+", ignoring error since object must be deleted", "requestInfo", requestInfo)
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 		}
-		r.Log.Error(err, "Failed to retrieve the provider")
+		r.Log.Error(err, "Failed to retrieve the provider", "requestInfo", requestInfo)
 		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 	}
 	// load the provider
 	provider, err2 := r.ProviderFactory(metricProvider.GetType(), r.Log, r.Client)
 	if err2 != nil {
-		r.Log.Error(err2, "Failed to get the correct Metric Provider")
+		r.Log.Error(err2, "Failed to get the correct Metric Provider", "requestInfo", requestInfo)
 		return ctrl.Result{Requeue: false}, err2
 	}
 	reconcile := ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}
@@ -116,7 +118,7 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	}
 
 	if err := r.Client.Status().Update(ctx, metric); err != nil {
-		r.Log.Error(err, "Failed to update the Metric status")
+		r.Log.Error(err, "Failed to update the Metric status", "requestInfo", requestInfo)
 		return ctrl.Result{}, err
 	}
 

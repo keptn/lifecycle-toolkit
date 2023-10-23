@@ -30,9 +30,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -88,11 +86,6 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	traceContextCarrier := propagation.MapCarrier(workload.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
-	ctx, span := r.getTracer().Start(ctx, "reconcile_workload", trace.WithSpanKind(trace.SpanKindConsumer))
-	defer span.End()
-
-	workload.SetSpanAttributes(span)
-
 	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name, "requestInfo", requestInfo)
 
 	workloadVersion := &klcv1alpha4.KeptnWorkloadVersion{}
@@ -104,13 +97,11 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	if errors.IsNotFound(err) {
 		workloadVersion, err := r.createWorkloadVersion(ctx, workload)
 		if err != nil {
-			span.SetStatus(codes.Error, err.Error())
 			return reconcile.Result{}, err
 		}
 		err = r.Client.Create(ctx, workloadVersion)
 		if err != nil {
 			r.Log.Error(err, "could not create WorkloadVersion")
-			span.SetStatus(codes.Error, err.Error())
 			r.EventSender.Emit(apicommon.PhaseCreateWorkloadVersion, "Warning", workloadVersion, apicommon.PhaseStateFailed, "could not create KeptnWorkloadVersion ", workloadVersion.Spec.Version)
 			return ctrl.Result{}, err
 		}
@@ -123,7 +114,6 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	}
 	if err != nil {
 		r.Log.Error(err, "could not get WorkloadVersion")
-		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{}, err
 	}
 
@@ -144,11 +134,6 @@ func (r *KeptnWorkloadReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *KeptnWorkloadReconciler) createWorkloadVersion(ctx context.Context, workload *klcv1alpha3.KeptnWorkload) (*klcv1alpha4.KeptnWorkloadVersion, error) {
-	ctx, span := r.getTracer().Start(ctx, "create_workload_version", trace.WithSpanKind(trace.SpanKindProducer))
-	defer span.End()
-
-	workload.SetSpanAttributes(span)
-
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}

@@ -26,7 +26,6 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/providers/keptnmetric"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"go.opentelemetry.io/otel/metric"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -36,16 +35,13 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 )
 
-const traceComponentName = "keptn/lifecycle-operator/evaluation"
-
 // KeptnEvaluationReconciler reconciles a KeptnEvaluation object
 type KeptnEvaluationReconciler struct {
 	client.Client
-	Scheme        *runtime.Scheme
-	EventSender   controllercommon.IEvent
-	Log           logr.Logger
-	Meters        apicommon.KeptnMeters
-	TracerFactory telemetry.TracerFactory
+	Scheme      *runtime.Scheme
+	EventSender controllercommon.IEvent
+	Log         logr.Logger
+	Meters      apicommon.KeptnMeters
 }
 
 // clusterrole
@@ -237,8 +233,4 @@ func (r *KeptnEvaluationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&klcv1alpha3.KeptnEvaluation{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
-}
-
-func (r *KeptnEvaluationReconciler) getTracer() telemetry.ITracer {
-	return r.TracerFactory.GetTracer(traceComponentName)
 }

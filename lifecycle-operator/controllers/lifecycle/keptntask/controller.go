@@ -24,7 +24,6 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"go.opentelemetry.io/otel/metric"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -34,16 +33,13 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 )
 
-const traceComponentName = "keptn/lifecycle-operator/task"
-
 // KeptnTaskReconciler reconciles a KeptnTask object
 type KeptnTaskReconciler struct {
 	client.Client
-	Scheme        *runtime.Scheme
-	EventSender   controllercommon.IEvent
-	Log           logr.Logger
-	Meters        apicommon.KeptnMeters
-	TracerFactory telemetry.TracerFactory
+	Scheme      *runtime.Scheme
+	EventSender controllercommon.IEvent
+	Log         logr.Logger
+	Meters      apicommon.KeptnMeters
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks,verbs=get;list;watch;create;update;patch;delete
@@ -123,8 +119,4 @@ func (r *KeptnTaskReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		// predicate disabling the auto reconciliation after updating the object status
 		For(&klcv1alpha3.KeptnTask{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
-}
-
-func (r *KeptnTaskReconciler) getTracer() telemetry.ITracer {
-	return r.TracerFactory.GetTracer(traceComponentName)
 }

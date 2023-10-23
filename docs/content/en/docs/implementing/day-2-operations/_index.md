@@ -124,7 +124,7 @@ spec:
           image: podtato-head-frontend:b # Only the image tag has been updated from 'a' to 'b'
 ```
 
-* **Update the configuration *and* the version label:** 
+* **Update the configuration *and* the version label:**
    Doing so causes the`KeptnWorkload` that is associated
     with the `podtato-head-frontend` deployment to be updated,
     and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`

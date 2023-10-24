@@ -113,13 +113,13 @@ runs:
             cd -  # Return to the previous directory
         done
         
+        cd ./lifecycle-operator/chart
+        
         touch tmp-values.yaml
         if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_on" ]; then
           echo "lifecycleOperator:" >> tmp-values.yaml
           echo "  allowedNamespaces: [allowed-ns-test]" >> tmp-values.yaml
         fi
-        
-        cd ./lifecycle-operator/chart
         
         if [ "${{ inputs.scheduling-gates }}" == "gates_on" ]; then
           if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_off" ]; then

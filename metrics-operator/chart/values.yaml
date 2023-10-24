@@ -1,33 +1,4 @@
-## @section Keptn Metrics Operator common
-## @extra   operatorService.ports[0] webhook port (must correspond to Mutating Webhook Configurations)
-## @extra   operatorService.ports[1] port to integrate with the K8s custom metrics API
-## @extra   operatorService.ports[2] port to integrate with metrics API (e.g. Keda)
-operatorService:
-  ports:
-## @param   operatorService.ports[0].name
-    - name: https
-## @param   operatorService.ports[0].port
-      port: 8443
-## @param   operatorService.ports[0].protocol
-      protocol: TCP
-## @param   operatorService.ports[0].targetPort
-      targetPort: https
-## @param   operatorService.ports[1].name
-    - name: custom-metrics
-## @param   operatorService.ports[1].port
-      port: 443
-## @param   operatorService.ports[1].targetPort
-      targetPort: custom-metrics
-## @param   operatorService.ports[2].name
-    - name: metrics
-## @param   operatorService.ports[2].port
-      port: 9999
-## @param   operatorService.ports[2].protocol
-      protocol: TCP
-## @param   operatorService.ports[2].targetPort
-      targetPort: metrics
-## @param   operatorService.type
-  type: ClusterIP
+
 ## @section Global parameters
 ## Global Docker image parameters
 ## Please, note that this will override the image parameters, including dependencies, configured to use the global value
@@ -44,20 +15,45 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  ## @param commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
+  ## @param global.commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
   ##
   commonLabels: { }
-  ## @param commonAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
+  ## @param global.commonAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
   ##
   commonAnnotations: { }
 
-kubernetesClusterDomain: cluster.local
-nodeSelector: { }
-replicas: 1
-tolerations: [ ]
-topologySpreadConstraints: [ ]
-annotations: {}
-podAnnotations: {}
+## @section Keptn Metrics Operator common
+## @extra   operatorService.ports[0] webhook port (must correspond to Mutating Webhook Configurations)
+## @extra   operatorService.ports[1] port to integrate with the K8s custom metrics API
+## @extra   operatorService.ports[2] port to integrate with metrics API (e.g. Keda)
+operatorService:
+  ports:
+    ## @param   operatorService.ports[0].name
+    - name: https
+      ## @param   operatorService.ports[0].port
+      port: 8443
+      ## @param   operatorService.ports[0].protocol
+      protocol: TCP
+      ## @param   operatorService.ports[0].targetPort
+      targetPort: https
+    ## @param   operatorService.ports[1].name
+    - name: custom-metrics
+      ## @param   operatorService.ports[1].port
+      port: 443
+      ## @param   operatorService.ports[1].targetPort
+      targetPort: custom-metrics
+    ## @param   operatorService.ports[2].name
+    - name: metrics
+      ## @param   operatorService.ports[2].port
+      port: 9999
+      ## @param   operatorService.ports[2].protocol
+      protocol: TCP
+      ## @param   operatorService.ports[2].targetPort
+      targetPort: metrics
+  ## @param   operatorService.type
+  type: ClusterIP
+
+
 
 config:
   health:
@@ -93,6 +89,12 @@ replicas: 1
 tolerations: [ ]
 ## @param    topologySpreadConstraints add custom topology constraints to metrics operator
 topologySpreadConstraints: [ ]
+## @param     annotations add deployment level annotations
+annotations: {}
+## @param     podAnnotations adds pod level annotations
+podAnnotations: {}
+## @param  schedulingGatesEnabled enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version
+schedulingGatesEnabled: false
 
 ## @section Keptn Metrics Operator controller
 ## @extra   containerSecurityContext Sets security context privileges
@@ -164,30 +166,3 @@ resources:
   requests:
     cpu: 10m
     memory: 64Mi
-operatorService:
-  ports:
-    - name: https
-      port: 8443
-      protocol: TCP
-      targetPort: https
-    - name: custom-metrics
-      port: 443
-      targetPort: custom-metrics
-    - name: metrics
-      port: 9999
-      protocol: TCP
-      targetPort: metrics
-  type: ClusterIP
-webhookService:
-  ports:
-    - port: 443
-      protocol: TCP
-      targetPort: 9443
-  type: ClusterIP
-
-## @section Global
-## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled
-## @param  imagePullSecrets global value for image registry secret
-imagePullSecrets: [ ]
-## @param  kubernetesClusterDomain overrides domain.local
-kubernetesClusterDomain: cluster.local

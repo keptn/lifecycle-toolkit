@@ -17,8 +17,6 @@ metricsOperator:
 
 ## @param global.imageRegistry Global Docker image registry
 ## @param global.imagePullSecrets Global Docker registry secret names as an array
-## @param global.storageClass Global StorageClass for Persistent Volume(s)
-## @param global.namespaceOverride Override the namespace for resource deployed by the chart, but can itself be overridden by the local namespaceOverride
 ##
 global:
   imageRegistry: ""
@@ -27,10 +25,10 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  ## @param commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
+  ## @param global.commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
   ##
   commonLabels: { }
-  ## @param commonAnnotations Common annotations to add to all Mongo resources. Evaluated as a template
+  ## @param global.commonAnnotations Common annotations to add to all Mongo resources. Evaluated as a template
   ##
   commonAnnotations: { }
 

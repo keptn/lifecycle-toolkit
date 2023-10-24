@@ -14,10 +14,10 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  ## @param commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
+  ## @param global.commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
   ##
   commonLabels: {}
-  ## @param commonAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
+  ## @param global.commonAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
   ##
   commonAnnotations: {}
 
@@ -32,9 +32,15 @@ replicas: 1
 tolerations: []
 ## @param     topologySpreadConstraints add topology constraints for cert manager
 topologySpreadConstraints: []
+
+## @param     kubernetesClusterDomain overrides cluster.local
 kubernetesClusterDomain: cluster.local
+## @param     annotations add deployment level annotations
 annotations: {}
+## @param     podAnnotations adds pod level annotations
 podAnnotations: {}
+## @param  schedulingGatesEnabled enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version
+schedulingGatesEnabled: false
 
 ## @section Keptn Certificate Operator controller
 ## @extra    containerSecurityContext Sets security context for the cert manager

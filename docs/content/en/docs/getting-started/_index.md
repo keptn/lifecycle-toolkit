@@ -85,9 +85,6 @@ kubectl apply -f collectorconfig.yaml
 By default, Keptn reacts immediately to a configuration change.
 Of course, the speed depends on the Kubernetes API server signaling updates
 and can be influenced by network latency.
-The interval is configurable; see the
-[KeptnConfig](../yaml-crd-ref/config.md)
-reference page for details.
 
 ## Step 2: Create Namespace for Demo Application
 

@@ -1143,16 +1143,15 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, ch
 
 	fakeClient := fake.NewClient(objs...)
 
-	recorder := record.NewFakeRecorder(100)
-	r := &KeptnWorkloadVersionReconciler{
-		Client:        fakeClient,
-		Scheme:        scheme.Scheme,
-		EventSender:   controllercommon.NewK8sSender(recorder),
-		Log:           ctrl.Log.WithName("test-appController"),
-		TracerFactory: tf,
-		Meters:        controllercommon.InitAppMeters(),
-		SpanHandler:   &telemetry.SpanHandler{},
+	SchedulingGatesHandler := &fake.ISchedulingGatesHandlerMock{
+		EnabledFunc: func() bool {
+			return false
+		},
 	}
+
+	recorder := record.NewFakeRecorder(100)
+	r := NewReconciler(fakeClient, scheme.Scheme, controllercommon.NewK8sSender(recorder), ctrl.Log.WithName("test-appController"),
+		controllercommon.InitAppMeters(), &telemetry.SpanHandler{}, tf, SchedulingGatesHandler, trace.NewNoopTracerProvider().Tracer("tracer"))
 	return r, recorder.Events, tr
 }
 

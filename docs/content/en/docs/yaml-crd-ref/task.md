@@ -4,12 +4,12 @@ description: Define a run of a KeptnTaskDefinition
 weight: 85
 ---
 
-When using Keptn to run tasks for software
-that is deployed outside of Kubernetes,
-you must create the `KeptnTask` resource manually
-and modify it manually for each new run.
-Keptn automatically populates the `KeptnTask` resource
-for tasks that deploy software on Kubernetes.
+Keptn uses KeptnTask resources internally
+to manage tasks (and their underlying Kubernetes Job resources)
+that are run before and after deployment of your workloads
+(pre- and post-deployment tasks).
+You do not need to create this resource yourself except in special situations,
+like using Keptn to manage workloads that are outside of the k8s cluster.
 
 ## Synopsis
 
@@ -37,9 +37,9 @@ spec:
 ## Fields
 
 * **apiVersion** -- API version being used.
-`
+
 * **kind** -- Resource type.
-   Must be set to `KeptnTask`
+  Must be set to `KeptnTask`
 
 * **metadata**
   * **name** -- Unique name of this run of the task.

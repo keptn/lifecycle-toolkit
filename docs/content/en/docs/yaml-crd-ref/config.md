@@ -35,7 +35,7 @@ spec:
     This field must be populated
     in order to export traces to the OpenTelemetry Collector.
   * **keptnAppCreationRequestTimeoutSeconds** --
-    interval in which automatic app discovery searches for workloads
+    interval in which automatic app discovery searches for [workloads](https://kubernetes.io/docs/concepts/workloads/)
     to put into the same auto-generated [KeptnApp](app.md).
     The default value is 30 (seconds).
 

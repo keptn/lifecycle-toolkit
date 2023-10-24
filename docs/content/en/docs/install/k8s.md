@@ -131,7 +131,7 @@ Some considerations for Keptn:
   resources and
   [KeptnApp](../yaml-crd-ref/app.md)
    resources
-  that are activated and defined by annotations to each Workload.
+  that are activated and defined by annotations to each workload.
 * [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md)
   resources need to be located
   in the same namespace as the associated
@@ -158,4 +158,4 @@ So, possible namespace designs run the gamut:
 
 * Run all your Keptn work in a single namespace
 * Create a separate namespace for each logical grouping of your Keptn work
-* Create a separate namespace for each workload
+* Create a separate namespace for each [workload](https://kubernetes.io/docs/concepts/workloads/)

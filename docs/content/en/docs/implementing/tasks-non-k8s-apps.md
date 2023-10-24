@@ -5,7 +5,7 @@ weight: 95
 ---
 
 Keptn Tasks running on a Kubernetes cluster
-can be triggered for workloads and applications
+can be triggered for [workloads](https://kubernetes.io/docs/concepts/workloads/) and applications
 that are deployed outside of Kubernetes.
 For example, Keptn could trigger load and performance tests
 for an application that is deployed on a virtual machine.
@@ -66,7 +66,7 @@ for more information.
 
 You must manually create the
 [KeptnTask](../yaml-crd-ref/task.md) resource.
-In the standard operating mode, when Keptn is managing workloads,
+In the standard operating mode, when Keptn is managing [workloads](https://kubernetes.io/docs/concepts/workloads/),
 the creation of the `KeptnTask` resource is automatic.
 
 Moreover, each time you want to execute a `KeptnTask`,

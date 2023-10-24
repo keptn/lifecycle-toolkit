@@ -25,7 +25,7 @@ and can do the following:
 * Keptn is application aware,
   so can extend the deployment with tasks and evaluations that
   are run either before or after your whole application starts the deployment
-  or at the individual workload level.
+  or at the individual [workload](https://kubernetes.io/docs/concepts/workloads/) level.
 * Validate any Keptn metric,
   either pre- or post-deployment,
   using the metrics from the Keptn Metrics Server introduced in
@@ -83,7 +83,7 @@ you need to do the following:
    by applying basic annotations to your `Deployment` resource.
    This also creates appropriate
    [KeptnApp](../yaml-crd-ref/app.md) resources
-   which aggregate workloads that are combined into the released product,
+   which aggregate [workloads](https://kubernetes.io/docs/concepts/workloads/) that are combined into the released product,
    regardless of the tools being used.
 
 ## Define evaluations to be performed pre- and post-deployment
@@ -167,7 +167,7 @@ For more information, see
 You can view the actual JavaScript code for the task in the repository.
 You see that "context" is important in this code.
 This refers to the context in which this code executes --
-for which application, for which version, for which Workload.
+for which application, for which version, for which workload.
 
 Because the slack server that is required to execute this task
 is protected by a secret, the task definition also specifies that secret.

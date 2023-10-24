@@ -58,10 +58,10 @@ of all Kubernetes activities within a deployment.
 Keptn observability makes it easy to understand
 deployment durations and failures across multiple deployment strategies.
 
-* Provides observability data for standard Kubernetes workload resources
+* Provides observability data for standard Kubernetes [workload](https://kubernetes.io/docs/concepts/workloads/) resources
   as well as
   [KeptnApp](https://lifecycle.keptn.sh/docs/yaml-crd-ref/app/)
-  resources (which connect logically related workloads)
+  resources (which connect logically related [workloads](https://kubernetes.io/docs/concepts/workloads/))
   using different deployment strategies.
 
 * Captures
@@ -128,10 +128,10 @@ The executables within a `KeptnTask` resource
 run in sequential order.
 
 Keptn tasks and evaluations can be run
-for either a Kubernetes workload (single service) resource
+for either a Kubernetes [workload](https://kubernetes.io/docs/concepts/workloads/) (single service) resource
 or a
 [KeptnApp](../yaml-crd-ref/app.md) resource,
-which is a single, cohesive unit that groups multiple workloads.
+which is a single, cohesive unit that groups multiple [workloads](https://kubernetes.io/docs/concepts/workloads/).
 For more information, see:
 
 * [Keptn tasks](../implementing/tasks) guide

@@ -4,11 +4,11 @@ description: Define all workloads and checks associated with an application
 weight: 10
 ---
 
-A `KeptnApp` resource lists all the workloads
+A `KeptnApp` resource lists all the [workloads](https://kubernetes.io/docs/concepts/workloads/)
 that constitute a logical application.
 It contains information about:
 
-- All workloads and checks
+- All [workloads](https://kubernetes.io/docs/concepts/workloads/) and checks
   that are associated with a Keptn application
 - A list of tasks and evaluations to be executed
   pre- and post-deployment.
@@ -75,11 +75,11 @@ when the app discovery feature generates the `KeptnApp` resource:
     - **name** - name of this Kubernetes
       [workload](https://kubernetes.io/docs/concepts/workloads/).
       Use the same naming rules listed above for the application name.
-      Provide one entry for each workload
+      Provide one entry for each [workload](https://kubernetes.io/docs/concepts/workloads/)
       associated with this Keptn application.
-    - **version** -- version number for this workload.
+    - **version** -- version number for this [workload](https://kubernetes.io/docs/concepts/workloads/).
       Changing this number causes a new execution
-      of checks for this workload only,
+      of checks for this [workload](https://kubernetes.io/docs/concepts/workloads/) only,
       not the entire application.
 
 The remaining fields are required only when implementing

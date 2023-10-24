@@ -66,7 +66,7 @@ Your cluster should include the following:
 
 * The
   [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
-  command that is used to administer Kubernetes.
+  CLI that is used to interact with Kubernetes clusters.
 
 * The
   [Helm](https://helm.sh/docs/intro/install/)

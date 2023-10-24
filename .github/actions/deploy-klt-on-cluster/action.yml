@@ -102,21 +102,15 @@ runs:
         helm repo add keptn "https://charts.lifecycle.keptn.sh"
         helm repo update
         
-        cd ./lifecycle-operator/chart 
-        helm dependency update
-        helm dependency build 
-        
-        cd ../../metrics-operator/chart 
-        helm dependency update
-        helm dependency build 
-        
-        cd ../../klt-cert-manager/chart 
-        helm dependency update
-        helm dependency build
-        
-        cd ../../chart
-        helm dependency update
-        helm dependency build
+        for chart_dir in ./lifecycle-operator/chart \
+                ../../metrics-operator/chart \
+                ../../klt-cert-manager/chart \
+                ../../chart; do
+            cd "$chart_dir"
+            helm dependency update
+            helm dependency build
+            cd -  # Return to the previous directory
+        done
 
         touch tmp-values.yaml
         if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_on" ]; then

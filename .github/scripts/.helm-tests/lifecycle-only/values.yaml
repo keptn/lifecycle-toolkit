@@ -11,9 +11,4 @@ lifecycleOperator:
 
 metricsOperator:
   enabled: false
-
-  ## E.g.
-  ## imagePullSecrets:
-  ##   - myRegistryKeySecretName
-  ##
   imagePullSecrets: []

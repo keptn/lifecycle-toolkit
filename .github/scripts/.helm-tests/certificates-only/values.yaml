@@ -7,10 +7,6 @@ metricsOperator:
 
 global:
   imageRegistry: "testreg"
-  ## E.g.
-  ## imagePullSecrets:
-  ##   - myRegistryKeySecretName
-  ##
   imagePullSecrets: []
   commonAnnotations:
     ciao: commonannotation

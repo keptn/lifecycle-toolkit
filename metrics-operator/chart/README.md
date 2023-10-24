@@ -56,6 +56,7 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 | `annotations`                          | add deployment level annotations                                                                                                                              | `{}`                |
 | `podAnnotations`                       | adds pod level annotations                                                                                                                                    | `{}`                |
 | `schedulingGatesEnabled`               | enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version               | `false`             |
+| `kubernetesClusterDomain`              | overrides cluster.local                                                                                                                                       | `cluster.local`     |
 
 ### Keptn Metrics Operator controller
 

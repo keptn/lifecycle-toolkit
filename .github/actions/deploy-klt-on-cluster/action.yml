@@ -98,7 +98,10 @@ runs:
       run: |
         echo "Installing Keptn using helm"
         helm version
-
+        
+        helm repo add keptn "https://charts.lifecycle.keptn.sh"
+        helm repo update
+        
         cd ./lifecycle-operator/chart 
         helm dependency update
         helm dependency build 

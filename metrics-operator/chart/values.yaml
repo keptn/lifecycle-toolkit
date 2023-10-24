@@ -1,46 +1,131 @@
-imagePullSecrets: [ ]
-kubernetesClusterDomain: cluster.local
+## @section Keptn Metrics Operator common
+## @extra   operatorService.ports[0] webhook port (must correspond to Mutating Webhook Configurations)
+## @extra   operatorService.ports[1] port to integrate with the K8s custom metrics API
+## @extra   operatorService.ports[2] port to integrate with metrics API (e.g. Keda)
+operatorService:
+  ports:
+## @param   operatorService.ports[0].name
+    - name: https
+## @param   operatorService.ports[0].port
+      port: 8443
+## @param   operatorService.ports[0].protocol
+      protocol: TCP
+## @param   operatorService.ports[0].targetPort
+      targetPort: https
+## @param   operatorService.ports[1].name
+    - name: custom-metrics
+## @param   operatorService.ports[1].port
+      port: 443
+## @param   operatorService.ports[1].targetPort
+      targetPort: custom-metrics
+## @param   operatorService.ports[2].name
+    - name: metrics
+## @param   operatorService.ports[2].port
+      port: 9999
+## @param   operatorService.ports[2].protocol
+      protocol: TCP
+## @param   operatorService.ports[2].targetPort
+      targetPort: metrics
+## @param   operatorService.type
+  type: ClusterIP
 config:
   health:
+## @param      config.health.healthProbeBindAddress setup on what address to start the default health handler
     healthProbeBindAddress: :8081
   leaderElection:
+## @param      config.leaderElection.leaderElect decides whether to enable leader election with multiple replicas
     leaderElect: true
+## @param      config.leaderElection.resourceName defines LeaderElectionID
     resourceName: 3f8532ca.keptn.sh
   metrics:
+## @param      config.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
     bindAddress: 127.0.0.1:8080
   webhook:
+## @param      config.webhook.port
     port: 9443
+## @extra Mutating Webhook Configurations for metrics Operator
+webhookService:
+  ports:
+## @param     webhookService.ports[0].port
+    - port: 443
+## @param     webhookService.ports[0].protocol
+      protocol: TCP
+## @param     webhookService.ports[0].targetPort
+      targetPort: 9443
+## @param     webhookService.type
+  type: ClusterIP
+## @param    nodeSelector add custom nodes selector to metrics operator
+nodeSelector: { }
+## @param   replicas customize number of installed metrics operator replicas
+replicas: 1
+## @param    tolerations add custom tolerations to metrics operator
+tolerations: [ ]
+## @param    topologySpreadConstraints add custom topology constraints to metrics operator
+topologySpreadConstraints: [ ]
+
+## @section Keptn Metrics Operator controller
+## @extra   containerSecurityContext Sets security context privileges
 containerSecurityContext:
+## @param   containerSecurityContext.allowPrivilegeEscalation
   allowPrivilegeEscalation: false
   capabilities:
+## @param   containerSecurityContext.capabilities.drop
     drop:
       - ALL
+## @param   containerSecurityContext.privileged
   privileged: false
+## @param   containerSecurityContext.runAsGroup
   runAsGroup: 65532
+## @param   containerSecurityContext.runAsNonRoot
   runAsNonRoot: true
+## @param   containerSecurityContext.runAsUser
   runAsUser: 65532
   seccompProfile:
+## @param   containerSecurityContext.seccompProfile.type
     type: RuntimeDefault
 env:
+## @param   env.exposeKeptnMetrics enable metrics exporter
   exposeKeptnMetrics: "true"
+## @param   env.enableKeptnAnalysis  enables/disables the analysis feature
   enableKeptnAnalysis: "false"
+## @param   env.metricsControllerLogLevel sets the log level of Metrics Controller
   metricsControllerLogLevel: "0"
+## @param   env.analysisControllerLogLevel  sets the log level of Analysis Controller
   analysisControllerLogLevel: "0"
 image:
+## @param   image.repository specify registry for manager image
   repository: ghcr.io/keptn/metrics-operator
+## @param   image.tag select tag for manager image
   tag: v0.8.2
+## @extra  livenessProbe custom livenessprobe for manager container
+## @skip   livenessProbe.httpGet.path
+## @skip   livenessProbe.httpGet.port
+## @skip   livenessProbe.initialDelaySeconds
+## @skip   livenessProbe.periodSeconds
 livenessProbe:
   httpGet:
     path: /healthz
     port: 8081
   initialDelaySeconds: 15
   periodSeconds: 20
+
+## @extra  readinessProbe custom readinessprobe for manager container
+## @skip   readinessProbe.httpGet.path
+## @skip   readinessProbe.httpGet.port
+## @skip   readinessProbe.initialDelaySeconds
+## @skip   readinessProbe.periodSeconds
 readinessProbe:
   httpGet:
     path: /readyz
     port: 8081
   initialDelaySeconds: 5
   periodSeconds: 10
+
+## @extra  resources specify limits and requests for manager container
+## @skip   resources.limits.cpu
+## @skip   resources.limits.memory
+## @skip   resources.requests.cpu
+## @skip   resources.requests.memory
 resources:
   limits:
     cpu: 500m
@@ -48,27 +133,10 @@ resources:
   requests:
     cpu: 10m
     memory: 64Mi
-nodeSelector: { }
-replicas: 1
-tolerations: [ ]
-topologySpreadConstraints: [ ]
-operatorService:
-  ports:
-    - name: https
-      port: 8443
-      protocol: TCP
-      targetPort: https
-    - name: custom-metrics
-      port: 443
-      targetPort: custom-metrics
-    - name: metrics
-      port: 9999
-      protocol: TCP
-      targetPort: metrics
-  type: ClusterIP
-webhookService:
-  ports:
-    - port: 443
-      protocol: TCP
-      targetPort: 9443
-  type: ClusterIP
+
+## @section Global
+## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled
+## @param  imagePullSecrets global value for image registry secret
+imagePullSecrets: [ ]
+## @param  kubernetesClusterDomain overrides domain.local
+kubernetesClusterDomain: cluster.local

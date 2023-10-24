@@ -47,8 +47,7 @@ jobs:
         run: |
           cd ./${{ matrix.config.path }}/
           cp ./README.md ./README-old.md
-          cat ./values.yaml ./doc.yaml > ./rendered.yaml
-          readme-generator --values=./rendered.yaml --readme=./README.md
+          readme-generator --values=./values.yaml --readme=./README.md
           if ! cmp --quiet ./README-old.md ./README.md; then
             echo "The Helm values for ${{ matrix.config.name }} have changes that are not reflected in the readme."
             echo "Please use ./.github/scripts/generate-helm-docs.sh to re-generate the docs."

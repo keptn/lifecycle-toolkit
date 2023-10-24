@@ -123,9 +123,9 @@ you must have the following on your cluster:
     or the visualization tool of your choice, following the instructions in
     [Grafana Setup](https://grafana.com/docs/grafana/latest/setup-grafana/).
   - Install
-    [Jaeger](https://grafana.com/grafana/dashboards/10001-jaeger/)
+    [Jaeger](https://www.jaegertracing.io/)
     or a similar tool for traces following the instructions in
-    [Jaeger Setup](https://github.com/jaegertracing/jaeger-operator#getting-started).
+    [Jaeger Setup](https://www.jaegertracing.io/docs/1.50/getting-started/).
 
   - Follow the instructions in the Grafana
     [README](https://github.com/keptn/lifecycle-toolkit/blob/main/dashboards/grafana/README.md)

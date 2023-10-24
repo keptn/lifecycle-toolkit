@@ -120,7 +120,7 @@ you must have the following on your cluster:
 
   - Install
     [Grafana](https://grafana.com/grafana/dashboards/)
-    or the dashboard of your choice, following the instructions in
+    or the visualization tool of your choice, following the instructions in
     [Grafana Setup](https://grafana.com/docs/grafana/latest/setup-grafana/).
   - Install
     [Jaeger](https://grafana.com/grafana/dashboards/10001-jaeger/)

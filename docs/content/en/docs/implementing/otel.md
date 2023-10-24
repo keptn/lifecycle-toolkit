@@ -101,7 +101,7 @@ you must have the following on your cluster:
     [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/)).
 
   - To install Prometheus into the `monitoring` namespace
-    using the default configuration included with Keptn,
+    using the example configuration included with Keptn,
     use the following command sequence.
     Use similar commands if you define a different configuration:
 

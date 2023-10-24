@@ -112,7 +112,7 @@ runs:
             helm dependency build
             cd -  # Return to the previous directory
         done
- 
+
         cd ./chart
 
         touch tmp-values.yaml

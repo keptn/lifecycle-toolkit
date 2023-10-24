@@ -107,6 +107,7 @@ runs:
                 ./klt-cert-manager/chart \
                 ./chart; do
             cd "$chart_dir"
+            echo "updating charts for" $chart_dir
             helm dependency update
             helm dependency build
             cd -  # Return to the previous directory

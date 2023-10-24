@@ -47,7 +47,7 @@ This is the second of three exercises in the
 series:
 
 - In the
-  [Getting started with Keptn metrics](usecase_metrics.md)
+  [Getting started with Keptn metrics](../getting-started/usecase_metrics.md)
   exercise, you learn how to define and use Keptn metrics.
   You may want to complete that exercise before doing this exercise
   although that is not required.
@@ -116,7 +116,7 @@ which allows you to trace everything done in the context of that deployment.
 You can supplement the DORA Metrics and OpenTelemetry information
 with information you explicitly define using Keptn metrics.
 The
-[Getting started with Keptn metrics](usecase_metrics.md)
+[Getting started with Keptn metrics](../getting-started/usecase_metrics.md)
 exercise discusses how to define Keptn metrics.
 
 ## View the results

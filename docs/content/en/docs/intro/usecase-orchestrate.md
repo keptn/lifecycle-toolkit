@@ -29,7 +29,7 @@ and can do the following:
 * Validate any Keptn metric,
   either pre- or post-deployment,
   using the metrics from the Keptn Metrics Server introduced in
-  [Getting started with Keptn metrics](usecase_metrics.md).
+  [Getting started with Keptn metrics](../getting-started/usecase_metrics.md).
 
 This means that you can be sure that the environment is healthy
 and has adequate resources before you begin the deployment.
@@ -62,7 +62,7 @@ You may want to complete the other exercises before doing this exercise
 although that is not required:
 
 * In the
-  [Getting started with Keptn metrics](usecase_metrics.md)
+  [Getting started with Keptn metrics](../getting-started/usecase_metrics.md)
   exercise, you learn how to define and use Keptn metrics.
 * In [Standardize observability](usecase-observability.md),
   you learn how to standardize access

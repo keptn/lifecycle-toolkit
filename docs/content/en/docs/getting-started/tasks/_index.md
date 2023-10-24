@@ -1,8 +1,7 @@
 ---
-title: Getting started with Release Lifecycle Management
+title: Release Lifecycle Management
 description: Add KeptnTasks to deployments
-weight: 25
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
+weight: 50
 ---
 
 The Release Lifecycle Management tools run
@@ -151,7 +150,8 @@ Incidentally, this is exactly how you can use Keptn with [applications deployed 
 
 Annotate the demo application `Deployment` manifest to have Keptn automatically trigger the task after every deployment.
 
-Recall the `Deployment` from the [getting started guide](../../getting-started/_index.md#step-3-deploy-demo-application).
+Recall the `Deployment` from the [Observability](../../getting-started/observability/_index.md#step-3-deploy-demo-application)
+Getting started guide.
 
 Add a new label so the `labels` section looks like this:
 

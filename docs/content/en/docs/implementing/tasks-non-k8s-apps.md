@@ -19,7 +19,7 @@ To do this:
 
 ## Install Keptn on a Kubernetes cluster
 
-You must enable a Kubernetes cluster and
+You must set up a Kubernetes cluster and
 [install](../install/install.md/#use-helm-chart)
 Keptn on it,
 but this can be a very lightweight, single-node KinD cluster; see

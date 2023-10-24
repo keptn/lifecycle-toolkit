@@ -112,7 +112,7 @@ you must have the following on your cluster:
 
     ```shell
     kubectl create namespace monitoring
-    kubectl apply --server-side -f config/prometheus/setup
+    kubectl apply --server-side -f config/prometheus/setup/
     kubectl apply -f config/prometheus/
     ```
 

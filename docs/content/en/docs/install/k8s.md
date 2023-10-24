@@ -109,7 +109,7 @@ Your cluster should include the following:
 
 * Keptn includes a lightweight `cert-manager` that, by default,
   is installed as part of the Keptn software.
-  If you are using another certification manager in the cluster,
+  If you are using another certificate manager in the cluster,
   you can configure Keptn to instead use your cert-manager.
   See [Use Keptn with cert-manager.io](../operate/cert-manager.md)
   for detailed instructions.

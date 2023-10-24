@@ -106,7 +106,7 @@ you must have the following on your cluster:
     Use similar commands if you define a different configuration:
 
     > **Note**
-    You must clone  the `lifecycle-toolkit` repository
+    You must clone the `lifecycle-toolkit` repository
     and `cd` into the correct directory
     (`examples/support/observability`) before running the following commands.
 

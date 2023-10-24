@@ -69,12 +69,12 @@ jobs:
         run: make integration-test
 
       - name: Create reports
-        if: ${{ failure() }}
+        if: failure()
         working-directory: ./.github/scripts
         run: ./create-reports-full.sh
 
       - name: Upload cluster logs
-        if: ${{ failure() }}
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: logs-integration-tests-${{ inputs.helm-install }}-${{ inputs.scheduling-gates }}-${{ inputs.allowed-namespaces }}

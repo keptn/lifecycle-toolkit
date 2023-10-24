@@ -31,12 +31,12 @@ jobs:
           make performance-test
 
       - name: Create reports
-        if: ${{ failure() }}
+        if: failure()
         working-directory: ./.github/scripts
         run: ./create-reports-toolkit.sh
 
       - name: Upload cluster logs
-        if: ${{ failure() }}
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: logs-performance-tests

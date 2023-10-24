@@ -61,7 +61,7 @@ Keptn will need to know where to send OpenTelemetry traces.
 Of course, Jaeger is not yet installed so traces have nowhere to go (yet),
 but creating this configuration now means the system is preconfigured.
 
-Save this file as `collectorconfig.yaml`.
+Save this file as `keptnconfig.yaml`.
 It doesn't matter where this file is located on your local machine:
 
 ```yaml

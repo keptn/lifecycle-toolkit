@@ -70,7 +70,7 @@ Your cluster should include the following:
 
 * The
   [Helm](https://helm.sh/docs/intro/install/)
-  command that is used to install and configure Keptn.
+  CLI that is used to install and configure Keptn.
 
 * Deployment tools of your choice,
   such as

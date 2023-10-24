@@ -5,42 +5,37 @@ package fake
 
 import (
 	"context"
-	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	//"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sync"
 )
 
-type CreateEvaluationAttributes struct {
-	SpanName   string
-	Definition lfcv1alpha3.KeptnEvaluationDefinition
-	CheckType  apicommon.CheckType
-}
-// MockEvaluationHandler is a mock implementation of common.EvaluationHandlerInterface.
+// MockEvaluationHandler is a mock implementation of evaluation.EvaluationHandlerInterface.
 //
 //	func TestSomethingThatUsesEvaluationHandlerInterface(t *testing.T) {
 //
-//		// make and configure a mocked common.EvaluationHandlerInterface
+//		// make and configure a mocked evaluation.EvaluationHandlerInterface
 //		mockedEvaluationHandlerInterface := &MockEvaluationHandler{
-//			CreateKeptnEvaluationFunc: func(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) (string, error) {
+//			CreateKeptnEvaluationFunc: func(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) (string, error) {
 //				panic("mock out the CreateKeptnEvaluation method")
 //			},
-//			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]lfcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
+//			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
 //				panic("mock out the ReconcileEvaluations method")
 //			},
 //		}
 //
-//		// use mockedEvaluationHandlerInterface in code that requires common.EvaluationHandlerInterface
+//		// use mockedEvaluationHandlerInterface in code that requires evaluation.EvaluationHandlerInterface
 //		// and then make assertions.
 //
 //	}
 type MockEvaluationHandler struct {
 	// CreateKeptnEvaluationFunc mocks the CreateKeptnEvaluation method.
-	CreateKeptnEvaluationFunc func(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) (string, error)
+	CreateKeptnEvaluationFunc func(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) (string, error)
 
 	// ReconcileEvaluationsFunc mocks the ReconcileEvaluations method.
-	ReconcileEvaluationsFunc func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]lfcv1alpha3.ItemStatus, apicommon.StatusSummary, error)
+	ReconcileEvaluationsFunc func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -53,7 +48,7 @@ type MockEvaluationHandler struct {
 			// ReconcileObject is the reconcileObject argument value.
 			ReconcileObject client.Object
 			// EvaluationCreateAttributes is the evaluationCreateAttributes argument value.
-			EvaluationCreateAttributes CreateEvaluationAttributes
+			EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
 		}
 		// ReconcileEvaluations holds details about calls to the ReconcileEvaluations method.
 		ReconcileEvaluations []struct {
@@ -64,7 +59,7 @@ type MockEvaluationHandler struct {
 			// ReconcileObject is the reconcileObject argument value.
 			ReconcileObject client.Object
 			// EvaluationCreateAttributes is the evaluationCreateAttributes argument value.
-			EvaluationCreateAttributes CreateEvaluationAttributes
+			EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
 		}
 	}
 	lockCreateKeptnEvaluation sync.RWMutex
@@ -72,7 +67,7 @@ type MockEvaluationHandler struct {
 }
 
 // CreateKeptnEvaluation calls CreateKeptnEvaluationFunc.
-func (mock *MockEvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) (string, error) {
+func (mock *MockEvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) (string, error) {
 	if mock.CreateKeptnEvaluationFunc == nil {
 		panic("MockEvaluationHandler.CreateKeptnEvaluationFunc: method is nil but EvaluationHandlerInterface.CreateKeptnEvaluation was just called")
 	}
@@ -80,7 +75,7 @@ func (mock *MockEvaluationHandler) CreateKeptnEvaluation(ctx context.Context, na
 		Ctx                        context.Context
 		Namespace                  string
 		ReconcileObject            client.Object
-		EvaluationCreateAttributes CreateEvaluationAttributes
+		EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
 	}{
 		Ctx:                        ctx,
 		Namespace:                  namespace,
@@ -101,13 +96,13 @@ func (mock *MockEvaluationHandler) CreateKeptnEvaluationCalls() []struct {
 	Ctx                        context.Context
 	Namespace                  string
 	ReconcileObject            client.Object
-	EvaluationCreateAttributes CreateEvaluationAttributes
+	EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
 } {
 	var calls []struct {
 		Ctx                        context.Context
 		Namespace                  string
 		ReconcileObject            client.Object
-		EvaluationCreateAttributes CreateEvaluationAttributes
+		EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
 	}
 	mock.lockCreateKeptnEvaluation.RLock()
 	calls = mock.calls.CreateKeptnEvaluation
@@ -116,7 +111,7 @@ func (mock *MockEvaluationHandler) CreateKeptnEvaluationCalls() []struct {
 }
 
 // ReconcileEvaluations calls ReconcileEvaluationsFunc.
-func (mock *MockEvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]lfcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
+func (mock *MockEvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
 	if mock.ReconcileEvaluationsFunc == nil {
 		panic("MockEvaluationHandler.ReconcileEvaluationsFunc: method is nil but EvaluationHandlerInterface.ReconcileEvaluations was just called")
 	}
@@ -124,7 +119,7 @@ func (mock *MockEvaluationHandler) ReconcileEvaluations(ctx context.Context, pha
 		Ctx                        context.Context
 		PhaseCtx                   context.Context
 		ReconcileObject            client.Object
-		EvaluationCreateAttributes CreateEvaluationAttributes
+		EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
 	}{
 		Ctx:                        ctx,
 		PhaseCtx:                   phaseCtx,
@@ -145,13 +140,13 @@ func (mock *MockEvaluationHandler) ReconcileEvaluationsCalls() []struct {
 	Ctx                        context.Context
 	PhaseCtx                   context.Context
 	ReconcileObject            client.Object
-	EvaluationCreateAttributes CreateEvaluationAttributes
+	EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
 } {
 	var calls []struct {
 		Ctx                        context.Context
 		PhaseCtx                   context.Context
 		ReconcileObject            client.Object
-		EvaluationCreateAttributes CreateEvaluationAttributes
+		EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
 	}
 	mock.lockReconcileEvaluations.RLock()
 	calls = mock.calls.ReconcileEvaluations

@@ -26,6 +26,7 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
@@ -54,7 +55,7 @@ type KeptnWorkloadVersionReconciler struct {
 	SpanHandler            *telemetry.SpanHandler
 	TracerFactory          telemetry.TracerFactory
 	SchedulingGatesHandler controllercommon.ISchedulingGatesHandler
-	EvaluationHandler      controllercommon.EvaluationHandlerInterface
+	EvaluationHandler      evaluation.EvaluationHandlerInterface
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions,verbs=get;list;watch;create;update;patch;delete
@@ -83,7 +84,7 @@ func NewReconciler(client client.Client, scheme *runtime.Scheme, iEvent controll
 		SpanHandler:            spanHandler,
 		TracerFactory:          tracerFactory,
 		SchedulingGatesHandler: iSchedulingGatesHandler,
-		EvaluationHandler:      controllercommon.NewEvaluationHandler(client, iEvent, log, tracer, scheme, spanHandler),
+		EvaluationHandler:      evaluation.NewEvaluationHandler(client, iEvent, log, tracer, scheme, spanHandler),
 	}
 }
 

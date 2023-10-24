@@ -8,6 +8,7 @@ import (
 
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadversion"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
@@ -44,7 +45,7 @@ var _ = BeforeSuite(func() {
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
 	TracerFactory := &common.TracerFactory{Tracer: tracer}
-	EvaluationHandler := controllercommon.NewEvaluationHandler(k8sManager.GetClient(), controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller")), GinkgoLogr,
+	EvaluationHandler := evaluation.NewEvaluationHandler(k8sManager.GetClient(), controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller")), GinkgoLogr,
 		TracerFactory.GetTracer(traceComponentName), k8sManager.GetScheme(), &telemetry.SpanHandler{})
 
 	// //setup controllers here

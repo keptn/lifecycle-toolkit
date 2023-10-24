@@ -1,4 +1,4 @@
-package common
+package evaluation
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	kltfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
@@ -268,7 +269,7 @@ func TestEvaluationHandler(t *testing.T) {
 			handler := EvaluationHandler{
 				SpanHandler: &spanHandlerMock,
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewK8sSender(fakeRecorder),
+				EventSender: common.NewK8sSender(fakeRecorder),
 				Client:      fake.NewClientBuilder().WithObjects(&tt.evalObj).Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
@@ -349,7 +350,7 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 			handler := EvaluationHandler{
 				SpanHandler: &kltfake.ISpanHandlerMock{},
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
+				EventSender: common.NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,

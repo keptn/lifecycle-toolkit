@@ -1,4 +1,4 @@
-package common
+package evaluation
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
@@ -28,7 +29,7 @@ type EvaluationHandlerInterface interface {
 
 type EvaluationHandler struct {
 	Client      client.Client
-	EventSender IEvent
+	EventSender common.IEvent
 	Log         logr.Logger
 	Tracer      trace.Tracer
 	Scheme      *runtime.Scheme
@@ -42,7 +43,7 @@ type CreateEvaluationAttributes struct {
 }
 
 // NewEvaluationHandler creates a new instance of the EvaluationHandler.
-func NewEvaluationHandler(client client.Client, eventSender IEvent, log logr.Logger, tracer trace.Tracer, scheme *runtime.Scheme, spanHandler telemetry.ISpanHandler) EvaluationHandler {
+func NewEvaluationHandler(client client.Client, eventSender common.IEvent, log logr.Logger, tracer trace.Tracer, scheme *runtime.Scheme, spanHandler telemetry.ISpanHandler) EvaluationHandler {
 	return EvaluationHandler{
 		Client:      client,
 		EventSender: eventSender,
@@ -67,9 +68,9 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 	// Check current state of the PrePostEvaluationTasks
 	var newStatus []klcv1alpha3.ItemStatus
 	for _, evaluationName := range evaluations {
-		oldstatus := GetOldStatus(evaluationName, statuses)
+		oldstatus := common.GetOldStatus(evaluationName, statuses)
 
-		evaluationStatus := GetItemStatus(evaluationName, statuses)
+		evaluationStatus := common.GetItemStatus(evaluationName, statuses)
 		evaluation := &klcv1alpha3.KeptnEvaluation{}
 		evaluationExists := false
 

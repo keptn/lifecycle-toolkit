@@ -7,12 +7,12 @@ import (
 
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 )
 
 func (r *KeptnWorkloadVersionReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 
-	evaluationCreateAttributes := controllercommon.CreateEvaluationAttributes{
+	evaluationCreateAttributes := evaluation.CreateEvaluationAttributes{
 		SpanName:  fmt.Sprintf(apicommon.CreateWorkloadEvalSpanName, checkType),
 		CheckType: checkType,
 	}

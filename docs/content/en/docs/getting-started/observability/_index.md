@@ -79,7 +79,7 @@ spec:
 Apply the file and wait for Keptn to pick up the new configuration:
 
 ```shell
-kubectl apply -f collectorconfig.yaml
+kubectl apply -f keptnconfig.yaml
 ```
 
 Keptn reacts immediately to a configuration change.

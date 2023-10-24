@@ -103,7 +103,7 @@ Your cluster should include the following:
 
 * If you want a dashboard for reviewing metrics and traces,
   install the dashboard tools of your choice;
-  we primarily use Grafana and Jaeger.
+  we primarily use Grafana.
   For more information, see
   [Requirements for Open Telemetry](../implementing/otel.md/#requirements-for-opentelemetry).
 

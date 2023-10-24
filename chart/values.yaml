@@ -1,12 +1,12 @@
 ## @section Keptn
 certManager:
-## @param certManager.enabled Enable this value to install Keptn Certificate Manager
+  ## @param certManager.enabled Enable this value to install Keptn Certificate Manager
   enabled: true
 lifecycleOperator:
-## @param lifecycleOperator.enabled Enable this value to install Keptn Lifecycle Operator
+  ## @param lifecycleOperator.enabled Enable this value to install Keptn Lifecycle Operator
   enabled: true
 metricsOperator:
-## @param metricsOperator.enabled Enable this value to install Keptn Metrics Operator
+  ## @param metricsOperator.enabled Enable this value to install Keptn Metrics Operator
   enabled: true
 
 ## @section Global parameters
@@ -27,10 +27,10 @@ global:
   imagePullSecrets: []
   ## @param global.commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
   ##
-  commonLabels: { }
+  commonLabels: {}
   ## @param global.commonAnnotations Common annotations to add to all Mongo resources. Evaluated as a template
   ##
-  commonAnnotations: { }
+  commonAnnotations: {}
 
 
 

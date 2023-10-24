@@ -98,10 +98,10 @@ runs:
       run: |
         echo "Installing Keptn using helm"
         helm version
-        
+
         helm repo add keptn "https://charts.lifecycle.keptn.sh"
         helm repo update
-        
+
         for chart_dir in ./lifecycle-operator/chart \
                 ./metrics-operator/chart \
                 ./klt-cert-manager/chart \
@@ -112,15 +112,15 @@ runs:
             helm dependency build
             cd -  # Return to the previous directory
         done
-        
+ 
         cd ./chart
-        
+
         touch tmp-values.yaml
         if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_on" ]; then
           echo "lifecycleOperator:" >> tmp-values.yaml
           echo "  allowedNamespaces: [allowed-ns-test]" >> tmp-values.yaml
         fi
-        
+
         if [ "${{ inputs.scheduling-gates }}" == "gates_on" ]; then
           if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_off" ]; then
             echo "lifecycleOperator:" >> tmp-values.yaml

@@ -176,7 +176,7 @@ Keptn is now aware of your deployments and is generating DORA statistics about t
 Keptn has created a resource called a `KeptnApp` to track your application.
 The name of which is based on the `part-of` label.
 
-It may take up to 30 seconds to create the `KeptnApp` so run the following command until you see the `keptnappdemo` CRD.
+It may take up to 30 seconds to create the `KeptnApp` so run the following command until you see the `keptnappdemo` CR.
 
 ```shell
 kubectl -n keptndemo get keptnapp

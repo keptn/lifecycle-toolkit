@@ -133,7 +133,7 @@ you must have the following on your cluster:
 
     Metrics can also be retrieved without a dashboard.
     See
-    [Accessing Metrics via the Kubernetes Custom Metrics API](evaluatemetrics/#accessing-metrics-via-the-kubernetes-custom-metrics-api)
+    [Accessing Metrics via the Kubernetes Custom Metrics API](evaluatemetrics.md/#accessing-metrics-via-the-kubernetes-custom-metrics-api)
 
 ### Integrate OpenTelemetry into Keptn
 

@@ -88,7 +88,7 @@ Your cluster should include the following:
   * Metrics used for
     [Keptn Metrics](../implementing/evaluatemetrics.md/)
   * Metrics used for
-    [OpenTelemetry](./implementing/otel.md/)
+    [OpenTelemetry](../implementing/otel.md/)
     observability
   * SLIs for pre- and post-deployment
     [evaluations](../implementing/evaluations.md/)

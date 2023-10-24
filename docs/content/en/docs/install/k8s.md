@@ -76,7 +76,7 @@ Your cluster should include the following:
   such as
   [Argo CD](https://argo-cd.readthedocs.io/en/stable/) or
   [Flux](https://fluxcd.io/).
-  Alternatively, Keptn also works with just `kubctl apply` for deployment.
+  Alternatively, Keptn also works with just `kubectl apply` for deployment.
 
 * At least one observability data provider such as
   [Prometheus](https://prometheus.io/),

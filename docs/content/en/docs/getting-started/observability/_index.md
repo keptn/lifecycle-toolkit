@@ -79,7 +79,7 @@ spec:
 Apply the file and restart Keptn to pick up the new config:
 
 ```shell
-kubectl apply -f collectorconfig.yaml
+kubectl apply -f keptnconfig.yaml
 ```
 
 ## Step 2: Create Namespace for Demo Application

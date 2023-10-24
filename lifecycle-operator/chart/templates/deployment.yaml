@@ -7,7 +7,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include  "common.annotations"  ( dict "context" . ) }}
+{{- include "common.annotations" ( dict "context" . ) }}
 {{- end }}
 ---
 apiVersion: v1
@@ -17,7 +17,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include  "common.annotations"  ( dict "context" . ) }}
+{{- include "common.annotations" ( dict "context" . ) }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -29,7 +29,7 @@ metadata:
     control-plane: lifecycle-operator
     keptn.sh/inject-cert: "true"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include  "common.annotations"  ( dict "context" . ) }}
+{{- include "common.annotations" ( dict "context" . ) }}
 spec:
   replicas: {{ .Values.lifecycleOperator.replicas }}
   selector:
@@ -185,7 +185,7 @@ metadata:
   labels:
     component: scheduler
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include  "common.annotations"  ( dict "context" . ) }}
+{{- include "common.annotations" ( dict "context" . ) }}
 spec:
   replicas: {{ .Values.scheduler.replicas }}
   selector:

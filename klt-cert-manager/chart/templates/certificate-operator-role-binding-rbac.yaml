@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-    {{- include  "common.annotations"  ( dict "context" . ) }}
+    {{- include "common.annotations" ( dict "context" . ) }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

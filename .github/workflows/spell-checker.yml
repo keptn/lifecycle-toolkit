@@ -1,4 +1,4 @@
-name: Spell Checkerr
+name: Spell Checker
 on:
   push:
     branches:

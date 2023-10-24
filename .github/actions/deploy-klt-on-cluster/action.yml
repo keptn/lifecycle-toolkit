@@ -113,7 +113,7 @@ runs:
             cd -  # Return to the previous directory
         done
         
-        cd ./lifecycle-operator/chart
+        cd ./chart
         
         touch tmp-values.yaml
         if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_on" ]; then

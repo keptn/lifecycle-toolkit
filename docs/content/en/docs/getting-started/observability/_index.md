@@ -76,11 +76,15 @@ spec:
   keptnAppCreationRequestTimeoutSeconds: 30
 ```
 
-Apply the file and restart Keptn to pick up the new config:
+Apply the file and wait for Keptn to pick up the new configuration:
 
 ```shell
 kubectl apply -f keptnconfig.yaml
 ```
+
+Keptn reacts immediately to a configuration change.
+although the speed depends on the Kubernetes API server signaling updates
+and can be influenced by network latency.
 
 ## Step 2: Create Namespace for Demo Application
 

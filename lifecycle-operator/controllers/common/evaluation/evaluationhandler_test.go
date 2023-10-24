@@ -267,14 +267,6 @@ func TestEvaluationHandler(t *testing.T) {
 			}
 			fakeRecorder := record.NewFakeRecorder(100)
 			handler := NewEvaluationHandler(fake.NewClientBuilder().WithObjects(&tt.evalObj).Build(), common.NewK8sSender(fakeRecorder), ctrl.Log.WithName("controller"), trace.NewNoopTracerProvider().Tracer("tracer"), scheme.Scheme, &spanHandlerMock)
-			// handler := EvaluationHandler{
-			// 	SpanHandler: &spanHandlerMock,
-			// 	Log:         ctrl.Log.WithName("controller"),
-			// 	EventSender: common.NewK8sSender(fakeRecorder),
-			// 	Client:      fake.NewClientBuilder().WithObjects(&tt.evalObj).Build(),
-			// 	Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
-			// 	Scheme:      scheme.Scheme,
-			// }
 			status, summary, err := handler.ReconcileEvaluations(context.TODO(), context.TODO(), tt.object, tt.createAttr)
 			if len(tt.wantStatus) == len(status) {
 				for j, item := range status {

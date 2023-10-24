@@ -97,7 +97,7 @@ you must have the following on your cluster:
   See [Prometheus Operator Setup](https://github.com/prometheus-operator/kube-prometheus/blob/main/docs/customizing.md).
 
   - The Prometheus Operator must have the required permissions
-    to watch resources of the `keptn-lifecycle-toolkit-system` namespace (see
+    to watch resources of your Keptn namespace (default is `keptn-lifecycle-toolkit-system`) (see
     [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/)).
 
   - To install Prometheus into the `monitoring` namespace

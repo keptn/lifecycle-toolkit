@@ -13,10 +13,12 @@ Below are some common problems and their solutions:
 
 ## Keptn is installed but it is not aware of my workloads
 
-If you are facing an issue where Keptn is installed but does not seem to be aware of your [workloads](https://kubernetes.io/docs/concepts/workloads/), follow these steps:
+If you are facing an issue where Keptn is installed but does not seem to be aware of your
+[workloads](https://kubernetes.io/docs/concepts/workloads/), follow these steps:
 
 1. Ensure that the namespace you wish to target is [annotated correctly](https://lifecycle.keptn.sh/docs/install/install/#enable-klt-for-your-cluster).
-2. Make sure your [workloads](https://kubernetes.io/docs/concepts/workloads/) (e.g., Deployment manifests) have the [three required annotations](https://lifecycle.keptn.sh/docs/implementing/integrate/#annotate-workloads).
+2. Make sure your [workloads](https://kubernetes.io/docs/concepts/workloads/)
+   (e.g., Deployment manifests) have the [three required annotations](https://lifecycle.keptn.sh/docs/implementing/integrate/#annotate-workloads).
 
 ## Keptn is causing my pods to be pending
 
@@ -24,7 +26,8 @@ If your pods are stuck in a pending state and Keptn seems to be the cause, it mi
 to a pre-deployment task or evaluation.
 Follow these steps:
 
-The most probable reason is that a pre-deployment task in your [workload](https://kubernetes.io/docs/concepts/workloads/) is either failing or has not completed yet.
+The most probable reason is that a pre-deployment task in your
+[workload](https://kubernetes.io/docs/concepts/workloads/) is either failing or has not completed yet.
 
 Failing pre-deployment evaluation tasks will prevent a pod from being scheduled.
 

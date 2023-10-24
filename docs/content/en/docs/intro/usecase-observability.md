@@ -132,7 +132,8 @@ Note that, from the `KeptnApp` YAML file,
 you can either increment the version number of the application
 (which causes all [workloads](https://kubernetes.io/docs/concepts/workloads/) to be rerun and produce observability data)
 or you can increment the version number of a single [workload](https://kubernetes.io/docs/concepts/workloads/),
-(which causes just that [workload](https://kubernetes.io/docs/concepts/workloads/) to be rerun and produce observability data).
+(which causes just that [workload](https://kubernetes.io/docs/concepts/workloads/)
+to be rerun and produce observability data).
 
 The videos that go with this exercise show how the
 DORA, OpenTelemetry, and Keptn metrics information

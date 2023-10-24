@@ -103,9 +103,9 @@ runs:
         helm repo update
         
         for chart_dir in ./lifecycle-operator/chart \
-                ../../metrics-operator/chart \
-                ../../klt-cert-manager/chart \
-                ../../chart; do
+                ./metrics-operator/chart \
+                ./klt-cert-manager/chart \
+                ./chart; do
             cd "$chart_dir"
             helm dependency update
             helm dependency build

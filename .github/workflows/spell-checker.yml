@@ -2,7 +2,7 @@ name: Spell Checker
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
     paths:
       - 'docs/**'

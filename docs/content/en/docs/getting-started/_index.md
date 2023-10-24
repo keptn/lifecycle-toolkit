@@ -82,7 +82,7 @@ Apply the file and wait for Keptn to pick up the new config:
 kubectl apply -f collectorconfig.yaml
 ```
 
-By default, Keptn checks this configuration every 30 seconds.
+By default, Keptn reacts immediately to a configuration change. Of course, the speed depends on the Kubernetes API server signaling updates and can be influenced by network latency.
 The interval is configurable; see the
 [KeptnConfig](../yaml-crd-ref/config.md)
 reference page for details.

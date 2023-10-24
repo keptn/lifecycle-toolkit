@@ -99,7 +99,7 @@ Your cluster should include the following:
   you must have an OpenTelemetry collector
   as well as a Prometheus operator installed on your cluster.
   For more information, see
-  [Requirements for Open Telemetry](../implementing/otel.md/#requirements-for-opentelemetry).
+  [Requirements for OpenTelemetry](../implementing/otel.md/#requirements-for-opentelemetry).
 
 * If you want a dashboard for reviewing metrics and traces,
   install the dashboard tools of your choice;

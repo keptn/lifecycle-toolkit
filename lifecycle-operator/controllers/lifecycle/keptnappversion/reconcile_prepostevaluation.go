@@ -7,11 +7,11 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 )
 
 func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, appVersion *klcv1alpha3.KeptnAppVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
-	evaluationHandler := controllercommon.EvaluationHandler{
+	evaluationHandler := evaluation.EvaluationHandler{
 		Client:      r.Client,
 		EventSender: r.EventSender,
 		Log:         r.Log,
@@ -20,7 +20,7 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Conte
 		SpanHandler: r.SpanHandler,
 	}
 
-	evaluationCreateAttributes := controllercommon.CreateEvaluationAttributes{
+	evaluationCreateAttributes := evaluation.CreateEvaluationAttributes{
 		SpanName:  fmt.Sprintf(apicommon.CreateAppEvalSpanName, checkType),
 		CheckType: checkType,
 	}

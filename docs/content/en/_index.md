@@ -100,7 +100,7 @@ Gain confidence in your work with pre-/post-deployment checks
 {{% readfile "partials/_index-observability-right.md" %}}
 </div>
 </div>
-<a class="btn -bg-green" href="./docs/getting-started/">
+<a class="btn -bg-green" href="./docs/intro/usecase-observability/">
     Get Started!
 </a>
 </div>

@@ -18,7 +18,7 @@ Instead, it uses
 the [Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness)
 to gate Pods until the required deployment checks pass.
 
-## Keptn Scheduling Gates for K8s 1.27 and above
+## Keptn Scheduling Gates for K8s 1.26 and above
 
 When you apply a workload to a K8s cluster,
 the Mutating Webhook checks each Pod for annotations
@@ -44,7 +44,7 @@ the Pod is not gated again:
 
 {{< embed path="/docs/assets/scheduler-gates/gate-removed.yaml" >}}
 
-## Keptn Scheduler for K8s 1.26 and earlier
+## Keptn Scheduler for K8s 1.25 and earlier
 
 The **Keptn Scheduler** works by registering itself as a Permit plugin within the Kubernetes
 scheduling cycle that ensures that Pods are scheduled to a node until and unless the

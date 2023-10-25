@@ -22,4 +22,4 @@ metrics, observability, health checks, with pre- and post-deployment evaluations
 | `global.imageRegistry`     | Global Docker image registry                                              | `""`  |
 | `global.imagePullSecrets`  | Global Docker registry secret names as an array                           | `[]`  |
 | `global.commonLabels`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |
-| `global.commonAnnotations` | Common annotations to add to all Mongo resources. Evaluated as a template | `{}`  |
+| `global.commonAnnotations` | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |

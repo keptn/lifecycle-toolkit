@@ -1,4 +1,27 @@
 ## @section Keptn Lifecycle Operator common
+## @section Global parameters
+## Please, note that this will override the image parameters, including dependencies, configured to use the global value
+## Current available global Docker image parameters: imageRegistry, imagePullSecrets and storageClass
+
+global:
+  ## @param global.imageRegistry Global container image registry
+  imageRegistry: ""
+
+  ## @param global.imagePullSecrets Global Docker registry secret names as an array
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+  ## @param global.commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
+  ##
+  commonLabels: { }
+  ## @param global.commonAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
+  ##
+  commonAnnotations: { }
+
+
+
 lifecycleOperatorConfig:
   health:
 ## @param    lifecycleOperatorConfig.health.healthProbeBindAddress setup on what address to start the default health handler
@@ -139,10 +162,12 @@ lifecycleOperatorMetricsService:
 
 ## @section Global
 ## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled
-## @param  imagePullSecrets global value for image registry secret
-imagePullSecrets: []
-## @param  kubernetesClusterDomain overrides domain.local
+## @param     kubernetesClusterDomain overrides cluster.local
 kubernetesClusterDomain: cluster.local
+## @param     annotations add deployment level annotations
+annotations: {}
+## @param     podAnnotations adds pod level annotations
+podAnnotations: {}
 ## @param  schedulingGatesEnabled enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version
 schedulingGatesEnabled: false
 ## @param  allowedNamespaces specifies the allowed namespaces for the lifecycle orchestration functionality

@@ -8,8 +8,15 @@ and application health checks
 
 ### Keptn Lifecycle Operator common
 
+
+### Global parameters
+
 | Name                                                    | Description                                                                                                                                                   | Value               |
 | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| `global.imageRegistry`                                  | Global container image registry                                                                                                                               | `""`                |
+| `global.imagePullSecrets`                               | Global Docker registry secret names as an array                                                                                                               | `[]`                |
+| `global.commonLabels`                                   | Common annotations to add to all Keptn resources. Evaluated as a template                                                                                     | `{}`                |
+| `global.commonAnnotations`                              | Common annotations to add to all Keptn resources. Evaluated as a template                                                                                     | `{}`                |
 | `lifecycleOperatorConfig.health.healthProbeBindAddress` | setup on what address to start the default health handler                                                                                                     | `:8081`             |
 | `lifecycleOperatorConfig.leaderElection.leaderElect`    | enable leader election for multiple replicas of the lifecycle operator                                                                                        | `true`              |
 | `lifecycleOperatorConfig.leaderElection.resourceName`   | define LeaderElectionID                                                                                                                                       | `6b866dd9.keptn.sh` |
@@ -62,8 +69,9 @@ and application health checks
 
 | Name                      | Description                                                                                                                                     | Value           |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| `imagePullSecrets`        | global value for image registry secret                                                                                                          | `[]`            |
-| `kubernetesClusterDomain` | overrides domain.local                                                                                                                          | `cluster.local` |
+| `kubernetesClusterDomain` | overrides cluster.local                                                                                                                         | `cluster.local` |
+| `annotations`             | add deployment level annotations                                                                                                                | `{}`            |
+| `podAnnotations`          | adds pod level annotations                                                                                                                      | `{}`            |
 | `schedulingGatesEnabled`  | enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version | `false`         |
 | `allowedNamespaces`       | specifies the allowed namespaces for the lifecycle orchestration functionality                                                                  | `[]`            |
 

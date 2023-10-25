@@ -8,11 +8,14 @@ metadata:
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: cert-manager-0.1.0
-    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: vmyversion
+    helm.sh/chart: cert-manager-0.1.0
+    mamma: test
+  annotations:
+    ciao: commonannotation
 ---
 # Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -21,11 +24,12 @@ metadata:
   name: certificate-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: cert-manager-0.1.0
-    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: vmyversion
+    helm.sh/chart: cert-manager-0.1.0
+    mamma: test
 rules:
 - apiGroups:
   - admissionregistration.k8s.io
@@ -76,11 +80,12 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: cert-manager-0.1.0
-    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: vmyversion
+    helm.sh/chart: cert-manager-0.1.0
+    mamma: test
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -97,11 +102,14 @@ metadata:
   name: certificate-operator-role
   namespace: "helmtests"
   labels:
-    helm.sh/chart: cert-manager-0.1.0
-    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: vmyversion
+    helm.sh/chart: cert-manager-0.1.0
+    mamma: test
+  annotations:
+    ciao: commonannotation
 rules:
 - apiGroups:
   - ""
@@ -132,11 +140,14 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: cert-manager-0.1.0
-    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: vmyversion
+    helm.sh/chart: cert-manager-0.1.0
+    mamma: test
+  annotations:
+    ciao: commonannotation
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -156,11 +167,14 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    helm.sh/chart: cert-manager-0.1.0
-    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: vmyversion
+    helm.sh/chart: cert-manager-0.1.0
+    mamma: test
+  annotations:
+    ciao: commonannotation
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -180,11 +194,14 @@ metadata:
     app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     control-plane: certificate-operator
-    helm.sh/chart: cert-manager-0.1.0
-    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/version: "v1.1.0"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: vmyversion
+    helm.sh/chart: cert-manager-0.1.0
+    mamma: test
+  annotations:
+    ciao: commonannotation
 spec:
   replicas: 1
   selector:
@@ -217,7 +234,7 @@ spec:
               value: "true"
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
-          image: ghcr.io/keptn/certificate-operator:v1.1.0
+          image: testreg/ghcr.io/keptn/certificate-operator:v1.1.0
           imagePullPolicy: Always
           name: certificate-operator
           resources:

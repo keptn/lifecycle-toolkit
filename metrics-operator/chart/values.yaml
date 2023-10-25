@@ -1,33 +1,58 @@
+
+## @section Global parameters
+## Please, note that this will override the image parameters, including dependencies, configured to use the global value
+## Current available global Docker image parameters: imageRegistry, imagePullSecrets and storageClass
+
+global:
+  ## @param global.imageRegistry Global container image registry
+  imageRegistry: ""
+
+  ## @param global.imagePullSecrets Global Docker registry secret names as an array
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+  ## @param global.commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
+  ##
+  commonLabels: { }
+  ## @param global.commonAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
+  ##
+  commonAnnotations: { }
+
 ## @section Keptn Metrics Operator common
 ## @extra   operatorService.ports[0] webhook port (must correspond to Mutating Webhook Configurations)
 ## @extra   operatorService.ports[1] port to integrate with the K8s custom metrics API
 ## @extra   operatorService.ports[2] port to integrate with metrics API (e.g. Keda)
 operatorService:
   ports:
-## @param   operatorService.ports[0].name
+    ## @param   operatorService.ports[0].name
     - name: https
-## @param   operatorService.ports[0].port
+      ## @param   operatorService.ports[0].port
       port: 8443
-## @param   operatorService.ports[0].protocol
+      ## @param   operatorService.ports[0].protocol
       protocol: TCP
-## @param   operatorService.ports[0].targetPort
+      ## @param   operatorService.ports[0].targetPort
       targetPort: https
-## @param   operatorService.ports[1].name
+    ## @param   operatorService.ports[1].name
     - name: custom-metrics
-## @param   operatorService.ports[1].port
+      ## @param   operatorService.ports[1].port
       port: 443
-## @param   operatorService.ports[1].targetPort
+      ## @param   operatorService.ports[1].targetPort
       targetPort: custom-metrics
-## @param   operatorService.ports[2].name
+    ## @param   operatorService.ports[2].name
     - name: metrics
-## @param   operatorService.ports[2].port
+      ## @param   operatorService.ports[2].port
       port: 9999
-## @param   operatorService.ports[2].protocol
+      ## @param   operatorService.ports[2].protocol
       protocol: TCP
-## @param   operatorService.ports[2].targetPort
+      ## @param   operatorService.ports[2].targetPort
       targetPort: metrics
-## @param   operatorService.type
+  ## @param   operatorService.type
   type: ClusterIP
+
+
+
 config:
   health:
 ## @param      config.health.healthProbeBindAddress setup on what address to start the default health handler
@@ -62,6 +87,12 @@ replicas: 1
 tolerations: [ ]
 ## @param    topologySpreadConstraints add custom topology constraints to metrics operator
 topologySpreadConstraints: [ ]
+## @param     annotations add deployment level annotations
+annotations: {}
+## @param     podAnnotations adds pod level annotations
+podAnnotations: {}
+## @param     kubernetesClusterDomain overrides cluster.local
+kubernetesClusterDomain: cluster.local
 
 ## @section Keptn Metrics Operator controller
 ## @extra   containerSecurityContext Sets security context privileges
@@ -133,10 +164,3 @@ resources:
   requests:
     cpu: 10m
     memory: 64Mi
-
-## @section Global
-## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled
-## @param  imagePullSecrets global value for image registry secret
-imagePullSecrets: [ ]
-## @param  kubernetesClusterDomain overrides domain.local
-kubernetesClusterDomain: cluster.local

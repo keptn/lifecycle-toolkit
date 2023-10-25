@@ -4,3 +4,13 @@ lifecycleOperator:
   enabled: false
 metricsOperator:
   enabled: false
+
+global:
+  imageRegistry: "testreg"
+  imagePullSecrets: []
+  commonAnnotations:
+    ciao: commonannotation
+  commonLabels:
+    mamma : "test"
+    app.kubernetes.io/version: vmyversion
+

@@ -1,6 +1,14 @@
+global:
+  imageRegistry: "testreg"
+
 certManager:
   enabled: false
 lifecycleOperator:
   enabled: true
+  lifecycleOperator:
+    image:
+      repository: myrep
+
 metricsOperator:
   enabled: false
+  imagePullSecrets: []

@@ -11,6 +11,15 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 
 ## Parameters
 
+### Global parameters
+
+| Name                       | Description                                                               | Value |
+| -------------------------- | ------------------------------------------------------------------------- | ----- |
+| `global.imageRegistry`     | Global container image registry                                           | `""`  |
+| `global.imagePullSecrets`  | Global Docker registry secret names as an array                           | `[]`  |
+| `global.commonLabels`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |
+| `global.commonAnnotations` | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |
+
 ### Keptn Metrics Operator common
 
 | Name                                   | Description                                                                                                                                                   | Value               |
@@ -44,6 +53,9 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 | `replicas`                             | customize number of installed metrics operator replicas                                                                                                       | `1`                 |
 | `tolerations`                          | add custom tolerations to metrics operator                                                                                                                    | `[]`                |
 | `topologySpreadConstraints`            | add custom topology constraints to metrics operator                                                                                                           | `[]`                |
+| `annotations`                          | add deployment level annotations                                                                                                                              | `{}`                |
+| `podAnnotations`                       | adds pod level annotations                                                                                                                                    | `{}`                |
+| `kubernetesClusterDomain`              | overrides cluster.local                                                                                                                                       | `cluster.local`     |
 
 ### Keptn Metrics Operator controller
 
@@ -66,10 +78,3 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 | `livenessProbe`                                     | custom livenessprobe for manager container        |                                  |
 | `readinessProbe`                                    | custom readinessprobe for manager container       |                                  |
 | `resources`                                         | specify limits and requests for manager container |                                  |
-
-### Global
-
-| Name                      | Description                            | Value           |
-| ------------------------- | -------------------------------------- | --------------- |
-| `imagePullSecrets`        | global value for image registry secret | `[]`            |
-| `kubernetesClusterDomain` | overrides domain.local                 | `cluster.local` |

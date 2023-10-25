@@ -23,7 +23,7 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads_noWorkloads(t *testing.T) 
 			AppName: "app",
 		},
 	}
-	r, _, _, _ := setupReconciler(appVersion)
+	r, _, _ := setupReconciler(appVersion)
 
 	state, err := r.reconcileWorkloads(context.TODO(), appVersion)
 	require.Nil(t, err)
@@ -54,7 +54,7 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 			AppName: "app",
 		},
 	}
-	r, _, _, _ := setupReconciler(appVersion)
+	r, _, _ := setupReconciler(appVersion)
 
 	// No workloadVersions are created yet, should stay in Pending state
 
@@ -200,7 +200,7 @@ func TestKeptnAppVersionReconciler_handleUnaccessibleWorkloadVersionList(t *test
 			AppName: "app",
 		},
 	}
-	r, _, _, _ := setupReconciler(appVersion)
+	r, _, _ := setupReconciler(appVersion)
 
 	err := r.handleUnaccessibleWorkloadVersionList(context.TODO(), appVersion)
 	require.Nil(t, err)

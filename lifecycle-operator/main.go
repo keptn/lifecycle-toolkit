@@ -49,7 +49,6 @@ import (
 	controlleroptions "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/options"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"go.opentelemetry.io/otel"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	metricsapi "go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -384,11 +383,14 @@ func main() {
 			"/mutate-v1-pod": {
 				Handler: pod_mutator.NewPodMutator(
 					mgr.GetClient(),
-					otel.Tracer("keptn/webhook"),
 					admission.NewDecoder(mgr.GetScheme()),
-					controllercommon.NewEventMultiplexer(webhookLogger, webhookRecorder, ceClient),
+					controllercommon.NewEventMultiplexer(
+						webhookLogger,
+						webhookRecorder,
+						ceClient),
 					webhookLogger,
-					env.SchedulingGatesEnabled),
+					env.SchedulingGatesEnabled,
+				),
 			},
 		})
 		setupLog.Info("starting webhook")

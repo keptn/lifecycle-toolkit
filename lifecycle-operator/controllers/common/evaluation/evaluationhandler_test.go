@@ -346,14 +346,15 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := v1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
-			handler := EvaluationHandler{
-				SpanHandler: &kltfake.ISpanHandlerMock{},
-				Log:         ctrl.Log.WithName("controller"),
-				EventSender: common.NewK8sSender(record.NewFakeRecorder(100)),
-				Client:      fake.NewClientBuilder().Build(),
-				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
-				Scheme:      scheme.Scheme,
-			}
+
+			handler := NewEvaluationHandler(
+				fake.NewClientBuilder().Build(),
+				common.NewK8sSender(record.NewFakeRecorder(100)),
+				ctrl.Log.WithName("controller"),
+				trace.NewNoopTracerProvider().Tracer("tracer"),
+				scheme.Scheme,
+				&kltfake.ISpanHandlerMock{})
+
 			name, err := handler.CreateKeptnEvaluation(context.TODO(), tt.object, tt.createAttr)
 			require.True(t, strings.Contains(name, tt.wantName))
 			require.Equal(t, tt.wantErr, err)

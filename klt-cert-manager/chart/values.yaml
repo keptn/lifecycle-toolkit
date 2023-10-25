@@ -36,8 +36,6 @@ kubernetesClusterDomain: cluster.local
 annotations: {}
 ## @param     podAnnotations adds pod level annotations
 podAnnotations: {}
-## @param  schedulingGatesEnabled enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version
-schedulingGatesEnabled: false
 
 ## @section Keptn Certificate Operator controller
 ## @extra    containerSecurityContext Sets security context for the cert manager

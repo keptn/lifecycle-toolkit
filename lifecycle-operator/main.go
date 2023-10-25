@@ -282,7 +282,7 @@ func main() {
 		spanHandler,
 		telemetry.GetOtelInstance(),
 		controllercommon.NewSchedulingGatesHandler(mgr.GetClient(),
-		workloadVersionLogger, env.SchedulingGatesEnabled),
+			workloadVersionLogger, env.SchedulingGatesEnabled),
 		otel.Tracer("keptn/workloadversion-controller"))
 	if err = (workloadVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadVersion")

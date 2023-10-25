@@ -45,8 +45,13 @@ var _ = BeforeSuite(func() {
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
 	TracerFactory := &common.TracerFactory{Tracer: tracer}
-	EvaluationHandler := evaluation.NewEvaluationHandler(k8sManager.GetClient(), controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller")), GinkgoLogr,
-		TracerFactory.GetTracer(traceComponentName), k8sManager.GetScheme(), &telemetry.SpanHandler{})
+	EvaluationHandler := evaluation.NewEvaluationHandler(
+		k8sManager.GetClient(),
+		controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller")),
+		GinkgoLogr,
+		TracerFactory.GetTracer(traceComponentName),
+		k8sManager.GetScheme(),
+		&telemetry.SpanHandler{})
 
 	// //setup controllers here
 	config.Instance().SetDefaultNamespace(KeptnNamespace)

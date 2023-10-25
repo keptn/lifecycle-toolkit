@@ -47,8 +47,6 @@ schedulingGatesEnabled: false
 ## @skip     containerSecurityContext.runAsGroup
 ## @skip     containerSecurityContext.runAsUser
 ## @skip     containerSecurityContext.seccompProfile.type
-
-
 containerSecurityContext:
   allowPrivilegeEscalation: false
   capabilities:

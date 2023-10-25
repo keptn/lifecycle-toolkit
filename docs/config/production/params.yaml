@@ -2,3 +2,7 @@ versions:
   - url: https://main.lifecycle.keptn.sh/docs
     version: development
 github_branch: page
+
+algolia_docsearch: false
+offlineSearch: false
+gcs_engine_id: '37a611225469c41ae' # needs to be replaced with a search engine ID from the keptn google account

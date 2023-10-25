@@ -100,7 +100,7 @@ Gain confidence in your work with pre-/post-deployment checks
 {{% readfile "partials/_index-observability-right.md" %}}
 </div>
 </div>
-<a class="btn -bg-green" href="./docs/getting-started/usecase_metrics/">
+<a class="btn -bg-green" href="./docs/getting-started/">
     Get Started!
 </a>
 </div>
@@ -119,7 +119,7 @@ Gain confidence in your work with pre-/post-deployment checks
 {{% readfile "partials/_index-gather-metrics-right.md" %}}
 </div>
 </div>
-<a class="btn -bg-green" href="./docs/getting-started/">
+<a class="btn -bg-green" href="./docs/getting-started/usecase_metrics/">
     Get Started!
 </a>
 </div>

@@ -146,8 +146,6 @@ spec:
       secret: slack-notification
 ```
 
-For more information about sending Slack notifications with Keptn, see
-[Implement Slack notifications](../implementing/slack.md).
 The code to be executed is expressed as a
 [Deno](https://deno.com)
 script, which uses JavaScript syntax.

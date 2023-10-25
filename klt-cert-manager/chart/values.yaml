@@ -16,10 +16,8 @@ global:
   ##
   imagePullSecrets: []
   ## @param global.commonLabels Common annotations to add to all Keptn resources. Evaluated as a template
-  ##
   commonLabels: {}
   ## @param global.commonAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
-  ##
   commonAnnotations: {}
 
 

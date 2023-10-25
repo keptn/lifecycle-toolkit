@@ -273,8 +273,17 @@ func main() {
 
 	workloadVersionLogger := ctrl.Log.WithName("KeptnWorkloadVersion Controller").V(determineWorkloadVersionControllerLogLevel(env.KeptnWorkloadVersionControllerLogLevel, env.KeptnWorkloadInstanceControllerLogLevel))
 	workloadVersionRecorder := mgr.GetEventRecorderFor("keptnworkloadversion-controller")
-	workloadVersionReconciler := keptnworkloadversion.NewReconciler(mgr.GetClient(), mgr.GetScheme(), controllercommon.NewEventMultiplexer(workloadVersionLogger, workloadVersionRecorder, ceClient),
-		workloadVersionLogger, keptnMeters, spanHandler, telemetry.GetOtelInstance(), controllercommon.NewSchedulingGatesHandler(mgr.GetClient(), workloadVersionLogger, env.SchedulingGatesEnabled), otel.Tracer("keptn/workloadversion-controller"))
+	workloadVersionReconciler := keptnworkloadversion.NewReconciler(
+		mgr.GetClient(),
+		mgr.GetScheme(),
+		controllercommon.NewEventMultiplexer(workloadVersionLogger, workloadVersionRecorder, ceClient),
+		workloadVersionLogger,
+		keptnMeters,
+		spanHandler,
+		telemetry.GetOtelInstance(),
+		controllercommon.NewSchedulingGatesHandler(mgr.GetClient(),
+		workloadVersionLogger, env.SchedulingGatesEnabled),
+		otel.Tracer("keptn/workloadversion-controller"))
 	if err = (workloadVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadVersion")
 		os.Exit(1)

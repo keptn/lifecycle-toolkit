@@ -14,11 +14,11 @@ metricsOperator:
 ## Current available global Docker image parameters: imageRegistry, imagePullSecrets and storageClass
 ##
 
-## @param global.imageRegistry Global Docker image registry
-## @param global.imagePullSecrets Global Docker registry secret names as an array
-##
 global:
+  ## @param global.imageRegistry Global Docker image registry
   imageRegistry: ""
+
+  ## @param global.imagePullSecrets Global Docker registry secret names as an array
   ## E.g.
   ## imagePullSecrets:
   ##   - myRegistryKeySecretName

@@ -8,7 +8,7 @@
 # Inputs: None
 
 # renovate: datasource=github-releases depName=elastic/crd-ref-docs
-GENERATOR_VERSION=v0.0.9
+GENERATOR_VERSION=v0.0.10
 API_DOMAIN="keptn.sh"
 OPERATOR_API_ROOT='lifecycle-operator/apis/'
 METRICS_API_ROOT='metrics-operator/api/'

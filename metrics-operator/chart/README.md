@@ -15,7 +15,7 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 
 | Name                       | Description                                                               | Value |
 | -------------------------- | ------------------------------------------------------------------------- | ----- |
-| `global.imageRegistry`     | Global Docker image registry                                              | `""`  |
+| `global.imageRegistry`     | Global container image registry                                           | `""`  |
 | `global.imagePullSecrets`  | Global Docker registry secret names as an array                           | `[]`  |
 | `global.commonLabels`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |
 | `global.commonAnnotations` | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |

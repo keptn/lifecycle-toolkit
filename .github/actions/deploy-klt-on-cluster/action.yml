@@ -18,10 +18,6 @@ inputs:
     required: false
     description: "Name of the kind cluster"
     default: "test-cluster"
-  helm-install:
-    required: false
-    description: "Install Keptn via helm instead of manifest if true"
-    default: "helm_on"
   scheduling-gates:
     required: false
     description: "Use scheduling gates instead of scheduler"
@@ -64,34 +60,7 @@ runs:
           kind load image-archive $image/$image -n ${{ inputs.cluster-name }}
         done
 
-    - name: Install lifecycle-toolkit with manifests
-      if: ${{  inputs.helm-install == 'helm_off' }}
-      shell: bash
-      run: |
-        echo "Installing Keptn using manifests"
-        sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/lifecycle-operator-manifest-test/release.yaml
-        sed -i 's/ghcr.io\/keptn\/deno-runtime:.*/localhost:5000\/keptn\/deno-runtime:${{ inputs.runtime_tag }}/g' \
-          ~/download/artifacts/lifecycle-operator-manifest-test/release.yaml
-        sed -i 's/ghcr.io\/keptn\/python-runtime:.*/localhost:5000\/keptn\/python-runtime:${{ inputs.runtime_tag }}/g' \
-          ~/download/artifacts/lifecycle-operator-manifest-test/release.yaml
-        kubectl create namespace keptn-lifecycle-toolkit-system
-        kubectl apply -f ~/download/artifacts/lifecycle-operator-manifest-test
-
-        sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/certificate-operator-manifest-test/release.yaml
-        kubectl apply -f ~/download/artifacts/certificate-operator-manifest-test
-        kubectl rollout status deployment certificate-operator -n keptn-lifecycle-toolkit-system -w
-
-        sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/metrics-operator-manifest-test/release.yaml
-        kubectl apply -f ~/download/artifacts/metrics-operator-manifest-test
-        kubectl rollout status deployment metrics-operator -n keptn-lifecycle-toolkit-system -w
-
-        sed -i 's/imagePullPolicy: Always/imagePullPolicy: Never/g' ~/download/artifacts/scheduler-manifest-test/release.yaml
-        kubectl apply -f ~/download/artifacts/scheduler-manifest-test
-        kubectl rollout status deployment scheduler -n keptn-lifecycle-toolkit-system -w
-        kubectl rollout status deployment lifecycle-operator -n keptn-lifecycle-toolkit-system -w
-
     - name: Install lifecycle-toolkit with helm
-      if: ${{ inputs.helm-install == 'helm_on' }}
       env:
         RELEASE_REGISTRY: "localhost:5000/keptn"
       shell: bash

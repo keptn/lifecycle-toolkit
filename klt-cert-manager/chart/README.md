@@ -6,14 +6,26 @@ resource.
 <!-- markdownlint-disable MD012 -->
 ## Parameters
 
+### Global parameters
+
+| Name                       | Description                                                               | Value |
+| -------------------------- | ------------------------------------------------------------------------- | ----- |
+| `global.imageRegistry`     | Global container image registry                                           | `""`  |
+| `global.imagePullSecrets`  | Global Docker registry secret names as an array                           | `[]`  |
+| `global.commonLabels`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |
+| `global.commonAnnotations` | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |
+
 ### Keptn Certificate Operator common
 
-| Name                        | Description                                    | Value |
-| --------------------------- | ---------------------------------------------- | ----- |
-| `nodeSelector`              | specify custom node selectors for cert manager | `{}`  |
-| `replicas`                  | customize number of replicas                   | `1`   |
-| `tolerations`               | customize tolerations for cert manager         | `[]`  |
-| `topologySpreadConstraints` | add topology constraints for cert manager      | `[]`  |
+| Name                        | Description                                    | Value           |
+| --------------------------- | ---------------------------------------------- | --------------- |
+| `nodeSelector`              | specify custom node selectors for cert manager | `{}`            |
+| `replicas`                  | customize number of replicas                   | `1`             |
+| `tolerations`               | customize tolerations for cert manager         | `[]`            |
+| `topologySpreadConstraints` | add topology constraints for cert manager      | `[]`            |
+| `kubernetesClusterDomain`   | overrides cluster.local                        | `cluster.local` |
+| `annotations`               | add deployment level annotations               | `{}`            |
+| `podAnnotations`            | adds pod level annotations                     | `{}`            |
 
 ### Keptn Certificate Operator controller
 
@@ -28,10 +40,3 @@ resource.
 | `livenessProbe`            | custom RBAC proxy liveness probe                                          |                                      |
 | `readinessProbe`           | custom manager readiness probe                                            |                                      |
 | `resources`                | custom limits and requests for manager container                          |                                      |
-
-### Global
-
-| Name                      | Description                            | Value           |
-| ------------------------- | -------------------------------------- | --------------- |
-| `imagePullSecrets`        | global value for image registry secret | `[]`            |
-| `kubernetesClusterDomain` | overrides domain.local                 | `cluster.local` |

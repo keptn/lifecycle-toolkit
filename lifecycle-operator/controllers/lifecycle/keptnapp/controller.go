@@ -19,7 +19,6 @@ package keptnapp
 import (
 	"context"
 	"fmt"
-
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
@@ -29,7 +28,6 @@ import (
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -50,6 +48,7 @@ type KeptnAppReconciler struct {
 	EventSender   controllercommon.IEvent
 	Log           logr.Logger
 	TracerFactory telemetry.TracerFactory
+	SpanHandler   telemetry.ISpanHandler
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnapps,verbs=get;list;watch;create;update;patch;delete
@@ -129,25 +128,14 @@ func (r *KeptnAppReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alpha3.KeptnApp) (*klcv1alpha3.KeptnAppVersion, error) {
-	ctxAppTrace, spanAppTrace := r.getTracer().Start(ctx, app.GetAppVersionName(), trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
-	defer spanAppTrace.End()
-
-	app.SetSpanAttributes(spanAppTrace)
-
-	// create TraceContext
-	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
-	traceContextCarrier := propagation.MapCarrier{}
-	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
-	appTraceContextCarrier := propagation.MapCarrier{}
-	otel.GetTextMapPropagator().Inject(ctxAppTrace, appTraceContextCarrier)
 
 	previousVersion := ""
 	if app.Spec.Version != app.Status.CurrentVersion {
 		previousVersion = app.Status.CurrentVersion
 	}
 
-	appVersion := app.GenerateAppVersion(previousVersion, traceContextCarrier)
-	appVersion.Spec.TraceId = appTraceContextCarrier
+	appVersion := app.GenerateAppVersion(previousVersion)
+
 	err := controllerutil.SetControllerReference(app, &appVersion, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference for AppVersion: "+appVersion.Name)

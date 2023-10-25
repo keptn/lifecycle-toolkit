@@ -24,7 +24,7 @@ func TestKeptnApp(t *testing.T) {
 	appVersionName := app.GetAppVersionName()
 	require.Equal(t, "app-version-6b86b273", appVersionName)
 
-	appVersion := app.GenerateAppVersion("prev", map[string]string{})
+	appVersion := app.GenerateAppVersion("prev")
 	require.Equal(t, KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{},

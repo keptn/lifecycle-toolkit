@@ -59,20 +59,20 @@ Make ANY Kubernetes Deployment observable
   read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
  </a>
 {{% /blocks/feature %}}
-{{% blocks/feature icon="home homedata" title="Deployment Data Access" %}}
+{{% blocks/feature icon="home homeorchestrate" title="Gather metrics from anywhere" %}}
 Standardize access for all Observability Data for K8s
 
 <!-- markdownlint-disable-next-line link-fragments -->
- <a class="btn btn-lg -bg-light mr-3 mb-4" href="#data-access">
+ <a class="btn btn-lg -bg-light mr-3 mb-4" href="#gather-metrics-from-anywhere">
   read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
  </a>
 {{% /blocks/feature %}}
 
-{{% blocks/feature icon="home homeorchestrate" title="Orchestrate Deployment Checks" %}}
+{{% blocks/feature icon="home homedata" title="Orchestrate Deployment Checks" %}}
 Gain confidence in your work with pre-/post-deployment checks
 
 <!-- markdownlint-disable-next-line link-fragments -->
- <a class="btn btn-lg -bg-light mr-3 mb-4" href="#deployment-check-orchestration">
+ <a class="btn btn-lg -bg-light mr-3 mb-4" href="#orchestrate-deployment-checks">
   read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
  </a>
 {{% /blocks/feature %}}
@@ -100,7 +100,7 @@ Gain confidence in your work with pre-/post-deployment checks
 {{% readfile "partials/_index-observability-right.md" %}}
 </div>
 </div>
-<a class="btn -bg-green" href="./docs/getting-started/">
+<a class="btn -bg-green" href="./docs/getting-started/usecase_metrics/">
     Get Started!
 </a>
 </div>
@@ -113,10 +113,10 @@ Gain confidence in your work with pre-/post-deployment checks
 <div class="mx-auto">
 <div class="d-flex flex-row flex-wrap" >
 <div class="whykeptn whykeptn-left w-25">
-{{% readfile "partials/_index-data-access-left.md" %}}
+{{% readfile "partials/_index-gather-metrics-left.md" %}}
 </div>
 <div class="whykeptn whykeptn-right ">
-{{% readfile "partials/_index-data-access-right.md" %}}
+{{% readfile "partials/_index-gather-metrics-right.md" %}}
 </div>
 </div>
 <a class="btn -bg-green" href="./docs/getting-started/">
@@ -137,7 +137,7 @@ Gain confidence in your work with pre-/post-deployment checks
 {{% readfile "partials/_index-deployment-checks-right.md" %}}
 </div>
 </div>
-<a class="btn -bg-green" href="./docs/getting-started/">
+<a class="btn -bg-green" href="./docs/implementing/tasks/">
     Get Started!
 </a>
 </div>

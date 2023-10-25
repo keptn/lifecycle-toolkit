@@ -11,7 +11,7 @@ This is because Keptn communicates with the Kubernetes scheduler
 for tasks such as enforcing checks natively,
 stopping a deployment from proceeding when criteria are not met,
 doing post-deployment evaluations
-and tracing all activities of all deployment workloads on the cluster.
+and tracing all activities of all deployment [workloads](https://kubernetes.io/docs/concepts/workloads/) on the cluster.
 
 Two methods are supported for installing Keptn:
 

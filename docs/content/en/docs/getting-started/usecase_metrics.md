@@ -55,7 +55,7 @@ you may want to do the other exercises:
   [Manage release lifecycle](../intro/usecase-orchestrate.md),
   you learn how to implement
   pre- and post-deployment tasks and evaluations
-  to orchestrate the flow of all the `workloads`
+  to orchestrate the flow of all the [workloads](https://kubernetes.io/docs/concepts/workloads/)
   that are part of your `application`.
 
 The steps to implement metrics in an existing cluster are:

@@ -11,7 +11,7 @@ of what Kubernetes does in the context of a Deployment.
 To do this,
 Keptn introduces the concept of an `application`,
 which is an abstraction that connects multiple
-Workloads that logically belong together,
+[Workloads](https://kubernetes.io/docs/concepts/workloads/) that logically belong together,
 even if they use different deployment strategies.
 
 This means that:
@@ -55,7 +55,7 @@ DORA metrics provide information such as:
 Keptn starts collecting these metrics
 as soon as you apply
 [basic annotations](integrate/#basic-annotations)
-to the Workload resource.
+to the [workload](https://kubernetes.io/docs/concepts/workloads/).
 Metrics are collected only for the resources
 that are annotated.
 

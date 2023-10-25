@@ -14,11 +14,11 @@ and questions that you have.
 
 Before you begin the migration project,
 we suggest that you run through the exercises in
-[Getting started](../../getting-started/)
+[Getting started](../getting-started/)
 to familiarize yourself with how Keptn works.
 When you are ready to begin the migration,
 follow the instructions in
-[Installation and upgrade](../../install)
+[Installation and upgrade](../install)
 to set up your Kubernetes cluster
 and install Keptn on it.
 
@@ -44,11 +44,11 @@ Some key points:
   [shipyard.yaml](https://keptn.sh/docs/1.0.x/reference/files/shipyard/)
   file as Keptn v1 does.
   * See the
-    [CRD Reference](../../yaml-crd-ref)
+    [CRD Reference](../yaml-crd-ref)
     section for pages that describe the Keptn manifests
     that you populate manually for Keptn.
   * See the
-    [API Reference](../../crd-ref)
+    [API Reference](../crd-ref)
     for a comprehensive reference to all resources
     defined for Keptn.
 
@@ -61,7 +61,7 @@ Some key points:
   the user-defined requirements.
 
 * Keptn operates on a
-  [KeptnApp](../../yaml-crd-ref/app.md)
+  [KeptnApp](../yaml-crd-ref/app.md)
   resource
   that is an amalgamation of multiple Kubernetes workloads,
   which together comprise the released application.
@@ -93,7 +93,7 @@ Some key points:
 
 For in-depth information about Keptn components
 and how they work, see the
-[Architecture](../../architecture)
+[Architecture](../architecture)
 section.
 
 ## Disposition of Keptn v1 components in Keptn
@@ -138,10 +138,10 @@ and translate that into an appropriate resource.
 The closest analogy is a Kubernetes
 [workload](https://kubernetes.io/docs/concepts/workloads/)
 but some services may be translated into
-[KeptnTaskDefinition](../../yaml-crd-ref/app.md)
+[KeptnTaskDefinition](../yaml-crd-ref/app.md)
 or other resources.
  See
-[Working with Keptn tasks](../../implementing/tasks/)
+[Working with Keptn tasks](../implementing/tasks/)
 for more information.
 
 For example:
@@ -169,7 +169,7 @@ when architecting the migration:
 
 * A **deployment stage** -- may define sequences of tasks
     that should be translated into
-    [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
+    [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
     resources that are executed pre- and post-deployment
 * A **testing stage** may define sequences of tasks
     that should be translated into `KeptnTaskDefinition` resources
@@ -198,7 +198,7 @@ In this way, you can define arbitrary sequences of any tasks
 at any length and also link (or chain) sequences together
 to form (primitive) workflows.
 When migrating, these sequences of tasks can often be translated into
-[KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
+[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
 resources that are defined to run either pre- or post-deployment
 of the pod-scheduling phase.
 
@@ -232,13 +232,13 @@ that is appropriate for the activity:
   or [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
   workload.
   You can code
-  [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
+  [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
   and
-  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
+  [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
   resources that are configured
   to run either pre- or post-deployment tasks
 * An **evaluation task** becomes a
-  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
+  [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
   resource.
 * All other standard tasks
   (**action**, **approval**, **get-action**, **rollback**,
@@ -270,7 +270,7 @@ such as Prometheus, Dynatrace, or Datadog,
 which is configured as a Keptn integration.
 
 When migrating to Keptn, you need to define a
-[KeptnMetricsProvider](../../yaml-crd-ref/metricsprovider.md)
+[KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md)
 resource for the data provider(s) you are using.
 Note that Keptn allows you to support multiple data providers
 and multiple instances of each data provider for your SLIs
@@ -279,22 +279,22 @@ whereas Keptn v1 only allows you to use one SLI per project.
 The queries defined for the Keptn v1 SLIs
 should be translated into an appropriate Keptn resource:
 
-* [KeptnMetric](../../yaml-crd-ref/metric.md)
+* [KeptnMetric](../yaml-crd-ref/metric.md)
 resources
   to do
-  [evaluations](../../implementing/evaluations.md)
+  [evaluations](../implementing/evaluations.md)
   with
-  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
+  [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
   resources.
-* [AnalysisValueTemplate](../../yaml-crd-ref/analysisvaluetemplate.md)
+* [AnalysisValueTemplate](../yaml-crd-ref/analysisvaluetemplate.md)
   resources to do
-  [analyses](../../implementing/slo)
+  [analyses](../implementing/slo)
   with
-  [AnalysisDefinition](../../yaml-crd-ref/analysisdefinition.md)
+  [AnalysisDefinition](../yaml-crd-ref/analysisdefinition.md)
   resources.
   Tools are provided to convert Keptn v1 SLIs and SLOs
   to Keptn resources; see
-  [Convert Keptn v1 SLIs/SLOs to Analysis resources](../metrics-observe/#convert-keptn-v1-slisslos-to-analysis-resources)
+  [Convert Keptn v1 SLIs/SLOs to Analysis resources](./metrics-observe.md#convert-keptn-v1-slisslos-to-analysis-resources)
   for more information.
 
 ### SLOs
@@ -304,21 +304,21 @@ Keptn v1
 can be implemented on Keptn as evaluations or analyses:
 
 * Simple evaluations of an SLI can be implemented as
-  [Evaluations](../../implementing/evaluations.md)
+  [Evaluations](../implementing/evaluations.md)
   which are defined as
-  [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
+  [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
   resources.
 
 * Complex analyses that use weighting and scoring
   and analyze the value over a specified time frame
   can be implemented as
-  [Analyses](../../implementing/slo)
+  [Analyses](../implementing/slo)
   that are defined in
-  [AnalysisDefinition](../../yaml-crd-ref/analysisdefinition.md)
+  [AnalysisDefinition](../yaml-crd-ref/analysisdefinition.md)
   resources.
   Tools are provided to convert Keptn v1 SLIs and SLOs
   to Keptn resources; see
-  [Convert Keptn v1 SLIs/SLOs to Analysis resources](../metrics-observe/#convert-keptn-v1-slisslos-to-analysis-resources)
+  [Convert Keptn v1 SLIs/SLOs to Analysis resources](./metrics-observe.md#convert-keptn-v1-slisslos-to-analysis-resources)
   for more information.
 
 ### Remediation
@@ -339,7 +339,7 @@ but it does provide limited "Day 2" facilities:
   and automatically add those resources to your configuration
   based on the `ReplicaSet` resources you have defined.
   See
-  [Using the HorizontalPodAutoscaler](../../implementing/evaluatemetrics.md/#using-the-horizontalpodautoscaler)
+  [Using the HorizontalPodAutoscaler](../implementing/evaluatemetrics.md/#using-the-horizontalpodautoscaler)
   for more information.
 
 ### Integrations and services in JES
@@ -349,7 +349,7 @@ Most functionality coded using the Keptn v1
 (Job Executor Service) facility
 can simply be moved into a `KeptnTaskDefinition` resource
 that uses the
-[container-runtime runner](../../yaml-crd-ref/taskdefinition.md/#synopsis-for-container-runtime).
+[container-runtime runner](../yaml-crd-ref/taskdefinition.md/#synopsis-for-container-runtime).
 If the JES container code is written in JavaScript or TypeScript,
 you may be able to use the `deno-runtime` runner.
 If the JES container code is written in Python 3,

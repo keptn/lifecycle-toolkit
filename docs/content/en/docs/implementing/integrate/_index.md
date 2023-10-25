@@ -122,7 +122,7 @@ annotation/label is populated:
   but not the combined workloads that constitute your deployed application.
 
 See
-[Keptn Applications and Keptn Workloads](../../architecture/keptn-apps/)
+[Keptn Applications and Keptn Workloads](../../architecture/keptn-apps.md)
 for architectural information about how `KeptnApp` and `KeptnWorkloads`
 are implemented.
 

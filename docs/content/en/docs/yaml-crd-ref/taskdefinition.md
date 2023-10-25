@@ -610,6 +610,6 @@ This modifies the synopsis in the following ways:
 * [KeptnApp](app.md)
 * [Working with tasks](../implementing/tasks)
 * [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
-* [KeptnApp and KeptnWorkload resources](../architecture/keptn-apps/).
+* [KeptnApp and KeptnWorkload resources](../architecture/keptn-apps.md).
 * [Orchestrate deployment checks](../intro/usecase-orchestrate.md)
 * [Executing sequential tasks](../implementing/tasks/#executing-sequential-tasks)

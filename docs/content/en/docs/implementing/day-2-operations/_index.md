@@ -11,7 +11,7 @@ Keptn also assists you with day 2 operations for your application.
 Tasks that fall under this category include:
 
 * Updating the version of one or more workloads that are part of
-the same application.
+the same application
 * Adding a new workload to an existing application
 * Monitoring the health of your application using `KeptnMetrics`
 * Optimizing the resource usage of your applications by integrating
@@ -38,7 +38,7 @@ and thus re-runs the pre- and post-tasks and evaluations for the application.
 If the version label/annotation does not change, Keptn does not consider
 a change of a workload configuration to be an update, and therefore no pre-
 and post-tasks/evaluations are executed because they have already been
-completed for the related `WorkloadVersion`.
+completed for the version set in the labels/annotations.
 
 To illustrate the update of a workload,
 let's assume the following example, including
@@ -125,7 +125,7 @@ spec:
 ```
 
 * **Update the configuration *and* the version label:**
-   Doing so causes the`KeptnWorkload` that is associated
+   Doing so causes the `KeptnWorkload` that is associated
     with the `podtato-head-frontend` deployment to be updated,
     and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`
     are executed before the updated pods are scheduled.
@@ -185,6 +185,7 @@ and `post-deployment-loadtests` will run again.
 
 If you are using the [automatic app discovery](../integrate#use-keptn-automatic-app-discovery),
 you do not need to update the `KeptnApp` resource.
+Keptn will take care of that for you.
 
 After applying the updated manifests, you can monitor the status
 of the application and related workloads using the following commands:
@@ -223,7 +224,7 @@ you must:
 `keptn.sh/app`/`app.kubernetes.io/part-of` label/annotation is present
 on the new workload
 * Add the new workload to the `KeptnApp`,
-if you have previously defined the `KeptnApp resource manually.
+if you have previously defined the `KeptnApp` resource manually.
 If the application has been discovered automatically, this step is not needed.
 
 For example, to add the deployment `podtato-head-left-leg` to the

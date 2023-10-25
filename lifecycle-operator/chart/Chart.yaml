@@ -50,4 +50,4 @@ appVersion: "v0.8.2" # x-release-please-version
 dependencies:
   - name: common
     repository: "https://charts.lifecycle.keptn.sh"
-    version: 0.1.x
+    version: 0.1.0

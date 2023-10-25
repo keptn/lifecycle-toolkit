@@ -17,16 +17,15 @@ resource.
 
 ### Keptn Certificate Operator common
 
-| Name                        | Description                                                                                                                                     | Value           |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| `nodeSelector`              | specify custom node selectors for cert manager                                                                                                  | `{}`            |
-| `replicas`                  | customize number of replicas                                                                                                                    | `1`             |
-| `tolerations`               | customize tolerations for cert manager                                                                                                          | `[]`            |
-| `topologySpreadConstraints` | add topology constraints for cert manager                                                                                                       | `[]`            |
-| `kubernetesClusterDomain`   | overrides cluster.local                                                                                                                         | `cluster.local` |
-| `annotations`               | add deployment level annotations                                                                                                                | `{}`            |
-| `podAnnotations`            | adds pod level annotations                                                                                                                      | `{}`            |
-| `schedulingGatesEnabled`    | enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version | `false`         |
+| Name                        | Description                                    | Value           |
+| --------------------------- | ---------------------------------------------- | --------------- |
+| `nodeSelector`              | specify custom node selectors for cert manager | `{}`            |
+| `replicas`                  | customize number of replicas                   | `1`             |
+| `tolerations`               | customize tolerations for cert manager         | `[]`            |
+| `topologySpreadConstraints` | add topology constraints for cert manager      | `[]`            |
+| `kubernetesClusterDomain`   | overrides cluster.local                        | `cluster.local` |
+| `annotations`               | add deployment level annotations               | `{}`            |
+| `podAnnotations`            | adds pod level annotations                     | `{}`            |
 
 ### Keptn Certificate Operator controller
 

@@ -38,15 +38,12 @@ var _ = Describe("App", Ordered, func() {
 			It("should update the spans", func() {
 				By("creating a new app version")
 				common.AssertResourceUpdated(ctx, k8sClient, instance)
-				fmt.Println("spanned ", instance.Name)
 			})
 
 		})
 		AfterEach(func() {
 			// Remember to clean up the cluster after each test
 			common.DeleteAppInCluster(ctx, k8sClient, instance)
-			// Reset span recorder after each spec
-			common.ResetSpanRecords(tracer, spanRecorder)
 		})
 
 	})

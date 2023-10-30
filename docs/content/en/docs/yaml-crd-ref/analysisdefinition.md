@@ -85,10 +85,10 @@ spec:
           * `inRange` -- value is inclusively in the defined range
           * `notInRange` --  value is exclusivly out of the defined range
 
-              Each of these operators require two operators:
+             Each of these operators require two arguments:
 
-                  * `lowBound` -- minimum value of the range included or excluded
-                  * `highBound` -- maximum value of the range included or excluded
+                 * `lowBound` -- minimum value of the range included or excluded
+                 * `highBound` -- maximum value of the range included or excluded
         <!-- markdownlint-disable -->
         * **warning** (optional) -- criteria for a warning,
           specified in the same way as the `failure` field.

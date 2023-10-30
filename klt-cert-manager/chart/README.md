@@ -29,14 +29,15 @@ resource.
 
 ### Keptn Certificate Operator controller
 
-| Name                       | Description                                                               | Value                                |
-| -------------------------- | ------------------------------------------------------------------------- | ------------------------------------ |
-| `containerSecurityContext` | Sets security context for the cert manager                                |                                      |
-| `env.labelSelectorKey`     | specify the label selector to find resources to generate certificates for | `keptn.sh/inject-cert`               |
-| `env.labelSelectorValue`   | specify the value for the label selector                                  | `true`                               |
-| `image.repository`         | specify repo for manager image                                            | `ghcr.io/keptn/certificate-operator` |
-| `image.tag`                | select tag for manager container                                          | `v1.2.0`                             |
-| `imagePullPolicy`          | select image pull policy for manager container                            | `Always`                             |
-| `livenessProbe`            | custom RBAC proxy liveness probe                                          |                                      |
-| `readinessProbe`           | custom manager readiness probe                                            |                                      |
-| `resources`                | custom limits and requests for manager container                          |                                      |
+| Name                       | Description                                                               | Value                        |
+| -------------------------- | ------------------------------------------------------------------------- | ---------------------------- |
+| `containerSecurityContext` | Sets security context for the cert manager                                |                              |
+| `env.labelSelectorKey`     | specify the label selector to find resources to generate certificates for | `keptn.sh/inject-cert`       |
+| `env.labelSelectorValue`   | specify the value for the label selector                                  | `true`                       |
+| `image.registry`           | specify repo for manager image                                            | `ghcr.io`                    |
+| `image.repository`         | specify repo for manager image                                            | `keptn/certificate-operator` |
+| `image.tag`                | select tag for manager container                                          | `v1.2.0`                     |
+| `imagePullPolicy`          | select image pull policy for manager container                            | `Always`                     |
+| `livenessProbe`            | custom RBAC proxy liveness probe                                          |                              |
+| `readinessProbe`           | custom manager readiness probe                                            |                              |
+| `resources`                | custom limits and requests for manager container                          |                              |

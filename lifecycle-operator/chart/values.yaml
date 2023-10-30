@@ -72,7 +72,7 @@ lifecycleOperator:
       type: RuntimeDefault
 ## @param   lifecycleOperator.env.functionRunnerImage specify image for deno task runtime
   env:
-    functionRunnerImage: ghcr.io/keptn/deno-runtime:v1.0.1
+    functionRunnerImage: ghcr.io/keptn/deno-runtime:v1.0.2
 ## @param   lifecycleOperator.env.keptnAppControllerLogLevel sets the log level of Keptn App Controller
     keptnAppControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnAppCreationRequestControllerLogLevel sets the log level of Keptn App Creation Request Controller

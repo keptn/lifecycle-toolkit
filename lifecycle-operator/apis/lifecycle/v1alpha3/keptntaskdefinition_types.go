@@ -110,10 +110,10 @@ type ContainerSpec struct {
 }
 
 type AutomountServiceAccountTokenSpec struct {
-	Type *bool `json:"type,omitempty"`
+	Type *bool `json:"type"`
 }
 type ServiceAccountSpec struct {
-	Name string `json:"name,omitempty"`
+	Name string `json:"name"`
 }
 
 // KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
@@ -153,4 +153,18 @@ type KeptnTaskDefinitionList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnTaskDefinition{}, &KeptnTaskDefinitionList{})
+}
+
+func (d *KeptnTaskDefinition) GetServiceAccount() string {
+	if d.Spec.ServiceAccount == nil {
+		return ""
+	}
+	return d.Spec.ServiceAccount.Name
+}
+
+func (d *KeptnTaskDefinition) GetAutomountServiceAccountToken() *bool {
+	if d.Spec.AutomountServiceAccountToken == nil {
+		return nil
+	}
+	return d.Spec.AutomountServiceAccountToken.Type
 }

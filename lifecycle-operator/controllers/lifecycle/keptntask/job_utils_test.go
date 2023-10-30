@@ -11,6 +11,7 @@ import (
 	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	batchv1 "k8s.io/api/batch/v1"
+	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -201,6 +202,81 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 	require.Equal(t, apicommon.StateSucceeded, task.Status.Status)
 }
 
+func TestKeptnTaskReconciler_generateJob(t *testing.T) {
+	namespace := "default"
+	taskName := "my-task"
+	svcAccname := "svcAccname"
+	taskDefinitionName := "my-task-definition"
+	token := true
+
+	taskDefinition := makeTaskDefinitionWithServiceAccount(taskDefinitionName, namespace, svcAccname, &token)
+
+	serviceAccount := makeServiceAccount(svcAccname, namespace, &token)
+	fakeClient := fakeclient.NewClient(serviceAccount, taskDefinition)
+
+	taskDefinition.Spec.ServiceAccount.Name = svcAccname
+	taskDefinition.Spec.Container = containerBuilder()
+
+	err := fakeClient.Status().Update(context.TODO(), taskDefinition)
+	require.Nil(t, err)
+
+	r := &KeptnTaskReconciler{
+		Client:      fakeClient,
+		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		Log:         ctrl.Log.WithName("task-controller"),
+		Scheme:      fakeClient.Scheme(),
+	}
+
+	task := makeTask(taskName, namespace, taskDefinitionName)
+
+	err = fakeClient.Create(context.TODO(), task)
+	require.Nil(t, err)
+
+	ctx := context.TODO()
+	request := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: namespace,
+		},
+	}
+
+	builderOpt := BuilderOptions{
+		Client:        r.Client,
+		req:           request,
+		Log:           r.Log,
+		task:          task,
+		containerSpec: taskDefinition.Spec.Container,
+		funcSpec:      controllercommon.GetRuntimeSpec(taskDefinition),
+		eventSender:   r.EventSender,
+		Image:         controllercommon.GetRuntimeImage(taskDefinition),
+		MountPath:     controllercommon.GetRuntimeMountPath(taskDefinition),
+		// ConfigMap:     taskDefinition.Status.Function.ConfigMap,
+	}
+
+	job := makeJobWithServiceAccount("test-job", namespace, svcAccname, task, &token)
+
+	builder := NewJobRunnerBuilder(builderOpt)
+
+	container, _ := builder.CreateContainer(ctx)
+	job.Spec.Template.Spec.Containers = []corev1.Container{*container}
+	job.Spec.Template.Spec.Volumes = []corev1.Volume{}
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: namespace,
+		Name:      task.Name,
+	}, task)
+	require.Nil(t, err)
+
+	err = fakeClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: namespace,
+		Name:      task.Name,
+	}, taskDefinition)
+	require.Nil(t, err)
+
+	job, err = r.generateJob(ctx, task, taskDefinition, request)
+	require.Nil(t, err)
+	require.NotNil(t, job, "generateJob function return a valid Job")
+}
+
 func makeJob(name, namespace string, status batchv1.JobStatus) *batchv1.Job {
 	return &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
@@ -271,5 +347,75 @@ func makeConfigMap(name, namespace string) *v1.ConfigMap {
 		Data: map[string]string{
 			"code": "console.log('hello');",
 		},
+	}
+}
+
+func makeTaskDefinitionWithServiceAccount(name, namespace, serviceAccountName string, token *bool) *klcv1alpha3.KeptnTaskDefinition {
+	return &klcv1alpha3.KeptnTaskDefinition{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: namespace,
+			Labels: map[string]string{
+				"label1": "label2",
+			},
+			Annotations: map[string]string{
+				"annotation1": "annotation2",
+			},
+		},
+		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+			ServiceAccount: &klcv1alpha3.ServiceAccountSpec{
+				Name: serviceAccountName,
+			},
+			AutomountServiceAccountToken: &klcv1alpha3.AutomountServiceAccountTokenSpec{
+				Type: token,
+			},
+		},
+	}
+}
+
+func makeJobWithServiceAccount(name string, namespace string, serviceaccount string, task *klcv1alpha3.KeptnTask, automountServiceAccountToken *bool) *batchv1.Job {
+	return &batchv1.Job{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: task.Namespace,
+			Labels:    task.Labels,
+		},
+		Spec: batchv1.JobSpec{
+			Template: corev1.PodTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels:      task.Labels,
+					Annotations: task.Annotations,
+				},
+				Spec: corev1.PodSpec{
+					RestartPolicy:                "OnFailure",
+					ServiceAccountName:           serviceaccount,
+					AutomountServiceAccountToken: automountServiceAccountToken,
+				},
+			},
+			BackoffLimit:          task.Spec.Retries,
+			ActiveDeadlineSeconds: task.GetActiveDeadlineSeconds(),
+		},
+	}
+}
+
+func containerBuilder() *klcv1alpha3.ContainerSpec {
+	return &klcv1alpha3.ContainerSpec{
+		Container: &v1.Container{},
+	}
+}
+
+func makeServiceAccount(name string, namespace string, serviceAccountToken *bool) *v1.ServiceAccount {
+	return &v1.ServiceAccount{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: namespace,
+			Labels: map[string]string{
+				"label1": "label2",
+			},
+			Annotations: map[string]string{
+				"annotation1": "annotation2",
+			},
+		},
+		AutomountServiceAccountToken: serviceAccountToken,
 	}
 }

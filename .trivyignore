@@ -1,2 +1,7 @@
 # DoS vulnerability in otelhttp in scheduler
+# The scheduler uses an old version of k8s,
+# what forces us to use an older version of OTel
+# which has the vulnerability.
+# As the scheduler will be removed soon, there is no need
+# to invest time to fix it.
 CVE-2023-45142

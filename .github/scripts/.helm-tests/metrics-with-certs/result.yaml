@@ -1811,7 +1811,7 @@ spec:
           value: "0"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: testreg/keptn/metrics-operator:v0.8.2
+        image: testreg/keptn/metrics-operator:v0.8.3
         imagePullPolicy: Never
         name: metrics-operator
         ports:

@@ -3,7 +3,6 @@ global:
   indexerConfig:
     type: "local"
     metricsDirectory: collected-metrics
-  prometheusURL: http://localhost:9090
 
 jobs:
   - name: keptn-metrics

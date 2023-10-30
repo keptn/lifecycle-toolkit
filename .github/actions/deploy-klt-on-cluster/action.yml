@@ -81,12 +81,12 @@ runs:
             helm dependency build
             cd -  # Return to the previous directory
         done
-
-        cd ./chart
-
+        
+        cd .github/actions/deploy-klt-on-cluster
+        
         if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_on" ]; then
           echo "lifecycleOperator:" >> values.yaml
-          echo "  allowedNamespaces: [allowed-ns-test]" >> tmp-values.yaml
+          echo "  allowedNamespaces: [allowed-ns-test]" >> values.yaml
         fi
 
         if [ "${{ inputs.scheduling-gates }}" == "gates_on" ]; then
@@ -97,7 +97,9 @@ runs:
         fi
         echo "installing with values.yaml file:"
         cat values.yaml
-        
+
+        cd ../../../chart
+
         helm install -n keptn-lifecycle-toolkit-system --create-namespace keptn ./ \
           --values values.yaml \
           --set lifecycleOperator.scheduler.image.tag=${{ inputs.runtime_tag }} \

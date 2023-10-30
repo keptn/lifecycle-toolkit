@@ -101,7 +101,7 @@ lifecycleOperator:
 ## @param   lifecycleOperator.image.repository specify registry for manager image
     repository: ghcr.io/keptn/lifecycle-operator
 ## @param   lifecycleOperator.image.tag  select tag for manager image
-    tag: v0.8.2
+    tag: v0.8.2 # x-release-please-version
 ## @param   lifecycleOperator.imagePullPolicy specify pull policy for manager image
   imagePullPolicy: Always
 ## @extra  lifecycleOperator.livenessProbe custom livenessprobe for manager container
@@ -206,7 +206,7 @@ scheduler:
 ## @param scheduler.image.repository set image repository for scheduler
     repository: ghcr.io/keptn/scheduler
 ## @param scheduler.image.tag set image tag for scheduler
-    tag: v0.8.2
+    tag: v0.8.2 # x-release-please-version
 ## @param scheduler.imagePullPolicy set image pull policy for scheduler
   imagePullPolicy: Always
 ## @extra scheduler.livenessProbe customizable liveness probe for the scheduler

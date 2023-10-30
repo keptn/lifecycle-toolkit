@@ -127,7 +127,7 @@ image:
 ## @param   image.repository specify registry for manager image
   repository: ghcr.io/keptn/metrics-operator
 ## @param   image.tag select tag for manager image
-  tag: v0.8.2
+  tag: v0.8.2 # x-release-please-version
 ## @extra  livenessProbe custom livenessprobe for manager container
 ## @skip   livenessProbe.httpGet.path
 ## @skip   livenessProbe.httpGet.port

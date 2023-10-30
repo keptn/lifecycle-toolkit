@@ -10,7 +10,8 @@ metricsOperator:
     enableKeptnAnalysis: "true"
 
 lifecycleOperator:
-    lifecycleOperator:
-      imagePullPolicy: Never
-    scheduler:
-      imagePullPolicy: Never
+  lifecycleOperator:
+    imagePullPolicy: Never
+  scheduler:
+    imagePullPolicy: Never
+    

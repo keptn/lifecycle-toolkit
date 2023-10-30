@@ -91,10 +91,10 @@ runs:
         if [ "${{ inputs.scheduling-gates }}" == "gates_on" ]; then
           echo "  schedulingGatesEnabled: true" >> values.yaml
         fi
-        
+
         TAG=${{ inputs.runtime_tag }}
         envsubst < values.yaml
-        
+ 
         echo "installing with values.yaml file:"
         cat values.yaml
 

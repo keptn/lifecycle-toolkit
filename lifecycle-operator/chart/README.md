@@ -53,7 +53,7 @@ and application health checks
 | `lifecycleOperator.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller                                                                         | `0`                                   |
 | `lifecycleOperator.env.otelCollectorUrl`                              | Sets the URL for the open telemetry collector                                                                          | `otel-collector:4317`                 |
 | `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                                                                  | `ghcr.io/keptn/python-runtime:v1.0.0` |
-| `lifecycleOperator.image.registry`                                    | specify repo for manager image                                                                                         | `ghcr.io`                             |
+| `lifecycleOperator.image.registry`                                    | specify the container registry for the lifecycle-operator image                                                        | `ghcr.io`                             |
 | `lifecycleOperator.image.repository`                                  | specify registry for manager image                                                                                     | `keptn/lifecycle-operator`            |
 | `lifecycleOperator.image.tag`                                         | select tag for manager image                                                                                           | `v0.8.2`                              |
 | `lifecycleOperator.imagePullPolicy`                                   | specify pull policy for manager image                                                                                  | `Always`                              |
@@ -84,7 +84,7 @@ and application health checks
 | `scheduler.replicas`                                         | modifies replicas                                              | `1`                   |
 | `scheduler.containerSecurityContext`                         | Sets security context                                          |                       |
 | `scheduler.env.otelCollectorUrl`                             | sets url for open telemetry collector                          | `otel-collector:4317` |
-| `scheduler.image.registry`                                   | specify repo for manager image                                 | `ghcr.io`             |
+| `scheduler.image.registry`                                   | specify the container registry for the scheduler image         | `ghcr.io`             |
 | `scheduler.image.repository`                                 | set image repository for scheduler                             | `keptn/scheduler`     |
 | `scheduler.image.tag`                                        | set image tag for scheduler                                    | `v0.8.2`              |
 | `scheduler.imagePullPolicy`                                  | set image pull policy for scheduler                            | `Always`              |

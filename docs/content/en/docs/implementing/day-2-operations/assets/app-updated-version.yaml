@@ -1,0 +1,16 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnApp
+metadata:
+  name: podtato-head
+  namespace: podtato-kubectl
+spec:
+  version: "0.1.0"
+  preDeploymentTasks:
+    - wait-for-prometheus
+  postDeploymentTasks:
+    - post-deployment-loadtests
+  workloads:
+    - name: podtato-head-frontend
+      version: 0.2.0 # Updated version. Needs to be set to the value of the 'app.kubernetes.io/version' label of the updated deployment
+    - name: podtato-head-hat
+      version: 1.1.1

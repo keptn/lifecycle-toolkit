@@ -95,7 +95,9 @@ runs:
           fi
           echo "  schedulingGatesEnabled: true" >> values.yaml
         fi
-
+        echo "installing with values.yaml file:"
+        cat values.yaml
+        
         helm install -n keptn-lifecycle-toolkit-system --create-namespace keptn ./ \
           --values values.yaml \
           --set lifecycleOperator.scheduler.image.tag=${{ inputs.runtime_tag }} \

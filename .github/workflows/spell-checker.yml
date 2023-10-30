@@ -2,7 +2,8 @@ name: Spell Checker
 on:
   pull_request_target:
     branches:
-    - "**"
+    - "main"
+    - "page"
     types:
     - 'opened'
     - 'reopened'

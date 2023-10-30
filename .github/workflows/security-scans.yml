@@ -138,22 +138,13 @@ jobs:
           echo "$TAG"
           mkdir scans
 
-          helm template keptn-test --namespace helmtests -f ./chart/values.yaml ./chart \
+          helm template keptn-test --namespace helmtests -f .github/actions/deploy-klt-on-cluster/values.yaml ./chart \
             --set lifecycleOperator.lifecycleOperator.image.tag=$TAG \
-            --set lifecycleOperator.lifecycleOperator.image.repository="localhost:5000/keptn/lifecycle-operator" \
-            --set lifecycleOperator.scheduler.imagePullPolicy=Never \
             --set lifecycleOperator.scheduler.image.tag=$TAG \
-            --set lifecycleOperator.scheduler.image.repository="localhost:5000/keptn/scheduler" \
-            --set lifecycleOperator.lifecycleOperator.imagePullPolicy=Never \
             --set lifecycleOperator.lifecycleOperator.env.functionRunnerImage=localhost:5000/keptn/deno-runtime:$TAG \
             --set lifecycleOperator.lifecycleOperator.env.pythonRunnerImage=localhost:5000/keptn/python-runtime:$TAG \
-            --set certManager.imagePullPolicy=Never \
             --set certManager.image.tag=$TAG \
-            --set certManager.image.repository="localhost:5000/keptn/certificate-operator" \
-            --set metricsOperator.imagePullPolicy=Never \
-            --set metricsOperator.env.enableKeptnAnalysis="true" \
-            --set metricsOperator.image.tag=$TAG \
-            --set metricsOperator.image.repository="localhost:5000/keptn/metrics-operator" > ./scans/result.yaml
+            --set metricsOperator.image.tag=$TAG > ./scans/result.yaml
 
       - name: KICS Scan
         if: matrix.tool == 'kics'

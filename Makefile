@@ -56,7 +56,7 @@ integration-test-allowed-namespaces-local: install-prometheus
 load-test:
 	kubectl apply -f ./test/load/assets/templates/namespace.yaml
 	kubectl apply -f ./test/load/assets/templates/provider.yaml
-	kube-burner init -c ./test/load/cfg.yml --metrics-profile ./test/load/metrics.yml
+	kube-burner init -c ./test/load/cfg.yml --metrics-profile ./test/load/metrics.yml --prometheus-url http://localhost:9090
 
 .PHONY: install-prometheus
 install-prometheus:

@@ -1144,27 +1144,21 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, ch
 	}}
 
 	fakeClient := fake.NewClient(objs...)
-
-	SchedulingGatesHandler := &fake.ISchedulingGatesHandlerMock{
-		EnabledFunc: func() bool {
-			return false
-		},
-	}
-
 	recorder := record.NewFakeRecorder(100)
 
 	r := &KeptnWorkloadVersionReconciler{
-		Client:                 fakeClient,
-		Scheme:                 scheme.Scheme,
-		EventSender:            controllercommon.NewK8sSender(recorder),
-		Log:                    ctrl.Log.WithName("test-appController"),
-		Meters:                 controllercommon.InitAppMeters(),
-		SpanHandler:            &telemetry.SpanHandler{},
-		TracerFactory:          tf,
-		SchedulingGatesHandler: SchedulingGatesHandler,
+		Client:        fakeClient,
+		Scheme:        scheme.Scheme,
+		EventSender:   controllercommon.NewK8sSender(recorder),
+		Log:           ctrl.Log.WithName("test-appController"),
+		Meters:        controllercommon.InitAppMeters(),
+		SpanHandler:   &telemetry.SpanHandler{},
+		TracerFactory: tf,
 		EvaluationHandler: &evalfake.MockEvaluationHandler{
 			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
-				return nil, nil, nil
+				var itemStatus []klcv1alpha3.ItemStatus
+				var summary apicommon.StatusSummary
+				return itemStatus, summary, nil
 			},
 		},
 	}

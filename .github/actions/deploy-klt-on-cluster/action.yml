@@ -85,14 +85,10 @@ runs:
         cd .github/actions/deploy-klt-on-cluster
 
         if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_on" ]; then
-          echo "lifecycleOperator:" >> values.yaml
           echo "  allowedNamespaces: [allowed-ns-test]" >> values.yaml
         fi
 
         if [ "${{ inputs.scheduling-gates }}" == "gates_on" ]; then
-          if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_off" ]; then
-            echo "lifecycleOperator:" >> values.yaml
-          fi
           echo "  schedulingGatesEnabled: true" >> values.yaml
         fi
         echo "installing with values.yaml file:"

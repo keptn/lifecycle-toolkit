@@ -27,9 +27,8 @@ func TestKeptnApp(t *testing.T) {
 	appVersion := app.GenerateAppVersion("prev")
 	require.Equal(t, KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
-			Annotations: map[string]string{},
-			Name:        "app-version-6b86b273",
-			Namespace:   "namespace",
+			Name:      "app-version-6b86b273",
+			Namespace: "namespace",
 		},
 		Spec: KeptnAppVersionSpec{
 			KeptnAppSpec: KeptnAppSpec{

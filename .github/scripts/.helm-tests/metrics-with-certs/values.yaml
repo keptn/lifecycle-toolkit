@@ -4,3 +4,7 @@ lifecycleOperator:
   enabled: false
 metricsOperator:
   enabled: true
+  imagePullPolicy: Never
+
+global:
+  imageRegistry: "testreg"

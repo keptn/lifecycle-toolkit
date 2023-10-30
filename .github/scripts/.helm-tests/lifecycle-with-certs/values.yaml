@@ -2,5 +2,9 @@ certManager:
   enabled: true
 lifecycleOperator:
   enabled: true
+  lifecycleOperator:
+    imagePullPolicy: Never
+  scheduler:
+    imagePullPolicy: Never
 metricsOperator:
   enabled: false

@@ -130,6 +130,8 @@ image:
   repository: keptn/metrics-operator
 ## @param   image.tag select tag for manager image
   tag: v0.8.2 # x-release-please-version
+## @param   imagePullPolicy specify pull policy for manager image
+  imagePullPolicy: Always
 ## @extra  livenessProbe custom livenessprobe for manager container
 ## @skip   livenessProbe.httpGet.path
 ## @skip   livenessProbe.httpGet.port

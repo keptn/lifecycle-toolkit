@@ -1811,7 +1811,7 @@ spec:
           value: "0"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: ghcr.io/keptn/metrics-operator:v0.8.2
+        image: keptn/metrics-operator:v0.8.2
         name: metrics-operator
         ports:
         - containerPort: 9443

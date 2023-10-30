@@ -57,32 +57,6 @@ _Appears in:_
 _Appears in:_
 - [KeptnTaskDefinitionSpec](#keptntaskdefinitionspec)
 
-| Field | Description |
-| --- | --- |
-| `name` _string_ | Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated. |
-| `image` _string_ | Container image name. More info: https://kubernetes.io/docs/concepts/containers/images This field is optional to allow higher level config management to default or override container images in workload controllers like Deployments and StatefulSets. |
-| `command` _string array_ | Entrypoint array. Not executed within a shell. The container image's ENTRYPOINT is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell |
-| `args` _string array_ | Arguments to the entrypoint. The container image's CMD is used if this is not provided. Variable references $(VAR_NAME) are expanded using the container's environment. If a variable cannot be resolved, the reference in the input string will be unchanged. Double $$ are reduced to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)". Escaped references will never be expanded, regardless of whether the variable exists or not. Cannot be updated. More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell |
-| `workingDir` _string_ | Container's working directory. If not specified, the container runtime's default will be used, which might be configured in the container image. Cannot be updated. |
-| `ports` _[ContainerPort](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#containerport-v1-core) array_ | List of ports to expose from the container. Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is listening on the default "0.0.0.0" address inside a container will be accessible from the network. Modifying this array with strategic merge patch may corrupt the data. For more information See https://github.com/kubernetes/kubernetes/issues/108255. Cannot be updated. |
-| `envFrom` _[EnvFromSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#envfromsource-v1-core) array_ | List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated. |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#envvar-v1-core) array_ | List of environment variables to set in the container. Cannot be updated. |
-| `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#resourcerequirements-v1-core)_ | Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
-| `resizePolicy` _[ContainerResizePolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#containerresizepolicy-v1-core) array_ | Resources resize policy for the container. |
-| `restartPolicy` _[ContainerRestartPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#containerrestartpolicy-v1-core)_ | RestartPolicy defines the restart behavior of individual containers in a pod. This field may only be set for init containers, and the only allowed value is "Always". For non-init containers or when this field is not specified, the restart behavior is defined by the Pod's restart policy and the container type. Setting the RestartPolicy as "Always" for the init container will have the following effect: this init container will be continually restarted on exit until all regular containers have terminated. Once all regular containers have completed, all init containers with restartPolicy "Always" will be shut down. This lifecycle differs from normal init containers and is often referred to as a "sidecar" container. Although this init container still starts in the init container sequence, it does not wait for the container to complete before proceeding to the next init container. Instead, the next init container starts immediately after this init container is started, or after any startupProbe has successfully completed. |
-| `volumeMounts` _[VolumeMount](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core) array_ | Pod volumes to mount into the container's filesystem. Cannot be updated. |
-| `volumeDevices` _[VolumeDevice](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumedevice-v1-core) array_ | volumeDevices is the list of block devices to be used by the container. |
-| `livenessProbe` _[Probe](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#probe-v1-core)_ | Periodic probe of container liveness. Container will be restarted if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes |
-| `readinessProbe` _[Probe](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#probe-v1-core)_ | Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes |
-| `startupProbe` _[Probe](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#probe-v1-core)_ | StartupProbe indicates that the Pod has successfully initialized. If specified, no other probes are executed until this completes successfully. If this probe fails, the Pod will be restarted, just as if the livenessProbe failed. This can be used to provide different probe parameters at the beginning of a Pod's lifecycle, when it might take a long time to load data or warm a cache, than during steady-state operation. This cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes |
-| `lifecycle` _[Lifecycle](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#lifecycle-v1-core)_ | Actions that the management system should take in response to container lifecycle events. Cannot be updated. |
-| `terminationMessagePath` _string_ | Optional: Path at which the file to which the container's termination message will be written is mounted into the container's filesystem. Message written is intended to be brief final status, such as an assertion failure message. Will be truncated by the node if greater than 4096 bytes. The total message length across all containers will be limited to 12kb. Defaults to /dev/termination-log. Cannot be updated. |
-| `terminationMessagePolicy` _[TerminationMessagePolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#terminationmessagepolicy-v1-core)_ | Indicate how the termination message should be populated. File will use the contents of terminationMessagePath to populate the container status message on both success and failure. FallbackToLogsOnError will use the last chunk of container log output if the termination message file is empty and the container exited with an error. The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Defaults to File. Cannot be updated. |
-| `imagePullPolicy` _[PullPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#pullpolicy-v1-core)_ | Image pull policy. One of Always, Never, IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images |
-| `securityContext` _[SecurityContext](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#securitycontext-v1-core)_ | SecurityContext defines the security options the container should be run with. If set, the fields of SecurityContext override the equivalent fields of PodSecurityContext. More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
-| `stdin` _boolean_ | Whether this container should allocate a buffer for stdin in the container runtime. If this is not set, reads from stdin in the container will always result in EOF. Default is false. |
-| `stdinOnce` _boolean_ | Whether the container runtime should close the stdin channel after it has been opened by a single attach. When stdin is true the stdin stream will remain open across multiple attach sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the first client attaches to stdin, and then remains open and accepts data until the client disconnects, at which time stdin is closed and remains closed until the container is restarted. If this flag is false, a container processes that reads from stdin will never receive an EOF. Default is false |
-| `tty` _boolean_ | Whether this container should allocate a TTY for itself, also requires 'stdin' to be true. Default is false. |
 
 
 #### EvaluationStatusItem
@@ -97,7 +71,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `value` _string_ | Value represents the value of the KeptnMetric being evaluated. |
-| `status` _KeptnState_ | Status indicates the status of the objective being evaluated. |
+| `status` _[KeptnState](#keptnstate)_ | Status indicates the status of the objective being evaluated. |
 | `message` _string_ | Message contains additional information about the evaluation of an objective. This can include explanations about why an evaluation has failed (e.g. due to a missed objective), or if there was any error during the evaluation of the objective. |
 
 
@@ -170,7 +144,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `definitionName` _string_ | DefinitionName is the name of the EvaluationDefinition/TaskDefinition |
-| `status` _KeptnState_ |  |
+| `status` _[KeptnState](#keptnstate)_ |  |
 | `name` _string_ | Name is the name of the Evaluation/Task |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | StartTime represents the time at which the Item (Evaluation/Task) started. |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | EndTime represents the time at which the Item (Evaluation/Task) started. |
@@ -361,19 +335,19 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `preDeploymentStatus` _KeptnState_ | PreDeploymentStatus indicates the current status of the KeptnAppVersion's PreDeployment phase. |
-| `postDeploymentStatus` _KeptnState_ | PostDeploymentStatus indicates the current status of the KeptnAppVersion's PostDeployment phase. |
-| `preDeploymentEvaluationStatus` _KeptnState_ | PreDeploymentEvaluationStatus indicates the current status of the KeptnAppVersion's PreDeploymentEvaluation phase. |
-| `postDeploymentEvaluationStatus` _KeptnState_ | PostDeploymentEvaluationStatus indicates the current status of the KeptnAppVersion's PostDeploymentEvaluation phase. |
-| `workloadOverallStatus` _KeptnState_ | WorkloadOverallStatus indicates the current status of the KeptnAppVersion's Workload deployment phase. |
+| `preDeploymentStatus` _[KeptnState](#keptnstate)_ | PreDeploymentStatus indicates the current status of the KeptnAppVersion's PreDeployment phase. |
+| `postDeploymentStatus` _[KeptnState](#keptnstate)_ | PostDeploymentStatus indicates the current status of the KeptnAppVersion's PostDeployment phase. |
+| `preDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ | PreDeploymentEvaluationStatus indicates the current status of the KeptnAppVersion's PreDeploymentEvaluation phase. |
+| `postDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ | PostDeploymentEvaluationStatus indicates the current status of the KeptnAppVersion's PostDeploymentEvaluation phase. |
+| `workloadOverallStatus` _[KeptnState](#keptnstate)_ | WorkloadOverallStatus indicates the current status of the KeptnAppVersion's Workload deployment phase. |
 | `workloadStatus` _[WorkloadStatus](#workloadstatus) array_ | WorkloadStatus contains the current status of each KeptnWorkload that is part of the KeptnAppVersion. |
 | `currentPhase` _string_ | CurrentPhase indicates the current phase of the KeptnAppVersion. |
 | `preDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ | PreDeploymentTaskStatus indicates the current state of each preDeploymentTask of the KeptnAppVersion. |
 | `postDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ | PostDeploymentTaskStatus indicates the current state of each postDeploymentTask of the KeptnAppVersion. |
 | `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ | PreDeploymentEvaluationTaskStatus indicates the current state of each preDeploymentEvaluation of the KeptnAppVersion. |
 | `postDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ | PostDeploymentEvaluationTaskStatus indicates the current state of each postDeploymentEvaluation of the KeptnAppVersion. |
-| `phaseTraceIDs` _object (keys:string, values:object)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnAppVersion. |
-| `status` _KeptnState_ | Status represents the overall status of the KeptnAppVersion. |
+| `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnAppVersion. |
+| `status` _[KeptnState](#keptnstate)_ | Status represents the overall status of the KeptnAppVersion. |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | StartTime represents the time at which the deployment of the KeptnAppVersion started. |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | EndTime represents the time at which the deployment of the KeptnAppVersion finished. |
 
@@ -481,7 +455,7 @@ _Appears in:_
 | `retries` _integer_ | Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or missed evaluation objective, before considering the KeptnEvaluation to be failed. |
 | `retryInterval` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ | RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error or a missed objective. |
 | `failAction` _string_ |  |
-| `checkType` _CheckType_ | Type indicates whether the KeptnEvaluation is part of the pre- or postDeployment phase. |
+| `checkType` _[CheckType](#checktype)_ | Type indicates whether the KeptnEvaluation is part of the pre- or postDeployment phase. |
 
 
 #### KeptnEvaluationStatus
@@ -497,7 +471,7 @@ _Appears in:_
 | --- | --- |
 | `retryCount` _integer_ | RetryCount indicates how many times the KeptnEvaluation has been attempted already. |
 | `evaluationStatus` _object (keys:string, values:[EvaluationStatusItem](#evaluationstatusitem))_ | EvaluationStatus describes the status of each objective of the KeptnEvaluationDefinition referenced by the KeptnEvaluation. |
-| `overallStatus` _KeptnState_ | OverallStatus describes the overall status of the KeptnEvaluation. The Overall status is derived from the status of the individual objectives of the KeptnEvaluationDefinition referenced by the KeptnEvaluation. |
+| `overallStatus` _[KeptnState](#keptnstate)_ | OverallStatus describes the overall status of the KeptnEvaluation. The Overall status is derived from the status of the individual objectives of the KeptnEvaluationDefinition referenced by the KeptnEvaluation. |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | StartTime represents the time at which the KeptnEvaluation started. |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | EndTime represents the time at which the KeptnEvaluation finished. |
 
@@ -633,7 +607,7 @@ _Appears in:_
 | `context` _[TaskContext](#taskcontext)_ | Context contains contextual information about the task execution. |
 | `parameters` _[TaskParameters](#taskparameters)_ | Parameters contains parameters that will be passed to the job that executes the task. |
 | `secureParameters` _[SecureParameters](#secureparameters)_ | SecureParameters contains secure parameters that will be passed to the job that executes the task. These will be stored and accessed as secrets in the cluster. |
-| `checkType` _CheckType_ | Type indicates whether the KeptnTask is part of the pre- or postDeployment phase. |
+| `checkType` _[CheckType](#checktype)_ | Type indicates whether the KeptnTask is part of the pre- or postDeployment phase. |
 | `retries` _integer_ | Retries indicates how many times the KeptnTask can be attempted in the case of an error before considering the KeptnTask to be failed. |
 | `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ | Timeout specifies the maximum time to wait for the task to be completed successfully. If the task does not complete successfully within this time frame, it will be considered to be failed. |
 
@@ -650,7 +624,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `jobName` _string_ | JobName is the name of the Job executing the Task. |
-| `status` _KeptnState_ | Status represents the overall state of the KeptnTask. |
+| `status` _[KeptnState](#keptnstate)_ | Status represents the overall state of the KeptnTask. |
 | `message` _string_ | Message contains information about unexpected errors encountered during the execution of the KeptnTask. |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | StartTime represents the time at which the KeptnTask started. |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | EndTime represents the time at which the KeptnTask finished. |
@@ -743,11 +717,11 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `preDeploymentStatus` _KeptnState_ | PreDeploymentStatus indicates the current status of the KeptnWorkloadInstance's PreDeployment phase. |
-| `deploymentStatus` _KeptnState_ | DeploymentStatus indicates the current status of the KeptnWorkloadInstance's Deployment phase. |
-| `preDeploymentEvaluationStatus` _KeptnState_ | PreDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadInstance's PreDeploymentEvaluation phase. |
-| `postDeploymentEvaluationStatus` _KeptnState_ | PostDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadInstance's PostDeploymentEvaluation phase. |
-| `postDeploymentStatus` _KeptnState_ | PostDeploymentStatus indicates the current status of the KeptnWorkloadInstance's PostDeployment phase. |
+| `preDeploymentStatus` _[KeptnState](#keptnstate)_ | PreDeploymentStatus indicates the current status of the KeptnWorkloadInstance's PreDeployment phase. |
+| `deploymentStatus` _[KeptnState](#keptnstate)_ | DeploymentStatus indicates the current status of the KeptnWorkloadInstance's Deployment phase. |
+| `preDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ | PreDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadInstance's PreDeploymentEvaluation phase. |
+| `postDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ | PostDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadInstance's PostDeploymentEvaluation phase. |
+| `postDeploymentStatus` _[KeptnState](#keptnstate)_ | PostDeploymentStatus indicates the current status of the KeptnWorkloadInstance's PostDeployment phase. |
 | `preDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ | PreDeploymentTaskStatus indicates the current state of each preDeploymentTask of the KeptnWorkloadInstance. |
 | `postDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ | PostDeploymentTaskStatus indicates the current state of each postDeploymentTask of the KeptnWorkloadInstance. |
 | `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ | PreDeploymentEvaluationTaskStatus indicates the current state of each preDeploymentEvaluation of the KeptnWorkloadInstance. |
@@ -755,8 +729,8 @@ _Appears in:_
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | StartTime represents the time at which the deployment of the KeptnWorkloadInstance started. |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | EndTime represents the time at which the deployment of the KeptnWorkloadInstance finished. |
 | `currentPhase` _string_ | CurrentPhase indicates the current phase of the KeptnWorkloadInstance. This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment - PostDeploymentTasks - PostDeploymentEvaluations |
-| `phaseTraceIDs` _object (keys:string, values:object)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadInstance |
-| `status` _KeptnState_ | Status represents the overall status of the KeptnWorkloadInstance. |
+| `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadInstance |
+| `status` _[KeptnState](#keptnstate)_ | Status represents the overall status of the KeptnWorkloadInstance. |
 
 
 #### KeptnWorkloadList
@@ -854,7 +828,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `uid` _UID_ |  |
+| `uid` _[UID](#uid)_ |  |
 | `kind` _string_ |  |
 | `name` _string_ |  |
 
@@ -940,6 +914,6 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `workload` _[KeptnWorkloadRef](#keptnworkloadref)_ | Workload refers to a KeptnWorkload that is part of the KeptnAppVersion. |
-| `status` _KeptnState_ | Status indicates the current status of the KeptnWorkload. |
+| `status` _[KeptnState](#keptnstate)_ | Status indicates the current status of the KeptnWorkload. |
 
 

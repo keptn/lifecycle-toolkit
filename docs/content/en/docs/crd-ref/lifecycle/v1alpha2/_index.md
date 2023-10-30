@@ -60,7 +60,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `value` _string_ |  |
-| `status` _KeptnState_ |  |
+| `status` _[KeptnState](#keptnstate)_ |  |
 | `message` _string_ |  |
 
 
@@ -152,7 +152,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `definitionName` _string_ | DefinitionName is the name of the EvaluationDefinition/TaskDefinition |
-| `status` _KeptnState_ |  |
+| `status` _[KeptnState](#keptnstate)_ |  |
 | `name` _string_ | Name is the name of the Evaluation/Task |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
@@ -295,19 +295,19 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `preDeploymentStatus` _KeptnState_ |  |
-| `postDeploymentStatus` _KeptnState_ |  |
-| `preDeploymentEvaluationStatus` _KeptnState_ |  |
-| `postDeploymentEvaluationStatus` _KeptnState_ |  |
-| `workloadOverallStatus` _KeptnState_ |  |
+| `preDeploymentStatus` _[KeptnState](#keptnstate)_ |  |
+| `postDeploymentStatus` _[KeptnState](#keptnstate)_ |  |
+| `preDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ |  |
+| `postDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ |  |
+| `workloadOverallStatus` _[KeptnState](#keptnstate)_ |  |
 | `workloadStatus` _[WorkloadStatus](#workloadstatus) array_ |  |
 | `currentPhase` _string_ |  |
 | `preDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  |
 | `postDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  |
 | `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  |
 | `postDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  |
-| `phaseTraceIDs` _object (keys:string, values:object)_ |  |
-| `status` _KeptnState_ |  |
+| `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ |  |
+| `status` _[KeptnState](#keptnstate)_ |  |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 
@@ -416,7 +416,7 @@ _Appears in:_
 | `retries` _integer_ |  |
 | `retryInterval` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ |  |
 | `failAction` _string_ |  |
-| `checkType` _CheckType_ |  |
+| `checkType` _[CheckType](#checktype)_ |  |
 
 
 #### KeptnEvaluationStatus
@@ -432,7 +432,7 @@ _Appears in:_
 | --- | --- |
 | `retryCount` _integer_ |  |
 | `evaluationStatus` _object (keys:string, values:[EvaluationStatusItem](#evaluationstatusitem))_ |  |
-| `overallStatus` _KeptnState_ |  |
+| `overallStatus` _[KeptnState](#keptnstate)_ |  |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 
@@ -552,7 +552,7 @@ _Appears in:_
 | `context` _[TaskContext](#taskcontext)_ |  |
 | `parameters` _[TaskParameters](#taskparameters)_ |  |
 | `secureParameters` _[SecureParameters](#secureparameters)_ |  |
-| `checkType` _CheckType_ |  |
+| `checkType` _[CheckType](#checktype)_ |  |
 
 
 #### KeptnTaskStatus
@@ -567,7 +567,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `jobName` _string_ |  |
-| `status` _KeptnState_ |  |
+| `status` _[KeptnState](#keptnstate)_ |  |
 | `message` _string_ |  |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
@@ -659,11 +659,11 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `preDeploymentStatus` _KeptnState_ |  |
-| `deploymentStatus` _KeptnState_ |  |
-| `preDeploymentEvaluationStatus` _KeptnState_ |  |
-| `postDeploymentEvaluationStatus` _KeptnState_ |  |
-| `postDeploymentStatus` _KeptnState_ |  |
+| `preDeploymentStatus` _[KeptnState](#keptnstate)_ |  |
+| `deploymentStatus` _[KeptnState](#keptnstate)_ |  |
+| `preDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ |  |
+| `postDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ |  |
+| `postDeploymentStatus` _[KeptnState](#keptnstate)_ |  |
 | `preDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  |
 | `postDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  |
 | `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  |
@@ -671,8 +671,8 @@ _Appears in:_
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ |  |
 | `currentPhase` _string_ |  |
-| `phaseTraceIDs` _object (keys:string, values:object)_ |  |
-| `status` _KeptnState_ |  |
+| `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ |  |
+| `status` _[KeptnState](#keptnstate)_ |  |
 
 
 #### KeptnWorkloadList
@@ -771,7 +771,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `uid` _UID_ |  |
+| `uid` _[UID](#uid)_ |  |
 | `kind` _string_ |  |
 | `name` _string_ |  |
 
@@ -837,6 +837,6 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `workload` _[KeptnWorkloadRef](#keptnworkloadref)_ |  |
-| `status` _KeptnState_ |  |
+| `status` _[KeptnState](#keptnstate)_ |  |
 
 

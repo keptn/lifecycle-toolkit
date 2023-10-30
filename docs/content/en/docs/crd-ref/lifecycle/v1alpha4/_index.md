@@ -86,11 +86,11 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `preDeploymentStatus` _KeptnState_ | PreDeploymentStatus indicates the current status of the KeptnWorkloadVersion's PreDeployment phase. |
-| `deploymentStatus` _KeptnState_ | DeploymentStatus indicates the current status of the KeptnWorkloadVersion's Deployment phase. |
-| `preDeploymentEvaluationStatus` _KeptnState_ | PreDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadVersion's PreDeploymentEvaluation phase. |
-| `postDeploymentEvaluationStatus` _KeptnState_ | PostDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadVersion's PostDeploymentEvaluation phase. |
-| `postDeploymentStatus` _KeptnState_ | PostDeploymentStatus indicates the current status of the KeptnWorkloadVersion's PostDeployment phase. |
+| `preDeploymentStatus` _[KeptnState](#keptnstate)_ | PreDeploymentStatus indicates the current status of the KeptnWorkloadVersion's PreDeployment phase. |
+| `deploymentStatus` _[KeptnState](#keptnstate)_ | DeploymentStatus indicates the current status of the KeptnWorkloadVersion's Deployment phase. |
+| `preDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ | PreDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadVersion's PreDeploymentEvaluation phase. |
+| `postDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ | PostDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadVersion's PostDeploymentEvaluation phase. |
+| `postDeploymentStatus` _[KeptnState](#keptnstate)_ | PostDeploymentStatus indicates the current status of the KeptnWorkloadVersion's PostDeployment phase. |
 | `preDeploymentTaskStatus` _[ItemStatus](../v1alpha3/#itemstatus) array_ | PreDeploymentTaskStatus indicates the current state of each preDeploymentTask of the KeptnWorkloadVersion. |
 | `postDeploymentTaskStatus` _[ItemStatus](../v1alpha3/#itemstatus) array_ | PostDeploymentTaskStatus indicates the current state of each postDeploymentTask of the KeptnWorkloadVersion. |
 | `preDeploymentEvaluationTaskStatus` _[ItemStatus](../v1alpha3/#itemstatus) array_ | PreDeploymentEvaluationTaskStatus indicates the current state of each preDeploymentEvaluation of the KeptnWorkloadVersion. |
@@ -98,7 +98,7 @@ _Appears in:_
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | StartTime represents the time at which the deployment of the KeptnWorkloadVersion started. |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | EndTime represents the time at which the deployment of the KeptnWorkloadVersion finished. |
 | `currentPhase` _string_ | CurrentPhase indicates the current phase of the KeptnWorkloadVersion. This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment - PostDeploymentTasks - PostDeploymentEvaluations |
-| `phaseTraceIDs` _object (keys:string, values:object)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadVersion |
-| `status` _KeptnState_ | Status represents the overall status of the KeptnWorkloadVersion. |
+| `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadVersion |
+| `status` _[KeptnState](#keptnstate)_ | Status represents the overall status of the KeptnWorkloadVersion. |
 
 

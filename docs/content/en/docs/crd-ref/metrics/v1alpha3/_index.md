@@ -406,7 +406,7 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `fixedValue` _Quantity_ | FixedValue defines the value for comparison |
+| `fixedValue` _[Quantity](#quantity)_ | FixedValue defines the value for comparison |
 
 
 #### ProviderRef
@@ -469,8 +469,8 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `lowBound` _Quantity_ | LowBound defines the lower bound of the range |
-| `highBound` _Quantity_ | HighBound defines the higher bound of the range |
+| `lowBound` _[Quantity](#quantity)_ | LowBound defines the lower bound of the range |
+| `highBound` _[Quantity](#quantity)_ | HighBound defines the higher bound of the range |
 
 
 #### Target

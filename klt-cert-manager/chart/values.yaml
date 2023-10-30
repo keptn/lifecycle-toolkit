@@ -64,7 +64,7 @@ image:
 ## @param     image.repository specify repo for manager image
   repository: ghcr.io/keptn/certificate-operator
 ## @param     image.tag select tag for manager container
-  tag: v1.1.0 # x-release-please-version
+  tag: v1.2.0 # x-release-please-version
 ## @param     imagePullPolicy select image pull policy for manager container
 imagePullPolicy: Always
 

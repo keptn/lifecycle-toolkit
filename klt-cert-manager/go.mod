@@ -3,7 +3,7 @@ module github.com/keptn/lifecycle-toolkit/klt-cert-manager
 go 1.20
 
 require (
-	github.com/go-logr/logr v1.2.4
+	github.com/go-logr/logr v1.3.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/afero v1.10.0

@@ -14,4 +14,3 @@ lifecycleOperator:
     imagePullPolicy: Never
   scheduler:
     imagePullPolicy: Never
-    

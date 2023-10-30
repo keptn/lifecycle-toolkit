@@ -92,9 +92,9 @@ runs:
           echo "  schedulingGatesEnabled: true" >> values.yaml
         fi
 
-        TAG=${{ inputs.runtime_tag }}
+        export TAG=${{ inputs.runtime_tag }}
         envsubst < values.yaml
- 
+
         echo "installing with values.yaml file:"
         cat values.yaml
 

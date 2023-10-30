@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.1.0
+    helm.sh/chart: cert-manager-0.2.0
     mamma: test
   annotations:
     ciao: commonannotation
@@ -28,7 +28,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.1.0
+    helm.sh/chart: cert-manager-0.2.0
     mamma: test
 rules:
 - apiGroups:
@@ -84,7 +84,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.1.0
+    helm.sh/chart: cert-manager-0.2.0
     mamma: test
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -106,7 +106,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.1.0
+    helm.sh/chart: cert-manager-0.2.0
     mamma: test
   annotations:
     ciao: commonannotation
@@ -144,7 +144,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.1.0
+    helm.sh/chart: cert-manager-0.2.0
     mamma: test
   annotations:
     ciao: commonannotation
@@ -171,7 +171,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.1.0
+    helm.sh/chart: cert-manager-0.2.0
     mamma: test
   annotations:
     ciao: commonannotation
@@ -198,7 +198,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.1.0
+    helm.sh/chart: cert-manager-0.2.0
     mamma: test
   annotations:
     ciao: commonannotation
@@ -234,7 +234,7 @@ spec:
               value: "true"
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
-          image: testreg/ghcr.io/keptn/certificate-operator:v1.1.0
+          image: testreg/ghcr.io/keptn/certificate-operator:v1.2.0
           imagePullPolicy: Always
           name: certificate-operator
           resources:

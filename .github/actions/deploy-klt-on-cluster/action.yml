@@ -94,10 +94,8 @@ runs:
         echo "installing with values.yaml file:"
         cat values.yaml
 
-        cd ../../../chart
-
-        helm install -n keptn-lifecycle-toolkit-system --create-namespace keptn ./ \
-          --values ../.github/actions/deploy-klt-on-cluster/values.yaml \
+        helm install -n keptn-lifecycle-toolkit-system --create-namespace keptn ../../../chart \
+          --values ./values.yaml \
           --set lifecycleOperator.scheduler.image.tag=${{ inputs.runtime_tag }} \
           --set lifecycleOperator.lifecycleOperator.image.tag=${{ inputs.runtime_tag }} \
           --set lifecycleOperator.lifecycleOperator.env.functionRunnerImage=localhost:5000/keptn/deno-runtime:${{ inputs.runtime_tag }} \

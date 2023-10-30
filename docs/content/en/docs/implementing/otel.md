@@ -11,7 +11,7 @@ of what Kubernetes does in the context of a Deployment.
 To do this,
 Keptn introduces the concept of an `application`,
 which is an abstraction that connects multiple
-Workloads that logically belong together,
+[Workloads](https://kubernetes.io/docs/concepts/workloads/) that logically belong together,
 even if they use different deployment strategies.
 
 This means that:
@@ -55,7 +55,7 @@ DORA metrics provide information such as:
 Keptn starts collecting these metrics
 as soon as you apply
 [basic annotations](integrate/#basic-annotations)
-to the Workload resource.
+to the [workload](https://kubernetes.io/docs/concepts/workloads/).
 Metrics are collected only for the resources
 that are annotated.
 
@@ -93,39 +93,47 @@ you must have the following on your cluster:
   See
   [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
   for more information.
-- Prometheus Operator.
+- A Prometheus Operator.
   See [Prometheus Operator Setup](https://github.com/prometheus-operator/kube-prometheus/blob/main/docs/customizing.md).
-- The Prometheus Operator must have the required permissions
-  to watch resources of the `keptn-lifecycle-toolkit-system` namespace (see
-  [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/)).
 
-If you want a dashboard for reviewing metrics and traces,
-you need:
+  - The Prometheus Operator must have the required permissions
+    to watch resources of your Keptn namespace (default is `keptn-lifecycle-toolkit-system`) (see
+    [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/)).
 
-- [Grafana](https://grafana.com/)
-  or the dashboard of your choice.
-   See
-  [Grafana Setup](https://grafana.com/docs/grafana/latest/setup-grafana/).
+  - To install Prometheus into the `monitoring` namespace
+    using the example configuration included with Keptn,
+    use the following command sequence.
+    Use similar commands if you define a different configuration:
 
-- [Jaeger](https://jaegertracing.io)
-  or a similar tool if you want traces.
-   See
-  [Jaeger Setup](https://github.com/jaegertracing/jaeger-operator#getting-started).
+    > **Note**
+    You must clone the `lifecycle-toolkit` repository
+    and `cd` into the correct directory
+    (`examples/support/observability`) before running the following commands.
 
-To install Prometheus into the `monitoring` namespace,
-using the default configuration included with Keptn,
-use the following commands.
-Use similar commands if you define a different configuration::
+    ```shell
+    kubectl create namespace monitoring
+    kubectl apply --server-side -f config/prometheus/setup/
+    kubectl apply -f config/prometheus/
+    ```
 
-> **Note**
-You must clone  the `lifecycle-toolkit` repository and `cd` into the correct directory
-(`examples/support/observability`) before running the following commands.
+- If you want a dashboard for reviewing metrics and traces:
 
-```shell
-kubectl create namespace monitoring
-kubectl apply --server-side -f config/prometheus/setup
-kubectl apply -f config/prometheus/
-```
+  - Install
+    [Grafana](https://grafana.com/grafana/)
+    or the visualization tool of your choice, following the instructions in
+    [Grafana Setup](https://grafana.com/docs/grafana/latest/setup-grafana/).
+  - Install
+    [Jaeger](https://www.jaegertracing.io/)
+    or a similar tool for traces following the instructions in
+    [Jaeger Setup](https://www.jaegertracing.io/docs/1.50/getting-started/).
+
+  - Follow the instructions in the Grafana
+    [README](https://github.com/keptn/lifecycle-toolkit/blob/main/dashboards/grafana/README.md)
+    file to configure the Grafana dashboard(s) for Keptn..
+
+    Metrics can also be retrieved without a dashboard.
+    See
+    [Accessing Metrics via the Kubernetes Custom Metrics API](evaluatemetrics.md/#accessing-metrics-via-the-kubernetes-custom-metrics-api)
 
 ### Integrate OpenTelemetry into Keptn
 

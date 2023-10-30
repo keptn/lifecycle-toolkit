@@ -16,7 +16,7 @@ file specifies the `app-pre-deploy-eval-2` evaluation as follows:
 
 The `evaluationTarget` is set to be `>1`,
 so this evaluation ensures that more than 1 CPU is available
-before the workload or application is deployed.
+before the [workload](https://kubernetes.io/docs/concepts/workloads/) or application is deployed.
 
 This evaluation references the
 [KeptnMetric](../yaml-crd-ref/metric.md) resource
@@ -35,9 +35,9 @@ or
 [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/),
 you must:
 
-* Annotate your `Workloads`
+* Annotate your [workloads](https://kubernetes.io/docs/concepts/workloads/)
   to identify the `KeptnEvaluationDefinition` resource you want to run
-  pre- and post-deployment for the specific workloads.
+  pre- and post-deployment for the specific [workloads](https://kubernetes.io/docs/concepts/workloads/).
 * Manually edit all
   [KeptnApp](../yaml-crd-ref/app.md) resources
   to specify the `KeptnEvaluationDefinition` to be run

@@ -216,7 +216,7 @@ func TestPhaseHandler(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := tt.handler.HandlePhase(context.TODO(), context.TODO(), trace.NewNoopTracerProvider().Tracer("tracer"), tt.object, tt.phase, trace.SpanFromContext(context.TODO()), tt.reconcilePhase)
+			result, err := tt.handler.HandlePhase(context.TODO(), context.TODO(), trace.NewNoopTracerProvider().Tracer("tracer"), tt.object, tt.phase, tt.reconcilePhase)
 			require.Equal(t, tt.want, result)
 			require.Equal(t, tt.wantErr, err)
 			require.Equal(t, tt.wantObject.Status.Status, tt.object.Status.Status)

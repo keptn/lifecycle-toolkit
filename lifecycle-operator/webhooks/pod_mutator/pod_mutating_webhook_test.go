@@ -15,7 +15,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator/handlers"
 	fakehandler "github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator/handlers/fake"
 	"github.com/stretchr/testify/require"
-	"go.opentelemetry.io/otel/trace"
 	admissionv1 "k8s.io/api/admission/v1"
 	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -43,15 +42,10 @@ func TestPodMutatingWebhookHandleDisabledNamespace(t *testing.T) {
 		},
 	})
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
 		Client:      fakeClient,
-		Tracer:      tr,
 		Decoder:     decoder,
 		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         testr.New(t),
@@ -92,15 +86,10 @@ func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
 		},
 	})
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
 		Client:      fakeClient,
-		Tracer:      tr,
 		Decoder:     decoder,
 		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         testr.New(t),
@@ -174,18 +163,10 @@ func TestPodMutatingWebhookHandleSingleService(t *testing.T) {
 		},
 	})
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
 	decoder := admission.NewDecoder(runtime.NewScheme())
 	log := testr.New(t)
 
-	wh := NewPodMutator(fakeClient,
-		tr,
-		decoder,
-		controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		log, false)
+	wh := NewPodMutator(fakeClient, decoder, controllercommon.NewK8sSender(record.NewFakeRecorder(100)), log, false)
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
@@ -293,16 +274,11 @@ func TestPodMutatingWebhookHandleSchedulingGatesGateRemoved(t *testing.T) {
 	}
 	fakeClient := fakeclient.NewClient(ns, pod)
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
 		SchedulingGatesEnabled: true,
 		Client:                 fakeClient,
-		Tracer:                 tr,
 		Decoder:                decoder,
 		EventSender:            controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:                    testr.New(t),
@@ -358,21 +334,10 @@ func TestPodMutatingWebhookHandleSchedulingGates(t *testing.T) {
 	}
 	fakeClient := fakeclient.NewClient(ns, pod)
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh :=
-		NewPodMutator(
-			fakeClient,
-			tr,
-			decoder,
-			controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-			testr.New(t),
-			true,
-		)
+		NewPodMutator(fakeClient, decoder, controllercommon.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), true)
 
 	request := generateRequest(pod, t)
 
@@ -448,19 +413,9 @@ func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t
 		},
 	})
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
-	wh := NewPodMutator(fakeClient,
-		tr,
-		decoder,
-		controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		testr.New(t),
-		false,
-	)
+	wh := NewPodMutator(fakeClient, decoder, controllercommon.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), false)
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
@@ -542,16 +497,9 @@ func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
 		},
 	})
 
-	pod, _, _, tr, decoder := setupTestData()
+	pod, _, _, decoder := setupTestData()
 
-	wh := NewPodMutator(
-		fakeClient,
-		tr,
-		decoder,
-		controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		testr.New(t),
-		false,
-	)
+	wh := NewPodMutator(fakeClient, decoder, controllercommon.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), false)
 
 	request := generateRequest(pod, t)
 
@@ -597,7 +545,7 @@ func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
 
 func TestPodMutatingWebhookHandleErrorPaths(t *testing.T) {
 
-	pod, dp, ns, tr, decoder := setupTestData()
+	pod, dp, ns, decoder := setupTestData()
 
 	tests := []struct {
 		name            string
@@ -666,7 +614,6 @@ func TestPodMutatingWebhookHandleErrorPaths(t *testing.T) {
 
 			wh := PodMutatingWebhook{
 				Decoder:  tt.decoder,
-				Tracer:   tr,
 				Log:      testr.New(t),
 				Client:   tt.client,
 				Workload: tt.workloadHandler,
@@ -705,7 +652,7 @@ func generateRequest(pod *corev1.Pod, t *testing.T) admissionv1.AdmissionRequest
 	}
 }
 
-func setupTestData() (*corev1.Pod, *v1.Deployment, *corev1.Namespace, *fakeclient.ITracerMock, *admission.Decoder) {
+func setupTestData() (*corev1.Pod, *v1.Deployment, *corev1.Namespace, *admission.Decoder) {
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testPod,
@@ -744,9 +691,6 @@ func setupTestData() (*corev1.Pod, *v1.Deployment, *corev1.Namespace, *fakeclien
 		},
 	}
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
 	decoder := admission.NewDecoder(runtime.NewScheme())
-	return pod, dp, ns, tr, decoder
+	return pod, dp, ns, decoder
 }

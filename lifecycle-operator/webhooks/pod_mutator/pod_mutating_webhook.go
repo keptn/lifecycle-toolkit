@@ -8,11 +8,8 @@ import (
 
 	"github.com/go-logr/logr"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/semconv"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator/handlers"
-	"go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/trace"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -30,7 +27,6 @@ const podKey = "pod"
 
 type PodMutatingWebhook struct {
 	Client                 client.Client
-	Tracer                 trace.Tracer
 	Decoder                handlers.Decoder
 	EventSender            controllercommon.IEvent
 	Log                    logr.Logger
@@ -40,31 +36,27 @@ type PodMutatingWebhook struct {
 	App                    handlers.K8sHandler
 }
 
-func NewPodMutator(client client.Client,
-	tracer trace.Tracer,
+func NewPodMutator(
+	client client.Client,
 	decoder *admission.Decoder,
 	eventSender controllercommon.IEvent,
 	log logr.Logger,
-	schedulingGatesEnabled bool) *PodMutatingWebhook {
+	schedulingGatesEnabled bool,
+) *PodMutatingWebhook {
 	return &PodMutatingWebhook{
 		SchedulingGatesEnabled: schedulingGatesEnabled,
 		Client:                 client,
-		Tracer:                 tracer,
 		EventSender:            eventSender,
 		Decoder:                decoder,
 		Log:                    log,
 		Pod:                    handlers.PodAnnotationHandler{Client: client, Log: log},
-		App:                    &handlers.AppCreationRequestHandler{Log: log, Client: client, EventSender: eventSender, Tracer: tracer},
-		Workload:               &handlers.WorkloadHandler{Log: log, Client: client, EventSender: eventSender, Tracer: tracer},
+		App:                    &handlers.AppCreationRequestHandler{Log: log, Client: client, EventSender: eventSender},
+		Workload:               &handlers.WorkloadHandler{Log: log, Client: client, EventSender: eventSender},
 	}
 }
 
 // Handle inspects incoming Pods and injects the Keptn scheduler if they contain the Keptn lifecycle annotations.
 func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) admission.Response {
-
-	ctx, span := a.Tracer.Start(ctx, "annotate_pod", trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
-	defer span.End()
-
 	a.Log.Info("webhook for pod called")
 
 	pod := &corev1.Pod{}
@@ -104,25 +96,21 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 		}
 
 		a.Log.Info("Annotations", "annotations", pod.Annotations)
-		semconv.AddAttributeFromAnnotations(span, pod.Annotations)
 		a.Log.Info("Attributes from annotations set")
 
 		if err := a.Workload.Handle(ctx, pod, req.Namespace); err != nil {
 			a.Log.Error(err, "Could not handle Workload")
-			span.SetStatus(codes.Error, err.Error())
 			return admission.Errored(http.StatusBadRequest, err)
 		}
 
 		if err := a.App.Handle(ctx, pod, req.Namespace); err != nil {
 			a.Log.Error(err, "Could not handle App")
-			span.SetStatus(codes.Error, err.Error())
 			return admission.Errored(http.StatusBadRequest, err)
 		}
 	}
 
 	marshaledPod, err := json.Marshal(pod)
 	if err != nil {
-		span.SetStatus(codes.Error, "Failed to marshal")
 		return admission.Errored(http.StatusInternalServerError, err)
 	}
 

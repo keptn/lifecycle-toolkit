@@ -89,7 +89,7 @@ AppPreDeployTasks
 ### Pre-deployment evaluation phase
 
 Pre-deployment evaluation can be used to assert the status of the cluster
-or of services the workload depends on,
+or of services the [workload](https://kubernetes.io/docs/concepts/workloads/) depends on,
 to assure it is deployed only if the specified prerequisites are met.
 
 ```shell
@@ -101,7 +101,7 @@ AppPreDeployEvaluations
 ### Deployment phase
 
 The `AppDeploy` phase basically covers
-the entire deployment and check phase of the workloads.
+the entire deployment and check phase of the [workloads](https://kubernetes.io/docs/concepts/workloads/).
 The `KeptnApp` just observes whether
 all pre and post-deployment tasks/evaluation are successful
 and that the pods are deployed successfully.

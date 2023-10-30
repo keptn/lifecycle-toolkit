@@ -12,8 +12,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	otelsdk "go.opentelemetry.io/otel/sdk/trace"
-	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	v1 "k8s.io/api/core/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -27,29 +25,26 @@ func TestEvaluation(t *testing.T) {
 }
 
 var (
-	k8sManager   ctrl.Manager
-	tracer       *otelsdk.TracerProvider
-	k8sClient    client.Client
-	ctx          context.Context
-	spanRecorder *sdktest.SpanRecorder
-	ns           *v1.Namespace
+	k8sManager ctrl.Manager
+	k8sClient  client.Client
+	ctx        context.Context
+	ns         *v1.Namespace
 )
 
 const KeptnNamespace = "keptnlifecycle"
 
 var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
-	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
+	ctx, k8sManager, _, _, k8sClient, readyToStart = common.InitSuite()
 
 	config.Instance().SetDefaultNamespace(KeptnNamespace)
 	// //setup controllers here
 	controller := &keptnevaluation.KeptnEvaluationReconciler{
-		Client:        k8sManager.GetClient(),
-		Scheme:        k8sManager.GetScheme(),
-		EventSender:   controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-evaluation-controller")),
-		Log:           GinkgoLogr,
-		Meters:        common.InitKeptnMeters(),
-		TracerFactory: &common.TracerFactory{Tracer: tracer},
+		Client:      k8sManager.GetClient(),
+		Scheme:      k8sManager.GetScheme(),
+		EventSender: controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-evaluation-controller")),
+		Log:         GinkgoLogr,
+		Meters:      common.InitKeptnMeters(),
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 

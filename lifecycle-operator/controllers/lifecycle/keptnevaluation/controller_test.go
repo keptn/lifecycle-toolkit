@@ -10,12 +10,10 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1alpha3"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/sdk/metric"
-	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -241,15 +239,6 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 	err = metricsapi.AddToScheme(scheme)
 	require.Nil(t, err)
 
-	// fake a tracer
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
-	tf := &fake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
-		return tr
-	}}
-
 	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme).WithObjects(objects...).WithStatusSubresource(objects...).Build()
 
 	provider := metric.NewMeterProvider()
@@ -258,12 +247,11 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 	config.Instance().SetDefaultNamespace("keptn")
 
 	r := &KeptnEvaluationReconciler{
-		Client:        fakeClient,
-		Scheme:        fakeClient.Scheme(),
-		Log:           logr.Logger{},
-		EventSender:   controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		Meters:        telemetry.SetUpKeptnTaskMeters(meter),
-		TracerFactory: tf,
+		Client:      fakeClient,
+		Scheme:      fakeClient.Scheme(),
+		Log:         logr.Logger{},
+		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		Meters:      telemetry.SetUpKeptnTaskMeters(meter),
 	}
 	return r, fakeClient
 }

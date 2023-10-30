@@ -9,14 +9,15 @@ to all metrics in the cluster
 and allows you to define metrics based on multiple data platforms
 and multiple instances of any data platform.
 Metrics are fetched independently
-and can be used for an evaluation at workload- and application-level, or for scaling your workloads.
+and can be used for an evaluation at [workload-](https://kubernetes.io/docs/concepts/workloads/)
+and application-level, or for scaling your [workloads](https://kubernetes.io/docs/concepts/workloads/).
 
 This data can be displayed on Grafana
 or another standard dashboard application that you configure
 or can be retrieved using standard Kubernetes commands.
 
 For an introduction to Keptn metrics, see
-[Getting started with Keptn metrics](../intro/usecase_metrics.md).
+[Getting started with Keptn metrics](../getting-started/usecase_metrics.md).
 
 ## Keptn metric basics
 

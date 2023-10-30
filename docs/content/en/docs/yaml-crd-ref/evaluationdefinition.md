@@ -9,7 +9,7 @@ A `KeptnEvaluationDefinition` assigns target values
 to [KeptnMetric](metric.md) queries.
 These are used as part of evaluation tasks
 that Keptn runs
-as part of pre- and post-analysis phases of a workload or application.
+as part of pre- and post-analysis phases of a [workload](https://kubernetes.io/docs/concepts/workloads/) or application.
 
 ## Yaml Synopsis
 

@@ -6,10 +6,6 @@ on:
         description: "Tag for the deno and python runner images"
         type: "string"
         required: true
-      helm-install:
-        description: "Decides whether to install via helm"
-        type: "string"
-        default: helm_on
       scheduling-gates:
         description: "Decides whether to use scheduling gates"
         type: "string"
@@ -38,7 +34,6 @@ jobs:
         uses: ./.github/actions/deploy-klt-on-cluster
         with:
           runtime_tag: ${{ inputs.runtime_tag }}
-          helm-install: ${{ inputs.helm-install }}
           scheduling-gates: ${{ inputs.scheduling-gates }}
           allowed-namespaces: ${{ inputs.allowed-namespaces }}
 
@@ -69,13 +64,13 @@ jobs:
         run: make integration-test
 
       - name: Create reports
-        if: always()
+        if: failure()
         working-directory: ./.github/scripts
         run: ./create-reports-full.sh
 
       - name: Upload cluster logs
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: logs-integration-tests-${{ inputs.helm-install }}-${{ inputs.scheduling-gates }}-${{ inputs.allowed-namespaces }}
+          name: logs-integration-tests-${{ inputs.scheduling-gates }}-${{ inputs.allowed-namespaces }}
           path: .github/scripts/logs

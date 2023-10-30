@@ -1,11 +1,18 @@
 ---
-title: Add Deployment Tasks
+title: Release Lifecycle Management
 description: Add KeptnTasks to deployments
-weight: 10
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
+weight: 50
 ---
 
-> This tutorial assumes you have already completed the [getting started guide](../../getting-started/).
+The Release Lifecycle Management tools run
+pre- and post-deployment tasks and checks
+for your existing cloud-native deployments
+to make them more robust.
+This tutorial introduces these tools.
+
+> This tutorial assumes you have already completed the
+[Getting started with Keptn Observability](../../getting-started/)
+exercise.
 > Please ensure you've finished that before attempting this guide.
 
 ## Keptn Pre and Post Deployment Tasks
@@ -143,7 +150,8 @@ Incidentally, this is exactly how you can use Keptn with [applications deployed 
 
 Annotate the demo application `Deployment` manifest to have Keptn automatically trigger the task after every deployment.
 
-Recall the `Deployment` from the [getting started guide](../../getting-started/_index.md#step-3-deploy-demo-application).
+Recall the `Deployment` from the [Observability](../../getting-started/observability/_index.md#step-3-deploy-demo-application)
+Getting started guide.
 
 Add a new label so the `labels` section looks like this:
 

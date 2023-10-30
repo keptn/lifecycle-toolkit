@@ -259,7 +259,7 @@ during the evaluation (false in this case).
 ## Usage
 
 An `Analysis` resource specifies a single Analysis run.
-It specifies the `AnalysisTemplateValue` resource
+It specifies the `AnalysisValueTemplate` resource
 that defines the calculations to use,
 the timeframe for which to report information,
 and values to use for variables for this run.

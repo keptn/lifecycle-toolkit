@@ -1,12 +1,12 @@
 dependencies:
 - name: keptn-cert-manager
   repository: file://../klt-cert-manager/chart
-  version: 0.1.0
+  version: 0.2.0
 - name: keptn-lifecycle-operator
   repository: file://../lifecycle-operator/chart
   version: 0.1.0
 - name: keptn-metrics-operator
   repository: file://../metrics-operator/chart
   version: 0.1.0
-digest: sha256:2cefa8b80f1065789f8e16bdc0d781053885025d3dcfab28c5ae99d3821ae66a
-generated: "2023-10-04T13:22:46.806236+02:00"
+digest: sha256:c7488f31be35aaa90007b22da4dd2989b42db1a6d9473d8d7e3ef7d58aee5714
+generated: "2023-10-30T11:39:44.614146+01:00"

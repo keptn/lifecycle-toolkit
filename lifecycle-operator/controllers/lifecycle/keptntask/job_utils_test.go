@@ -210,15 +210,14 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 	token := true
 
 	taskDefinition := makeTaskDefinitionWithServiceAccount(taskDefinitionName, namespace, svcAccname, &token)
+	taskDefinition.Spec.ServiceAccount.Name = svcAccname
+	taskDefinition.Spec.Container = containerBuilder()
 
 	serviceAccount := makeServiceAccount(svcAccname, namespace, &token)
 	fakeClient := fakeclient.NewClient(serviceAccount, taskDefinition)
 
-	taskDefinition.Spec.ServiceAccount.Name = svcAccname
-	taskDefinition.Spec.Container = containerBuilder()
-
-	err := fakeClient.Status().Update(context.TODO(), taskDefinition)
-	require.Nil(t, err)
+	task := makeTask(taskName, namespace, taskDefinitionName)
+	job := makeJobWithServiceAccount("test-job", namespace, svcAccname, task, &token)
 
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
@@ -227,9 +226,7 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 		Scheme:      fakeClient.Scheme(),
 	}
 
-	task := makeTask(taskName, namespace, taskDefinitionName)
-
-	err = fakeClient.Create(context.TODO(), task)
+	err := fakeClient.Create(context.TODO(), task)
 	require.Nil(t, err)
 
 	ctx := context.TODO()
@@ -252,25 +249,23 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 		// ConfigMap:     taskDefinition.Status.Function.ConfigMap,
 	}
 
-	job := makeJobWithServiceAccount("test-job", namespace, svcAccname, task, &token)
-
 	builder := NewJobRunnerBuilder(builderOpt)
 
 	container, _ := builder.CreateContainer(ctx)
 	job.Spec.Template.Spec.Containers = []corev1.Container{*container}
 	job.Spec.Template.Spec.Volumes = []corev1.Volume{}
 
-	err = fakeClient.Get(context.TODO(), types.NamespacedName{
+	errTask := fakeClient.Get(context.TODO(), types.NamespacedName{
 		Namespace: namespace,
 		Name:      task.Name,
 	}, task)
-	require.Nil(t, err)
+	require.Nil(t, errTask)
 
-	err = fakeClient.Get(context.TODO(), types.NamespacedName{
+	errTaskDefinition := fakeClient.Get(context.TODO(), types.NamespacedName{
 		Namespace: namespace,
-		Name:      task.Name,
+		Name:      taskDefinition.Name,
 	}, taskDefinition)
-	require.Nil(t, err)
+	require.Nil(t, errTaskDefinition)
 
 	job, err = r.generateJob(ctx, task, taskDefinition, request)
 	require.Nil(t, err)

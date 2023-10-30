@@ -11,6 +11,8 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
+	evalfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
@@ -1150,15 +1152,22 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, ch
 	}
 
 	recorder := record.NewFakeRecorder(100)
-	r := NewReconciler(
-		fakeClient,
-		scheme.Scheme,
-		controllercommon.NewK8sSender(recorder),
-		ctrl.Log.WithName("test-appController"),
-		controllercommon.InitAppMeters(),
-		&telemetry.SpanHandler{}, tf,
-		SchedulingGatesHandler,
-		trace.NewNoopTracerProvider().Tracer("keptn/test-workloadversion-controller"))
+
+	r := &KeptnWorkloadVersionReconciler{
+		Client:                 fakeClient,
+		Scheme:                 scheme.Scheme,
+		EventSender:            controllercommon.NewK8sSender(recorder),
+		Log:                    ctrl.Log.WithName("test-appController"),
+		Meters:                 controllercommon.InitAppMeters(),
+		SpanHandler:            &telemetry.SpanHandler{},
+		TracerFactory:          tf,
+		SchedulingGatesHandler: SchedulingGatesHandler,
+		EvaluationHandler: &evalfake.MockEvaluationHandler{
+			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
+				return nil, nil, nil
+			},
+		},
+	}
 	return r, recorder.Events, tr
 }
 

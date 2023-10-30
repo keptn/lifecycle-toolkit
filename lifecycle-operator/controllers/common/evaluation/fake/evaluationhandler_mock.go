@@ -18,9 +18,6 @@ import (
 //
 //		// make and configure a mocked evaluation.EvaluationHandlerInterface
 //		mockedEvaluationHandlerInterface := &MockEvaluationHandler{
-//			CreateKeptnEvaluationFunc: func(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) (string, error) {
-//				panic("mock out the CreateKeptnEvaluation method")
-//			},
 //			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
 //				panic("mock out the ReconcileEvaluations method")
 //			},
@@ -31,25 +28,11 @@ import (
 //
 //	}
 type MockEvaluationHandler struct {
-	// CreateKeptnEvaluationFunc mocks the CreateKeptnEvaluation method.
-	CreateKeptnEvaluationFunc func(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) (string, error)
-
 	// ReconcileEvaluationsFunc mocks the ReconcileEvaluations method.
 	ReconcileEvaluationsFunc func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
-		// CreateKeptnEvaluation holds details about calls to the CreateKeptnEvaluation method.
-		CreateKeptnEvaluation []struct {
-			// Ctx is the ctx argument value.
-			Ctx context.Context
-			// Namespace is the namespace argument value.
-			Namespace string
-			// ReconcileObject is the reconcileObject argument value.
-			ReconcileObject client.Object
-			// EvaluationCreateAttributes is the evaluationCreateAttributes argument value.
-			EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
-		}
 		// ReconcileEvaluations holds details about calls to the ReconcileEvaluations method.
 		ReconcileEvaluations []struct {
 			// Ctx is the ctx argument value.
@@ -62,52 +45,7 @@ type MockEvaluationHandler struct {
 			EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
 		}
 	}
-	lockCreateKeptnEvaluation sync.RWMutex
-	lockReconcileEvaluations  sync.RWMutex
-}
-
-// CreateKeptnEvaluation calls CreateKeptnEvaluationFunc.
-func (mock *MockEvaluationHandler) CreateKeptnEvaluation(ctx context.Context, namespace string, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) (string, error) {
-	if mock.CreateKeptnEvaluationFunc == nil {
-		panic("MockEvaluationHandler.CreateKeptnEvaluationFunc: method is nil but EvaluationHandlerInterface.CreateKeptnEvaluation was just called")
-	}
-	callInfo := struct {
-		Ctx                        context.Context
-		Namespace                  string
-		ReconcileObject            client.Object
-		EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
-	}{
-		Ctx:                        ctx,
-		Namespace:                  namespace,
-		ReconcileObject:            reconcileObject,
-		EvaluationCreateAttributes: evaluationCreateAttributes,
-	}
-	mock.lockCreateKeptnEvaluation.Lock()
-	mock.calls.CreateKeptnEvaluation = append(mock.calls.CreateKeptnEvaluation, callInfo)
-	mock.lockCreateKeptnEvaluation.Unlock()
-	return mock.CreateKeptnEvaluationFunc(ctx, namespace, reconcileObject, evaluationCreateAttributes)
-}
-
-// CreateKeptnEvaluationCalls gets all the calls that were made to CreateKeptnEvaluation.
-// Check the length with:
-//
-//	len(mockedEvaluationHandlerInterface.CreateKeptnEvaluationCalls())
-func (mock *MockEvaluationHandler) CreateKeptnEvaluationCalls() []struct {
-	Ctx                        context.Context
-	Namespace                  string
-	ReconcileObject            client.Object
-	EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
-} {
-	var calls []struct {
-		Ctx                        context.Context
-		Namespace                  string
-		ReconcileObject            client.Object
-		EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
-	}
-	mock.lockCreateKeptnEvaluation.RLock()
-	calls = mock.calls.CreateKeptnEvaluation
-	mock.lockCreateKeptnEvaluation.RUnlock()
-	return calls
+	lockReconcileEvaluations sync.RWMutex
 }
 
 // ReconcileEvaluations calls ReconcileEvaluationsFunc.

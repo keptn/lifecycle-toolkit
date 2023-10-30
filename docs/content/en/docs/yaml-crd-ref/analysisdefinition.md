@@ -38,7 +38,7 @@ spec:
 
 * **apiVersion** -- API version being used
 * **kind** -- Resource type.
-   Must be set to AnalysisDefinition.
+   Must be set to `AnalysisDefinition`.
 * **metadata**
   * **name** -- Unique name of this analysis definition.
     Names must comply with the
@@ -83,12 +83,12 @@ spec:
 
           Valid operators for specifying ranges are:
           * `inRange` -- value is inclusively in the defined range
-          * `notInRange` --  value is exclusivly out of the defined range
+          * `notInRange` --  value is exclusively out of the defined range
 
-             Each of these operators require two arguments:
+            Each of these operators require two arguments:
 
-             * `lowBound` -- minimum value of the range included or excluded
-             * `highBound` -- maximum value of the range included or excluded
+            * `lowBound` -- minimum value of the range included or excluded
+            * `highBound` -- maximum value of the range included or excluded
         <!-- markdownlint-disable -->
         * **warning** (optional) -- criteria for a warning,
           specified in the same way as the `failure` field.

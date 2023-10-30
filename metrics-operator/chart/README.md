@@ -75,7 +75,7 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 | `env.analysisControllerLogLevel`                    | sets the log level of Analysis Controller                     | `0`                      |
 | `image.registry`                                    | specify the container registry for the metrics-operator image | `ghcr.io`                |
 | `image.repository`                                  | specify registry for manager image                            | `keptn/metrics-operator` |
-| `image.tag`                                         | select tag for manager image                                  | `v0.8.2`                 |
+| `image.tag`                                         | select tag for manager image                                  | `v0.8.3`                 |
 | `imagePullPolicy`                                   | specify pull policy for manager image                         | `Always`                 |
 | `livenessProbe`                                     | custom livenessprobe for manager container                    |                          |
 | `readinessProbe`                                    | custom readinessprobe for manager container                   |                          |

@@ -1,9 +1,29 @@
-Thank you for installing {{ .Chart.Name }}.
+CHART NAME: {{ .Chart.Name  }}
+CHART VERSION: {{ .Chart.Version  }}
+APP VERSION: {{ .Chart.AppVersion  }}
 
-Your release is named {{ .Release.Name }}.
+** Please be patient while the chart is being deployed **
 
-To learn more about the release, try:
+The following controllers have been deployed:
 
-  $ helm status {{ .Release.Name }}
-  $ helm get all {{ .Release.Name }}
-  
+  {{- if .Values.certManager.enabled }}
+  - keptn-cert-manager
+  {{- end }}
+  {{- if .Values.lifecycleOperator.enabled }}
+  - keptn-lifecycle-operator
+  {{- end }}
+  {{- if .Values.metricsOperator.enabled }}
+  - keptn-metrics-operator
+  {{- end }}
+
+Check the status of the pods by running this command:
+
+  kubectl get pods --namespace {{ include "common.names.namespace" . | quote }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+Read the keptn documentation to start working with the controllers:
+
+    https://lifecycle.keptn.sh/
+
+For any bug and issues, use:
+
+    https://github.com/keptn/lifecycle-toolkit/issues

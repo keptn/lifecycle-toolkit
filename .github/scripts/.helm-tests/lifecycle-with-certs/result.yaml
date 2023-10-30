@@ -6782,7 +6782,7 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
         image: ghcr.io/keptn/lifecycle-operator:v0.8.2
-        imagePullPolicy: Always
+        imagePullPolicy: Never
         name: lifecycle-operator
         ports:
         - containerPort: 9443
@@ -6874,7 +6874,7 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
         image: ghcr.io/keptn/scheduler:v0.8.2
-        imagePullPolicy: Always
+        imagePullPolicy: Never
         name: scheduler
         resources:
           limits:

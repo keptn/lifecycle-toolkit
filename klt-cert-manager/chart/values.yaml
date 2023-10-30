@@ -61,8 +61,10 @@ env:
 ## @param     env.labelSelectorValue specify the value for the label selector
   labelSelectorValue: "true"
 image:
+## @param     image.registry specify the container registry for the certificate-operator image
+  registry: ghcr.io
 ## @param     image.repository specify repo for manager image
-  repository: ghcr.io/keptn/certificate-operator
+  repository: keptn/certificate-operator
 ## @param     image.tag select tag for manager container
   tag: v1.2.0 # x-release-please-version
 ## @param     imagePullPolicy select image pull policy for manager container

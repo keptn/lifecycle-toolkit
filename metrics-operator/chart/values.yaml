@@ -124,10 +124,14 @@ env:
 ## @param   env.analysisControllerLogLevel  sets the log level of Analysis Controller
   analysisControllerLogLevel: "0"
 image:
+## @param     image.registry specify the container registry for the metrics-operator image
+  registry: ghcr.io
 ## @param   image.repository specify registry for manager image
-  repository: ghcr.io/keptn/metrics-operator
+  repository: keptn/metrics-operator
 ## @param   image.tag select tag for manager image
   tag: v0.8.2 # x-release-please-version
+## @param   imagePullPolicy specify pull policy for manager image
+imagePullPolicy: Always
 ## @extra  livenessProbe custom livenessprobe for manager container
 ## @skip   livenessProbe.httpGet.path
 ## @skip   livenessProbe.httpGet.port

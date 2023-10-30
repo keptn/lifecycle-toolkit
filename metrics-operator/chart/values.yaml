@@ -124,7 +124,7 @@ env:
 ## @param   env.analysisControllerLogLevel  sets the log level of Analysis Controller
   analysisControllerLogLevel: "0"
 image:
-## @param     image.registry specify repo for manager image
+## @param     image.registry specify the container registry for the metrics-operator image
   registry: ghcr.io
 ## @param   image.repository specify registry for manager image
   repository: keptn/metrics-operator

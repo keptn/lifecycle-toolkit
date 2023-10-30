@@ -98,7 +98,7 @@ lifecycleOperator:
 ## @param   lifecycleOperator.env.pythonRunnerImage specify image for python task runtime
     pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.0
   image:
-## @param    lifecycleOperator.image.registry specify repo for manager image
+## @param    lifecycleOperator.image.registry specify the container registry for the lifecycle-operator image
     registry: ghcr.io
 ## @param   lifecycleOperator.image.repository specify registry for manager image
     repository: keptn/lifecycle-operator
@@ -205,7 +205,7 @@ scheduler:
 ## @param scheduler.env.otelCollectorUrl sets url for open telemetry collector
     otelCollectorUrl: otel-collector:4317
   image:
-## @param     scheduler.image.registry specify repo for manager image
+## @param     scheduler.image.registry specify the container registry for the scheduler image
     registry: ghcr.io
 ## @param scheduler.image.repository set image repository for scheduler
     repository: keptn/scheduler

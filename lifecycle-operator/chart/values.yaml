@@ -96,7 +96,7 @@ lifecycleOperator:
 ## @param   lifecycleOperator.env.otelCollectorUrl Sets the URL for the open telemetry collector
     otelCollectorUrl: otel-collector:4317
 ## @param   lifecycleOperator.env.pythonRunnerImage specify image for python task runtime
-    pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.0
+    pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.1
   image:
 ## @param    lifecycleOperator.image.registry specify the container registry for the lifecycle-operator image
     registry: ghcr.io

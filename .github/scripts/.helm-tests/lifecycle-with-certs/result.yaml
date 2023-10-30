@@ -6754,7 +6754,7 @@ spec:
         - name: FUNCTION_RUNNER_IMAGE
           value: "ghcr.io/keptn/deno-runtime:v1.0.1"
         - name: PYTHON_RUNNER_IMAGE
-          value: "ghcr.io/keptn/python-runtime:v1.0.0"
+          value: "ghcr.io/keptn/python-runtime:v1.0.1"
         - name: OTEL_COLLECTOR_URL
           value: "otel-collector:4317"
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL

@@ -234,7 +234,7 @@ spec:
               value: "true"
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
-          image: testreg/keptn/certificate-operator:v1.1.0
+          image: testreg/keptn/certificate-operator:v1.2.0
           imagePullPolicy: Always
           name: certificate-operator
           resources:

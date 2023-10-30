@@ -13,11 +13,11 @@ Tasks that fall under this category include:
 * Updating the version of one or more [workloads](https://kubernetes.io/docs/concepts/workloads/)
 that are part of the same application
 * Adding a new [workload](https://kubernetes.io/docs/concepts/workloads/) to an existing application
-* Monitoring the health of your application using `KeptnMetrics`, as described [here](../evaluatemetrics)
+* Monitoring the health of your application using `KeptnMetrics`, as described [here](../evaluatemetrics/)
 * Optimizing the resource usage of your applications by integrating
 `KeptnMetrics` into a
 [HorizontalPodAutoscaler (HPA)](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/),
-as described [here](../evaluatemetrics#using-the-horizontalpodautoscaler)
+as described [here](../evaluatemetrics/#using-the-horizontalpodautoscaler)
 
 ## Updating Workload Versions
 

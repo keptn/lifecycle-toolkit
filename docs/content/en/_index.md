@@ -137,7 +137,7 @@ Gain confidence in your work with pre-/post-deployment checks
 {{% readfile "partials/_index-deployment-checks-right.md" %}}
 </div>
 </div>
-<a class="btn -bg-green" href="./docs/docs/intro/#release-lifecycle-management">
+<a class="btn -bg-green" href="./docs/intro/#release-lifecycle-management">
     Get Started!
 </a>
 </div>

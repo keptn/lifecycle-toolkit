@@ -84,34 +84,24 @@ runs:
 
         cd ./chart
 
-        touch tmp-values.yaml
         if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_on" ]; then
-          echo "lifecycleOperator:" >> tmp-values.yaml
+          echo "lifecycleOperator:" >> values.yaml
           echo "  allowedNamespaces: [allowed-ns-test]" >> tmp-values.yaml
         fi
 
         if [ "${{ inputs.scheduling-gates }}" == "gates_on" ]; then
           if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_off" ]; then
-            echo "lifecycleOperator:" >> tmp-values.yaml
+            echo "lifecycleOperator:" >> values.yaml
           fi
-          echo "  schedulingGatesEnabled: true" >> tmp-values.yaml
+          echo "  schedulingGatesEnabled: true" >> values.yaml
         fi
 
         helm install -n keptn-lifecycle-toolkit-system --create-namespace keptn ./ \
-          --values tmp-values.yaml \
-          --set lifecycleOperator.scheduler.imagePullPolicy=Never \
+          --values values.yaml \
           --set lifecycleOperator.scheduler.image.tag=${{ inputs.runtime_tag }} \
-          --set lifecycleOperator.scheduler.image.repository="localhost:5000/keptn/scheduler" \
-          --set lifecycleOperator.lifecycleOperator.imagePullPolicy=Never \
           --set lifecycleOperator.lifecycleOperator.image.tag=${{ inputs.runtime_tag }} \
-          --set lifecycleOperator.lifecycleOperator.image.repository="localhost:5000/keptn/lifecycle-operator" \
           --set lifecycleOperator.lifecycleOperator.env.functionRunnerImage=localhost:5000/keptn/deno-runtime:${{ inputs.runtime_tag }} \
           --set lifecycleOperator.lifecycleOperator.env.pythonRunnerImage=localhost:5000/keptn/python-runtime:${{ inputs.runtime_tag }} \
-          --set certManager.imagePullPolicy=Never \
           --set certManager.image.tag=${{ inputs.runtime_tag }} \
-          --set certManager.image.repository="localhost:5000/keptn/certificate-operator" \
-          --set metricsOperator.imagePullPolicy=Never \
-          --set metricsOperator.env.enableKeptnAnalysis="true" \
           --set metricsOperator.image.tag=${{ inputs.runtime_tag }} \
-          --set metricsOperator.image.repository="localhost:5000/keptn/metrics-operator" \
           --debug --wait --timeout 1m

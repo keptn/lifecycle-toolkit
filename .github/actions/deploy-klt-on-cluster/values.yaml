@@ -1,0 +1,16 @@
+global:
+  imageRegistry: "localhost:5000"
+
+certManager:
+  imagePullPolicy: Never
+
+metricsOperator:
+  imagePullPolicy: Never
+  env:
+    enableKeptnAnalysis: "true"
+
+lifecycleOperator:
+    lifecycleOperator:
+      imagePullPolicy: Never
+    scheduler:
+      imagePullPolicy: Never

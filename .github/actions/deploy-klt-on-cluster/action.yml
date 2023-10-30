@@ -93,11 +93,11 @@ runs:
         fi
 
         export TAG=${{ inputs.runtime_tag }}
-        envsubst < values.yaml
+        envsubst < values.yaml > tmp.yaml
 
         echo "installing with values.yaml file:"
-        cat values.yaml
+        cat tmp.yaml
 
         helm install -n keptn-lifecycle-toolkit-system --create-namespace keptn ../../../chart \
-          --values ./values.yaml \
+          --values ./tmp.yaml \
           --debug --wait --timeout 1m

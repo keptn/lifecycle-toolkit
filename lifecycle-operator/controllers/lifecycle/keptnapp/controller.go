@@ -19,6 +19,7 @@ package keptnapp
 import (
 	"context"
 	"fmt"
+
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
@@ -38,8 +39,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
-
-const traceComponentName = "keptn/lifecycle-operator/app"
 
 // KeptnAppReconciler reconciles a KeptnApp object
 type KeptnAppReconciler struct {
@@ -175,8 +174,4 @@ func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv
 		}
 	}
 	return lastResultErr
-}
-
-func (r *KeptnAppReconciler) getTracer() telemetry.ITracer {
-	return r.TracerFactory.GetTracer(traceComponentName)
 }

@@ -17,6 +17,7 @@ on:
       - '**.md'
       - 'lifecycle-operator/apis/**'
       - 'metrics-operator/api/**'
+      - '.github/scripts/generate-crd-docs/generate-crd-docs.sh'
 
 env:
   GO_VERSION: "~1.20"

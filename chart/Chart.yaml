@@ -57,7 +57,7 @@ dependencies:
     version: 0.2.0
     alias: certManager
     condition: certManager.enabled
-    repository: "file://../klt-cert-manager/chart"
+    repository: "https://charts.lifecycle.keptn.sh"
   - name: keptn-lifecycle-operator
     version: 0.1.0
     alias: lifecycleOperator

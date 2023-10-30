@@ -5,6 +5,9 @@
     },
     {
       "pattern": "^/images/why-keptn"
+    },
+    {
+      "pattern": "^../assets/"
     }
   ],
   "timeout": "20s",

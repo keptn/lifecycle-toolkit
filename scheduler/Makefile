@@ -15,7 +15,7 @@
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
 BUILDENVVAR=CGO_ENABLED=0
-TAG?="v0.8.2" # x-release-please-version
+TAG?="v0.8.3" # x-release-please-version
 CHART_APPVERSION?=""
 
 LOCAL_REGISTRY=localhost:5000/scheduler-plugins

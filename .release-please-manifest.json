@@ -4,6 +4,6 @@
   "runtimes/python-runtime": "1.0.1",
   "runtimes/deno-runtime": "1.0.2",
   "lifecycle-operator": "0.8.2",
-  "scheduler": "0.8.2",
+  "scheduler": "0.8.3",
   "metrics-operator": "0.8.2"
 }

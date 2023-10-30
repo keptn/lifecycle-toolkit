@@ -1,7 +1,7 @@
 {
   ".": "0.8.2",
   "klt-cert-manager": "1.1.0",
-  "runtimes/python-runtime": "1.0.0",
+  "runtimes/python-runtime": "1.0.1",
   "runtimes/deno-runtime": "1.0.1",
   "lifecycle-operator": "0.8.2",
   "scheduler": "0.8.2",

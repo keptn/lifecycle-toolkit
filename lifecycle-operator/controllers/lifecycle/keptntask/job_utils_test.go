@@ -11,7 +11,6 @@ import (
 	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	batchv1 "k8s.io/api/batch/v1"
-	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -211,13 +210,11 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 
 	taskDefinition := makeTaskDefinitionWithServiceAccount(taskDefinitionName, namespace, svcAccname, &token)
 	taskDefinition.Spec.ServiceAccount.Name = svcAccname
-	taskDefinition.Spec.Container = containerBuilder()
 
 	serviceAccount := makeServiceAccount(svcAccname, namespace, &token)
 	fakeClient := fakeclient.NewClient(serviceAccount, taskDefinition)
 
 	task := makeTask(taskName, namespace, taskDefinitionName)
-	job := makeJobWithServiceAccount("test-job", namespace, svcAccname, task, &token)
 
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
@@ -236,25 +233,6 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 		},
 	}
 
-	builderOpt := BuilderOptions{
-		Client:        r.Client,
-		req:           request,
-		Log:           r.Log,
-		task:          task,
-		containerSpec: taskDefinition.Spec.Container,
-		funcSpec:      controllercommon.GetRuntimeSpec(taskDefinition),
-		eventSender:   r.EventSender,
-		Image:         controllercommon.GetRuntimeImage(taskDefinition),
-		MountPath:     controllercommon.GetRuntimeMountPath(taskDefinition),
-		// ConfigMap:     taskDefinition.Status.Function.ConfigMap,
-	}
-
-	builder := NewJobRunnerBuilder(builderOpt)
-
-	container, _ := builder.CreateContainer(ctx)
-	job.Spec.Template.Spec.Containers = []corev1.Container{*container}
-	job.Spec.Template.Spec.Volumes = []corev1.Volume{}
-
 	errTask := fakeClient.Get(context.TODO(), types.NamespacedName{
 		Namespace: namespace,
 		Name:      task.Name,
@@ -267,9 +245,25 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 	}, taskDefinition)
 	require.Nil(t, errTaskDefinition)
 
-	job, err = r.generateJob(ctx, task, taskDefinition, request)
+	job, err := r.generateJob(ctx, task, taskDefinition, request)
 	require.Nil(t, err)
 	require.NotNil(t, job, "generateJob function return a valid Job")
+
+	resultingJob := job
+
+	require.Len(t, resultingJob.Spec.Template.Spec.Containers, 1)
+	require.Equal(t, resultingJob.Spec.Template.Spec.ServiceAccountName, svcAccname)
+	require.Equal(t, resultingJob.Spec.Template.Spec.AutomountServiceAccountToken, &token)
+	require.Equal(t, map[string]string{
+		"label1": "label2",
+	}, resultingJob.Labels)
+	require.Equal(t, map[string]string{
+		"annotation1":        "annotation2",
+		"keptn.sh/app":       "my-app",
+		"keptn.sh/task-name": "my-task",
+		"keptn.sh/version":   "",
+		"keptn.sh/workload":  "my-workload",
+	}, resultingJob.Annotations)
 }
 
 func makeJob(name, namespace string, status batchv1.JobStatus) *batchv1.Job {
@@ -358,6 +352,9 @@ func makeTaskDefinitionWithServiceAccount(name, namespace, serviceAccountName st
 			},
 		},
 		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+			Container: &klcv1alpha3.ContainerSpec{
+				Container: &v1.Container{},
+			},
 			ServiceAccount: &klcv1alpha3.ServiceAccountSpec{
 				Name: serviceAccountName,
 			},
@@ -365,37 +362,6 @@ func makeTaskDefinitionWithServiceAccount(name, namespace, serviceAccountName st
 				Type: token,
 			},
 		},
-	}
-}
-
-func makeJobWithServiceAccount(name string, namespace string, serviceaccount string, task *klcv1alpha3.KeptnTask, automountServiceAccountToken *bool) *batchv1.Job {
-	return &batchv1.Job{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: task.Namespace,
-			Labels:    task.Labels,
-		},
-		Spec: batchv1.JobSpec{
-			Template: corev1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels:      task.Labels,
-					Annotations: task.Annotations,
-				},
-				Spec: corev1.PodSpec{
-					RestartPolicy:                "OnFailure",
-					ServiceAccountName:           serviceaccount,
-					AutomountServiceAccountToken: automountServiceAccountToken,
-				},
-			},
-			BackoffLimit:          task.Spec.Retries,
-			ActiveDeadlineSeconds: task.GetActiveDeadlineSeconds(),
-		},
-	}
-}
-
-func containerBuilder() *klcv1alpha3.ContainerSpec {
-	return &klcv1alpha3.ContainerSpec{
-		Container: &v1.Container{},
 	}
 }
 

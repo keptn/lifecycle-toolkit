@@ -79,7 +79,7 @@
     "fileMatch": [
       "examples\\/.*\\.ya?ml$",
       "test\\/.*\\.ya?ml$",
-      ".github\\/scripts\\/.helm-tests\\/**\\/*.ya?ml$"
+      ".github\\/scripts\\/.helm-tests\\/.*\\/.*.ya?ml$"
     ],
     "packageRules": [
       {

@@ -64,10 +64,15 @@ status:
   * **analysisDefinition** -- Identify the `AnalysisDefinition` resource
     that stores the `AnalysisValuesTemplate` associated with this `Analysis`
     * **name** -- Name of the `AnalysisDefinition` resource
-    * **namespace** -- Namespace of the `AnalysisDefinition` resource.
+    * **namespace** (optional) --
+      Namespace of the `AnalysisDefinition` resource.
+      The `AnalysisDefinition` resource can be located in any namespace.
+      If the namespace is not specified,
+      the analysis controller looks for the `AnalysisDefinition` resource
+      in the same namespace as the `Analysis` resource.
   * **status** -- results of this Analysis run,
-    added to the resource by Keptn.
-    * **pass** -- Whether the analysis passed or failed.
+    added to the resource by Keptn,
+    based on criteria defined in the `AnalysisDefinition` resource.
     <!-- markdownlint-disable -->
     * **warning** -- Whether the analysis returned a warning.
     * **raw** --  String-encoded JSON object that reaports the results

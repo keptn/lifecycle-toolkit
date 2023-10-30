@@ -141,12 +141,12 @@ Some considerations for Keptn:
   The `Analysis` resource references the `AnalysisDefinition` resource,
   which then references the `AnalysisValueTemplate` resource.
 
-  - If the `namespace` is not set explicitly,
+  * If the `namespace` is not set explicitly,
     the `AnalysisDefinition` and `AnalysisValueTemplate` resources
     must reside in the same namespace as the `Analysis` resource.
     In this case, analyses resources of the same name
     can reside in different namespaces without impacting each other.
-  - If the `namespace` field is set for the resources,
+  * If the `namespace` field is set for the resources,
     the `Analysis`, `AnalysisDefinition`, and `AnalysisValueTemplate` resources
     can each reside in different namespaces.
     In this case, each analysis resource must have a name
@@ -154,11 +154,11 @@ Some considerations for Keptn:
 
   This provides configuration options such as the following:
 
-    - You can have one namespace
+  * You can have one namespace
       with all of your `AnalysisDefinitions` and `AnalysisValueTemplates` resources
       and reuse them in the different namespaces where you run the analyses.
 
-    - You can have everything strictly namespaced
+  * You can have everything strictly namespaced
       and always put the `AnalysisDefinitions`, `ValueTemplates`
       and the `Analysis` resources into the same namespace,
       without adding the explicit namespace selectors

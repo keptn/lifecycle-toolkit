@@ -58,7 +58,7 @@ spec:
       [AnalysisDefinition](analysisdefinition.md)
       resource used for this objective.
       That resource defines the data provider and the query to use.
-      * **namespace** (optional) -- 
+      * **namespace** (optional) --
         Namespace of the `analysisValueTemplateRef` resource.
         If the namespace is not specified,
         the analysis controller looks for the `AnalysisValueTemplateRef` resource
@@ -75,15 +75,15 @@ spec:
           or as a range of values.
 
           Valid operators for absolute values are:
-            * `lessThan` -- `<` operator
-            * `lessThanOrEqual` -- `<=` operator
-            * `greaterThan` -- `>` operator
-            * `greaterThanOrEqual` -- `>=` operator
-            * `equalTo` -- `==` operator
+          * `lessThan` -- `<` operator
+          * `lessThanOrEqual` -- `<=` operator
+          * `greaterThan` -- `>` operator
+          * `greaterThanOrEqual` -- `>=` operator
+          * `equalTo` -- `==` operator
 
           Valid operators for specifying ranges are:
-            * `inRange` -- value is inclusively in the defined range
-            * `notInRange` --  value is exclusivly out of the defined range
+          * `inRange` -- value is inclusively in the defined range
+          * `notInRange` --  value is exclusivly out of the defined range
 
               Each of these operators require two operators:
 

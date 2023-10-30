@@ -34,15 +34,14 @@ var (
 
 var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
-	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
+	ctx, k8sManager, _, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
 	// //setup controllers here
 	controller := &keptnapp.KeptnAppReconciler{
-		Client:        k8sManager.GetClient(),
-		Scheme:        k8sManager.GetScheme(),
-		EventSender:   controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("load-app-controller")),
-		Log:           GinkgoLogr,
-		TracerFactory: &common.TracerFactory{Tracer: tracer},
+		Client:      k8sManager.GetClient(),
+		Scheme:      k8sManager.GetScheme(),
+		EventSender: controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("load-app-controller")),
+		Log:         GinkgoLogr,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 	close(readyToStart)

@@ -25,7 +25,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	operatorcommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
@@ -43,11 +42,9 @@ import (
 // KeptnAppReconciler reconciles a KeptnApp object
 type KeptnAppReconciler struct {
 	client.Client
-	Scheme        *runtime.Scheme
-	EventSender   controllercommon.IEvent
-	Log           logr.Logger
-	TracerFactory telemetry.TracerFactory
-	SpanHandler   telemetry.ISpanHandler
+	Scheme      *runtime.Scheme
+	EventSender controllercommon.IEvent
+	Log         logr.Logger
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnapps,verbs=get;list;watch;create;update;patch;delete

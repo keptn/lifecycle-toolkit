@@ -139,4 +139,3 @@ For more information, see:
 * [Evaluations](../implementing/evaluations.md) User Guide
 * [Manage release lifecycle](usecase-orchestrate.md)
 * [KeptnApp and KeptnWorkload resources](../architecture/keptn-apps)
-

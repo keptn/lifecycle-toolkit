@@ -162,7 +162,7 @@ Note the following:
 `KeptnMetrics` can be retrieved using the `kubectl` command and the
 [KeptnMetric](../yaml-crd-ref/metric.md)
 API.
-This sections shows how to do that.
+This section shows how to do that.
 
 Metrics can also be displayed on a Grafana or other dashboard
 or they can be exposed as OpenTelemetry metrics; see

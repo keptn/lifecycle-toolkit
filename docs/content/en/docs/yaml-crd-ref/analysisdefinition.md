@@ -52,13 +52,13 @@ spec:
   * **objectives**
     This is a list of objectives whose results are combined
     to determine whether the analysis fails, passes, or passes with a warning.
-    * **analysisValueTemplateRef** --
+    * **analysisValueTemplateRef** (required) --
       This string marks the beginning of each objective
-      * **name** -- The `metadata.name` value of the
+      * **name** (required) -- The `metadata.name` value of the
       [AnalysisDefinition](analysisdefinition.md)
       resource used for this objective.
       That resource defines the data provider and the query to use.
-      * **namespace** (optional) --
+      * **namespace** --
         Namespace of the `analysisValueTemplateRef` resource.
         If the namespace is not specified,
         the analysis controller looks for the `AnalysisValueTemplateRef` resource
@@ -90,17 +90,17 @@ spec:
             * `lowBound` -- minimum value of the range included or excluded
             * `highBound` -- maximum value of the range included or excluded
         <!-- markdownlint-disable -->
-        * **warning** (optional) -- criteria for a warning,
+        * **warning** -- criteria for a warning,
           specified in the same way as the `failure` field.
-      * **weight** (optional) -- used to emphasize the importance
+      * **weight**  -- used to emphasize the importance
         of one `objective` over others
-      * **keyObjective** (optional) -- If set to `true`,
+      * **keyObjective** -- If set to `true`,
         the entire analysis fails if this objective fails
-  * **totalScore**
+  * **totalScore** (required) --
     * **passPercentage** -- threshhold to reach for the full analysis
       (all objectives) to pass
     <!-- markdownlint-disable -->
-    * **warningPercentage** (optional) -- threshhold to reach
+    * **warningPercentage** -- threshhold to reach
       for the full analysis (all objectives) to pass with  `warning` status
 
 ## Usage

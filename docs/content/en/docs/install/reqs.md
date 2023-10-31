@@ -24,19 +24,18 @@ Kustomize Version: v4.5.4
 Server Version: v1.24.0
 ```
 
-Keptn uses a different scheduling method
-when using Kubernetes versions 1.26 and older
-or if the `schedulingGatesEnabled` Helm value is set to `false`
-for Kubernetes versions greater than 1.26.
- See
+Keptn scheduling is implemented using the Kubernetes Scheduler Framework
+when running on Kubernetes versions 1.26 and earlier.
+For Kubernetes versions greater than 1.26,
+Keptn scheduling is implemented using Kubernetes Feature gates,
+unless the `schedulingGatesEnabled` Keptn Helm chart value is set to `false`.
+See
 [Keptn integration with Scheduling](../architecture/components/scheduler/)
 for details.
 
 Note that you must modify your vCluster configuration
-before installing Keptn when using Kubernetes versions 1.26 and older
-or if the `schedulingGatesEnabled` Helm chart value is set to `false`
-for Kubernetes versions greater than 1.26.
- See
+to work with the Kubernetes Scheduler Framework.
+See
 [Running Keptn with vCluster](install.md/#running-keptn-with-vcluster)
 for more information.
 

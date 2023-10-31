@@ -132,7 +132,7 @@ Some considerations for Keptn:
   So you can create `KeptnMetrics` in a centralized namespace
   (such as `keptn-lifecycle-toolkit`)
   and access those metrics in evaluations on all namespaces in the cluster.
-* The resources used for analyses
+* The references to the resources used for analyses,
   ([Analysis](../yaml-crd-ref/analysis.md),
   [AnalysisDefinition](../yaml-crd-ref/analysisdefinition.md),
   and

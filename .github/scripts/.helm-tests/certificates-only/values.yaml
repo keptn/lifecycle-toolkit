@@ -15,4 +15,3 @@ global:
   commonLabels:
     mamma : "test"
     app.kubernetes.io/version: vmyversion
-

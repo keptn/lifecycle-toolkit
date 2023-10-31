@@ -45,7 +45,7 @@ status:
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
 * **spec**
-  * **timeframe** -- Specifies the range  for the corresponding query
+  * **timeframe** (required) -- Specifies the range  for the corresponding query
     in the AnalysisValueTemplate.
     This can be populated as one of the following:
 
@@ -61,13 +61,18 @@ status:
     If neither is set, the Analysis can not be added to the cluster.
   * **args** -- Map of key/value pairs that can be used
     to substitute variables in the `AnalysisValueTemplate` query.
-  * **analysisDefinition** -- Identify the `AnalysisDefinition` resource
+  * **analysisDefinition** (required) -- Identify the `AnalysisDefinition` resource
     that stores the `AnalysisValuesTemplate` associated with this `Analysis`
     * **name** -- Name of the `AnalysisDefinition` resource
-    * **namespace** -- Namespace of the `AnalysisDefinition` resource.
+    * **namespace** (optional) --
+      Namespace of the `AnalysisDefinition` resource.
+      The `AnalysisDefinition` resource can be located in any namespace.
+      If the namespace is not specified,
+      the analysis controller looks for the `AnalysisDefinition` resource
+      in the same namespace as the `Analysis` resource.
   * **status** -- results of this Analysis run,
-    added to the resource by Keptn.
-    * **pass** -- Whether the analysis passed or failed.
+    added to the resource by Keptn,
+    based on criteria defined in the `AnalysisDefinition` resource.
     <!-- markdownlint-disable -->
     * **warning** -- Whether the analysis returned a warning.
     * **raw** --  String-encoded JSON object that reaports the results

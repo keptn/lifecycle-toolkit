@@ -44,7 +44,7 @@ and can be displayed on dashboard tools, such as Grafana.
 
 A Keptn Analysis is implemented with three resources:
 
-* [AnalysisValueTemplate](../../crd-ref/metrics/v1alpha3/#analysisvaluetemplate) --
+* [AnalysisValueTemplate](../../yaml-crd-ref/analysisvaluetemplate.md)
   defines the SLI with the `KeptnMetricsProvider` (data source)
   and the query to perform for each SLI
 
@@ -57,7 +57,7 @@ A Keptn Analysis is implemented with three resources:
   resource for each instance of each data provider you are using.
   The template refers to that provider and queries it.
 
-* [AnalysisDefinition](../../crd-ref/metrics/v1alpha3/#analysisdefinition) --
+* [AnalysisDefinition](../../yaml-crd-ref/analysisdefinition.md)
   define the list of SLOs for an `Analysis`
 
   An `AnalysisDefinition` resource contains a list of objectives to satisfy.
@@ -71,7 +71,7 @@ A Keptn Analysis is implemented with three resources:
     defining the data provider from which to gather the data
     and how to compute the Analysis
 
-* [Analysis](../../crd-ref/metrics/v1alpha3/#analysis) --
+* [Analysis](../../yaml-crd-ref/analysis.md)
   define the specific configurations and the Analysis to report.
 
   An `Analysis` resource customizes the templates

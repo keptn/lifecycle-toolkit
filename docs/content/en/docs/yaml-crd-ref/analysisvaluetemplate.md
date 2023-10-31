@@ -18,7 +18,7 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisValueTemplate
 metadata:
   name: response-time-p95
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: <namespace-where-this-resource-resides>
 spec:
   provider:
     name: prometheus | dynatrace | dql | datadog
@@ -46,9 +46,12 @@ spec:
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
-  * **namespace** -- Namespace where this template lives
+  * **namespace** (optional) -- Namespace where this template lives.
+    `Analysis` resources must specify this namespace
+    when referencing this definition,
+    unless it resides in the same namespace as the `Analysis` resource.
 * **spec**
-  * **provider**
+  * **provider** (required) -- the KeptnMetricProvider
     * **name** -- The `spec.name` value of the
       [KeptnMetricsProvider](metricsprovider.md) resource to use.
       Note that each `AnalysisValueTemplate` resource
@@ -56,7 +59,7 @@ spec:
       However, an `Analysis` resource
       can use multiple `AnalysisValueTemplate` resources,
       each of which uses a different data source.
-  * **query** -- query to be made.
+  * **query** (required) -- query to be made.
     This is done in the data provider's query language.
     It can include variables that use the go templating syntax
     to insert a placeholder in the query.

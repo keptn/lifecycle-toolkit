@@ -144,6 +144,34 @@ Some considerations for Keptn:
   So you can create `KeptnMetrics` in a centralized namespace
   (such as `keptn-lifecycle-toolkit`)
   and access those metrics in evaluations on all namespaces in the cluster.
+* Analysis related resources
+  ([Analysis](../yaml-crd-ref/analysis.md),
+  [AnalysisDefinition](../yaml-crd-ref/analysisdefinition.md),
+  and
+  [AnalysisValueTemplate](../yaml-crd-ref/analysisvaluetemplate.md))
+  reference each other via a `name` and, optionally, a `namespace` field.
+  The `Analysis` resource references the `AnalysisDefinition` resource,
+  which then references the `AnalysisValueTemplate` resources.
+
+  * If the `namespace` in the reference is not set explicitly,
+    the `AnalysisDefinition` and `AnalysisValueTemplate` resources
+    must reside in the same namespace as the `Analysis` resource.
+  * If the `namespace` in the reference is set for the resources,
+    the `Analysis`, `AnalysisDefinition`, and `AnalysisValueTemplate` resources
+    can each reside in different namespaces.
+
+  This provides configuration options such as the following:
+
+  * You can have one namespace
+      with all of your `AnalysisDefinition` and `AnalysisValueTemplate` resources
+      and reuse them in the different namespaces where you run analyses.
+
+  * You can have everything strictly namespaced
+      and always put the `AnalysisDefinition`, `AnalysisValueTemplate`
+      and the `Analysis` resources into the same namespace,
+      without adding the explicit namespace selectors
+      when creating references between those objects.
+
 * Each `KeptnApp` resource identifies the namespace to which it belongs.
   If you configure multiple namespaces,
   you can have `KeptnApp` resources with the same name

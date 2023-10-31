@@ -6873,7 +6873,7 @@ spec:
           value: "otel-collector:4317"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: ghcr.io/keptn/scheduler:v0.8.2
+        image: ghcr.io/keptn/scheduler:v0.8.3
         imagePullPolicy: Never
         name: scheduler
         resources:

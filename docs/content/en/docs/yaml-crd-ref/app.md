@@ -59,7 +59,7 @@ when the app discovery feature generates the `KeptnApp` resource:
     specification.
 
 - **spec**
-  - **version** -- version of the Keptn application.
+  - **version** (required) -- version of the Keptn application.
     Changing this version number causes a new execution
     of all application-level checks
   - **revision** -- revision of a `version`.
@@ -72,12 +72,12 @@ when the app discovery feature generates the `KeptnApp` resource:
     [Restart an Application Deployment](../implementing/restart-application-deployment/)
     for a longer discussion of this.
   - **workloads**
-    - **name** - name of this Kubernetes
+    - **name** (required) -- name of this Kubernetes
       [workload](https://kubernetes.io/docs/concepts/workloads/).
       Use the same naming rules listed above for the application name.
       Provide one entry for each [workload](https://kubernetes.io/docs/concepts/workloads/)
       associated with this Keptn application.
-    - **version** -- version number for this [workload](https://kubernetes.io/docs/concepts/workloads/).
+    - **version** (required) -- version number for this [workload](https://kubernetes.io/docs/concepts/workloads/).
       Changing this number causes a new execution
       of checks for this [workload](https://kubernetes.io/docs/concepts/workloads/) only,
       not the entire application.

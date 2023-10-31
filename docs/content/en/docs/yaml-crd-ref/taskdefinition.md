@@ -87,7 +87,7 @@ spec:
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
 * **spec**
-  * **deno | python | container** -- Define the container type
+  * **deno | python | container** (required) -- Define the container type
   to use for this task.
   Each task can use one type of runner,
   identified by this field:
@@ -107,10 +107,10 @@ spec:
       and code the functionality to match the container you define.
       See
       [Synopsis for container-runtime container](#synopsis-for-container-runtime).
-  * **retries** (optional) -- specifies the number of times
+  * **retries** -- specifies the number of times
     a job executing the `KeptnTaskDefinition`
     should be restarted if an attempt is unsuccessful.
-  * **timeout** (optional) -- specifies the maximum time
+  * **timeout** -- specifies the maximum time
     to wait for the task to be completed successfully.
     The value supplied should specify the unit of measurement;
     for example, `5s` indicates 5 seconds and `5m` indicates 5 minutes.

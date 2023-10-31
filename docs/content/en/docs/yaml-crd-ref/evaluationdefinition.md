@@ -42,14 +42,20 @@ spec:
 
 * **spec**
 
-  * **objectives** -- define the evaluations to be performed.
+  * **objectives** (required) -- define the evaluations to be performed.
      Each objective is expressed as a `keptnMetricRef`
      and an `evaluationTarget` value.
 
-    * **KeptnMetricRef** -- A reference to the
-      [KeptnMetric](metric.md) object that contains the value,
-      identified by `name` and `namespace`
-    * **evaluationTarget** -- Desired value of the query,
+    * **keptnMetricRef** (required) -- A reference to the
+      [KeptnMetric](metric.md) object
+
+      * **name** (required) -- Name of the referenced
+        [KeptnMetric](metric.md) object
+
+      * **namespace** -- Name of the referenced
+        [KeptnMetric](metric.md) object
+
+    * **evaluationTarget** (required) -- Desired value of the query,
        expressed as an arithmetic formula,
        usually less than (`<`) or greater than (`>`)
        This is used to define success or failure criteria

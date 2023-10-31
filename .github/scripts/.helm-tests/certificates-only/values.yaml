@@ -1,5 +1,7 @@
 certManager:
   enabled: true
+  image:
+    tag: v0.0.0
 lifecycleOperator:
   enabled: false
 metricsOperator:
@@ -13,4 +15,3 @@ global:
   commonLabels:
     mamma : "test"
     app.kubernetes.io/version: vmyversion
-

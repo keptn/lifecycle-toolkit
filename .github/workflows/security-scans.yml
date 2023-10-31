@@ -200,6 +200,12 @@ jobs:
           - "scheduler"
           - "certificate-operator"
     steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: 'true'
+
       - name: Download images
         id: download_images
         uses: actions/download-artifact@v3
@@ -213,6 +219,7 @@ jobs:
           input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
           exit-code: '1'
+          trivyignores: .trivyignore
 
   govulncheck:
     name: Govulncheck

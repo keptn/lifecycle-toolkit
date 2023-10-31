@@ -1,7 +1,5 @@
 
-## Deployment Check Orchestration
-
-### Orchestrating deployment checks
+## Orchestrate Deployment Checks
 
 To reduce complexity of custom checks use Keptn to:
 

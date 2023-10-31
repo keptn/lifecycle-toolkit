@@ -40,7 +40,7 @@ spec:
 
 * **apiVersion** (required) -- API version being used.
 
-* **kind** -- Resource type.
+* **kind** (required) -- Resource type.
    Must be set to `KeptnMetric`.
 
 * **metadata**

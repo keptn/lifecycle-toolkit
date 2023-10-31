@@ -51,7 +51,7 @@ spec:
     when referencing this definition,
     unless it resides in the same namespace as the `Analysis` resource.
 * **spec**
-  * **provider**
+  * **provider** (required) -- the KeptnMetricProvider 
     * **name** -- The `spec.name` value of the
       [KeptnMetricsProvider](metricsprovider.md) resource to use.
       Note that each `AnalysisValueTemplate` resource
@@ -59,7 +59,7 @@ spec:
       However, an `Analysis` resource
       can use multiple `AnalysisValueTemplate` resources,
       each of which uses a different data source.
-  * **query** -- query to be made.
+  * **query** (required) -- query to be made.
     This is done in the data provider's query language.
     It can include variables that use the go templating syntax
     to insert a placeholder in the query.

@@ -11,11 +11,11 @@ func TestTaskDefinition_GetServiceAccountNoName(t *testing.T) {
 		Spec: KeptnTaskDefinitionSpec{},
 	}
 	svcAccname := d.GetServiceAccount()
-	require.Len(t, svcAccname, 0)
+	require.Equal(t, svcAccname, "")
 }
 
 func TestTaskDefinition_GetServiceAccountName(t *testing.T) {
-	svcAccName := "sva"
+	sAName := "sva"
 	d := &KeptnTaskDefinition{
 		Spec: KeptnTaskDefinitionSpec{
 			ServiceAccount: &ServiceAccountSpec{
@@ -24,7 +24,7 @@ func TestTaskDefinition_GetServiceAccountName(t *testing.T) {
 		},
 	}
 	svcAccname := d.GetServiceAccount()
-	require.Len(t, svcAccname, 3)
+	require.Equal(t, svcAccname, sAName)
 }
 
 func TestTaskDefinition_GetAutomountServiceAccountToken(t *testing.T) {
@@ -36,6 +36,5 @@ func TestTaskDefinition_GetAutomountServiceAccountToken(t *testing.T) {
 			},
 		},
 	}
-	automountSaToken := d.GetAutomountServiceAccountToken()
-	require.True(t, *automountSaToken)
+	require.True(t, *d.GetAutomountServiceAccountToken())
 }

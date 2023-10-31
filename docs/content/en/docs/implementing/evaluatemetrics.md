@@ -147,8 +147,6 @@ spec:
 
 Note the following:
 
-* Populate one YAML file per metric
-  then apply all of them.
 * Each metric is assigned a unique `name`.
 * The value of the `spec.provider.name` field
   must correspond to the name assigned in

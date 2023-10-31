@@ -47,7 +47,7 @@ simplifying configuration and integration into a single set of metrics.
 
 To learn more, see:
 
-* [Gettng started with Keptn metrics](../getting-started/usecase_metrics.md)
+* [Getting started with Keptn metrics](../getting-started/usecase_metrics.md)
 * [Keptn Metrics](../implementing/evaluatemetrics.md) User Guide
 
 ## Observability

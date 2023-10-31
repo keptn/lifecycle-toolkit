@@ -4,3 +4,5 @@ lifecycleOperator:
   enabled: false
 metricsOperator:
   enabled: true
+  image:
+    tag: v0.0.0

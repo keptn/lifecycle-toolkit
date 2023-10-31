@@ -40,7 +40,7 @@ so it does not work with
 ("vClusters") out of the box.
 This is also an issue
 if the `schedulingGatesEnabled` Helm chart value is set to `false`
-for Kubernetes versions greater than 1.26.
+for Kubernetes version 1.27 and later.
 See
 [Keptn integration with Scheduling](../architecture/components/scheduler/)
 for details.

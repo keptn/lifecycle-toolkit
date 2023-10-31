@@ -62,10 +62,10 @@ dependencies:
     version: 0.1.0
     alias: lifecycleOperator
     condition: lifecycleOperator.enabled
-    repository: "file://../lifecycle-operator/chart"
+    repository: "https://charts.lifecycle.keptn.sh"
   - name: keptn-metrics-operator
     version: 0.1.0
     alias: metricsOperator
     condition: metricsOperator.enabled
-    repository: "file://../metrics-operator/chart"
+    repository: "https://charts.lifecycle.keptn.sh"
 # TODO: change repository links to released ones once the charts get their first release

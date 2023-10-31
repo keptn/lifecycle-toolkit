@@ -210,15 +210,7 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 
 	taskDefinition := makeTaskDefinitionWithServiceAccount(taskDefinitionName, namespace, svcAccname, &token)
 	taskDefinition.Spec.ServiceAccount.Name = svcAccname
-
-	serviceAccount := &v1.ServiceAccount{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: svcAccname,
-		},
-		AutomountServiceAccountToken: &token,
-	}
-
-	fakeClient := fakeclient.NewClient(serviceAccount, taskDefinition)
+	fakeClient := fakeclient.NewClient(taskDefinition)
 	task := makeTask(taskName, namespace, taskDefinitionName)
 
 	r := &KeptnTaskReconciler{

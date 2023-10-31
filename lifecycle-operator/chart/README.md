@@ -86,7 +86,7 @@ and application health checks
 | `scheduler.env.otelCollectorUrl`                             | sets url for open telemetry collector                          | `otel-collector:4317` |
 | `scheduler.image.registry`                                   | specify the container registry for the scheduler image         | `ghcr.io`             |
 | `scheduler.image.repository`                                 | set image repository for scheduler                             | `keptn/scheduler`     |
-| `scheduler.image.tag`                                        | set image tag for scheduler                                    | `v0.8.2`              |
+| `scheduler.image.tag`                                        | set image tag for scheduler                                    | `v0.8.3`              |
 | `scheduler.imagePullPolicy`                                  | set image pull policy for scheduler                            | `Always`              |
 | `scheduler.livenessProbe`                                    | customizable liveness probe for the scheduler                  |                       |
 | `scheduler.readinessProbe`                                   | customizable readiness probe for the scheduler                 |                       |

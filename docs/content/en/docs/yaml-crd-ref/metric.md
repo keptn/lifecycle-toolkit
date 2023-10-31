@@ -67,6 +67,7 @@ spec:
   * **query** -- String in the provider-specific query language,
     used to obtain a metric.
   * **fetchIntervalSeconds** -- Number of seconds between updates of the metric.
+    Information is fetched in on a continuous basis at this rate
   * **range**
     * **interval** -- Timeframe for which the metric would be queried.
     Defaults to 5m.
@@ -81,6 +82,12 @@ spec:
     such as a forbidden code.
 
 ## Usage
+
+You should populate one YAML file per metric, then apply all of them.
+As soon as you define and apply
+your `KeptnMetricsProvider` and `KeptnMetric` resources,
+Keptn begins collecting the metrics you defined.
+You do not need to do anything else.
 
 A `KeptnMetric` resource must be located
 in the same namespace as the associated

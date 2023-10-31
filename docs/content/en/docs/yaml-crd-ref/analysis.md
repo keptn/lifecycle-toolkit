@@ -45,7 +45,7 @@ status:
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
 * **spec**
-  * **timeframe** -- Specifies the range  for the corresponding query
+  * **timeframe** (required) -- Specifies the range  for the corresponding query
     in the AnalysisValueTemplate.
     This can be populated as one of the following:
 
@@ -61,7 +61,7 @@ status:
     If neither is set, the Analysis can not be added to the cluster.
   * **args** -- Map of key/value pairs that can be used
     to substitute variables in the `AnalysisValueTemplate` query.
-  * **analysisDefinition** -- Identify the `AnalysisDefinition` resource
+  * **analysisDefinition** (required) -- Identify the `AnalysisDefinition` resource
     that stores the `AnalysisValuesTemplate` associated with this `Analysis`
     * **name** -- Name of the `AnalysisDefinition` resource
     * **namespace** -- Namespace of the `AnalysisDefinition` resource.

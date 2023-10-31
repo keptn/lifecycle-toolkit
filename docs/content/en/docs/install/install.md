@@ -42,7 +42,7 @@ This is also an issue
 if the `schedulingGatesEnabled` Helm chart value is set to `false`
 for Kubernetes version 1.27 and later.
 See
-[Keptn integration with Scheduling](../architecture/components/scheduler/)
+[Keptn integration with Scheduling](../architecture/components/scheduler.md)
 for details.
 
 To solve this problem:

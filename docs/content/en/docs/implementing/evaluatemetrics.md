@@ -110,8 +110,8 @@ You can define any type of metric from any data source.
 
 In our example, we define two bits of information to retrieve:
 
-* Number of CPUs, derived from the `dev-prometheus` data platform
-* `availability` SLO, derived from the `dev-dynatrace` data platform
+* Number of CPUs, fetched from the `dev-prometheus` data platform
+* `availability` SLO, fetched from the `dev-dynatrace` data platform
 
 Each of these are configured to fetch data every 10 seconds
 but you could configure a different `fetchIntervalSeconds` value

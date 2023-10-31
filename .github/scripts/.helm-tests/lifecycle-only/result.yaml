@@ -6525,7 +6525,7 @@ spec:
           value: "false"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: testreg/myrep:v0.8.2
+        image: testreg/myrep:v0.0.1
         imagePullPolicy: Always
         name: lifecycle-operator
         ports:

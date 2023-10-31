@@ -5,6 +5,3 @@ lifecycleOperator:
 metricsOperator:
   enabled: true
   imagePullPolicy: Never
-
-global:
-  imageRegistry: "testreg"

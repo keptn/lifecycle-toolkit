@@ -139,7 +139,7 @@ Some considerations for Keptn:
   [AnalysisValueTemplate](../yaml-crd-ref/analysisvaluetemplate.md))
   each support an optional `namespace` field.
   The `Analysis` resource references the `AnalysisDefinition` resource,
-  which then references the `AnalysisValueTemplate` resource.
+  which then references the `AnalysisValueTemplate` resources.
 
   * If the `namespace` is not set explicitly,
     the `AnalysisDefinition` and `AnalysisValueTemplate` resources

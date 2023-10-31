@@ -138,5 +138,5 @@ For more information, see:
 * [Deployment tasks](../implementing/tasks) User Guide
 * [Evaluations](../implementing/evaluations.md) User Guide
 * [Manage release lifecycle](usecase-orchestrate.md)
-* [KeptnApp and KeptnWorkflow resources](../architecture/keptn-apps)
+* [KeptnApp and KeptnWorkload resources](../architecture/keptn-apps)
 

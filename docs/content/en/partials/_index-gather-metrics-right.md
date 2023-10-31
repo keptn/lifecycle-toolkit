@@ -1,5 +1,5 @@
 
-## Data Access
+## Gather metrics from anywhere
 
 ### Standardizing access for all Observability Data for K8s
 

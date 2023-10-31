@@ -52,7 +52,7 @@ spec:
       * **name** (required) -- A name of the referenced
         [KeptnMetric](metric.md) object
 
-      * **namespace** -- A name of the referenced
+      * **namespace** -- Name of the referenced
         [KeptnMetric](metric.md) object
 
     * **evaluationTarget** (required) -- Desired value of the query,

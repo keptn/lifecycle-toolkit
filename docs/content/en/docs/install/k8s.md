@@ -141,7 +141,7 @@ Some considerations for Keptn:
   The `Analysis` resource references the `AnalysisDefinition` resource,
   which then references the `AnalysisValueTemplate` resources.
 
-  * If the `namespace` is not set explicitly,
+  * If the `namespace` in the reference is not set explicitly,
     the `AnalysisDefinition` and `AnalysisValueTemplate` resources
     must reside in the same namespace as the `Analysis` resource.
     In this case, analyses resources of the same name

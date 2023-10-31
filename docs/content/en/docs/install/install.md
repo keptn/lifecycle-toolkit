@@ -55,7 +55,7 @@ To solve this problem:
 1. Create or upgrade the vCluster,
    following the instructions in that same document.
 
-1. Follow the instructions in the next section
+1. Follow the instructions in the section below
    to install Keptn in that vCluster.
 
 ## Use Helm Chart

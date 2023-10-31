@@ -130,7 +130,7 @@ metadata:
 spec:
   provider:
     name: dev-prometheus
-  query: "sum(kube_node_status_cvapacity{resources`cpu`})"
+  query: "sum(kube_node_status_capacity{resources`cpu`})"
   fetchIntervalSeconds: 10
 ---
 apiVersion: metrics.keptn.sh/v1alpha2

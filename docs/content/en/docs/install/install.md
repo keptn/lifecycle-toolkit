@@ -34,7 +34,7 @@ You are then ready to
 
 Keptn running on Kubernetes versions 1.26 and older
 uses a custom
-[scheduler](../architecture/components/scheduler/),
+[scheduler](../architecture/components/scheduler.md),
 so it does not work with
 [Virtual Kubernetes Clusters](https://www.vcluster.com/)
 ("vClusters") out of the box.

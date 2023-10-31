@@ -13,7 +13,7 @@ To run the converter, execute the following command:
 
 <!---x-release-please-start-version-->
 ```shell
-METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.2
+METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
 PATH_TO_SLI=<PATH_TO_SLI>
 KEPTN_PROVIDER_NAME=<KEPTN_PROVIDER_NAME>
 KEPTN_PROVIDER_NAMESPACE=<KEPTN_PROVIDER_NAMESPACE>

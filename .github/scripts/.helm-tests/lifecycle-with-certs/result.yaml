@@ -6752,9 +6752,9 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: FUNCTION_RUNNER_IMAGE
-          value: "ghcr.io/keptn/deno-runtime:v1.0.1"
+          value: "ghcr.io/keptn/deno-runtime:v1.0.2"
         - name: PYTHON_RUNNER_IMAGE
-          value: "ghcr.io/keptn/python-runtime:v1.0.0"
+          value: "ghcr.io/keptn/python-runtime:v1.0.1"
         - name: OTEL_COLLECTOR_URL
           value: "otel-collector:4317"
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
@@ -6782,7 +6782,7 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
         image: ghcr.io/keptn/lifecycle-operator:v0.8.2
-        imagePullPolicy: Always
+        imagePullPolicy: Never
         name: lifecycle-operator
         ports:
         - containerPort: 9443
@@ -6874,7 +6874,7 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
         image: ghcr.io/keptn/scheduler:v0.8.2
-        imagePullPolicy: Always
+        imagePullPolicy: Never
         name: scheduler
         resources:
           limits:

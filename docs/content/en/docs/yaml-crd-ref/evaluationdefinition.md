@@ -49,10 +49,10 @@ spec:
     * **keptnMetricRef** (required) -- A reference to the
       [KeptnMetric](metric.md) object
 
-        * **name** (required) -- A name of the referenced
+      * **name** (required) -- A name of the referenced
         [KeptnMetric](metric.md) object
 
-        * **namespace** -- A name of the referenced
+      * **namespace** -- A name of the referenced
         [KeptnMetric](metric.md) object
 
     * **evaluationTarget** (required) -- Desired value of the query,

@@ -51,7 +51,7 @@ spec:
     when referencing this definition,
     unless it resides in the same namespace as the `Analysis` resource.
 * **spec**
-  * **provider** (required) -- the KeptnMetricProvider 
+  * **provider** (required) -- the KeptnMetricProvider
     * **name** -- The `spec.name` value of the
       [KeptnMetricsProvider](metricsprovider.md) resource to use.
       Note that each `AnalysisValueTemplate` resource

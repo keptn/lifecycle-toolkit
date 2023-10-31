@@ -147,7 +147,7 @@ spec:
 
 Note the following:
 
-* Each metric is assigned a unique `name`.
+* Each metric should have a unique `name`.
 * The value of the `spec.provider.name` field
   must correspond to the name assigned in
   the `metadata.name` field of a `KeptnMetricsProvider` resource.

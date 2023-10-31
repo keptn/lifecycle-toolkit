@@ -146,7 +146,7 @@ Some considerations for Keptn:
     must reside in the same namespace as the `Analysis` resource.
     In this case, analyses resources of the same name
     can reside in different namespaces without impacting each other.
-  * If the `namespace` field is set for the resources,
+  * If the `namespace` in the reference is set for the resources,
     the `Analysis`, `AnalysisDefinition`, and `AnalysisValueTemplate` resources
     can each reside in different namespaces.
     In this case, each analysis resource must have a name

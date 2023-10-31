@@ -6666,7 +6666,7 @@ spec:
               value: "true"
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
-          image: ghcr.io/keptn/certificate-operator:v1.2.0
+          image: ghcr.io/keptn/certificate-operator:v0.0.0
           imagePullPolicy: Always
           name: certificate-operator
           resources:
@@ -6781,7 +6781,7 @@ spec:
           value: "false"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: ghcr.io/keptn/lifecycle-operator:v0.8.2
+        image: ghcr.io/keptn/lifecycle-operator:v0.0.0
         imagePullPolicy: Never
         name: lifecycle-operator
         ports:
@@ -6873,7 +6873,7 @@ spec:
           value: "otel-collector:4317"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: ghcr.io/keptn/scheduler:v0.8.3
+        image: ghcr.io/keptn/scheduler:v0.0.0
         imagePullPolicy: Never
         name: scheduler
         resources:

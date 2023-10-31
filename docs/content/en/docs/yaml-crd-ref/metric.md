@@ -83,7 +83,6 @@ spec:
 
 ## Usage
 
-You should populate one YAML file per metric, then apply all of them.
 As soon as you define and apply
 your `KeptnMetricsProvider` and `KeptnMetric` resources,
 Keptn begins collecting the metrics you defined.

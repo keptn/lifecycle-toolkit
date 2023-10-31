@@ -37,5 +37,5 @@ func TestTaskDefinition_GetAutomountServiceAccountToken(t *testing.T) {
 		},
 	}
 	automountSaToken := d.GetAutomountServiceAccountToken()
-	require.Equal(t, automountSaToken, &token)
+	require.True(t, *automountSaToken)
 }

@@ -49,7 +49,7 @@ spec:
     * **keptnMetricRef** (required) -- A reference to the
       [KeptnMetric](metric.md) object
 
-      * **name** (required) -- A name of the referenced
+      * **name** (required) -- Name of the referenced
         [KeptnMetric](metric.md) object
 
       * **namespace** -- Name of the referenced

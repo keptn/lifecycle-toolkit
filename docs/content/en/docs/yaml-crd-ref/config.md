@@ -40,7 +40,7 @@ spec:
     to put into the same auto-generated [KeptnApp](app.md).
     The default value is 30 (seconds).
   * **cloudEventsEndpoint** --
-    Endpoint where Cloud Events should be posted by the lifecycle operator.
+    Endpoint where the lifecycle operator posts Cloud Events.
 
 ## Usage
 

@@ -66,9 +66,10 @@ spec:
     that monitors the production deployment.
   * **query** (required) -- String in the provider-specific query language,
     used to obtain a metric.
+
   * **fetchIntervalSeconds** (required) -- Number of seconds between updates of the metric.
   * **range**
-    * **interval** -- Timeframe for which the metric would be queried.
+    * **interval** -- Timeframe for which the metric is queried.
     Defaults to 5m.
 
 * **status**
@@ -81,6 +82,11 @@ spec:
     such as a forbidden code.
 
 ## Usage
+
+As soon as you define and apply
+your `KeptnMetricsProvider` and `KeptnMetric` resources,
+Keptn begins collecting the metrics you defined.
+You do not need to do anything else.
 
 A `KeptnMetric` resource must be located
 in the same namespace as the associated

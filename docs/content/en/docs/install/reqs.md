@@ -24,8 +24,22 @@ Kustomize Version: v4.5.4
 Server Version: v1.24.0
 ```
 
-Keptn is not currently compatible with
-[vcluster](<https://github.com/loft-sh/vcluster>).
+Keptn makes use of a custom scheduler
+when running on Kubernetes v1.26 and earlier.
+For Kubernetes v1.27 and later, scheduling is
+implemented using
+[Kubernetes scheduling gates](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness/),
+unless the `schedulingGatesEnabled` Helm value is set to `false`.
+See
+[Keptn integration with Scheduling](../architecture/components/scheduler/)
+for details.
+
+If Keptn is installed on a [vCluster](https://www.vcluster.com/) with
+Kubernetes v1.26 or earlier, some extra configuration
+needs to be added for full compatibility.
+See
+[Running Keptn with vCluster](install.md/#running-keptn-with-vcluster)
+for more information.
 
 ## Resource requirements
 

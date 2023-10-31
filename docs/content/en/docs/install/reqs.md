@@ -31,7 +31,7 @@ implemented using
 [Kubernetes scheduling gates](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness/),
 unless the `schedulingGatesEnabled` Helm value is set to `false`.
 See
-[Keptn integration with Scheduling](../architecture/components/scheduler/)
+[Keptn integration with Scheduling](../architecture/components/scheduler.md)
 for details.
 
 If Keptn is installed on a [vCluster](https://www.vcluster.com/) with

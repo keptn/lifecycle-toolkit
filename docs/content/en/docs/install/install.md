@@ -34,7 +34,7 @@ You are then ready to
 
 Keptn running on Kubernetes versions 1.26 and older
 uses a custom
-[scheduler](../architecture/components/scheduler/),
+[scheduler](../architecture/components/scheduler.md),
 so it does not work with
 [Virtual Kubernetes Clusters](https://www.vcluster.com/)
 ("vClusters") out of the box.
@@ -42,7 +42,7 @@ This is also an issue
 if the `schedulingGatesEnabled` Helm chart value is set to `false`
 for Kubernetes version 1.27 and later.
 See
-[Keptn integration with Scheduling](../architecture/components/scheduler/)
+[Keptn integration with Scheduling](../architecture/components/scheduler.md)
 for details.
 
 To solve this problem:

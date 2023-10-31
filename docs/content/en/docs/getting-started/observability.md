@@ -29,7 +29,7 @@ The following is an imperative walkthrough.
 By the end of this page, here is what will be built.
 The system will be built in stages.
 
-![system overview](assets/install01.png)
+![system overview](../assets/install01.png)
 
 ## The Basics: A Deployment, Keptn and DORA Metrics
 
@@ -42,7 +42,7 @@ Keptn will monitor the deployment and generate:
 - An OpenTelemetry trace per deployment
 - DORA metrics
 
-![the basics](assets/install02.png)
+![the basics](../assets/install02.png)
 
 Notice though that the metrics and traces have nowhere to go.
 That will be fixed in a subsequent step.
@@ -234,7 +234,7 @@ Open a browser window and go to `http://localhost:8080`
 
 You should see the "Welcome to nginx" page.
 
-![nginx demo app](assets/nginx.png)
+![nginx demo app](../assets/nginx.png)
 
 ## Step 6: View DORA Metrics
 
@@ -257,7 +257,7 @@ Open a new terminal window to continue.
 - Access metrics in Prometheus format on `http://localhost:2222/metrics`
 - Look for metrics starting with `keptn_`
 
-![keptn prometheus metrics](assets/keptnprommetrics.png)
+![keptn prometheus metrics](../assets/keptnprommetrics.png)
 
 Keptn emits various metrics about the state of your system.
 These metrics can then be visualised in Grafana.
@@ -283,7 +283,7 @@ So let's install new Observability components to help us:
   Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
 - [Grafana](https://grafana.com) (and some prebuilt dashboards): Visualise the data
 
-![add observability](assets/install01.png)
+![add observability](../assets/install01.png)
 
 ## Step 8: Install Cert Manager
 
@@ -470,9 +470,9 @@ This signals that the deployment was successful and the pod is running.
 
 View the Keptn Applications Dashboard and you should see the DORA metrics and an OpenTelemetry trace:
 
-![keptn applications dashboard](assets/keptnapplications.png)
+![keptn applications dashboard](../assets/keptnapplications.png)
 
-![deployment trace](assets/deploymenttrace.png)
+![deployment trace](../assets/deploymenttrace.png)
 
 ## Step 14: More control over KeptnApp
 
@@ -525,7 +525,7 @@ spec:
     that failed to deploy, perhaps because a
     `preDeploymentEvaluation` or `preDeploymentTask` failed.
     See
-    [Restart an Application Deployment](../../implementing/restart-application-deployment/)
+    [Restart an Application Deployment](../implementing/restart-application-deployment/)
     for a longer discussion of this.
   - **workloads**
     - **name** - name of this Kubernetes
@@ -545,23 +545,23 @@ If used, these fields must be populated manually:
 - **preDeploymentTasks** -- list each task
     to be run as part of the pre-deployment stage.
     Task names must match the value of the `metadata.name` field
-    for the associated [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md) resource.
+    for the associated [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md) resource.
 - **postDeploymentTasks** -- list each task
     to be run as part of the post-deployment stage.
     Task names must match the value of the `metadata.name` field
     for the associated
-    [KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
+    [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
     resource.
 - **preDeploymentEvaluations** -- list each evaluation to be run
     as part of the pre-deployment stage.
     Evaluation names must match the value of the `metadata.name` field
     for the associated
-    [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
+    [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
     resource.
 - **postDeploymentEvaluations** -- list each evaluation to be run
     as part of the post-deployment stage.
     Evaluation names must match the value of the `metadata.name` field
-    for the associated [KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
+    for the associated [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
     resource.
 
 ## Example
@@ -589,10 +589,10 @@ You may have noticed that the `KeptnApp` Custom Resources are created automatica
 
 However, you can override this automatic behaviour by creating a custom `KeptnApp` CRD.
 In this way, you are in full control of what constitutes a Keptn Application.
-See [KeptnApp Reference page](../../yaml-crd-ref/app.md) for more information.
+See [KeptnApp Reference page](../yaml-crd-ref/app.md) for more information.
 
 ## What's next?
 
 Keptn can run pre and post deployment tasks and SLO evaluations automatically.
 
-Continue the Keptn learning journey by [adding deployment tasks](../../implementing/tasks).
+Continue the Keptn learning journey by [adding deployment tasks](../implementing/tasks).

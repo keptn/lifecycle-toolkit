@@ -66,8 +66,10 @@ The status follows the
 
 Keptn can be installed on any Kubernetes cluster
 running Kubernetes >=1.24.
-Note that Keptn is not currently compatible with
-[vcluster](https://github.com/loft-sh/vcluster).
+Note that you may need to modify your vCluster configuration
+before installing Keptn; see
+[Running Keptn with vCluster](https://main.lifecycle.keptn.sh/docs/install/install//#running-keptn-with-vcluster)
+for more information.
 
 Use the following command sequence
 to install the latest release of Keptn:

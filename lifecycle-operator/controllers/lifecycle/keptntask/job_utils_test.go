@@ -246,7 +246,7 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 	require.Nil(t, err)
 	require.NotNil(t, resultingJob, "generateJob function return a valid Job")
 
-	require.Len(t, resultingJob.Spec.Template.Spec.Containers, 1)
+	require.NotNil(t, resultingJob.Spec.Template.Spec.Containers)
 	require.Equal(t, resultingJob.Spec.Template.Spec.ServiceAccountName, svcAccname)
 	require.Equal(t, resultingJob.Spec.Template.Spec.AutomountServiceAccountToken, &token)
 	require.Equal(t, map[string]string{

@@ -19,7 +19,7 @@ func TestTaskDefinition_GetServiceAccountName(t *testing.T) {
 	d := &KeptnTaskDefinition{
 		Spec: KeptnTaskDefinitionSpec{
 			ServiceAccount: &ServiceAccountSpec{
-				Name: svcAccName,
+				Name: sAName,
 			},
 		},
 	}

@@ -8,6 +8,10 @@ lifecycleOperator:
   lifecycleOperator:
     image:
       repository: myrep
+      tag: v0.0.1
+  scheduler:
+    image:
+      tag: v0.0.0
 
 metricsOperator:
   enabled: false

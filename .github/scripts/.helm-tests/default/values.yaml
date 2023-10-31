@@ -1,6 +1,16 @@
 certManager:
   enabled: true
+  image:
+    tag: v0.0.0
 lifecycleOperator:
   enabled: true
+  lifecycleOperator:
+    image:
+      tag: v0.0.0
+  scheduler:
+    image:
+      tag: v0.0.0
 metricsOperator:
   enabled: true
+  image:
+    tag: v0.0.0

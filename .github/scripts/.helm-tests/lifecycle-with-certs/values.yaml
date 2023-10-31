@@ -1,10 +1,16 @@
 certManager:
   enabled: true
+  image:
+    tag: v0.0.0
 lifecycleOperator:
   enabled: true
   lifecycleOperator:
     imagePullPolicy: Never
+    image:
+      tag: v0.0.0
   scheduler:
     imagePullPolicy: Never
+    image:
+      tag: v0.0.0
 metricsOperator:
   enabled: false

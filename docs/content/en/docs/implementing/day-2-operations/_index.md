@@ -62,10 +62,10 @@ To do that, change `podtato-head-frontend` as follows:
 {{< embed path="/docs/content/en/docs/implementing/day-2-operations/assets/deployment-new-image.yaml" >}}
 
 * **Update the configuration *and* the version label:**
-   Doing so causes the `KeptnWorkload` that is associated
-    with the `podtato-head-frontend` deployment to be updated,
-    and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`
-    are executed before the updated pods are scheduled.
+Doing so causes the `KeptnWorkload` that is associated
+with the `podtato-head-frontend` deployment to be updated,
+and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`
+are executed before the updated pods are scheduled.
 In this case, the deployment should be changed as follows:
 
 {{< embed path="/docs/content/en/docs/implementing/day-2-operations/assets/deployment-new-image-and-version.yaml" >}}

@@ -161,7 +161,7 @@ Note the following:
 
 ### Accessing Metrics via the Kubernetes Custom Metrics API
 
-`KeptnMetrics` can be retrieved using the `kubctl` command and the
+`KeptnMetrics` can be retrieved using the `kubectl` command and the
 [KeptnMetric](../yaml-crd-ref/metric.md)
 API.
 This sections shows how to do that.

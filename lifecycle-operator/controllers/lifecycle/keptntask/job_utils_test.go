@@ -211,9 +211,14 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 	taskDefinition := makeTaskDefinitionWithServiceAccount(taskDefinitionName, namespace, svcAccname, &token)
 	taskDefinition.Spec.ServiceAccount.Name = svcAccname
 
-	serviceAccount := makeServiceAccount(svcAccname, namespace, &token)
-	fakeClient := fakeclient.NewClient(serviceAccount, taskDefinition)
+	serviceAccount := &v1.ServiceAccount{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: svcAccname,
+		},
+		AutomountServiceAccountToken: &token,
+	}
 
+	fakeClient := fakeclient.NewClient(serviceAccount, taskDefinition)
 	task := makeTask(taskName, namespace, taskDefinitionName)
 
 	r := &KeptnTaskReconciler{
@@ -245,11 +250,9 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 	}, taskDefinition)
 	require.Nil(t, errTaskDefinition)
 
-	job, err := r.generateJob(ctx, task, taskDefinition, request)
+	resultingJob, err := r.generateJob(ctx, task, taskDefinition, request)
 	require.Nil(t, err)
-	require.NotNil(t, job, "generateJob function return a valid Job")
-
-	resultingJob := job
+	require.NotNil(t, resultingJob, "generateJob function return a valid Job")
 
 	require.Len(t, resultingJob.Spec.Template.Spec.Containers, 1)
 	require.Equal(t, resultingJob.Spec.Template.Spec.ServiceAccountName, svcAccname)
@@ -362,21 +365,5 @@ func makeTaskDefinitionWithServiceAccount(name, namespace, serviceAccountName st
 				Type: token,
 			},
 		},
-	}
-}
-
-func makeServiceAccount(name string, namespace string, serviceAccountToken *bool) *v1.ServiceAccount {
-	return &v1.ServiceAccount{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
-			Namespace: namespace,
-			Labels: map[string]string{
-				"label1": "label2",
-			},
-			Annotations: map[string]string{
-				"annotation1": "annotation2",
-			},
-		},
-		AutomountServiceAccountToken: serviceAccountToken,
 	}
 }

@@ -122,7 +122,7 @@ annotation/label is populated:
   but not the combined workloads that constitute your deployed application.
 
 See
-[Keptn Applications and Keptn Workloads](../../architecture/keptn-apps/)
+[Keptn Applications and Keptn Workloads](../../architecture/keptn-apps.md)
 for architectural information about how `KeptnApp` and `KeptnWorkloads`
 are implemented.
 
@@ -252,7 +252,7 @@ Afterward, you can monitor the status of the deployment using
 a command like the following:
 
 ```shell
-kubectl get keptnworkloadinstance -n podtato-kubectl -w
+kubectl get keptnworkloadversion -n podtato-kubectl -w
 ```
 
 The generated `KeptnApp` file includes `metadata`
@@ -370,7 +370,7 @@ kubectl apply -f .
 Afterward, you can monitor the status of the deployment using
 
 ```shell
-kubectl get keptnworkloadinstance -n podtato-kubectl -w
+kubectl get keptnworkloadversion -n podtato-kubectl -w
 ```
 
 The deployment for a Workload stays in a `Pending`

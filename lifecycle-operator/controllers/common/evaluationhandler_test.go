@@ -354,7 +354,7 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
 			}
-			name, err := handler.CreateKeptnEvaluation(context.TODO(), "namespace", tt.object, tt.createAttr)
+			name, err := handler.CreateKeptnEvaluation(context.TODO(), tt.object, tt.createAttr)
 			require.True(t, strings.Contains(name, tt.wantName))
 			require.Equal(t, tt.wantErr, err)
 		})

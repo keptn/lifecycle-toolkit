@@ -123,88 +123,32 @@ a sequence of executables that need to be run in order,
 you can put them all in one `KeptnTaskDefinition` resource,
 which can execute a virtually unlimited number
 of programs, scripts, and functions,
-as long as they all need the same runner, such as Python.
+as long as they are all using the same runner.
+You have the following options:
 
-Another option is to encode all your steps in the language of your choice
-and build a container that Keptn executes.
-This is often the best solution if you need to execute complex sequences.
+- Encode all your steps in the language of your choice
+  and build an image
+  that Keptn executes in a `container-runtime` runner.
+  This is often the best solution if you need to execute complex sequences
+  because it gives you the most flexibility..
 
-If you use either the `deno-runtime` or `python-runtime` runner,
-you can specify the actions to take by coding the actual calls
-inline in the manifest,
-by calling scripts from a remote webserver,
-or by calling other `KeptnTaskDefinition` resources you have defined.
-This provides great flexibility in
-how you define your `KeptnTaskDefinition` resources,
-allowing you to define the ideal mix of executables that run sequentially
-and executables (or sets of executables) that run in parallel.
+- Use the `inline` syntax for one of the Keptn pre-defined runners
+  (either `deno-runtime` or `python-runtime`)
+  to code the actual calls inline in the `KeptnTaskDefinition` resource.
+  See
+  [Fields for pre-defined containers](../../yaml-crd-ref/taskdefinition.md/#fields-for-pre-defined-containers)
+  for more information.
 
-As an example, let's say you need to run a set of integration tests,
-a set of performance tests, and a set of regression tests.
+- Create a script that calls the functions, programs, and scripts
+  that need to execute sequentially
+  and install this on a remote webserver that Keptn can access.
+  Then use the `httpRef` syntax for one of the pre-defined runners
+  to call this script from your `KeptnTaskDefinition`,
+  which can set parameters for the script if appropriate.
 
-- You can create one `KeptnTaskDefinition` that calls all the tasks,
-  in order, either by putting the actual calls
-  in the `KeptnTaskDefinition` resource (`inline` syntax)
-  or by calling scripts from a remote webserver (`httpRef` syntax), or by providing a container to run.
-
-- You can create separate `KeptnTaskDefinition` resources
-  for integration tests, performance tests, and regression tests.
-
-  - If you annotate the `KeptnApp` resource to call
-    each of these `KeptnTask` resources,
-    the three sets of tests run in parallel.
-
-  - You can create a "parent" `KeptnTaskDefinition` resource
-    that uses the `functionref` syntax
-    to call the `KeptnTaskDefinition` resources
-    for integration tests, performance tests, and regression tests.
-    If you annotate the `KeptnApp` resource
-    to run this parent `KeptnTask` resource,
-    all tests run sequentially.
-
-    This approach also allows you to run the test sequence if, for example,
-    the integration tests require the `deno-runtime` runner
-    but the performance and regression tests
-    require the `python-runtime` runner.
-    The parent `KeptnTaskDefinition` can run `KeptnTask` resources
-    that use different runners,
-    although the "parent" definition runtime is used
-    for the container that runs all the tests.
-    In other words, the parent `KeptnTaskDefinition` resources
-    is not a merge of other `KeptnTaskDefinition` resources
-    but rather the code/container of the parent runner.
-
-- If you need to test your deployment for different platforms
-  (such as Linux, MacOS, and Windows)
-  or for different software versions
-  (such as Java 11, Java 17, and Java 21),
-  parallel testing can improve performance.
-  In this case, you can construct different `KeptnTaskDefinition` resources
-  for each platform,
-  perhaps defining different input parameters
-  (such as different secrets or environment variables).
-
-- Define one `KeptnTaskDefinition` resource that runs
-  integration tests, then regression test, then performance tests
-  in order.
-
-  - You could use the `functionRef` syntax
-    and code the calling sequences for all tests
-    inside your `KeptnTaskDefinition` resource
-    or you could use the `httpRef` syntax
-    to call scripts from an external webserver.
-  - You could code separate `KeptnTaskDefinition` resources
-    for integration tests, regression tests, and performance tests.
-    These three test sets could then run in parallel.
-  - You could create a `KeptnTaskDefinition` resource
-    that uses the `functionRef` syntax to call the
-    `KeptnTaskDefinition` resources for each type of testing.
-    Executing that resource would execute the three types of tests
-    in sequential order.
-
-If you define a `container-runtime` runner container
-for your `KeptnTaskDefinition`,
-you can do anything allowed by the configuration you define for that container.
+For more details about implementing these options, see the
+[KeptnTaskDefinition](../../yaml-crd-ref/taskdefinition.md)
+page.
 
 ## Context
 

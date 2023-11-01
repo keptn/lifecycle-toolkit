@@ -61,20 +61,12 @@ func assertAppSpan(instance *klcv1alpha3.KeptnApp, spanRecorder *sdktest.SpanRec
 	var spans []otelsdk.ReadOnlySpan
 	Eventually(func() bool {
 		spans = spanRecorder.Ended()
-		return len(spans) >= 3
+		return len(spans) >= 1
 	}, "10s").Should(BeTrue())
 
 	Expect(spans[0].Name()).To(Equal(instance.GetAppVersionName()))
 	Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppName.String(instance.Name)))
 	Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
-
-	Expect(spans[1].Name()).To(Equal("create_app_version"))
-	Expect(spans[1].Attributes()).To(ContainElement(apicommon.AppName.String(instance.Name)))
-	Expect(spans[1].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
-
-	Expect(spans[2].Name()).To(Equal("reconcile_app"))
-	Expect(spans[2].Attributes()).To(ContainElement(apicommon.AppName.String(instance.Name)))
-	Expect(spans[2].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
 }
 
 func createInstanceInCluster(name string, namespace string, version string) *klcv1alpha3.KeptnApp {

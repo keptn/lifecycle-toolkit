@@ -846,7 +846,7 @@ _Appears in:_
 
 
 
-
+ResourceReference represents the parent resource of Workload
 
 _Appears in:_
 - [KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)

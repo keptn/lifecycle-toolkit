@@ -22,17 +22,17 @@ data:
     end
     return hs
 
-  resource.customizations.health.lifecycle.keptn.sh_KeptnWorkloadInstance: |
+  resource.customizations.health.lifecycle.keptn.sh_KeptnWorkloadVersion: |
     hs = {}
     hs.status = "Progressing"
-    hs.message = "KeptnWorkloadInstance is progressing"
+    hs.message = "KeptnWorkloadVersion is progressing"
     if obj.status.status == "Succeeded" then
       hs.status = "Healthy"
-      hs.message = "KeptnWorkloadInstance is healthy"
+      hs.message = "KeptnWorkloadVersion is healthy"
     end
     if obj.status.status == "Failed" then
       hs.status = "Degraded"
-      hs.message = "KeptnWorkloadInstance is degraded"
+      hs.message = "KeptnWorkloadVersion is degraded"
     end
     return hs
 

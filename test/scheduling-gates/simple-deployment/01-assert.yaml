@@ -3,8 +3,8 @@ kind: KeptnWorkload
 metadata:
   name: waiter-waiter
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnWorkloadInstance
+apiVersion: lifecycle.keptn.sh/v1alpha4
+kind: KeptnWorkloadVersion
 metadata:
   name: waiter-waiter-0.4
 status:

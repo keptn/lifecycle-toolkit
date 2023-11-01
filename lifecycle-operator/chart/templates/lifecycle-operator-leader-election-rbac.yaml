@@ -4,7 +4,8 @@ metadata:
   name: lifecycle-operator-leader-election-role
   namespace: {{ .Release.Namespace | quote }}
   labels:
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include "common.annotations" ( dict "context" . ) }}
 rules:
 - apiGroups:
   - ""
@@ -44,7 +45,8 @@ metadata:
   name: lifecycle-operator-leader-election-rolebinding
   namespace: {{ .Release.Namespace | quote }}
   labels:
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include "common.annotations" ( dict "context" . ) }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

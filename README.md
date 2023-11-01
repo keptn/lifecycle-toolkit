@@ -66,8 +66,12 @@ The status follows the
 
 Keptn can be installed on any Kubernetes cluster
 running Kubernetes >=1.24.
-Note that Keptn is not currently compatible with
-[vcluster](https://github.com/loft-sh/vcluster).
+
+For users running [vCluster](https://www.vcluster.com/),
+please note that you may need to modify
+your configuration before installing Keptn; see
+[Running Keptn with vCluster](https://main.lifecycle.keptn.sh/docs/install/install//#running-keptn-with-vcluster)
+for more information.
 
 Use the following command sequence
 to install the latest release of Keptn:
@@ -77,6 +81,52 @@ helm repo add klt https://charts.lifecycle.keptn.sh
 helm repo update
 helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
+
+### Installation with only certain namespaces allowed
+
+Keptn lifecycle orchestration is by default enabled for all namespaces except the following ones:
+
+- `kube-system`
+- `kube-public`
+- `kube-node-lease`
+- `cert-manager`
+- `keptn-lifecycle-toolkit-system`
+- `observability`
+- `monitoring`
+- `<Keptn installation namespace>`
+
+To restrict Keptn lifecycle orchestration to specific namespaces, you must specify
+those namespaces during installation via helm values.
+First you need to create a `values.yaml`
+file
+
+```yaml
+lifecycleOperator:
+  allowedNamespaces:
+  - allowed-ns-1
+  - allowed-ns-2
+```
+
+and add the values file to the helm installation command:
+
+```shell
+helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo update
+helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --values values.yaml --create-namespace --wait
+```
+
+> **Note**
+Please be aware that you still need to correctly annotate the namespaces where
+Keptn lifecycle orchestration is allowed.
+> To annotate them, use:
+
+```shell
+kubectl annotate ns <your-allowed-namespace> keptn.sh/lifecycle-toolkit='enabled'
+```
+
+> **Note**
+Please be aware that, if this option is set, adding any additional namespace
+requires the helm installation to be updated by adding the name of the new namespace to the list.
 
 ### Installation without scheduler
 

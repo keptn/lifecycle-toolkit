@@ -7,7 +7,8 @@ metadata:
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn-lifecycle-toolkit"
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include "common.annotations" ( dict "context" . ) }}
 webhooks:
 - admissionReviewVersions:
   - v1
@@ -24,20 +25,26 @@ webhooks:
       operator: NotIn
       values:
       - lifecycle-operator
+{{- if eq (len .Values.allowedNamespaces) 0 }}
     - key: kubernetes.io/metadata.name
       operator: NotIn
       values:
-      - kube-system
-      - kube-public
-      - kube-node-lease
       - cert-manager
       - keptn-lifecycle-toolkit-system
       - observability
       - monitoring
+{{- else }}
+    - key: kubernetes.io/metadata.name
+      operator: In
+      values: {{ .Values.allowedNamespaces | default list | toJson }}
+{{- end }}
     - key: kubernetes.io/metadata.name
       operator: NotIn
       values:
       - '{{ .Release.Namespace }}'
+      - kube-system
+      - kube-public
+      - kube-node-lease
   rules:
   - apiGroups:
     - ""

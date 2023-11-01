@@ -6,9 +6,11 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -267,13 +269,13 @@ func Test_setAnnotations(t *testing.T) {
 			},
 		},
 		{
-			name: "KeptnWorkloadInstance",
-			object: &klcv1alpha3.KeptnWorkloadInstance{
+			name: "KeptnWorkloadVersion",
+			object: &klcv1alpha4.KeptnWorkloadVersion{
 				ObjectMeta: v1.ObjectMeta{
-					Name:      "workloadInstance",
+					Name:      "workloadVersion",
 					Namespace: "namespace",
 				},
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						AppName: "app",
 						Version: "1.0.0",
@@ -282,14 +284,14 @@ func Test_setAnnotations(t *testing.T) {
 				},
 			},
 			want: map[string]string{
-				"namespace":            "namespace",
-				"name":                 "workloadInstance",
-				"phase":                "AppDeploy",
-				"appName":              "app",
-				"workloadVersion":      "1.0.0",
-				"workloadName":         "workload",
-				"workloadInstanceName": "workloadInstance",
-				"traceparent":          "",
+				"namespace":           "namespace",
+				"name":                "workloadVersion",
+				"phase":               "AppDeploy",
+				"appName":             "app",
+				"workloadVersion":     "1.0.0",
+				"workloadName":        "workload",
+				"workloadVersionName": "workloadVersion",
+				"traceparent":         "",
 			},
 		},
 		{
@@ -524,4 +526,19 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 
 		})
 	}
+}
+
+func TestGetRequestInfo(t *testing.T) {
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Name:      "example",
+			Namespace: "test-namespace",
+		}}
+
+	info := GetRequestInfo(req)
+	expected := map[string]string{
+		"name":      "example",
+		"namespace": "test-namespace",
+	}
+	require.Equal(t, expected, info)
 }

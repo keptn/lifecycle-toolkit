@@ -1,5 +1,38 @@
 # Changelog
 
+## [0.8.3](https://github.com/keptn/lifecycle-toolkit/compare/scheduler-v0.8.2...scheduler-v0.8.3) (2023-10-30)
+
+
+### Features
+
+* adapt code to use KeptnWorkloadVersion instead of KeptnWorkloadInstance ([#2255](https://github.com/keptn/lifecycle-toolkit/issues/2255)) ([c06fae1](https://github.com/keptn/lifecycle-toolkit/commit/c06fae13daa2aa98a3daf71abafe0e8ce4e5f4a3))
+* add test and lint cmd to makefiles ([#2176](https://github.com/keptn/lifecycle-toolkit/issues/2176)) ([c55e0a9](https://github.com/keptn/lifecycle-toolkit/commit/c55e0a9f368c82ad3032eb676edd59e68b29fad6))
+
+
+### Other
+
+* adapt Makefile command to run unit tests ([#2072](https://github.com/keptn/lifecycle-toolkit/issues/2072)) ([2db2569](https://github.com/keptn/lifecycle-toolkit/commit/2db25691748beedbb02ed92806d327067c422285))
+* **scheduler:** improve logging ([#2283](https://github.com/keptn/lifecycle-toolkit/issues/2283)) ([59fa565](https://github.com/keptn/lifecycle-toolkit/commit/59fa56584003bd1d97ecf8d2f9246b1789a3cde4))
+
+
+### Dependency Updates
+
+* update dependency kubernetes-sigs/kustomize to v5.2.1 ([#2308](https://github.com/keptn/lifecycle-toolkit/issues/2308)) ([6653a47](https://github.com/keptn/lifecycle-toolkit/commit/6653a47d4156c0e60aa471f11a643a2664669023))
+* update kubernetes packages (patch) ([#2102](https://github.com/keptn/lifecycle-toolkit/issues/2102)) ([b2853f9](https://github.com/keptn/lifecycle-toolkit/commit/b2853f9ecdfb4b7b81d0b88cf782b82c9958c5cb))
+* update module github.com/onsi/ginkgo/v2 to v2.12.1 ([#2156](https://github.com/keptn/lifecycle-toolkit/issues/2156)) ([dbf2867](https://github.com/keptn/lifecycle-toolkit/commit/dbf2867133067b162e82b71b6547c3dfac95d0af))
+* update module github.com/onsi/ginkgo/v2 to v2.13.0 ([#2272](https://github.com/keptn/lifecycle-toolkit/issues/2272)) ([0df464d](https://github.com/keptn/lifecycle-toolkit/commit/0df464dd8e4fc7729deeb5bae4938b236902d661))
+* update module github.com/onsi/gomega to v1.28.0 ([#2209](https://github.com/keptn/lifecycle-toolkit/issues/2209)) ([c0726d0](https://github.com/keptn/lifecycle-toolkit/commit/c0726d0b0e9d9732123aaf8b1ad012bc24672b84))
+* update module github.com/onsi/gomega to v1.28.1 ([#2343](https://github.com/keptn/lifecycle-toolkit/issues/2343)) ([64b1508](https://github.com/keptn/lifecycle-toolkit/commit/64b1508f0e383aa7fbc406e17e2cc66546601e53))
+* update module golang.org/x/net to v0.15.0 ([#2065](https://github.com/keptn/lifecycle-toolkit/issues/2065)) ([50ce9c0](https://github.com/keptn/lifecycle-toolkit/commit/50ce9c09914f505ffaf33eee41564afa65661215))
+* update module golang.org/x/net to v0.16.0 ([#2249](https://github.com/keptn/lifecycle-toolkit/issues/2249)) ([e89ea71](https://github.com/keptn/lifecycle-toolkit/commit/e89ea71bc1a2d69828179c64ffe3c34ce359dd94))
+* update module golang.org/x/net to v0.17.0 ([#2267](https://github.com/keptn/lifecycle-toolkit/issues/2267)) ([8443874](https://github.com/keptn/lifecycle-toolkit/commit/8443874254cda9e5f4c662cab1a3e5e3b3277435))
+* update module google.golang.org/grpc to v1.58.0 ([#2066](https://github.com/keptn/lifecycle-toolkit/issues/2066)) ([6fae5a7](https://github.com/keptn/lifecycle-toolkit/commit/6fae5a7ebf356625b4754b7890f7c71dbb4ac0a6))
+* update module google.golang.org/grpc to v1.58.1 ([#2115](https://github.com/keptn/lifecycle-toolkit/issues/2115)) ([d08df40](https://github.com/keptn/lifecycle-toolkit/commit/d08df40188bc633037c49a1468a70eefc960a4a1))
+* update module google.golang.org/grpc to v1.58.2 ([#2163](https://github.com/keptn/lifecycle-toolkit/issues/2163)) ([5efa650](https://github.com/keptn/lifecycle-toolkit/commit/5efa6502403daa37bdfc51fa8600da6b1f845ac2))
+* update module google.golang.org/grpc to v1.58.3 ([#2275](https://github.com/keptn/lifecycle-toolkit/issues/2275)) ([66e86c0](https://github.com/keptn/lifecycle-toolkit/commit/66e86c03272d75207bd3b42014d88b1b912b9198))
+* update module google.golang.org/grpc to v1.59.0 ([#2302](https://github.com/keptn/lifecycle-toolkit/issues/2302)) ([fda2315](https://github.com/keptn/lifecycle-toolkit/commit/fda231552475eaf0f60457ad42a26c4ed3473008))
+* update module k8s.io/kubernetes to v1.25.15 ([#2305](https://github.com/keptn/lifecycle-toolkit/issues/2305)) ([7c554be](https://github.com/keptn/lifecycle-toolkit/commit/7c554bee758179e8a6a602fc338801e00f56b5dc))
+
 ## [0.8.2](https://github.com/keptn/lifecycle-toolkit/compare/scheduler-v0.8.1...scheduler-v0.8.2) (2023-09-06)
 
 

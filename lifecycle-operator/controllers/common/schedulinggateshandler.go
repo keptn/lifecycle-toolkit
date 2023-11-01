@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -14,7 +14,7 @@ import (
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/schedulinggateshandler_mock.go . ISchedulingGatesHandler
 type ISchedulingGatesHandler interface {
-	RemoveGates(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error
+	RemoveGates(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error
 	Enabled() bool
 }
 
@@ -39,25 +39,25 @@ func NewSchedulingGatesHandler(c client.Client, l logr.Logger, enabled bool) *Sc
 	}
 }
 
-func (h *SchedulingGatesHandler) RemoveGates(ctx context.Context, workloadInstance *klcv1alpha3.KeptnWorkloadInstance) error {
-	switch workloadInstance.Spec.ResourceReference.Kind {
+func (h *SchedulingGatesHandler) RemoveGates(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error {
+	switch workloadVersion.Spec.ResourceReference.Kind {
 	case "Pod":
-		return h.removeGates(ctx, h.Client, workloadInstance.Spec.ResourceReference.Name, workloadInstance.Namespace)
+		return h.removeGates(ctx, h.Client, workloadVersion.Spec.ResourceReference.Name, workloadVersion.Namespace)
 	case "ReplicaSet", "StatefulSet", "DaemonSet":
-		podList, err := h.getPods(ctx, h.Client, workloadInstance.Spec.ResourceReference.UID, workloadInstance.Spec.ResourceReference.Kind, workloadInstance.Namespace)
+		podList, err := h.getPods(ctx, h.Client, workloadVersion.Spec.ResourceReference.UID, workloadVersion.Spec.ResourceReference.Kind, workloadVersion.Namespace)
 		if err != nil {
 			h.Logger.Error(err, "cannot get pods")
 			return err
 		}
 		for _, pod := range podList {
-			err := h.removeGates(ctx, h.Client, pod, workloadInstance.Namespace)
+			err := h.removeGates(ctx, h.Client, pod, workloadVersion.Namespace)
 			if err != nil {
 				h.Logger.Error(err, "cannot remove gates from pod")
 				return err
 			}
 		}
 	default:
-		return controllererrors.ErrUnsupportedWorkloadInstanceResourceReference
+		return controllererrors.ErrUnsupportedWorkloadVersionResourceReference
 	}
 
 	return nil

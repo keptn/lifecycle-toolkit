@@ -10,6 +10,7 @@ import (
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -20,6 +21,20 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	jobName := ""
 	definition, err := controllercommon.GetTaskDefinition(r.Client, r.Log, ctx, task.Spec.TaskDefinition, req.Namespace)
 	if err != nil {
+		if errors.IsNotFound(err) {
+			r.Log.Info("TaskDefinition for Task not found",
+				"task", task.Name,
+				"taskDefinition", task.Spec.TaskDefinition,
+				"namespace", task.Namespace,
+			)
+		} else {
+			// log the error, but continue to proceed with other tasks that may be created
+			r.Log.Error(err, "Could not create task",
+				"task", task.Name,
+				"taskDefinition", task.Spec.TaskDefinition,
+				"namespace", task.Namespace,
+			)
+		}
 		r.Log.Error(err, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition))
 		r.EventSender.Emit(apicommon.PhaseCreateTask, "Warning", task, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
 		return err

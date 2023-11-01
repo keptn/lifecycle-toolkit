@@ -23,10 +23,10 @@
       "extra-files": [
         "README.md",
         "operator/config/manager/manager.yaml",
-        "helm/chart/Chart.yaml",
+        "chart/Chart.yaml",
         "Makefile",
-        "helm/chart/values.yaml",
-        "helm/chart/README.md",
+        "chart/values.yaml",
+        "chart/README.md",
         "docs/content/en/docs/getting-started/_index.md"
       ]
     },
@@ -38,7 +38,9 @@
       "prerelease": false,
       "draft": false,
       "extra-files": [
-        "Makefile"
+        "Makefile",
+        "chart/Chart.yaml",
+        "chart/values.yaml"
       ]
     },
     "lifecycle-operator": {
@@ -50,7 +52,9 @@
       "prerelease": false,
       "draft": false,
       "extra-files": [
-        "Makefile"
+        "Makefile",
+        "chart/Chart.yaml",
+        "chart/values.yaml"
       ]
     },
     "scheduler": {
@@ -75,7 +79,9 @@
       "extra-files": [
         "Makefile",
         "converter/sli_converter.md",
-        "converter/slo_converter.md"
+        "converter/slo_converter.md",
+        "chart/Chart.yaml",
+        "chart/values.yaml"
       ]
     },
     "runtimes/python-runtime": {

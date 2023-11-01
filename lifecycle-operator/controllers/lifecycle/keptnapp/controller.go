@@ -28,7 +28,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -70,7 +69,8 @@ type KeptnAppReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("Searching for App")
+	requestInfo := controllercommon.GetRequestInfo(req)
+	r.Log.Info("Searching for App", "requestInfo", requestInfo)
 
 	app := &klcv1alpha3.KeptnApp{}
 	err := r.Get(ctx, req.NamespacedName, app)
@@ -84,11 +84,6 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	traceContextCarrier := propagation.MapCarrier(app.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
-	ctx, span := r.getTracer().Start(ctx, "reconcile_app", trace.WithSpanKind(trace.SpanKindConsumer))
-	defer span.End()
-
-	app.SetSpanAttributes(span)
-
 	r.Log.Info("Reconciling Keptn App", "app", app.Name)
 
 	appVersion := &klcv1alpha3.KeptnAppVersion{}
@@ -99,13 +94,11 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	if errors.IsNotFound(err) {
 		appVersion, err := r.createAppVersion(ctx, app)
 		if err != nil {
-			span.SetStatus(codes.Error, err.Error())
 			return reconcile.Result{}, err
 		}
 		err = r.Client.Create(ctx, appVersion)
 		if err != nil {
 			r.Log.Error(err, "could not create AppVersion")
-			span.SetStatus(codes.Error, err.Error())
 			r.EventSender.Emit(common.PhaseCreateAppVersion, "Warning", appVersion, common.PhaseStateFailed, "Could not create KeptnAppVersion", appVersion.Spec.Version)
 			return ctrl.Result{}, err
 		}
@@ -122,7 +115,6 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 	if err != nil {
 		r.Log.Error(err, "could not get AppVersion")
-		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{}, err
 	}
 
@@ -137,13 +129,9 @@ func (r *KeptnAppReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alpha3.KeptnApp) (*klcv1alpha3.KeptnAppVersion, error) {
-	ctx, span := r.getTracer().Start(ctx, "create_app_version", trace.WithSpanKind(trace.SpanKindProducer))
-	defer span.End()
-
 	ctxAppTrace, spanAppTrace := r.getTracer().Start(ctx, app.GetAppVersionName(), trace.WithNewRoot(), trace.WithSpanKind(trace.SpanKindServer))
 	defer spanAppTrace.End()
 
-	app.SetSpanAttributes(span)
 	app.SetSpanAttributes(spanAppTrace)
 
 	// create TraceContext

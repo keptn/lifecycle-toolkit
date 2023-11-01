@@ -24,12 +24,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -38,16 +33,13 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 )
 
-const traceComponentName = "keptn/lifecycle-operator/task"
-
 // KeptnTaskReconciler reconciles a KeptnTask object
 type KeptnTaskReconciler struct {
 	client.Client
-	Scheme        *runtime.Scheme
-	EventSender   controllercommon.IEvent
-	Log           logr.Logger
-	Meters        apicommon.KeptnMeters
-	TracerFactory telemetry.TracerFactory
+	Scheme      *runtime.Scheme
+	EventSender controllercommon.IEvent
+	Log         logr.Logger
+	Meters      apicommon.KeptnMeters
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks,verbs=get;list;watch;create;update;patch;delete
@@ -58,26 +50,19 @@ type KeptnTaskReconciler struct {
 // +kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get;list
 
 func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("Reconciling KeptnTask")
+	requestInfo := controllercommon.GetRequestInfo(req)
+	r.Log.Info("Reconciling KeptnTask", "requestInfo", requestInfo)
 	task := &klcv1alpha3.KeptnTask{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, task); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
-			r.Log.Info("KeptnTask resource not found. Ignoring since object must be deleted")
+			r.Log.Info("KeptnTask resource not found. Ignoring since object must be deleted", "requestInfo", requestInfo)
 			return ctrl.Result{}, nil
 		}
 		r.Log.Error(err, "Failed to get the KeptnTask")
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
-
-	traceContextCarrier := propagation.MapCarrier(task.Annotations)
-	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
-
-	ctx, span := r.getTracer().Start(ctx, "reconcile_task", trace.WithSpanKind(trace.SpanKindConsumer))
-	defer span.End()
-
-	task.SetSpanAttributes(span)
 
 	task.SetStartTime()
 
@@ -91,14 +76,12 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	job, err := r.getJob(ctx, task.Status.JobName, req.Namespace)
 	if err != nil && !errors.IsNotFound(err) {
 		r.Log.Error(err, "Could not check if job is running")
-		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
 
 	if job == nil {
 		err = r.createJob(ctx, req, task)
 		if err != nil {
-			span.SetStatus(codes.Error, err.Error())
 			r.Log.Error(err, "could not create Job")
 		} else {
 			task.Status.Status = apicommon.StateProgressing
@@ -111,14 +94,14 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 	}
 
-	r.Log.Info("Finished Reconciling KeptnTask")
+	r.Log.Info("Finished Reconciling KeptnTask", "requestInfo", requestInfo)
 
 	// Task is completed at this place
 	task.SetEndTime()
 
 	attrs := task.GetMetricsAttributes()
 
-	r.Log.Info("Increasing task count")
+	r.Log.Info("Increasing task count", "requestInfo", requestInfo)
 
 	// metrics: increment task counter
 	r.Meters.TaskCount.Add(ctx, 1, metric.WithAttributes(attrs...))
@@ -136,8 +119,4 @@ func (r *KeptnTaskReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		// predicate disabling the auto reconciliation after updating the object status
 		For(&klcv1alpha3.KeptnTask{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
-}
-
-func (r *KeptnTaskReconciler) getTracer() telemetry.ITracer {
-	return r.TracerFactory.GetTracer(traceComponentName)
 }

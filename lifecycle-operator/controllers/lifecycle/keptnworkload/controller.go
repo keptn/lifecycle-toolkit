@@ -22,15 +22,17 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	operatorcommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/trace"
 	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -40,8 +42,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
-
-const traceComponentName = "keptn/lifecycle-operator/workload"
 
 // KeptnWorkloadReconciler reconciles a KeptnWorkload object
 type KeptnWorkloadReconciler struct {
@@ -55,9 +55,9 @@ type KeptnWorkloadReconciler struct {
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloads/finalizers,verbs=update
-// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadinstances/finalizers,verbs=update
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -69,7 +69,8 @@ type KeptnWorkloadReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("Searching for workload")
+	requestInfo := controllercommon.GetRequestInfo(req)
+	r.Log.Info("Searching for workload", "requestInfo", requestInfo)
 
 	workload := &klcv1alpha3.KeptnWorkload{}
 	err := r.Get(ctx, req.NamespacedName, workload)
@@ -83,29 +84,23 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	traceContextCarrier := propagation.MapCarrier(workload.Annotations)
 	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
-	ctx, span := r.getTracer().Start(ctx, "reconcile_workload", trace.WithSpanKind(trace.SpanKindConsumer))
-	defer span.End()
+	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name, "requestInfo", requestInfo)
 
-	workload.SetSpanAttributes(span)
-
-	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name)
-
-	workloadInstance := &klcv1alpha3.KeptnWorkloadInstance{}
+	workloadVersion := &klcv1alpha4.KeptnWorkloadVersion{}
+	workloadVersionName := operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKeptnNameLen, workload.Name, workload.Spec.Version)
 
 	// Try to find the workload instance
-	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workload.GetWorkloadInstanceName()}, workloadInstance)
+	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workloadVersionName}, workloadVersion)
 	// If the workload instance does not exist, create it
 	if errors.IsNotFound(err) {
-		workloadInstance, err := r.createWorkloadInstance(ctx, workload)
+		workloadVersion, err := r.createWorkloadVersion(ctx, workload)
 		if err != nil {
-			span.SetStatus(codes.Error, err.Error())
 			return reconcile.Result{}, err
 		}
-		err = r.Client.Create(ctx, workloadInstance)
+		err = r.Client.Create(ctx, workloadVersion)
 		if err != nil {
-			r.Log.Error(err, "could not create WorkloadInstance")
-			span.SetStatus(codes.Error, err.Error())
-			r.EventSender.Emit(apicommon.PhaseCreateWorklodInstance, "Warning", workloadInstance, apicommon.PhaseStateFailed, "could not create KeptnWorkloadInstance ", workloadInstance.Spec.Version)
+			r.Log.Error(err, "could not create WorkloadVersion")
+			r.EventSender.Emit(apicommon.PhaseCreateWorkloadVersion, "Warning", workloadVersion, apicommon.PhaseStateFailed, "could not create KeptnWorkloadVersion ", workloadVersion.Spec.Version)
 			return ctrl.Result{}, err
 		}
 		workload.Status.CurrentVersion = workload.Spec.Version
@@ -116,8 +111,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return ctrl.Result{}, nil
 	}
 	if err != nil {
-		r.Log.Error(err, "could not get WorkloadInstance")
-		span.SetStatus(codes.Error, err.Error())
+		r.Log.Error(err, "could not get WorkloadVersion")
 		return ctrl.Result{}, err
 	}
 
@@ -137,12 +131,7 @@ func (r *KeptnWorkloadReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, workload *klcv1alpha3.KeptnWorkload) (*klcv1alpha3.KeptnWorkloadInstance, error) {
-	ctx, span := r.getTracer().Start(ctx, "create_workload_instance", trace.WithSpanKind(trace.SpanKindProducer))
-	defer span.End()
-
-	workload.SetSpanAttributes(span)
-
+func (r *KeptnWorkloadReconciler) createWorkloadVersion(ctx context.Context, workload *klcv1alpha3.KeptnWorkload) (*klcv1alpha4.KeptnWorkloadVersion, error) {
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
@@ -153,15 +142,26 @@ func (r *KeptnWorkloadReconciler) createWorkloadInstance(ctx context.Context, wo
 		previousVersion = workload.Status.CurrentVersion
 	}
 
-	workloadInstance := workload.GenerateWorkloadInstance(previousVersion, traceContextCarrier)
-	err := controllerutil.SetControllerReference(workload, &workloadInstance, r.Scheme)
+	workloadVersion := generateWorkloadVersion(previousVersion, traceContextCarrier, workload)
+	err := controllerutil.SetControllerReference(workload, &workloadVersion, r.Scheme)
 	if err != nil {
-		r.Log.Error(err, "could not set controller reference for WorkloadInstance: "+workloadInstance.Name)
+		r.Log.Error(err, "could not set controller reference for WorkloadVersion: "+workloadVersion.Name)
 	}
 
-	return &workloadInstance, err
+	return &workloadVersion, err
 }
 
-func (r *KeptnWorkloadReconciler) getTracer() telemetry.ITracer {
-	return r.TracerFactory.GetTracer(traceComponentName)
+func generateWorkloadVersion(previousVersion string, traceContextCarrier map[string]string, w *klcv1alpha3.KeptnWorkload) klcv1alpha4.KeptnWorkloadVersion {
+	return klcv1alpha4.KeptnWorkloadVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Annotations: traceContextCarrier,
+			Name:        operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKeptnNameLen, w.Name, w.Spec.Version),
+			Namespace:   w.Namespace,
+		},
+		Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: w.Spec,
+			WorkloadName:      w.Name,
+			PreviousVersion:   previousVersion,
+		},
+	}
 }

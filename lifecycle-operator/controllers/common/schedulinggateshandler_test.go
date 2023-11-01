@@ -7,6 +7,7 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
@@ -223,14 +224,14 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 	tests := []struct {
 		name    string
 		handler SchedulingGatesHandler
-		wi      *klcv1alpha3.KeptnWorkloadInstance
+		wi      *klcv1alpha4.KeptnWorkloadVersion
 		wantErr error
 	}{
 		{
 			name:    "unsuported resource ref",
 			handler: SchedulingGatesHandler{},
-			wi: &klcv1alpha3.KeptnWorkloadInstance{
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+			wi: &klcv1alpha4.KeptnWorkloadVersion{
+				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						ResourceReference: klcv1alpha3.ResourceReference{
 							Kind: "unsupported",
@@ -238,7 +239,7 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					},
 				},
 			},
-			wantErr: controllererrors.ErrUnsupportedWorkloadInstanceResourceReference,
+			wantErr: controllererrors.ErrUnsupportedWorkloadVersionResourceReference,
 		},
 		{
 			name: "pod - happy path",
@@ -247,8 +248,8 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					return nil
 				},
 			},
-			wi: &klcv1alpha3.KeptnWorkloadInstance{
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+			wi: &klcv1alpha4.KeptnWorkloadVersion{
+				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						ResourceReference: klcv1alpha3.ResourceReference{
 							Kind: "Pod",
@@ -265,8 +266,8 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					return fmt.Errorf("pod")
 				},
 			},
-			wi: &klcv1alpha3.KeptnWorkloadInstance{
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+			wi: &klcv1alpha4.KeptnWorkloadVersion{
+				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						ResourceReference: klcv1alpha3.ResourceReference{
 							Kind: "Pod",
@@ -286,8 +287,8 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					return []string{"podName"}, nil
 				},
 			},
-			wi: &klcv1alpha3.KeptnWorkloadInstance{
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+			wi: &klcv1alpha4.KeptnWorkloadVersion{
+				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						ResourceReference: klcv1alpha3.ResourceReference{
 							Kind: "ReplicaSet",
@@ -304,8 +305,8 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					return []string{}, nil
 				},
 			},
-			wi: &klcv1alpha3.KeptnWorkloadInstance{
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+			wi: &klcv1alpha4.KeptnWorkloadVersion{
+				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						ResourceReference: klcv1alpha3.ResourceReference{
 							Kind: "ReplicaSet",
@@ -322,8 +323,8 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					return []string{}, fmt.Errorf("err")
 				},
 			},
-			wi: &klcv1alpha3.KeptnWorkloadInstance{
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+			wi: &klcv1alpha4.KeptnWorkloadVersion{
+				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						ResourceReference: klcv1alpha3.ResourceReference{
 							Kind: "ReplicaSet",
@@ -343,8 +344,8 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					return []string{"podName"}, nil
 				},
 			},
-			wi: &klcv1alpha3.KeptnWorkloadInstance{
-				Spec: klcv1alpha3.KeptnWorkloadInstanceSpec{
+			wi: &klcv1alpha4.KeptnWorkloadVersion{
+				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
 						ResourceReference: klcv1alpha3.ResourceReference{
 							Kind: "ReplicaSet",

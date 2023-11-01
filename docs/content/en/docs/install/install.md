@@ -11,7 +11,7 @@ This is because Keptn communicates with the Kubernetes scheduler
 for tasks such as enforcing checks natively,
 stopping a deployment from proceeding when criteria are not met,
 doing post-deployment evaluations
-and tracing all activities of all deployment workloads on the cluster.
+and tracing all activities of all deployment [workloads](https://kubernetes.io/docs/concepts/workloads/) on the cluster.
 
 Two methods are supported for installing Keptn:
 
@@ -29,6 +29,34 @@ in order to run some Keptn functionality.
 
 You are then ready to
 [Integrate Keptn with your applications](../implementing/integrate).
+
+## Running Keptn with vCluster
+
+Keptn running on Kubernetes versions 1.26 and older
+uses a custom
+[scheduler](../architecture/components/scheduler.md),
+so it does not work with
+[Virtual Kubernetes Clusters](https://www.vcluster.com/)
+("vClusters") out of the box.
+This is also an issue
+if the `schedulingGatesEnabled` Helm chart value is set to `false`
+for Kubernetes version 1.27 and later.
+See
+[Keptn integration with Scheduling](../architecture/components/scheduler.md)
+for details.
+
+To solve this problem:
+
+1. Follow the instructions in
+   [Separate vCluster Scheduler](https://www.vcluster.com/docs/architecture/scheduling#separate-vcluster-scheduler)
+   to modify the vCluster `values.yaml` file
+   to use a virtual scheduler.
+
+1. Create or upgrade the vCluster,
+   following the instructions in that same document.
+
+1. Follow the instructions in the section below
+   to install Keptn in that vCluster.
 
 ## Use Helm Chart
 

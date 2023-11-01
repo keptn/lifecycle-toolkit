@@ -4,11 +4,11 @@ description: Define all workloads and checks associated with an application
 weight: 10
 ---
 
-A `KeptnApp` resource lists all the workloads
+A `KeptnApp` resource lists all the [workloads](https://kubernetes.io/docs/concepts/workloads/)
 that constitute a logical application.
 It contains information about:
 
-- All workloads and checks
+- All [workloads](https://kubernetes.io/docs/concepts/workloads/) and checks
   that are associated with a Keptn application
 - A list of tasks and evaluations to be executed
   pre- and post-deployment.
@@ -59,7 +59,7 @@ when the app discovery feature generates the `KeptnApp` resource:
     specification.
 
 - **spec**
-  - **version** -- version of the Keptn application.
+  - **version** (required) -- version of the Keptn application.
     Changing this version number causes a new execution
     of all application-level checks
   - **revision** -- revision of a `version`.
@@ -72,14 +72,14 @@ when the app discovery feature generates the `KeptnApp` resource:
     [Restart an Application Deployment](../implementing/restart-application-deployment/)
     for a longer discussion of this.
   - **workloads**
-    - **name** - name of this Kubernetes
+    - **name** (required) -- name of this Kubernetes
       [workload](https://kubernetes.io/docs/concepts/workloads/).
       Use the same naming rules listed above for the application name.
-      Provide one entry for each workload
+      Provide one entry for each [workload](https://kubernetes.io/docs/concepts/workloads/)
       associated with this Keptn application.
-    - **version** -- version number for this workload.
+    - **version** (required) -- version number for this [workload](https://kubernetes.io/docs/concepts/workloads/).
       Changing this number causes a new execution
-      of checks for this workload only,
+      of checks for this [workload](https://kubernetes.io/docs/concepts/workloads/) only,
       not the entire application.
 
 The remaining fields are required only when implementing
@@ -171,7 +171,7 @@ spec:
 - [KeptnTaskDefinition](taskdefinition.md)
 - [KeptnEvaluationDefinition](evaluationdefinition.md)
 - [Working with tasks](../implementing/tasks)
-- [Architecture of KeptnWorkloads and KeptnTasks](../architecture/keptn-apps/)
+- [Architecture of KeptnWorkloads and KeptnTasks](../architecture/keptn-apps.md)
 - [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
 - [Orchestrate deployment checks](../intro/usecase-orchestrate.md)
 - [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)

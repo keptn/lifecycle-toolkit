@@ -40,6 +40,17 @@ type KeptnConfigReconciler struct {
 	Log                 logr.Logger
 	LastAppliedSpec     *optionsv1alpha1.KeptnConfigSpec
 	DefaultCollectorURL string
+	config              config.IConfig
+}
+
+func NewReconciler(client client.Client, scheme *runtime.Scheme, log logr.Logger, collectorUrl string) *KeptnConfigReconciler {
+	return &KeptnConfigReconciler{
+		Client:              client,
+		Scheme:              scheme,
+		Log:                 log,
+		config:              config.Instance(),
+		DefaultCollectorURL: collectorUrl,
+	}
 }
 
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch
@@ -64,13 +75,13 @@ func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		r.initConfig()
 	}
 
+	// reconcile config values
+	r.config.SetCreationRequestTimeout(time.Duration(cfg.Spec.KeptnAppCreationRequestTimeoutSeconds) * time.Second)
+	r.config.SetCloudEventsEndpoint(cfg.Spec.CloudEventsEndpoint)
 	result, err := r.reconcileOtelCollectorUrl(cfg)
 	if err != nil {
 		return result, err
 	}
-	// reconcile config values
-	cfgInstance := config.Instance()
-	cfgInstance.SetCreationRequestTimeout(time.Duration(cfg.Spec.KeptnAppCreationRequestTimeoutSeconds) * time.Second)
 
 	r.LastAppliedSpec = &cfg.Spec
 	return ctrl.Result{}, nil

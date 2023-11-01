@@ -200,6 +200,12 @@ jobs:
           - "scheduler"
           - "certificate-operator"
     steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: 'true'
+
       - name: Download images
         id: download_images
         uses: actions/download-artifact@v3
@@ -208,11 +214,12 @@ jobs:
           path: images
 
       - name: Trivy image scan
-        uses: aquasecurity/trivy-action@fbd16365eb88e12433951383f5e99bd901fc618f # 0.12.0
+        uses: aquasecurity/trivy-action@b77b85c0254bba6789e787844f0585cde1e56320 # 0.13.0
         with:
           input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
           exit-code: '1'
+          trivyignores: .trivyignore
 
   govulncheck:
     name: Govulncheck

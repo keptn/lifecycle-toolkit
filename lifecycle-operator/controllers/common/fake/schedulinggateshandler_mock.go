@@ -5,7 +5,7 @@ package fake
 
 import (
 	"context"
-	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	"sync"
 )
 
@@ -18,7 +18,7 @@ import (
 //			EnabledFunc: func() bool {
 //				panic("mock out the Enabled method")
 //			},
-//			RemoveGatesFunc: func(ctx context.Context, workloadInstance *lfcv1alpha3.KeptnWorkloadInstance) error {
+//			RemoveGatesFunc: func(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error {
 //				panic("mock out the RemoveGates method")
 //			},
 //		}
@@ -32,7 +32,7 @@ type ISchedulingGatesHandlerMock struct {
 	EnabledFunc func() bool
 
 	// RemoveGatesFunc mocks the RemoveGates method.
-	RemoveGatesFunc func(ctx context.Context, workloadInstance *lfcv1alpha3.KeptnWorkloadInstance) error
+	RemoveGatesFunc func(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -43,8 +43,8 @@ type ISchedulingGatesHandlerMock struct {
 		RemoveGates []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
-			// WorkloadInstance is the workloadInstance argument value.
-			WorkloadInstance *lfcv1alpha3.KeptnWorkloadInstance
+			// WorkloadVersion is the workloadVersion argument value.
+			WorkloadVersion *klcv1alpha4.KeptnWorkloadVersion
 		}
 	}
 	lockEnabled     sync.RWMutex
@@ -79,21 +79,21 @@ func (mock *ISchedulingGatesHandlerMock) EnabledCalls() []struct {
 }
 
 // RemoveGates calls RemoveGatesFunc.
-func (mock *ISchedulingGatesHandlerMock) RemoveGates(ctx context.Context, workloadInstance *lfcv1alpha3.KeptnWorkloadInstance) error {
+func (mock *ISchedulingGatesHandlerMock) RemoveGates(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error {
 	if mock.RemoveGatesFunc == nil {
 		panic("ISchedulingGatesHandlerMock.RemoveGatesFunc: method is nil but ISchedulingGatesHandler.RemoveGates was just called")
 	}
 	callInfo := struct {
-		Ctx              context.Context
-		WorkloadInstance *lfcv1alpha3.KeptnWorkloadInstance
+		Ctx             context.Context
+		WorkloadVersion *klcv1alpha4.KeptnWorkloadVersion
 	}{
-		Ctx:              ctx,
-		WorkloadInstance: workloadInstance,
+		Ctx:             ctx,
+		WorkloadVersion: workloadVersion,
 	}
 	mock.lockRemoveGates.Lock()
 	mock.calls.RemoveGates = append(mock.calls.RemoveGates, callInfo)
 	mock.lockRemoveGates.Unlock()
-	return mock.RemoveGatesFunc(ctx, workloadInstance)
+	return mock.RemoveGatesFunc(ctx, workloadVersion)
 }
 
 // RemoveGatesCalls gets all the calls that were made to RemoveGates.
@@ -101,12 +101,12 @@ func (mock *ISchedulingGatesHandlerMock) RemoveGates(ctx context.Context, worklo
 //
 //	len(mockedISchedulingGatesHandler.RemoveGatesCalls())
 func (mock *ISchedulingGatesHandlerMock) RemoveGatesCalls() []struct {
-	Ctx              context.Context
-	WorkloadInstance *lfcv1alpha3.KeptnWorkloadInstance
+	Ctx             context.Context
+	WorkloadVersion *klcv1alpha4.KeptnWorkloadVersion
 } {
 	var calls []struct {
-		Ctx              context.Context
-		WorkloadInstance *lfcv1alpha3.KeptnWorkloadInstance
+		Ctx             context.Context
+		WorkloadVersion *klcv1alpha4.KeptnWorkloadVersion
 	}
 	mock.lockRemoveGates.RLock()
 	calls = mock.calls.RemoveGates

@@ -60,8 +60,8 @@ spec:
 
 * **spec**
 
-  * **type** -- The type of data provider for this instance
-  * **targetServer** -- URL of the data provider, enclosed in double quotes
+  * **type** (required) -- The type of data provider for this instance
+  * **targetServer** (required) -- URL of the data provider, enclosed in double quotes
   * **secretKeyRef**
     * **name:** -- Name of the token for this data provider
     * **key:** -- Key for this data provider

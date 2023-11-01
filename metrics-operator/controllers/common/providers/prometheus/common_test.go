@@ -140,7 +140,7 @@ func Test_GetRoundtripper(t *testing.T) {
 				},
 			},
 			k8sClient: fake.NewClient(goodsecret),
-			want:      config.NewBasicAuthRoundTripper("myuser", "mytoken", "", promapi.DefaultRoundTripper),
+			want:      config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
 			wantErr:   false,
 		},
 		{

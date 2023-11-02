@@ -52,9 +52,9 @@ That will be fixed in a subsequent step.
 Install Keptn using Helm:
 
 ```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
 Keptn will need to know where to send OpenTelemetry traces.

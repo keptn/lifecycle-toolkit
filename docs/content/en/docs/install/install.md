@@ -65,9 +65,9 @@ should be installed using Helm Charts.
 The command sequence to fetch and install the latest release is:
 
 ```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn klt/klt \
+helm upgrade --install keptn keptn/keptn \
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
@@ -83,7 +83,7 @@ Some helpful hints:
 
   ```shell
   helm repo update
-  helm search repo klt
+  helm search repo keptn
   ```
 
 * To verify that the Keptn components are installed in your cluster,

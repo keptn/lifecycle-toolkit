@@ -6,10 +6,10 @@ global:
 certManager:
   enabled: true
 lifecycleOperator:
-  enabled: false   # do not install
+  enabled: false   # lifecycle operator won't be installed
 metricsOperator:
   enabled: true
   image:
-    tag: v0.0.0 #changes metrics operator image tag
-  imagePullPolicy: Never #sets the image policy to never pull
+    tag: v0.0.0 # changes metrics operator image tag
+  imagePullPolicy: Never
 

@@ -5,7 +5,7 @@ weight: 500
 ---
 
 After you have successfully rolled out your application by following
-the instructions in the [integration guide](../integrate),
+the instructions in the [integration guide](./integrate.md),
 Keptn also assists you with day 2 operations for your application.
 
 Tasks that fall under this category include:
@@ -84,7 +84,7 @@ of the `KeptnApp` to be executed again.
 In this example, this means that the tasks `wait-for-prometheus`,
 and `post-deployment-loadtests` will run again.
 
-If you are using the [automatic app discovery](../integrate#use-keptn-automatic-app-discovery),
+If you are using the [automatic app discovery](./integrate.md#use-keptn-automatic-app-discovery),
 you do not need to update the `KeptnApp` resource.
 Keptn will take care of that for you.
 

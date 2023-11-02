@@ -23,7 +23,7 @@ to gate Pods until the required deployment checks pass.
 When you apply a workload to a K8s cluster,
 the Mutating Webhook checks each Pod for annotations
 to see if it is annotated with
-[Keptn specific annotations](../../implementing/integrate/_index.md#basic-annotations).
+[Keptn specific annotations](../../implementing/integrate.md#basic-annotations).
 If the annotations are present, the Webhook adds a gate to the Pod called `keptn-prechecks-gate`.
 This spec tells the Kubernetes scheduling framework
 to wait for  the Keptn checks before assigning the pod to a node.
@@ -64,7 +64,7 @@ a [Permit plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/schedu
 ### How does the Keptn Scheduler works
 
 Firstly the Mutating Webhook checks for annotations on Pods to see if it is annotated with
-[Keptn specific annotations](../../implementing/integrate/#basic-annotations).
+[Keptn specific annotations](../../implementing/integrate.md#basic-annotations).
 If the annotations are present, the Webhook assigns the **Keptn Scheduler** to the Pod.
 This ensures that the Keptn Scheduler only gets Pods that have been annotated for it.
 A Pod `test-pod` modified by the Mutating Webhook looks as follows:

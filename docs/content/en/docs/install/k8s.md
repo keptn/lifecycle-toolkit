@@ -93,7 +93,7 @@ Your cluster should include the following:
   * SLIs for pre- and post-deployment
     [evaluations](../implementing/evaluations.md/)
   * SLIs used for
-    [analyses](../implementing/slo/)
+    [analyses](../implementing/slo.md)
 
 * If you want to use the standardized observability feature,
   you must have an OpenTelemetry collector

@@ -46,7 +46,7 @@ let's assume the following example, including
 a [workload](https://kubernetes.io/docs/concepts/workloads/) called `podtato-head-frontend` that includes a pre-task and
 a pre-evaluation.
 
-{{< embed path="/docs/content/en/docs/implementing/day-2-operations/assets/deployment-initial.yaml" >}}
+{{< docsembed path="content/en/docs/implementing/assets/deployment-initial.yaml" >}}
 
 Now, let's assume that the configuration of that [workload](https://kubernetes.io/docs/concepts/workloads/) needs to be changed.
 In this example we assume that the image of that [workload](https://kubernetes.io/docs/concepts/workloads/)
@@ -59,7 +59,7 @@ of the result of any task or evaluation, e.g., when the previously used image ha
 and the image must be updated as quickly as possible.
 To do that, change `podtato-head-frontend` as follows:
 
-{{< embed path="/docs/content/en/docs/implementing/assets/deployment-new-image.yaml" >}}
+{{< docsembed path="content/en/docs/implementing/assets/deployment-new-image.yaml" >}}
 
 * **Update the configuration *and* the version label:**
 Doing so causes the `KeptnWorkload` that is associated
@@ -68,7 +68,7 @@ and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`
 are executed before the updated pods are scheduled.
 In this case, the deployment should be changed as follows:
 
-{{< embed path="/docs/content/en/docs/implementing/assets/deployment-new-image-and-version.yaml" >}}
+{{< docsembed path="content/en/docs/implementing/assets/deployment-new-image-and-version.yaml" >}}
 
 If you have defined the related `KeptnApp` resource yourself,
 this must also be updated to refer to the updated `KeptnWorkload`.
@@ -77,7 +77,7 @@ this updated deployment is not able to progress otherwise.
 Therefore, make sure that the version of `podtato-head-frontend`
 is updated accordingly:
 
-{{< embed path="/docs/content/en/docs/implementing/assets/app-updated-version.yaml" >}}
+{{< docsembed path="content/en/docs/implementing/assets/app-updated-version.yaml" >}}
 
 Updating the `KeptnApp` also causes all pre-/post-tasks/evaluations
 of the `KeptnApp` to be executed again.

@@ -171,19 +171,21 @@ jobs:
           name: ${{ matrix.config.name }}-image.tar
           path: /tmp/${{ matrix.config.name }}-image.tar
 
+  image_tag:
+    name: Store tag of the built images
+    needs: prepare_ci_run
+    runs-on: ubuntu-22.04
+    env:
+      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
+    steps:
       - name: Create empty file to store image tag
-        if: matrix.config.name == 'lifecycle-operator'
-        working-directory: ./${{ matrix.config.folder }}
-        env:
-          CHART_APPVERSION: dev-${{ env.DATETIME }}
         run: echo "" > tag
 
-      - name: Upload release.yaml for tests
-        if: matrix.config.name == 'lifecycle-operator'
+      - name: Upload tag for tests
         uses: actions/upload-artifact@v3
         with:
           name: dev-${{ env.DATETIME }}
-          path: ${{ matrix.config.folder }}/tag
+          path: tag
 
   component_tests:
     name: Component Tests

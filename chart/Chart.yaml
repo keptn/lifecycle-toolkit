@@ -57,15 +57,15 @@ dependencies:
     version: 0.2.0
     alias: certManager
     condition: certManager.enabled
-    repository: "https://charts.lifecycle.keptn.sh"
+    repository: file://../klt-cert-manager/chart
   - name: keptn-lifecycle-operator
     version: 0.1.0
     alias: lifecycleOperator
     condition: lifecycleOperator.enabled
-    repository: "https://charts.lifecycle.keptn.sh"
+    repository: file://../lifecycle-operator/chart
   - name: keptn-metrics-operator
     version: 0.1.0
     alias: metricsOperator
     condition: metricsOperator.enabled
-    repository: "https://charts.lifecycle.keptn.sh"
+    repository: file://../metrics-operator/chart
 # TODO: change repository links to released ones once the charts get their first release

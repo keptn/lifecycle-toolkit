@@ -1156,9 +1156,7 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, ch
 		TracerFactory: tf,
 		EvaluationHandler: &evalfake.MockEvaluationHandler{
 			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
-				var itemStatus []klcv1alpha3.ItemStatus
-				var summary apicommon.StatusSummary
-				return itemStatus, summary, nil
+				return []klcv1alpha3.ItemStatus{}, apicommon.StatusSummary{}, nil
 			},
 		},
 	}

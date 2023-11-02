@@ -12,18 +12,18 @@ import (
 	"sync"
 )
 
-// MockEvaluationHandler is a mock implementation of evaluation.EvaluationHandlerInterface.
+// MockEvaluationHandler is a mock implementation of evaluation.IEvaluationHandler.
 //
-//	func TestSomethingThatUsesEvaluationHandlerInterface(t *testing.T) {
+//	func TestSomethingThatUsesIEvaluationHandler(t *testing.T) {
 //
-//		// make and configure a mocked evaluation.EvaluationHandlerInterface
-//		mockedEvaluationHandlerInterface := &MockEvaluationHandler{
+//		// make and configure a mocked evaluation.IEvaluationHandler
+//		mockedIEvaluationHandler := &MockEvaluationHandler{
 //			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
 //				panic("mock out the ReconcileEvaluations method")
 //			},
 //		}
 //
-//		// use mockedEvaluationHandlerInterface in code that requires evaluation.EvaluationHandlerInterface
+//		// use mockedIEvaluationHandler in code that requires evaluation.IEvaluationHandler
 //		// and then make assertions.
 //
 //	}
@@ -51,7 +51,7 @@ type MockEvaluationHandler struct {
 // ReconcileEvaluations calls ReconcileEvaluationsFunc.
 func (mock *MockEvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
 	if mock.ReconcileEvaluationsFunc == nil {
-		panic("MockEvaluationHandler.ReconcileEvaluationsFunc: method is nil but EvaluationHandlerInterface.ReconcileEvaluations was just called")
+		panic("MockEvaluationHandler.ReconcileEvaluationsFunc: method is nil but IEvaluationHandler.ReconcileEvaluations was just called")
 	}
 	callInfo := struct {
 		Ctx                        context.Context
@@ -73,7 +73,7 @@ func (mock *MockEvaluationHandler) ReconcileEvaluations(ctx context.Context, pha
 // ReconcileEvaluationsCalls gets all the calls that were made to ReconcileEvaluations.
 // Check the length with:
 //
-//	len(mockedEvaluationHandlerInterface.ReconcileEvaluationsCalls())
+//	len(mockedIEvaluationHandler.ReconcileEvaluationsCalls())
 func (mock *MockEvaluationHandler) ReconcileEvaluationsCalls() []struct {
 	Ctx                        context.Context
 	PhaseCtx                   context.Context

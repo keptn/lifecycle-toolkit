@@ -21,8 +21,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
-//go:generate moq -pkg fake -skip-ensure -out ./fake/evaluationhandler_mock.go . EvaluationHandlerInterface:MockEvaluationHandler
-type EvaluationHandlerInterface interface {
+//go:generate moq -pkg fake -skip-ensure -out ./fake/evaluationhandler_mock.go . IEvaluationHandler:MockEvaluationHandler
+type IEvaluationHandler interface {
 	ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error)
 }
 

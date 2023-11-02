@@ -255,6 +255,15 @@ jobs:
           path: ./helm-charts-repository
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
 
+      - name: Substitue local paths with official chart URL
+        if: matrix.config.name == 'keptn'
+        working-directory: ./${{ matrix.config.path }}
+        run: |
+          # substitute local charts path with official ones
+          yq '.dependencies.[].repository = "https://charts.lifecycle.keptn.sh"' ./Chart.yaml > ./Chart.yaml
+          helm dependency update
+          helm dependency build
+
       - name: Copy chart from klt to helm repo
         run: rsync -av --delete --exclude='charts/*.tgz' ./${{ matrix.config.path }}/ ./helm-charts-repository/charts/${{ matrix.config.name }}/
 

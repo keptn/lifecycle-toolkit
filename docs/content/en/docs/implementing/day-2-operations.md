@@ -13,11 +13,11 @@ Tasks that fall under this category include:
 * Updating the version of one or more [workloads](https://kubernetes.io/docs/concepts/workloads/)
 that are part of the same application
 * Adding a new [workload](https://kubernetes.io/docs/concepts/workloads/) to an existing application
-* Monitoring the health of your application using `KeptnMetrics`, as described [here](../evaluatemetrics.md)
+* Monitoring the health of your application using `KeptnMetrics`, as described [here](./evaluatemetrics.md)
 * Optimizing the resource usage of your applications by integrating
 `KeptnMetrics` into a
 [HorizontalPodAutoscaler (HPA)](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/),
-as described [here](../evaluatemetrics.md/#using-the-horizontalpodautoscaler)
+as described [here](./evaluatemetrics.md/#using-the-horizontalpodautoscaler)
 
 ## Updating Workload Versions
 
@@ -59,7 +59,7 @@ of the result of any task or evaluation, e.g., when the previously used image ha
 and the image must be updated as quickly as possible.
 To do that, change `podtato-head-frontend` as follows:
 
-{{< embed path="/docs/content/en/docs/implementing/day-2-operations/assets/deployment-new-image.yaml" >}}
+{{< embed path="/docs/content/en/docs/implementing/assets/deployment-new-image.yaml" >}}
 
 * **Update the configuration *and* the version label:**
 Doing so causes the `KeptnWorkload` that is associated
@@ -68,7 +68,7 @@ and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`
 are executed before the updated pods are scheduled.
 In this case, the deployment should be changed as follows:
 
-{{< embed path="/docs/content/en/docs/implementing/day-2-operations/assets/deployment-new-image-and-version.yaml" >}}
+{{< embed path="/docs/content/en/docs/implementing/assets/deployment-new-image-and-version.yaml" >}}
 
 If you have defined the related `KeptnApp` resource yourself,
 this must also be updated to refer to the updated `KeptnWorkload`.
@@ -77,7 +77,7 @@ this updated deployment is not able to progress otherwise.
 Therefore, make sure that the version of `podtato-head-frontend`
 is updated accordingly:
 
-{{< embed path="/docs/content/en/docs/implementing/day-2-operations/assets/app-updated-version.yaml" >}}
+{{< embed path="/docs/content/en/docs/implementing/assets/app-updated-version.yaml" >}}
 
 Updating the `KeptnApp` also causes all pre-/post-tasks/evaluations
 of the `KeptnApp` to be executed again.

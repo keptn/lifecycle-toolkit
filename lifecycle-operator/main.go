@@ -37,6 +37,7 @@ import (
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnappcreationrequest"
@@ -49,10 +50,10 @@ import (
 	controlleroptions "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/options"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"go.opentelemetry.io/otel"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	metricsapi "go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/otel/trace"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -271,19 +272,27 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
 		os.Exit(1)
 	}
-
 	workloadVersionLogger := ctrl.Log.WithName("KeptnWorkloadVersion Controller").V(determineWorkloadVersionControllerLogLevel(env.KeptnWorkloadVersionControllerLogLevel, env.KeptnWorkloadInstanceControllerLogLevel))
 	workloadVersionRecorder := mgr.GetEventRecorderFor("keptnworkloadversion-controller")
-	workloadVersionReconciler := keptnworkloadversion.NewReconciler(
+	evaluationHandler := evaluation.NewEvaluationHandler(
 		mgr.GetClient(),
-		mgr.GetScheme(),
 		controllercommon.NewEventMultiplexer(workloadVersionLogger, workloadVersionRecorder, ceClient),
 		workloadVersionLogger,
-		keptnMeters,
+		trace.NewNoopTracerProvider().Tracer("keptn/workloadversion-controller"),
+		mgr.GetScheme(),
 		spanHandler,
-		telemetry.GetOtelInstance(),
-		controllercommon.NewSchedulingGatesHandler(mgr.GetClient(), workloadVersionLogger, env.SchedulingGatesEnabled),
-		otel.Tracer("keptn/workloadversion-controller"))
+	)
+	workloadVersionReconciler := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
+		SchedulingGatesHandler: controllercommon.NewSchedulingGatesHandler(mgr.GetClient(), workloadVersionLogger, env.SchedulingGatesEnabled),
+		Client:                 mgr.GetClient(),
+		Scheme:                 mgr.GetScheme(),
+		Log:                    workloadVersionLogger,
+		EventSender:            controllercommon.NewEventMultiplexer(workloadVersionLogger, workloadVersionRecorder, ceClient),
+		Meters:                 keptnMeters,
+		TracerFactory:          telemetry.GetOtelInstance(),
+		SpanHandler:            spanHandler,
+		EvaluationHandler:      evaluationHandler,
+	}
 	if err = (workloadVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadVersion")
 		os.Exit(1)

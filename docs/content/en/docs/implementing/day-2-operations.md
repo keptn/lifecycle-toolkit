@@ -133,7 +133,7 @@ For example, to add the deployment `podtato-head-left-leg` to the
 `podtato-head` application, the configuration for that new deployment
 would look like this, with the required label being set:
 
-{{< docsembed path="content/en/docs/implementing/day-2-operations/assets/new-deployment.yaml" >}}
+{{< docsembed path="content/en/docs/implementing/assets/new-deployment.yaml" >}}
 
 The `KeptnApp`, if defined by the user, should contain the
 reference to the newly added [workload](https://kubernetes.io/docs/concepts/workloads/).
@@ -142,7 +142,7 @@ progress if it is not part of a `KeptnApp`.
 For automatically discovered apps this is done
 automatically.
 
-{{< docsembed path="content/en/docs/implementing/day-2-operations/assets/app-with-new-workload.yaml" >}}
+{{< docsembed path="content/en/docs/implementing/assets/app-with-new-workload.yaml" >}}
 
 After applying the updated manifests, you can monitor the status
 of the application and related [workloads](https://kubernetes.io/docs/concepts/workloads/) using the following commands:

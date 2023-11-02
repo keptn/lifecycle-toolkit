@@ -55,10 +55,10 @@ type KeptnTaskDefinitionSpec struct {
 	// +kubebuilder:validation:Type:=string
 	// +optional
 	Timeout metav1.Duration `json:"timeout,omitempty"`
-	// Service Account to be used in jobs to authenticate with the Kubernetes API and access cluster resources.
+	// ServiceAccount specifies the service account to be used in jobs to authenticate with the Kubernetes API and access cluster resources.
 	ServiceAccount *ServiceAccountSpec `json:"serviceAccount,omitempty"`
-	// automountServiceAccountToken allows to enable K8s to assign cluster API credentials to a pod, if set to false
-	// the pod will decline the serviceAccount
+	// AutomountServiceAccountToken allows to enable K8s to assign cluster API credentials to a pod, if set to false
+	// the pod will decline the service account
 	AutomountServiceAccountToken *AutomountServiceAccountTokenSpec `json:"automountServiceAccountToken,omitempty"`
 }
 

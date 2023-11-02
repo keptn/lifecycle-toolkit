@@ -278,7 +278,7 @@ func main() {
 		mgr.GetClient(),
 		controllercommon.NewEventMultiplexer(workloadVersionLogger, workloadVersionRecorder, ceClient),
 		workloadVersionLogger,
-		trace.NewNoopTracerProvider().Tracer("keptn/workloadversion-controller"),
+		trace.NewNoopTracerProvider().Tracer("keptn/lifecycle-operator/workloadversion"),
 		mgr.GetScheme(),
 		spanHandler,
 	)

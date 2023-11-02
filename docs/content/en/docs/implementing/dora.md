@@ -21,7 +21,7 @@ DORA metrics provide information such as:
 
 Keptn starts collecting these metrics
 as soon as you apply
-[basic annotations](./integrate/#basic-annotations)
+[basic annotations](./integrate.md#basic-annotations)
 to the
 [Workload](https://kubernetes.io/docs/concepts/workloads/)
 resources

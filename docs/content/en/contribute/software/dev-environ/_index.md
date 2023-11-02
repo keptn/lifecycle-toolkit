@@ -57,7 +57,7 @@ you also see the `runtimes` directory.
 This defines the runners that you can use when defining
 tasks to be run either pre- or post-deployment.
 These are discussed in
-[Runners and containers](../../../docs/implementing/tasks/#runners-and-containers).
+[Runners and containers](../../../docs/implementing/tasks.md#runners-and-containers).
 
 ## Install software
 

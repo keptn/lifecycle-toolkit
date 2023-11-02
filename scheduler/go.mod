@@ -108,7 +108,7 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/apiextensions-apiserver v0.25.0 // indirect
+	k8s.io/apiextensions-apiserver v0.25.15 // indirect
 	k8s.io/cloud-provider v0.25.4 // indirect
 	k8s.io/component-helpers v0.25.15 // indirect
 	k8s.io/csi-translation-lib v0.25.4 // indirect

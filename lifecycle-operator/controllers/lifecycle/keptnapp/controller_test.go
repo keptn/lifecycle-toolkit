@@ -12,7 +12,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
-	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -37,7 +36,7 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 		},
 		Status: lfcv1alpha3.KeptnAppStatus{},
 	}
-	r, _, _ := setupReconciler()
+	r, _ := setupReconciler()
 
 	appVersion, err := r.createAppVersion(context.TODO(), app)
 	if err != nil {
@@ -62,7 +61,7 @@ func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {
 			Version: "version",
 		},
 	}
-	r, _, _ := setupReconciler()
+	r, _ := setupReconciler()
 
 	appVersion, err := r.createAppVersion(context.Background(), app)
 	if err != nil {
@@ -117,7 +116,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 	app := controllercommon.GetApp("myapp")
 	appfin := controllercommon.GetApp("myfinishedapp")
 	appver := controllercommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0-6b86b273", nil, lfcv1alpha3.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
-	r, _, tracer := setupReconciler(app, appfin, appver)
+	r, _ := setupReconciler(app, appfin, appver)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -135,10 +134,6 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 		})
 	}
-
-	// check correct traces
-	assert.Equal(t, len(tracer.StartCalls()), 1)
-	assert.Equal(t, tracer.StartCalls()[0].SpanName, "myapp-1.0.0-6b86b273")
 }
 
 func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
@@ -152,7 +147,7 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 			Namespace: "default",
 		},
 	}
-	r, _, _ := setupReconciler(app, appVersion)
+	r, _ := setupReconciler(app, appVersion)
 
 	_, err := r.Reconcile(context.TODO(), ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -172,31 +167,21 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 	require.Equal(t, apicommon.StateDeprecated, keptnappversion.Status.Status)
 }
 
-func setupReconciler(objs ...client.Object) (*KeptnAppReconciler, chan string, *fake.ITracerMock) {
+func setupReconciler(objs ...client.Object) (*KeptnAppReconciler, chan string) {
 	// setup logger
 	opts := zap.Options{
 		Development: true,
 	}
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
-	// fake a tracer
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
-	tf := &fake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
-		return tr
-	}}
-
 	fakeClient := fake.NewClient(objs...)
 
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppReconciler{
-		Client:        fakeClient,
-		Scheme:        scheme.Scheme,
-		EventSender:   controllercommon.NewK8sSender(recorder),
-		Log:           ctrl.Log.WithName("test-appController"),
-		TracerFactory: tf,
+		Client:      fakeClient,
+		Scheme:      scheme.Scheme,
+		EventSender: controllercommon.NewK8sSender(recorder),
+		Log:         ctrl.Log.WithName("test-appController"),
 	}
-	return r, recorder.Events, tr
+	return r, recorder.Events
 }

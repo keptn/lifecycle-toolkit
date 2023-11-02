@@ -1,9 +1,7 @@
 ---
 title: Integrate Keptn with your applications
 description: How to integrate Keptn into your Kubernetes cluster
-layout: quickstart
-weight: 45
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
+weight: 10
 ---
 
 Keptn works
@@ -124,7 +122,7 @@ annotation/label is populated:
   but not the combined workloads that constitute your deployed application.
 
 See
-[Keptn Applications and Keptn Workloads](../../concepts/architecture/keptn-apps/)
+[Keptn Applications and Keptn Workloads](../../architecture/keptn-apps.md)
 for architectural information about how `KeptnApp` and `KeptnWorkloads`
 are implemented.
 
@@ -254,7 +252,7 @@ Afterward, you can monitor the status of the deployment using
 a command like the following:
 
 ```shell
-kubectl get keptnworkloadinstance -n podtato-kubectl -w
+kubectl get keptnworkloadversion -n podtato-kubectl -w
 ```
 
 The generated `KeptnApp` file includes `metadata`
@@ -337,7 +335,7 @@ metadata:
   name: podtato-head
   namespace: podtato-kubectl
   annotations:
-    app.kubernetes.io/managed-by: "klt"
+    app.kubernetes.io/managed-by: "keptn"
 spec:
   version: "<version string based on a hash of all containing workloads>"
   workloads:
@@ -372,7 +370,7 @@ kubectl apply -f .
 Afterward, you can monitor the status of the deployment using
 
 ```shell
-kubectl get keptnworkloadinstance -n podtato-kubectl -w
+kubectl get keptnworkloadversion -n podtato-kubectl -w
 ```
 
 The deployment for a Workload stays in a `Pending`

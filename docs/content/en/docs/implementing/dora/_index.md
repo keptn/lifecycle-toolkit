@@ -1,7 +1,7 @@
 ---
 title: DORA metrics
 description: Access DORA metrics for your cluster
-weight: 65
+weight: 30
 ---
 
 DORA metrics are an industry-standard set of measurements

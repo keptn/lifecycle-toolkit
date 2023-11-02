@@ -120,9 +120,20 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
-| `timeframe` _[Timeframe](#timeframe)_ | Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate |
+| `timeframe` _[Timeframe](#timeframe)_ | Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate. Please note that either a combination of 'from' and 'to' or the 'recent' property may be set. If neither is set, the Analysis can not be added to the cluster. |
 | `args` _object (keys:string, values:string)_ | Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})". |
 | `analysisDefinition` _[ObjectReference](#objectreference)_ | AnalysisDefinition refers to the AnalysisDefinition, a CRD that stores the AnalysisValuesTemplates |
+
+
+#### AnalysisState
+
+_Underlying type:_ `string`
+
+AnalysisState represents the state of the analysis
+
+_Appears in:_
+- [AnalysisStatus](#analysisstatus)
+
 
 
 #### AnalysisStatus
@@ -136,9 +147,11 @@ _Appears in:_
 
 | Field | Description |
 | --- | --- |
+| `timeframe` _[Timeframe](#timeframe)_ | Timeframe describes the time frame which is evaluated by the Analysis |
 | `raw` _string_ | Raw contains the raw result of the SLO computation |
 | `pass` _boolean_ | Pass returns whether the SLO is satisfied |
 | `warning` _boolean_ | Warning returns whether the analysis returned a warning |
+| `state` _[AnalysisState](#analysisstate)_ | State describes the current state of the Analysis (Pending/Progressing/Completed) |
 | `storedValues` _object (keys:string, values:[ProviderResult](#providerresult))_ | StoredValues contains all analysis values that have already been retrieved successfully |
 
 
@@ -189,6 +202,23 @@ _Appears in:_
 | --- | --- |
 | `provider` _[ObjectReference](#objectreference)_ | Provider refers to the KeptnMetricsProvider which should be used to retrieve the data |
 | `query` _string_ | Query represents the query to be run. It can include placeholders that are defined using the go template syntax. More info on go templating - https://pkg.go.dev/text/template |
+
+
+#### IntervalResult
+
+
+
+
+
+_Appears in:_
+- [KeptnMetricStatus](#keptnmetricstatus)
+
+| Field | Description |
+| --- | --- |
+| `value` _string_ | Value represents the resulting value |
+| `range` _[RangeSpec](#rangespec)_ | Range represents the time range for which this data was queried |
+| `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
+| `errMsg` _string_ | ErrMsg represents the error details when the query could not be evaluated |
 
 
 #### KeptnMetric
@@ -257,6 +287,7 @@ _Appears in:_
 | `rawValue` _integer array_ | RawValue represents the resulting value in raw format |
 | `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated |
 | `errMsg` _string_ | ErrMsg represents the error details when the query could not be evaluated |
+| `intervalResults` _[IntervalResult](#intervalresult) array_ | IntervalResults contain a slice of all the interval results |
 
 
 #### KeptnMetricsProvider
@@ -404,6 +435,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `objectiveReference` _[ObjectReference](#objectreference)_ | Objective store reference to corresponding objective template |
+| `query` _string_ | Query represents the executed query |
 | `value` _string_ | Value is the value the provider returned |
 | `errMsg` _string_ | ErrMsg stores any possible error at retrieval time |
 
@@ -415,6 +447,7 @@ _Appears in:_
 RangeSpec defines the time range for which data is to be queried
 
 _Appears in:_
+- [IntervalResult](#intervalresult)
 - [KeptnMetricSpec](#keptnmetricspec)
 
 | Field | Description |
@@ -422,6 +455,7 @@ _Appears in:_
 | `interval` _string_ | Interval specifies the duration of the time interval for the data query |
 | `step` _string_ | Step represents the query resolution step width for the data query |
 | `aggregation` _string_ | Aggregation defines the type of aggregation function to be applied on the data. Accepted values: p90, p95, p99, max, min, avg, median |
+| `storedResults` _integer_ | StoredResults indicates the upper limit of how many past results should be stored in the status of a KeptnMetric |
 
 
 #### RangeValue
@@ -462,11 +496,13 @@ _Appears in:_
 
 _Appears in:_
 - [AnalysisSpec](#analysisspec)
+- [AnalysisStatus](#analysisstatus)
 
 | Field | Description |
 | --- | --- |
-| `from` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | From is the time of start for the query, this field follows RFC3339 time format |
-| `to` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | To is the time of end for the query, this field follows RFC3339 time format |
+| `from` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | From is the time of start for the query. This field follows RFC3339 time format |
+| `to` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#time-v1-meta)_ | To is the time of end for the query. This field follows RFC3339 time format |
+| `recent` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ | Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' provides an Analysis for the last five minutes |
 
 
 #### TotalScore

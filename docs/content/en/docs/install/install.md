@@ -11,7 +11,7 @@ This is because Keptn communicates with the Kubernetes scheduler
 for tasks such as enforcing checks natively,
 stopping a deployment from proceeding when criteria are not met,
 doing post-deployment evaluations
-and tracing all activities of all deployment workloads on the cluster.
+and tracing all activities of all deployment [workloads](https://kubernetes.io/docs/concepts/workloads/) on the cluster.
 
 Two methods are supported for installing Keptn:
 
@@ -19,7 +19,8 @@ Two methods are supported for installing Keptn:
   the [Helm Chart](#use-helm-chart).
   This is the preferred strategy because it allows you to customize your cluster.
 
-* See the [use manifests](#use-manifests) section for more information on installing via manifest.
+* Releases v0.8.2 and earlier can be installed using
+  the [manifests](#use-manifests).
   This is the less-preferred way because it does not support customization.
 
 After Keptn is installed, you must
@@ -28,6 +29,34 @@ in order to run some Keptn functionality.
 
 You are then ready to
 [Integrate Keptn with your applications](../implementing/integrate).
+
+## Running Keptn with vCluster
+
+Keptn running on Kubernetes versions 1.26 and older
+uses a custom
+[scheduler](../architecture/components/scheduler.md),
+so it does not work with
+[Virtual Kubernetes Clusters](https://www.vcluster.com/)
+("vClusters") out of the box.
+This is also an issue
+if the `schedulingGatesEnabled` Helm chart value is set to `false`
+for Kubernetes version 1.27 and later.
+See
+[Keptn integration with Scheduling](../architecture/components/scheduler.md)
+for details.
+
+To solve this problem:
+
+1. Follow the instructions in
+   [Separate vCluster Scheduler](https://www.vcluster.com/docs/architecture/scheduling#separate-vcluster-scheduler)
+   to modify the vCluster `values.yaml` file
+   to use a virtual scheduler.
+
+1. Create or upgrade the vCluster,
+   following the instructions in that same document.
+
+1. Follow the instructions in the section below
+   to install Keptn in that vCluster.
 
 ## Use Helm Chart
 
@@ -74,7 +103,7 @@ rather than the full Toolkit
 or if you need to change the size of the installation.
 
 To modify configuration options, download a copy of the
-[helm/chart/values.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/values.yaml)
+[chart/values.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/chart/values.yaml)
 file, modify some values, and use the modified file to install Keptn:
 
 1. Download the `values.yaml` file:
@@ -103,12 +132,12 @@ For more information,see
 
 * The [Helm Get Values](https://helm.sh/docs/helm/helm_get_values/)) document
 
-* The [helm-charts](https://github.com/keptn/lifecycle-toolkit/blob/main/helm/chart/README.md) page
+* The [helm-charts](https://github.com/keptn/lifecycle-toolkit/blob/main/chart/README.md) page
   contains the full list of available values.
 
 ## Use manifests
 
-Versions v0.10.0 and earlier of Keptn can be installed using manifests,
+Versions v0.8.2 and earlier of Keptn can be installed using manifests,
 although we recommend that you use Helm Charts
 because they allow you to easily customize your configuration.
 

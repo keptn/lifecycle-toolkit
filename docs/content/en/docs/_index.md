@@ -4,5 +4,5 @@ linktitle: Docs
 description: Learn how to use Keptn.
 cascade:
   type: docs
-  currentversion: klt-v0.8.2
+  currentversion: main
 ---

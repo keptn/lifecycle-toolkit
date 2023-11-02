@@ -39,7 +39,7 @@ spec:
 ## Fields
 
 * **apiVersion** -- API version being used.
-`
+
 * **kind** -- Resource type.
    Must be set to `KeptnMetric`.
 
@@ -51,7 +51,7 @@ spec:
   * **namespace** -- Namespace of the application using this metric.
 
 * **spec**
-  * **provider.name** --
+  * **provider.name** (required) --
     Name of this instance of the data source
     from which the metric is collected.
     This value must match the value of the `metadata.name` field
@@ -64,11 +64,12 @@ spec:
     as the name of the Prometheus server that monitors the dev deployment
     and `prod-prometheus` as the name of the Prometheus server
     that monitors the production deployment.
-  * **query** -- String in the provider-specific query language,
+  * **query** (required) -- String in the provider-specific query language,
     used to obtain a metric.
-  * **fetchIntervalSeconds** -- Number of seconds between updates of the metric.
+
+  * **fetchIntervalSeconds** (required) -- Number of seconds between updates of the metric.
   * **range**
-    * **interval** -- Timeframe for which the metric would be queried.
+    * **interval** -- Timeframe for which the metric is queried.
     Defaults to 5m.
 
 * **status**
@@ -81,6 +82,11 @@ spec:
     such as a forbidden code.
 
 ## Usage
+
+As soon as you define and apply
+your `KeptnMetricsProvider` and `KeptnMetric` resources,
+Keptn begins collecting the metrics you defined.
+You do not need to do anything else.
 
 A `KeptnMetric` resource must be located
 in the same namespace as the associated
@@ -156,5 +162,5 @@ spec:
 * [KeptnEvaluationDefinition](evaluationdefinition.md)
 * [KeptnMetricsProvider](metricsprovider.md)
 * Implementing [Keptn Metrics](../implementing/evaluatemetrics.md)
-* [Getting started with Keptn metrics](../intro/usecase_metrics.md)
-* Architecture of the [Keptn Metrics Operator](../concepts/architecture/components/metrics-operator/_index.md)
+* [Getting started with Keptn metrics](../getting-started/metrics.md)
+* Architecture of the [Keptn Metrics Operator](../architecture/components/metrics-operator.md)

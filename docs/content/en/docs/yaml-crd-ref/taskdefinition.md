@@ -305,7 +305,7 @@ spec:
     See
     [Passing secrets, environment variables, and modifying the python command](#passing-secrets-environment-variables-and-modifying-the-python-command)
     and
-    [Parameterized functions](../implementing/tasks/#parameterized-functions)
+    [Parameterized functions](../implementing/tasks.md#parameterized-functions)
     for more information.
 
     * **deno example:**
@@ -321,7 +321,7 @@ spec:
     Note that, currently, only one secret can be passed
     per `KeptnTaskDefinition` resource.
 
-    See [Create secret text](../implementing/tasks/#create-secret-text)
+    See [Create secret text](../implementing/tasks.md#create-secret-text)
     for details.
 
     * **deno example:**
@@ -358,7 +358,7 @@ and
 and in the
 [KeptnApp](app.md) resource.
 See
-[Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
+[Pre- and post-deployment tasks](../implementing/integrate.md#pre--and-post-deployment-checks)
 for details.
 Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
@@ -371,7 +371,7 @@ either by using the `inline` syntax for a pre-defined container image
 or by creating your own image
 and running it in the Keptn `container-runtime` runner.
 See
-[Executing sequential tasks](../implementing/tasks/#executing-sequential-tasks)
+[Executing sequential tasks](../implementing/tasks.md#executing-sequential-tasks)
 for more information.
 
 ## Examples for a container-runtime runner
@@ -608,8 +608,8 @@ This modifies the synopsis in the following ways:
 ## See also
 
 * [KeptnApp](app.md)
-* [Working with tasks](../implementing/tasks)
-* [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
+* [Working with tasks](../implementing/tasks.md)
+* [Pre- and post-deployment tasks](../implementing/integrate.md#pre--and-post-deployment-checks)
 * [KeptnApp and KeptnWorkload resources](../architecture/keptn-apps.md).
 * [Orchestrate deployment checks](../intro/usecase-orchestrate.md)
-* [Executing sequential tasks](../implementing/tasks/#executing-sequential-tasks)
+* [Executing sequential tasks](../implementing/tasks.md#executing-sequential-tasks)

@@ -91,7 +91,7 @@ resource.
 
 ## How basic annotations are implemented
 
-The [Basic annotations](../implementing/integrate/#basic-annotations)
+The [Basic annotations](../implementing/integrate.md#basic-annotations)
 page gives instructions for applying the annotations or labels
 that identify the pods that Keptn should manage.
 

@@ -23,7 +23,7 @@ appropriate Keptn facilities:
 
 * Keptn v1 calculations that use weighting and scoring
   can be converted to use the
-  [Keptn Analysis](../implementing/slo)
+  [Keptn Analysis](../implementing/slo.md)
   feature.
   Tools are provided to help with this conversion;
   see below.
@@ -31,7 +31,7 @@ appropriate Keptn facilities:
 By default, Keptn includes additional observability features
 that are not included in Keptn v1:
 
-* [DORA metrics](../implementing/dora)
+* [DORA metrics](../implementing/dora.md)
 * [OpenTelemetry observability](../implementing/otel.md)
 
 ## Paradigm changes

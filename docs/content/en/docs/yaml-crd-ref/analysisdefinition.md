@@ -150,7 +150,7 @@ spec:
 ```
 
 For an example of how to implement the Keptn Analysis feature, see the
-[Analysis](../implementing/slo)
+[Analysis](../implementing/slo.md)
 guide page.
 
 ## Files
@@ -169,4 +169,4 @@ in the `metrics-operator` deployment.
 
 * [Analysis](analysis.md)
 * [AnalysisValueTemplate](analysisvaluetemplate.md)
-* [Analysis](../implementing/slo) guide
+* [Analysis](../implementing/slo.md) guide

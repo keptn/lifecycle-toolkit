@@ -78,7 +78,7 @@ you need to do the following:
    [Install and update](../install/_index.md)
    to install and enable Keptn on your cluster.
 1. Follow the instructions in
-   [Annotate workload](../implementing/integrate/#basic-annotations)
+   [Annotate workload](../implementing/integrate.md#basic-annotations)
    to integrate Keptn into your Kubernetes cluster
    by applying basic annotations to your `Deployment` resource.
    This also creates appropriate
@@ -160,7 +160,7 @@ you can also use Python 3 to define your task,
 or you can define a standard Kubernetes container
 that uses the image, runner, and runtime dependencies that you choose.
 For more information, see
-[Working with Keptn tasks](../implementing/tasks).
+[Working with Keptn tasks](../implementing/tasks.md).
 
 You can view the actual JavaScript code for the task in the repository.
 You see that "context" is important in this code.
@@ -173,7 +173,7 @@ is protected by a secret, the task definition also specifies that secret.
 ## Integrate evaluations and tasks into the cluster
 
 Follow the instructions in
-[Annotate workload](../implementing/integrate/#pre--and-post-deployment-checks)
+[Annotate workload](../implementing/integrate.md#pre--and-post-deployment-checks)
 to integrate the evaluations and tasks you defined
 into the cluster
 by applying annotations to the `Deployment` resource.

@@ -33,7 +33,7 @@ spec:
 * **metadata**
   * **labels** -- The Analysis feature uses the
     `name` and `part-of` labels that are discussed in
-    [Basic annotations](../implementing/integrate/#basic-annotations)
+    [Basic annotations](../implementing.mdintegrate/#basic-annotations)
     plus the following:
     * **app.kubernetes.io/instance** analysis-sample
     * **app.kuberentes.io/managed-by** -- Tool used to manage
@@ -88,7 +88,7 @@ The template refers to that provider and queries it.
 
 For a full example of how the `AnalysisValueTemplate` is used
 to implement the Keptn Analysis feature, see the
-[Analysis](../implementing/slo)
+[Analysis](../implementing/slo.md)
 guide page.
 
 ## Files
@@ -107,4 +107,4 @@ in the `metrics-operator` deployment.
 
 * [Analysis](analysis.md)
 * [AnalysisDefinition](analysisdefinition.md)
-* [Analysis](../implementing/slo) guide
+* [Analysis](../implementing/slo.md) guide

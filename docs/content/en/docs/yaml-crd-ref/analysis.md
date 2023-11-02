@@ -321,7 +321,7 @@ This `Analysis` resource:
   will be substituted for this string.
 
 For a full example of how to implement the Keptn Analysis feature, see the
-[Analysis](../implementing/slo)
+[Analysis](../implementing/slo.md)
 guide page.
 
 ## Files
@@ -339,4 +339,4 @@ in the `metrics-operator` deployment.
 
 * [AnalysisDefinition](analysisdefinition.md)
 * [AnalysisValueTemplate](analysisvaluetemplate.md)
-* [Analysis](../implementing/slo) guide
+* [Analysis](../implementing/slo.md) guide

@@ -105,7 +105,9 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 					Annotations: task.Annotations,
 				},
 				Spec: corev1.PodSpec{
-					RestartPolicy: "OnFailure",
+					RestartPolicy:                "OnFailure",
+					ServiceAccountName:           definition.GetServiceAccount(),
+					AutomountServiceAccountToken: definition.GetAutomountServiceAccountToken(),
 				},
 			},
 			BackoffLimit:          task.Spec.Retries,

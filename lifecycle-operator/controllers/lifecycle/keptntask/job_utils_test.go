@@ -201,6 +201,66 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 	require.Equal(t, apicommon.StateSucceeded, task.Status.Status)
 }
 
+func TestKeptnTaskReconciler_generateJob(t *testing.T) {
+	namespace := "default"
+	taskName := "my-task"
+	svcAccname := "svcAccname"
+	taskDefinitionName := "my-task-definition"
+	token := true
+
+	taskDefinition := makeTaskDefinitionWithServiceAccount(taskDefinitionName, namespace, svcAccname, &token)
+	taskDefinition.Spec.ServiceAccount.Name = svcAccname
+	fakeClient := fakeclient.NewClient(taskDefinition)
+	task := makeTask(taskName, namespace, taskDefinitionName)
+
+	r := &KeptnTaskReconciler{
+		Client:      fakeClient,
+		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		Log:         ctrl.Log.WithName("task-controller"),
+		Scheme:      fakeClient.Scheme(),
+	}
+
+	err := fakeClient.Create(context.TODO(), task)
+	require.Nil(t, err)
+
+	ctx := context.TODO()
+	request := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: namespace,
+		},
+	}
+
+	errTask := fakeClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: namespace,
+		Name:      task.Name,
+	}, task)
+	require.Nil(t, errTask)
+
+	errTaskDefinition := fakeClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: namespace,
+		Name:      taskDefinition.Name,
+	}, taskDefinition)
+	require.Nil(t, errTaskDefinition)
+
+	resultingJob, err := r.generateJob(ctx, task, taskDefinition, request)
+	require.Nil(t, err)
+	require.NotNil(t, resultingJob, "generateJob function return a valid Job")
+
+	require.NotNil(t, resultingJob.Spec.Template.Spec.Containers)
+	require.Equal(t, resultingJob.Spec.Template.Spec.ServiceAccountName, svcAccname)
+	require.Equal(t, resultingJob.Spec.Template.Spec.AutomountServiceAccountToken, &token)
+	require.Equal(t, map[string]string{
+		"label1": "label2",
+	}, resultingJob.Labels)
+	require.Equal(t, map[string]string{
+		"annotation1":        "annotation2",
+		"keptn.sh/app":       "my-app",
+		"keptn.sh/task-name": "my-task",
+		"keptn.sh/version":   "",
+		"keptn.sh/workload":  "my-workload",
+	}, resultingJob.Annotations)
+}
+
 func makeJob(name, namespace string, status batchv1.JobStatus) *batchv1.Job {
 	return &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
@@ -270,6 +330,32 @@ func makeConfigMap(name, namespace string) *v1.ConfigMap {
 		},
 		Data: map[string]string{
 			"code": "console.log('hello');",
+		},
+	}
+}
+
+func makeTaskDefinitionWithServiceAccount(name, namespace, serviceAccountName string, token *bool) *klcv1alpha3.KeptnTaskDefinition {
+	return &klcv1alpha3.KeptnTaskDefinition{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: namespace,
+			Labels: map[string]string{
+				"label1": "label2",
+			},
+			Annotations: map[string]string{
+				"annotation1": "annotation2",
+			},
+		},
+		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+			Container: &klcv1alpha3.ContainerSpec{
+				Container: &v1.Container{},
+			},
+			ServiceAccount: &klcv1alpha3.ServiceAccountSpec{
+				Name: serviceAccountName,
+			},
+			AutomountServiceAccountToken: &klcv1alpha3.AutomountServiceAccountTokenSpec{
+				Type: token,
+			},
 		},
 	}
 }

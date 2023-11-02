@@ -1,4 +1,4 @@
-package common
+package evaluation
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	kltfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
@@ -265,14 +266,13 @@ func TestEvaluationHandler(t *testing.T) {
 				},
 			}
 			fakeRecorder := record.NewFakeRecorder(100)
-			handler := EvaluationHandler{
-				SpanHandler: &spanHandlerMock,
-				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewK8sSender(fakeRecorder),
-				Client:      fake.NewClientBuilder().WithObjects(&tt.evalObj).Build(),
-				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
-				Scheme:      scheme.Scheme,
-			}
+			handler := NewEvaluationHandler(
+				fake.NewClientBuilder().WithObjects(&tt.evalObj).Build(),
+				common.NewK8sSender(fakeRecorder),
+				ctrl.Log.WithName("controller"),
+				trace.NewNoopTracerProvider().Tracer("tracer"),
+				scheme.Scheme,
+				&spanHandlerMock)
 			status, summary, err := handler.ReconcileEvaluations(context.TODO(), context.TODO(), tt.object, tt.createAttr)
 			if len(tt.wantStatus) == len(status) {
 				for j, item := range status {
@@ -346,14 +346,15 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := v1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
-			handler := EvaluationHandler{
-				SpanHandler: &kltfake.ISpanHandlerMock{},
-				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
-				Client:      fake.NewClientBuilder().Build(),
-				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
-				Scheme:      scheme.Scheme,
-			}
+
+			handler := NewEvaluationHandler(
+				fake.NewClientBuilder().Build(),
+				common.NewK8sSender(record.NewFakeRecorder(100)),
+				ctrl.Log.WithName("controller"),
+				trace.NewNoopTracerProvider().Tracer("tracer"),
+				scheme.Scheme,
+				&kltfake.ISpanHandlerMock{})
+
 			name, err := handler.CreateKeptnEvaluation(context.TODO(), tt.object, tt.createAttr)
 			require.True(t, strings.Contains(name, tt.wantName))
 			require.Equal(t, tt.wantErr, err)

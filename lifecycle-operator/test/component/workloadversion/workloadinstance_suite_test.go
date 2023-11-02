@@ -8,6 +8,7 @@ import (
 
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadversion"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
@@ -34,11 +35,23 @@ var (
 	spanRecorder *sdktest.SpanRecorder
 )
 
-const KeptnNamespace = "keptnlifecycle"
+const (
+	KeptnNamespace     = "keptnlifecycle"
+	traceComponentName = "keptn/lifecycle-operator/workloadversion"
+)
 
 var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
+
+	TracerFactory := &common.TracerFactory{Tracer: tracer}
+	EvaluationHandler := evaluation.NewEvaluationHandler(
+		k8sManager.GetClient(),
+		controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller")),
+		GinkgoLogr,
+		TracerFactory.GetTracer(traceComponentName),
+		k8sManager.GetScheme(),
+		&telemetry.SpanHandler{})
 
 	// //setup controllers here
 	config.Instance().SetDefaultNamespace(KeptnNamespace)
@@ -51,6 +64,7 @@ var _ = BeforeSuite(func() {
 		Meters:                 common.InitKeptnMeters(),
 		SpanHandler:            &telemetry.SpanHandler{},
 		TracerFactory:          &common.TracerFactory{Tracer: tracer},
+		EvaluationHandler:      EvaluationHandler,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 	close(readyToStart)

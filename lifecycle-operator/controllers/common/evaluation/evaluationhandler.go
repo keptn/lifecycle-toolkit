@@ -1,4 +1,4 @@
-package common
+package evaluation
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
@@ -20,9 +21,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
+//go:generate moq -pkg fake -skip-ensure -out ./fake/evaluationhandler_mock.go . IEvaluationHandler:MockEvaluationHandler
+type IEvaluationHandler interface {
+	ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error)
+}
+
 type EvaluationHandler struct {
-	client.Client
-	EventSender IEvent
+	Client      client.Client
+	EventSender common.IEvent
 	Log         logr.Logger
 	Tracer      trace.Tracer
 	Scheme      *runtime.Scheme
@@ -33,6 +39,18 @@ type CreateEvaluationAttributes struct {
 	SpanName   string
 	Definition klcv1alpha3.KeptnEvaluationDefinition
 	CheckType  apicommon.CheckType
+}
+
+// NewEvaluationHandler creates a new instance of the EvaluationHandler.
+func NewEvaluationHandler(client client.Client, eventSender common.IEvent, log logr.Logger, tracer trace.Tracer, scheme *runtime.Scheme, spanHandler telemetry.ISpanHandler) EvaluationHandler {
+	return EvaluationHandler{
+		Client:      client,
+		EventSender: eventSender,
+		Log:         log,
+		Tracer:      tracer,
+		Scheme:      scheme,
+		SpanHandler: spanHandler,
+	}
 }
 
 //nolint:gocognit,gocyclo
@@ -49,9 +67,9 @@ func (r EvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx co
 	// Check current state of the PrePostEvaluationTasks
 	var newStatus []klcv1alpha3.ItemStatus
 	for _, evaluationName := range evaluations {
-		oldstatus := GetOldStatus(evaluationName, statuses)
+		oldstatus := common.GetOldStatus(evaluationName, statuses)
 
-		evaluationStatus := GetItemStatus(evaluationName, statuses)
+		evaluationStatus := common.GetItemStatus(evaluationName, statuses)
 		evaluation := &klcv1alpha3.KeptnEvaluation{}
 		evaluationExists := false
 

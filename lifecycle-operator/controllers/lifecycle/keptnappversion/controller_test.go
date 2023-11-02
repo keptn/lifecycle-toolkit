@@ -11,6 +11,8 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	lfcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
+	evalfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
@@ -296,6 +298,11 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 		TracerFactory: tf,
 		SpanHandler:   spanRecorder,
 		Meters:        controllercommon.InitAppMeters(),
+		EvaluationHandler: &evalfake.MockEvaluationHandler{
+			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]lfcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
+				return []lfcv1alpha3.ItemStatus{}, apicommon.StatusSummary{}, nil
+			},
+		},
 	}
 	return r, recorder.Events, spanRecorder
 }

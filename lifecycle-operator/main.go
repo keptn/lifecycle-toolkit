@@ -300,13 +300,14 @@ func main() {
 	appVersionLogger := ctrl.Log.WithName("KeptnAppVersion Controller").V(env.KeptnAppVersionControllerLogLevel)
 	appVersionRecorder := mgr.GetEventRecorderFor("keptnappversion-controller")
 	appVersionReconciler := &keptnappversion.KeptnAppVersionReconciler{
-		Client:        mgr.GetClient(),
-		Scheme:        mgr.GetScheme(),
-		Log:           appVersionLogger,
-		EventSender:   controllercommon.NewEventMultiplexer(appVersionLogger, appVersionRecorder, ceClient),
-		TracerFactory: telemetry.GetOtelInstance(),
-		Meters:        keptnMeters,
-		SpanHandler:   spanHandler,
+		Client:            mgr.GetClient(),
+		Scheme:            mgr.GetScheme(),
+		Log:               appVersionLogger,
+		EventSender:       controllercommon.NewEventMultiplexer(appVersionLogger, appVersionRecorder, ceClient),
+		TracerFactory:     telemetry.GetOtelInstance(),
+		Meters:            keptnMeters,
+		SpanHandler:       spanHandler,
+		EvaluationHandler: evaluationHandler,
 	}
 	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")

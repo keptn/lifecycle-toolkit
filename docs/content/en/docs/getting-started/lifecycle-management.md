@@ -23,7 +23,7 @@ When Keptn is successfully monitoring your deployments, it can also run arbitrar
 - post-deployment (after the post is scheduled)
 
 > Pre and post deployments can also run on a KeptnApp level.
-> See [annotations to KeptnApp](../implementing/integrate/_index.md#annotations-to-keptnapp)
+> See [annotations to KeptnApp](../implementing/integrate.md#annotations-to-keptnapp)
 
 ## Prerequisites: Deploy webhook sink
 
@@ -219,7 +219,7 @@ Do this by using the `keptn.sh/pre-deployment-tasks` label.
 ## Further Information
 
 There is a lot more you can do with KeptnTasks.
-See [pre and post deployment checks page](../implementing/integrate#pre--and-post-deployment-checks) to find out more.
+See [pre and post deployment checks page](../implementing/integrate.md#pre--and-post-deployment-checks) to find out more.
 
 ## What's next?
 

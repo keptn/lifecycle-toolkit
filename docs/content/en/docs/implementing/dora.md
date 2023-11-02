@@ -21,7 +21,7 @@ DORA metrics provide information such as:
 
 Keptn starts collecting these metrics
 as soon as you apply
-[basic annotations](../integrate/#basic-annotations)
+[basic annotations](./integrate.md#basic-annotations)
 to the
 [Workload](https://kubernetes.io/docs/concepts/workloads/)
 resources
@@ -59,4 +59,4 @@ DORA metrics are also displayed on Grafana
 or whatever dashboard application you choose.
 For example:
 
-![DORA metrics](assets/dynatrace_dora_dashboard.png)
+![DORA metrics](../assets/dynatrace_dora_dashboard.png)

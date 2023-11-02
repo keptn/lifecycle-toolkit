@@ -54,7 +54,7 @@ DORA metrics provide information such as:
 
 Keptn starts collecting these metrics
 as soon as you apply
-[basic annotations](integrate/#basic-annotations)
+[basic annotations](./integrate.md#basic-annotations)
 to the [workload](https://kubernetes.io/docs/concepts/workloads/).
 Metrics are collected only for the resources
 that are annotated.
@@ -140,7 +140,7 @@ you must have the following on your cluster:
 To integrate OpenTelemetry into Keptn:
 
 - Apply
-  [basic annotations](../implementing/integrate/#basic-annotations)
+  [basic annotations](./integrate.md#basic-annotations)
   for your `Deployment` resource
   to integrate Keptn into your Kubernetes cluster.
 - To expose OpenTelemetry metrics,

@@ -263,7 +263,7 @@ jobs:
         working-directory: ./${{ matrix.config.path }}
         run: |
           # substitute local charts path with official ones
-          sed -i 's|file://../.*/chart|https://charts.lifecycle.keptn.sh|' ./Chart.yaml
+          yq '.dependencies.[].repository = "https://charts.lifecycle.keptn.sh"' ./Chart.yaml > ./Chart.yaml
           helm dependency update
           helm dependency build
 

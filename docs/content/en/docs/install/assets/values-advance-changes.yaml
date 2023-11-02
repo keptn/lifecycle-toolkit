@@ -1,5 +1,5 @@
 global:
-  imageRegistry: "localhost:5000" # change all installed operator registry ex. now the metrics operator image will be taken from testreg/keptn/metrics-operator:v0.0.0
+  imageRegistry: "localhost:5000" # change all installed operator registry ex. now the metrics operator image will be taken from localhost:5000/keptn/metrics-operator:v0.0.0
   commonLabels:
     app.kubernetes.io/version: myversion # this label will be added to all installed resources
 

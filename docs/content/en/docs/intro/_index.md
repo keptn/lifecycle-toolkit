@@ -65,7 +65,7 @@ deployment durations and failures across multiple deployment strategies.
   using different deployment strategies.
 
 * Captures
-  [DORA metrics](../implementing/dora/)
+  [DORA metrics](../implementing/dora.md)
   and exposes them as OpenTelemetry metrics out of the box.
 
 * Reports traces and custom Keptn metrics from configured data providers
@@ -88,7 +88,7 @@ To learn more, see:
 
 * [Getting started with Keptn Observability](../getting-started/observability.md)
 * [Standardize observability](usecase-observability.md/)
-* [DORA metrics](../implementing/dora) User Guide
+* [DORA metrics](../implementing/dora.md) User Guide
 * [OpenTelemetry observability](../implementing/otel.md) User Guide
 
 ## Release lifecycle management
@@ -135,7 +135,7 @@ which is a single, cohesive unit that groups multiple [workloads](https://kubern
 For more information, see:
 
 * [Getting started with release lifecycle management](../getting-started/lifecycle-management.md)
-* [Deployment tasks](../implementing/tasks) User Guide
+* [Deployment tasks](../implementing/tasks.md) User Guide
 * [Evaluations](../implementing/evaluations.md) User Guide
 * [Manage release lifecycle](usecase-orchestrate.md)
 * [KeptnApp and KeptnWorkload resources](../architecture/keptn-apps.md)

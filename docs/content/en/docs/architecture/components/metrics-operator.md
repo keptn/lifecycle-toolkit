@@ -27,7 +27,7 @@ so they are compatible with the Kubernetes
 (HPA), which enables the horizontal scaling of workloads
 based on metrics collected from multiple observability platforms.
 See
-[Using the HorizontalPodAutoscaler](../../implementing/evaluatemetrics.md/#using-the-horizontalpodautoscaler)
+[Using the HorizontalPodAutoscaler](../../implementing/evaluatemetrics.md#using-the-horizontalpodautoscaler)
 for instructions.
 
 The Metrics Operator consists of the following components:

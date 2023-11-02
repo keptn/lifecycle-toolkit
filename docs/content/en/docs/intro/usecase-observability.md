@@ -69,7 +69,7 @@ you need to do the following:
    [Install and update](../install)
    to install and enable Keptn on your cluster.
 1. Follow the instructions in
-   [Basic annotations](../implementing/integrate/#basic-annotations)
+   [Basic annotations](../implementing/integrate.md#basic-annotations)
    to integrate Keptn into your Kubernetes cluster
    by applying basic annotations
    to your [workload](https://kubernetes.io/docs/concepts/workloads/) resources.
@@ -86,7 +86,7 @@ about your deployments.
 Keptn starts collecting these metrics
 as soon as you annotate the `Deployment` resource.
 See
-[DORA metrics](../implementing/dora)
+[DORA metrics](../implementing/dora.md)
 for more details.
 
 ## Using OpenTelemetry

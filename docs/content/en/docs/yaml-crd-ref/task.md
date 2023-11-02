@@ -85,7 +85,7 @@ spec:
   * **secureParameters** -- Secure parameters that are passed
     to the job that executes the `KeptnTask`.
     These are stored and accessed as Kubernetes `Secrets` in the cluster.
-    See [Working with secrets](../implementing/tasks/#working-with-secrets)
+    See [Working with secrets](../implementing/tasks.md#working-with-secrets)
     for more information.
   * **checkType** -- Defines whether task is part of pre- or post-deployment phase.
     Keptn populates this field based on annotations

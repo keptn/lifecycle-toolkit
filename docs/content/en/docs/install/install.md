@@ -28,7 +28,7 @@ After Keptn is installed, you must
 in order to run some Keptn functionality.
 
 You are then ready to
-[Integrate Keptn with your applications](../implementing/integrate).
+[Integrate Keptn with your applications](../implementing/integrate.md).
 
 ## Running Keptn with vCluster
 
@@ -190,4 +190,4 @@ This annotation tells the webhook to handle the namespace.
 
 After enabling Keptn for your namespace(s),
 you are ready to
-[Integrate Keptn with your applications](../implementing/integrate).
+[Integrate Keptn with your applications](../implementing/integrate.md).

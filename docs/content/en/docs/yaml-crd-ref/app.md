@@ -175,4 +175,4 @@ spec:
 - [Pre- and post-deployment tasks](../implementing/integrate.md#pre--and-post-deployment-checks)
 - [Orchestrate deployment checks](../intro/usecase-orchestrate.md)
 - [Use Keptn automatic app discovery](../implementing/integrate.md#use-keptn-automatic-app-discovery)
-- [Restart an Application Deployment](../implementing.mdrestart-application-deployment/)
+- [Restart an Application Deployment](../implementing/restart-application-deployment.md)

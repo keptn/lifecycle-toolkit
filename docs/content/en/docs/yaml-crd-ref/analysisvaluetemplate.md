@@ -33,7 +33,7 @@ spec:
 * **metadata**
   * **labels** -- The Analysis feature uses the
     `name` and `part-of` labels that are discussed in
-    [Basic annotations](../implementing.mdintegrate/#basic-annotations)
+    [Basic annotations](../implementing/integrate.md#basic-annotations)
     plus the following:
     * **app.kubernetes.io/instance** analysis-sample
     * **app.kuberentes.io/managed-by** -- Tool used to manage

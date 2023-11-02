@@ -171,24 +171,21 @@ jobs:
           name: ${{ matrix.config.name }}-image.tar
           path: /tmp/${{ matrix.config.name }}-image.tar
 
-      - name: Install controller-gen
-        if: matrix.config.name == 'lifecycle-operator' || matrix.config.name == 'metrics-operator'
-        working-directory: ./${{ matrix.config.folder }}
-        run: make controller-gen
+  image_tag:
+    name: Store tag of the built images
+    needs: prepare_ci_run
+    runs-on: ubuntu-22.04
+    env:
+      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
+    steps:
+      - name: Create empty file to store image tag
+        run: echo "" > tag
 
-      - name: Generate test release manifest
-        if: matrix.config.name != 'deno-runtime' && matrix.config.name != 'python-runtime'
-        working-directory: ./${{ matrix.config.folder }}
-        env:
-          CHART_APPVERSION: dev-${{ env.DATETIME }}
-        run: make release-manifests
-
-      - name: Upload release.yaml for tests
-        if: matrix.config.name != 'deno-runtime' && matrix.config.name != 'python-runtime'
+      - name: Upload tag for tests
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.config.name }}-manifest-test
-          path: ${{ matrix.config.folder }}/config/rendered/release.yaml
+          name: dev-${{ env.DATETIME }}
+          path: tag
 
   component_tests:
     name: Component Tests

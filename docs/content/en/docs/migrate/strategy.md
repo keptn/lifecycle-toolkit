@@ -141,7 +141,7 @@ but some services may be translated into
 [KeptnTaskDefinition](../yaml-crd-ref/app.md)
 or other resources.
  See
-[Working with Keptn tasks](../implementing/tasks/)
+[Working with Keptn tasks](../implementing/tasks.md)
 for more information.
 
 For example:
@@ -288,7 +288,7 @@ resources
   resources.
 * [AnalysisValueTemplate](../yaml-crd-ref/analysisvaluetemplate.md)
   resources to do
-  [analyses](../implementing/slo)
+  [analyses](../implementing/slo.md)
   with
   [AnalysisDefinition](../yaml-crd-ref/analysisdefinition.md)
   resources.
@@ -312,7 +312,7 @@ can be implemented on Keptn as evaluations or analyses:
 * Complex analyses that use weighting and scoring
   and analyze the value over a specified time frame
   can be implemented as
-  [Analyses](../implementing/slo)
+  [Analyses](../implementing/slo.md)
   that are defined in
   [AnalysisDefinition](../yaml-crd-ref/analysisdefinition.md)
   resources.

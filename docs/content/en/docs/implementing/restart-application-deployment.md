@@ -6,11 +6,11 @@ weight: 100
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-A [KeptnApp](../../yaml-crd-ref/app.md) can fail
+A [KeptnApp](../yaml-crd-ref/app.md) can fail
 because of an unsuccessful pre-deployment evaluation
 or pre-deployment task.
 For example, this happens if the target value of a
-[KeptnEvaluationDefinition](../../yaml-crd-ref/evaluationdefinition.md)
+[KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
 resource is misconfigured
 or a pre-deployment evaluation checks the wrong URL.
 

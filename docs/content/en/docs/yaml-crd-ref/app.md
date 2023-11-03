@@ -69,7 +69,7 @@ when the app discovery feature generates the `KeptnApp` resource:
     that failed to deploy, perhaps because a
     `preDeploymentEvaluation` or `preDeploymentTask` failed.
     See
-    [Restart an Application Deployment](../implementing/restart-application-deployment/)
+    [Restart an Application Deployment](../implementing/restart-application-deployment.md)
     for a longer discussion of this.
   - **workloads**
     - **name** (required) -- name of this Kubernetes
@@ -121,10 +121,10 @@ into the repository of the deployment engine
 and is then deployed by that deployment engine.
 
 A `KeptnApp` resource is created automatically, using the
-[automatic application discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
+[automatic application discovery](../implementing/integrate.md#use-keptn-automatic-app-discovery)
 feature to generate a `KeptnApp` resource
 based on the
-[basic annotations](../implementing/integrate/#basic-annotations)
+[basic annotations](../implementing/integrate.md#basic-annotations)
 that are applied to any of the workload resources.
 This allows you to use the Keptn observability features for existing resources
 without manually populating any Keptn related resources.
@@ -170,9 +170,9 @@ spec:
 
 - [KeptnTaskDefinition](taskdefinition.md)
 - [KeptnEvaluationDefinition](evaluationdefinition.md)
-- [Working with tasks](../implementing/tasks)
+- [Working with tasks](../implementing/tasks.md)
 - [Architecture of KeptnWorkloads and KeptnTasks](../architecture/keptn-apps.md)
-- [Pre- and post-deployment tasks](../implementing/integrate/#pre--and-post-deployment-checks)
+- [Pre- and post-deployment tasks](../implementing/integrate.md#pre--and-post-deployment-checks)
 - [Orchestrate deployment checks](../intro/usecase-orchestrate.md)
-- [Use Keptn automatic app discovery](../implementing/integrate/#use-keptn-automatic-app-discovery)
-- [Restart an Application Deployment](../implementing/restart-application-deployment/)
+- [Use Keptn automatic app discovery](../implementing/integrate.md#use-keptn-automatic-app-discovery)
+- [Restart an Application Deployment](../implementing/restart-application-deployment.md)

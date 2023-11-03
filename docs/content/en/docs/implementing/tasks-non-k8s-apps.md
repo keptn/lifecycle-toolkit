@@ -12,15 +12,15 @@ for an application that is deployed on a virtual machine.
 
 To do this:
 
-1. [Install Keptn on a Kubernetes cluster](#install-keptn-on-a-kubernetes-cluster)
-1. [Create a KeptnTaskDefinition](#create-a-keptntaskdefinition)
-1. [Create and apply a KeptnTask](#create-and-apply-a-keptntask)
-1. [Re-run the KeptnTask](#re-run-the-keptntask)
+- [Install Keptn on a Kubernetes cluster](#install-keptn-on-a-kubernetes-cluster)
+- [Create a KeptnTaskDefinition](#create-a-keptntaskdefinition)
+- [Create and apply a KeptnTask](#create-and-apply-a-keptntask)
+- [Re-run the KeptnTask](#re-run-the-keptntask)
 
 ## Install Keptn on a Kubernetes cluster
 
 You must set up a Kubernetes cluster and
-[install](../install/install.md/#use-helm-chart)
+[install](../install/install.md/#basic-installation)
 Keptn on it,
 but this can be a very lightweight, single-node KinD cluster; see
 [Create local Kubernetes cluster](../install/k8s.md/#create-local-kubernetes-cluster).
@@ -33,7 +33,7 @@ When you have Keptn installed, create a
 YAML file that defines what you want to execute
 as a `KeptnTaskDefinition` resource.
 See
-[Deployment tasks](../implementing/tasks/)
+[Deployment tasks](./tasks.md)
 and the
 [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md/)
 reference page for more information.
@@ -59,7 +59,7 @@ spec:
 This example uses the `container-runtime` runner,
 but you can instead use the `deno-runtime` or `python-runtime` runner.
 See
-[Runners and containers](tasks/#runners-and-containers)
+[Runners and containers](./tasks.md#runners-and-containers)
 for more information.
 
 ## Create and apply a KeptnTask

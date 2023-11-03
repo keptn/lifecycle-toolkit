@@ -49,7 +49,7 @@ This page covers the following:
   discusses how to configure vCluster in order to run Keptn on it.
 
 After you install Keptn, you are ready to
-[Integrate Keptn with your applications](../implementing/integrate).
+[Integrate Keptn with your applications](../implementing/integrate.md).
 
 ## Basic installation
 
@@ -106,7 +106,7 @@ rather than the full Toolkit
 or if you need to change the size of the installation.
 
 To modify configuration options, download a copy of the
-[chart/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/chart/values.yaml)
+[chart/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml)
 file, modify some values, and use the modified file to install Keptn:
 
 1. Download the `values.yaml` file:
@@ -161,8 +161,8 @@ The following table summarizes the Keptn umbrella chart scheme;
 | Component | Used for | Configuration file |
 | --------- | -------- | --------------------|
 | [Keptn umbrella](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/README.md) | Installs subcharts, global configuration | [keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml) |
-| [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/README.md) | [Observability](../implementing/otel), Lifecycle management [tasks](../implementing/tasks) and [evaluations](../implementing/evaluatemetrics.md) | [keptn-lifecycle-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml) |
-| [metrics-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/README.md) | [Keptn metrics](../implementing/evaluatemetrics.md), [Analysis](../implementing/slo) | [keptn-metrics-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/values.yaml) |
+| [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/README.md) | [Observability](../implementing/otel.md), Lifecycle management [tasks](../implementing/tasks.md) and [evaluations](../implementing/evaluatemetrics.md) | [keptn-lifecycle-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml) |
+| [metrics-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/README.md) | [Keptn metrics](../implementing/evaluatemetrics.md), [Analysis](../implementing/slo.md) | [keptn-metrics-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/values.yaml) |
 | [cert-manager](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md)  | Configures TLS certificates | [keptn-cert-manager/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/values.yaml) |
 
 By default, all components are included when you install Keptn.
@@ -206,10 +206,10 @@ This annotation tells the webhook to handle the namespace.
 
 After enabling Keptn for your namespace(s),
 you are ready to
-[Integrate Keptn with your applications](../implementing/integrate).
+[Integrate Keptn with your applications](../implementing/integrate.md).
 
 For more information about implementing observability, see the
-[Observability User Guide](../implementing/otel).
+[Observability User Guide](../implementing/otel.md).
 
 ### Enable Keptn Metrics Operator (Metrics)
 
@@ -237,7 +237,7 @@ disable it using the following values.yaml:
 >
 
 For more information about implementing Keptn Analysis, see the
-[Analysis User Guide](../implementing/slo).
+[Analysis User Guide](../implementing/slo.md).
 
 ### Disable Keptn Certificate Manager (Certificates)
 

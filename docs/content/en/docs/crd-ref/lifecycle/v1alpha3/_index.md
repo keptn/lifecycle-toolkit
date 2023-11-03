@@ -23,8 +23,6 @@ Package v1alpha3 contains API Schema definitions for the lifecycle v1alpha3 API 
 - [KeptnEvaluationDefinition](#keptnevaluationdefinition)
 - [KeptnEvaluationDefinitionList](#keptnevaluationdefinitionlist)
 - [KeptnEvaluationList](#keptnevaluationlist)
-- [KeptnEvaluationProvider](#keptnevaluationprovider)
-- [KeptnEvaluationProviderList](#keptnevaluationproviderlist)
 - [KeptnTask](#keptntask)
 - [KeptnTaskDefinition](#keptntaskdefinition)
 - [KeptnTaskDefinitionList](#keptntaskdefinitionlist)
@@ -70,6 +68,8 @@ _Appears in:_
 | `envFrom` _[EnvFromSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#envfromsource-v1-core) array_ | List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated. |
 | `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#envvar-v1-core) array_ | List of environment variables to set in the container. Cannot be updated. |
 | `resources` _[ResourceRequirements](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#resourcerequirements-v1-core)_ | Compute Resources required by this container. Cannot be updated. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| `resizePolicy` _[ContainerResizePolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#containerresizepolicy-v1-core) array_ | Resources resize policy for the container. |
+| `restartPolicy` _[ContainerRestartPolicy](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#containerrestartpolicy-v1-core)_ | RestartPolicy defines the restart behavior of individual containers in a pod. This field may only be set for init containers, and the only allowed value is "Always". For non-init containers or when this field is not specified, the restart behavior is defined by the Pod's restart policy and the container type. Setting the RestartPolicy as "Always" for the init container will have the following effect: this init container will be continually restarted on exit until all regular containers have terminated. Once all regular containers have completed, all init containers with restartPolicy "Always" will be shut down. This lifecycle differs from normal init containers and is often referred to as a "sidecar" container. Although this init container still starts in the init container sequence, it does not wait for the container to complete before proceeding to the next init container. Instead, the next init container starts immediately after this init container is started, or after any startupProbe has successfully completed. |
 | `volumeMounts` _[VolumeMount](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core) array_ | Pod volumes to mount into the container's filesystem. Cannot be updated. |
 | `volumeDevices` _[VolumeDevice](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumedevice-v1-core) array_ | volumeDevices is the list of block devices to be used by the container. |
 | `livenessProbe` _[Probe](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#probe-v1-core)_ | Periodic probe of container liveness. Container will be restarted if the probe fails. Cannot be updated. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes |
@@ -460,53 +460,6 @@ KeptnEvaluationList contains a list of KeptnEvaluation
 | `items` _[KeptnEvaluation](#keptnevaluation) array_ |  |
 
 
-#### KeptnEvaluationProvider
-
-
-
-KeptnEvaluationProvider is the Schema for the keptnevaluationproviders API
-
-_Appears in:_
-- [KeptnEvaluationProviderList](#keptnevaluationproviderlist)
-
-| Field | Description |
-| --- | --- |
-| `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
-| `kind` _string_ | `KeptnEvaluationProvider`
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
-| `spec` _[KeptnEvaluationProviderSpec](#keptnevaluationproviderspec)_ |  |
-| `status` _string_ | unused field |
-
-
-#### KeptnEvaluationProviderList
-
-
-
-KeptnEvaluationProviderList contains a list of KeptnEvaluationProvider
-
-
-
-| Field | Description |
-| --- | --- |
-| `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha3`
-| `kind` _string_ | `KeptnEvaluationProviderList`
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
-| `items` _[KeptnEvaluationProvider](#keptnevaluationprovider) array_ |  |
-
-
-#### KeptnEvaluationProviderSpec
-
-
-
-KeptnEvaluationProviderSpec defines the desired state of KeptnEvaluationProvider
-
-_Appears in:_
-- [KeptnEvaluationProvider](#keptnevaluationprovider)
-
-| Field | Description |
-| --- | --- |
-| `targetServer` _string_ |  |
-| `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#secretkeyselector-v1-core)_ |  |
 
 
 #### KeptnEvaluationSpec
@@ -893,7 +846,7 @@ _Appears in:_
 
 
 
-
+ResourceReference represents the parent resource of Workload
 
 _Appears in:_
 - [KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)

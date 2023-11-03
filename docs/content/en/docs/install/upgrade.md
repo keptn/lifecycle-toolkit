@@ -11,9 +11,9 @@ you can upgrade to the latest version
 by running the same command sequence used to install Keptn:
 
 ```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn klt/klt \
+helm upgrade --install keptn keptn/keptn \
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
@@ -25,6 +25,51 @@ to modify the configuration as discussed on the
 If you installed your Keptn instance from the Manifest,
 additional steps are required to use the Helm Chart to upgrade.
 Contact us on Slack for assistance.
+
+## Upgrade to Helm from a manifest installation
+
+> **Warning**
+Upgrade to Helm from a manifest installation can cause loss
+of Keptn custom resources.
+
+Keptn v.0.7.0 and later can be installed with Helm charts;
+Keptn v.0.8.3 can only be installed with Helm.
+If you previously installed Keptn from manifests,
+you can not directly upgrade with Helm but must back up your manifests,
+then reinstall Keptn from a Helm chart and re-apply your manifests.
+
+To start the upgrade process, follow the steps below:
+
+1. To not loose all of your data, we encourage you to do a backup of the manifests,
+which you applied to the cluster (`Pods`, `Deployments`,
+`StatefulSets`, `DeamonSets`, `KeptnApps`,... ).
+After the re-installation of Keptn with Helm, you can re-apply
+these manifests and restart the Keptn deployment process.
+
+1. Completely remove your Keptn installation with the following command sequence:
+
+```shell
+your-keptn-version=<your-keptn-version>
+kubectl delete -f \
+     https://github.com/keptn/lifecycle-toolkit/releases/download/$your-keptn-version/manifest.yaml
+```
+
+1. Use Helm to install a clean version of Keptn:
+
+```shell
+helm repo add keptn https://charts.lifecycle.keptn.sh
+helm repo update
+helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --create-namespace --wait
+```
+
+For information about  advanced installation options, refer to
+[Modify Helm configuration options](install.md).
+
+1. After the installation finishes, restore the manifests from you backup
+
+> **Warning** Please be aware that Keptn applications will start the deployment process from the
+beginning and the system is not guaranteed to return
+to the exact state it was in before re-installation, even if you created the backup correctly.
 
 ## Migrate from v0.6.0 to v0.7.0
 

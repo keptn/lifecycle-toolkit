@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: podtato-kubectl
+  annotations:
+    keptn.sh/lifecycle-toolkit: "enabled"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-frontend
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: podtato-head-frontend
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/version: 0.1.0
+        keptn.sh/pre-deployment-evaluations: my-evaluation
+        keptn.sh/pre-deployment-tasks: my-task
+    spec:
+      containers:
+        - name: podtato-head-frontend
+          image: podtato-head-frontend:a
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-hat
+  namespace: podtato-kubectl
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: podtato-head-hat
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/version: 0.1.1
+    spec:
+      containers:
+        - name: podtato-head-hat
+          image: podtato-head-hat:a

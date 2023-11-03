@@ -232,7 +232,7 @@ disable it using the following values.yaml:
   To enable it, add the following to your `helm upgrade` command line:
 
   ```shell
-  --set 'metricsOperator.env.enableKeptnAnalysis: "true"'
+  --set metricsOperator.env.enableKeptnAnalysis=true
   ```
 >
 

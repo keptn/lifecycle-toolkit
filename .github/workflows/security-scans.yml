@@ -134,17 +134,14 @@ jobs:
       - name: Generate manifests
         run: |
           # Fetch tag of the images
-          TAG=$(ls tag/)
+          export TAG=$(ls tag/)
           echo "$TAG"
           mkdir scans
+          envsubst < .github/actions/deploy-klt-on-cluster/values.yaml > tmp.yaml
+          echo "used values.yaml file:"
+          cat tmp.yaml
 
-          helm template keptn-test --namespace helmtests -f .github/actions/deploy-klt-on-cluster/values.yaml ./chart \
-            --set lifecycleOperator.lifecycleOperator.image.tag=$TAG \
-            --set lifecycleOperator.scheduler.image.tag=$TAG \
-            --set lifecycleOperator.lifecycleOperator.env.functionRunnerImage=localhost:5000/keptn/deno-runtime:$TAG \
-            --set lifecycleOperator.lifecycleOperator.env.pythonRunnerImage=localhost:5000/keptn/python-runtime:$TAG \
-            --set certManager.image.tag=$TAG \
-            --set metricsOperator.image.tag=$TAG > ./scans/result.yaml
+          helm template keptn-test --namespace helmtests -f tmp.yaml ./chart > ./scans/result.yaml
 
       - name: KICS Scan
         if: matrix.tool == 'kics'

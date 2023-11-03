@@ -87,16 +87,17 @@ type envConfig struct {
 	PodNamespace string `envconfig:"POD_NAMESPACE" default:""`
 	PodName      string `envconfig:"POD_NAME" default:""`
 
-	KeptnAppControllerLogLevel                int `envconfig:"KEPTN_APP_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnAppCreationRequestControllerLogLevel int `envconfig:"KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnAppVersionControllerLogLevel         int `envconfig:"KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnEvaluationControllerLogLevel         int `envconfig:"KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnTaskControllerLogLevel               int `envconfig:"KEPTN_TASK_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnTaskDefinitionControllerLogLevel     int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadControllerLogLevel           int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadVersionControllerLogLevel    int `envconfig:"KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadInstanceControllerLogLevel   int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppControllerLogLevel                int   `envconfig:"KEPTN_APP_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppCreationRequestControllerLogLevel int   `envconfig:"KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnAppVersionControllerLogLevel         int   `envconfig:"KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnEvaluationControllerLogLevel         int   `envconfig:"KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnTaskControllerLogLevel               int   `envconfig:"KEPTN_TASK_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnTaskDefinitionControllerLogLevel     int   `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadControllerLogLevel           int   `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadVersionControllerLogLevel    int   `envconfig:"KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnWorkloadInstanceControllerLogLevel   int   `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnOptionsControllerLogLevel            int   `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
+	TTLSecondsAfterFinished                   int32 `envconfig:"TTL_SECONDS_AFTER_FINISHED" default:"600"`
 
 	SchedulingGatesEnabled bool `envconfig:"SCHEDULING_GATES_ENABLED" default:"false"`
 
@@ -207,14 +208,16 @@ func main() {
 		os.Exit(1)
 	}
 
+	ttlSecondsInJob := env.TTLSecondsAfterFinished
 	taskLogger := ctrl.Log.WithName("KeptnTask Controller").V(env.KeptnTaskControllerLogLevel)
 	taskRecorder := mgr.GetEventRecorderFor("keptntask-controller")
 	taskReconciler := &keptntask.KeptnTaskReconciler{
-		Client:      mgr.GetClient(),
-		Scheme:      mgr.GetScheme(),
-		Log:         taskLogger,
-		EventSender: controllercommon.NewEventMultiplexer(taskLogger, taskRecorder, ceClient),
-		Meters:      keptnMeters,
+		Client:            mgr.GetClient(),
+		Scheme:            mgr.GetScheme(),
+		Log:               taskLogger,
+		DefaultTTLSeconds: ttlSecondsInJob,
+		EventSender:       controllercommon.NewEventMultiplexer(taskLogger, taskRecorder, ceClient),
+		Meters:            keptnMeters,
 	}
 	if err = (taskReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnTask")

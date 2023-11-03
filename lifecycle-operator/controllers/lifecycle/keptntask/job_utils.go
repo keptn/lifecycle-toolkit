@@ -110,8 +110,9 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 					AutomountServiceAccountToken: definition.GetAutomountServiceAccountToken(),
 				},
 			},
-			BackoffLimit:          task.Spec.Retries,
-			ActiveDeadlineSeconds: task.GetActiveDeadlineSeconds(),
+			BackoffLimit:            task.Spec.Retries,
+			ActiveDeadlineSeconds:   task.GetActiveDeadlineSeconds(),
+			TTLSecondsAfterFinished: r.GetTTLSecondsAfterFinished(&definition.Spec),
 		},
 	}
 	err := controllerutil.SetControllerReference(task, job, r.Scheme)
@@ -154,4 +155,11 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 	job.Spec.Template.Spec.Containers = []corev1.Container{*container}
 
 	return job, nil
+}
+
+func (r *KeptnTaskReconciler) GetTTLSecondsAfterFinished(d *klcv1alpha3.KeptnTaskDefinitionSpec) *int32 {
+	if d.TTLSecondsAfterFinished == nil {
+		return &r.DefaultTTLSeconds
+	}
+	return d.TTLSecondsAfterFinished
 }

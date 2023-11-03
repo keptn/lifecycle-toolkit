@@ -4238,6 +4238,12 @@ spec:
                   within this time frame, it will be considered to be failed.
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
+              ttlSecondsAfterFinished:
+                description: TTLSecondsAfterFinished controller makes a job eligible
+                  to be cleaned up after it is finished. The timer starts when the
+                  status shows up to be Complete or Failed.
+                format: int32
+                type: integer
             type: object
           status:
             description: Status describes the current state of the KeptnTaskDefinition.
@@ -8292,6 +8298,8 @@ spec:
           value: "0"
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
           value: "0"
+        - name: TTL_SECONDS_AFTER_FINISHED
+          value: "600"
         - name: SCHEDULING_GATES_ENABLED
           value: "false"
         - name: KUBERNETES_CLUSTER_DOMAIN

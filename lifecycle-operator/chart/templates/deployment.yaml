@@ -99,6 +99,9 @@ spec:
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
           value: {{ .Values.lifecycleOperator.env.optionsControllerLogLevel | quote
             }}
+        - name: TTL_SECONDS_AFTER_FINISHED
+          value: {{ .Values.lifecycleOperator.env.ttlSecondsAfterFinished | quote
+            }}
         - name: SCHEDULING_GATES_ENABLED
           value: {{ .Values.schedulingGatesEnabled | quote
             }}

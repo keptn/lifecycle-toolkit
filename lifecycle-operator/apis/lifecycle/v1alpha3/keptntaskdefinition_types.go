@@ -60,6 +60,9 @@ type KeptnTaskDefinitionSpec struct {
 	// AutomountServiceAccountToken allows to enable K8s to assign cluster API credentials to a pod, if set to false
 	// the pod will decline the service account
 	AutomountServiceAccountToken *AutomountServiceAccountTokenSpec `json:"automountServiceAccountToken,omitempty"`
+	// TTLSecondsAfterFinished controller makes a job eligible to be cleaned up after it is finished.
+	// The timer starts when the status shows up to be Complete or Failed.
+	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
 }
 
 type RuntimeSpec struct {

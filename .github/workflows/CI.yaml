@@ -261,6 +261,9 @@ jobs:
         run: |
           # substitute local charts path with official ones
           yq -i '.dependencies.[].repository = "https://charts.lifecycle.keptn.sh"' ./Chart.yaml
+          # update Chart.lock files
+          helm repo add keptn https://charts.lifecycle.keptn.sh
+          helm repo update
           helm dependency update
           helm dependency build
 

@@ -185,7 +185,7 @@ If you only want to run the Keptn Observability use-case in your cluster,
 you do not need to install the Keptn Metrics Operator.
 To disable it, modify the `keptn/values.yaml` file like this:
 
-{{< embed path="/docs/content/en/docs/install/assets/values-only-lifecycle.yaml" >}}
+{{< docsembed path="/assets/values-only-lifecycle.yaml" >}}
 
 Keptn Observability must be enabled by
 [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/).
@@ -216,7 +216,7 @@ For more information about implementing observability, see the
 If you are interested in Metrics, you do not need Keptn Lifecycle Operator.
 disable it using the following values.yaml:
 
-{{< embed path="/docs/content/en/docs/install/assets/values-only-metrics.yaml" >}}
+{{< docsembed path="/assets/values-only-metrics.yaml" >}}
 
 For more information about implementing Metrics, see the
 [Metrics User Guide](../implementing/evaluatemetrics.md).
@@ -226,7 +226,7 @@ For more information about implementing Metrics, see the
 To enable Keptn Analysis in your cluster, you again do not need the Keptn Lifcycle Operator,
 disable it using the following values.yaml:
 
-{{< embed path="/docs/content/en/docs/install/assets/values-only-metrics.yaml" >}}
+{{< docsembed path="/assets/values-only-metrics.yaml" >}}
 
 > **Note** The Analysis use-case is currently behind a feature flag.
   To enable it, add the following to your `helm upgrade` command line:
@@ -247,7 +247,7 @@ you can disable Keptn `cert-manager` by using the
 to the `helm upgrade` command line
 or you can modify the `keptn/values.yaml` file:
 
-{{< embed path="/docs/content/en/docs/install/assets/values-remove-certmanager.yaml" >}}
+{{< docsembed path="/assets/values-remove-certmanager.yaml" >}}
 
 For more information on using `cert-manager` with Keptn, see
 [Use Keptn with cert-manager.io](../operate/cert-manager.md).
@@ -267,7 +267,7 @@ that are supported for that component.
 
 Here is an example `values.yaml` altering metrics operator values:
 
-{{< embed path="/docs/content/en/docs/install/assets/values-advance-changes.yaml" >}}
+{{< docsembed path="/assets/values-advance-changes.yaml" >}}
 
 ## Running Keptn with vCluster
 

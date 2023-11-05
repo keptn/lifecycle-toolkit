@@ -6,7 +6,7 @@ require (
 	github.com/DataDog/datadog-api-client-go/v2 v2.18.0
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.3.0
-	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/mux v1.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20231030092256-f3bbb967e4aa
 	github.com/open-feature/go-sdk v1.8.0

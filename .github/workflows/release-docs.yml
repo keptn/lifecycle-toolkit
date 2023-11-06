@@ -71,6 +71,9 @@ jobs:
       - name: Copy configuration
         if: ${{ steps.folder.outputs.latest }}
         run: |
+          # Copy only the configuration files in the root folder of docs.
+          # The || true is to prevent cp failing and blocking the pipeline because it cannot copy the folders
+          #    due to the missing -r option. Otherwise, it creates two copies of the documentation.
           cp ./docs/* "${{ env.PAGE_DIR }}/docs" || true
 
       - name: Copy documentation folder

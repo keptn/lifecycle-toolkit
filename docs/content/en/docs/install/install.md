@@ -122,7 +122,7 @@ and use the modified file to install Keptn:
    describes each parameter in the `values.yaml` file.
 
 1. Upgrade your Keptn installation to use the new configuration
-   by adding the following string to your `helm upgrade` command line:
+   by adding the following string to your `helm upgrade` command:
 
    ```shell
    --values=values.yaml

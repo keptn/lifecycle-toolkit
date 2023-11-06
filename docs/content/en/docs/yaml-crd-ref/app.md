@@ -4,18 +4,16 @@ description: Define all workloads and checks associated with an application
 weight: 10
 ---
 
-A `KeptnApp` resource lists all the [workloads](https://kubernetes.io/docs/concepts/workloads/)
-that constitute a logical application.
+A `KeptnApp` is a Custom Resource Definition (CRD) that serves as a blueprint for defining and managing all the essential components, including [workloads](https://kubernetes.io/docs/concepts/workloads/) that are  necessary to operate our application within a Kubernetes cluster. This definition outlines the various pieces that make up our application, ensuring their proper orchestration and coordination.
 It contains information about:
 
 - All [workloads](https://kubernetes.io/docs/concepts/workloads/) and checks
   that are associated with a Keptn application
-- A list of tasks and evaluations to be executed
-  pre- and post-deployment.
-- Tasks referenced by `KeptnApp` are defined in a
-  [KeptnTaskDefinition](taskdefinition.md) resource.
-  `KeptnApp` identifies the task by the value of the `metadata.name` field
-  and does not need to understand what runner is used to define the task.
+- A list of tasks and evaluations to be can be executed such as 
+  pre and post-deployment.
+- Tasks which are referenced by `KeptnApp` are defined in a
+  [KeptnTaskDefinition](taskdefinition.md) resource which helps us for more stable deployment.
+- `KeptnApp` simply looks at the name of a task stored in `metadata.name` to figure out what the task is, without needing to know all the technical details of how the task is carried out by a runner. In other words, it recognizes tasks by their names and doesn't get bogged down in the specifics of how they work.
 
 ## Synopsis
 
@@ -50,13 +48,11 @@ when the app discovery feature generates the `KeptnApp` resource:
 
 - **apiVersion** -- API version being used.
 - **kind** -- Resource type.
-   Must be set to `KeptnApp`
+   Must be set to `KeptnApp`.
 
-- **metadata**
-  - **name** -- Unique name of this application.
-    Names must comply with the
-    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-    specification.
+- **metadata** -- Information about the resources.
+  - **name** -- This field is used to specify the unique name of the application or resource being defined. The name must follow the guidelines outlined in the [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names) specification.
+  - **namespace** -- Isolates resources in Kubernetes, aiding organization and preventing naming conflicts across clusters, enhancing multi-tenant and collaborative cluster management. 
 
 - **spec**
   - **version** (required) -- version of the Keptn application.
@@ -161,6 +157,10 @@ spec:
 ```
 
 ## Files
+
+API Reference:
+
+* [KeptnTaskDefinition](../crd-ref/lifecycle/v1alpha3/_index.md#keptnapp)
 
 ## Differences between versions
 

@@ -4,12 +4,9 @@ description: Define a run of a KeptnTaskDefinition
 weight: 85
 ---
 
-Keptn uses KeptnTask resources internally
-to manage tasks (and their underlying Kubernetes Job resources)
-that are run before and after deployment of your workloads
-(pre- and post-deployment tasks).
-You do not need to create this resource yourself except in special situations,
-like using Keptn to manage workloads that are outside of the k8s cluster.
+Keptn utilizes `KeptnTask` as an internal mechanism to handle tasks (including their underlying Kubernetes Job resources)which are executed before and after deploying of your workloads
+(referred to as pre- and post-deployment tasks).
+In most cases, there's no such need for creating these resources manually. However, there might be specific scenarios, such as when you're using Keptn to manage workloads that exist outside of the Kubernetes cluster, where you might need to create these resources yourself.
 
 ## Synopsis
 

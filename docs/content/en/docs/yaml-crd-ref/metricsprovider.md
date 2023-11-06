@@ -107,7 +107,7 @@ spec:
 
 API Reference:
 
-* [KeptnEvaluationDefinition](../crd-ref/lifecycle/v1alpha3/_index.md#keptnevaluationdefinition)
+* [KeptnMetricsProvider](../crd-ref/metrics/v1alpha3/_index.md#keptnmetricsprovider)
 
 ## Differences between versions
 

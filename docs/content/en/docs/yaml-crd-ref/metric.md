@@ -4,11 +4,7 @@ description: Define all workloads and checks associated with an application
 weight: 50
 ---
 
-A `KeptnMetric` represents a metric that is collected from a provider.
-Providing the metrics as a CR in a Kubernetes cluster
-facilitates the reusability of this data across multiple components
-and allows using multiple observability platforms
-for different metrics at the same time.
+A `KeptnMetric` is a way to capture and share data from a metric source. By creating a Custom Resource (CR) in a Kubernetes cluster to represent these metrics, it makes it easier to reuse this data across various components. This approach also enables the use of different observability platforms for various metrics simultaneously.
 
 `KeptnMetric` CRs are also used as targets for
 [EvaluationDefinition](evaluationdefinition.md) CRs.
@@ -85,8 +81,7 @@ spec:
 
 As soon as you define and apply
 your `KeptnMetricsProvider` and `KeptnMetric` resources,
-Keptn begins collecting the metrics you defined.
-You do not need to do anything else.
+Keptn starts collecting the metrics as you defined.
 
 A `KeptnMetric` resource must be located
 in the same namespace as the associated
@@ -129,6 +124,8 @@ spec:
 ## Files
 
 API Reference:
+
+* [KeptnMetric](../crd-ref/metrics/v1alpha3/_index.md#keptnmetric)
 
 ## Differences between versions
 

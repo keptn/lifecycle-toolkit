@@ -4,7 +4,7 @@ description: Define configuration values
 weight: 20
 ---
 
-`KeptnConfig` defines Keptn configuration values.
+`KeptnConfig` It is refers as configuartion files and the settings used to define the behaviour of the kubernetes cluster.
 
 ## Yaml Synopsis
 
@@ -44,15 +44,15 @@ spec:
 
 ## Usage
 
-Each cluster should have a single `KeptnConfig` CRD
+Each cluster must have atleast one `KeptnConfig` CRD
 that describes all configurations for that cluster.
 
 ## Example
 
 ### OTel example
 
-This example specifies the URL of the OpenTelemetry collector
-and that the automatic app discovery should be run every 40 seconds:
+In this example, we specify that the URL of the OpenTelemetry collector
+and the automatic app discovery should be run every 40 seconds:
 
 ```yaml
 apiVersion: options.keptn.sh/v1alpha2

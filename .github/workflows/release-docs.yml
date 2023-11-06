@@ -64,7 +64,7 @@ jobs:
         run: |
           FROM="${{ env.PAGE_DIR }}/docs/content/en/docs"
           TO="${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.migrate }}"
-          echo "Moving ${FROM} -> ${TO}" 
+          echo "Moving ${FROM} -> ${TO}"
           cp -R $FROM $TO
           rm -rf $FROM
 
@@ -75,9 +75,10 @@ jobs:
 
       - name: Copy documentation folder
         run: |
-            cp -R ./docs/content/en/docs "${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.name}}"
-            echo "${{ inputs.tag_name }}" > "${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.name}}/version"
-            sed -i 's/currentversion: main/currentversion: ${{ inputs.tag_name }}/g' "${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.name}}/_index.md"
+          cp -R ./docs/content/en/docs "${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.name}}"
+          echo "${{ inputs.tag_name }}" > "${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.name}}/version"
+          FILE="${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.name}}/_index.md"
+          sed -i 's/currentversion: main/currentversion: ${{ inputs.tag_name }}/g' ${FILE}
 
 
       - name: Push content

@@ -98,7 +98,7 @@ Some helpful hints:
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
   ```
 
-  > **Note:** For versions prior to v0.9.0,
+  > **Note** For versions prior to v0.9.0,
     the Release `NAME` is `keptn/klt`;
     use the corresponding CHART version to install an older release.
   >

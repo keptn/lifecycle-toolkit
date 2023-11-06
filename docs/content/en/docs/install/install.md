@@ -1,52 +1,25 @@
 ---
-title: Install and enable Keptn
-description: Install Keptn
+title: Install Keptn
+description: Install and enable Keptn
 weight: 35
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-Keptn must be installed, enabled, and integrated
-into each Kubernetes cluster you want to monitor.
-This is because Keptn communicates with the Kubernetes scheduler
+Keptn must be installed onto each Kubernetes cluster you want to monitor.
+Additionally, Keptn needs to be enabled on certain namespaces.
+This is because Keptn communicates with the Kubernetes primitives
 for tasks such as enforcing checks natively,
 stopping a deployment from proceeding when criteria are not met,
 doing post-deployment evaluations
 and tracing all activities of all deployment [workloads](https://kubernetes.io/docs/concepts/workloads/) on the cluster.
 
-Keptn v.0.9.0 and later is installed using
-an umbrella [Helm Chart](#basic-installation).
-This means that the Helm Chart that installs all of Keptn
-actually groups subcharts for individual services
-and you can install one of these services
-without installing all of Keptn.
+Keptn v0.9.0 and later is installed using
+a [Helm Chart](#basic-installation).
 
 > **Note** Earlier releases could also be installed using the manifest.
 > See
 [Upgrade to Helm from a manifest installation](upgrade.md/#upgrade-to-helm-from-a-manifest-installation)
 > if you need to upgrade from a manifest installation.
-
-This page covers the following:
-
-* [Basic installation](#basic-installation) discusses the command sequence
-  used to install Keptn.
-
-* To modify the Keptn configuration,
-  you must modify the appropriate `values.yaml` files:
-
-  * [Modify Helm configuration options](#modify-helm-configuration-options)
-    summarizes the mechanics of modifying and applying a `values.yaml` file.
-  * [Control what components are installed](#control-what-components-are-installed_
-    explains how to modify the umbrella `values.yaml` file
-    to control which components are included in your Keptn configuration.
-    By default, all components are installed.
-
-    This section then gives explicit notes about the components that must be configured
-    for common use-cases.
-  * [Customizing the configuration of components](#customizing-the-configuration-of-components)
-    explains how to modify the configuration of individual components.
-
-* [Running Keptn with vCluster](#running-keptn-with-vcluster)
-  discusses how to configure vCluster in order to run Keptn on it.
 
 After you install Keptn, you are ready to
 [Integrate Keptn with your applications](../implementing/integrate.md).
@@ -54,15 +27,14 @@ After you install Keptn, you are ready to
 ## Basic installation
 
 Keptn is installed onto an existing Kubernetes cluster
-using an umbrella Helm Chart.
+using a Helm chart.
 To modify the Keptn configuration,
-you must modify the appropriate Helm Chart.
+you must modify the `values.yaml` file of the chart.
 
-> **Note** Keptn works on virtually any type of Kubernetes cluster
-  with some standard tools installed.
+> **Note** Keptn works on virtually any type of Kubernetes cluster.
   See
-  [Kubernetes cluster](k8s.md)
-  for details about preparing your Kubernetes cluster for Keptn.
+  [Requirements](reqs.md)
+  for specific requirements for your Kubernetes cluster.
 >
 
 The command sequence to fetch and install the latest release of Keptn is:
@@ -71,48 +43,42 @@ The command sequence to fetch and install the latest release of Keptn is:
 helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
 helm upgrade --install keptn keptn/keptn \
-   -n keptn-lifecycle-toolkit-system --create-namespace --wait
+   -n keptn-system --create-namespace --wait
 ```
-
-Note that the `helm repo update` command is used for fresh installs
-as well as for upgrades.
 
 Some helpful hints:
 
 * Use the `--version <version>` flag on the
-  `helm upgrade --install` command line to specify a different Keptn version.
+  `helm upgrade --install` command to specify a different Keptn Helm chart version.
 
 * Use the following command sequence to see a list of available versions:
 
   ```shell
   helm repo update
-  helm search repo keptn
+  helm search repo keptn --versions
   ```
 
-* To verify that the Keptn components are installed in your cluster,
+* To verify that Keptn was installed in your cluster,
   run the following command:
 
   ```shell
-  kubectl get pods -n keptn-lifecycle-toolkit-system
+  kubectl get pods -n keptn-system
   ```
 
-  The output shows all components that are running on your system.
+  The output shows all Keptn components that are running on your cluster.
 
 ## Modify Helm configuration options
 
-Helm chart values can be modified before the installation.
-This is useful if you want to install only the `metrics-operator`
-rather than the full Toolkit
-or if you need to change the size of the installation.
+Helm values can be modified before the installation.
 
 To modify configuration options, download a copy of the
-[chart/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml)
-file, modify some values, and use the modified file to install Keptn:
+default `values.yaml` file,
+modify some values, and use the modified file to install Keptn:
 
 1. Download the `values.yaml` file:
 
    ```shell
-   helm get values RELEASE_NAME [flags] > values.yaml
+   helm show values keptn/keptn > values.yaml
    ```
 
 1. Edit your local copy to modify some values

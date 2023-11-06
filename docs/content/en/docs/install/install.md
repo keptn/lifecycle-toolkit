@@ -314,7 +314,7 @@ For more information about implementing Keptn Analysis, see the
 
 If you wish to use your own custom certificate manager,
 you can disable the Keptn `cert-manager` by using the
-`--set " certificateManager.enabled=false"` argument
+`--set "certificateManager.enabled=false"` argument
 to the `helm upgrade` command line
 or you can modify the `keptn/values.yaml` file:
 

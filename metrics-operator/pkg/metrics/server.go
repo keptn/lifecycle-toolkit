@@ -127,7 +127,7 @@ func (m *serverManager) setup() error {
 		go func() {
 			err := m.server.ListenAndServe()
 			if err != nil {
-				klog.Errorf("could not start keptn-metrics server: %w", err)
+				klog.Errorf("could not start keptn-metrics server: %v", err)
 			}
 		}()
 

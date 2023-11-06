@@ -5,12 +5,10 @@ import (
 	"fmt"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	otelsdk "go.opentelemetry.io/otel/sdk/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apiserver/pkg/storage/names"
@@ -42,7 +40,7 @@ var _ = Describe("Workload", Ordered, func() {
 		})
 
 		Context("with a new Workload CRD", func() {
-			It("should update the spans and create WorkloadVersion", func() {
+			It("should create WorkloadVersion", func() {
 				By("Check if WorkloadVersion was created")
 
 				workloadVersion = &klcv1alpha4.KeptnWorkloadVersion{}
@@ -56,23 +54,6 @@ var _ = Describe("Workload", Ordered, func() {
 					g.Expect(workloadVersion.Spec.KeptnWorkloadSpec).To(Equal(workload.Spec))
 
 				}, "30s").Should(Succeed())
-
-				By("Comparing spans")
-				var spans []otelsdk.ReadWriteSpan
-				Eventually(func() bool {
-					spans = spanRecorder.Started()
-					return len(spans) >= 2
-				}, "10s").Should(BeTrue())
-
-				Expect(spans[0].Name()).To(Equal("reconcile_workload"))
-				Expect(spans[0].Attributes()).To(ContainElement(apicommon.WorkloadName.String(workload.Name)))
-				Expect(spans[0].Attributes()).To(ContainElement(apicommon.WorkloadVersion.String(workload.Spec.Version)))
-				Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppName.String(workload.Spec.AppName)))
-
-				Expect(spans[1].Name()).To(Equal("create_workload_version"))
-				Expect(spans[1].Attributes()).To(ContainElement(apicommon.WorkloadName.String(workload.Name)))
-				Expect(spans[1].Attributes()).To(ContainElement(apicommon.WorkloadVersion.String(workload.Spec.Version)))
-				Expect(spans[1].Attributes()).To(ContainElement(apicommon.AppName.String(workload.Spec.AppName)))
 			})
 
 		})

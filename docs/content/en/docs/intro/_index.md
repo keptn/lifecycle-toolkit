@@ -47,8 +47,8 @@ simplifying configuration and integration into a single set of metrics.
 
 To learn more, see:
 
-* [Custom Keptn metrics](usecase_metrics.md)
-* [Keptn Metrics](../implementing/evaluatemetrics.md) guide
+* [Getting started with Keptn metrics](../getting-started/metrics.md)
+* [Keptn Metrics](../implementing/evaluatemetrics.md) User Guide
 
 ## Observability
 
@@ -58,14 +58,14 @@ of all Kubernetes activities within a deployment.
 Keptn observability makes it easy to understand
 deployment durations and failures across multiple deployment strategies.
 
-* Provides observability data for standard Kubernetes workload resources
+* Provides observability data for standard Kubernetes [workload](https://kubernetes.io/docs/concepts/workloads/) resources
   as well as
   [KeptnApp](https://lifecycle.keptn.sh/docs/yaml-crd-ref/app/)
-  resources (which connect logically related workloads)
+  resources (which connect logically related [workloads](https://kubernetes.io/docs/concepts/workloads/))
   using different deployment strategies.
 
 * Captures
-  [DORA metrics](../implementing/dora/)
+  [DORA metrics](../implementing/dora.md)
   and exposes them as OpenTelemetry metrics out of the box.
 
 * Reports traces and custom Keptn metrics from configured data providers
@@ -86,10 +86,10 @@ to ensure that your deployments are observable.
 
 To learn more, see:
 
-* [Getting started with Keptn Observability](../getting-started)
+* [Getting started with Keptn Observability](../getting-started/observability.md)
 * [Standardize observability](usecase-observability.md/)
-* [DORA metrics](../implementing/dora) guide
-* [OpenTelemetry observability](../implementing/otel.md) guide
+* [DORA metrics](../implementing/dora.md) User Guide
+* [OpenTelemetry observability](../implementing/otel.md) User Guide
 
 ## Release lifecycle management
 
@@ -128,21 +128,14 @@ The executables within a `KeptnTask` resource
 run in sequential order.
 
 Keptn tasks and evaluations can be run
-for either a Kubernetes workload (single service) resource
+for either a Kubernetes [workload](https://kubernetes.io/docs/concepts/workloads/) (single service) resource
 or a
 [KeptnApp](../yaml-crd-ref/app.md) resource,
-which is a single, cohesive unit that groups multiple workloads.
+which is a single, cohesive unit that groups multiple [workloads](https://kubernetes.io/docs/concepts/workloads/).
 For more information, see:
 
-* [Keptn tasks](../implementing/tasks)
-* [Evaluations](../implementing/evaluations.md)
-* [KeptnApp and KeptnWorkflow resources](../architecture/keptn-apps)
-
-## Next steps
-
-To learn more, see:
-
-* [Getting started with release lifecycle management](../tutorials/tasks/)
+* [Getting started with release lifecycle management](../getting-started/lifecycle-management.md)
+* [Deployment tasks](../implementing/tasks.md) User Guide
+* [Evaluations](../implementing/evaluations.md) User Guide
 * [Manage release lifecycle](usecase-orchestrate.md)
-* [Deployment tasks](../implementing/tasks)
-* [Evaluations](../implementing/evaluations.md)
+* [KeptnApp and KeptnWorkload resources](../architecture/keptn-apps.md)

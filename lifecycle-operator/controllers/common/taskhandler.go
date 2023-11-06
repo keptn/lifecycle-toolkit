@@ -91,17 +91,24 @@ func (r TaskHandler) ReconcileTasks(ctx context.Context, phaseCtx context.Contex
 				&taskStatus,
 			)
 			if err != nil {
-				// log the error, but continue to proceed with other tasks that may be created
-				r.Log.Error(err, "Could not create task", "task", taskDefinitionName)
+				if errors.IsNotFound(err) {
+					r.Log.Info("TaskDefinition for Task not found",
+						"task", taskStatus.Name,
+						"taskDefinition", taskDefinitionName,
+						"namespace", piWrapper.GetNamespace(),
+					)
+				} else {
+					// log the error, but continue to proceed with other tasks that may be created
+					r.Log.Error(err, "Could not create task",
+						"task", taskStatus.Name,
+						"taskDefinition", taskDefinitionName,
+						"namespace", piWrapper.GetNamespace(),
+					)
+				}
 				continue
 			}
 		} else {
-			r.handleTaskExists(
-				phaseCtx,
-				piWrapper,
-				task,
-				&taskStatus,
-			)
+			r.handleTaskExists(phaseCtx, task, &taskStatus)
 		}
 		// Update state of the Check
 		newStatus = append(newStatus, taskStatus)
@@ -160,7 +167,6 @@ func (r TaskHandler) setupTasks(taskCreateAttributes CreateTaskAttributes, piWra
 func (r TaskHandler) handleTaskNotExists(ctx context.Context, phaseCtx context.Context, taskCreateAttributes CreateTaskAttributes, taskName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, task *klcv1alpha3.KeptnTask, taskStatus *klcv1alpha3.ItemStatus) error {
 	definition, err := GetTaskDefinition(r.Client, r.Log, ctx, taskName, piWrapper.GetNamespace())
 	if err != nil {
-		r.Log.Error(err, "could not find KeptnTaskDefinition")
 		return controllererrors.ErrCannotGetKeptnTaskDefinition
 	}
 	taskCreateAttributes.Definition = *definition
@@ -178,7 +184,7 @@ func (r TaskHandler) handleTaskNotExists(ctx context.Context, phaseCtx context.C
 	return nil
 }
 
-func (r TaskHandler) handleTaskExists(phaseCtx context.Context, piWrapper *interfaces.PhaseItemWrapper, task *klcv1alpha3.KeptnTask, taskStatus *klcv1alpha3.ItemStatus) {
+func (r TaskHandler) handleTaskExists(phaseCtx context.Context, task *klcv1alpha3.KeptnTask, taskStatus *klcv1alpha3.ItemStatus) {
 	_, spanTaskTrace, err := r.SpanHandler.GetSpan(phaseCtx, r.Tracer, task, "")
 	if err != nil {
 		r.Log.Error(err, "could not get span")

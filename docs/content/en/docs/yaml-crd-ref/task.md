@@ -4,12 +4,12 @@ description: Define a run of a KeptnTaskDefinition
 weight: 85
 ---
 
-When using Keptn to run tasks for software
-that is deployed outside of Kubernetes,
-you must create the `KeptnTask` resource manually
-and modify it manually for each new run.
-Keptn automatically populates the `KeptnTask` resource
-for tasks that deploy software on Kubernetes.
+Keptn uses KeptnTask resources internally
+to manage tasks (and their underlying Kubernetes Job resources)
+that are run before and after deployment of your workloads
+(pre- and post-deployment tasks).
+You do not need to create this resource yourself except in special situations,
+like using Keptn to manage workloads that are outside of the k8s cluster.
 
 ## Synopsis
 
@@ -37,9 +37,9 @@ spec:
 ## Fields
 
 * **apiVersion** -- API version being used.
-`
+
 * **kind** -- Resource type.
-   Must be set to `KeptnTask`
+  Must be set to `KeptnTask`
 
 * **metadata**
   * **name** -- Unique name of this run of the task.
@@ -50,17 +50,17 @@ spec:
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
 * **spec** - Defines the speficication of this `KeptnTask` resource
-  * **taskDefinition** - Name of the corresponding `KeptnTaskDefinition` resource.
+  * **taskDefinition** (required) -- Name of the corresponding `KeptnTaskDefinition` resource.
     This `KeptnTaskDefinition` can be located in the same namespace
     or in the Keptn installation namespace.
-  * **context** - Contextual information about the task execution
-    * **appName** - Name of the
+  * **context** (required) -- Contextual information about the task execution
+    * **appName** (required) -- Name of the
       [KeptnApp](../yaml-crd-ref/app.md) resource
       for which the `KeptnTask` is being executed.
-    * **appVersion** - Version of the `KeptnApp` resource
+    * **appVersion** (required) -- Version of the `KeptnApp` resource
       for which the `KeptnTask` is being executed.
 
-    * **objectType** - Indicates whether this `KeptnTask`
+    * **objectType** (required) -- Indicates whether this `KeptnTask`
       is being executed for a `KeptnApp` or a `KeptnWorkload` resource.
       When populating this resource manually
       to run a task for a non-Kubernetes deployment,
@@ -68,7 +68,7 @@ spec:
       Keptn populates this field based on annotations
       to the `KeptnWorkload` and `KeptnApp` resources.
 
-    * **taskType** Indicates whether this `KeptnTask`
+    * **taskType** (required) -- Indicates whether this `KeptnTask`
       is part of the pre- or post-deployment phase.
       When populating this resource manually
       to run a task for a non-Kubernetes deployment,
@@ -76,24 +76,24 @@ spec:
       Keptn populates this field based on annotations
       to the `KeptnWorkload` and `KeptnApp` resources.
 
-    * **workloadName** - Name of the `KeptnWorkload`
+    * **workloadName** (required) -- Name of the `KeptnWorkload`
       for which the `KeptnTask` is being executed.
-    * **workloadVersion** - Version of the `KeptnWorkload`
+    * **workloadVersion** (required) -- Version of the `KeptnWorkload`
       for which the `KeptnTask` is being executed.
-  * **parameters** (optional) -- Parameters that are passed to the job
+  * **parameters** -- Parameters that are passed to the job
     that executes the `KeptnTask`.
-  * **secureParameters** (optional) -- Secure parameters that are passed
+  * **secureParameters** -- Secure parameters that are passed
     to the job that executes the `KeptnTask`.
     These are stored and accessed as Kubernetes `Secrets` in the cluster.
-    See [Working with secrets](../implementing/tasks/#working-with-secrets)
+    See [Working with secrets](../implementing/tasks.md#working-with-secrets)
     for more information.
   * **checkType** -- Defines whether task is part of pre- or post-deployment phase.
     Keptn populates this field based on annotations
     to the `KeptnWorkload` and `KeptnApp` resources.
-  * **retries** (optional) -- If errors occur,
+  * **retries** -- If errors occur,
     this defines the number of attempts made
     before the `KeptnTask` is considered to be failed.
-  * **timeout** (optional) -- Specifies the time, in seconds,
+  * **timeout** -- Specifies the time, in seconds,
     to wait for the `KeptnTask` to complete successfully.
     If the `KeptnTask` does not complete successfully in this timeframe,
     it is considered to be failed.

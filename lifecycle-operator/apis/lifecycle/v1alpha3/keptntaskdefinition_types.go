@@ -55,6 +55,11 @@ type KeptnTaskDefinitionSpec struct {
 	// +kubebuilder:validation:Type:=string
 	// +optional
 	Timeout metav1.Duration `json:"timeout,omitempty"`
+	// ServiceAccount specifies the service account to be used in jobs to authenticate with the Kubernetes API and access cluster resources.
+	ServiceAccount *ServiceAccountSpec `json:"serviceAccount,omitempty"`
+	// AutomountServiceAccountToken allows to enable K8s to assign cluster API credentials to a pod, if set to false
+	// the pod will decline the service account
+	AutomountServiceAccountToken *AutomountServiceAccountTokenSpec `json:"automountServiceAccountToken,omitempty"`
 }
 
 type RuntimeSpec struct {
@@ -104,6 +109,13 @@ type ContainerSpec struct {
 	*v1.Container `json:",inline"`
 }
 
+type AutomountServiceAccountTokenSpec struct {
+	Type *bool `json:"type"`
+}
+type ServiceAccountSpec struct {
+	Name string `json:"name"`
+}
+
 // KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
 type KeptnTaskDefinitionStatus struct {
 	// Function contains status information of the function definition for the task.
@@ -141,4 +153,18 @@ type KeptnTaskDefinitionList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnTaskDefinition{}, &KeptnTaskDefinitionList{})
+}
+
+func (d *KeptnTaskDefinition) GetServiceAccount() string {
+	if d.Spec.ServiceAccount == nil {
+		return ""
+	}
+	return d.Spec.ServiceAccount.Name
+}
+
+func (d *KeptnTaskDefinition) GetAutomountServiceAccountToken() *bool {
+	if d.Spec.AutomountServiceAccountToken == nil {
+		return nil
+	}
+	return d.Spec.AutomountServiceAccountToken.Type
 }

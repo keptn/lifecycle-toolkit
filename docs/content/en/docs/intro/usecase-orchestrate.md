@@ -25,11 +25,11 @@ and can do the following:
 * Keptn is application aware,
   so can extend the deployment with tasks and evaluations that
   are run either before or after your whole application starts the deployment
-  or at the individual workload level.
+  or at the individual [workload](https://kubernetes.io/docs/concepts/workloads/) level.
 * Validate any Keptn metric,
   either pre- or post-deployment,
   using the metrics from the Keptn Metrics Server introduced in
-  [Getting started with Keptn metrics](usecase_metrics.md).
+  [Getting started with Keptn metrics](../getting-started/metrics.md).
 
 This means that you can be sure that the environment is healthy
 and has adequate resources before you begin the deployment.
@@ -62,7 +62,7 @@ You may want to complete the other exercises before doing this exercise
 although that is not required:
 
 * In the
-  [Getting started with Keptn metrics](usecase_metrics.md)
+  [Getting started with Keptn metrics](../getting-started/metrics.md)
   exercise, you learn how to define and use Keptn metrics.
 * In [Standardize observability](usecase-observability.md),
   you learn how to standardize access
@@ -78,12 +78,12 @@ you need to do the following:
    [Install and update](../install/_index.md)
    to install and enable Keptn on your cluster.
 1. Follow the instructions in
-   [Annotate workload](../implementing/integrate/#basic-annotations)
+   [Annotate workload](../implementing/integrate.md#basic-annotations)
    to integrate Keptn into your Kubernetes cluster
    by applying basic annotations to your `Deployment` resource.
    This also creates appropriate
    [KeptnApp](../yaml-crd-ref/app.md) resources
-   which aggregate workloads that are combined into the released product,
+   which aggregate [workloads](https://kubernetes.io/docs/concepts/workloads/) that are combined into the released product,
    regardless of the tools being used.
 
 ## Define evaluations to be performed pre- and post-deployment
@@ -146,8 +146,6 @@ spec:
       secret: slack-notification
 ```
 
-For more information about sending Slack notifications with Keptn, see
-[Implement Slack notifications](../implementing/slack.md).
 The code to be executed is expressed as a
 [Deno](https://deno.com)
 script, which uses JavaScript syntax.
@@ -162,12 +160,12 @@ you can also use Python 3 to define your task,
 or you can define a standard Kubernetes container
 that uses the image, runner, and runtime dependencies that you choose.
 For more information, see
-[Working with Keptn tasks](../implementing/tasks).
+[Working with Keptn tasks](../implementing/tasks.md).
 
 You can view the actual JavaScript code for the task in the repository.
 You see that "context" is important in this code.
 This refers to the context in which this code executes --
-for which application, for which version, for which Workload.
+for which application, for which version, for which workload.
 
 Because the slack server that is required to execute this task
 is protected by a secret, the task definition also specifies that secret.
@@ -175,7 +173,7 @@ is protected by a secret, the task definition also specifies that secret.
 ## Integrate evaluations and tasks into the cluster
 
 Follow the instructions in
-[Annotate workload](../implementing/integrate/#pre--and-post-deployment-checks)
+[Annotate workload](../implementing/integrate.md#pre--and-post-deployment-checks)
 to integrate the evaluations and tasks you defined
 into the cluster
 by applying annotations to the `Deployment` resource.

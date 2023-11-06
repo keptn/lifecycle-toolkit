@@ -11,9 +11,7 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/trace"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -24,35 +22,29 @@ import (
 type WorkloadHandler struct {
 	Client      client.Client
 	Log         logr.Logger
-	Tracer      trace.Tracer
 	EventSender controllercommon.IEvent
 }
 
 func (a *WorkloadHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace string) error {
 
-	ctx, span := a.Tracer.Start(ctx, "create_workload", trace.WithSpanKind(trace.SpanKindProducer))
-	defer span.End()
-
 	newWorkload := generateWorkload(ctx, pod, namespace)
-	newWorkload.SetSpanAttributes(span)
 
 	a.Log.Info("Searching for workload")
 
 	workload := &klcv1alpha3.KeptnWorkload{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newWorkload.Name}, workload)
 	if errors.IsNotFound(err) {
-		return a.createWorkload(ctx, newWorkload, span)
+		return a.createWorkload(ctx, newWorkload)
 	}
 
 	if err != nil {
-		span.SetStatus(codes.Error, err.Error())
 		return fmt.Errorf("could not fetch Workload %w", err)
 	}
 
-	return a.updateWorkload(ctx, workload, newWorkload, span)
+	return a.updateWorkload(ctx, workload, newWorkload)
 }
 
-func (a *WorkloadHandler) updateWorkload(ctx context.Context, workload *klcv1alpha3.KeptnWorkload, newWorkload *klcv1alpha3.KeptnWorkload, span trace.Span) error {
+func (a *WorkloadHandler) updateWorkload(ctx context.Context, workload *klcv1alpha3.KeptnWorkload, newWorkload *klcv1alpha3.KeptnWorkload) error {
 	if reflect.DeepEqual(workload.Spec, newWorkload.Spec) {
 		a.Log.Info("Pod not changed, not updating anything")
 		return nil
@@ -65,20 +57,18 @@ func (a *WorkloadHandler) updateWorkload(ctx context.Context, workload *klcv1alp
 	if err != nil {
 		a.Log.Error(err, "Could not update Workload")
 		a.EventSender.Emit(apicommon.PhaseUpdateWorkload, "Warning", workload, apicommon.PhaseStateFailed, "could not update KeptnWorkload", workload.Spec.Version)
-		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 
 	return nil
 }
 
-func (a *WorkloadHandler) createWorkload(ctx context.Context, newWorkload *klcv1alpha3.KeptnWorkload, span trace.Span) error {
+func (a *WorkloadHandler) createWorkload(ctx context.Context, newWorkload *klcv1alpha3.KeptnWorkload) error {
 	a.Log.Info("Creating workload", "workload", newWorkload.Name)
 	err := a.Client.Create(ctx, newWorkload)
 	if err != nil {
 		a.Log.Error(err, "Could not create Workload")
 		a.EventSender.Emit(apicommon.PhaseCreateWorkload, "Warning", newWorkload, apicommon.PhaseStateFailed, "could not create KeptnWorkload", newWorkload.Spec.Version)
-		span.SetStatus(codes.Error, err.Error())
 		return err
 	}
 

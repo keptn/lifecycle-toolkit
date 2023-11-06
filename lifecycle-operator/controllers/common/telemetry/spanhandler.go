@@ -45,9 +45,11 @@ func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcil
 	childCtx, span := tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindConsumer))
 	piWrapper.SetSpanAttributes(span)
 
-	traceContextCarrier := propagation.MapCarrier{}
-	otel.GetTextMapPropagator().Inject(childCtx, traceContextCarrier)
-	piWrapper.SetPhaseTraceID(phase, traceContextCarrier)
+	if phase != "" {
+		traceContextCarrier := propagation.MapCarrier{}
+		otel.GetTextMapPropagator().Inject(childCtx, traceContextCarrier)
+		piWrapper.SetPhaseTraceID(phase, traceContextCarrier)
+	}
 
 	r.bindCRDSpan[spanKey] = keptnSpanCtx{
 		Span: span,

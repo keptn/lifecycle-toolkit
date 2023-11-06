@@ -27,7 +27,7 @@ type PhaseResult struct {
 	ctrl.Result
 }
 
-func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase apicommon.KeptnPhaseType, span trace.Span, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (*PhaseResult, error) {
+func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (*PhaseResult, error) {
 	requeueResult := ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
@@ -53,7 +53,6 @@ func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context,
 	if err != nil {
 		spanPhaseTrace.AddEvent(phase.LongName + " could not get reconciled")
 		r.EventSender.Emit(phase, "Warning", reconcileObject, apicommon.PhaseStateReconcileError, "could not get reconciled", piWrapper.GetVersion())
-		span.SetStatus(codes.Error, err.Error())
 		return &PhaseResult{Continue: false, Result: requeueResult}, err
 	}
 

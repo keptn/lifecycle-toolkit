@@ -7,7 +7,7 @@ RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
-TAG?="v0.8.2" # x-release-please-version
+TAG?="v0.8.3" # x-release-please-version
 RELEASE_IMAGE:=lifecycle-operator:$(TAG)
 CHART_APPVERSION?=""
 

@@ -6,40 +6,71 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 ---
 
 Keptn must be installed, enabled, and integrated
-into each cluster you want to monitor.
+into each Kubernetes cluster you want to monitor.
 This is because Keptn communicates with the Kubernetes scheduler
 for tasks such as enforcing checks natively,
 stopping a deployment from proceeding when criteria are not met,
 doing post-deployment evaluations
-and tracing all activities of all deployment workloads on the cluster.
+and tracing all activities of all deployment [workloads](https://kubernetes.io/docs/concepts/workloads/) on the cluster.
 
-Two methods are supported for installing Keptn:
+Keptn v.0.9.0 and later is installed using
+an umbrella [Helm Chart](#basic-installation).
+This means that the Helm Chart that installs all of Keptn
+actually groups subcharts for individual services
+and you can install one of these services
+without installing all of Keptn.
 
-* Releases v0.7.0 and later can be installed using
-  the [Helm Chart](#use-helm-chart).
-  This is the preferred strategy because it allows you to customize your cluster.
+> **Note** Earlier releases could also be installed using the manifest.
+> See
+[Upgrade to Helm from a manifest installation](upgrade.md/#upgrade-to-helm-from-a-manifest-installation)
+> if you need to upgrade from a manifest installation.
 
-* Releases v0.8.2 and earlier can be installed using
-  the [manifests](#use-manifests).
-  This is the less-preferred way because it does not support customization.
+This page covers the following:
 
-After Keptn is installed, you must
-[Enable Keptn for your cluster](#enable-keptn-for-your-cluster)
-in order to run some Keptn functionality.
+* [Basic installation](#basic-installation) discusses the command sequence
+  used to install Keptn.
 
-You are then ready to
-[Integrate Keptn with your applications](../implementing/integrate).
+* To modify the Keptn configuration,
+  you must modify the appropriate `values.yaml` files:
 
-## Use Helm Chart
+  * [Modify Helm configuration options](#modify-helm-configuration-options)
+    summarizes the mechanics of modifying and applying a `values.yaml` file.
+  * [Control what components are installed](#control-what-components-are-installed_
+    explains how to modify the umbrella `values.yaml` file
+    to control which components are included in your Keptn configuration.
+    By default, all components are installed.
 
-Version v0.7.0 and later of Keptn
-should be installed using Helm Charts.
-The command sequence to fetch and install the latest release is:
+    This section then gives explicit notes about the components that must be configured
+    for common use-cases.
+  * [Customizing the configuration of components](#customizing-the-configuration-of-components)
+    explains how to modify the configuration of individual components.
+
+* [Running Keptn with vCluster](#running-keptn-with-vcluster)
+  discusses how to configure vCluster in order to run Keptn on it.
+
+After you install Keptn, you are ready to
+[Integrate Keptn with your applications](../implementing/integrate.md).
+
+## Basic installation
+
+Keptn is installed onto an existing Kubernetes cluster
+using an umbrella Helm Chart.
+To modify the Keptn configuration,
+you must modify the appropriate Helm Chart.
+
+> **Note** Keptn works on virtually any type of Kubernetes cluster
+  with some standard tools installed.
+  See
+  [Kubernetes cluster](k8s.md)
+  for details about preparing your Kubernetes cluster for Keptn.
+>
+
+The command sequence to fetch and install the latest release of Keptn is:
 
 ```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn klt/klt \
+helm upgrade --install keptn keptn/keptn \
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
@@ -55,7 +86,7 @@ Some helpful hints:
 
   ```shell
   helm repo update
-  helm search repo klt
+  helm search repo keptn
   ```
 
 * To verify that the Keptn components are installed in your cluster,
@@ -67,7 +98,7 @@ Some helpful hints:
 
   The output shows all components that are running on your system.
 
-### Modify Helm configuration options
+## Modify Helm configuration options
 
 Helm chart values can be modified before the installation.
 This is useful if you want to install only the `metrics-operator`
@@ -75,7 +106,7 @@ rather than the full Toolkit
 or if you need to change the size of the installation.
 
 To modify configuration options, download a copy of the
-[chart/values.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/chart/values.yaml)
+[chart/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml)
 file, modify some values, and use the modified file to install Keptn:
 
 1. Download the `values.yaml` file:
@@ -100,53 +131,66 @@ Configuration options are specified using the format:
 --set key1=value1,key2=value2,....
 ```
 
-For more information,see
+Keptn presents a toolkit composed of multiple operators, each of which enables a specific use-case.
+In the next sections we explore basic installation setups based on use-case.
+The installation command is always the following, only the content of the value.yaml file changes:
 
-* The [Helm Get Values](https://helm.sh/docs/helm/helm_get_values/)) document
+```shell
+helm repo add keptn https://charts.lifecycle.keptn.sh
+helm repo update
+helm upgrade --install keptn keptn/keptn \
+   --values ./values.yaml \
+   -n keptn-lifecycle-toolkit-system --create-namespace --wait
+```
 
-* The [helm-charts](https://github.com/keptn/lifecycle-toolkit/blob/main/chart/README.md) page
+* The [helm-charts](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/README.md) page
   contains the full list of available values.
 
-## Use manifests
+## Control what components are installed
 
-Versions v0.8.2 and earlier of Keptn can be installed using manifests,
-although we recommend that you use Helm Charts
-because they allow you to easily customize your configuration.
+Keptn v.0.9 and later releases use an umbrella chart
+with separate charts for individual subcharts.
 
-Versions 0.6.0 and earlier can only be installed using manifests.
+* Use the Keptn umbrella `values.yaml` file to specify which components are installed
+  and to set some global configuration parameters for Keptn
+* Each component has its own `values.yaml` file
+  where you set configuration parameters that are specific to that component.
 
-> **Note** When installing Version 0.6.0,
-you must first install the `cert-manager` with the following command sequence:
+The following table summarizes the Keptn umbrella chart scheme;
 
-```shell
-kubectl apply \
-   -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
-kubectl wait \
-   --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=60s
-```
+| Component | Used for | Configuration file |
+| --------- | -------- | --------------------|
+| [Keptn umbrella](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/README.md) | Installs subcharts, global configuration | [keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml) |
+| [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/README.md) | [Observability](../implementing/otel.md), Lifecycle management [tasks](../implementing/tasks.md) and [evaluations](../implementing/evaluatemetrics.md) | [keptn-lifecycle-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml) |
+| [metrics-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/README.md) | [Keptn metrics](../implementing/evaluatemetrics.md), [Analysis](../implementing/slo.md) | [keptn-metrics-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/values.yaml) |
+| [cert-manager](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md)  | Configures TLS certificates | [keptn-cert-manager/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/values.yaml) |
 
-Use a command sequence like the following
-to install Keptn from the manifest,
-specifying the version you want to install.
+By default, all components are included when you install Keptn.
+To specify the components that are included,
+you need to modify the
+[keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml)
+file.
+The following sections summarize the configurations needed for different use cases.
 
-```shell
-kubectl apply \
-   -f https://github.com/keptn/lifecycle-toolkit/releases/download/v0.6.0/manifest.yaml
-kubectl wait --for=condition=Available deployment/lifecycle-operator \
-   -n keptn-lifecycle-toolkit-system --timeout=120s
-```
+Note that the umbrella scheme is quite flexible.
+You can install all of Keptn on your cluster,
+then modify the configuration to exclude some components
+and update your configuration.
+Conversely, you can exclude some components when you install Keptn
+then later add them in.
 
-Keptn and its dependencies are now installed and ready to use.
+### Enable Keptn Lifecycle Operator (Observability)
 
-## Enable Keptn for your cluster
+If you only want to run the Keptn Observability use-case in your cluster,
+you do not need to install the Keptn Metrics Operator.
+To disable it, modify the `keptn/values.yaml` file like this:
 
-To enable the Keptn in your cluster,
-annotate the Kubernetes
-[Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-resource for each namespace in the cluster.
-For an example of this, see
-[simplenode-dev-ns.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-ns.yaml)
-file, which looks like this:
+{{< embed path="/docs/content/en/docs/install/assets/values-only-lifecycle.yaml" >}}
+
+Keptn Observability must be enabled by
+[Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/).
+To enable Observability in your namespace, you need to annotate it.
+For example, for the `simplenode-dev` namespace:
 
 ```yaml
 apiVersion: v1
@@ -162,4 +206,93 @@ This annotation tells the webhook to handle the namespace.
 
 After enabling Keptn for your namespace(s),
 you are ready to
-[Integrate Keptn with your applications](../implementing/integrate).
+[Integrate Keptn with your applications](../implementing/integrate.md).
+
+For more information about implementing observability, see the
+[Observability User Guide](../implementing/otel.md).
+
+### Enable Keptn Metrics Operator (Metrics)
+
+If you are interested in Metrics, you do not need Keptn Lifecycle Operator.
+disable it using the following values.yaml:
+
+{{< embed path="/docs/content/en/docs/install/assets/values-only-metrics.yaml" >}}
+
+For more information about implementing Metrics, see the
+[Metrics User Guide](../implementing/evaluatemetrics.md).
+
+### Enable Keptn Analysis (SLOs/SLIs)
+
+To enable Keptn Analysis in your cluster, you again do not need the Keptn Lifcycle Operator,
+disable it using the following values.yaml:
+
+{{< embed path="/docs/content/en/docs/install/assets/values-only-metrics.yaml" >}}
+
+> **Note** The Analysis use-case is currently behind a feature flag.
+  To enable it, add the following to your `helm upgrade` command line:
+
+  ```shell
+  --set metricsOperator.env.enableKeptnAnalysis=true
+  ```
+>
+
+For more information about implementing Keptn Analysis, see the
+[Analysis User Guide](../implementing/slo.md).
+
+### Disable Keptn Certificate Manager (Certificates)
+
+If you wish to use your custom certificate manager,
+you can disable Keptn `cert-manager` by using the
+`--set " certificateManager.enabled=false"` argument
+to the `helm upgrade` command line
+or you can modify the `keptn/values.yaml` file:
+
+{{< embed path="/docs/content/en/docs/install/assets/values-remove-certmanager.yaml" >}}
+
+For more information on using `cert-manager` with Keptn, see
+[Use Keptn with cert-manager.io](../operate/cert-manager.md).
+
+For more advanced installations configurations,see:
+
+* [CertificateManager-README](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md)
+
+## Customizing the configuration of components
+
+To access and modify the configuration of a subcomponent,
+modify the component's `values.yaml` file.
+You can use the sub-chart name
+as written in the `chart.yaml` file.
+The `README` file for each component documents the parameters
+that are supported for that component.
+
+Here is an example `values.yaml` altering metrics operator values:
+
+{{< embed path="/docs/content/en/docs/install/assets/values-advance-changes.yaml" >}}
+
+## Running Keptn with vCluster
+
+Keptn running on Kubernetes versions 1.26 and older
+uses a custom
+[scheduler](../architecture/components/scheduler.md),
+so it does not work with
+[Virtual Kubernetes Clusters](https://www.vcluster.com/)
+("vClusters") out of the box.
+This is also an issue
+if the `schedulingGatesEnabled` Helm chart value is set to `false`
+for Kubernetes version 1.27 and later.
+See
+[Keptn integration with Scheduling](../architecture/components/scheduler.md)
+for details.
+
+To solve this problem:
+
+1. Follow the instructions in
+   [Separate vCluster Scheduler](https://www.vcluster.com/docs/architecture/scheduling#separate-vcluster-scheduler)
+   to modify the vCluster `values.yaml` file
+   to use a virtual scheduler.
+
+1. Create or upgrade the vCluster,
+   following the instructions in that same document.
+
+1. Follow the instructions in the section below
+   to install Keptn in that vCluster.

@@ -14,7 +14,7 @@ everything Kubernetes does in the context of a deployment.
 To do this,
 Keptn introduces the concept of an `application`,
 which is an abstraction that connects multiple
-Workloads that logically belong together,
+workloads that logically belong together,
 even if they use different deployment strategies.
 
 This means that:
@@ -47,7 +47,7 @@ This is the second of three exercises in the
 series:
 
 - In the
-  [Getting started with Keptn metrics](usecase_metrics.md)
+  [Getting started with Keptn metrics](../getting-started/metrics.md)
   exercise, you learn how to define and use Keptn metrics.
   You may want to complete that exercise before doing this exercise
   although that is not required.
@@ -55,7 +55,7 @@ series:
   [Manage release lifecycle](usecase-orchestrate.md),
   you learn how to implement
   pre- and post-deployment tasks and evaluations
-  to orchestrate the flow of all the `workloads`
+  to orchestrate the flow of all the [workloads](https://kubernetes.io/docs/concepts/workloads/)
   that are part of your `application`.
 
 This exercise shows how to standardize access
@@ -69,14 +69,14 @@ you need to do the following:
    [Install and update](../install)
    to install and enable Keptn on your cluster.
 1. Follow the instructions in
-   [Basic annotations](../implementing/integrate/#basic-annotations)
+   [Basic annotations](../implementing/integrate.md#basic-annotations)
    to integrate Keptn into your Kubernetes cluster
    by applying basic annotations
-   to your workload and pod resources.
+   to your [workload](https://kubernetes.io/docs/concepts/workloads/) resources.
    and to create appropriate
    [KeptnApp](../yaml-crd-ref/app.md)
    resources that aggregate
-   all the `workloads` for a logical deployment into a single resource.
+   all the [workloads](https://kubernetes.io/docs/concepts/workloads/) for a logical deployment into a single resource.
 
 ## DORA metrics
 
@@ -86,7 +86,7 @@ about your deployments.
 Keptn starts collecting these metrics
 as soon as you annotate the `Deployment` resource.
 See
-[DORA metrics](../implementing/dora)
+[DORA metrics](../implementing/dora.md)
 for more details.
 
 ## Using OpenTelemetry
@@ -116,7 +116,7 @@ which allows you to trace everything done in the context of that deployment.
 You can supplement the DORA Metrics and OpenTelemetry information
 with information you explicitly define using Keptn metrics.
 The
-[Getting started with Keptn metrics](usecase_metrics.md)
+[Getting started with Keptn metrics](../getting-started/metrics.md)
 exercise discusses how to define Keptn metrics.
 
 ## View the results
@@ -130,9 +130,10 @@ onto a dashboard of your choice:
 
 Note that, from the `KeptnApp` YAML file,
 you can either increment the version number of the application
-(which causes all workloads to be rerun and produce observability data)
-or you can increment the version number of a single workload,
-(which causes just that workload to be rerun and produce observability data).
+(which causes all [workloads](https://kubernetes.io/docs/concepts/workloads/) to be rerun and produce observability data)
+or you can increment the version number of a single [workload](https://kubernetes.io/docs/concepts/workloads/),
+(which causes just that [workload](https://kubernetes.io/docs/concepts/workloads/)
+to be rerun and produce observability data).
 
 The videos that go with this exercise show how the
 DORA, OpenTelemetry, and Keptn metrics information

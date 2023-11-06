@@ -101,7 +101,7 @@ API reference:
 A preliminary release of the Keptn Analysis feature
 is included in Keptn v0.8.3 and v0.9.0 but is hidden behind a feature flag.
 See the
-[Analysis](analysis/#differences-between-versions)
+[Analysis](analysis.md/#differences-between-versions)
 reference page for instructions to activate the preview of this feature.
 
 ## See also

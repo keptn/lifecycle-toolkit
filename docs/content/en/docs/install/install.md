@@ -74,7 +74,7 @@ as well as for upgrades.
 Some helpful hints:
 
 * Use the `--version <version>` flag on the
-  `helm upgrade --install` command line to specify a Keptn version
+  `helm upgrade --install` command to install a Keptn version
   other than the latest.
 
 * Use the following command sequence to see a list of available versions:

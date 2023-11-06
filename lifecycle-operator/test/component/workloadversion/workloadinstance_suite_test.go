@@ -44,7 +44,7 @@ var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
-	TracerFactory := &common.TracerFactory{Tracer: tracer}
+	tracerFactory := &common.TracerFactory{Tracer: tracer}
 	EvaluationHandler := evaluation.NewEvaluationHandler(
 		k8sManager.GetClient(),
 		controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller")),
@@ -63,7 +63,7 @@ var _ = BeforeSuite(func() {
 		Log:                    GinkgoLogr,
 		Meters:                 common.InitKeptnMeters(),
 		SpanHandler:            &telemetry.SpanHandler{},
-		TracerFactory:          &common.TracerFactory{Tracer: tracer},
+		TracerFactory:          tracerFactory,
 		EvaluationHandler:      EvaluationHandler,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())

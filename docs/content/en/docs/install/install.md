@@ -87,20 +87,8 @@ Some helpful hints:
     helm search repo keptn
     ```
 
-  The output should look like this:
-  ```
-  NAME                            CHART VERSION   APP VERSION     DESCRIPTION                                       
-  keptn/keptn                     0.3.0           v0.9.0          A Helm chart for Keptn Lifecycle Toolkit, a set...
-  keptn/keptn-cert-manager        0.2.0           v1.2.0          A Helm chart for Keptn Certificate Manager, a s...
-  keptn/keptn-lifecycle-operator  0.1.0           v0.8.3          A Helm chart for Keptn Lifecycle Operator, a su...
-  keptn/keptn-metrics-operator    0.1.0           v0.8.3          A Helm chart for Keptn Metrics Operator, a subp...
-  keptn/common                    0.1.0                           A Helm chart containing common templates for Keptn
-  keptn/klt                       0.2.6           v0.8.2          A Helm chart for Keptn Lifecycle Toolkit, a set...
-  ```
-
-  You see that the "CHART VERSION" for `keptn/keptn`
-  for v0.9.0 is 0.3.0
-  so the following command sequence explicitly installs Keptn v0.9.0.
+  You see that the "CHART VERSION" for `keptn/keptn` v0.9.0 is 0.3.0
+  so the following command sequence explicitly installs Keptn v0.9.0:
 
   ```shell
   helm repo add keptn https://charts.lifecycle.keptn.sh
@@ -110,9 +98,18 @@ Some helpful hints:
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
   ```
 
-* If you modify the `values.yaml` file for the umbrella chart
-  and/or the component sub-charts,
-  apply the modified configuration with the `-- values values.yaml` flag.
+  > **Note:** For versions prior to v0.9.0,
+    the Release `NAME` is `keptn/klt`;
+    use the corresponding CHART version to install an older release.
+  >
+
+* You can modify the `values.yaml` file for the umbrella chart
+  and/or the component sub-charts.
+  See
+  [Modify Helm configuration options](#modify-helm-configuration-options)
+  below.
+  You can then apply the modified configuration
+  with the `--values <values-filename.yaml>` flag.
   For example, if you created a `my.values.yaml`
   to exclude the `lifecycle-operator` from your cluster
   and created a `metrics.values.yaml` to modify the configuration

@@ -61,10 +61,10 @@ jobs:
 
       - name: Move old latest release documentation folder
         if: ${{ steps.folder.outputs.migrate }}
+        env:
+          FROM: "${{ env.PAGE_DIR }}/docs/content/en/docs"
+          TO: "${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.migrate }}"
         run: |
-          FROM="${{ env.PAGE_DIR }}/docs/content/en/docs"
-          TO="${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.migrate }}"
-          echo "Moving ${FROM} -> ${TO}"
           cp -R $FROM $TO
           rm -rf $FROM
 
@@ -74,11 +74,12 @@ jobs:
           cp ./docs/* "${{ env.PAGE_DIR }}/docs" || true
 
       - name: Copy documentation folder
+        env:
+          FOLDER: "${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.name}}"
         run: |
-          cp -R ./docs/content/en/docs "${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.name}}"
-          echo "${{ inputs.tag_name }}" > "${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.name}}/version"
-          FILE="${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.name}}/_index.md"
-          sed -i 's/currentversion: main/currentversion: ${{ inputs.tag_name }}/g' ${FILE}
+          cp -R ./docs/content/en/docs $FOLDER
+          echo "${{ inputs.tag_name }}" > "${FOLDER}/version"
+          sed -i 's/currentversion: main/currentversion: ${{ inputs.tag_name }}/g' "${FOLDER}/_index.md"
 
 
       - name: Push content

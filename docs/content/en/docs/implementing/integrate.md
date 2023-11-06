@@ -24,7 +24,7 @@ To integrate Keptn with your applications:
 Keptn on your cluster.
 * If you are using the `lifecycle-operator` component,
   [enable](../install/install.md/#enable-keptn-lifecycle-operator-observability-andor-release-lifecycle-management)
-  Keptn.
+  Keptn in your namespace.
 * Annotate or label your workloads
 with either Keptn or Kubernetes keys.
   * [Basic annotations](#basic-annotations)

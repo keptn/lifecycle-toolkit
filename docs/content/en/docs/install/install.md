@@ -274,7 +274,7 @@ or you can modify the `keptn/values.yaml` file:
 
 {{< embed path="/docs/content/en/docs/install/assets/values-remove-certmanager.yaml" >}}
 
-For more information on using `cert-manager` with Keptn, see
+For more information about using `cert-manager` with Keptn, see
 [Use Keptn with cert-manager.io](../operate/cert-manager.md).
 
 ## Customizing the configuration of components

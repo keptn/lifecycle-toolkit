@@ -6,9 +6,9 @@ require (
 	github.com/DataDog/datadog-api-client-go/v2 v2.18.0
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.3.0
-	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/mux v1.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20231030092256-f3bbb967e4aa
+	github.com/keptn/lifecycle-toolkit/klt-cert-manager v0.0.0-20231106070240-d2c3e148cd11
 	github.com/open-feature/go-sdk v1.8.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.17.0
@@ -24,7 +24,7 @@ require (
 	k8s.io/apiserver v0.28.3
 	k8s.io/client-go v0.28.3
 	k8s.io/component-base v0.28.3
-	k8s.io/klog/v2 v2.100.1
+	k8s.io/klog/v2 v2.110.1
 	k8s.io/metrics v0.28.3
 	sigs.k8s.io/controller-runtime v0.16.3
 	sigs.k8s.io/custom-metrics-apiserver v1.28.0

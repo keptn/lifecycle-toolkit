@@ -152,7 +152,7 @@ download a copy of the appropriate `values.yaml` file
 (see the table in the
 [Control what components are installed](#control-what-components-are-installed)
 section below).
-Edit the local copy of that `value.yaml` file to make the modifications,
+Edit the local copy of that `values.yaml` file to make the modifications,
 and use the modified file to install Keptn:
 
 1. Download the `values.yaml` file:

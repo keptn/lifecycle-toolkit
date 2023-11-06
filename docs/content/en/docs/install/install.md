@@ -92,7 +92,7 @@ Some helpful hints:
     ```
 
 * If you modify the `values.yaml` file for the umbrella chart
-  and/or the component sub-charts, 
+  and/or the component sub-charts,
   apply the modified configuration with the `values - values.yaml` flag.
   For example, if you created a `my.values.yaml`
   to exclude the `lifecycle-operator` from your cluster
@@ -104,6 +104,7 @@ Some helpful hints:
    --values my.values.yaml --values metrics.values.yaml \
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
   ```
+
   Note that you can specify multiple `--values` options in one command.
   The precedence is from right to left.
 

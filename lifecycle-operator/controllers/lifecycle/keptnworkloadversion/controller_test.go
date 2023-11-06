@@ -1377,7 +1377,20 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTrace
 		},
 	}
 
-	r, _, _ := setupReconciler(appVersion)
+	wv := &klcv1alpha4.KeptnWorkloadVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-app-my-workload-1.0",
+		},
+		Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
+				AppName: "my-app",
+				Version: "1.0",
+			},
+			WorkloadName: "my-app-my-workload",
+		},
+	}
+
+	r, _, _ := setupReconciler(appVersion, wv)
 
 	appVersion.Status = klcv1alpha3.KeptnAppVersionStatus{
 		PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
@@ -1389,6 +1402,38 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTrace
 	err := r.Client.Status().Update(context.TODO(), appVersion)
 
 	require.Nil(t, err)
+
+	requeue, err := r.checkPreEvaluationStatusOfApp(context.TODO(), wv)
+
+	require.False(t, requeue)
+	require.Nil(t, err)
+
+	err = r.Client.Get(context.TODO(), types.NamespacedName{Name: wv.Name}, wv)
+
+	require.Nil(t, err)
+
+	require.Equal(t, map[string]string{"traceparent": "parent-id"}, wv.Spec.TraceId)
+}
+
+func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTraceIDWithAppVersionSpecTraceID(t *testing.T) {
+	appVersion := &klcv1alpha3.KeptnAppVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-app-version",
+		},
+		Spec: klcv1alpha3.KeptnAppVersionSpec{
+			AppName: "my-app",
+			TraceId: map[string]string{"traceparent": "parent-id"},
+			KeptnAppSpec: klcv1alpha3.KeptnAppSpec{
+				Version: "1.0",
+				Workloads: []klcv1alpha3.KeptnWorkloadRef{
+					{
+						Name:    "my-workload",
+						Version: "1.0",
+					},
+				},
+			},
+		},
+	}
 
 	wv := &klcv1alpha4.KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
@@ -1403,11 +1448,78 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTrace
 		},
 	}
 
+	r, _, _ := setupReconciler(appVersion, wv)
+
+	appVersion.Status = klcv1alpha3.KeptnAppVersionStatus{
+		PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
+	}
+
+	err := r.Client.Status().Update(context.TODO(), appVersion)
+
 	requeue, err := r.checkPreEvaluationStatusOfApp(context.TODO(), wv)
 
 	require.False(t, requeue)
 	require.Nil(t, err)
 
-	// TODO check if status of WorkloadVersion was updated with trace id
-	// TODO WorkloadVersion has to be in cluster, otherwise this scenario will not work due to update of object
+	err = r.Client.Get(context.TODO(), types.NamespacedName{Name: wv.Name}, wv)
+
+	require.Nil(t, err)
+
+	require.Equal(t, map[string]string{"traceparent": "parent-id"}, wv.Spec.TraceId)
+}
+
+func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppErrorWhenUpdatingWorkloadVersion(t *testing.T) {
+	appVersion := &klcv1alpha3.KeptnAppVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-app-version",
+		},
+		Spec: klcv1alpha3.KeptnAppVersionSpec{
+			AppName: "my-app",
+			TraceId: map[string]string{"traceparent": "parent-id"},
+			KeptnAppSpec: klcv1alpha3.KeptnAppSpec{
+				Version: "1.0",
+				Workloads: []klcv1alpha3.KeptnWorkloadRef{
+					{
+						Name:    "my-workload",
+						Version: "1.0",
+					},
+				},
+			},
+		},
+	}
+
+	wv := &klcv1alpha4.KeptnWorkloadVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-app-my-workload-1.0",
+		},
+		Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
+				AppName: "my-app",
+				Version: "1.0",
+			},
+			WorkloadName: "my-app-my-workload",
+		},
+	}
+
+	r, _, _ := setupReconciler(appVersion, wv)
+
+	// inject an error into the fake client to return an error on update
+	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme.Scheme).WithInterceptorFuncs(interceptor.Funcs{
+		Update: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.UpdateOption) error {
+			return errors.New("unexpected error")
+		},
+	}).WithObjects(wv, appVersion).WithStatusSubresource(appVersion).Build()
+
+	r.Client = fakeClient
+
+	appVersion.Status = klcv1alpha3.KeptnAppVersionStatus{
+		PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
+	}
+
+	err := r.Client.Status().Update(context.TODO(), appVersion)
+
+	requeue, err := r.checkPreEvaluationStatusOfApp(context.TODO(), wv)
+
+	require.NotNil(t, err)
+	require.True(t, requeue)
 }

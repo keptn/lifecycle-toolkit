@@ -17,8 +17,8 @@ HUGO_ENABLEGITINFO = "true"
 
 [context.branch-deploy]
 
-[context.production.environment]
-HUGO_ENV = "production"
-
 [context.production]
 command = "hugo -b $URL"
+
+[context.production.environment]
+HUGO_ENV = "production"

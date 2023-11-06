@@ -7,7 +7,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 
 Keptn must be installed and integrated
 into each Kubernetes cluster you want to monitor.
-Keptn v.0.9.0 and later is installed using
+Keptn v0.9.0 and later is installed using
 an umbrella [Helm Chart](#basic-installation).
 This means that the Helm Chart that installs all of Keptn
 actually groups subcharts for individual services

@@ -228,8 +228,8 @@ then later add them in.
 If you only want to run the Keptn Observability
 and/or Release Lifecycle Management use-cases in your cluster,
 you do not need to install the Keptn Metrics Operator.
-To disable it, set the `metricsOperator` parameter
-in the `keptn/values.yaml` file to `disabled` as in the following:
+To disable it, set the `metricsOperator.enabled` value
+to `false` as in the following:
 
 {{< embed path="/docs/content/en/docs/install/assets/values-only-lifecycle.yaml" >}}
 

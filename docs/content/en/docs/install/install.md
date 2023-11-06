@@ -6,12 +6,8 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 ---
 
 Keptn must be installed onto each Kubernetes cluster you want to monitor.
-Additionally, Keptn needs to be enabled on certain namespaces.
-This is because Keptn communicates with the Kubernetes primitives
-for tasks such as enforcing checks natively,
-stopping a deployment from proceeding when criteria are not met,
-doing post-deployment evaluations
-and tracing all activities of all deployment [workloads](https://kubernetes.io/docs/concepts/workloads/) on the cluster.
+Additionally, Keptn needs to be enabled on your namespaces.
+This will give you flexibility in how and where you want to use Keptn.
 
 Keptn v0.9.0 and later is installed using [Helm](https://helm.sh/).
 
@@ -45,6 +41,20 @@ helm upgrade --install keptn keptn/keptn \
    -n keptn-system --create-namespace --wait
 ```
 
+If you want to use Keptn to observe your deployments, you must enable Keptn in your
+[Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+via annotations.
+For example, for the `testy-test` namespace:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: testy-test
+  annotations:
+    keptn.sh/lifecycle-toolkit: "enabled" # this tells Keptn to watch the namespace
+```
+
 Some helpful hints:
 
 * Use the `--version <version>` flag on the
@@ -65,20 +75,6 @@ Some helpful hints:
   ```
 
   The output shows all Keptn components that are running on your cluster.
-
-If you want to use Keptn to observe your deployments, you must enable Keptn in your
-[Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-via annotations.
-For example, for the `testy-test` namespace:
-
-```yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: testy-test
-  annotations:
-    keptn.sh/lifecycle-toolkit: "enabled" # this tells Keptn to watch the namespace
-```
 
 ## Customizing the configuration of components
 
@@ -121,29 +117,28 @@ Configuration options are specified using the format:
 --set key2=value2 ...
 ```
 
-The [helm-charts](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/README.md) page
+The [helm-chart](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/README.md) page
 contains the full list of available values.
 
 ## Control what components are installed
 
-Keptn consists of multiple operators, each of which enables a specific use-case.
-Each of the operator is packaged into a subchart of Keptn which can be configured individually.
+Keptn consists of multiple components, each of which enables a specific use-case.
+Each of the components is packaged into a subchart of Keptn which can be configured individually.
 
-The following table summarizes the Keptn umbrella chart scheme;
+The following table summarizes the Keptn umbrella chart scheme:
 
-| Component                                                                                                                  | Used for | Configuration file |
-|----------------------------------------------------------------------------------------------------------------------------| -------- | --------------------|
-| [Keptn](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/README.md)                           | Installs subcharts, global configuration | [keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml) |
-| [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/README.md) | [Observability](../implementing/otel.md), Lifecycle management [tasks](../implementing/tasks.md) and [evaluations](../implementing/evaluatemetrics.md) | [keptn-lifecycle-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/values.yaml) |
-| [metrics-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/README.md)    | [Keptn metrics](../implementing/evaluatemetrics.md), [Analysis](../implementing/slo.md) | [keptn-metrics-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/values.yaml) |
-| [cert-manager](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md)            | Configures TLS certificates | [keptn-cert-manager/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/values.yaml) |
+| Component                                                                                                                  | Used for                                                                                                                  | Configuration file |
+|----------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------| --------------------|
+| [Keptn](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/README.md)                           | Installs subcharts, global configuration                                                                                  | [keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml) |
+| [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/README.md) | [Observability](../implementing/otel.md), [Release Lifecycle Management](../intro/_index.md#release-lifecycle-management) | [keptn-lifecycle-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/values.yaml) |
+| [metrics-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/README.md)    | [Keptn metrics](../implementing/evaluatemetrics.md), [Analysis](../implementing/slo.md)                                   | [keptn-metrics-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/values.yaml) |
+| [cert-manager](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md)            | TLS Certificate management for all Keptn components                                                                       | [keptn-cert-manager/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/values.yaml) |
 
 By default, all components are included when you install Keptn.
 To specify the components that are included,
 you need to modify the Keptn `values.yaml` file.
-The following sections summarize the configurations needed for different use cases.
 
-Note that the umbrella scheme is quite flexible.
+Note that the Keptn Helm chart is quite flexible.
 You can install all Keptn components on your cluster,
 then modify the configuration to exclude some components
 and update your installation.

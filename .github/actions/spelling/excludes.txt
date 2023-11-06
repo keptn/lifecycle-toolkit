@@ -11,6 +11,7 @@ ignore$
 \.npmrc$
 \.png$
 \.jpg$
+\.ttf
 \.sav$
 \.sum$
 \.xlf$

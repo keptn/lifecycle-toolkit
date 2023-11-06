@@ -182,7 +182,7 @@ Configuration options are specified using the format:
 
 Keptn presents a toolkit composed of multiple operators,
 each of which enables a specific use-case.
-Keptn v.0.9 and later releases use an umbrella chart
+Keptn v0.9.0 and later releases use an umbrella Helm chart
 with separate charts for each operator.
 
 The installation command is always the same;

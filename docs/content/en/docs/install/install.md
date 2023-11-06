@@ -76,36 +76,58 @@ Some helpful hints:
 * Use the `--version <version>` flag on the
   `helm upgrade --install` command to install a Keptn version
   other than the latest.
-  For example,
+  You must specify the Chart Version of `keptn/keptn` here,
+  not the actual Keptn release number.
 
-  ```shell
-  helm upgrade --install keptn keptn/keptn \
-   --version version klt-v0.8.2 \
-   -n keptn-lifecycle-toolkit-system --create-namespace --wait
-  ```
-
-  * Use the following command sequence to see a list of available versions:
+  To get the appropriate chart version for the Keptn version you want,
+  use the following command sequence:
 
     ```shell
+    helm repo add keptn https://charts.lifecycle.keptn.sh
     helm repo update
     helm search repo keptn
     ```
 
+  The output should look like this:
+  ```
+  NAME                            CHART VERSION   APP VERSION     DESCRIPTION                                       
+  keptn/keptn                     0.3.0           v0.9.0          A Helm chart for Keptn Lifecycle Toolkit, a set...
+  keptn/keptn-cert-manager        0.2.0           v1.2.0          A Helm chart for Keptn Certificate Manager, a s...
+  keptn/keptn-lifecycle-operator  0.1.0           v0.8.3          A Helm chart for Keptn Lifecycle Operator, a su...
+  keptn/keptn-metrics-operator    0.1.0           v0.8.3          A Helm chart for Keptn Metrics Operator, a subp...
+  keptn/common                    0.1.0                           A Helm chart containing common templates for Keptn
+  keptn/klt                       0.2.6           v0.8.2          A Helm chart for Keptn Lifecycle Toolkit, a set...
+  ```
+
+  You see that the "CHART VERSION" for `keptn/keptn`
+  for v0.9.0 is 0.3.0
+  so the following command sequence explicitly installs Keptn v0.9.0.
+
+  ```shell
+  helm repo add keptn https://charts.lifecycle.keptn.sh
+  helm repo update
+  helm upgrade --install keptn keptn/keptn \
+   --version version 0.3.0 \
+   -n keptn-lifecycle-toolkit-system --create-namespace --wait
+  ```
+
 * If you modify the `values.yaml` file for the umbrella chart
   and/or the component sub-charts,
-  apply the modified configuration with the `values - values.yaml` flag.
+  apply the modified configuration with the `-- values values.yaml` flag.
   For example, if you created a `my.values.yaml`
   to exclude the `lifecycle-operator` from your cluster
   and created a `metrics.values.yaml` to modify the configuration
-  of the `metrics-operator`, the command is:
+  of the `metrics-operator`, the command sequence is:
 
   ```shell
+  helm repo add keptn https://charts.lifecycle.keptn.sh
+  helm repo update
   helm upgrade --install keptn keptn/keptn \
    --values my.values.yaml --values metrics.values.yaml \
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
   ```
 
-  Note that you can specify multiple `--values` options in one command.
+  You see that you can specify multiple `--values` options in one command.
   The precedence is from right to left.
 
 * To view which Keptn components are installed in your cluster

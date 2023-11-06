@@ -190,7 +190,7 @@ Keptn v.0.9 and later releases use an umbrella chart
 with separate charts for each operator.
 
 The installation command is always the same;
-only the content of the `value.yaml` file(s) changes:
+only the content of the `values.yaml` file(s) changes:
 
 * Use the Keptn umbrella `values.yaml` file to specify which components are installed
   and to set some global configuration parameters for Keptn

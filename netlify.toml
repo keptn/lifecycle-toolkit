@@ -20,5 +20,4 @@ HUGO_ENABLEGITINFO = "true"
 [context.production]
 command = "hugo -b $URL"
 
-[context.production.environment]
-HUGO_ENV = "production"
+environment = { HUGO_ENV = "production" }

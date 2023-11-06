@@ -63,7 +63,7 @@ var _ = BeforeSuite(func() {
 		Log:               GinkgoLogr,
 		Meters:            common.InitKeptnMeters(),
 		SpanHandler:       &telemetry.SpanHandler{},
-		TracerFactory:     &common.TracerFactory{Tracer: tracer},
+		TracerFactory:     tracerFactory,
 		EvaluationHandler: EvaluationHandler,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())

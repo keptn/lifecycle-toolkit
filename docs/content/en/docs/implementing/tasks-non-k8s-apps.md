@@ -12,15 +12,15 @@ for an application that is deployed on a virtual machine.
 
 To do this:
 
-1. [Install Keptn on a Kubernetes cluster](#install-keptn-on-a-kubernetes-cluster)
-1. [Create a KeptnTaskDefinition](#create-a-keptntaskdefinition)
-1. [Create and apply a KeptnTask](#create-and-apply-a-keptntask)
-1. [Re-run the KeptnTask](#re-run-the-keptntask)
+- [Install Keptn on a Kubernetes cluster](#install-keptn-on-a-kubernetes-cluster)
+- [Create a KeptnTaskDefinition](#create-a-keptntaskdefinition)
+- [Create and apply a KeptnTask](#create-and-apply-a-keptntask)
+- [Re-run the KeptnTask](#re-run-the-keptntask)
 
 ## Install Keptn on a Kubernetes cluster
 
 You must set up a Kubernetes cluster and
-[install](../install/install.md/#use-helm-chart)
+[install](../install/install.md/#basic-installation)
 Keptn on it,
 but this can be a very lightweight, single-node KinD cluster; see
 [Create local Kubernetes cluster](../install/k8s.md/#create-local-kubernetes-cluster).

@@ -13,8 +13,7 @@ stopping a deployment from proceeding when criteria are not met,
 doing post-deployment evaluations
 and tracing all activities of all deployment [workloads](https://kubernetes.io/docs/concepts/workloads/) on the cluster.
 
-Keptn v0.9.0 and later is installed using
-a [Helm Chart](#basic-installation).
+Keptn v0.9.0 and later is installed using [Helm](https://helm.sh/).
 
 > **Note** Earlier releases could also be installed using the manifest.
 > See
@@ -81,8 +80,17 @@ metadata:
     keptn.sh/lifecycle-toolkit: "enabled" # this tells Keptn to watch the namespace
 ```
 
+## Customizing the configuration of components
 
-## Modify Helm configuration options
+To modify configuration of the subcomponents of Keptn,
+use the corresponding Helm values in your main `values.yaml`.
+Use the subcomponent's parent value as the root for your configuration.
+
+Here is an example `values.yaml` altering global and metrics operator values:
+
+{{< docsembed path="content/en/docs/install/assets/values-advance-changes.yaml" >}}
+
+### Modify Helm configuration options
 
 Helm values can be modified before the installation.
 
@@ -142,103 +150,16 @@ and update your installation.
 Conversely, you can exclude some components when you install Keptn
 then later add them in.
 
-### Enable Keptn Lifecycle Operator (Observability)
-
-If you only want to run the Keptn Observability use-case in your cluster,
-you do not need to install the Keptn Metrics Operator.
-To disable it, modify the `keptn/values.yaml` file like this:
-
-{{< docsembed path="content/en/docs/install/assets/values-only-lifecycle.yaml" >}}
-
-After enabling Keptn for your namespace(s),
-you are ready to
-[Integrate Keptn with your applications](../implementing/integrate.md).
-
-For more information about implementing observability, see the
-[Observability User Guide](../implementing/otel.md).
-
-### Enable Keptn Metrics Operator (Metrics)
-
-If you are interested in Metrics, you do not need Keptn Lifecycle Operator.
-disable it using the following values.yaml:
-
-{{< docsembed path="content/en/docs/install/assets/values-only-metrics.yaml" >}}
-
-For more information about implementing Metrics, see the
-[Metrics User Guide](../implementing/evaluatemetrics.md).
-
-### Enable Keptn Analysis (SLOs/SLIs)
-
-To enable Keptn Analysis in your cluster, you again do not need the Keptn Lifcycle Operator,
-disable it using the following values.yaml:
-
-{{< docsembed path="content/en/docs/install/assets/values-only-metrics.yaml" >}}
-
-> **Note** The Analysis use-case is currently behind a feature flag.
-  To enable it, add the following to your `helm upgrade` command line:
-
-  ```shell
-  --set metricsOperator.env.enableKeptnAnalysis=true
-  ```
->
-
-For more information about implementing Keptn Analysis, see the
-[Analysis User Guide](../implementing/slo.md).
-
 ### Disable Keptn Certificate Manager (Certificates)
 
 If you wish to use your custom certificate manager,
-you can disable Keptn `cert-manager` by using the
-`--set " certificateManager.enabled=false"` argument
-to the `helm upgrade` command line
-or you can modify the `keptn/values.yaml` file:
+you can disable Keptn `cert-manager` by setting the
+`certificateManager.enabled` Helm value to `false`:
 
 {{< docsembed path="content/en/docs/install/assets/values-remove-certmanager.yaml" >}}
 
 For more information on using `cert-manager` with Keptn, see
 [Use Keptn with cert-manager.io](../operate/cert-manager.md).
 
-For more advanced installations configurations,see:
-
-* [CertificateManager-README](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md)
-
-## Customizing the configuration of components
-
-To access and modify the configuration of a subcomponent,
-modify the component's `values.yaml` file.
-You can use the sub-chart name
-as written in the `chart.yaml` file.
-The `README` file for each component documents the parameters
-that are supported for that component.
-
-Here is an example `values.yaml` altering metrics operator values:
-
-{{< docsembed path="content/en/docs/install/assets/values-advance-changes.yaml" >}}
-
-## Running Keptn with vCluster
-
-Keptn running on Kubernetes versions 1.26 and older
-uses a custom
-[scheduler](../architecture/components/scheduler.md),
-so it does not work with
-[Virtual Kubernetes Clusters](https://www.vcluster.com/)
-("vClusters") out of the box.
-This is also an issue
-if the `schedulingGatesEnabled` Helm chart value is set to `false`
-for Kubernetes version 1.27 and later.
-See
-[Keptn integration with Scheduling](../architecture/components/scheduler.md)
-for details.
-
-To solve this problem:
-
-1. Follow the instructions in
-   [Separate vCluster Scheduler](https://www.vcluster.com/docs/architecture/scheduling#separate-vcluster-scheduler)
-   to modify the vCluster `values.yaml` file
-   to use a virtual scheduler.
-
-1. Create or upgrade the vCluster,
-   following the instructions in that same document.
-
-1. Follow the instructions in the section below
-   to install Keptn in that vCluster.
+For the full list of Helm values, see the
+[keptn-cert-manager Helm chart README](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md).

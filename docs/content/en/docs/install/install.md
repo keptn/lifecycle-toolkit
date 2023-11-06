@@ -7,7 +7,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 
 Keptn must be installed and integrated
 into each Kubernetes cluster you want to monitor.
-Keptn v.0.9.0 and later is packaged as
+Keptn v.0.9.0 and later is installed using
 an umbrella [Helm Chart](#basic-installation).
 This means that the Helm Chart that installs all of Keptn
 actually groups subcharts for individual services
@@ -76,31 +76,54 @@ Some helpful hints:
 * Use the `--version <version>` flag on the
   `helm upgrade --install` command to install a Keptn version
   other than the latest.
-
-* Use the following command sequence to see a list of available versions:
+  For example,
 
   ```shell
-  helm repo update
-  helm search repo keptn
+  helm upgrade --install keptn keptn/keptn \
+   --version version klt-v0.8.2 \
+   -n keptn-lifecycle-toolkit-system --create-namespace --wait
+  ```
 
-* To verify that the Keptn components are installed in your cluster,
+  * Use the following command sequence to see a list of available versions:
+
+    ```shell
+    helm repo update
+    helm search repo keptn
+    ```
+
+* If you modify the `values.yaml` file for the umbrella chart
+  and/or the component sub-charts, 
+  apply the modified configuration with the `values - values.yaml` flag.
+  For example, if you created a `my.values.yaml`
+  to exclude the `lifecycle-operator` from your cluster
+  and created a `metrics.values.yaml` to modify the configuration
+  of the `metrics-operator`, the command is:
+
+  ```shell
+  helm upgrade --install keptn keptn/keptn \
+   --values my.values.yaml --values metrics.values.yaml \
+   -n keptn-lifecycle-toolkit-system --create-namespace --wait
+  ```
+  Note that you can specify multiple `--values` options in one command.
+  The precedence is from right to left.
+
+* To view which Keptn components are installed in your cluster
+  and verify that they are the correct ones,
   run the following command:
 
   ```shell
   kubectl get pods -n keptn-lifecycle-toolkit-system
   ```
 
-  The output shows all components that are running on your system.
-
 ## Modify Helm configuration options
 
 To modify the Keptn configuration,
-you must modify the appropriate Helm Chart.
-Helm chart values can be modified before the installation
+you must modify the appropriate `values.yaml` file.
+Values can be modified before the installation
 or can be modified and reapplied after the initial installation.
 This is useful if you do not want to install all components,
-if you need to change the size of the installation,
-or if you want to turn verbose logging on or off.
+if you need to modify the configuration in some way,
+such as to turn verbose logging on or off.
 
 To modify configuration options,
 download a copy of the appropriate `values.yaml` file

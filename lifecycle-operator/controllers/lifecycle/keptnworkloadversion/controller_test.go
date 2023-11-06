@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"go.opentelemetry.io/otel/propagation"
-	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 	"strings"
 	"testing"
 	"time"
@@ -22,6 +20,7 @@ import (
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
 	testrequire "github.com/stretchr/testify/require"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
@@ -32,6 +31,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
+	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
@@ -1456,6 +1456,8 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTrace
 
 	err := r.Client.Status().Update(context.TODO(), appVersion)
 
+	require.Nil(t, err)
+
 	requeue, err := r.checkPreEvaluationStatusOfApp(context.TODO(), wv)
 
 	require.False(t, requeue)
@@ -1517,6 +1519,8 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppErrorWhenUp
 	}
 
 	err := r.Client.Status().Update(context.TODO(), appVersion)
+
+	require.Nil(t, err)
 
 	requeue, err := r.checkPreEvaluationStatusOfApp(context.TODO(), wv)
 

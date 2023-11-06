@@ -76,7 +76,7 @@ func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status
 	crd, err := sMgr.GetCRD(ctx, pod.Namespace, name)
 
 	if err != nil {
-		klog.Infof("[Keptn Permit Plugin] could not find workloadVersion crd %s in namespace %s, err:%s", name, pod.GetObjectMeta().GetNamespace(), err.Error())
+		klog.Infof("[Keptn Permit Plugin] could not find workloadVersion crd %s in namespace %s, err: %s", name, pod.GetObjectMeta().GetNamespace(), err.Error())
 		return WorkloadVersionNotFound
 	}
 
@@ -84,7 +84,7 @@ func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status
 
 	//check CRD status
 	phase, found, err := unstructured.NestedString(crd.UnstructuredContent(), "status", "preDeploymentEvaluationStatus")
-	klog.Infof("[Keptn Permit Plugin] workloadVersion crd %s, found %s with phase %s ", crd, found, phase)
+	klog.Infof("[Keptn Permit Plugin] workloadVersion crd %s, found %t with phase %s ", crd, found, phase)
 	if err == nil && found {
 		span.AddEvent("StatusEvaluation", trace.WithAttributes(tracing.Status.String(phase)))
 		switch KeptnState(phase) {

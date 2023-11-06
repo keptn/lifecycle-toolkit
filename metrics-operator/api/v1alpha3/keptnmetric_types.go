@@ -55,6 +55,7 @@ type ProviderRef struct {
 // RangeSpec defines the time range for which data is to be queried
 type RangeSpec struct {
 	// Interval specifies the duration of the time interval for the data query
+	// +optional
 	// +kubebuilder:default:="5m"
 	Interval string `json:"interval,omitempty"`
 	// Step represents the query resolution step width for the data query

@@ -46,6 +46,7 @@ type KeptnWorkloadInstanceStatus struct {
 	// +kubebuilder:default:=Pending
 	DeploymentStatus common.KeptnState `json:"deploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
+	// +kubebuilder:validation:type:=string
 	PreDeploymentEvaluationStatus common.KeptnState `json:"preDeploymentEvaluationStatus,omitempty"`
 	// +kubebuilder:default:=Pending
 	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`

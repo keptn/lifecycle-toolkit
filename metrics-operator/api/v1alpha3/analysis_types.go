@@ -92,7 +92,6 @@ type Timeframe struct {
 	To metav1.Time `json:"to,omitempty"`
 	// Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' provides an Analysis
 	// for the last five minutes
-	// +optional
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
 	// +optional

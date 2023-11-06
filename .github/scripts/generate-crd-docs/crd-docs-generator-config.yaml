@@ -8,4 +8,20 @@ processor:
     - "TypeMeta$"
     - "EmptyStatus$"
 render:
-  kubernetesVersion: 1.24
+  kubernetesVersion: 1.28
+  knownTypes:
+    - name: Quantity
+      package: "k8s.io/apimachinery/pkg/api/resource"
+      link: https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity
+    - name: Time
+      package: "k8s.io/apimachinery/pkg/apis/meta/v1"
+      link: https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Time
+    - name: Duration
+      package: "k8s.io/apimachinery/pkg/apis/meta/v1"
+      link: https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration
+    - name: MapCarrier
+      package: "go.opentelemetry.io/otel/propagation"
+      link: https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier
+    - name: KeptnState
+      package: "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha1/common"
+      link: https://go.dev/ref/spec#String_types

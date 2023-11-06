@@ -72,7 +72,7 @@ jobs:
           FROM="${{ env.PAGE_DIR }}/docs/content/en/docs"
           TO="${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.migrate }}"
           echo "Moving ${FROM} -> ${TO}" 
-          cp -vR $FROM $TO
+          cp -R $FROM $TO
           rm -rf $FROM
 
       - name: Copy configuration
@@ -88,6 +88,7 @@ jobs:
 
       - name: Check results
         run: |
+          tree -d ${{ env.PAGE_DIR }}/docs/content/en/docs
           diff -r -q ./docs/content/en/docs ${{ env.PAGE_DIR }}/docs/content/en/docs
           # verify that the dev branch is exactly what we push to live
 

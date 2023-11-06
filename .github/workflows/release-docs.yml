@@ -78,7 +78,7 @@ jobs:
       - name: Copy configuration
         if: ${{ steps.folder.outputs.latest }}
         run: |
-          cp -R ./docs/. "${{ env.PAGE_DIR }}/docs"
+          cp ./docs/* "${{ env.PAGE_DIR }}/docs" || true
 
       - name: Copy documentation folder
         run: |

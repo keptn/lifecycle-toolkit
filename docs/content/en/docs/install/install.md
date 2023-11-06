@@ -48,9 +48,8 @@ After you install Keptn, you are ready to
 ## Basic installation
 
 Keptn is installed onto an existing Kubernetes cluster
-using an umbrella Helm Chart and standard
-[helm](https://helm.sh/docs/intro/cheatsheet/)
-commands.
+using a Helm Chart and standard
+[Helm commands](https://helm.sh/docs/intro/cheatsheet/).
 
 > **Note** Keptn works on virtually any type of Kubernetes cluster
   with some standard tools installed.

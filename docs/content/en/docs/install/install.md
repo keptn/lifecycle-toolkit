@@ -295,12 +295,11 @@ Disable it using the following values.yaml:
 
 {{< embed path="/docs/content/en/docs/install/assets/values-only-metrics.yaml" >}}
 
-> **Note** The Analysis use-case is currently behind a feature flag.
-  To enable it, add the following to your `helm upgrade` command line:
-
-  ```shell
-  --set metricsOperator.env.enableKeptnAnalysis=true
-  ```
+> **Note** A preliminary release of the Keptn Analysis feature
+  is included in Keptn v0.8.3 and v0.9.0 but is hidden behind a feature flag.
+  See the
+  [Analysis](../yaml-crd-ref/analysis/#differences-between-versions)
+  reference page for how to activate the preview of this feature.
 >
 
 For more information about implementing Keptn Analysis, see the

@@ -347,7 +347,7 @@ To preview these features, do one of the following for your Keptn cluster:
   file
 
 See
-[Modify Helm configuration options](../install/install/#modify-helm-configuration-options)
+[Modify Helm configuration options](../install/install.md/#modify-helm-configuration-options)
 for more information.
 
 ## See also

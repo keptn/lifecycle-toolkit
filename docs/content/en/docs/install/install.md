@@ -68,7 +68,7 @@ Some helpful hints:
   ```shell
   helm repo add keptn https://charts.lifecycle.keptn.sh
   helm repo update
-  helm search repo keptn
+  helm search repo keptn --versions
   ```
   
   You see that the "CHART VERSION" for `keptn/keptn` v0.9.0 is 0.3.0

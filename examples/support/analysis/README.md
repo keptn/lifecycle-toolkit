@@ -94,7 +94,7 @@ by following the instructions in the [observability-example](../observability/RE
 
 When you have done so, you also need to make sure that the podtato-head application is monitored by Prometheus by
 creating a Prometheus `ServiceMonitor`.
-Ths can be done by applying the manifest in `./config/service-monitor.yaml`:
+This can be done by applying the manifest in `./config/service-monitor.yaml`:
 
 ```shell
 kubectl apply -f ./config/service-monitor.yaml

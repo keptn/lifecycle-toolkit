@@ -42,7 +42,7 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]v1alpha3.ProviderResult
 		return result
 	}
 
-	// if target fullfilled warning criteria, we return the half score
+	// if target fulfilled warning criteria, we return the half score
 	if result.IsWarn() {
 		result.Score = float64(obj.Weight) / 2
 		return result

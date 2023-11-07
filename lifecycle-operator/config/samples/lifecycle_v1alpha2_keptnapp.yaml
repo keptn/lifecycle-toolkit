@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/name: keptnapp
     app.kubernetes.io/instance: keptnapp-sample
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    app.kuberentes.io/managed-by: kustomize
+    app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: keptn-lifecycle-toolkit
   name: keptnapp-sample
 spec:

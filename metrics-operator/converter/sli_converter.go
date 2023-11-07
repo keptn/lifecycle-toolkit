@@ -22,12 +22,12 @@ func NewSLIConverter() *SLIConverter {
 }
 
 func (c *SLIConverter) Convert(fileContent []byte, provider string, namespace string) (string, error) {
-	//check that provider and namespace is set
+	// check that provider and namespace is set
 	if err := c.validateInput(provider, namespace); err != nil {
 		return "", err
 	}
 
-	// unmarshall content
+	// unmarshal content
 	content := &SLI{}
 	err := yaml.Unmarshal(fileContent, content)
 	if err != nil {
@@ -99,7 +99,7 @@ func convertQuery(query string) string {
 	// followed by unlimited occurrences of uppercase letters and numbers
 	// examples: $LIST, $L, $L2T, $L555
 	re := regexp.MustCompile(`\$\b[A-Z][A-Z0-9]*\b`)
-	//get all substrings matching regex
+	// get all substrings matching regex
 	variables := re.FindAllStringSubmatch(query, -1)
 	if len(variables) == 0 {
 		return query

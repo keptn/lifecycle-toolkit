@@ -102,7 +102,7 @@ Here is an example `values.yaml` altering global and metrics operator values:
 
 {{< docsembed path="content/en/docs/install/assets/values-advance-changes.yaml" >}}
 
-Note the additional parameters that are specified
+Note the additional values that are specified
 in the `metricsOperator` section.
 These are documented in the README file for that operator,
 which is linked from the `metrics-operator` item under "Component"

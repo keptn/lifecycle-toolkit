@@ -303,6 +303,8 @@ jimmidyson
 jsonschema
 jwtkav
 kav
+kacr
+jwt
 kebabcase
 keda
 kelseyhightower
@@ -764,6 +766,7 @@ workdir
 workflows
 WORKLOADNAME
 WORKLOADOVERALLSTATUS
+workloadstate
 workloadstatus
 workloadversion
 workqueue

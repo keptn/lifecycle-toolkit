@@ -5,17 +5,16 @@ package fake
 
 import (
 	"context"
-	"sync"
-
 	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sync"
 )
 
-// ISpanHandlerMock is a mock implementation of common.ISpanHandler.
+// ISpanHandlerMock is a mock implementation of telemetry.ISpanHandler.
 //
 //	func TestSomethingThatUsesISpanHandler(t *testing.T) {
 //
-//		// make and configure a mocked common.ISpanHandler
+//		// make and configure a mocked telemetry.ISpanHandler
 //		mockedISpanHandler := &ISpanHandlerMock{
 //			GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 //				panic("mock out the GetSpan method")
@@ -25,7 +24,7 @@ import (
 //			},
 //		}
 //
-//		// use mockedISpanHandler in code that requires common.ISpanHandler
+//		// use mockedISpanHandler in code that requires telemetry.ISpanHandler
 //		// and then make assertions.
 //
 //	}

@@ -1,4 +1,4 @@
-package common
+package taskdefinition
 
 import (
 	"reflect"
@@ -11,15 +11,15 @@ import (
 
 func TestGetRuntimeImage(t *testing.T) {
 
-	t.Setenv(FunctionRuntimeImageKey, "js")
-	t.Setenv(PythonRuntimeImageKey, "python")
+	t.Setenv(FunctionRuntimeImageKey, FunctionScriptKey)
+	t.Setenv(PythonRuntimeImageKey, PythonScriptKey)
 	tests := []struct {
 		name string
 		def  *klcv1alpha3.KeptnTaskDefinition
 		want string
 	}{
 		{
-			name: "python",
+			name: PythonScriptKey,
 			def: &klcv1alpha3.KeptnTaskDefinition{
 				Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
 					Python: &klcv1alpha3.RuntimeSpec{
@@ -29,9 +29,9 @@ func TestGetRuntimeImage(t *testing.T) {
 					},
 				},
 			},
-			want: "python",
+			want: PythonScriptKey,
 		}, {
-			name: "js",
+			name: FunctionScriptKey,
 			def: &klcv1alpha3.KeptnTaskDefinition{
 				Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
 					Deno: &klcv1alpha3.RuntimeSpec{
@@ -41,7 +41,7 @@ func TestGetRuntimeImage(t *testing.T) {
 					},
 				},
 			},
-			want: "js",
+			want: FunctionScriptKey,
 		}, {
 			name: "default function",
 			def: &klcv1alpha3.KeptnTaskDefinition{
@@ -53,7 +53,7 @@ func TestGetRuntimeImage(t *testing.T) {
 					},
 				},
 			},
-			want: "js",
+			want: FunctionScriptKey,
 		},
 		{
 			name: "default and python defined, default wins",
@@ -71,7 +71,7 @@ func TestGetRuntimeImage(t *testing.T) {
 					},
 				},
 			},
-			want: "js",
+			want: FunctionScriptKey,
 		},
 		{
 			name: "deno and python defined, deno wins",
@@ -89,7 +89,7 @@ func TestGetRuntimeImage(t *testing.T) {
 					},
 				},
 			},
-			want: "js",
+			want: FunctionScriptKey,
 		},
 	}
 	for _, tt := range tests {
@@ -108,7 +108,7 @@ func TestGetRuntimeSpec(t *testing.T) {
 		want *klcv1alpha3.RuntimeSpec
 	}{
 		{
-			name: "python",
+			name: PythonScriptKey,
 			def: &klcv1alpha3.KeptnTaskDefinition{
 				Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
 					Python: &klcv1alpha3.RuntimeSpec{
@@ -125,7 +125,7 @@ func TestGetRuntimeSpec(t *testing.T) {
 			},
 		},
 		{
-			name: "js",
+			name: FunctionScriptKey,
 			def: &klcv1alpha3.KeptnTaskDefinition{
 				Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
 					Deno: &klcv1alpha3.RuntimeSpec{
@@ -255,7 +255,7 @@ func TestGetRuntimeMountPath(t *testing.T) {
 			want: FunctionScriptMountPath,
 		},
 		{
-			name: "python",
+			name: PythonScriptKey,
 			def: &klcv1alpha3.KeptnTaskDefinition{
 				Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
 					Python: &klcv1alpha3.RuntimeSpec{

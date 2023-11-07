@@ -1,4 +1,4 @@
-package common
+package schedulinggate
 
 import (
 	"context"
@@ -21,7 +21,7 @@ type ISchedulingGatesHandler interface {
 type RemoveGatesFunc func(ctx context.Context, c client.Client, podName string, podNamespace string) error
 type GetPodsFunc func(ctx context.Context, c client.Client, ownerUID types.UID, ownerKind string, namespace string) ([]string, error)
 
-type SchedulingGatesHandler struct {
+type Handler struct {
 	client.Client
 	logr.Logger
 	enabled     bool
@@ -29,8 +29,8 @@ type SchedulingGatesHandler struct {
 	getPods     GetPodsFunc
 }
 
-func NewSchedulingGatesHandler(c client.Client, l logr.Logger, enabled bool) *SchedulingGatesHandler {
-	return &SchedulingGatesHandler{
+func NewHandler(c client.Client, l logr.Logger, enabled bool) *Handler {
+	return &Handler{
 		Client:      c,
 		Logger:      l,
 		enabled:     enabled,
@@ -39,7 +39,7 @@ func NewSchedulingGatesHandler(c client.Client, l logr.Logger, enabled bool) *Sc
 	}
 }
 
-func (h *SchedulingGatesHandler) RemoveGates(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error {
+func (h *Handler) RemoveGates(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error {
 	switch workloadVersion.Spec.ResourceReference.Kind {
 	case "Pod":
 		return h.removeGates(ctx, h.Client, workloadVersion.Spec.ResourceReference.Name, workloadVersion.Namespace)
@@ -63,7 +63,7 @@ func (h *SchedulingGatesHandler) RemoveGates(ctx context.Context, workloadVersio
 	return nil
 }
 
-func (h *SchedulingGatesHandler) Enabled() bool {
+func (h *Handler) Enabled() bool {
 	return h.enabled
 }
 

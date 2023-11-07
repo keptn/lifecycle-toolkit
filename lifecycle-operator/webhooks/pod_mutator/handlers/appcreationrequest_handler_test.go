@@ -9,8 +9,8 @@ import (
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -29,7 +29,7 @@ var errAppCreate = errors.New("bad")
 
 func TestAppHandlerHandle(t *testing.T) {
 
-	mockEventSender := common.NewK8sSender(record.NewFakeRecorder(100))
+	mockEventSender := eventsender.NewK8sSender(record.NewFakeRecorder(100))
 	log := testr.New(t)
 
 	pod := &corev1.Pod{
@@ -68,13 +68,13 @@ func TestAppHandlerHandle(t *testing.T) {
 		{
 			name:    "Create AppCreationRequest inherit from workload",
 			pod:     pod,
-			client:  fake.NewClient(),
+			client:  testcommon.NewTestClient(),
 			wantReq: singleServiceCreationReq,
 		},
 		{
 			name:    "AppCreationRequest already exists",
 			pod:     pod,
-			client:  fake.NewClient(singleServiceCreationReq),
+			client:  testcommon.NewTestClient(singleServiceCreationReq),
 			wantReq: singleServiceCreationReq,
 		},
 		{
@@ -89,7 +89,7 @@ func TestAppHandlerHandle(t *testing.T) {
 						apicommon.VersionAnnotation:  "0.1",
 					},
 				}},
-			client: fake.NewClient(),
+			client: testcommon.NewTestClient(),
 			wantReq: &klcv1alpha3.KeptnAppCreationRequest{
 				TypeMeta: metav1.TypeMeta{
 					Kind:       "KeptnAppCreationRequest",
@@ -153,9 +153,9 @@ func TestAppHandlerHandle(t *testing.T) {
 }
 
 func TestAppHandlerCreateAppSucceeds(t *testing.T) {
-	fakeClient := fake.NewClient()
+	fakeClient := testcommon.NewTestClient()
 	logger := logr.Discard()
-	eventSender := common.NewK8sSender(record.NewFakeRecorder(100))
+	eventSender := eventsender.NewK8sSender(record.NewFakeRecorder(100))
 
 	appHandler := &AppCreationRequestHandler{
 		Client:      fakeClient,
@@ -178,9 +178,9 @@ func TestAppHandlerCreateAppSucceeds(t *testing.T) {
 }
 
 func TestAppHandlerCreateAppFails(t *testing.T) {
-	fakeClient := fake.NewClient()
+	fakeClient := testcommon.NewTestClient()
 	logger := logr.Discard()
-	eventSender := common.NewK8sSender(record.NewFakeRecorder(100))
+	eventSender := eventsender.NewK8sSender(record.NewFakeRecorder(100))
 
 	appHandler := &AppCreationRequestHandler{
 		Client:      fakeClient,

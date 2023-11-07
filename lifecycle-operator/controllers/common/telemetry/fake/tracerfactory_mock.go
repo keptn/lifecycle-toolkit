@@ -4,23 +4,22 @@
 package fake
 
 import (
-	"sync"
-
 	"go.opentelemetry.io/otel/trace"
+	"sync"
 )
 
-// TracerFactoryMock is a mock implementation of interfaces.TracerFactory.
+// TracerFactoryMock is a mock implementation of telemetry.TracerFactory.
 //
 //	func TestSomethingThatUsesTracerFactory(t *testing.T) {
 //
-//		// make and configure a mocked interfaces.TracerFactory
+//		// make and configure a mocked telemetry.TracerFactory
 //		mockedTracerFactory := &TracerFactoryMock{
 //			GetTracerFunc: func(name string) trace.Tracer {
 //				panic("mock out the GetTracer method")
 //			},
 //		}
 //
-//		// use mockedTracerFactory in code that requires interfaces.TracerFactory
+//		// use mockedTracerFactory in code that requires telemetry.TracerFactory
 //		// and then make assertions.
 //
 //	}

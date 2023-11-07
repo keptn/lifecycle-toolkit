@@ -7,7 +7,7 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
 	admissionv1 "k8s.io/api/admission/v1"
 	appsv1 "k8s.io/api/apps/v1"
@@ -99,7 +99,7 @@ func TestCopyAnnotationsIfParentAnnotated(t *testing.T) {
 		},
 	}
 
-	fakeClient := fakeclient.NewClient(rsWithDpOwner, rsWithNoOwner, testDp, testSts, testDs)
+	fakeClient := testcommon.NewTestClient(rsWithDpOwner, rsWithNoOwner, testDp, testSts, testDs)
 
 	type fields struct {
 		Client client.Client
@@ -310,7 +310,7 @@ func TestIsAnnotated(t *testing.T) {
 		},
 	}
 
-	fakeClient := fakeclient.NewClient(rsWithDpOwner, rsWithNoOwner, testDp)
+	fakeClient := testcommon.NewTestClient(rsWithDpOwner, rsWithNoOwner, testDp)
 
 	type fields struct {
 		Client client.Client

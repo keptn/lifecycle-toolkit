@@ -6,9 +6,9 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
-	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
 	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
@@ -29,7 +29,7 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 	cm := makeConfigMap(cmName, namespace)
 
 	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, namespace, cmName)
-	fakeClient := fakeclient.NewClient(cm, taskDefinition)
+	fakeClient := testcommon.NewTestClient(cm, taskDefinition)
 
 	taskDefinition.Status.Function.ConfigMap = cmName
 	err := fakeClient.Status().Update(context.TODO(), taskDefinition)
@@ -37,7 +37,7 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
 	}
@@ -94,7 +94,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	cm := makeConfigMap(cmName, namespace)
 	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, KeptnNamespace, cmName)
 
-	fakeClient := fakeclient.NewClient(cm, taskDefinition)
+	fakeClient := testcommon.NewTestClient(cm, taskDefinition)
 
 	taskDefinition.Status.Function.ConfigMap = cmName
 	err := fakeClient.Status().Update(context.TODO(), taskDefinition)
@@ -103,7 +103,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	config.Instance().SetDefaultNamespace(KeptnNamespace)
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
 	}
@@ -173,7 +173,7 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
 	}
@@ -210,12 +210,12 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 
 	taskDefinition := makeTaskDefinitionWithServiceAccount(taskDefinitionName, namespace, svcAccname, &token)
 	taskDefinition.Spec.ServiceAccount.Name = svcAccname
-	fakeClient := fakeclient.NewClient(taskDefinition)
+	fakeClient := testcommon.NewTestClient(taskDefinition)
 	task := makeTask(taskName, namespace, taskDefinitionName)
 
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
 	}

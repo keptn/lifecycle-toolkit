@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
@@ -40,7 +40,7 @@ var _ = BeforeSuite(func() {
 	controller := &keptnworkload.KeptnWorkloadReconciler{
 		Client:        k8sManager.GetClient(),
 		Scheme:        k8sManager.GetScheme(),
-		EventSender:   controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-workload-controller")),
+		EventSender:   eventsender.NewK8sSender(k8sManager.GetEventRecorderFor("test-workload-controller")),
 		Log:           GinkgoLogr,
 		TracerFactory: &common.TracerFactory{Tracer: tracer},
 	}

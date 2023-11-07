@@ -8,6 +8,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"golang.org/x/net/context"
 	corev1 "k8s.io/api/core/v1"
@@ -214,7 +215,7 @@ func (fb *RuntimeBuilder) handleParent(ctx context.Context, params *RuntimeExecu
 		fb.options.eventSender.Emit(apicommon.PhaseCreateTask, "Warning", fb.options.task, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", fb.options.task.Spec.TaskDefinition), "")
 		return err
 	}
-	parSpec := controllercommon.GetRuntimeSpec(parentDefinition)
+	parSpec := taskdefinition.GetRuntimeSpec(parentDefinition)
 	// if the parent has also another parent, the data from the grandparent are alredy copied to the parent and therefore parent can copy it's data to the child
 	parentJobParams, _, err = fb.parseRuntimeTaskDefinition(parSpec, parentDefinition.Name, parentDefinition.Namespace, parentDefinition.Status.Function.ConfigMap)
 	if err != nil {
@@ -232,8 +233,8 @@ func (fb *RuntimeBuilder) handleParent(ctx context.Context, params *RuntimeExecu
 	params.ConfigMap = parentDefinition.Status.Function.ConfigMap
 
 	// rewrite image and mount based on parent
-	params.Image = controllercommon.GetRuntimeImage(parentDefinition)
-	params.MountPath = controllercommon.GetRuntimeMountPath(parentDefinition)
+	params.Image = taskdefinition.GetRuntimeImage(parentDefinition)
+	params.MountPath = taskdefinition.GetRuntimeMountPath(parentDefinition)
 
 	return nil
 }

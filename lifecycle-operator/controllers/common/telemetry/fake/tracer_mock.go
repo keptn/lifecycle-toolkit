@@ -5,23 +5,22 @@ package fake
 
 import (
 	"context"
-	"sync"
-
 	"go.opentelemetry.io/otel/trace"
+	"sync"
 )
 
-// ITracerMock is a mock implementation of interfaces.ITracer.
+// ITracerMock is a mock implementation of telemetry.ITracer.
 //
 //	func TestSomethingThatUsesITracer(t *testing.T) {
 //
-//		// make and configure a mocked interfaces.ITracer
+//		// make and configure a mocked telemetry.ITracer
 //		mockedITracer := &ITracerMock{
 //			StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 //				panic("mock out the Start method")
 //			},
 //		}
 //
-//		// use mockedITracer in code that requires interfaces.ITracer
+//		// use mockedITracer in code that requires telemetry.ITracer
 //		// and then make assertions.
 //
 //	}

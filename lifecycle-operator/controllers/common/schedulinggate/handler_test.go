@@ -1,4 +1,4 @@
-package common
+package schedulinggate
 
 import (
 	"context"
@@ -209,7 +209,7 @@ func Test_GetPodsOfOwner(t *testing.T) {
 }
 
 func Test_SchedulingGatesHandler_IsSchedulingGatesEnabled(t *testing.T) {
-	h := SchedulingGatesHandler{
+	h := Handler{
 		enabled: true,
 	}
 
@@ -223,13 +223,13 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabled(t *testing.T) {
 func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.T) {
 	tests := []struct {
 		name    string
-		handler SchedulingGatesHandler
+		handler Handler
 		wi      *klcv1alpha4.KeptnWorkloadVersion
 		wantErr error
 	}{
 		{
 			name:    "unsuported resource ref",
-			handler: SchedulingGatesHandler{},
+			handler: Handler{},
 			wi: &klcv1alpha4.KeptnWorkloadVersion{
 				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
 					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
@@ -243,7 +243,7 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 		},
 		{
 			name: "pod - happy path",
-			handler: SchedulingGatesHandler{
+			handler: Handler{
 				removeGates: func(ctx context.Context, c client.Client, podName, podNamespace string) error {
 					return nil
 				},
@@ -261,7 +261,7 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 		},
 		{
 			name: "pod - fail path",
-			handler: SchedulingGatesHandler{
+			handler: Handler{
 				removeGates: func(ctx context.Context, c client.Client, podName, podNamespace string) error {
 					return fmt.Errorf("pod")
 				},
@@ -279,7 +279,7 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 		},
 		{
 			name: "ReplicaSet, StatefulSet, DaemonSet - happy path",
-			handler: SchedulingGatesHandler{
+			handler: Handler{
 				removeGates: func(ctx context.Context, c client.Client, podName, podNamespace string) error {
 					return nil
 				},
@@ -300,7 +300,7 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 		},
 		{
 			name: "ReplicaSet, StatefulSet, DaemonSet - happy path - no pods found",
-			handler: SchedulingGatesHandler{
+			handler: Handler{
 				getPods: func(ctx context.Context, c client.Client, ownerUID types.UID, ownerKind, namespace string) ([]string, error) {
 					return []string{}, nil
 				},
@@ -318,7 +318,7 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 		},
 		{
 			name: "ReplicaSet, StatefulSet, DaemonSet - happy path - err getPods",
-			handler: SchedulingGatesHandler{
+			handler: Handler{
 				getPods: func(ctx context.Context, c client.Client, ownerUID types.UID, ownerKind, namespace string) ([]string, error) {
 					return []string{}, fmt.Errorf("err")
 				},
@@ -336,7 +336,7 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 		},
 		{
 			name: "ReplicaSet, StatefulSet, DaemonSet - err removeGates",
-			handler: SchedulingGatesHandler{
+			handler: Handler{
 				removeGates: func(ctx context.Context, c client.Client, podName, podNamespace string) error {
 					return fmt.Errorf("err")
 				},

@@ -10,11 +10,13 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
-	evalfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	evaluationfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	schedulinggatefake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggate/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
+	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
@@ -38,7 +40,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedReplicaSet(t *
 	replicasetFail := makeReplicaSet("myrep", "default", &rep, 0)
 	workloadVersion := makeWorkloadVersionWithRef(replicasetFail.ObjectMeta, "ReplicaSet")
 
-	fakeClient := fake.NewClient(replicasetFail, workloadVersion)
+	fakeClient := testcommon.NewTestClient(replicasetFail, workloadVersion)
 
 	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
@@ -56,7 +58,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableReplicaSe
 	workloadVersion := makeWorkloadVersionWithRef(replicasetFail.ObjectMeta, "ReplicaSet")
 
 	// do not put the ReplicaSet into the cluster
-	fakeClient := fake.NewClient(workloadVersion)
+	fakeClient := testcommon.NewTestClient(workloadVersion)
 
 	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
@@ -73,7 +75,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedStatefulSet(t 
 	statefulsetFail := makeStatefulSet("mystat", "default", &rep, 0)
 	workloadVersion := makeWorkloadVersionWithRef(statefulsetFail.ObjectMeta, "StatefulSet")
 
-	fakeClient := fake.NewClient(statefulsetFail, workloadVersion)
+	fakeClient := testcommon.NewTestClient(statefulsetFail, workloadVersion)
 	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
 	}
@@ -90,7 +92,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableStatefulS
 	workloadVersion := makeWorkloadVersionWithRef(statefulSetFail.ObjectMeta, "StatefulSet")
 
 	// do not put the StatefulSet into the cluster
-	fakeClient := fake.NewClient(workloadVersion)
+	fakeClient := testcommon.NewTestClient(workloadVersion)
 
 	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
@@ -106,7 +108,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedDaemonSet(t *t
 	daemonSetFail := makeDaemonSet("mystat", "default", 1, 0)
 	workloadVersion := makeWorkloadVersionWithRef(daemonSetFail.ObjectMeta, "DaemonSet")
 
-	fakeClient := fake.NewClient(daemonSetFail, workloadVersion)
+	fakeClient := testcommon.NewTestClient(daemonSetFail, workloadVersion)
 
 	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
@@ -122,7 +124,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableDaemonSet
 	workloadVersion := makeWorkloadVersionWithRef(daemonSetFail.ObjectMeta, "DaemonSet")
 
 	// do not put the DaemonSet into the cluster
-	fakeClient := fake.NewClient(workloadVersion)
+	fakeClient := testcommon.NewTestClient(workloadVersion)
 
 	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
@@ -139,7 +141,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyReplicaSet(t *t
 	replicaSet := makeReplicaSet("myrep", "default", &rep, 1)
 	workloadVersion := makeWorkloadVersionWithRef(replicaSet.ObjectMeta, "ReplicaSet")
 
-	fakeClient := fake.NewClient(replicaSet, workloadVersion)
+	fakeClient := testcommon.NewTestClient(replicaSet, workloadVersion)
 
 	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
@@ -156,7 +158,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyStatefulSet(t *
 	statefulSet := makeStatefulSet("mystat", "default", &rep, 1)
 	workloadVersion := makeWorkloadVersionWithRef(statefulSet.ObjectMeta, "StatefulSet")
 
-	fakeClient := fake.NewClient(statefulSet, workloadVersion)
+	fakeClient := testcommon.NewTestClient(statefulSet, workloadVersion)
 
 	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
@@ -172,7 +174,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyDaemonSet(t *te
 	daemonSet := makeDaemonSet("mystat", "default", 1, 1)
 	workloadVersion := makeWorkloadVersionWithRef(daemonSet.ObjectMeta, "DaemonSet")
 
-	fakeClient := fake.NewClient(daemonSet, workloadVersion)
+	fakeClient := testcommon.NewTestClient(daemonSet, workloadVersion)
 
 	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
@@ -186,7 +188,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyDaemonSet(t *te
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnsupportedReferenceKind(t *testing.T) {
 
 	workloadVersion := makeWorkloadVersionWithRef(metav1.ObjectMeta{}, "Unknown")
-	fakeClient := fake.NewClient(workloadVersion)
+	fakeClient := testcommon.NewTestClient(workloadVersion)
 	r := &KeptnWorkloadVersionReconciler{
 		Client: fakeClient,
 	}
@@ -766,7 +768,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 		},
 	}
 
-	app := controllercommon.ReturnAppVersion(
+	app := testcommon.ReturnAppVersion(
 		testNamespace,
 		"some-app",
 		"1.0.0",
@@ -781,7 +783,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 		},
 	)
 	r, eventChannel, _ := setupReconciler(wi, app)
-	r.SchedulingGatesHandler = &fake.ISchedulingGatesHandlerMock{
+	r.SchedulingGatesHandler = &schedulinggatefake.ISchedulingGatesHandlerMock{
 		EnabledFunc: func() bool {
 			return false
 		},
@@ -847,7 +849,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion_SchedulingGates
 		},
 	}
 
-	app := controllercommon.ReturnAppVersion(
+	app := testcommon.ReturnAppVersion(
 		testNamespace,
 		"some-app",
 		"1.0.0",
@@ -862,7 +864,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion_SchedulingGates
 		},
 	)
 
-	schedulingGatesMock := &fake.ISchedulingGatesHandlerMock{
+	schedulingGatesMock := &schedulinggatefake.ISchedulingGatesHandlerMock{
 		RemoveGatesFunc: func(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error {
 			return nil
 		},
@@ -938,7 +940,7 @@ func TestKeptnWorkloadVersionReconciler_RemoveGates_fail(t *testing.T) {
 		},
 	}
 
-	app := controllercommon.ReturnAppVersion(
+	app := testcommon.ReturnAppVersion(
 		testNamespace,
 		"some-app",
 		"1.0.0",
@@ -953,7 +955,7 @@ func TestKeptnWorkloadVersionReconciler_RemoveGates_fail(t *testing.T) {
 		},
 	)
 	r, _, _ := setupReconciler(wi, app)
-	r.SchedulingGatesHandler = &fake.ISchedulingGatesHandlerMock{
+	r.SchedulingGatesHandler = &schedulinggatefake.ISchedulingGatesHandlerMock{
 		RemoveGatesFunc: func(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error {
 			return fmt.Errorf("err")
 		},
@@ -1017,7 +1019,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 		},
 	}
 
-	app := controllercommon.ReturnAppVersion(
+	app := testcommon.ReturnAppVersion(
 
 		testNamespace,
 		"some-app",
@@ -1092,7 +1094,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileDoNotRetryAfterFailedPhase(t *t
 	// simulate a KWI that has been cancelled due to a failed pre deployment check
 	wi.DeprecateRemainingPhases(apicommon.PhaseWorkloadPreDeployment)
 
-	app := controllercommon.ReturnAppVersion(
+	app := testcommon.ReturnAppVersion(
 		testNamespace,
 		"some-app",
 		"1.0.0",
@@ -1127,7 +1129,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileDoNotRetryAfterFailedPhase(t *t
 
 }
 
-func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, chan string, *fake.ITracerMock) {
+func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, chan string, *telemetryfake.ITracerMock) {
 	// setup logger
 	opts := zap.Options{
 		Development: true,
@@ -1135,26 +1137,27 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, ch
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	// fake a tracer
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &telemetryfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	tf := &fake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
 		return tr
 	}}
 
-	fakeClient := fake.NewClient(objs...)
+	fakeClient := testcommon.NewTestClient(objs...)
+
 	recorder := record.NewFakeRecorder(100)
 
 	r := &KeptnWorkloadVersionReconciler{
 		Client:        fakeClient,
 		Scheme:        scheme.Scheme,
-		EventSender:   controllercommon.NewK8sSender(recorder),
+		EventSender:   eventsender.NewK8sSender(recorder),
 		Log:           ctrl.Log.WithName("test-appController"),
-		Meters:        controllercommon.InitAppMeters(),
-		SpanHandler:   &telemetry.SpanHandler{},
+		Meters:        testcommon.InitAppMeters(),
+		SpanHandler:   &telemetry.Handler{},
 		TracerFactory: tf,
-		EvaluationHandler: &evalfake.MockEvaluationHandler{
+		EvaluationHandler: &evaluationfake.MockEvaluationHandler{
 			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
 				return []klcv1alpha3.ItemStatus{}, apicommon.StatusSummary{}, nil
 			},

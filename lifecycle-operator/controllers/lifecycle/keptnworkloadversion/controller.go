@@ -59,6 +59,7 @@ type KeptnWorkloadVersionReconciler struct {
 	TracerFactory          telemetry.TracerFactory
 	SchedulingGatesHandler schedulinggates.ISchedulingGatesHandler
 	EvaluationHandler      evaluation.IEvaluationHandler
+	PhaseHandler           phase.IHandler
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions,verbs=get;list;watch;create;update;patch;delete
@@ -105,13 +106,6 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	appTraceContextCarrier := propagation.MapCarrier(workloadVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
 
-	phaseHandler := phase.Handler{
-		Client:      r.Client,
-		EventSender: r.EventSender,
-		Log:         r.Log,
-		SpanHandler: r.SpanHandler,
-	}
-
 	// this will be the parent span for all phases of the WorkloadVersion
 	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), workloadVersion, "")
 	if err != nil {
@@ -123,12 +117,12 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	}
 
 	// Wait for pre-deployment checks of Workload
-	if result, err := r.doPreDeploymentTaskPhase(ctx, workloadVersion, phaseHandler, ctxWorkloadTrace); !result.Continue {
+	if result, err := r.doPreDeploymentTaskPhase(ctx, workloadVersion, ctxWorkloadTrace); !result.Continue {
 		return result.Result, err
 	}
 
 	// Wait for pre-evaluation checks of Workload
-	if result, err := r.doPreDeploymentEvaluationPhase(ctx, workloadVersion, phaseHandler, ctxWorkloadTrace); !result.Continue {
+	if result, err := r.doPreDeploymentEvaluationPhase(ctx, workloadVersion, ctxWorkloadTrace); !result.Continue {
 		return result.Result, err
 	}
 
@@ -141,17 +135,17 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	}
 
 	// Wait for deployment of Workload
-	if result, err := r.doDeploymentPhase(ctx, workloadVersion, phaseHandler, ctxWorkloadTrace); !result.Continue {
+	if result, err := r.doDeploymentPhase(ctx, workloadVersion, ctxWorkloadTrace); !result.Continue {
 		return result.Result, err
 	}
 
 	// Wait for post-deployment checks of Workload
-	if result, err := r.doPostDeploymentTaskPhase(ctx, workloadVersion, phaseHandler, ctxWorkloadTrace); !result.Continue {
+	if result, err := r.doPostDeploymentTaskPhase(ctx, workloadVersion, ctxWorkloadTrace); !result.Continue {
 		return result.Result, err
 	}
 
 	// Wait for post-evaluation checks of Workload
-	if result, err := r.doPostDeploymentEvaluationPhase(ctx, workloadVersion, phaseHandler, ctxWorkloadTrace); !result.Continue {
+	if result, err := r.doPostDeploymentEvaluationPhase(ctx, workloadVersion, ctxWorkloadTrace); !result.Continue {
 		return result.Result, err
 	}
 
@@ -159,12 +153,12 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	return r.finishKeptnWorkloadVersionReconcile(ctx, workloadVersion, spanWorkloadTrace)
 }
 
-func (r *KeptnWorkloadVersionReconciler) doPreDeploymentTaskPhase(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, phaseHandler phase.Handler, ctxWorkloadTrace context.Context) (*phase.PhaseResult, error) {
+func (r *KeptnWorkloadVersionReconciler) doPreDeploymentTaskPhase(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
 	if !workloadVersion.IsPreDeploymentSucceeded() {
 		reconcilePre := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadVersion, apicommon.PreDeploymentCheckType)
 		}
-		return phaseHandler.HandlePhase(ctx,
+		return r.PhaseHandler.HandlePhase(ctx,
 			ctxWorkloadTrace,
 			r.getTracer(),
 			workloadVersion,
@@ -172,17 +166,17 @@ func (r *KeptnWorkloadVersionReconciler) doPreDeploymentTaskPhase(ctx context.Co
 			reconcilePre,
 		)
 	}
-	return &phase.PhaseResult{
+	return phase.PhaseResult{
 		Continue: true,
 	}, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) doPreDeploymentEvaluationPhase(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, phaseHandler phase.Handler, ctxWorkloadTrace context.Context) (*phase.PhaseResult, error) {
+func (r *KeptnWorkloadVersionReconciler) doPreDeploymentEvaluationPhase(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
 	if !workloadVersion.IsPreDeploymentEvaluationSucceeded() {
 		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadVersion, apicommon.PreDeploymentEvaluationCheckType)
 		}
-		return phaseHandler.HandlePhase(ctx,
+		return r.PhaseHandler.HandlePhase(ctx,
 			ctxWorkloadTrace,
 			r.getTracer(),
 			workloadVersion,
@@ -190,17 +184,17 @@ func (r *KeptnWorkloadVersionReconciler) doPreDeploymentEvaluationPhase(ctx cont
 			reconcilePreEval,
 		)
 	}
-	return &phase.PhaseResult{
+	return phase.PhaseResult{
 		Continue: true,
 	}, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) doDeploymentPhase(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, phaseHandler phase.Handler, ctxWorkloadTrace context.Context) (*phase.PhaseResult, error) {
+func (r *KeptnWorkloadVersionReconciler) doDeploymentPhase(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
 	if !workloadVersion.IsDeploymentSucceeded() {
 		reconcileWorkloadVersion := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcileDeployment(ctx, workloadVersion)
 		}
-		return phaseHandler.HandlePhase(ctx,
+		return r.PhaseHandler.HandlePhase(ctx,
 			ctxWorkloadTrace,
 			r.getTracer(),
 			workloadVersion,
@@ -208,17 +202,17 @@ func (r *KeptnWorkloadVersionReconciler) doDeploymentPhase(ctx context.Context, 
 			reconcileWorkloadVersion,
 		)
 	}
-	return &phase.PhaseResult{
+	return phase.PhaseResult{
 		Continue: true,
 	}, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) doPostDeploymentTaskPhase(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, phaseHandler phase.Handler, ctxWorkloadTrace context.Context) (*phase.PhaseResult, error) {
+func (r *KeptnWorkloadVersionReconciler) doPostDeploymentTaskPhase(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
 	if !workloadVersion.IsPostDeploymentCompleted() {
 		reconcilePost := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadVersion, apicommon.PostDeploymentCheckType)
 		}
-		return phaseHandler.HandlePhase(ctx,
+		return r.PhaseHandler.HandlePhase(ctx,
 			ctxWorkloadTrace,
 			r.getTracer(),
 			workloadVersion,
@@ -226,17 +220,17 @@ func (r *KeptnWorkloadVersionReconciler) doPostDeploymentTaskPhase(ctx context.C
 			reconcilePost,
 		)
 	}
-	return &phase.PhaseResult{
+	return phase.PhaseResult{
 		Continue: true,
 	}, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) doPostDeploymentEvaluationPhase(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, phaseHandler phase.Handler, ctxWorkloadTrace context.Context) (*phase.PhaseResult, error) {
+func (r *KeptnWorkloadVersionReconciler) doPostDeploymentEvaluationPhase(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
 	if !workloadVersion.IsPostDeploymentEvaluationSucceeded() {
 		reconcilePostEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadVersion, apicommon.PostDeploymentEvaluationCheckType)
 		}
-		return phaseHandler.HandlePhase(ctx,
+		return r.PhaseHandler.HandlePhase(ctx,
 			ctxWorkloadTrace,
 			r.getTracer(),
 			workloadVersion,
@@ -244,7 +238,7 @@ func (r *KeptnWorkloadVersionReconciler) doPostDeploymentEvaluationPhase(ctx con
 			reconcilePostEval,
 		)
 	}
-	return &phase.PhaseResult{
+	return phase.PhaseResult{
 		Continue: true,
 	}, nil
 }

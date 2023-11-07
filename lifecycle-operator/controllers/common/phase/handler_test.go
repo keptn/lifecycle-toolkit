@@ -226,3 +226,18 @@ func TestHandler(t *testing.T) {
 		})
 	}
 }
+
+func TestNewHandler(t *testing.T) {
+	spanHandler := &telemetry.Handler{}
+	log := ctrl.Log.WithName("controller")
+	eventSender := eventsender.NewK8sSender(record.NewFakeRecorder(100))
+	client := fake.NewClientBuilder().WithScheme(scheme.Scheme).Build()
+
+	handler := NewHandler(client, eventSender, log, spanHandler)
+
+	require.NotNil(t, handler)
+	require.NotNil(t, handler.Client)
+	require.NotNil(t, handler.EventSender)
+	require.NotNil(t, handler.Log)
+	require.NotNil(t, handler.SpanHandler)
+}

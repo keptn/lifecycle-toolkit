@@ -1185,7 +1185,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcilePreDeploymentEvaluationUnexpect
 		},
 	}
 
-	app := controllercommon.ReturnAppVersion(
+	app := testcommon.ReturnAppVersion(
 		testNamespace,
 		"some-app",
 		"1.0.0",
@@ -1202,7 +1202,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcilePreDeploymentEvaluationUnexpect
 
 	r, _, _ := setupReconciler(wi, app)
 
-	mockEvaluationHandler := r.EvaluationHandler.(*evalfake.MockEvaluationHandler)
+	mockEvaluationHandler := r.EvaluationHandler.(*evaluationfake.MockEvaluationHandler)
 
 	mockEvaluationHandler.ReconcileEvaluationsFunc = func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
 		return nil, apicommon.StatusSummary{}, errors.New("unexpected error")

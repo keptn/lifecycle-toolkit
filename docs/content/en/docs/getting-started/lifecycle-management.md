@@ -211,7 +211,7 @@ spec:
 
 ### Pre-deployment Tasks
 
-Keptn Tasks can also be executed pre-deployment (before hte pods are scheduled).
+Keptn Tasks can also be executed pre-deployment (before the pods are scheduled).
 Do this by using the `keptn.sh/pre-deployment-tasks` label.
 
 > Note: If a pre-deployment task fails, the pod will remain in a Pending state.

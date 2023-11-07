@@ -22,12 +22,12 @@ type keptnSpanCtx struct {
 	Ctx  context.Context //nolint:all
 }
 
-type SpanHandler struct {
+type Handler struct {
 	bindCRDSpan map[string]keptnSpanCtx
 	mtx         sync.Mutex
 }
 
-func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+func (r *Handler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 	piWrapper, err := interfaces.NewSpanItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, nil, err
@@ -58,7 +58,7 @@ func (r *SpanHandler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcil
 	return childCtx, span, nil
 }
 
-func (r *SpanHandler) UnbindSpan(reconcileObject client.Object, phase string) error {
+func (r *Handler) UnbindSpan(reconcileObject client.Object, phase string) error {
 	piWrapper, err := interfaces.NewSpanItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return err

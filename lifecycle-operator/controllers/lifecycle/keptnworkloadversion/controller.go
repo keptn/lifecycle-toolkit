@@ -27,6 +27,9 @@ import (
 	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
@@ -49,12 +52,12 @@ const traceComponentName = "keptn/lifecycle-operator/workloadversion"
 type KeptnWorkloadVersionReconciler struct {
 	client.Client
 	Scheme                 *runtime.Scheme
-	EventSender            controllercommon.IEvent
+	EventSender            eventsender.IEvent
 	Log                    logr.Logger
 	Meters                 apicommon.KeptnMeters
-	SpanHandler            *telemetry.SpanHandler
+	SpanHandler            *telemetry.Handler
 	TracerFactory          telemetry.TracerFactory
-	SchedulingGatesHandler controllercommon.ISchedulingGatesHandler
+	SchedulingGatesHandler schedulinggates.ISchedulingGatesHandler
 	EvaluationHandler      evaluation.IEvaluationHandler
 }
 

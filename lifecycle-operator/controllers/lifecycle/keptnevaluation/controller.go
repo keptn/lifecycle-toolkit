@@ -25,6 +25,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/providers/keptnmetric"
 	"go.opentelemetry.io/otel/metric"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -39,7 +40,7 @@ import (
 type KeptnEvaluationReconciler struct {
 	client.Client
 	Scheme      *runtime.Scheme
-	EventSender controllercommon.IEvent
+	EventSender eventsender.IEvent
 	Log         logr.Logger
 	Meters      apicommon.KeptnMeters
 }

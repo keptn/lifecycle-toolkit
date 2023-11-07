@@ -8,8 +8,8 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	kltfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
@@ -257,7 +257,7 @@ func TestEvaluationHandler(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := v1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
-			spanHandlerMock := kltfake.ISpanHandlerMock{
+			spanHandlerMock := telemetryfake.ISpanHandlerMock{
 				GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 					return context.TODO(), trace.SpanFromContext(context.TODO()), nil
 				},
@@ -266,9 +266,9 @@ func TestEvaluationHandler(t *testing.T) {
 				},
 			}
 			fakeRecorder := record.NewFakeRecorder(100)
-			handler := NewEvaluationHandler(
+			handler := NewHandler(
 				fake.NewClientBuilder().WithObjects(&tt.evalObj).Build(),
-				common.NewK8sSender(fakeRecorder),
+				eventsender.NewK8sSender(fakeRecorder),
 				ctrl.Log.WithName("controller"),
 				trace.NewNoopTracerProvider().Tracer("tracer"),
 				scheme.Scheme,
@@ -347,13 +347,13 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 			err := v1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 
-			handler := NewEvaluationHandler(
+			handler := NewHandler(
 				fake.NewClientBuilder().Build(),
-				common.NewK8sSender(record.NewFakeRecorder(100)),
+				eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				ctrl.Log.WithName("controller"),
 				trace.NewNoopTracerProvider().Tracer("tracer"),
 				scheme.Scheme,
-				&kltfake.ISpanHandlerMock{})
+				&telemetryfake.ISpanHandlerMock{})
 
 			name, err := handler.CreateKeptnEvaluation(context.TODO(), tt.object, tt.createAttr)
 			require.True(t, strings.Contains(name, tt.wantName))

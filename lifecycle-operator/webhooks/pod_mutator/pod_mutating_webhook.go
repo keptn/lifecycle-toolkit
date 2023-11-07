@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-logr/logr"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator/handlers"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -28,7 +28,7 @@ const podKey = "pod"
 type PodMutatingWebhook struct {
 	Client                 client.Client
 	Decoder                handlers.Decoder
-	EventSender            controllercommon.IEvent
+	EventSender            eventsender.IEvent
 	Log                    logr.Logger
 	SchedulingGatesEnabled bool
 	Pod                    handlers.PodAnnotationHandler
@@ -39,7 +39,7 @@ type PodMutatingWebhook struct {
 func NewPodMutator(
 	client client.Client,
 	decoder *admission.Decoder,
-	eventSender controllercommon.IEvent,
+	eventSender eventsender.IEvent,
 	log logr.Logger,
 	schedulingGatesEnabled bool,
 ) *PodMutatingWebhook {

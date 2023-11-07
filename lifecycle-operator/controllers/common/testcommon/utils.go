@@ -1,14 +1,40 @@
-package common
+package testcommon
 
 import (
 	"fmt"
 
 	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	lfcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
 	"go.opentelemetry.io/otel/metric"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
+	corev1 "k8s.io/api/core/v1"
+	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	"k8s.io/client-go/kubernetes/scheme"
+	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
+
+const KeptnNamespace = "keptn"
+
+// NewTestClient returns a new controller-runtime fake Client configured with the Operator's scheme, and initialized with objs.
+func NewTestClient(objs ...client.Object) client.Client {
+	SetupSchemes()
+	return fake.NewClientBuilder().WithScheme(scheme.Scheme).WithStatusSubresource(objs...).WithObjects(objs...).Build()
+}
+
+func SetupSchemes() {
+	utilruntime.Must(clientgoscheme.AddToScheme(scheme.Scheme))
+	utilruntime.Must(corev1.AddToScheme(scheme.Scheme))
+	utilruntime.Must(apiv1.AddToScheme(scheme.Scheme))
+	utilruntime.Must(lfcv1alpha3.AddToScheme(scheme.Scheme))
+	utilruntime.Must(lfcv1alpha4.AddToScheme(scheme.Scheme))
+	utilruntime.Must(optionsv1alpha1.AddToScheme(scheme.Scheme))
+}
 
 func GetApp(name string) *lfcv1alpha3.KeptnApp {
 	app := &lfcv1alpha3.KeptnApp{

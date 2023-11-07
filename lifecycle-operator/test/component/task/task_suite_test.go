@@ -6,8 +6,9 @@ import (
 	"testing"
 	"time"
 
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptntask"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
@@ -35,8 +36,8 @@ var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
 	ctx, k8sManager, _, _, k8sClient, readyToStart = common.InitSuite()
 
-	_ = os.Setenv(controllercommon.FunctionRuntimeImageKey, "my-image-js")
-	_ = os.Setenv(controllercommon.PythonRuntimeImageKey, "my-image-py")
+	_ = os.Setenv(taskdefinition.FunctionRuntimeImageKey, "my-image-js")
+	_ = os.Setenv(taskdefinition.PythonRuntimeImageKey, "my-image-py")
 
 	config.Instance().SetDefaultNamespace(KeptnNamespace)
 
@@ -44,7 +45,7 @@ var _ = BeforeSuite(func() {
 	controller := &keptntask.KeptnTaskReconciler{
 		Client:      k8sManager.GetClient(),
 		Scheme:      k8sManager.GetScheme(),
-		EventSender: controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-task-controller")),
+		EventSender: eventsender.NewK8sSender(k8sManager.GetEventRecorderFor("test-task-controller")),
 		Log:         GinkgoLogr,
 		Meters:      common.InitKeptnMeters(),
 	}

@@ -10,8 +10,11 @@ import (
 	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	lfcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
+	evalfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
@@ -22,7 +25,7 @@ import (
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
+	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
@@ -43,7 +46,7 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 		PostDeploymentEvaluationStatus: apicommon.StatePending,
 	}
 
-	app := controllercommon.ReturnAppVersion("default", "myappversion", "1.0.0", nil, pendingStatus)
+	app := testcommon.ReturnAppVersion("default", "myappversion", "1.0.0", nil, pendingStatus)
 
 	r, eventChannel, _ := setupReconciler(app)
 
@@ -182,7 +185,7 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 
 func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 
-	app := controllercommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
+	app := testcommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
 	r, eventChannel, _ := setupReconciler(app)
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -236,11 +239,11 @@ func setupReconcilerWithMeters() *KeptnAppVersionReconciler {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	// fake a tracer
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &telemetryfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	tf := &fake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
 		return tr
 	}}
 
@@ -249,12 +252,12 @@ func setupReconcilerWithMeters() *KeptnAppVersionReconciler {
 	r := &KeptnAppVersionReconciler{
 		Log:           ctrl.Log.WithName("test-appVersionController"),
 		TracerFactory: tf,
-		Meters:        controllercommon.InitAppMeters(),
+		Meters:        testcommon.InitAppMeters(),
 	}
 	return r
 }
 
-func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan string, *fake.ISpanHandlerMock) {
+func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan string, *telemetryfake.ISpanHandlerMock) {
 	// setup logger
 	opts := zap.Options{
 		Development: true,
@@ -262,17 +265,17 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	// fake a tracer
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &telemetryfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	tf := &fake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
 		return tr
 	}}
 
 	// fake span handler
 
-	spanRecorder := &fake.ISpanHandlerMock{
+	spanRecorder := &telemetryfake.ISpanHandlerMock{
 		GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 			return ctx, trace.SpanFromContext(ctx), nil
 		},
@@ -284,18 +287,23 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 		return []string{workloadVersion.Spec.AppName}
 	}
 
-	fake.SetupSchemes()
-	fakeClient := k8sfake.NewClientBuilder().WithObjects(objs...).WithStatusSubresource(objs...).WithScheme(scheme.Scheme).WithObjects().WithIndex(&lfcv1alpha4.KeptnWorkloadVersion{}, "spec.app", workloadVersionIndexer).Build()
+	testcommon.SetupSchemes()
+	fakeClient := fake.NewClientBuilder().WithObjects(objs...).WithStatusSubresource(objs...).WithScheme(scheme.Scheme).WithObjects().WithIndex(&lfcv1alpha4.KeptnWorkloadVersion{}, "spec.app", workloadVersionIndexer).Build()
 
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppVersionReconciler{
 		Client:        fakeClient,
 		Scheme:        scheme.Scheme,
-		EventSender:   controllercommon.NewK8sSender(recorder),
+		EventSender:   eventsender.NewK8sSender(recorder),
 		Log:           ctrl.Log.WithName("test-appVersionController"),
 		TracerFactory: tf,
 		SpanHandler:   spanRecorder,
-		Meters:        controllercommon.InitAppMeters(),
+		Meters:        testcommon.InitAppMeters(),
+		EvaluationHandler: &evalfake.MockEvaluationHandler{
+			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]lfcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
+				return []lfcv1alpha3.ItemStatus{}, apicommon.StatusSummary{}, nil
+			},
+		},
 	}
 	return r, recorder.Events, spanRecorder
 }

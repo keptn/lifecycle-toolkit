@@ -53,6 +53,7 @@ helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
 helm search repo keptn
 ```
+
 Then specify that CHART version to the `--version` flag
 in the `helm update` command documented for the release you are installing.
 
@@ -77,7 +78,6 @@ Note that, if you want to run pre- and/or post-deployment
 [evaluations](../implementing/evaluations.md)
 as part of the Release Lifecycle Management use-case,
 you need to run the Keptn Metrics Operator.
-
 
 You must also enable Keptn for each
 [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
@@ -121,7 +121,6 @@ and
 [Evaluations](../implementing/evaluations.md)
 User Guides.
 
-
 ### Enable Keptn Metrics Operator (Metrics)
 
 If you are only interested in Metrics,
@@ -132,6 +131,7 @@ Disable it using the following values.yaml:
 
 For more information about implementing Metrics, see the
 [Metrics User Guide](../implementing/evaluatemetrics.md).
+
 ### Enable Keptn Analysis (SLOs/SLIs)
 
 To enable Keptn Analysis in your cluster,
@@ -162,5 +162,3 @@ or you can modify the `keptn/values.yaml` file:
 
 For more information about using `cert-manager` with Keptn, see
 [Use Keptn with cert-manager.io](../operate/cert-manager.md).
-
-

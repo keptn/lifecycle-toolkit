@@ -63,7 +63,6 @@ Some helpful hints:
 * Use the `--version <version>` flag on the
   `helm upgrade --install` command to specify a different Keptn Helm chart version.
 
-  
   To get the appropriate chart version for the Keptn version you want,
   use the following command sequence:
 
@@ -110,7 +109,6 @@ These are documented in the README file for that operator,
 which is linked from the `metrics-operator` item under "Component"
 in the table in
 [Control what components are installed](install/#control-what-components-are-installed).
-
 
 ### Modify Helm configuration options
 

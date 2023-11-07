@@ -90,7 +90,7 @@ and application health checks
 | `scheduler.imagePullPolicy`                                  | set image pull policy for scheduler                            | `Always`              |
 | `scheduler.livenessProbe`                                    | customizable liveness probe for the scheduler                  |                       |
 | `scheduler.readinessProbe`                                   | customizable readiness probe for the scheduler                 |                       |
-| `scheduler.resources`                                        | sets cpu and memory resurces/limits for scheduler              |                       |
+| `scheduler.resources`                                        | sets cpu and memory resources/limits for scheduler             |                       |
 | `scheduler.topologySpreadConstraints`                        | add topology constraints for scheduler                         | `[]`                  |
 | `schedulerConfig.profiles[0].schedulerName`                  | changes scheduler name                                         | `keptn-scheduler`     |
 | `schedulerConfig.leaderElection.leaderElect`                 | enables leader election for multiple replicas of the scheduler | `false`               |

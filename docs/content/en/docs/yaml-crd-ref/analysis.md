@@ -75,7 +75,7 @@ status:
     based on criteria defined in the `AnalysisDefinition` resource.
     <!-- markdownlint-disable -->
     * **warning** -- Whether the analysis returned a warning.
-    * **raw** --  String-encoded JSON object that reaports the results
+    * **raw** --  String-encoded JSON object that reports the results
       of evaluating one or more objectives or metrics.
       See
       [Interpreting Analysis results](#interpreting-analysis-results)

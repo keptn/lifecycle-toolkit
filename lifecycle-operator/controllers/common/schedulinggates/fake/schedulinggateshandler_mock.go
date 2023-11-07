@@ -9,11 +9,11 @@ import (
 	"sync"
 )
 
-// ISchedulingGatesHandlerMock is a mock implementation of common.ISchedulingGatesHandler.
+// ISchedulingGatesHandlerMock is a mock implementation of schedulinggate.ISchedulingGatesHandler.
 //
 //	func TestSomethingThatUsesISchedulingGatesHandler(t *testing.T) {
 //
-//		// make and configure a mocked common.ISchedulingGatesHandler
+//		// make and configure a mocked schedulinggate.ISchedulingGatesHandler
 //		mockedISchedulingGatesHandler := &ISchedulingGatesHandlerMock{
 //			EnabledFunc: func() bool {
 //				panic("mock out the Enabled method")
@@ -23,7 +23,7 @@ import (
 //			},
 //		}
 //
-//		// use mockedISchedulingGatesHandler in code that requires common.ISchedulingGatesHandler
+//		// use mockedISchedulingGatesHandler in code that requires schedulinggate.ISchedulingGatesHandler
 //		// and then make assertions.
 //
 //	}

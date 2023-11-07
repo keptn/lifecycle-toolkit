@@ -1,4 +1,4 @@
-package common
+package taskdefinition
 
 import (
 	"os"
@@ -13,6 +13,8 @@ const (
 	PythonRuntimeImageKey   = "PYTHON_RUNNER_IMAGE"
 	FunctionScriptMountPath = "/var/data/function.ts"
 	PythonScriptMountPath   = "/var/data/function.py"
+	FunctionScriptKey       = "js"
+	PythonScriptKey         = "python"
 )
 
 func GetRuntimeSpec(def *klcv1alpha3.KeptnTaskDefinition) *klcv1alpha3.RuntimeSpec {
@@ -69,7 +71,7 @@ func GetRuntimeMountPath(def *klcv1alpha3.KeptnTaskDefinition) string {
 	return path
 }
 
-// check if either the funtions or container spec is set
+// check if either the functions or container spec is set
 func SpecExists(definition *klcv1alpha3.KeptnTaskDefinition) bool {
 	if definition == nil {
 		return false

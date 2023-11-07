@@ -7,11 +7,11 @@ import (
 
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/task"
 )
 
 func (r *KeptnWorkloadVersionReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
-	taskHandler := controllercommon.TaskHandler{
+	taskHandler := task.Handler{
 		Client:      r.Client,
 		EventSender: r.EventSender,
 		Log:         r.Log,
@@ -20,7 +20,7 @@ func (r *KeptnWorkloadVersionReconciler) reconcilePrePostDeployment(ctx context.
 		SpanHandler: r.SpanHandler,
 	}
 
-	taskCreateAttributes := controllercommon.CreateTaskAttributes{
+	taskCreateAttributes := task.CreateTaskAttributes{
 		SpanName:  fmt.Sprintf(apicommon.CreateWorkloadTaskSpanName, checkType),
 		CheckType: checkType,
 	}

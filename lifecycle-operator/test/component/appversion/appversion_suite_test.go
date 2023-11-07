@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnappversion"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
@@ -45,13 +45,13 @@ var _ = BeforeSuite(func() {
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
 	tracerFactory := &common.TracerFactory{Tracer: tracer}
-	EvaluationHandler := evaluation.NewEvaluationHandler(
+	EvaluationHandler := evaluation.NewHandler(
 		k8sManager.GetClient(),
-		controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-appversion-controller")),
+		eventsender.NewK8sSender(k8sManager.GetEventRecorderFor("test-appversion-controller")),
 		GinkgoLogr,
 		tracerFactory.GetTracer(traceComponentName),
 		k8sManager.GetScheme(),
-		&telemetry.SpanHandler{})
+		&telemetry.Handler{})
 
 	config.Instance().SetDefaultNamespace(KeptnNamespace)
 
@@ -59,10 +59,10 @@ var _ = BeforeSuite(func() {
 	controller := &keptnappversion.KeptnAppVersionReconciler{
 		Client:            k8sManager.GetClient(),
 		Scheme:            k8sManager.GetScheme(),
-		EventSender:       controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-appversion-controller")),
+		EventSender:       eventsender.NewK8sSender(k8sManager.GetEventRecorderFor("test-appversion-controller")),
 		Log:               GinkgoLogr,
 		Meters:            common.InitKeptnMeters(),
-		SpanHandler:       &telemetry.SpanHandler{},
+		SpanHandler:       &telemetry.Handler{},
 		TracerFactory:     tracerFactory,
 		EvaluationHandler: EvaluationHandler,
 	}

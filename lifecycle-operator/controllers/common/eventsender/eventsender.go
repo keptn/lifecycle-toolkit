@@ -1,4 +1,4 @@
-package common
+package eventsender
 
 import (
 	"context"
@@ -8,7 +8,9 @@ import (
 	ce "github.com/cloudevents/sdk-go/v2"
 	"github.com/go-logr/logr"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -116,4 +118,32 @@ func (e *k8sEvent) Emit(phase apicommon.KeptnPhaseType, eventType string, reconc
 	msg := setEventMessage(phase, reconcileObject, message, version)
 	annotations := setAnnotations(reconcileObject, phase)
 	e.recorder.AnnotatedEventf(reconcileObject, annotations, eventType, fmt.Sprintf("%s%s", phase.ShortName, status), msg)
+}
+
+func setEventMessage(phase apicommon.KeptnPhaseType, reconcileObject client.Object, longReason string, version string) string {
+	if version == "" {
+		return fmt.Sprintf("%s: %s / Namespace: %s, Name: %s", phase.LongName, longReason, reconcileObject.GetNamespace(), reconcileObject.GetName())
+	}
+	return fmt.Sprintf("%s: %s / Namespace: %s, Name: %s, Version: %s", phase.LongName, longReason, reconcileObject.GetNamespace(), reconcileObject.GetName(), version)
+}
+
+func setAnnotations(reconcileObject client.Object, phase apicommon.KeptnPhaseType) map[string]string {
+	if reconcileObject == nil || reconcileObject.GetName() == "" || reconcileObject.GetNamespace() == "" {
+		return nil
+	}
+	annotations := map[string]string{
+		"namespace": reconcileObject.GetNamespace(),
+		"name":      reconcileObject.GetName(),
+		"phase":     phase.ShortName,
+	}
+
+	piWrapper, err := interfaces.NewEventObjectWrapperFromClientObject(reconcileObject)
+	if err == nil {
+		common.CopyMap(annotations, piWrapper.GetEventAnnotations())
+	}
+
+	annotationsObject := reconcileObject.GetAnnotations()
+	annotations["traceparent"] = annotationsObject["traceparent"]
+
+	return annotations
 }

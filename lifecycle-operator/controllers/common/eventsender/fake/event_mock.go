@@ -9,18 +9,18 @@ import (
 	"sync"
 )
 
-// MockEvent is a mock implementation of common.IEvent.
+// MockEvent is a mock implementation of eventsender.IEvent.
 //
 //	func TestSomethingThatUsesIEvent(t *testing.T) {
 //
-//		// make and configure a mocked common.IEvent
+//		// make and configure a mocked eventsender.IEvent
 //		mockedIEvent := &MockEvent{
 //			EmitFunc: func(phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, status string, message string, version string)  {
 //				panic("mock out the Emit method")
 //			},
 //		}
 //
-//		// use mockedIEvent in code that requires common.IEvent
+//		// use mockedIEvent in code that requires eventsender.IEvent
 //		// and then make assertions.
 //
 //	}

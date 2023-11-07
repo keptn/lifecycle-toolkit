@@ -34,7 +34,7 @@ type CertificateWatcher struct {
 	certificateDirectory  string
 	namespace             string
 	certificateSecretName string
-	certificateTreshold   time.Duration
+	certificateThreshold  time.Duration
 	ICertificateHandler
 	Log logr.Logger
 }
@@ -47,7 +47,7 @@ func NewCertificateWatcher(reader client.Reader, certDir string, namespace strin
 		namespace:             namespace,
 		certificateSecretName: secretName,
 		ICertificateHandler:   defaultCertificateHandler{},
-		certificateTreshold:   CertThreshold,
+		certificateThreshold:  CertThreshold,
 		Log:                   log,
 	}
 }
@@ -106,7 +106,7 @@ func (watcher *CertificateWatcher) ensureCertificateFile(secret corev1.Secret, f
 }
 
 func (watcher *CertificateWatcher) WaitForCertificates() {
-	for threshold := time.Now().Add(watcher.certificateTreshold); time.Now().Before(threshold); {
+	for threshold := time.Now().Add(watcher.certificateThreshold); time.Now().Before(threshold); {
 
 		if err := watcher.updateCertificatesFromSecret(); err != nil {
 			if k8serrors.IsNotFound(err) {

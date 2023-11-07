@@ -38,7 +38,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggate"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnappcreationrequest"
@@ -284,7 +284,7 @@ func main() {
 		spanHandler,
 	)
 	workloadVersionReconciler := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
-		SchedulingGatesHandler: schedulinggate.NewHandler(mgr.GetClient(), workloadVersionLogger, env.SchedulingGatesEnabled),
+		SchedulingGatesHandler: schedulinggates.NewHandler(mgr.GetClient(), workloadVersionLogger, env.SchedulingGatesEnabled),
 		Client:                 mgr.GetClient(),
 		Scheme:                 mgr.GetScheme(),
 		Log:                    workloadVersionLogger,

@@ -13,7 +13,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	evaluationfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
-	schedulinggatefake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggate/fake"
+	schedulinggatesfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
@@ -783,7 +783,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 		},
 	)
 	r, eventChannel, _ := setupReconciler(wi, app)
-	r.SchedulingGatesHandler = &schedulinggatefake.ISchedulingGatesHandlerMock{
+	r.SchedulingGatesHandler = &schedulinggatesfake.ISchedulingGatesHandlerMock{
 		EnabledFunc: func() bool {
 			return false
 		},
@@ -864,7 +864,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion_SchedulingGates
 		},
 	)
 
-	schedulingGatesMock := &schedulinggatefake.ISchedulingGatesHandlerMock{
+	schedulingGatesMock := &schedulinggatesfake.ISchedulingGatesHandlerMock{
 		RemoveGatesFunc: func(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error {
 			return nil
 		},
@@ -955,7 +955,7 @@ func TestKeptnWorkloadVersionReconciler_RemoveGates_fail(t *testing.T) {
 		},
 	)
 	r, _, _ := setupReconciler(wi, app)
-	r.SchedulingGatesHandler = &schedulinggatefake.ISchedulingGatesHandlerMock{
+	r.SchedulingGatesHandler = &schedulinggatesfake.ISchedulingGatesHandlerMock{
 		RemoveGatesFunc: func(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error {
 			return fmt.Errorf("err")
 		},

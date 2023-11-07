@@ -9,7 +9,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggate"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadversion"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
@@ -57,7 +57,7 @@ var _ = BeforeSuite(func() {
 	// //setup controllers here
 	config.Instance().SetDefaultNamespace(KeptnNamespace)
 	controller := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
-		SchedulingGatesHandler: schedulinggate.NewHandler(nil, GinkgoLogr, false),
+		SchedulingGatesHandler: schedulinggates.NewHandler(nil, GinkgoLogr, false),
 		Client:                 k8sManager.GetClient(),
 		Scheme:                 k8sManager.GetScheme(),
 		EventSender:            eventsender.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller")),

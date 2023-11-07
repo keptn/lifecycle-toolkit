@@ -29,7 +29,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggate"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
@@ -57,7 +57,7 @@ type KeptnWorkloadVersionReconciler struct {
 	Meters                 apicommon.KeptnMeters
 	SpanHandler            *telemetry.Handler
 	TracerFactory          telemetry.TracerFactory
-	SchedulingGatesHandler schedulinggate.ISchedulingGatesHandler
+	SchedulingGatesHandler schedulinggates.ISchedulingGatesHandler
 	EvaluationHandler      evaluation.IEvaluationHandler
 }
 

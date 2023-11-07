@@ -1,4 +1,4 @@
-package schedulinggate
+package schedulinggates
 
 import (
 	"context"

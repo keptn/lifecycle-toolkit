@@ -164,7 +164,7 @@ in the umbrella `values.yaml` file.
 
 The following table summarizes the Keptn umbrella chart scheme;
 click the name in the "Component" column
-to view the README file that documents the parameters
+to view the README file that documents the Helm values
 that can be set for that component:
 
 | Component                                                                                                                  | Used for                                                                                                                  | Configuration file |

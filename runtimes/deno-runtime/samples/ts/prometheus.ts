@@ -12,7 +12,7 @@ if (text && text != "") {
     Deno.exit(1);
   }
 } else {
-  console.log("Missing mandatory enviornment variable DATA.");
+  console.log("Missing mandatory environment variable DATA.");
   printUsage();
 }
 

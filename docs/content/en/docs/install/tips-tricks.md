@@ -58,7 +58,7 @@ in the `helm update` command documented for the release you are installing.
 
 ## Example configurations by use-case
 
-[Control what components are installed](install/#customizing-the-configuration-of-components)
+[Control what components are installed](install.md/#customizing-the-configuration-of-components)
 discusses how to configure Keptn to include only the components you want.
 The following sections summarize and give examples
 of the configurations needed for different use cases.

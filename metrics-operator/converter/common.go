@@ -26,12 +26,12 @@ func NewEmptyOperatorErr(op []string) error {
 }
 
 func NewUnconvertableOperatorCombinationErr(op1, op2 string) error {
-	return fmt.Errorf("unconvertable combination of operators: '%s', '%s'", op1, op2)
+	return fmt.Errorf("inconvertible combination of operators: '%s', '%s'", op1, op2)
 }
 
 func NewUnsupportedResourceNameErr(name string) error {
 	return fmt.Errorf(
-		"unsupported resource name: %s. Provided reosource name must match the pattern %s and must not have more than %d characters.",
+		"unsupported resource name: %s. Provided resource name must match the pattern %s and must not have more than %d characters.",
 		name,
 		K8sResourceNameRegexp,
 		MaxResourceNameLength,

@@ -49,7 +49,7 @@ spec:
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
-* **spec** - Defines the speficication of this `KeptnTask` resource
+* **spec** - Defines the specification of this `KeptnTask` resource
   * **taskDefinition** (required) -- Name of the corresponding `KeptnTaskDefinition` resource.
     This `KeptnTaskDefinition` can be located in the same namespace
     or in the Keptn installation namespace.

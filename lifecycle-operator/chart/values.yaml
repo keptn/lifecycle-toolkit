@@ -233,7 +233,7 @@ scheduler:
       path: /healthz
       port: 10259
       scheme: HTTPS
-## @extra scheduler.resources sets cpu and memory resurces/limits for scheduler
+## @extra scheduler.resources sets cpu and memory resources/limits for scheduler
 ## @skip scheduler.resources.limits.cpu
 ## @skip scheduler.resources.limits.memory
 ## @skip scheduler.resources.requests.cpu

@@ -66,7 +66,7 @@ func (c *SLOConverter) Convert(fileContent []byte, analysisDef string, namespace
 		return "", err
 	}
 
-	// unmarshall content
+	// unmarshal content
 	content := &SLO{}
 	err := yaml.Unmarshal(fileContent, content)
 	if err != nil {
@@ -334,7 +334,7 @@ func cleanupObjective(o *Objective) *Objective {
 }
 
 // remove % operators from criterium structure
-// if criteria did have only % operators, remove it from strucutre
+// if criteria did have only % operators, remove it from structure
 func cleanupCriteria(criteria []Criteria) []Criteria {
 	newCriteria := make([]Criteria, 0, len(criteria))
 	for _, c := range criteria {

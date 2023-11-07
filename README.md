@@ -169,7 +169,7 @@ For more info about Keptn, please see our
   then installing and enabling Keptn.
 - [Implementing Keptn applications](https://lifecycle.keptn.sh/docs/implementing/)
   documents how to integrate Keptn to work with your existing deployment engine
-  and implement its variouos features.
+  and implement its various features.
 - [Architecture](https://lifecycle.keptn.sh/docs/concepts/architecture/) provides detailed technical information
   about how Keptn works.
 - [CRD Reference](https://lifecycle.keptn.sh/docs/yaml-crd-ref/) and

@@ -41,11 +41,11 @@ function getPrometheusURL(url: string, metrics: string): string {
   return queryURL + "/api/v1/query?query=" + metrics + "&time=" + dateTime;
 }
 
-const promtheusURL = getPrometheusURL(data.url, data.metrics);
-console.log("Prometheus URL => " + promtheusURL);
+const prometheusURL = getPrometheusURL(data.url, data.metrics);
+console.log("Prometheus URL => " + prometheusURL);
 let value;
 try {
-  const jsonResponse = await fetch(promtheusURL);
+  const jsonResponse = await fetch(prometheusURL);
   const jsonData = await jsonResponse.json();
   value = jsonData.data.result[0].value[1];
 } catch (error) {

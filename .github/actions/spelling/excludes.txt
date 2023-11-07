@@ -19,5 +19,8 @@ ignore$
 ^\.github/actions/spelling
 _test\.go$
 ^examples/support/observability/config/
+^examples/support/observability/assets/
 ^test/prometheus/
 ^\.github/scripts/\.helm-tests/[a-zA-Z0-9-]+/result.ya?ml
+^dashboards/grafana/configmap/*.yaml
+^dashboards/grafana/import/*.json

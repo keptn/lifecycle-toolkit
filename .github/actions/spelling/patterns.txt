@@ -107,4 +107,4 @@ go install(?:\s+[a-z]+\.[-@\w/.]+)+
 LS0[a-zA-Z0-9]+
 
 # k8s CRD validation patterns
-pattern\: *$
+pattern\: .*$

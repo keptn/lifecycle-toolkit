@@ -7,7 +7,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 
 Keptn must be installed onto each Kubernetes cluster you want to monitor.
 Additionally, Keptn needs to be enabled on your namespaces.
-This will give you flexibility in how and where you want to use Keptn.
+This gives you flexibility in how and where you want to use Keptn.
 
 Keptn v0.9.0 and later is installed using [Helm](https://helm.sh/).
 
@@ -41,7 +41,10 @@ helm upgrade --install keptn keptn/keptn \
    -n keptn-system --create-namespace --wait
 ```
 
-If you want to use Keptn to observe your deployments, you must enable Keptn in your
+If you want to use Keptn to observe your deployments
+or to run pre- and/or post tasks and/or evaluations
+as part of lifecycle management,
+you must enable Keptn in your
 [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 via annotations.
 For example, for the `testy-test` namespace:
@@ -60,14 +63,29 @@ Some helpful hints:
 * Use the `--version <version>` flag on the
   `helm upgrade --install` command to specify a different Keptn Helm chart version.
 
-* Use the following command sequence to see a list of available versions:
+  
+  To get the appropriate chart version for the Keptn version you want,
+  use the following command sequence:
 
   ```shell
+  helm repo add keptn https://charts.lifecycle.keptn.sh
   helm repo update
-  helm search repo keptn --versions
+  helm search repo keptn
+  ```
+  
+  You see that the "CHART VERSION" for `keptn/keptn` v0.9.0 is 0.3.0
+  so the following command sequence explicitly installs Keptn v0.9.0:
+
+  ```shell
+  helm repo add keptn https://charts.lifecycle.keptn.sh
+  helm repo update
+  helm upgrade --install keptn keptn/keptn \
+   --version version 0.3.0 \
+   -n keptn-lifecycle-toolkit-system --create-namespace --wait
   ```
 
-* To verify that Keptn was installed in your cluster,
+* To view which Keptn components are installed in your cluster
+  and verify that they are the correct ones,
   run the following command:
 
   ```shell
@@ -86,6 +104,14 @@ Here is an example `values.yaml` altering global and metrics operator values:
 
 {{< docsembed path="content/en/docs/install/assets/values-advance-changes.yaml" >}}
 
+Note the additional parameters that are specified
+in the `metricsOperator` section.
+These are documented in the README file for that operator,
+which is linked from the `metrics-operator` item under "Component"
+in the table in
+[Control what components are installed](install/#control-what-components-are-installed).
+
+
 ### Modify Helm configuration options
 
 Helm values can be modified before the installation.
@@ -102,30 +128,47 @@ modify some values, and use the modified file to install Keptn:
 
 1. Edit your local copy to modify some values
 
-1. Install Keptn by adding the following string to your `helm upgrade` command line:
+1. To apply the modified configuration.
+   install Keptn by adding the following string
+   to your `helm upgrade` command line:
 
    ```shell
    --values=values.yaml
    ```
 
-You can also use the `--set` flag
-to specify a value change for the `helm upgrade --install` command.
-Configuration options are specified using the format:
+   For example, if you create a `my.values.yaml`
+   and modified some configuration values,
+   the command sequence to apply your configuration is:
 
-```shell
---set key1=value1 \
---set key2=value2 ...
-```
+   ```shell
+   helm repo add keptn https://charts.lifecycle.keptn.sh
+   helm repo update
+   helm upgrade --install keptn keptn/keptn \
+    --values my.values.yaml \
+    -n keptn-lifecycle-toolkit-system --create-namespace --wait
+   ```
 
-The [helm-chart](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/README.md) page
-contains the full list of available values.
+   You can also use the `--set` flag
+   to specify a value change for the `helm upgrade --install` command.
+   Configuration options are specified using the format:
+
+   ```shell
+   --set key1=value1 \
+   --set key2=value2 ...
+   ```
 
 ## Control what components are installed
 
-Keptn consists of multiple components, each of which enables a specific use-case.
-Each of the components is packaged into a subchart of Keptn which can be configured individually.
+Keptn consists of multiple components,
+each of which enables a specific use-case.
+Each of the components is packaged into a subchart of Keptn
+which has parameters that can be configured for that component
+in the umbrella `values.yaml` file.
 
-The following table summarizes the Keptn umbrella chart scheme:
+The following table summarizes the Keptn umbrella chart scheme;
+click the name in the "Component" column
+to view the README file that documents the parameters
+that can be set for that component:
 
 | Component                                                                                                                  | Used for                                                                                                                  | Configuration file |
 |----------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------| --------------------|

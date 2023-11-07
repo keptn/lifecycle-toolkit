@@ -102,3 +102,6 @@ go install(?:\s+[a-z]+\.[-@\w/.]+)+
 
 # hugo youtube links
 \{\{\< youtube [a-zA-Z0-9\-]+ \>\}\}$
+
+# tls certs
+tls\.(crt|key)\: \"[a-zA-Z0-9]+\"

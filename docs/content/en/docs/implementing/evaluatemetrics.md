@@ -166,7 +166,7 @@ This section shows how to do that.
 
 Metrics can also be displayed on a Grafana or other dashboard
 or they can be exposed as OpenTelemetry metrics; see
-[Access Keptn metrics as OpenTelementry metrics](otel.md/#access-keptn-metrics-as-opentelemetry-metrics)
+[Access Keptn metrics as OpenTelemetry metrics](otel.md/#access-keptn-metrics-as-opentelemetry-metrics)
 for instructions.
 
 ### Retrieve KeptnMetric values with kubectl and the KeptnMetric API

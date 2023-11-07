@@ -105,7 +105,6 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	appTraceContextCarrier := propagation.MapCarrier(workloadVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
 
-	// Wait for pre-deployment checks of Workload
 	phaseHandler := phase.Handler{
 		Client:      r.Client,
 		EventSender: r.EventSender,
@@ -123,6 +122,7 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 		spanWorkloadTrace.AddEvent("WorkloadVersion Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 	}
 
+	// Wait for pre-deployment checks of Workload
 	if result, err := r.doPreDeploymentTaskPhase(ctx, workloadVersion, phaseHandler, ctxWorkloadTrace); !result.Continue {
 		return result.Result, err
 	}

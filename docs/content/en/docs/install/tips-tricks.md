@@ -23,9 +23,8 @@ Keptn is installed using the
 [keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml)
 umbrella chart.
 Each subchart has its own `values.yaml` file
-with parameters that are documented in the README file for each,
-but configuration changes for the subcharts
-are added to the umbrella chart.
+with parameters that are documented in its README file,
+but configuration changes for the subcharts are added to the umbrella chart.
 See
 [Customizing the configuration of components](install.md/#customizing-the-configuration-of-components)
 for an example.
@@ -33,12 +32,12 @@ for an example.
 ## Installing older versions of Keptn
 
 Installation of Keptn v0.9.0 has two significant differences
-compared to installation of earlier releases:
+compared to the installation of earlier releases:
 
 * Keptn v0.9.0 and later releases use
   the umbrella charts whereas earlier versions did not
 * Keptn v0.9.0 and later releases use
-  `keptn` as the value to the `NAME` option to the
+  `keptn` as the value to the `NAME` option of the
   [helm repo add](https://helm.sh/docs/helm/helm_repo_add/)
   command whereas earlier releases used `klt`.
 
@@ -53,8 +52,9 @@ helm repo update
 helm search repo keptn
 ```
 
-Then specify that CHART version to the `--version` flag
-in the `helm update` command documented for the release you are installing.
+To install an older release,
+specify that CHART version to the `--version` flag
+in the `helm update` command for the release you are installing.
 
 ## Example configurations by use-case
 
@@ -63,10 +63,10 @@ discusses how to configure Keptn to include only the components you want.
 The following sections summarize and give examples
 of the configurations needed for different use cases.
 
-### Enable Keptn Lifecycle Operator (Observability and/or Release Lifecycle Management)
+### Enable Keptn Lifecycle Operator (Observability and/or Release Lifecycle)
 
 If you only want to run the Keptn Observability
-and/or Release Lifecycle Management use-cases in your cluster,
+and/or Release Lifecycle use-cases in your cluster,
 you do not need to install the Keptn Metrics Operator.
 To disable it, set the `metricsOperator.enabled` value
 to `false` as in the following:
@@ -75,13 +75,13 @@ to `false` as in the following:
 
 Note that, if you want to run pre- and/or post-deployment
 [evaluations](../implementing/evaluations.md)
-as part of the Release Lifecycle Management use-case,
+as part of the Release Lifecycle use-case,
 you need to run the Keptn Metrics Operator.
 
 You must also enable Keptn for each
 [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 on which you want to run either
-the Observability or Release Lifecycle Management use-case.
+the Observability or Release Lifecycle use-case.
 This is because Keptn communicates with the Kubernetes scheduling mechanism
 for tasks such as enforcing checks natively,
 stopping a deployment from proceeding when criteria are not met,
@@ -114,7 +114,7 @@ you are ready to
 For more information about implementing Observability, see the
 [Observability User Guide](../implementing/otel.md).
 
-For more information about implementing Keptn Release Management, see the
+For more information about implementing Keptn Release Lifecycle, see the
 [Deployment tasks](../implementing/tasks.md)
 and
 [Evaluations](../implementing/evaluations.md)

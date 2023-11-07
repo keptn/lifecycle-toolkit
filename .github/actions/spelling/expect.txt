@@ -451,7 +451,6 @@ PARAMSx
 perc
 persistentvolumeclaims
 persistentvolumes
-phasehandler
 phaseitem
 pid
 pipefail
@@ -513,6 +512,7 @@ runsendevent
 runtimes
 runtimespec
 sbom
+schedulinggate
 schedulinggateshandler
 sclient
 screenshot
@@ -566,8 +566,6 @@ targetserver
 taskcontext
 taskdef
 taskdefinition
-taskdefinitionhandler
-taskhandler
 taskparameters
 taskstatus
 Tato
@@ -576,6 +574,7 @@ templ
 templated
 testanalysis
 testcertificate
+testcommon
 testmetrics
 testreg
 teststep

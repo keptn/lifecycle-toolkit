@@ -268,7 +268,7 @@ func createInterval(op []string) (*Interval, error) {
 		return createUnboundedInterval(op[0])
 	}
 
-	//bounded interval
+	// bounded interval
 	return createBoundedInterval(op)
 }
 
@@ -276,7 +276,7 @@ func createBoundedInterval(op []string) (*Interval, error) {
 	if len(op) < 2 {
 		return nil, NewUnsupportedIntervalCombinationErr(op)
 	}
-	//fetch operators and values
+	// fetch operators and values
 	operator1, value1, err := decodeOperatorAndValue(op[0])
 	if err != nil {
 		return nil, err
@@ -285,12 +285,12 @@ func createBoundedInterval(op []string) (*Interval, error) {
 	if err != nil {
 		return nil, err
 	}
-	// determine lower and higher bouds
+	// determine lower and higher bounds
 	smallerOperator, biggerOperator, err := decideIntervalBounds(operator1, value1, operator2, value2)
 	if err != nil {
 		return nil, err
 	}
-	//check if the interval makes logical sense for conversions, e.g. 5 < x < 10; unsupported: x < 5 && x > 10
+	// check if the interval makes logical sense for conversions, e.g. 5 < x < 10; unsupported: x < 5 && x > 10
 	if isGreaterOrEqual(smallerOperator.Operation) && isLessOrEqual(biggerOperator.Operation) {
 		return &Interval{
 			Start: smallerOperator.Value,
@@ -302,7 +302,7 @@ func createBoundedInterval(op []string) (*Interval, error) {
 }
 
 func createUnboundedInterval(op string) (*Interval, error) {
-	//fetch operator and value
+	// fetch operator and value
 	operator, value, err := decodeOperatorAndValue(op)
 	if err != nil {
 		return nil, err

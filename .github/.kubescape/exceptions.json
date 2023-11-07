@@ -116,7 +116,7 @@
     ]
   },
   {
-    "name": "data desctruction",
+    "name": "data destruction",
     "policyType": "postureExceptionPolicy",
     "actions": [
       "alertOnly"

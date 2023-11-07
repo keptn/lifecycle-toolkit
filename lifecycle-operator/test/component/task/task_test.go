@@ -7,7 +7,6 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
 	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -130,7 +129,7 @@ var _ = Describe("Task", Ordered, func() {
 					g.Expect(task.Status.Status).To(Equal(apicommon.StateSucceeded))
 				}, "20s").Should(Succeed())
 			})
-			It("succeed task if taskDefiniton for Container is present in default KLT namespace", func() {
+			It("succeed task if taskDefinition for Container is present in default KLT namespace", func() {
 				By("create default KLT namespace")
 
 				ns := &v1.Namespace{

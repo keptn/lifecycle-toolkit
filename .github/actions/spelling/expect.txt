@@ -53,7 +53,6 @@ bacherfl
 badanalysis
 badmetric
 badtaskdefinition
-bargauge
 basecmd
 batchai
 baz
@@ -65,7 +64,6 @@ BUILDENVVAR
 BUILDKIT
 BUILDPLATFORM
 buildx
-BWk
 CACHEDIR
 cainjection
 carryforward
@@ -144,7 +142,6 @@ docsearch
 docsembed
 docsy
 dql
-DQml
 DTAPI
 dtclient
 dupl
@@ -213,7 +210,6 @@ google
 govulncheck
 grafana
 graphql
-groupby
 groupversion
 GVK
 healthz
@@ -261,10 +257,12 @@ ITracer
 jaegertracing
 javascript
 jetstack
+Jhb
 jsonschema
-kav
-kacr
 jwt
+kacr
+kauz
+kav
 kebabcase
 keda
 kelseyhightower
@@ -587,7 +585,6 @@ tgz
 thisthatdc
 thschue
 timeframe
-timepicker
 Timerange
 timeseries
 timespan
@@ -638,7 +635,6 @@ whitespaces
 whykeptn
 wjdp
 wli
-wlo
 Wls
 wordpress
 workdir

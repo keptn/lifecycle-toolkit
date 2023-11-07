@@ -18,4 +18,4 @@ ignore$
 \.xlf$
 ^\.github/actions/spelling
 _test\.go$
-^examples/support/observability/config/*.yaml$
+^examples/support/observability/config/

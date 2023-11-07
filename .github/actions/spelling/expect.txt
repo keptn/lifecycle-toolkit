@@ -420,6 +420,7 @@ nolint
 nonroot
 noreply
 nsa
+oac
 oauth
 objectmeta
 objectreference
@@ -499,6 +500,7 @@ redis
 referrerpolicy
 relref
 remediations
+replicasets
 replicationcontrollers
 resourcereference
 Rexed

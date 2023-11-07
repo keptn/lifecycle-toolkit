@@ -105,3 +105,6 @@ go install(?:\s+[a-z]+\.[-@\w/.]+)+
 
 # tls certs
 LS0[a-zA-Z0-9]+
+
+# k8s CRD validation patterns
+pattern\: *$

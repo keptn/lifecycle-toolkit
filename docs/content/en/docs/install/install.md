@@ -25,7 +25,7 @@ This page covers the following:
   used to install Keptn.
 
 * To modify the Keptn configuration,
-  you must modify the appropriate `values.yaml` files:
+  you must modify the umbrella `values.yaml` files:
 
   * [Modify Helm configuration options](#modify-helm-configuration-options)
     summarizes the mechanics of modifying and applying a `values.yaml` file.
@@ -39,16 +39,13 @@ This page covers the following:
   * [Customizing the configuration of components](#customizing-the-configuration-of-components)
     explains how to modify the configuration of individual components.
 
-* [Running Keptn with vCluster](#running-keptn-with-vcluster)
-  discusses how to configure vCluster in order to run Keptn on it.
-
 After you install Keptn, you are ready to
 [Integrate Keptn with your applications](../implementing/integrate.md).
 
 ## Basic installation
 
 Keptn is installed onto an existing Kubernetes cluster
-using a Helm Chart and standard
+using an umbrella Helm Chart and standard
 [Helm commands](https://helm.sh/docs/intro/cheatsheet/).
 
 > **Note** Keptn works on virtually any type of Kubernetes cluster
@@ -98,33 +95,30 @@ Some helpful hints:
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
   ```
 
-  > **Note** For versions prior to v0.9.0,
-    the Release `NAME` is `keptn/klt`;
-    use the corresponding CHART version to install an older release.
+  > **Note** To install a version prior to v0.9.0,
+    use the install command sequence that is documented for that release.
+    Use the command sequence shown above to determine the CHART version
+    and specify that CHART version to the `--version` flag.
   >
 
-* You can modify the `values.yaml` file for the umbrella chart
-  and/or the component sub-charts.
+* To modify the configuration,
+  modify the umbrella `values.yaml` file.
   See
   [Modify Helm configuration options](#modify-helm-configuration-options)
-  below.
+  below for instructions.
   You can then apply the modified configuration
   with the `--values <values-filename.yaml>` flag.
-  For example, if you created a `my.values.yaml`
-  to exclude the `lifecycle-operator` from your cluster
-  and created a `metrics.values.yaml` to modify the configuration
-  of the `metrics-operator`, the command sequence is:
+  For example, if you create a `my.values.yaml`
+  and modified some configuration values,
+  the command sequence to apply your configuration is:
 
   ```shell
   helm repo add keptn https://charts.lifecycle.keptn.sh
   helm repo update
   helm upgrade --install keptn keptn/keptn \
-   --values my.values.yaml --values metrics.values.yaml \
+   --values my.values.yaml \
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
   ```
-
-  You see that you can specify multiple `--values` options in one command.
-  The precedence is from right to left.
 
 * To view which Keptn components are installed in your cluster
   and verify that they are the correct ones,
@@ -137,7 +131,7 @@ Some helpful hints:
 ## Modify Helm configuration options
 
 To modify the Keptn configuration,
-you must modify the appropriate `values.yaml` file.
+you must modify the keptn/keptn `values.yaml` file.
 Values can be modified before the installation
 or can be modified and reapplied after the initial installation.
 This is useful if you do not want to install all components,
@@ -145,14 +139,15 @@ if you need to modify the configuration in some way,
 such as to turn verbose logging on or off.
 
 To modify configuration options,
-download a copy of the appropriate `values.yaml` file
+download a copy of the Keptn umbrella `values.yaml` file
 (see the table in the
 [Control what components are installed](#control-what-components-are-installed)
 section below).
 Edit the local copy of that `values.yaml` file to make the modifications,
 and use the modified file to install Keptn:
 
-1. Download the `values.yaml` file:
+1. Download the umbrella `values.yaml` file
+   ([keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml)):
 
    ```shell
    helm get values RELEASE_NAME [flags] > values.yaml
@@ -163,20 +158,23 @@ and use the modified file to install Keptn:
    (which is linked to the text in the "Components" column in the table)
    describes each parameter in the `values.yaml` file.
 
+   > **Note** To modify configurations that are documented for a subchart,
+     add them to your copy of the umbrella `values.yaml` file.
+     See
+     [Customizing he configuration of components](#customizing-the-configuration-of-components)
+     for an example.
+   >
+
 1. Upgrade your Keptn installation to use the new configuration
-   by adding the following string to your `helm upgrade` command:
+   following the instructions above.
+
+   You can instead use the `--set` flag
+   to specify a value change for the `helm upgrade --install` command.
+   CConfiguration options are specified using the format:
 
    ```shell
-   --values=values.yaml
+   --set key1=value1,key2=value2,....
    ```
-
-You can also use the `--set` flag
-to specify a value change for the `helm upgrade --install` command.
-Configuration options are specified using the format:
-
-```shell
---set key1=value1,key2=value2,....
-```
 
 ## Control what components are installed
 
@@ -210,7 +208,8 @@ To specify the components that are included,
 you need to modify the
 [keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml)
 file.
-The following sections summarize the configurations needed for different use cases.
+The following sections summarize and give examples
+of the configurations needed for different use cases.
 
 Note that the umbrella scheme is quite flexible.
 You can install all of Keptn on your cluster,
@@ -331,30 +330,14 @@ Here is an example `values.yaml` that alters values for the metrics operator:
 
 {{< embed path="/docs/content/en/docs/install/assets/values-advance-changes.yaml" >}}
 
-## Running Keptn with vCluster
+Note the additional parameters that are specified
+in the `metricsOperator` section.
+These are documented in the README file for that operator,
+which is linked from the `metrics-operator` item under "Component"
+in the table above.
 
-Keptn running on Kubernetes versions 1.26 and older
-uses a custom
-[scheduler](../architecture/components/scheduler.md),
-so, out of the box, it does not work with
-[Virtual Kubernetes Clusters](https://www.vcluster.com/)
-("vClusters").
-This is also an issue
-if the `schedulingGatesEnabled` Helm chart value is set to `false`
-for Kubernetes version 1.27 and later.
-See
-[Keptn integration with Scheduling](../architecture/components/scheduler.md)
-for details.
-
-To solve this problem:
-
-1. Follow the instructions in
-   [Separate vCluster Scheduler](https://www.vcluster.com/docs/architecture/scheduling#separate-vcluster-scheduler)
-   to modify the vCluster `values.yaml` file
-   to use a virtual scheduler.
-
-1. Create or upgrade the vCluster,
-   following the instructions in that same document.
-
-1. Follow the instructions in the section below
-   to install Keptn in that vCluster.
+> **Note** Helm itself allows you to specify multiple `values.yaml` files
+  to the `helm update` command
+  but this is never done when installing Keptn.
+  All configuration modifications for all components
+  are instead specified in the umbrella `values.yaml` file.

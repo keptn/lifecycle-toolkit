@@ -3,6 +3,7 @@
 /swagger-ui/
 CODEOWNERS
 CONTRIBUTORS.md
+CHANGELOG.md
 ignore$
 \.editorconfig$
 \.gitkeep$

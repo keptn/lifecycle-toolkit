@@ -42,8 +42,7 @@ helm upgrade --install keptn keptn/keptn \
 ```
 
 If you want to use Keptn to observe your deployments
-or to run pre- and/or post tasks and/or evaluations
-as part of lifecycle management,
+or to enhance them with lifecycle management
 you must enable Keptn in your
 [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 via annotations.

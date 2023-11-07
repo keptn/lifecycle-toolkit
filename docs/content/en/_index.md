@@ -1,5 +1,5 @@
 ---
-title: Home
+title: Keptn Kubernetes Orchestration - Supercharge Your Deployments
 cascade:
   - _target:
       path: "/docs/**"

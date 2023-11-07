@@ -1,18 +1,23 @@
+# https://docs.netlify.com/routing/redirects/redirect-options/#custom-404-page-handling
+[[redirects]]
+  from = "/*"
+  to = "/404/"
+  status = 404
+
 [build]
 base = "docs/"
 publish = "public/"
 command = "hugo -b $DEPLOY_PRIME_URL"
 
 [build.environment]
-HUGO_VERSION = "0.105.0"
+HUGO_VERSION = "0.111.3"
 HUGO_ENABLEGITINFO = "true"
 
 [context.deploy-preview]
 
 [context.branch-deploy]
 
-[context.production.environment]
-HUGO_ENV = "production"
-
 [context.production]
 command = "hugo -b $URL"
+
+environment = { HUGO_ENV = "production" }

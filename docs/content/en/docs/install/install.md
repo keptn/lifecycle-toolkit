@@ -159,7 +159,7 @@ modify some values, and use the modified file to install Keptn:
 Keptn consists of multiple components,
 each of which enables a specific use-case.
 Each of the components is packaged into a subchart of Keptn
-which has parameters that can be configured for that component
+which has values that can be configured for that component
 in the umbrella `values.yaml` file.
 
 The following table summarizes the Keptn umbrella chart scheme;

@@ -99,3 +99,6 @@ go install(?:\s+[a-z]+\.[-@\w/.]+)+
 
 # tar arguments
 \b(?:\\n|)g?tar(?:\.exe|)(?:(?:\s+--[-a-zA-Z]+|\s+-[a-zA-Z]+|\s[ABGJMOPRSUWZacdfh-pr-xz]+\b)(?:=[^ ]*|))+
+
+# hugo youtube links
+\{\{\< youtube [a-zA-Z0-9] \>\}\}$

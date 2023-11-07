@@ -18,4 +18,4 @@ ignore$
 \.xlf$
 ^\.github/actions/spelling
 _test\.go$
-^\Qexamples/support/observability/config/prometheus/grafana-dashboardDefinitions.yaml\E$
+^examples/support/observability/config

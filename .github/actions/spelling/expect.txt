@@ -119,7 +119,6 @@ daemonset
 dario
 datadog
 datasource
-datasources
 datetime
 davidanson
 dawidd
@@ -532,7 +531,6 @@ serviceport
 shellcheck
 SHELLFLAGS
 shortcode
-shortcodes
 sigstore
 simpleapp
 simplenode

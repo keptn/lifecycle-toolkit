@@ -15,7 +15,6 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
-	"k8s.io/klog/v2"
 )
 
 var workloadVersionResource = schema.GroupVersionResource{Group: "lifecycle.keptn.sh", Version: "v1alpha4", Resource: "keptnworkloadversions"}
@@ -71,7 +70,7 @@ func NewWorkloadManager(d dynamic.Interface) *WorkloadManager {
 }
 
 func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status {
-	//List workloadVersion run CRDs
+	// List workloadVersion run CRDs
 	name := getCRDName(pod)
 	crd, err := sMgr.GetCRD(ctx, pod.Namespace, name)
 
@@ -82,7 +81,7 @@ func (sMgr *WorkloadManager) Permit(ctx context.Context, pod *corev1.Pod) Status
 
 	_, span := sMgr.getSpan(ctx, crd, pod)
 
-	//check CRD status
+	// check CRD status
 	phase, found, err := unstructured.NestedString(crd.UnstructuredContent(), "status", "preDeploymentEvaluationStatus")
 	klog.Infof("[Keptn Permit Plugin] workloadVersion crd %s, found %t with phase %s ", crd, found, phase)
 	if err == nil && found {
@@ -120,7 +119,7 @@ func (sMgr *WorkloadManager) getSpan(ctx context.Context, crd *unstructured.Unst
 		return ctx, span
 	}
 	ctx, span := tracing.CreateSpan(ctx, crd, sMgr.Tracer, pod.Namespace)
-	//TODO store only sampled one and cap it
+	// TODO store only sampled one and cap it
 	sMgr.bindCRDSpan[name] = span
 	return ctx, span
 }
@@ -129,7 +128,7 @@ func (sMgr *WorkloadManager) getSpan(ctx context.Context, crd *unstructured.Unst
 // input and checks, if the resulting string matches the maxLen condition.
 // If it does not match, it reduces the subparts, starting with the first
 // one (but leaving its length at least in minSubstrLen so it's not deleted
-// completely) adn continuing with the rest if needed.
+// completely) and continuing with the rest if needed.
 // Let's take WorkloadVersion as an example (3 parts: app, workload, version).
 // First the app name is reduced if needed (only to minSubstrLen),
 // afterwards workload and the version is not reduced at all. This pattern is

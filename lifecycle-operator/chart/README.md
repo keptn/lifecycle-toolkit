@@ -79,7 +79,7 @@ and application health checks
 ### Keptn Scheduler
 
 | Name                                                         | Description                                                    | Value                 |
-| ------------------------------------------------------------ |----------------------------------------------------------------| --------------------- |
+| ------------------------------------------------------------ | -------------------------------------------------------------- | --------------------- |
 | `scheduler.nodeSelector`                                     | adds node selectors for scheduler                              | `{}`                  |
 | `scheduler.replicas`                                         | modifies replicas                                              | `1`                   |
 | `scheduler.containerSecurityContext`                         | Sets security context                                          |                       |

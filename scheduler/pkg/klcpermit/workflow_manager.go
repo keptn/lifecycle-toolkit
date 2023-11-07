@@ -15,6 +15,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
+	"k8s.io/klog/v2"
 )
 
 var workloadVersionResource = schema.GroupVersionResource{Group: "lifecycle.keptn.sh", Version: "v1alpha4", Resource: "keptnworkloadversions"}

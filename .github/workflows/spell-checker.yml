@@ -5,9 +5,9 @@ on:
       - "main"
       - "page"
     types:
-    - 'opened'
-    - 'reopened'
-    - 'synchronize'
+      - 'opened'
+      - 'reopened'
+      - 'synchronize'
 
 jobs:
   spelling:

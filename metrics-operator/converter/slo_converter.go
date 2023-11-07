@@ -310,7 +310,7 @@ func createUnboundedInterval(op string) (*Interval, error) {
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)
 	if !ok {
-		return nil, NewUnconvertableValueErr(value)
+		return nil, NewInconvertibleValueErr(value)
 	}
 	// interval of (val, Inf)
 	if isGreaterOrEqual(operator) {
@@ -406,7 +406,7 @@ func negateSingleOperator(op string, value string) (*metricsapi.Operator, error)
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)
 	if !ok {
-		return nil, NewUnconvertableValueErr(value)
+		return nil, NewInconvertibleValueErr(value)
 	}
 	if op == "<=" {
 		return &metricsapi.Operator{
@@ -444,7 +444,7 @@ func createSingleOperator(op string, value string) (*metricsapi.Operator, error)
 	dec := inf.NewDec(1, 0)
 	_, ok := dec.SetString(value)
 	if !ok {
-		return nil, NewUnconvertableValueErr(value)
+		return nil, NewInconvertibleValueErr(value)
 	}
 	if op == "<=" {
 		return &metricsapi.Operator{
@@ -508,12 +508,12 @@ func decideIntervalBounds(op1 string, value1 string, op2 string, value2 string) 
 	dec1 := inf.NewDec(1, 0)
 	_, ok := dec1.SetString(value1)
 	if !ok {
-		return nil, nil, NewUnconvertableValueErr(value1)
+		return nil, nil, NewInconvertibleValueErr(value1)
 	}
 	dec2 := inf.NewDec(1, 0)
 	_, ok = dec2.SetString(value2)
 	if !ok {
-		return nil, nil, NewUnconvertableValueErr(value2)
+		return nil, nil, NewInconvertibleValueErr(value2)
 	}
 
 	operator1 := &Operator{

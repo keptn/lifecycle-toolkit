@@ -13,7 +13,7 @@ func NewInvalidOperatorErr(msg string) error {
 	return fmt.Errorf("invalid operator: '%s'", msg)
 }
 
-func NewUnconvertableValueErr(msg string) error {
+func NewInconvertibleValueErr(msg string) error {
 	return fmt.Errorf("unable to convert value '%s' to decimal", msg)
 }
 

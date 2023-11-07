@@ -246,7 +246,6 @@ IManager
 IMeter
 Infof
 inlines
-inodes
 Intelli
 intervalresult
 iobjective
@@ -618,6 +617,7 @@ validatingwebhookconfigurations
 vanalysis
 vanalysisdefinition
 vcluster
+Vec
 versioned
 versioning
 visualise
@@ -643,7 +643,7 @@ workdir
 workflows
 WORKLOADNAME
 WORKLOADOVERALLSTATUS
-workloadstate
+workloadsstate
 workloadstatus
 workloadversion
 xxxx

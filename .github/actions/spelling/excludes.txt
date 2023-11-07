@@ -22,5 +22,5 @@ _test\.go$
 ^examples/support/observability/assets/
 ^test/prometheus/
 ^\.github/scripts/\.helm-tests/[a-zA-Z0-9-]+/result.ya?ml
-^dashboards/grafana/configmap/*.yaml
-^dashboards/grafana/import/*.json
+^dashboards/grafana/configmap/.*\.ya?ml
+^dashboards/grafana/import/.*\.json

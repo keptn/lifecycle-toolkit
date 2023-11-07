@@ -25,7 +25,7 @@ func NewEmptyOperatorErr(op []string) error {
 	return fmt.Errorf("empty operators: '%v'", op)
 }
 
-func NewUnconvertableOperatorCombinationErr(op1, op2 string) error {
+func NewInconvertibleOperatorCombinationErr(op1, op2 string) error {
 	return fmt.Errorf("inconvertible combination of operators: '%s', '%s'", op1, op2)
 }
 

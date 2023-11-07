@@ -500,7 +500,7 @@ func createDoubleOperator(op1 string, value1 string, op2 string, value2 string) 
 		}, nil
 	}
 
-	return nil, NewUnconvertableOperatorCombinationErr(op1, op2)
+	return nil, NewInconvertibleOperatorCombinationErr(op1, op2)
 }
 
 // decides which of the values is smaller and binds operator to them

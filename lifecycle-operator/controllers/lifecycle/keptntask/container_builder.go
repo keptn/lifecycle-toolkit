@@ -2,7 +2,7 @@ package keptntask
 
 import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
 	"golang.org/x/net/context"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -44,7 +44,7 @@ func (c *ContainerBuilder) getVolumeSource() *corev1.EmptyDirVolumeSource {
 }
 
 func (c *ContainerBuilder) generateVolume() *corev1.Volume {
-	if !common.IsVolumeMountPresent(c.spec) {
+	if !taskdefinition.IsVolumeMountPresent(c.spec) {
 		return nil
 	}
 	return &corev1.Volume{

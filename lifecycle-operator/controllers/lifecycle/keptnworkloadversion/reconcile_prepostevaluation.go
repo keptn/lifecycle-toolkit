@@ -11,7 +11,6 @@ import (
 )
 
 func (r *KeptnWorkloadVersionReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
-
 	evaluationCreateAttributes := evaluation.CreateEvaluationAttributes{
 		SpanName:  fmt.Sprintf(apicommon.CreateWorkloadEvalSpanName, checkType),
 		CheckType: checkType,

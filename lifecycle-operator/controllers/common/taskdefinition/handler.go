@@ -1,4 +1,4 @@
-package common
+package taskdefinition
 
 import (
 	"os"
@@ -13,6 +13,8 @@ const (
 	PythonRuntimeImageKey   = "PYTHON_RUNNER_IMAGE"
 	FunctionScriptMountPath = "/var/data/function.ts"
 	PythonScriptMountPath   = "/var/data/function.py"
+	FunctionScriptKey       = "js"
+	PythonScriptKey         = "python"
 )
 
 func GetRuntimeSpec(def *klcv1alpha3.KeptnTaskDefinition) *klcv1alpha3.RuntimeSpec {

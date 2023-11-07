@@ -1,4 +1,4 @@
-package common
+package task
 
 import (
 	"context"
@@ -8,7 +8,9 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
-	kltfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
@@ -102,7 +104,7 @@ func TestTaskHandler(t *testing.T) {
 			},
 			taskDef: &v1alpha3.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
-					Namespace: KeptnNamespace,
+					Namespace: testcommon.KeptnNamespace,
 					Name:      "task-def",
 				},
 			},
@@ -142,7 +144,7 @@ func TestTaskHandler(t *testing.T) {
 			},
 			taskDef: &v1alpha3.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
-					Namespace: KeptnNamespace,
+					Namespace: testcommon.KeptnNamespace,
 					Name:      "task-def",
 				},
 			},
@@ -354,13 +356,13 @@ func TestTaskHandler(t *testing.T) {
 			unbindSpanCalls: 1,
 		},
 	}
-	config.Instance().SetDefaultNamespace(KeptnNamespace)
+	config.Instance().SetDefaultNamespace(testcommon.KeptnNamespace)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := v1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
-			spanHandlerMock := kltfake.ISpanHandlerMock{
+			spanHandlerMock := telemetryfake.ISpanHandlerMock{
 				GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 					return context.TODO(), trace.SpanFromContext(context.TODO()), nil
 				},
@@ -372,10 +374,10 @@ func TestTaskHandler(t *testing.T) {
 			if tt.taskDef != nil {
 				initObjs = append(initObjs, tt.taskDef)
 			}
-			handler := TaskHandler{
+			handler := Handler{
 				SpanHandler: &spanHandlerMock,
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
+				EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithObjects(initObjs...).Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
@@ -443,10 +445,10 @@ func TestTaskHandler_createTask(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := v1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
-			handler := TaskHandler{
-				SpanHandler: &kltfake.ISpanHandlerMock{},
+			handler := Handler{
+				SpanHandler: &telemetryfake.ISpanHandlerMock{},
 				Log:         ctrl.Log.WithName("controller"),
-				EventSender: NewK8sSender(record.NewFakeRecorder(100)),
+				EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().Build(),
 				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,

@@ -1,4 +1,4 @@
-package common
+package phase
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-logr/logr"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
@@ -15,9 +16,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-type PhaseHandler struct {
+type Handler struct {
 	client.Client
-	EventSender IEvent
+	EventSender eventsender.IEvent
 	Log         logr.Logger
 	SpanHandler telemetry.ISpanHandler
 }
@@ -27,7 +28,7 @@ type PhaseResult struct {
 	ctrl.Result
 }
 
-func (r PhaseHandler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (*PhaseResult, error) {
+func (r Handler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (*PhaseResult, error) {
 	requeueResult := ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
@@ -78,7 +79,7 @@ func shouldAbortPhase(oldStatus apicommon.KeptnState) bool {
 	return oldStatus.IsDeprecated() || oldStatus.IsFailed()
 }
 
-func (r PhaseHandler) handleCompletedPhase(state apicommon.KeptnState, piWrapper *interfaces.PhaseItemWrapper, phase apicommon.KeptnPhaseType, reconcileObject client.Object, spanPhaseTrace trace.Span) (*PhaseResult, error) {
+func (r Handler) handleCompletedPhase(state apicommon.KeptnState, piWrapper *interfaces.PhaseItemWrapper, phase apicommon.KeptnPhaseType, reconcileObject client.Object, spanPhaseTrace trace.Span) (*PhaseResult, error) {
 	if state.IsFailed() {
 		piWrapper.Complete()
 		piWrapper.SetState(apicommon.StateFailed)

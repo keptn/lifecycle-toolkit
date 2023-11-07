@@ -182,7 +182,6 @@ emptydir
 ENABLEGITINFO
 endgroup
 envconfig
-enviornment
 envsubst
 envtest
 errorf

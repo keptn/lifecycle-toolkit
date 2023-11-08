@@ -141,7 +141,7 @@ To implement this:
 * Paste those lines into your `values.yaml` file
   and modify their values in that file.
 
-### Modify Helm configuration options
+### Modify Helm values
 
 To modify Helm configuration options:
 

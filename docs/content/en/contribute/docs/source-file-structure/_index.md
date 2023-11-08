@@ -77,7 +77,7 @@ The source locations are:
 
 * [Lifecycle API](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/apis/lifecycle)
 * [Metrics API](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/api)
-* [Options API](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/apis/options/v1alpha1)
+* [Options API](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/apis/options)
 
 The text is coded in a limited form of markdown.
 

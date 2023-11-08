@@ -125,7 +125,7 @@ modify some values, and use the modified file to install Keptn:
 
 1. Edit your local copy to modify some values
 
-1. To apply the modified configuration.
+1. To apply the modified configuration,
    install Keptn by adding the following string
    to your `helm upgrade` command line:
 

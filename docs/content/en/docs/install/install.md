@@ -143,7 +143,7 @@ To implement this:
 
 ### Modify Helm values
 
-To modify Helm configuration options:
+To modify Helm values:
 
 1. Download a copy of the `keptn/values.yaml` file:
 

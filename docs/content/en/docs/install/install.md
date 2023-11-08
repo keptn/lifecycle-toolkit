@@ -74,8 +74,8 @@ Some helpful hints:
 
   ```shell
   helm upgrade --install keptn keptn/keptn \
-   --version version 0.3.0 \
-   -n keptn-lifecycle-toolkit-system --create-namespace --wait
+   --version 0.3.0 \
+   -n keptn-system --create-namespace --wait
   ```
 
 * To view which Keptn components are installed in your cluster

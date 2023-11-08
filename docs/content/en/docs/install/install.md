@@ -168,7 +168,7 @@ To modify Helm configuration options:
    ```shell
    helm upgrade --install keptn keptn/keptn \
     --values my.values.yaml \
-    -n keptn-lifecycle-toolkit-system --create-namespace --wait
+    -n keptn-system --create-namespace --wait
    ```
 
    You can also use the `--set` flag

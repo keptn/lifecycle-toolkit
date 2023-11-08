@@ -3,6 +3,14 @@ github_project_repo: https://github.com/keptn/lifecycle-toolkit
 github_repo: https://github.com/keptn/lifecycle-toolkit
 github_subdir: docs
 
+images:
+  - https://lifecycle.keptn.sh/images/logo-mobile.svg
+
+description: >-
+  Achieve cloud-native application lifecycle orchestration with Keptn.
+  Enhance Kubernetes monitoring, streamline metrics ingestion, and
+  automate deployment validation. Join the Keptn community for insights.
+
 versions:
   - url: /docs/
     version: branch-preview

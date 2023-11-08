@@ -32,7 +32,7 @@ that are relevant only to documentation
 * Avoid using FAQ's in documentation.
   In general, they say "here is some miscellaneous information
   that I was too lazy to organize logically for you."
-  In rare occasions, they may be appropriate,
+  On rare occasions, they may be appropriate,
   such as if you need a quick reference to a large, complicated document
   and include links to detailed documentation about the topic.
 
@@ -49,6 +49,21 @@ that are relevant only to documentation
     to the full installation documentation which has more details.
   * The Getting Started Guide also includes this information
     for the same reason.
+
+* When you want to display a sample file that exists in the repository,
+  use the `embed path` shortcode syntax
+  (which automatically pulls the current version of the file into your document)
+  rather than copying the text.
+  This ensures that, when the sample file is updated,
+  your document is also updated.
+
+  For example, to embed the `examples/sample-app/version3/app-pre-deploy-eval.yaml` file,
+  the syntax is:
+
+  ```md
+  {{</*embed path="/examples/sample-app/version-3/app-pre-deploy-eval.yaml"*/>}}
+
+  ```
 
 * `markdownlint` enforces limits on line length.
   Links to other documents are exempted from this limit

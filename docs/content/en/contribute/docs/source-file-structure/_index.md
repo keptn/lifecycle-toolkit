@@ -98,7 +98,7 @@ leaving links to the various sections in the *CONTRIBUTING.md* guides.
 ## Build strategy
 
 This section discusses how the individual files and directories
-are assembled into the documenation set.
+are assembled into the documentation set.
 See
 [Published Doc Structure](../publish)
 for information about the branches where the documentation is published.

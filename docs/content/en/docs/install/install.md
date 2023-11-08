@@ -198,8 +198,7 @@ then later add them in.
 
 If you wish to use your custom certificate manager,
 you can disable Keptn `cert-manager` by setting the
-`certificateManager.enabled` Helm value to `false`
-in your copy of the `keptn/values.yaml` file:
+`certificateManager.enabled` Helm value to `false`:
 
 {{< docsembed path="content/en/docs/install/assets/values-remove-certmanager.yaml" >}}
 

@@ -122,7 +122,7 @@ The following table summarizes the Keptn `values.yaml` files.
 ## Customizing the configuration of components
 
 To modify configuration of the subcomponents of Keptn,
-use the corresponding Helm values in your `keptn/values.yaml` file.
+use the corresponding Helm values in your `values.yaml` file.
 Use the subcomponent's parent value as the root for your configuration.
 
 Here is an example `values.yaml` altering global and metrics operator values:

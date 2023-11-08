@@ -47,7 +47,7 @@ In the order they appear in the rendered docs, the subdirectories are:
     * **scheduler** (Keptn integration with Scheduling)
 
   * **deployment-flow** (Flow of deployment)
-  * **keptn-apps** (KeptnApp and KeptnWorkflow)
+  * **keptn-apps** (KeptnApp and KeptnWorkload)
   * **cert-manager** (Keptn Certification Manager)
 
 * **crd-ref** (API Reference):

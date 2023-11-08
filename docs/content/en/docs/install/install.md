@@ -90,11 +90,11 @@ Some helpful hints:
 
 ## Keptn Helm configuration
 
-The Keptn configuration is controlled by a set of `values.yaml` files,
+The Keptn configuration is controlled by a set of Helm value files,
 summarized in the following table.
-The `keptn/values.yaml` Helm chart is an umbrella chart
-that calls the subcharts for all components.
-Each component has its own `values.yaml` file
+The Keptn Helm chart is an umbrella chart
+that contains subcharts for all components of Keptn.
+Each component has its own Helm values file
 (documented in its own README file),
 that defines configurations specific to that component.
 

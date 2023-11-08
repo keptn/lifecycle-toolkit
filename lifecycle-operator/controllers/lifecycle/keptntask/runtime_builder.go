@@ -216,7 +216,7 @@ func (fb *RuntimeBuilder) handleParent(ctx context.Context, params *RuntimeExecu
 		return err
 	}
 	parSpec := taskdefinition.GetRuntimeSpec(parentDefinition)
-	// if the parent has also another parent, the data from the grandparent are alredy copied to the parent and therefore parent can copy it's data to the child
+	// if the parent has also another parent, the data from the grandparent are already copied to the parent and therefore parent can copy it's data to the child
 	parentJobParams, _, err = fb.parseRuntimeTaskDefinition(parSpec, parentDefinition.Name, parentDefinition.Namespace, parentDefinition.Status.Function.ConfigMap)
 	if err != nil {
 		return err

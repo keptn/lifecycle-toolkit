@@ -11,7 +11,7 @@ before it becomes part of the Keptn product.
 This page discusses what you need to do during the review phase.
 
 GitHub automatically assigns reviewers to your PR.
-You can also tag oher people in the description or comments.
+You can also tag other people in the description or comments.
 
 Your PR will usually be reviewed within a couple of days,
 but feel free to let us know about your PR

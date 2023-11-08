@@ -113,7 +113,7 @@ func TestCertificateWatcher_ValidateCertificateExpiration(t *testing.T) {
 			name: "certificate cannot be decoded",
 			certHandler: &fake.ICertificateHandlerMock{
 				DecodeFunc: func(data []byte) (p *pem.Block, rest []byte) {
-					return nil, nil //fake a failure in the decoding
+					return nil, nil // fake a failure in the decoding
 				},
 				ParseFunc: nil,
 			},
@@ -141,7 +141,7 @@ func TestCertificateWatcher_ValidateCertificateExpiration(t *testing.T) {
 		{
 			name:        "good certificate - expired",
 			certData:    []byte(uniqueIDPEM),
-			now:         time.Now(), //setting up now makes sure that the threshold is passed
+			now:         time.Now(), // setting up now makes sure that the threshold is passed
 			certHandler: defaultCertificateHandler{},
 			want:        false,
 		},
@@ -312,7 +312,7 @@ func TestNewCertificateWatcher(t *testing.T) {
 		namespace:             "default",
 		certificateSecretName: "my-secret",
 		certificateDirectory:  "test",
-		certificateTreshold:   CertThreshold,
+		certificateThreshold:  CertThreshold,
 		ICertificateHandler:   defaultCertificateHandler{},
 		Log:                   testr.New(t),
 	}

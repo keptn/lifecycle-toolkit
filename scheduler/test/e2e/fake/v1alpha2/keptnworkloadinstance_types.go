@@ -58,7 +58,7 @@ type KeptnWorkloadInstanceStatus struct {
 }
 
 type ItemStatus struct {
-	// name of EvaluationDefinition/TaskDefiniton
+	// name of EvaluationDefinition/TaskDefinition
 	DefinitionName string `json:"definitionName,omitempty"`
 	// +kubebuilder:default:=Pending
 	Status common.KeptnState `json:"status,omitempty"`

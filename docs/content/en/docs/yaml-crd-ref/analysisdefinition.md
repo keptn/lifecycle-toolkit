@@ -97,10 +97,10 @@ spec:
       * **keyObjective** -- If set to `true`,
         the entire analysis fails if this objective fails
   * **totalScore** (required) --
-    * **passPercentage** -- threshhold to reach for the full analysis
+    * **passPercentage** -- threshold to reach for the full analysis
       (all objectives) to pass
     <!-- markdownlint-disable -->
-    * **warningPercentage** -- threshhold to reach
+    * **warningPercentage** -- threshold to reach
       for the full analysis (all objectives) to pass with  `warning` status
 
 ## Usage

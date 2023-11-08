@@ -36,7 +36,7 @@ spec:
     [Basic annotations](../implementing/integrate.md#basic-annotations)
     plus the following:
     * **app.kubernetes.io/instance** analysis-sample
-    * **app.kuberentes.io/managed-by** -- Tool used to manage
+    * **app.kubernetes.io/managed-by** -- Tool used to manage
       the operation of the application.
       Valid values are `helm` and `kustomize`.
     * **app.kubernetes.io/created-by** metrics-operator

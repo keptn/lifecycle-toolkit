@@ -7,7 +7,6 @@ on:
         description: "Release Tag to use"
         type: "string"
         required: true
-        default: "debug"
       dry_run:
         description: "Flag for testing"
         type: "boolean"

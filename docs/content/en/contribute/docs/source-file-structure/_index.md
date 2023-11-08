@@ -117,7 +117,7 @@ provide introductory material about how to use various features.
 
 Here is a template to use to create a new CRD Reference page:
 
-```shell
+```markdown
 ---
 title: template for new files in this directory
 description: <one-line description of CRD>

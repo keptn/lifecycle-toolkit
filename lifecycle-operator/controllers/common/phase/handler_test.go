@@ -28,7 +28,7 @@ func TestHandler(t *testing.T) {
 		phase          apicommon.KeptnPhaseType
 		reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)
 		wantObject     *v1alpha3.KeptnAppVersion
-		want           *PhaseResult
+		want           PhaseResult
 		wantErr        error
 		endTimeSet     bool
 	}{
@@ -42,7 +42,7 @@ func TestHandler(t *testing.T) {
 					Status: apicommon.StateDeprecated,
 				},
 			},
-			want:    &PhaseResult{Continue: false, Result: ctrl.Result{}},
+			want:    PhaseResult{Continue: false, Result: ctrl.Result{}},
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -68,7 +68,7 @@ func TestHandler(t *testing.T) {
 			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return "", fmt.Errorf("some err")
 			},
-			want:    &PhaseResult{Continue: false, Result: requeueResult},
+			want:    PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: fmt.Errorf("some err"),
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -95,7 +95,7 @@ func TestHandler(t *testing.T) {
 			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return apicommon.StatePending, nil
 			},
-			want:    &PhaseResult{Continue: false, Result: requeueResult},
+			want:    PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -122,7 +122,7 @@ func TestHandler(t *testing.T) {
 			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return apicommon.StateProgressing, nil
 			},
-			want:    &PhaseResult{Continue: false, Result: requeueResult},
+			want:    PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -149,7 +149,7 @@ func TestHandler(t *testing.T) {
 			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return apicommon.StateSucceeded, nil
 			},
-			want:    &PhaseResult{Continue: true, Result: requeueResult},
+			want:    PhaseResult{Continue: true, Result: requeueResult},
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -176,7 +176,7 @@ func TestHandler(t *testing.T) {
 			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return apicommon.StateFailed, nil
 			},
-			want:    &PhaseResult{Continue: false, Result: ctrl.Result{}},
+			want:    PhaseResult{Continue: false, Result: ctrl.Result{}},
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -204,7 +204,7 @@ func TestHandler(t *testing.T) {
 			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return apicommon.StateUnknown, nil
 			},
-			want:    &PhaseResult{Continue: false, Result: requeueResult},
+			want:    PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{

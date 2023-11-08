@@ -18,8 +18,7 @@ jobs:
       actions: read
     outputs:
       followup: ${{ steps.spelling.outputs.followup }}
-    runs-on: ubuntu-latest
-    if: ${{ contains(github.event_name, 'pull_request')}}
+    runs-on: ubuntu-22.04
     concurrency:
       group: spelling-${{ github.event.pull_request.number || github.ref }}
       # note: If you use only_check_changed_files, you do not want cancel-in-progress
@@ -55,3 +54,5 @@ jobs:
           extra_dictionary_limit: 20
           extra_dictionaries:
             cspell:software-terms/dict/softwareTerms.txt
+            cspell:k8s/dict/k8s.txt
+            cspell:golang/dict/go.txt

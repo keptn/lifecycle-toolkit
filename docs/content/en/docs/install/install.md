@@ -138,8 +138,8 @@ To implement this:
 
 * Go into the `values.yaml` file linked under "Configuration file"
 * Copy the lines for the values you want to modify
-* Paste those lines into the `keptn/values.yaml` file
-  and modify their values in that file
+* Paste those lines into your `values.yaml` file
+  and modify their values in that file.
 
 ### Modify Helm configuration options
 

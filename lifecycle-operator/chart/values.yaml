@@ -93,8 +93,6 @@ lifecycleOperator:
     keptnWorkloadInstanceControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
     optionsControllerLogLevel: "0"
-## @param   lifecycleOperator.env.ttlSecondsAfterFinished creates a timeout to clean up the job when it is completed or failed
-    ttlSecondsAfterFinished: "600"
 ## @param   lifecycleOperator.env.otelCollectorUrl Sets the URL for the open telemetry collector
     otelCollectorUrl: otel-collector:4317
 ## @param   lifecycleOperator.env.pythonRunnerImage specify image for python task runtime

@@ -86,8 +86,6 @@ spec:
               value: "0"
             - name: OPTIONS_CONTROLLER_LOG_LEVEL
               value: "0"
-            - name: TTL_SECONDS_AFTER_FINISHED
-              value: "600"
             - name: SCHEDULING_GATES_ENABLED
               value: "false"
           securityContext:

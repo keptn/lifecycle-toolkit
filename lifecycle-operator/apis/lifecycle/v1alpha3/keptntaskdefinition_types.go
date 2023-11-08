@@ -62,6 +62,7 @@ type KeptnTaskDefinitionSpec struct {
 	AutomountServiceAccountToken *AutomountServiceAccountTokenSpec `json:"automountServiceAccountToken,omitempty"`
 	// TTLSecondsAfterFinished controller makes a job eligible to be cleaned up after it is finished.
 	// The timer starts when the status shows up to be Complete or Failed.
+	// +kubebuilder:default:=300
 	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
 }
 

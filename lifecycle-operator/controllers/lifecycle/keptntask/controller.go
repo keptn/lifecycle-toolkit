@@ -36,11 +36,10 @@ import (
 // KeptnTaskReconciler reconciles a KeptnTask object
 type KeptnTaskReconciler struct {
 	client.Client
-	Scheme            *runtime.Scheme
-	EventSender       controllercommon.IEvent
-	Log               logr.Logger
-	DefaultTTLSeconds int32
-	Meters            apicommon.KeptnMeters
+	Scheme      *runtime.Scheme
+	EventSender controllercommon.IEvent
+	Log         logr.Logger
+	Meters      apicommon.KeptnMeters
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntasks,verbs=get;list;watch;create;update;patch;delete

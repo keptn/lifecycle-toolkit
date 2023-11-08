@@ -48,7 +48,7 @@ In the order they appear in the rendered docs, the subdirectories are:
 
   * **deployment-flow** (Flow of deployment)
   * **keptn-apps** (KeptnApp and KeptnWorkload)
-  * **cert-manager** (Keptn Certification Manager)
+  * **cert-manager** (Keptn Certificate Manager)
 
 * **crd-ref** (API Reference):
   Comprehensive information about all the APIs that define the Keptn CRDs.

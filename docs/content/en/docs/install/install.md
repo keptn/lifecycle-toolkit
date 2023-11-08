@@ -63,20 +63,16 @@ Some helpful hints:
   `helm upgrade --install` command to specify a different Keptn Helm chart version.
 
   To get the appropriate chart version for the Keptn version you want,
-  use the following command sequence:
+  use the following command:
 
   ```shell
-  helm repo add keptn https://charts.lifecycle.keptn.sh
-  helm repo update
   helm search repo keptn --versions
   ```
   
   You see that the "CHART VERSION" for `keptn/keptn` v0.9.0 is 0.3.0
-  so the following command sequence explicitly installs Keptn v0.9.0:
+  so use the following command to explicitly installs Keptn v0.9.0:
 
   ```shell
-  helm repo add keptn https://charts.lifecycle.keptn.sh
-  helm repo update
   helm upgrade --install keptn keptn/keptn \
    --version version 0.3.0 \
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
@@ -92,10 +88,41 @@ Some helpful hints:
 
   The output shows all Keptn components that are running on your cluster.
 
+## Keptn Helm configuration
+
+The Keptn configuration is controlled by a set of `values.yaml` files,
+summarized in the following table.
+The `keptn/values.yaml` Helm chart is an umbrella chart
+that calls the subcharts for all components.
+Each component has its own `values.yaml` file
+(documented in its own README file),
+that defines configurations specific to that component.
+
+All configuration changes for all components
+are made to the `keptn/values.yaml` file.
+This is discussed more in
+[Modify Helm configuration options](#modify-helm-configuration-options)
+below.
+
+The following table summarizes the Keptn `values.yaml` files.
+
+* Click the name in the "Component" column
+  to view the README file that documents the Helm values
+  that can be set for that component
+* Click the string in the "Configuration file" column
+  to view the actual `values.yaml` file for each
+
+| Component                                                                                                                  | Used for                                                                                                                  | Configuration file |
+|----------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------| --------------------|
+| [Keptn](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/README.md)                           | Installs subcharts, global configuration                                                                                  | [keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml) |
+| [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/README.md) | [Observability](../implementing/otel.md), [Release Lifecycle Management](../intro/_index.md#release-lifecycle-management) | [keptn-lifecycle-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/values.yaml) |
+| [metrics-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/README.md)    | [Keptn metrics](../implementing/evaluatemetrics.md), [Analysis](../implementing/slo.md)                                   | [keptn-metrics-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/values.yaml) |
+| [cert-manager](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md)            | [TLS Certificate management for all Keptn components](../architecture/cert-manager)                                                                       | [keptn-cert-manager/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/values.yaml) |
+
 ## Customizing the configuration of components
 
 To modify configuration of the subcomponents of Keptn,
-use the corresponding Helm values in your main `values.yaml`.
+use the corresponding Helm values in your `keptn/values.yaml` file.
 Use the subcomponent's parent value as the root for your configuration.
 
 Here is an example `values.yaml` altering global and metrics operator values:
@@ -106,18 +133,19 @@ Note the additional values that are specified
 in the `metricsOperator` section.
 These are documented in the README file for that operator,
 which is linked from the `metrics-operator` item under "Component"
-in the table in
-[Control what components are installed](install/#control-what-components-are-installed).
+in the table above.
+To implement this:
+
+* Go into the `values.yaml` file linked under "Configuration file"
+* Copy the lines for the values you want to modify
+* Paste those lines into the `keptn/values.yaml` file
+  and modify their values in that file
 
 ### Modify Helm configuration options
 
-Helm values can be modified before the installation.
+To modify Helm configuration options:
 
-To modify configuration options, download a copy of the
-default `values.yaml` file,
-modify some values, and use the modified file to install Keptn:
-
-1. Download the `values.yaml` file:
+1. Download a copy of the `keptn/values.yaml` file:
 
    ```shell
    helm show values keptn/keptn > values.yaml
@@ -125,9 +153,9 @@ modify some values, and use the modified file to install Keptn:
 
 1. Edit your local copy to modify some values
 
-1. To apply the modified configuration,
-   install Keptn by adding the following string
-   to your `helm upgrade` command line:
+1. Add the following string
+   to your `helm upgrade` command line to install Keptn
+   with your configuration changes:
 
    ```shell
    --values=values.yaml
@@ -135,11 +163,9 @@ modify some values, and use the modified file to install Keptn:
 
    For example, if you create a `my.values.yaml`
    and modified some configuration values,
-   the command sequence to apply your configuration is:
+   use the following command to apply your configuration:
 
    ```shell
-   helm repo add keptn https://charts.lifecycle.keptn.sh
-   helm repo update
    helm upgrade --install keptn keptn/keptn \
     --values my.values.yaml \
     -n keptn-lifecycle-toolkit-system --create-namespace --wait
@@ -156,27 +182,10 @@ modify some values, and use the modified file to install Keptn:
 
 ## Control what components are installed
 
-Keptn consists of multiple components,
-each of which enables a specific use-case.
-Each of the components is packaged into a subchart of Keptn
-which has values that can be configured for that component
-in the umbrella `values.yaml` file.
-
-The following table summarizes the Keptn umbrella chart scheme;
-click the name in the "Component" column
-to view the README file that documents the Helm values
-that can be set for that component:
-
-| Component                                                                                                                  | Used for                                                                                                                  | Configuration file |
-|----------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------| --------------------|
-| [Keptn](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/README.md)                           | Installs subcharts, global configuration                                                                                  | [keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml) |
-| [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/README.md) | [Observability](../implementing/otel.md), [Release Lifecycle Management](../intro/_index.md#release-lifecycle-management) | [keptn-lifecycle-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/values.yaml) |
-| [metrics-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/README.md)    | [Keptn metrics](../implementing/evaluatemetrics.md), [Analysis](../implementing/slo.md)                                   | [keptn-metrics-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/values.yaml) |
-| [cert-manager](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md)            | TLS Certificate management for all Keptn components                                                                       | [keptn-cert-manager/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/values.yaml) |
-
 By default, all components are included when you install Keptn.
 To specify the components that are included,
-you need to modify the Keptn `values.yaml` file.
+you need to modify the Keptn `values.yaml` file
+to disable the components you do not want to install.
 
 Note that the Keptn Helm chart is quite flexible.
 You can install all Keptn components on your cluster,
@@ -189,7 +198,8 @@ then later add them in.
 
 If you wish to use your custom certificate manager,
 you can disable Keptn `cert-manager` by setting the
-`certificateManager.enabled` Helm value to `false`:
+`certificateManager.enabled` Helm value to `false`
+in your copy of the `keptn/values.yaml` file:
 
 {{< docsembed path="content/en/docs/install/assets/values-remove-certmanager.yaml" >}}
 

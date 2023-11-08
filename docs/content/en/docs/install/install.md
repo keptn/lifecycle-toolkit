@@ -99,7 +99,7 @@ Each component has its own Helm values file
 that defines configurations specific to that component.
 
 All configuration changes for all components
-are made to the `keptn/values.yaml` file.
+can be made in one `values.yaml` file.
 This is discussed more in
 [Modify Helm configuration options](#modify-helm-configuration-options)
 below.

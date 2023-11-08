@@ -1,10 +1,7 @@
 ---
 title: Page Not Found
-weight: 100
-menu:
-    main:
-        weight: 20
 type: docs
+toc_hide: true
 cascade:
     type: docs
 ---

@@ -83,7 +83,7 @@ The text is coded in a limited form of markdown.
 
 After modifying text for the API reference, you must regenerate it.
 
-To manuall install the tool to regenerate the API reference docs,
+To manually install the tool to regenerate the API reference docs,
 execute the following command
 in the root directory of your `lifecycle-toolkit` clone:
 

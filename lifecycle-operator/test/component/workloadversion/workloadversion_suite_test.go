@@ -2,7 +2,6 @@ package workloadversion_test
 
 import (
 	"context"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
 	"os"
 	"testing"
 	"time"
@@ -10,6 +9,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadversion"
@@ -20,8 +20,6 @@ import (
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	// nolint:gci
-	// +kubebuilder:scaffold:imports
 )
 
 func TestWorkloadVersion(t *testing.T) {

@@ -162,7 +162,7 @@ To modify Helm values:
    ```
 
    For example, if you create a `my.values.yaml`
-   and modified some configuration values,
+   and modify some configuration values,
    use the following command to apply your configuration:
 
    ```shell

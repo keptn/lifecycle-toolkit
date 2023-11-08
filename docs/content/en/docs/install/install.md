@@ -154,7 +154,7 @@ To modify Helm configuration options:
 1. Edit your local copy to modify some values
 
 1. Add the following string
-   to your `helm upgrade` command line to install Keptn
+   to your `helm upgrade` command to install Keptn
    with your configuration changes:
 
    ```shell

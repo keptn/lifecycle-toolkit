@@ -77,7 +77,6 @@ type envConfig struct {
 	KeptnMetricControllerLogLevel int    `envconfig:"METRICS_CONTROLLER_LOG_LEVEL" default:"0"`
 	AnalysisControllerLogLevel    int    `envconfig:"ANALYSIS_CONTROLLER_LOG_LEVEL" default:"0"`
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
-	EnableKeptnAnalysis           bool   `envconfig:"ENABLE_ANALYSIS" default:"false"`
 }
 
 //nolint:gocyclo,funlen
@@ -201,31 +200,30 @@ func main() {
 		os.Exit(1)
 	}
 
-	if env.EnableKeptnAnalysis {
-		analysisLogger := ctrl.Log.WithName("KeptnAnalysis Controller")
-		targetEval := analysis.NewTargetEvaluator(&analysis.OperatorEvaluator{})
-		objEval := analysis.NewObjectiveEvaluator(&targetEval)
-		analysisEval := analysis.NewAnalysisEvaluator(&objEval)
+	analysisLogger := ctrl.Log.WithName("KeptnAnalysis Controller")
+	targetEval := analysis.NewTargetEvaluator(&analysis.OperatorEvaluator{})
+	objEval := analysis.NewObjectiveEvaluator(&targetEval)
+	analysisEval := analysis.NewAnalysisEvaluator(&objEval)
 
-		ac := &analysiscontroller.AnalysisReconciler{
-			Client:                mgr.GetClient(),
-			Scheme:                mgr.GetScheme(),
-			Log:                   analysisLogger.V(env.AnalysisControllerLogLevel),
-			MaxWorkers:            2,
-			NewWorkersPoolFactory: analysiscontroller.NewWorkersPool,
-			IAnalysisEvaluator:    &analysisEval,
-		}
-		if err = ac.SetupWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
-			os.Exit(1)
-		}
-
-		res := make(chan analysistypes.AnalysisCompletion)
-
-		ac.SetAnalysisResultsChannel(res)
-
-		_ = analysismetrics.GetResultsReporter(ctx, res)
+	ac := &analysiscontroller.AnalysisReconciler{
+		Client:                mgr.GetClient(),
+		Scheme:                mgr.GetScheme(),
+		Log:                   analysisLogger.V(env.AnalysisControllerLogLevel),
+		MaxWorkers:            2,
+		NewWorkersPoolFactory: analysiscontroller.NewWorkersPool,
+		IAnalysisEvaluator:    &analysisEval,
 	}
+	if err = ac.SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "KeptnMetric")
+		os.Exit(1)
+	}
+
+	res := make(chan analysistypes.AnalysisCompletion)
+
+	ac.SetAnalysisResultsChannel(res)
+
+	_ = analysismetrics.GetResultsReporter(ctx, res)
+
 	// +kubebuilder:scaffold:builder
 
 	setupValidationWebhooks(mgr)

@@ -145,7 +145,7 @@ To implement this:
 
 To modify Helm values:
 
-1. Download a copy of the `keptn/values.yaml` file:
+1. Download a copy of the Helm values file:
 
    ```shell
    helm show values keptn/keptn > values.yaml

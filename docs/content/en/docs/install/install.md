@@ -106,11 +106,11 @@ below.
 
 The following table summarizes the Keptn `values.yaml` files.
 
-* Click the name in the "Component" column
-  to view the README file that documents the Helm values
-  that can be set for that component
-* Click the string in the "Configuration file" column
-  to view the actual `values.yaml` file for each
+* The "Component" column leads you to the
+  README files for each component where
+  all Helm values are documented
+* The "Configuration file" column leads you to
+  the Helm values files for each component
 
 | Component                                                                                                                  | Used for                                                                                                                  | Configuration file |
 |----------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------| --------------------|

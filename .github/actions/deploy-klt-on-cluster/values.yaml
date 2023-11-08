@@ -7,8 +7,6 @@ certManager:
     tag: $TAG
 metricsOperator:
   imagePullPolicy: Never
-  env:
-    enableKeptnAnalysis: "true"
   image:
     tag: $TAG
 

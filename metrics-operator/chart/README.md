@@ -70,7 +70,6 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 | `containerSecurityContext.runAsUser`                |                                                               | `65532`                  |
 | `containerSecurityContext.seccompProfile.type`      |                                                               | `RuntimeDefault`         |
 | `env.exposeKeptnMetrics`                            | enable metrics exporter                                       | `true`                   |
-| `env.enableKeptnAnalysis`                           | enables/disables the analysis feature                         | `false`                  |
 | `env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller                      | `0`                      |
 | `env.analysisControllerLogLevel`                    | sets the log level of Analysis Controller                     | `0`                      |
 | `image.registry`                                    | specify the container registry for the metrics-operator image | `ghcr.io`                |

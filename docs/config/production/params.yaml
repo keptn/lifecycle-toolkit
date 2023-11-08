@@ -2,3 +2,16 @@ versions:
   - url: https://main.lifecycle.keptn.sh/docs
     version: development
 github_branch: page
+
+images:
+  - https://lifecycle.keptn.sh/images/logo-mobile.svg
+
+description: >-
+  Achieve cloud-native application lifecycle orchestration with Keptn.
+  Enhance Kubernetes monitoring, streamline metrics ingestion, and
+  automate deployment validation. Join the Keptn community for insights.
+
+
+algolia_docsearch: false
+offlineSearch: false
+gcs_engine_id: '37a611225469c41ae' # needs to be replaced with a search engine ID from the keptn google account

@@ -173,7 +173,7 @@ To modify Helm configuration options:
 
    You can also use the `--set` flag
    to specify a value change for the `helm upgrade --install` command.
-   Configuration options are specified using the format:
+   Helm values are specified using the format:
 
    ```shell
    --set key1=value1 \

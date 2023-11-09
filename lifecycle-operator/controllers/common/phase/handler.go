@@ -16,6 +16,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+//go:generate moq -pkg fake -skip-ensure -out ./fake/handler_mock.go . IHandler:MockHandler
+type IHandler interface {
+	HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (PhaseResult, error)
+}
+
 type Handler struct {
 	client.Client
 	EventSender eventsender.IEvent
@@ -28,17 +33,26 @@ type PhaseResult struct {
 	ctrl.Result
 }
 
-func (r Handler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (*PhaseResult, error) {
+func NewHandler(client client.Client, eventSender eventsender.IEvent, log logr.Logger, spanHandler telemetry.ISpanHandler) Handler {
+	return Handler{
+		Client:      client,
+		EventSender: eventSender,
+		Log:         log,
+		SpanHandler: spanHandler,
+	}
+}
+
+func (r Handler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (PhaseResult, error) {
 	requeueResult := ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
-		return &PhaseResult{Continue: false, Result: ctrl.Result{Requeue: true}}, err
+		return PhaseResult{Continue: false, Result: ctrl.Result{Requeue: true}}, err
 	}
 	oldStatus := piWrapper.GetState()
 	oldPhase := piWrapper.GetCurrentPhase()
 	// do not attempt to execute the current phase if the whole phase item is already in deprecated/failed state
 	if shouldAbortPhase(oldStatus) {
-		return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
+		return PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
 	}
 	if oldPhase != phase.ShortName {
 		r.EventSender.Emit(phase, "Normal", reconcileObject, apicommon.PhaseStateStarted, "has started", piWrapper.GetVersion())
@@ -54,7 +68,7 @@ func (r Handler) HandlePhase(ctx context.Context, ctxTrace context.Context, trac
 	if err != nil {
 		spanPhaseTrace.AddEvent(phase.LongName + " could not get reconciled")
 		r.EventSender.Emit(phase, "Warning", reconcileObject, apicommon.PhaseStateReconcileError, "could not get reconciled", piWrapper.GetVersion())
-		return &PhaseResult{Continue: false, Result: requeueResult}, err
+		return PhaseResult{Continue: false, Result: requeueResult}, err
 	}
 
 	defer func(ctx context.Context, oldStatus apicommon.KeptnState, oldPhase string, reconcileObject client.Object) {
@@ -72,14 +86,14 @@ func (r Handler) HandlePhase(ctx context.Context, ctxTrace context.Context, trac
 
 	piWrapper.SetState(apicommon.StateProgressing)
 
-	return &PhaseResult{Continue: false, Result: requeueResult}, nil
+	return PhaseResult{Continue: false, Result: requeueResult}, nil
 }
 
 func shouldAbortPhase(oldStatus apicommon.KeptnState) bool {
 	return oldStatus.IsDeprecated() || oldStatus.IsFailed()
 }
 
-func (r Handler) handleCompletedPhase(state apicommon.KeptnState, piWrapper *interfaces.PhaseItemWrapper, phase apicommon.KeptnPhaseType, reconcileObject client.Object, spanPhaseTrace trace.Span) (*PhaseResult, error) {
+func (r Handler) handleCompletedPhase(state apicommon.KeptnState, piWrapper *interfaces.PhaseItemWrapper, phase apicommon.KeptnPhaseType, reconcileObject client.Object, spanPhaseTrace trace.Span) (PhaseResult, error) {
 	if state.IsFailed() {
 		piWrapper.Complete()
 		piWrapper.SetState(apicommon.StateFailed)
@@ -91,7 +105,7 @@ func (r Handler) handleCompletedPhase(state apicommon.KeptnState, piWrapper *int
 		}
 		r.EventSender.Emit(phase, "Warning", reconcileObject, apicommon.PhaseStateFailed, "has failed", piWrapper.GetVersion())
 		piWrapper.DeprecateRemainingPhases(phase)
-		return &PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
+		return PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
 	}
 
 	// end the current phase do not set the overall state of the whole object to Succeeded here, as this can cause
@@ -104,5 +118,5 @@ func (r Handler) handleCompletedPhase(state apicommon.KeptnState, piWrapper *int
 	}
 	r.EventSender.Emit(phase, "Normal", reconcileObject, apicommon.PhaseStateFinished, "has finished", piWrapper.GetVersion())
 
-	return &PhaseResult{Continue: true, Result: ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}}, nil
+	return PhaseResult{Continue: true, Result: ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}}, nil
 }

@@ -38,6 +38,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnapp"
@@ -283,6 +284,12 @@ func main() {
 		mgr.GetScheme(),
 		spanHandler,
 	)
+	workloadVersionPhaseHandler := phase.NewHandler(
+		mgr.GetClient(),
+		workloadVersionEventSender,
+		workloadVersionLogger,
+		spanHandler,
+	)
 	workloadVersionReconciler := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
 		SchedulingGatesHandler: schedulinggates.NewHandler(mgr.GetClient(), workloadVersionLogger, env.SchedulingGatesEnabled),
 		Client:                 mgr.GetClient(),
@@ -293,6 +300,7 @@ func main() {
 		TracerFactory:          telemetry.GetOtelInstance(),
 		SpanHandler:            spanHandler,
 		EvaluationHandler:      workloadVersionEvaluationHandler,
+		PhaseHandler:           workloadVersionPhaseHandler,
 	}
 	if err = (workloadVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadVersion")

@@ -237,6 +237,7 @@ ifdef
 ifeq
 ifile
 ifndef
+IHandler
 IManager
 IMeter
 Infof

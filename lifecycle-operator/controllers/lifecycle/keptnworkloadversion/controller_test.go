@@ -14,6 +14,8 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	evaluationfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
+	phasefake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase/fake"
 	schedulinggatesfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
@@ -1038,7 +1040,11 @@ func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 		},
 	)
 
-	r, eventChannel, _ := setupReconciler(app, wi)
+	r, _, _ := setupReconciler(app, wi)
+
+	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		return phase.PhaseResult{Continue: false, Result: ctrl.Result{Requeue: false}}, nil
+	}}
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -1053,82 +1059,6 @@ func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 
 	// do not requeue since we reached completion
 	require.False(t, result.Requeue)
-
-	// here we do not expect an event about the application preEvaluation being finished since that  will have been sent in
-	// one of the previous reconciliation loops that lead to the first phase being reached
-	expectedEvents := []string{
-		"WorkloadPreDeployTasksFailed",
-	}
-
-	for _, e := range expectedEvents {
-		event := <-eventChannel
-		require.Equal(t, strings.Contains(event, req.Name), true, "wrong workloadVersion")
-		require.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
-		require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
-	}
-}
-
-func TestKeptnWorkloadVersionReconciler_ReconcileDoNotRetryAfterFailedPhase(t *testing.T) {
-
-	testNamespace := "some-ns"
-
-	wi := &klcv1alpha4.KeptnWorkloadVersion{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "some-wi",
-			Namespace: testNamespace,
-		},
-		Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
-				AppName: "some-app",
-				Version: "1.0.0",
-			},
-			WorkloadName:    "some-app-some-workload",
-			PreviousVersion: "",
-			TraceId:         nil,
-		},
-		Status: klcv1alpha4.KeptnWorkloadVersionStatus{
-			CurrentPhase: apicommon.PhaseWorkloadPreDeployment.ShortName,
-			StartTime:    metav1.Time{},
-			EndTime:      metav1.Time{},
-		},
-	}
-
-	// simulate a KWI that has been cancelled due to a failed pre deployment check
-	wi.DeprecateRemainingPhases(apicommon.PhaseWorkloadPreDeployment)
-
-	app := testcommon.ReturnAppVersion(
-		testNamespace,
-		"some-app",
-		"1.0.0",
-		[]klcv1alpha3.KeptnWorkloadRef{
-			{
-				Name:    "some-workload",
-				Version: "1.0.0",
-			},
-		},
-		klcv1alpha3.KeptnAppVersionStatus{
-			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
-		},
-	)
-
-	r, eventChannel, _ := setupReconciler(wi, app)
-
-	req := ctrl.Request{
-		NamespacedName: types.NamespacedName{
-			Namespace: testNamespace,
-			Name:      "some-wi",
-		},
-	}
-
-	result, err := r.Reconcile(context.TODO(), req)
-
-	require.Nil(t, err)
-
-	// do not requeue since we were cancelled earlier
-	require.False(t, result.Requeue)
-
-	require.Empty(t, len(eventChannel))
 }
 
 func TestKeptnWorkloadVersionReconciler_ReconcileCouldNotRetrieveObject(t *testing.T) {
@@ -1207,6 +1137,14 @@ func TestKeptnWorkloadVersionReconciler_ReconcilePreDeploymentEvaluationUnexpect
 	mockEvaluationHandler.ReconcileEvaluationsFunc = func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
 		return nil, apicommon.StatusSummary{}, errors.New("unexpected error")
 	}
+
+	mockPhaseHandler := &phasefake.MockHandler{
+		HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+			return phase.PhaseResult{Continue: false, Result: ctrl.Result{Requeue: true}}, errors.New("unexpected error")
+		},
+	}
+
+	r.PhaseHandler = mockPhaseHandler
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{

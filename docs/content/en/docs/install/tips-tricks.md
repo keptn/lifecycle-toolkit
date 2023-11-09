@@ -42,8 +42,7 @@ compared to the installation of earlier releases:
 
 To install a version prior to v0.9.0,
 use the install command sequence that is documented for that release.
-Use the same command sequence documented for v0.9.0
-to determine the CHART version for the release you want to install:
+To install the latest version use:
   
 ```shell
 helm repo add keptn https://charts.lifecycle.keptn.sh

@@ -35,7 +35,7 @@ spec:
 <!--     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names) -->
 <!--     specification. -->
 <!-- * **spec** -->
-<!-- ...
+<!-- ... -->
 ...
 
 Fields should be clearly marked as to whether they are

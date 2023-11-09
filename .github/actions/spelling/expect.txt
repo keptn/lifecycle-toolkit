@@ -602,6 +602,8 @@ tracetest
 trivy
 trivyignore
 trunc
+ttlsecondsafterfinished
+ttlsecondstask
 UIDs
 undeploy
 unmarshal

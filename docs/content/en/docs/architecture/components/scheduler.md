@@ -23,7 +23,7 @@ These two implementations are discussed below.
 ## Keptn Scheduling Gates for K8s 1.27 and above
 
 When Keptn is running on Kubernetes version 1.27 and greater
-and the Keptn Helm chart value `lifecycleOperator.schedulingGatesEnabled` is set to `true`,
+and the Keptn Helm value `lifecycleOperator.schedulingGatesEnabled` is set to `true`,
 Keptn uses the
 [Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness)
 to gate Pods until the required deployment checks pass.

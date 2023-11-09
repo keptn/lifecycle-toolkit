@@ -111,8 +111,9 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 					AutomountServiceAccountToken: definition.GetAutomountServiceAccountToken(),
 				},
 			},
-			BackoffLimit:          task.Spec.Retries,
-			ActiveDeadlineSeconds: task.GetActiveDeadlineSeconds(),
+			BackoffLimit:            task.Spec.Retries,
+			ActiveDeadlineSeconds:   task.GetActiveDeadlineSeconds(),
+			TTLSecondsAfterFinished: definition.Spec.TTLSecondsAfterFinished,
 		},
 	}
 	err := controllerutil.SetControllerReference(task, job, r.Scheme)

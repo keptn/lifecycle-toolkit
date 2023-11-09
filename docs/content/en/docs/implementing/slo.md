@@ -40,6 +40,12 @@ For more information,see:
 The Analysis result is exposed as an OpenTelemetry metric
 and can be displayed on dashboard tools, such as Grafana.
 
+> **Note** A preliminary release of the Keptn Analysis feature
+  is included in Keptn v0.8.3 and v0.9.0 but is hidden behind a feature flag.
+  See the
+  [Analysis](../yaml-crd-ref/analysis.md/#differences-between-versions)
+  reference page for instructions to activate the preview of this feature.
+
 ## Keptn Analysis basics
 
 A Keptn Analysis is implemented with three resources:

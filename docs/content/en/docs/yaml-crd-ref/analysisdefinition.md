@@ -161,9 +161,10 @@ API reference:
 ## Differences between versions
 
 A preliminary release of the Keptn Analysis feature
-is included in Keptn v.0.8.3 but is hidden behind a feature flag.
-To preview these features, set the environment `ENABLE_ANALYSIS` to `true`
-in the `metrics-operator` deployment.
+is included in Keptn v0.8.3 and v0.9.0 but is hidden behind a feature flag.
+See the
+[Analysis](analysis.md/#differences-between-versions)
+reference page for instructions to activate the preview of this feature.
 
 ## See also
 

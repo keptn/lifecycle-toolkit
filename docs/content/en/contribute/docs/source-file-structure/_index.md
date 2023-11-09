@@ -33,14 +33,23 @@ In the order they appear in the rendered docs, the subdirectories are:
   Requirements and instructions for installing and enabling Keptn
 * **operate** (Operate Keptn):
   Guides about running and managing the Keptn cluster
-* **implementing** (Implementing Keptn applications):
+* **implementing** (User Guides):
   This is currently a catch-all section
   for guides and how-to material about implementing Keptn features.
   It needs to be restructured and subdivided
-* **troubleshooting.md** (Troubleshooting Guide):
-  How to diagnose and solve common problems with Keptn
 * **architecture** (Architecture):
   Information about how Keptn actually works
+
+  * **components** (Keptn Components)
+
+    * **lifecycle-operator** (Keptn Lifecycle Operator)
+    * **metrics-operator** (Keptn Metrics Operator)
+    * **scheduler** (Keptn integration with Scheduling)
+
+  * **deployment-flow** (Flow of deployment)
+  * **keptn-apps** (KeptnApp and KeptnWorkload)
+  * **cert-manager** (Keptn Certificate Manager)
+
 * **crd-ref** (API Reference):
   Comprehensive information about all the APIs that define the Keptn CRDs.
   This section is auto-generated from source code
@@ -87,6 +96,12 @@ into the *Contributing guide*,
 leaving links to the various sections in the *CONTRIBUTING.md* guides.
 
 ## Build strategy
+
+This section discusses how the individual files and directories
+are assembled into the documentation set.
+See
+[Published Doc Structure](../publish)
+for information about the branches where the documentation is published.
 
 All files in the directories are built
 except for files that are explicitly `ignored`

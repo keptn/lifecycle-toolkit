@@ -9,6 +9,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadversion"
@@ -19,8 +20,6 @@ import (
 	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	// nolint:gci
-	// +kubebuilder:scaffold:imports
 )
 
 func TestWorkloadVersion(t *testing.T) {
@@ -45,14 +44,23 @@ var _ = BeforeSuite(func() {
 	var readyToStart chan struct{}
 	ctx, k8sManager, tracer, spanRecorder, k8sClient, readyToStart = common.InitSuite()
 
+	eventSender := eventsender.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller"))
+
 	tracerFactory := &common.TracerFactory{Tracer: tracer}
-	EvaluationHandler := evaluation.NewHandler(
+	evaluationHandler := evaluation.NewHandler(
 		k8sManager.GetClient(),
-		eventsender.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller")),
+		eventSender,
 		GinkgoLogr,
 		tracerFactory.GetTracer(traceComponentName),
 		k8sManager.GetScheme(),
 		&telemetry.Handler{})
+
+	phaseHandler := phase.NewHandler(
+		k8sManager.GetClient(),
+		eventSender,
+		GinkgoLogr,
+		&telemetry.Handler{},
+	)
 
 	// //setup controllers here
 	config.Instance().SetDefaultNamespace(KeptnNamespace)
@@ -60,12 +68,13 @@ var _ = BeforeSuite(func() {
 		SchedulingGatesHandler: schedulinggates.NewHandler(nil, GinkgoLogr, false),
 		Client:                 k8sManager.GetClient(),
 		Scheme:                 k8sManager.GetScheme(),
-		EventSender:            eventsender.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller")),
+		EventSender:            eventSender,
 		Log:                    GinkgoLogr,
 		Meters:                 common.InitKeptnMeters(),
 		SpanHandler:            &telemetry.Handler{},
 		TracerFactory:          tracerFactory,
-		EvaluationHandler:      EvaluationHandler,
+		EvaluationHandler:      evaluationHandler,
+		PhaseHandler:           phaseHandler,
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 	close(readyToStart)

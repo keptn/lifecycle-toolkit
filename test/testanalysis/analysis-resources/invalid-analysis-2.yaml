@@ -5,7 +5,7 @@ metadata:
 spec:
   timeframe:
     # using invalid 'recent' value
-    recent: "cinque minuti"
+    recent: "five minutes"
   args:
     project: my-project
     stage: dev

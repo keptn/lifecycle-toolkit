@@ -12,7 +12,7 @@ on:
       - "**.go"
       - "**/go.mod"
       - "**/go.sum"
-      - ".golangi.yml"
+      - ".golangci.yml"
       - ".github/workflows/golangci-lint.yml"
       - "!docs/**"
 env:

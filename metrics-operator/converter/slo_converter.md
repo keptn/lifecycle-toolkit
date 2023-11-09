@@ -29,7 +29,7 @@ The converter is part of `metrics-operator` image.
 
 ## Usage
 
-The converter will convert a single `slo.yaml` file into single `AnalysisDefintion` resource.
+The converter will convert a single `slo.yaml` file into single `AnalysisDefinition` resource.
 
 To run the converter, execute the following command:
 

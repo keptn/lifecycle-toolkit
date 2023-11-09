@@ -40,7 +40,7 @@ The earlier project is called "Keptn v1".
 
 * As a project name that is trademarked,
   you should not use an apostrophe-s to make it a possessive ("Keptn's")
-  or hyphentate it (as in "Keptn-specific").
+  or hyphenate it (as in "Keptn-specific").
 
 The Keptn project is a "toolkit" with three use cases, named:
 

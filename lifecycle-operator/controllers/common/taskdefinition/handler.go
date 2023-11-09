@@ -71,7 +71,7 @@ func GetRuntimeMountPath(def *klcv1alpha3.KeptnTaskDefinition) string {
 	return path
 }
 
-// check if either the funtions or container spec is set
+// check if either the functions or container spec is set
 func SpecExists(definition *klcv1alpha3.KeptnTaskDefinition) bool {
 	if definition == nil {
 		return false

@@ -40,7 +40,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 		)
 		Context("With an existing EvaluationDefinition pointing to KeptnMetric", func() {
 			It("KeptnEvaluationController Should succeed, as it finds valid values in KeptnMetric", func() {
-				By("Create EvaluationDefiniton")
+				By("Create EvaluationDefinition")
 
 				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName)
 
@@ -109,7 +109,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 				common.LogErrorIfPresent(err)
 			})
 			It("KeptnEvaluationController Should succeed, as it finds KeptnEvaluationDefinition in default KLT namespace", func() {
-				By("Create EvaluationDefiniton")
+				By("Create EvaluationDefinition")
 
 				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, KeptnNamespace, metricName)
 
@@ -181,7 +181,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 				common.LogErrorIfPresent(err)
 			})
 			It("KeptnEvaluationController Metric status does not exist", func() {
-				By("Create EvaluationDefiniton")
+				By("Create EvaluationDefinition")
 
 				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName)
 
@@ -216,7 +216,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 				common.LogErrorIfPresent(err)
 			})
 			It("KeptnEvaluationController Metric does not exist", func() {
-				By("Create EvaluationDefiniton")
+				By("Create EvaluationDefinition")
 
 				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, namespaceName, metricName)
 

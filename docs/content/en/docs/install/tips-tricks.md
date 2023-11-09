@@ -22,9 +22,8 @@ without installing all of Keptn.
 Keptn is installed using the
 [keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml)
 umbrella chart.
-Each subchart has its own `values.yaml` file
-with parameters that are documented in its README file,
-but configuration changes for the subcharts are added to the umbrella chart.
+Each subchart has its own README file describing possible configuration options,
+but configuration changes for the subcharts are added to a single `values.yaml` file.
 See
 [Customizing the configuration of components](install.md/#customizing-the-configuration-of-components)
 for an example.

@@ -32,7 +32,7 @@
         "docker.io\\/odubajdt\\/.*",
         "docker.io\\/thisthatdc\\/.*",
         "testreg\\/.*",
-        ".*\\/myrep"
+        "myrep"
       ]
     },
     {

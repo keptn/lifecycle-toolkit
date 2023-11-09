@@ -5,42 +5,50 @@ description: Basic understanding of how Keptn integrates with Kubernetes Pod Sch
 weight: 80
 ---
 
-Keptn needs to integrate with Kubernetes scheduling to block
+Keptn integrates with Kubernetes scheduling to block
 the deployment of applications that do not satisfy Keptn defined pre-deployment checks.
+The default scheduling paradigm is different
+depending on the version of Kubernetes you are running:
 
-On Kubernetes versions 1.26 and older,
-Keptn uses the **Keptn Scheduler** to block application deployment when appropriate
-and orchestrate the deployment process.
+* On Kubernetes versions 1.26 and older,
+  Keptn uses the **Keptn Scheduler** to block application deployment when appropriate
+  and orchestrate the deployment process.
 
-If the Keptn helm chart value `schedulingGatesEnabled` is set to `true`, and Keptn is running on a Kubernetes version
-greater than 1.26, Keptn does not install a scheduler plugin.
-Instead, it uses
-the [Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness)
-to gate Pods until the required deployment checks pass.
+* On Kubernetes version 1.27 and greater,
+  scheduling is implemented using
+  [Kubernetes scheduling gates](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness/).
+
+These two implementations are discussed below.
 
 ## Keptn Scheduling Gates for K8s 1.27 and above
 
-When you apply a workload to a K8s cluster,
-the Mutating Webhook checks each Pod for annotations
-to see if it is annotated with
-[Keptn specific annotations](../../implementing/integrate.md#basic-annotations).
-If the annotations are present, the Webhook adds a gate to the Pod called `keptn-prechecks-gate`.
-This spec tells the Kubernetes scheduling framework
-to wait for  the Keptn checks before assigning the pod to a node.
+When Keptn is running on Kubernetes version 1.27 and greater
+and the Keptn Helm value `lifecycleOperator.schedulingGatesEnabled` is set to `true`,
+Keptn uses the
+[Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness)
+to gate Pods until the required deployment checks pass.
 
-For instance a pod gated by keptn looks like the following:
+When a workload is applied to a Kubernetes cluster,
+the Mutating Webhook checks each Pod for annotations.
+If
+[Keptn specific annotations](../../implementing/integrate.md#basic-annotations)
+are present,
+the Webhook adds a scheduling gate to the Pod called `keptn-prechecks-gate`.
+This spec tells the Kubernetes scheduling framework
+to wait for the Keptn checks before binding the pod to a node.
+
+For example, a pod gated by Keptn looks like the following:
 
 {{< embed path="/docs/assets/scheduler-gates/gated.yaml" >}}
 
-The **WorkloadVersion CRD** contains information about the `pre-deployment` checks that
-need to be performed before the Pod can be scheduled.
-If the `pre-deployment` checks have finished successfully, the WorkloadVersion Controller removes the gate from the
-Pod.
-The scheduler can then allow the Pod to be scheduled to a node.
-If the `pre-deployment` checks have not yet finished, the gate stays and the Pod remains in the pending state.
-When removing the gate, the WorkloadVersion controller also adds the following annotation so that,
-if the spec is updated,
-the Pod is not gated again:
+If the `pre-deployment` checks have finished successfully,
+the WorkloadVersion Controller removes the gate from the Pod.
+The default k8s scheduler can then allow the Pod to be bound to a node.
+If the `pre-deployment` checks have not yet finished successfully,
+the gate stays and the Pod remains in the pending state.
+When removing the gate,
+the WorkloadVersion controller also adds the following annotation so that,
+if the spec is updated, the Pod is not gated again:
 
 {{< embed path="/docs/assets/scheduler-gates/gate-removed.yaml" >}}
 
@@ -91,10 +99,10 @@ checks have finished successfully.
 
 The Keptn Scheduler processes the following information from the WorkloadVersion CRD:
 
-- The name of the pre-deployment checks that need to be performed.
-- The status of the pre-deployment checks.
-- The deadline for the pre-deployment checks to be completed.
-- The Keptn Scheduler checks the status of the `pre-deployment` checks every 10 seconds.
+* The name of the pre-deployment checks that need to be performed.
+* The status of the pre-deployment checks.
+* The deadline for the pre-deployment checks to be completed.
+* The Keptn Scheduler checks the status of the `pre-deployment` checks every 10 seconds.
 If the checks have not finished successfully within 5 minutes,
 the Keptn Scheduler does not allow the Pod to be scheduled.
 

@@ -7,7 +7,7 @@ metadata:
     keptn.sh/version: 1.0.0
     keptn.sh/workload: my-test-workload
 spec:
-   ttlSecondsAfterFinished: 100
+  ttlSecondsAfterFinished: 100
 status:
   conditions:
     - type: Complete

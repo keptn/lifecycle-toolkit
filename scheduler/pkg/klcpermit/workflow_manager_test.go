@@ -376,14 +376,18 @@ func Test_getSpan_unbindSpan(t *testing.T) {
 
 func Test_calculateVersion(t *testing.T) {
 	tests := []struct {
-		name string
-		pod  *corev1.Pod
-		want string
+		name          string
+		pod           *corev1.Pod
+		containerName string
+		want          string
+		wantErr       bool
 	}{
 		{
-			name: "empty pod",
-			pod:  &corev1.Pod{},
-			want: "2166136261",
+			name:          "empty pod",
+			pod:           &corev1.Pod{},
+			containerName: "",
+			want:          "2166136261",
+			wantErr:       false,
 		},
 		{
 			name: "no containers",
@@ -392,7 +396,9 @@ func Test_calculateVersion(t *testing.T) {
 					Name: "pod-name",
 				},
 			},
-			want: "2166136261",
+			containerName: "",
+			want:          "2166136261",
+			wantErr:       false,
 		},
 		{
 			name: "single container",
@@ -409,7 +415,9 @@ func Test_calculateVersion(t *testing.T) {
 					},
 				},
 			},
-			want: "tag",
+			containerName: "",
+			want:          "tag",
+			wantErr:       false,
 		},
 		{
 			name: "single container latest tag",
@@ -426,7 +434,28 @@ func Test_calculateVersion(t *testing.T) {
 					},
 				},
 			},
-			want: "2894867514",
+			containerName: "",
+			want:          "2894867514",
+			wantErr:       false,
+		},
+		{
+			name: "single container annotation mismatch",
+			pod: &corev1.Pod{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "pod-name",
+				},
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{
+							Name:  "container-name",
+							Image: "image:latest",
+						},
+					},
+				},
+			},
+			containerName: "not-container-name",
+			want:          "",
+			wantErr:       true,
 		},
 		{
 			name: "multiple containers",
@@ -447,7 +476,55 @@ func Test_calculateVersion(t *testing.T) {
 					},
 				},
 			},
-			want: "3235658121",
+			containerName: "",
+			want:          "3235658121",
+			wantErr:       false,
+		},
+		{
+			name: "multiple containers with annotation",
+			pod: &corev1.Pod{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "pod-name",
+				},
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{
+							Name:  "container-name",
+							Image: "image:tag1",
+						},
+						{
+							Name:  "container-name2",
+							Image: "image:tag2",
+						},
+					},
+				},
+			},
+			containerName: "container-name2",
+			want:          "tag2",
+			wantErr:       false,
+		},
+		{
+			name: "multiple containers with annotation mismatch",
+			pod: &corev1.Pod{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "pod-name",
+				},
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{
+							Name:  "container-name",
+							Image: "image:tag1",
+						},
+						{
+							Name:  "container-name2",
+							Image: "image:tag2",
+						},
+					},
+				},
+			},
+			containerName: "not-container-name",
+			want:          "",
+			wantErr:       true,
 		},
 		{
 			name: "multiple containers with env",
@@ -488,14 +565,22 @@ func Test_calculateVersion(t *testing.T) {
 					},
 				},
 			},
-			want: "2484568705",
+			containerName: "",
+			want:          "2484568705",
+			wantErr:       false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := calculateVersion(tt.pod)
-			require.Equal(t, tt.want, got)
+			got, err := calculateVersion(tt.pod, tt.containerName)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("calculateVersion() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("calculateVersion() = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

@@ -74,6 +74,11 @@ func GetOwnerReference(resource *metav1.ObjectMeta) metav1.OwnerReference {
 	return reference
 }
 
+func getContainerName(meta *metav1.ObjectMeta) string {
+	containerName, _ := GetLabelOrAnnotation(meta, apicommon.ContainerNameAnnotation, apicommon.ContainerNameAnnotation)
+	return containerName
+}
+
 func setMapKey(myMap map[string]string, key, value string) {
 	if myMap == nil {
 		return
@@ -94,24 +99,40 @@ func initEmptyAnnotations(meta *metav1.ObjectMeta, size int) {
 	}
 }
 
-func calculateVersion(pod *corev1.Pod) string {
+func calculateVersion(pod *corev1.Pod, containerName string) (string, error) {
 	if len(pod.Spec.Containers) == 1 {
+		if containerName != "" && pod.Spec.Containers[0].Name != containerName {
+			return "", fmt.Errorf("The container name '%s' specified in %s does not match the name of the container in the pod", containerName, apicommon.ContainerNameAnnotation)
+		}
 		image := strings.Split(pod.Spec.Containers[0].Image, ":")
 		lenImg := len(image) - 1
 		if lenImg >= 1 && image[lenImg] != "" && image[lenImg] != "latest" {
-			return image[lenImg]
+			return image[lenImg], nil
 		}
 	}
 
 	name := ""
+	containerFound := false
 	for _, item := range pod.Spec.Containers {
+		if item.Name == containerName {
+			containerFound = true
+			image := strings.Split(item.Image, ":")
+			lenImg := len(image) - 1
+			if lenImg >= 1 && image[lenImg] != "" && image[lenImg] != "latest" {
+				return image[lenImg], nil
+			}
+		}
 		name = name + item.Name + item.Image
 		for _, e := range item.Env {
 			name = name + e.Name + e.Value
 		}
 	}
 
+	if containerName != "" && !containerFound {
+		return "", fmt.Errorf("The container name '%s' specified in %s does not match any containers in the pod", containerName, apicommon.ContainerNameAnnotation)
+	}
+
 	h := fnv.New32a()
 	h.Write([]byte(name))
-	return fmt.Sprint(h.Sum32())
+	return fmt.Sprint(h.Sum32()), nil
 }

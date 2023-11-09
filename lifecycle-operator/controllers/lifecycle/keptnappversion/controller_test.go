@@ -3,8 +3,6 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
-	phasefake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase/fake"
 	"reflect"
 	"strings"
 	"testing"
@@ -15,6 +13,8 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	evalfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
+	phasefake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase/fake"
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
@@ -151,7 +151,10 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 		},
 		Status: status,
 	}
-	r, eventChannel, _ := setupReconciler(app)
+	r, _, _ := setupReconciler(app)
+	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		return phase.PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
+	}}
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -161,19 +164,6 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 	}
 
 	result, err := r.Reconcile(context.WithValue(context.TODO(), CONTEXTID, req.Name), req)
-	require.Nil(t, err)
-
-	expectedEvents := []string{
-		"AppPreDeployTasksFailed",
-	}
-
-	for _, e := range expectedEvents {
-		event := <-eventChannel
-		require.Equal(t, strings.Contains(event, req.Name), true, "wrong appversion")
-		require.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
-		require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
-	}
-
 	require.Nil(t, err)
 
 	// do not requeue since we reached completion

@@ -89,7 +89,7 @@ in the root directory of your `lifecycle-toolkit` clone:
 ./.github/scripts/generate-crd-docs/generate-crd-docs.sh
 ```
 
-### CRD Reference
+#### CRD Reference
 
 The
 [CRD Reference](https://lifecycle.keptn.sh/docs/yaml-crd-ref/)
@@ -104,56 +104,9 @@ For new users, the
 [User Guides](https://lifecycle.keptn.sh/docs/implementing/)
 provide introductory material about how to use various features.
 
-Here is a template to use to create a new CRD Reference page:
-
-```markdown
----
-title: template for new files in this directory
-description: <one-line description of CRD>
-weight: <assign weight to create alphabetical order>
----
-
-Copy this template to create a new CRD reference page.
-
-1. Replace the variable text in metadata with information for this page
-1. Delete these instructions from your file
-1. Populate the page with appropriate content
-
-## Synopsis
-
-## Fields
-
-<!-- Detailed description of each field/parameter -->
-
-Fields should be clearly marked as to whether they are
-required or optional.
-If they are optional,
-text should explain the behavior when that field is not populated.
-
-## Usage
-
-<!-- How this CRD is "activated".  For example, which event uses this CRD -->
-<!-- Instructions and guidelines for when and how to customize a CRD -->
-
-
-## Examples
-
-Include code snippets that illustrate
-how this resource is populated.
-Code examples should use be embedded links to example source code
-so that they will be updated automatically when changes are made to the example.
-
-## Files
-
-* Link to subsection for this resource in the "API Reference"
-
-## Differences between versions
-
-## See also
-
-* Links to related reference pages
-* Links to related User Guides and other documentation
-```
+A template to use to create a new CRD Reference page
+is available
+[here](../templates/yaml-crd-ref-template.md).
 
 ## Contributing guide
 

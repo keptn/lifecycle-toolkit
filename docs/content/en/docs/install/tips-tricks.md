@@ -52,7 +52,7 @@ helm search repo keptn
 ```
 
 To install an older release,
-specify that CHART version to the `--version` flag
+specify the version with the chart `--version` flag
 in the `helm update` command for the release you are installing.
 
 ## Example configurations by use-case

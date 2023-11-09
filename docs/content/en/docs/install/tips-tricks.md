@@ -80,16 +80,8 @@ You must also enable Keptn for each
 [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 on which you want to run either
 the Observability or Release Lifecycle use-case.
-This is because Keptn communicates with the Kubernetes scheduling mechanism
-for tasks such as enforcing checks natively,
-stopping a deployment from proceeding when criteria are not met,
-doing post-deployment evaluations
-and tracing all activities of all deployment
-[workloads](https://kubernetes.io/docs/concepts/workloads/)
-on the cluster.
 
-To enable Keptn in your namespace,
-annotate the appropriate `Namespace` resource(s).
+To enable Keptn, annotate the appropriate `Namespace` resource(s).
 For example, for the `simplenode-dev` namespace,
 the annotation looks like this:
 

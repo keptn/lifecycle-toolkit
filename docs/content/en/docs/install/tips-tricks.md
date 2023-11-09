@@ -16,7 +16,7 @@ that supplement that information.
 Keptn v0.9.0 and later is installed using a Helm umbrella chart.
 This means that the Helm Chart that installs all of Keptn
 actually groups subcharts for individual components
-and you can install individual services
+and you can install individual components
 without installing all of Keptn.
 
 Keptn is installed using the

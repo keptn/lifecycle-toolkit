@@ -3,6 +3,8 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
+	phasefake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase/fake"
 	"reflect"
 	"strings"
 	"testing"
@@ -50,6 +52,10 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 	r, eventChannel, _ := setupReconciler(app)
 
+	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		return phase.PhaseResult{Continue: true, Result: ctrl.Result{Requeue: false}}, nil
+	}}
+
 	tests := []struct {
 		name    string
 		req     ctrl.Request
@@ -66,16 +72,7 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 			},
 			wantErr: nil,
 			events: []string{
-				`AppPreDeployTasksStarted`,
-				`AppPreDeployTasksFinished`,
-				`AppPreDeployEvaluationsStarted`,
-				`AppPreDeployEvaluationsFinished`,
-				`AppDeployStarted`,
-				`AppDeployFinished`,
-				`AppPostDeployTasksStarted`,
-				`AppPostDeployTasksFinished`,
-				`AppPostDeployEvaluationsStarted`,
-				`AppPostDeployEvaluationsFinished`,
+				`AppCompletedFinished`,
 			},
 		},
 		{

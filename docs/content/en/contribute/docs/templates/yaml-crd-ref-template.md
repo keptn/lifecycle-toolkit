@@ -36,7 +36,6 @@ spec:
 <!--     specification. -->
 <!-- * **spec** -->
 <!-- ... -->
-...
 
 Fields should be clearly marked as to whether they are
 required or optional.

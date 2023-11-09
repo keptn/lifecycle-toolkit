@@ -1,5 +1,6 @@
 _merge: deep
 title: Keptn
+baseURL: /
 
 module:
   hugoVersion:

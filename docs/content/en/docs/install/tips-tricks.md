@@ -74,7 +74,7 @@ to `false` as in the following:
 Note that, if you want to run pre- and/or post-deployment
 [evaluations](../implementing/evaluations.md)
 as part of the Release Lifecycle use-case,
-you need to run the Keptn Metrics Operator.
+you need to have the Keptn Metrics Operator installed.
 
 You must also enable Keptn for each
 [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)

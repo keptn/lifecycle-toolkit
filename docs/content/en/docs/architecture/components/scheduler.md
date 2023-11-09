@@ -23,7 +23,7 @@ These two implementations are discussed below.
 ## Keptn Scheduling Gates for K8s 1.27 and above
 
 When Keptn is running on Kubernetes version 1.27 and greater
-or the Keptn Helm chart value `lifecycleOperator.schedulingGatesEnabled` is set to `true`,
+and the Keptn Helm chart value `lifecycleOperator.schedulingGatesEnabled` is set to `true`,
 Keptn uses the
 [Pod Scheduling Readiness K8s API](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness)
 to gate Pods until the required deployment checks pass.
@@ -33,9 +33,9 @@ the Mutating Webhook checks each Pod for annotations.
 If
 [Keptn specific annotations](../../implementing/integrate.md#basic-annotations)
 are present,
-the Webhook adds a gate to the Pod called `keptn-prechecks-gate`.
+the Webhook adds a scheduling gate to the Pod called `keptn-prechecks-gate`.
 This spec tells the Kubernetes scheduling framework
-to wait for the Keptn checks before assigning the pod to a node.
+to wait for the Keptn checks before binding the pod to a node.
 
 For example, a pod gated by Keptn looks like the following:
 
@@ -43,8 +43,8 @@ For example, a pod gated by Keptn looks like the following:
 
 If the `pre-deployment` checks have finished successfully,
 the WorkloadVersion Controller removes the gate from the Pod.
-The scheduler can then allow the Pod to be bound to a node.
-If the `pre-deployment` checks have not yet finished,
+The default k8s scheduler can then allow the Pod to be bound to a node.
+If the `pre-deployment` checks have not yet finished successfully,
 the gate stays and the Pod remains in the pending state.
 When removing the gate,
 the WorkloadVersion controller also adds the following annotation so that,

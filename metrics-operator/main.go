@@ -33,6 +33,7 @@ import (
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
 	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsv1beta1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	analysiscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
@@ -68,6 +69,7 @@ func init() {
 	utilruntime.Must(metricsv1alpha1.AddToScheme(scheme))
 	utilruntime.Must(metricsv1alpha2.AddToScheme(scheme))
 	utilruntime.Must(metricsv1alpha3.AddToScheme(scheme))
+	utilruntime.Must(metricsv1beta1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 

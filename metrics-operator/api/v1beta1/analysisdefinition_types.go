@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha3
+package v1beta1
 
 import (
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -97,7 +97,6 @@ type Operator struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-//+kubebuilder:storageversion
 
 // AnalysisDefinition is the Schema for the analysisdefinitions APIs
 type AnalysisDefinition struct {
@@ -120,8 +119,4 @@ type AnalysisDefinitionList struct {
 
 func init() {
 	SchemeBuilder.Register(&AnalysisDefinition{}, &AnalysisDefinitionList{})
-}
-
-func (o *OperatorValue) GetFloatValue() float64 {
-	return o.FixedValue.AsApproximateFloat64()
 }

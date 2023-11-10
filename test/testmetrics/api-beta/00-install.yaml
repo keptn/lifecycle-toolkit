@@ -14,24 +14,28 @@ spec:
   secretKeyRef:
     name: "prometheusLoginCredentials"
     key: "my-credentials"
----
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetric
-metadata:
-  labels:
-    app.kubernetes.io/name: keptnmetric
-    app.kubernetes.io/instance: keptnmetric
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/created-by: metrics-operator
-  name: keptnmetric
-spec:
-  provider:
-    name: some-name
-  query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
-  fetchIntervalSeconds: 10
-  range:
-    interval: "5m"
+# v1beta1,KeptnMetric cannot be applied to the cluster due to the presence of
+# conversion webhook for KeptnMetric CRD
+# The non-existence of conversion path from v1beta1 to v1alpha3 (HUB)
+# causes the system to refuse this CR when applied
+# ---
+# apiVersion: metrics.keptn.sh/v1beta1
+# kind: KeptnMetric
+# metadata:
+#   labels:
+#     app.kubernetes.io/name: keptnmetric
+#     app.kubernetes.io/instance: keptnmetric
+#     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+#     app.kubernetes.io/managed-by: kustomize
+#     app.kubernetes.io/created-by: metrics-operator
+#   name: keptnmetric
+# spec:
+#   provider:
+#     name: some-name
+#   query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
+#   fetchIntervalSeconds: 10
+#   range:
+#     interval: "5m"
 ---
 apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisValueTemplate

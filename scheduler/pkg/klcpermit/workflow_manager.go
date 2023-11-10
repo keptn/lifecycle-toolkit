@@ -215,16 +215,21 @@ func getLabelOrAnnotation(pod *corev1.Pod, primaryAnnotation string, secondaryAn
 	return "", false
 }
 
+func getImageVersion(image string) (string, error) {
+	splitImage := strings.Split(image, ":")
+	lenImg := len(splitImage) - 1
+	if lenImg >= 1 && splitImage[lenImg] != "" && splitImage[lenImg] != "latest" {
+		return splitImage[lenImg], nil
+	}
+	return "", fmt.Errorf("Invalid image version")
+}
+
 func calculateVersion(pod *corev1.Pod, containerName string) (string, error) {
 	if len(pod.Spec.Containers) == 1 {
 		if containerName != "" && pod.Spec.Containers[0].Name != containerName {
 			return "", fmt.Errorf("The container name '%s' specified in %s does not match the name of the container in the pod", containerName, ContainerNameAnnotation)
 		}
-		image := strings.Split(pod.Spec.Containers[0].Image, ":")
-		lenImg := len(image) - 1
-		if lenImg >= 1 && image[lenImg] != "" && image[lenImg] != "latest" {
-			return image[lenImg], nil
-		}
+		return getImageVersion(pod.Spec.Containers[0].Image)
 	}
 
 	name := ""
@@ -232,10 +237,9 @@ func calculateVersion(pod *corev1.Pod, containerName string) (string, error) {
 	for _, item := range pod.Spec.Containers {
 		if item.Name == containerName {
 			containerFound = true
-			image := strings.Split(item.Image, ":")
-			lenImg := len(image) - 1
-			if lenImg >= 1 && image[lenImg] != "" && image[lenImg] != "latest" {
-				return image[lenImg], nil
+			version, err := getImageVersion(item.Image)
+			if err == nil {
+				return version, nil
 			}
 		}
 		name = name + item.Name + item.Image

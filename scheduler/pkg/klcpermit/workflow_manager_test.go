@@ -435,8 +435,8 @@ func Test_calculateVersion(t *testing.T) {
 				},
 			},
 			containerName: "",
-			want:          "2894867514",
-			wantErr:       false,
+			want:          "",
+			wantErr:       true,
 		},
 		{
 			name: "single container annotation mismatch",

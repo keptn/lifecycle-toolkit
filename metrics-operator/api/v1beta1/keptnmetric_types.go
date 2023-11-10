@@ -99,7 +99,7 @@ type KeptnMetric struct {
 
 // +kubebuilder:object:root=true
 
-// KeptnMetricList contains a list of KeptnMetric
+// KeptnMetricList contains a list of KeptnMetric resources
 type KeptnMetricList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

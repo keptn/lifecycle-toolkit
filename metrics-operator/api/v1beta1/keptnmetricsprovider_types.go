@@ -50,7 +50,7 @@ type KeptnMetricsProvider struct {
 
 // +kubebuilder:object:root=true
 
-// KeptnMetricsProviderList contains a list of KeptnMetricsProvider
+// KeptnMetricsProviderList contains a list of KeptnMetricsProvider resources
 type KeptnMetricsProviderList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

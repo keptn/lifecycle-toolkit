@@ -92,7 +92,7 @@ type Analysis struct {
 
 //+kubebuilder:object:root=true
 
-// AnalysisList contains a list of Analysis
+// AnalysisList contains a list of Analysis resources
 type AnalysisList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

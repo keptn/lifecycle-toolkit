@@ -33,7 +33,6 @@ import (
 	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
 	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
 	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
-	metricsv1beta1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	analysiscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
@@ -69,7 +68,13 @@ func init() {
 	utilruntime.Must(metricsv1alpha1.AddToScheme(scheme))
 	utilruntime.Must(metricsv1alpha2.AddToScheme(scheme))
 	utilruntime.Must(metricsv1alpha3.AddToScheme(scheme))
-	utilruntime.Must(metricsv1beta1.AddToScheme(scheme))
+	// v1beta1 should not be added to the scheme, as the scheme
+	// is used during conversion webhook registration ->
+	// this leads to an error during installation as v1beta1
+	// does not have a conversion path to v1alpha3
+	// v1beta1 should be added to scheme when it will become HUB version
+	// and conversion webhooks will be removed
+	// utilruntime.Must(metricsv1beta1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 

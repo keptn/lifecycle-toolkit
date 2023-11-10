@@ -46,7 +46,7 @@ type AnalysisValueTemplate struct {
 
 //+kubebuilder:object:root=true
 
-// AnalysisValueTemplateList contains a list of AnalysisValueTemplate
+// AnalysisValueTemplateList contains a list of AnalysisValueTemplate resources
 type AnalysisValueTemplateList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

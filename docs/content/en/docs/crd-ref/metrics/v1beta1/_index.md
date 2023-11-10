@@ -66,7 +66,7 @@ _Appears in:_
 
 
 
-AnalysisDefinitionList contains a list of AnalysisDefinition
+AnalysisDefinitionList contains a list of AnalysisDefinition resources
 
 
 
@@ -97,7 +97,7 @@ _Appears in:_
 
 
 
-AnalysisList contains a list of Analysis
+AnalysisList contains a list of Analysis resources
 
 
 
@@ -177,7 +177,7 @@ _Appears in:_
 
 
 
-AnalysisValueTemplateList contains a list of AnalysisValueTemplate
+AnalysisValueTemplateList contains a list of AnalysisValueTemplate resources
 
 
 
@@ -243,7 +243,7 @@ _Appears in:_
 
 
 
-KeptnMetricList contains a list of KeptnMetric
+KeptnMetricList contains a list of KeptnMetric resources
 
 
 
@@ -312,7 +312,7 @@ _Appears in:_
 
 
 
-KeptnMetricsProviderList contains a list of KeptnMetricsProvider
+KeptnMetricsProviderList contains a list of KeptnMetricsProvider resources
 
 
 

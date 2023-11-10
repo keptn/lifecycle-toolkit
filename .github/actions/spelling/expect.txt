@@ -66,10 +66,12 @@ BUILDPLATFORM
 buildx
 CACHEDIR
 cainjection
+canoncical
 carryforward
 certificatehandler
 certmanager
 certwebhook
+changefreq
 Chans
 Checkmarx
 clientgoscheme
@@ -137,7 +139,6 @@ deploymenttrace
 dflags
 distroless
 Dockerfiles
-docsearch
 docsembed
 docsy
 dql
@@ -184,10 +185,8 @@ funlen
 Fxq
 gaurav
 gci
-gcs
 Generatable
 getenv
-getjson
 getopt
 gexec
 gha
@@ -210,7 +209,9 @@ govulncheck
 grafana
 graphql
 groupversion
+gtag
 GVK
+haspopup
 healthz
 hellopy
 helloworldtask
@@ -222,6 +223,7 @@ homeobservability
 homeorchestrate
 horizontalpodautoscaler
 hpa
+hreflang
 htmltest
 httpref
 httpreference
@@ -230,6 +232,7 @@ iak
 IAnalysis
 ICertificate
 IConfig
+iconx
 IEvaluation
 IEvent
 iface
@@ -352,10 +355,13 @@ kustomizeconfig
 kuttl
 kwi
 kwv
+labelledby
+lastmod
 lastword
 lfc
 Lifcycle
 lifecyclekeptnsh
+lightbox
 linkedin
 linktitle
 linting
@@ -406,6 +412,7 @@ myservice
 myuser
 myversion
 namespacedelete
+nbsp
 netlify
 Neue
 nifi
@@ -447,6 +454,7 @@ otlptracegrpc
 OUTDIR
 owide
 oyaml
+pagelinks
 PARAMSx
 perc
 persistentvolumeclaims
@@ -536,6 +544,7 @@ simpleapp
 simplenode
 simplenodeservice
 sitemap
+SJLS
 sli
 slisslos
 slo
@@ -546,6 +555,7 @@ spanitem
 spdx
 spf
 stakeholders
+standalone
 statefulset
 statefultest
 stdouttrace
@@ -553,7 +563,6 @@ storageclasses
 storageversion
 sts
 subcharts
-subdir
 subjectaccessreviews
 substitue
 substr
@@ -605,6 +614,7 @@ UIDs
 undeploy
 unmarshal
 unmarshalling
+urlset
 usecase
 usecasebox
 usr
@@ -641,6 +651,7 @@ WORKLOADOVERALLSTATUS
 workloadsstate
 workloadstatus
 workloadversion
+xhtml
 xxxx
 XXXXXXXXXXXXXXXXXXXXXXXX
 yannh

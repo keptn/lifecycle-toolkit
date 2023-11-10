@@ -374,6 +374,52 @@ func Test_getSpan_unbindSpan(t *testing.T) {
 
 }
 
+func TestGetImageVersion(t *testing.T) {
+	tests := []struct {
+		name    string
+		image   string
+		want    string
+		wantErr bool
+	}{
+		{
+			name:    "Return image version when version is present",
+			image:   "my-image:1.0.0",
+			want:    "1.0.0",
+			wantErr: false,
+		},
+		{
+			name:    "Return error when image version is not present",
+			image:   "my-image",
+			want:    "",
+			wantErr: true,
+		},
+		{
+			name:    "Return error when image version is empty",
+			image:   "my-image:",
+			want:    "",
+			wantErr: true,
+		},
+		{
+			name:    "Return error when image version is latest",
+			image:   "my-image:latest",
+			want:    "",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := getImageVersion(tt.image)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("getImageVersion() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("getImageVersion() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func Test_calculateVersion(t *testing.T) {
 	tests := []struct {
 		name          string

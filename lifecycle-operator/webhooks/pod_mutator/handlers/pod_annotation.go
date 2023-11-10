@@ -126,14 +126,15 @@ func isPodAnnotated(pod *corev1.Pod) bool {
 	containerName, _ := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.ContainerNameAnnotation, "")
 	_, gotWorkloadAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	_, gotVersionAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
-	var err error
 
 	if gotWorkloadAnnotation {
 		if !gotVersionAnnotation {
 			initEmptyAnnotations(&pod.ObjectMeta, 1)
-			pod.Annotations[apicommon.VersionAnnotation], err = calculateVersion(pod, containerName)
+			version, err := calculateVersion(pod, containerName)
 			if err != nil {
 				log.Println(err)
+			} else {
+				pod.Annotations[apicommon.VersionAnnotation] = version
 			}
 		}
 		return true

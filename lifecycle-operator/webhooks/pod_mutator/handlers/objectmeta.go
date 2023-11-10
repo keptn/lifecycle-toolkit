@@ -74,11 +74,6 @@ func GetOwnerReference(resource *metav1.ObjectMeta) metav1.OwnerReference {
 	return reference
 }
 
-func getContainerName(meta *metav1.ObjectMeta) string {
-	containerName, _ := GetLabelOrAnnotation(meta, apicommon.ContainerNameAnnotation, apicommon.ContainerNameAnnotation)
-	return containerName
-}
-
 func setMapKey(myMap map[string]string, key, value string) {
 	if myMap == nil {
 		return

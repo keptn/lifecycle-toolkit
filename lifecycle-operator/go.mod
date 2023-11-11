@@ -24,7 +24,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.19.0
 	go.opentelemetry.io/otel/sdk/metric v1.19.0
 	go.opentelemetry.io/otel/trace v1.19.0
-	golang.org/x/net v0.17.0
+	golang.org/x/net v0.18.0
 	google.golang.org/grpc v1.59.0
 	k8s.io/api v0.28.3
 	k8s.io/apiextensions-apiserver v0.28.3
@@ -78,9 +78,9 @@ require (
 	go.uber.org/zap v1.25.0 // indirect
 	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e // indirect
 	golang.org/x/oauth2 v0.11.0 // indirect
-	golang.org/x/sys v0.13.0 // indirect
-	golang.org/x/term v0.13.0 // indirect
-	golang.org/x/text v0.13.0 // indirect
+	golang.org/x/sys v0.14.0 // indirect
+	golang.org/x/term v0.14.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.12.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
@@ -100,4 +100,4 @@ require (
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
-replace golang.org/x/net => golang.org/x/net v0.17.0
+replace golang.org/x/net => golang.org/x/net v0.18.0

@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
 	providersfake "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/fake"
@@ -25,7 +25,7 @@ func TestKeptnMetricReconciler_fetchProvider(t *testing.T) {
 	provider := metricsapi.KeptnMetricsProvider{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "KeptnMetricsProvider",
-			APIVersion: "metrics.keptn.sh/v1alpha3"},
+			APIVersion: "metrics.keptn.sh/v1beta1"},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "myprovider",
 			Namespace: "default",

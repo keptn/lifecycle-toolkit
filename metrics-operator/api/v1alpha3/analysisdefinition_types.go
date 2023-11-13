@@ -97,7 +97,6 @@ type Operator struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-//+kubebuilder:storageversion
 
 // AnalysisDefinition is the Schema for the analysisdefinitions APIs
 type AnalysisDefinition struct {

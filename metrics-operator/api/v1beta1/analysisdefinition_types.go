@@ -97,6 +97,7 @@ type Operator struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:storageversion
 
 // AnalysisDefinition is the Schema for the analysisdefinitions APIs
 type AnalysisDefinition struct {
@@ -119,4 +120,8 @@ type AnalysisDefinitionList struct {
 
 func init() {
 	SchemeBuilder.Register(&AnalysisDefinition{}, &AnalysisDefinitionList{})
+}
+
+func (o *OperatorValue) GetFloatValue() float64 {
+	return o.FixedValue.AsApproximateFloat64()
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/fake"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/stretchr/testify/require"
@@ -13,16 +13,16 @@ import (
 func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 	tests := []struct {
 		name            string
-		values          map[string]v1alpha3.ProviderResult
-		o               v1alpha3.Objective
+		values          map[string]metricsapi.ProviderResult
+		o               metricsapi.Objective
 		want            types.ObjectiveResult
 		mockedEvaluator ITargetEvaluator
 	}{
 		{
 			name:   "no value in results map",
-			values: map[string]v1alpha3.ProviderResult{},
-			o: v1alpha3.Objective{
-				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
+			values: map[string]metricsapi.ProviderResult{},
+			o: metricsapi.Objective{
+				AnalysisValueTemplateRef: metricsapi.ObjectReference{
 					Name: "name",
 				},
 			},
@@ -30,8 +30,8 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 			want: types.ObjectiveResult{
 				Score: 0.0,
 				Error: fmt.Errorf("required value 'name' not available"),
-				Objective: v1alpha3.Objective{
-					AnalysisValueTemplateRef: v1alpha3.ObjectReference{
+				Objective: metricsapi.Objective{
+					AnalysisValueTemplateRef: metricsapi.ObjectReference{
 						Name: "name",
 					},
 				},
@@ -39,17 +39,17 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name: "evaluation passed",
-			values: map[string]v1alpha3.ProviderResult{
+			values: map[string]metricsapi.ProviderResult{
 				"name": {Value: "20", Query: "qqqqqqqq"},
 			},
-			o: v1alpha3.Objective{
-				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
+			o: metricsapi.Objective{
+				AnalysisValueTemplateRef: metricsapi.ObjectReference{
 					Name: "name",
 				},
 				Weight: 2,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{
-				EvaluateFunc: func(val float64, target *v1alpha3.Target) types.TargetResult {
+				EvaluateFunc: func(val float64, target *metricsapi.Target) types.TargetResult {
 					return types.TargetResult{
 						Pass: true,
 					}
@@ -63,8 +63,8 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 				Result: types.TargetResult{
 					Pass: true,
 				},
-				Objective: v1alpha3.Objective{
-					AnalysisValueTemplateRef: v1alpha3.ObjectReference{
+				Objective: metricsapi.Objective{
+					AnalysisValueTemplateRef: metricsapi.ObjectReference{
 						Name: "name",
 					},
 					Weight: 2,
@@ -73,17 +73,17 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name: "evaluation finished with warning",
-			values: map[string]v1alpha3.ProviderResult{
+			values: map[string]metricsapi.ProviderResult{
 				"name": {Value: "20", Query: "qqqqqqqq"},
 			},
-			o: v1alpha3.Objective{
-				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
+			o: metricsapi.Objective{
+				AnalysisValueTemplateRef: metricsapi.ObjectReference{
 					Name: "name",
 				},
 				Weight: 2,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{
-				EvaluateFunc: func(val float64, target *v1alpha3.Target) types.TargetResult {
+				EvaluateFunc: func(val float64, target *metricsapi.Target) types.TargetResult {
 					return types.TargetResult{
 						Warning: true,
 						Pass:    false,
@@ -99,8 +99,8 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 					Pass:    false,
 					Warning: true,
 				},
-				Objective: v1alpha3.Objective{
-					AnalysisValueTemplateRef: v1alpha3.ObjectReference{
+				Objective: metricsapi.Objective{
+					AnalysisValueTemplateRef: metricsapi.ObjectReference{
 						Name: "name",
 					},
 					Weight: 2,
@@ -109,17 +109,17 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name: "evaluation failed",
-			values: map[string]v1alpha3.ProviderResult{
+			values: map[string]metricsapi.ProviderResult{
 				"name": {Value: "20", Query: "qqqqqqqq"},
 			},
-			o: v1alpha3.Objective{
-				AnalysisValueTemplateRef: v1alpha3.ObjectReference{
+			o: metricsapi.Objective{
+				AnalysisValueTemplateRef: metricsapi.ObjectReference{
 					Name: "name",
 				},
 				Weight: 2,
 			},
 			mockedEvaluator: &fake.ITargetEvaluatorMock{
-				EvaluateFunc: func(val float64, target *v1alpha3.Target) types.TargetResult {
+				EvaluateFunc: func(val float64, target *metricsapi.Target) types.TargetResult {
 					return types.TargetResult{
 						Warning: false,
 						Pass:    false,
@@ -135,8 +135,8 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 					Pass:    false,
 					Warning: false,
 				},
-				Objective: v1alpha3.Objective{
-					AnalysisValueTemplateRef: v1alpha3.ObjectReference{
+				Objective: metricsapi.Objective{
+					AnalysisValueTemplateRef: metricsapi.ObjectReference{
 						Name: "name",
 					},
 					Weight: 2,
@@ -155,7 +155,7 @@ func TestObjectiveEvaluator_Evaluate(t *testing.T) {
 func TestGetValueFromMap(t *testing.T) {
 	tests := []struct {
 		name    string
-		values  map[string]v1alpha3.ProviderResult
+		values  map[string]metricsapi.ProviderResult
 		in      string
 		val     float64
 		query   string
@@ -163,7 +163,7 @@ func TestGetValueFromMap(t *testing.T) {
 	}{
 		{
 			name: "happy path",
-			values: map[string]v1alpha3.ProviderResult{
+			values: map[string]metricsapi.ProviderResult{
 				"key1": {Value: "7", Query: "qqqqqqqq"},
 			},
 			in:      "key1",
@@ -173,7 +173,7 @@ func TestGetValueFromMap(t *testing.T) {
 		},
 		{
 			name: "key not found",
-			values: map[string]v1alpha3.ProviderResult{
+			values: map[string]metricsapi.ProviderResult{
 				"key1": {Value: "7", Query: "qqqqqqqq"},
 			},
 			in:      "key",
@@ -183,7 +183,7 @@ func TestGetValueFromMap(t *testing.T) {
 		},
 		{
 			name: "value not float",
-			values: map[string]v1alpha3.ProviderResult{
+			values: map[string]metricsapi.ProviderResult{
 				"key1": {Value: "", Query: "qqqqqqqq"},
 			},
 			in:      "key1",
@@ -206,7 +206,7 @@ func TestGetValueFromMap(t *testing.T) {
 }
 
 func TestComputeKey(t *testing.T) {
-	obj := v1alpha3.ObjectReference{
+	obj := metricsapi.ObjectReference{
 		Name: "key",
 	}
 

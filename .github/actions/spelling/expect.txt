@@ -58,6 +58,7 @@ batchai
 baz
 benbjohnson
 bitnami
+breadcrumb
 btn
 Buf
 BUILDENVVAR
@@ -139,6 +140,7 @@ deploymenttrace
 dflags
 distroless
 Dockerfiles
+docsearch
 docsembed
 docsy
 dql
@@ -185,8 +187,10 @@ funlen
 Fxq
 gaurav
 gci
+gcs
 Generatable
 getenv
+getjson
 getopt
 gexec
 gha
@@ -376,6 +380,7 @@ makefiles
 markdownfiles
 markdownlint
 markdownlintignore
+markmap
 matryer
 maxdepth
 MDL
@@ -492,6 +497,7 @@ promhttp
 providerref
 providerresult
 pyfunction
+pygments
 pyyaml
 quickstart
 rangespec
@@ -562,6 +568,7 @@ storageclasses
 storageversion
 sts
 subcharts
+subdir
 subjectaccessreviews
 substitue
 substr
@@ -657,3 +664,4 @@ yannh
 yml
 YOURNAME
 yourregistry
+youtube

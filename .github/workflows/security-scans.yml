@@ -61,7 +61,6 @@ jobs:
           path: ./dist
 
       - name: Upload tag
-        if: ${{ github.event_name  != 'schedule' }}
         uses: actions/upload-artifact@v3
         with:
           name: tag

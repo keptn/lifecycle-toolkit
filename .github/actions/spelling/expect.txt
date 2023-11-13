@@ -544,7 +544,6 @@ simpleapp
 simplenode
 simplenodeservice
 sitemap
-SJLS
 sli
 slisslos
 slo

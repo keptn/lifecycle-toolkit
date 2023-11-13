@@ -58,6 +58,7 @@ batchai
 baz
 benbjohnson
 bitnami
+breadcrumb
 btn
 Buf
 BUILDENVVAR
@@ -66,10 +67,12 @@ BUILDPLATFORM
 buildx
 CACHEDIR
 cainjection
+canonical
 carryforward
 certificatehandler
 certmanager
 certwebhook
+changefreq
 Chans
 Checkmarx
 clientgoscheme
@@ -210,7 +213,9 @@ govulncheck
 grafana
 graphql
 groupversion
+gtag
 GVK
+haspopup
 healthz
 hellopy
 helloworldtask
@@ -222,6 +227,7 @@ homeobservability
 homeorchestrate
 horizontalpodautoscaler
 hpa
+hreflang
 htmltest
 httpref
 httpreference
@@ -230,6 +236,7 @@ iak
 IAnalysis
 ICertificate
 IConfig
+iconx
 IEvaluation
 IEvent
 iface
@@ -353,10 +360,13 @@ kustomizeconfig
 kuttl
 kwi
 kwv
+labelledby
+lastmod
 lastword
 lfc
 Lifcycle
 lifecyclekeptnsh
+lightbox
 linkedin
 linktitle
 linting
@@ -371,6 +381,7 @@ makefiles
 markdownfiles
 markdownlint
 markdownlintignore
+markmap
 matryer
 maxdepth
 MDL
@@ -407,6 +418,7 @@ myservice
 myuser
 myversion
 namespacedelete
+nbsp
 netlify
 Neue
 nifi
@@ -448,6 +460,7 @@ otlptracegrpc
 OUTDIR
 owide
 oyaml
+pagelinks
 PARAMSx
 perc
 persistentvolumeclaims
@@ -485,6 +498,7 @@ promhttp
 providerref
 providerresult
 pyfunction
+pygments
 pyyaml
 quickstart
 rangespec
@@ -547,6 +561,7 @@ spanitem
 spdx
 spf
 stakeholders
+standalone
 statefulset
 statefultest
 stdouttrace
@@ -608,6 +623,7 @@ UIDs
 undeploy
 unmarshal
 unmarshalling
+urlset
 usecase
 usecasebox
 usr
@@ -644,9 +660,11 @@ WORKLOADOVERALLSTATUS
 workloadsstate
 workloadstatus
 workloadversion
+xhtml
 xxxx
 XXXXXXXXXXXXXXXXXXXXXXXX
 yannh
 yml
 YOURNAME
 yourregistry
+youtube

@@ -1,0 +1,24 @@
+
+{{ if in .RelPermalink "docs-v" -}}
+  {{ $canonical := replaceRE "-v[^/]+/" "/" .RelPermalink -}}
+  {{ $canonicalPath := substr $canonical 0 -1 -}}
+  {{ if .GetPage $canonicalPath -}}
+    <link rel="canonical" href="{{ $canonical | absURL}}"/>
+  {{ else }}
+    {{ range .Site.Pages -}}
+      {{ if in .Aliases $canonical -}}
+        <link rel="canonical" href="{{ .RelPermalink | absURL}}"/>
+      {{- end }}
+    {{- end}}
+  {{- end}}
+{{ else if in .RelPermalink "/docs/" -}}
+  <link rel="canonical" href="{{ .RelPermalink | absURL}}"/>
+{{- end}}
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SJLS2F2J2B"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-SJLS2F2J2B');
+</script>

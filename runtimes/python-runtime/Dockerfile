@@ -9,6 +9,8 @@ LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolki
 
 RUN apk --no-cache add curl
 
+RUN apk update && apk upgrade --no-cache libcrypto3 libssl3
+
 RUN pip install -q --disable-pip-version-check pyyaml GitPython requests
 
 COPY entrypoint.sh /entrypoint.sh

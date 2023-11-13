@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha3
+package v1beta1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -32,7 +32,6 @@ type AnalysisValueTemplateSpec struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
-//+kubebuilder:storageversion
 
 // AnalysisValueTemplate is the Schema for the analysisvaluetemplates API
 type AnalysisValueTemplate struct {
@@ -47,7 +46,7 @@ type AnalysisValueTemplate struct {
 
 //+kubebuilder:object:root=true
 
-// AnalysisValueTemplateList contains a list of AnalysisValueTemplate
+// AnalysisValueTemplateList contains a list of AnalysisValueTemplate resources
 type AnalysisValueTemplateList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

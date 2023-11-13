@@ -43,7 +43,7 @@ Status of the different features:
 
 - ![status](https://img.shields.io/badge/status-stable-brightgreen)
   Observability: expose [OTel](https://opentelemetry.io/) metrics and traces of your deployment.
-- ![status](https://img.shields.io/badge/status-alpha-orange)
+- ![status](https://img.shields.io/badge/status-beta-yellow)
   K8s Custom Metrics: expose your Observability platform via the [Custom Metric API](https://github.com/kubernetes/design-proposals-archive/blob/main/instrumentation/custom-metrics-api.md).
 - ![status](https://img.shields.io/badge/status-beta-yellow)
   Release lifecycle: handle pre- and post-checks of your Application deployment.
@@ -77,9 +77,9 @@ Use the following command sequence
 to install the latest release of Keptn:
 
 ```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
 ### Installation with only certain namespaces allowed
@@ -110,9 +110,9 @@ lifecycleOperator:
 and add the values file to the helm installation command:
 
 ```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --values values.yaml --create-namespace --wait
+helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --values values.yaml --create-namespace --wait
 ```
 
 > **Note**
@@ -145,9 +145,9 @@ Use the following command sequence
 to install Keptn with scheduling gates enabled:
 
 ```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --set schedulingGatesEnabled=true --create-namespace --wait
+helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --set schedulingGatesEnabled=true --create-namespace --wait
 ```
 
 > **Note**

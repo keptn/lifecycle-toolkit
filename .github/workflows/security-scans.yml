@@ -240,7 +240,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
           exit-code: '1'
           trivyignores: .trivyignore
-      
+
       - name: Trivy image scan
         if: matrix.image != 'scheduler'
         uses: aquasecurity/trivy-action@2b6a709cf9c4025c5438138008beaddbb02086f0 # 0.14.0

@@ -318,6 +318,12 @@ func main() {
 		mgr.GetScheme(),
 		spanHandler,
 	)
+	appVersionPhaseHandler := phase.NewHandler(
+		mgr.GetClient(),
+		appVersionEventSender,
+		appVersionLogger,
+		spanHandler,
+	)
 	appVersionReconciler := &keptnappversion.KeptnAppVersionReconciler{
 		Client:            mgr.GetClient(),
 		Scheme:            mgr.GetScheme(),
@@ -327,6 +333,7 @@ func main() {
 		Meters:            keptnMeters,
 		SpanHandler:       spanHandler,
 		EvaluationHandler: appVersionEvaluationHandler,
+		PhaseHandler:      appVersionPhaseHandler,
 	}
 	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")

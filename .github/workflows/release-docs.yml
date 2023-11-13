@@ -70,10 +70,6 @@ jobs:
           sed -i 's/currentversion: main/currentversion: ${{ inputs.tag_name }}/g' "${FOLDER}/_index.md"
           # copy netlify conf
           cp ./netlify.toml ${{ env.PAGE_DIR }}/netlify.toml
-          echo "========"
-          cat "${FOLDER}/version"
-          echo "========"
-          cat "${FOLDER}/_index.md"
 
 
       - name: Push content

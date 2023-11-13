@@ -1,7 +1,7 @@
 apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisDefinition
 metadata:
-  name: ed-my-proj-dev-svc1
+  name: ad-my-proj-dev-svc1
   namespace: keptn-lifecycle-toolkit-system
 spec:
   objectives:

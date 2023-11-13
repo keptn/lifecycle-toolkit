@@ -10,13 +10,12 @@ metadata:
   name: analysis-sample
 spec:
   timeframe:
-    from: 2023-05-05T05:05:05Z
-    to: 2023-05-05T10:10:10Z
+    recent: 5m
   args:
     project: my-project
     stage: dev
     service: svc1
     nodename: test # can be any key/value pair; NOT only project/stage/service
   analysisDefinition:
-    name: ed-my-proj-dev-svc1
+    name: ad-my-proj-dev-svc1
     namespace: keptn-lifecycle-toolkit-system

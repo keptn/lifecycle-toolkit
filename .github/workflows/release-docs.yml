@@ -56,20 +56,24 @@ jobs:
       - name: Copy old docs into main branch status
         run: |
           # Copy only the docs folder into the current documentation status from main
-          ls -al ${{ env.PAGE_DIR }}/docs/content/en/
           cp -R ${{ env.PAGE_DIR }}/docs/content/en/docs-* "./docs/content/en/"
-          ls -al ./docs/content/en/
 
       - name: Copy documentation site to page
+        env:
+          FOLDER: "${{ env.PAGE_DIR }}/docs/content/en/docs"
         run: |
           # clean page branch status
           rm -rf ${{ env.PAGE_DIR }}/docs
           cp -R ./docs ${{ env.PAGE_DIR }}/docs
           # mark the new live version with the release tag
-          echo "${{ inputs.tag_name }}" > "${{ env.PAGE_DIR }}/docs/content/en/docs/version"
+          echo "${{ inputs.tag_name }}" > "${FOLDER}/version"
           sed -i 's/currentversion: main/currentversion: ${{ inputs.tag_name }}/g' "${FOLDER}/_index.md"
           # copy netlify conf
           cp ./netlify.toml ${{ env.PAGE_DIR }}/netlify.toml
+          echo "========"
+          cat "${FOLDER}/version"
+          echo "========"
+          cat "${FOLDER}/_index.md"
 
 
       - name: Push content

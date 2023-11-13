@@ -43,23 +43,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Detect needed Folder Operations
+      - name: Detect current live version
         id: folder
         run: |
-            CURRENT_VERSION=`cat ${{ env.PAGE_DIR }}/docs/content/en/docs/version || echo "unknown"`
-            echo $CURRENT_VERSION
-            if [[ "${{ fromJson(steps.latest_release.outputs.data).tag_name }}" == "${{ inputs.tag_name }}" ]]; then
-              if [[ "${{ fromJson(steps.latest_release.outputs.data).tag_name }}" != "$CURRENT_VERSION" ]]; then
-                echo "migrate=docs-$CURRENT_VERSION" >> $GITHUB_OUTPUT
-              fi
-              echo "name=docs" >> $GITHUB_OUTPUT
-              echo "latest=true" >> $GITHUB_OUTPUT
-            else
-              echo "name=docs-${{ inputs.tag_name }}" >> $GITHUB_OUTPUT
-            fi
+          CURRENT_VERSION=`cat ${{ env.PAGE_DIR }}/docs/content/en/docs/version || echo "unknown"`
+          echo "Migrating to ${CURRENT_VERSION}"
+          echo "migrate=docs-$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Move old latest release documentation folder
-        if: ${{ steps.folder.outputs.migrate }}
+      - name: Move current live docs to a versioned folder
         env:
           FROM: "${{ env.PAGE_DIR }}/docs/content/en/docs"
           TO: "${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.migrate }}"
@@ -67,21 +58,21 @@ jobs:
           cp -R $FROM $TO
           rm -rf $FROM
 
-      - name: Copy configuration
-        if: ${{ steps.folder.outputs.latest }}
+      - name: Copy old docs into main branch status
         run: |
-          # Copy only the configuration files in the root folder of docs.
-          # The || true is to prevent cp failing and blocking the pipeline because it cannot copy the folders
-          #    due to the missing -r option. Otherwise, it creates two copies of the documentation.
-          cp ./docs/* "${{ env.PAGE_DIR }}/docs" || true
+          # Copy only the docs folder into the current documentation status from main
+          cp -R "${{ env.PAGE_DIR }}/docs/content/en/docs-*" "./docs/content/en/"
 
-      - name: Copy documentation folder
-        env:
-          FOLDER: "${{ env.PAGE_DIR }}/docs/content/en/${{ steps.folder.outputs.name}}"
+      - name: Copy documentation site to page
         run: |
-          cp -R ./docs/content/en/docs $FOLDER
-          echo "${{ inputs.tag_name }}" > "${FOLDER}/version"
+          # clean page branch status
+          rm -rf ${{ env.PAGE_DIR }}/docs
+          cp -R ./docs ${{ env.PAGE_DIR }}/docs
+          # mark the new live version with the release tag
+          echo "${{ inputs.tag_name }}" > "${{ env.PAGE_DIR }}/docs/content/en/docs/version"
           sed -i 's/currentversion: main/currentversion: ${{ inputs.tag_name }}/g' "${FOLDER}/_index.md"
+          # copy netlify conf
+          cp ./netlify.toml ${{ env.PAGE_DIR }}/netlify.toml
 
 
       - name: Push content

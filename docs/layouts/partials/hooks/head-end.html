@@ -1,12 +1,12 @@
 
 {{ if in .RelPermalink "docs-v" -}}
-  {{ $canoncical := replaceRE "-v[^/]+/" "/" .RelPermalink -}}
-  {{ $canoncicalPath := substr $canoncical 0 -1 -}}
-  {{ if .GetPage $canoncicalPath -}}
-    <link rel="canonical" href="{{ $canoncical | absURL}}"/>
+  {{ $canonical := replaceRE "-v[^/]+/" "/" .RelPermalink -}}
+  {{ $canonicalPath := substr $canonical 0 -1 -}}
+  {{ if .GetPage $canonicalPath -}}
+    <link rel="canonical" href="{{ $canonical | absURL}}"/>
   {{ else }}
     {{ range .Site.Pages -}}
-      {{ if in .Aliases $canoncical -}}
+      {{ if in .Aliases $canonical -}}
         <link rel="canonical" href="{{ .RelPermalink | absURL}}"/>
       {{- end }}
     {{- end}}

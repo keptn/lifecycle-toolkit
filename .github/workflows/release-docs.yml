@@ -56,8 +56,9 @@ jobs:
       - name: Copy old docs into main branch status
         run: |
           # Copy only the docs folder into the current documentation status from main
-          ls -a ls -al ${{ env.PAGE_DIR }}/docs/content/en/
-          cp -R "${{ env.PAGE_DIR }}/docs/content/en/docs-*" "./docs/content/en/"
+          ls -al ${{ env.PAGE_DIR }}/docs/content/en/
+          cp -R ${{ env.PAGE_DIR }}/docs/content/en/docs-* "./docs/content/en/"
+          ls -al ./docs/content/en/
 
       - name: Copy documentation site to page
         run: |

@@ -650,5 +650,3 @@ yannh
 yml
 YOURNAME
 yourregistry
-libcrypto
-libssl

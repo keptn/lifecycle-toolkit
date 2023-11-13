@@ -1,0 +1,21 @@
+name: Debug Release Documentation
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Release Tag to use"
+        type: "string"
+        required: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  update-docs:
+    name: Update Documentation test
+    with:
+      tag_name: ${{ inputs.tag_name }}
+    uses: ./.github/workflows/release-docs.yml
+    secrets: inherit

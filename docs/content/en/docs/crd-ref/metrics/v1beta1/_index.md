@@ -336,7 +336,7 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `type` _string_ | Type represents the provider type. This can be one of prometheus, dynatrace, datadog, dql. |
-| `targetServer` _string_ | TargetServer defined the URL at which the metrics provider is reachable with included port and protocol. |
+| `targetServer` _string_ | TargetServer defines URL (including port and protocol) at which the metrics provider is reachable. |
 | `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#secretkeyselector-v1-core)_ | SecretKeyRef defines an optional secret for access credentials to the metrics provider. |
 
 

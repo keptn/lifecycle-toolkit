@@ -1,6 +1,12 @@
 name: Release Documentation
 
 on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Release Tag to use"
+        type: "string"
+        required: true
   workflow_call:
     inputs:
       tag_name:

@@ -525,7 +525,7 @@ spec:
     that failed to deploy, perhaps because a
     `preDeploymentEvaluation` or `preDeploymentTask` failed.
     See
-    [Restart an Application Deployment](../implementing/restart-application-deployment.md)
+    [Restart an Application Deployment](../guides/restart-application-deployment.md)
     for a longer discussion of this.
   - **workloads**
     - **name** - name of this Kubernetes
@@ -595,4 +595,4 @@ See [KeptnApp Reference page](../yaml-crd-ref/app.md) for more information.
 
 Keptn can run pre and post deployment tasks and SLO evaluations automatically.
 
-Continue the Keptn learning journey by [adding deployment tasks](../implementing/tasks.md).
+Continue the Keptn learning journey by [adding deployment tasks](../guides/tasks.md).

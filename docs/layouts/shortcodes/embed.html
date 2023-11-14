@@ -7,5 +7,5 @@
         {{- highlight (.Content | htmlUnescape | safeHTML ) "yaml" -}}
     {{ end }}
 {{ else }}
-    {{ errorf "Unable to get remote resource." }}
+    {{ errorf "Unable to get remote resource: %s" $u }}
 {{ end }}

@@ -18,7 +18,7 @@ we suggest that you run through the exercises in
 to familiarize yourself with how Keptn works.
 When you are ready to begin the migration,
 follow the instructions in
-[Installation and upgrade](../install)
+[Installation and upgrade](../installation)
 to set up your Kubernetes cluster
 and install Keptn on it.
 
@@ -93,7 +93,7 @@ Some key points:
 
 For in-depth information about Keptn components
 and how they work, see the
-[Architecture](../architecture)
+[Architecture](../components)
 section.
 
 ## Disposition of Keptn v1 components in Keptn
@@ -141,7 +141,7 @@ but some services may be translated into
 [KeptnTaskDefinition](../yaml-crd-ref/app.md)
 or other resources.
  See
-[Working with Keptn tasks](../implementing/tasks.md)
+[Working with Keptn tasks](../guides/tasks.md)
 for more information.
 
 For example:
@@ -282,13 +282,13 @@ should be translated into an appropriate Keptn resource:
 * [KeptnMetric](../yaml-crd-ref/metric.md)
 resources
   to do
-  [evaluations](../implementing/evaluations.md)
+  [evaluations](../guides/evaluations.md)
   with
   [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
   resources.
 * [AnalysisValueTemplate](../yaml-crd-ref/analysisvaluetemplate.md)
   resources to do
-  [analyses](../implementing/slo.md)
+  [analyses](../guides/slo.md)
   with
   [AnalysisDefinition](../yaml-crd-ref/analysisdefinition.md)
   resources.
@@ -304,7 +304,7 @@ Keptn v1
 can be implemented on Keptn as evaluations or analyses:
 
 * Simple evaluations of an SLI can be implemented as
-  [Evaluations](../implementing/evaluations.md)
+  [Evaluations](../guides/evaluations.md)
   which are defined as
   [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
   resources.
@@ -312,7 +312,7 @@ can be implemented on Keptn as evaluations or analyses:
 * Complex analyses that use weighting and scoring
   and analyze the value over a specified time frame
   can be implemented as
-  [Analyses](../implementing/slo.md)
+  [Analyses](../guides/slo.md)
   that are defined in
   [AnalysisDefinition](../yaml-crd-ref/analysisdefinition.md)
   resources.
@@ -339,7 +339,7 @@ but it does provide limited "Day 2" facilities:
   and automatically add those resources to your configuration
   based on the `ReplicaSet` resources you have defined.
   See
-  [Using the HorizontalPodAutoscaler](../implementing/evaluatemetrics.md/#using-the-horizontalpodautoscaler)
+  [Using the HorizontalPodAutoscaler](../guides/evaluatemetrics.md/#using-the-horizontalpodautoscaler)
   for more information.
 
 ### Integrations and services in JES

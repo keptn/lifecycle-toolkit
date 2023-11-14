@@ -1,5 +1,5 @@
 ---
-title: Keptn metrics
+title: Keptn Metrics
 description: Enhance your deployment with custom Keptn metrics
 weight: 30
 ---
@@ -48,11 +48,11 @@ series.
 After completing this exercise,
 you may want to do the other exercises:
 
-- In [Standardize observability](../intro/usecase-observability.md),
+- In [Standardize observability](../core-concepts/usecase-observability.md),
   you learn how to standardize access
   to the observability data for your cluster.
 - In
-  [Manage release lifecycle](../intro/usecase-orchestrate.md),
+  [Manage release lifecycle](../core-concepts/usecase-orchestrate.md),
   you learn how to implement
   pre- and post-deployment tasks and evaluations
   to orchestrate the flow of all the [workloads](https://kubernetes.io/docs/concepts/workloads/)
@@ -60,14 +60,14 @@ you may want to do the other exercises:
 
 The steps to implement metrics in an existing cluster are:
 
-1. [Install Keptn](../install/install.md)
+1. [Install Keptn](../installation/install.md)
 1. Configure the metrics you want to use:
    - [Define metrics providers](#define-metrics-providers)
    - [Define KeptnMetric information](#define-keptnmetric-information)
    - [View available metrics](#view-available-metrics)
 
 If you want to create your own cluster to run this exercise,
-follow the instructions in [Installation](../install/install.md).
+follow the instructions in [Installation](../installation/install.md).
 
 ## Define metrics to use
 
@@ -278,7 +278,7 @@ The Kubernetes HorizontalPodAutoscaler (HPA)
 uses metrics to provide autoscaling for the cluster.
 HPA can retrieve KeptnMetrics and use those metrics to implement HPA.
 See
-Using the [HorizontalPodAutoscaler](../implementing/evaluatemetrics.md/#using-the-horizontalpodautoscaler)
+Using the [HorizontalPodAutoscaler](../guides/evaluatemetrics.md/#using-the-horizontalpodautoscaler)
 for detailed information.
 
 ## Learn more
@@ -286,6 +286,6 @@ for detailed information.
 To learn more about the Keptn Metrics Server, see:
 
 - Architecture:
-  [Keptn Metrics Operator](../architecture/components/metrics-operator.md)
+  [Keptn Metrics Operator](../components/components/metrics-operator.md)
 - More information about implementing Keptn Metrics:
-  [Keptn Metrics](../implementing/evaluatemetrics.md)
+  [Keptn Metrics](../guides/evaluatemetrics.md)

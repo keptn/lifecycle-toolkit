@@ -63,7 +63,7 @@ jobs:
 
       - name: Create release matrix
         id: build-matrix
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         env:
           CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
           KLT_TAG: ${{ steps.release.outputs.tag_name }}

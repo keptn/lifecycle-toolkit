@@ -1171,7 +1171,7 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, ch
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) telemetry.ITracer {
 		return tr
 	}}
 

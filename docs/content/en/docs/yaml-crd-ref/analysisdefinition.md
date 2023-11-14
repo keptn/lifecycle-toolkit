@@ -10,7 +10,7 @@ list of Service Level Objectives (SLOs) for an `Analysis`.
 ## Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisDefinition
 metadata:
   name: <name-of-this-resource>
@@ -119,7 +119,7 @@ Each of these objectives must specify:
 ## Example
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisDefinition
 metadata:
   name: ed-my-proj-dev-svc1
@@ -156,7 +156,7 @@ guide page.
 ## Files
 
 API reference:
-[AnalysisDefinition](../crd-ref/metrics/v1alpha3/#analysisdefinition)
+[AnalysisDefinition](../crd-ref/metrics/v1beta1/#analysisdefinition)
 
 ## Differences between versions
 

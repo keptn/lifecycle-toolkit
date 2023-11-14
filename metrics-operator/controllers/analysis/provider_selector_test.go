@@ -279,3 +279,53 @@ func TestProvidersPool_StartProviders(t *testing.T) {
 	pool.StopProviders()
 
 }
+
+func TestProvidersPool_isProviderTypeRegistered(t *testing.T) {
+	type fields struct {
+		providers map[string]chan metricstypes.ProviderRequest
+	}
+	type args struct {
+		providerType string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		{
+			name: "supported provider",
+			fields: fields{
+				providers: map[string]chan metricstypes.ProviderRequest{
+					"mock-provider": make(chan metricstypes.ProviderRequest),
+				},
+			},
+			args: args{
+				providerType: "mock-provider",
+			},
+			want: true,
+		},
+		{
+			name: "unsupported provider",
+			fields: fields{
+				providers: map[string]chan metricstypes.ProviderRequest{
+					"mock-provider": make(chan metricstypes.ProviderRequest),
+				},
+			},
+			args: args{
+				providerType: "sock-provider",
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ps := ProvidersPool{
+				providers: tt.fields.providers,
+			}
+			if got := ps.isProviderTypeRegistered(tt.args.providerType); got != tt.want {
+				t.Errorf("isProviderTypeRegistered() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

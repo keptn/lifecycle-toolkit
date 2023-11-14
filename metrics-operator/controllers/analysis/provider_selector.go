@@ -84,7 +84,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 
 			ps.log.Info("found KeptnMetricsProvider, preparing query", "workerID:", id, "AnalysisValueTemplate:", templ.Name, "KeptnMetricsProvider:", templ.Spec.Provider.Name, "ProviderType:", providerRef.Spec.Type, "query:", templ.Spec.Query)
 
-			if !providers.IsProviderSupported(providerRef.Spec.Type) {
+			if !ps.isProviderTypeRegistered(providerRef.Spec.Type) {
 				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, ErrMsg: fmt.Sprintf("unsupported provider: %s", providerRef.Spec.Type)}
 				continue
 			}
@@ -119,6 +119,15 @@ func (ps ProvidersPool) GetResult(ctx context.Context) (*metricsapi.ProviderResu
 	case res := <-ps.results:
 		return &res, nil
 	}
+}
+
+func (ps ProvidersPool) isProviderTypeRegistered(providerType string) bool {
+	for p, _ := range ps.providers {
+		if p == providerType {
+			return true
+		}
+	}
+	return false
 }
 
 func generateQuery(query string, selectors map[string]string) (string, error) {

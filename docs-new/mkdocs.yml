@@ -1,8 +1,0 @@
-site_name: Keptn
-theme:
-  name: material
-  favicon: https://lifecycle.keptn.sh/images/logo-mobile.svg
-  features:
-    - navigation.instant
-repo_name: keptn/lifecycle-toolkit
-repo_url: https://github.com/keptn/lifecycle-toolkit

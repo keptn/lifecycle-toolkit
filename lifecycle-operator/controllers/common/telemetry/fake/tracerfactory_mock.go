@@ -4,7 +4,7 @@
 package fake
 
 import (
-	"go.opentelemetry.io/otel/trace"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"sync"
 )
 
@@ -14,7 +14,7 @@ import (
 //
 //		// make and configure a mocked telemetry.TracerFactory
 //		mockedTracerFactory := &TracerFactoryMock{
-//			GetTracerFunc: func(name string) trace.Tracer {
+//			GetTracerFunc: func(name string) telemetry.ITracer {
 //				panic("mock out the GetTracer method")
 //			},
 //		}
@@ -25,7 +25,7 @@ import (
 //	}
 type TracerFactoryMock struct {
 	// GetTracerFunc mocks the GetTracer method.
-	GetTracerFunc func(name string) trace.Tracer
+	GetTracerFunc func(name string) telemetry.ITracer
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -39,7 +39,7 @@ type TracerFactoryMock struct {
 }
 
 // GetTracer calls GetTracerFunc.
-func (mock *TracerFactoryMock) GetTracer(name string) trace.Tracer {
+func (mock *TracerFactoryMock) GetTracer(name string) telemetry.ITracer {
 	if mock.GetTracerFunc == nil {
 		panic("TracerFactoryMock.GetTracerFunc: method is nil but TracerFactory.GetTracer was just called")
 	}

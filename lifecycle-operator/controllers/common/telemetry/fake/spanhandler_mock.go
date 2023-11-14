@@ -5,6 +5,7 @@ package fake
 
 import (
 	"context"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sync"
@@ -16,7 +17,7 @@ import (
 //
 //		// make and configure a mocked telemetry.ISpanHandler
 //		mockedISpanHandler := &ISpanHandlerMock{
-//			GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+//			GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 //				panic("mock out the GetSpan method")
 //			},
 //			UnbindSpanFunc: func(reconcileObject client.Object, phase string) error {
@@ -30,7 +31,7 @@ import (
 //	}
 type ISpanHandlerMock struct {
 	// GetSpanFunc mocks the GetSpan method.
-	GetSpanFunc func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error)
+	GetSpanFunc func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error)
 
 	// UnbindSpanFunc mocks the UnbindSpan method.
 	UnbindSpanFunc func(reconcileObject client.Object, phase string) error
@@ -42,7 +43,7 @@ type ISpanHandlerMock struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// Tracer is the tracer argument value.
-			Tracer trace.Tracer
+			Tracer telemetry.ITracer
 			// ReconcileObject is the reconcileObject argument value.
 			ReconcileObject client.Object
 			// Phase is the phase argument value.
@@ -61,13 +62,13 @@ type ISpanHandlerMock struct {
 }
 
 // GetSpan calls GetSpanFunc.
-func (mock *ISpanHandlerMock) GetSpan(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+func (mock *ISpanHandlerMock) GetSpan(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 	if mock.GetSpanFunc == nil {
 		panic("ISpanHandlerMock.GetSpanFunc: method is nil but ISpanHandler.GetSpan was just called")
 	}
 	callInfo := struct {
 		Ctx             context.Context
-		Tracer          trace.Tracer
+		Tracer          telemetry.ITracer
 		ReconcileObject client.Object
 		Phase           string
 	}{
@@ -88,13 +89,13 @@ func (mock *ISpanHandlerMock) GetSpan(ctx context.Context, tracer trace.Tracer, 
 //	len(mockedISpanHandler.GetSpanCalls())
 func (mock *ISpanHandlerMock) GetSpanCalls() []struct {
 	Ctx             context.Context
-	Tracer          trace.Tracer
+	Tracer          telemetry.ITracer
 	ReconcileObject client.Object
 	Phase           string
 } {
 	var calls []struct {
 		Ctx             context.Context
-		Tracer          trace.Tracer
+		Tracer          telemetry.ITracer
 		ReconcileObject client.Object
 		Phase           string
 	}

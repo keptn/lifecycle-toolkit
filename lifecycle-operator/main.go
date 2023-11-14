@@ -55,7 +55,7 @@ import (
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	metricsapi "go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/sdk/metric"
-	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -280,7 +280,7 @@ func main() {
 		mgr.GetClient(),
 		workloadVersionEventSender,
 		workloadVersionLogger,
-		trace.NewNoopTracerProvider().Tracer("keptn/lifecycle-operator/workloadversion"),
+		noop.NewTracerProvider().Tracer("keptn/lifecycle-operator/workloadversion"),
 		mgr.GetScheme(),
 		spanHandler,
 	)
@@ -314,7 +314,7 @@ func main() {
 		mgr.GetClient(),
 		appVersionEventSender,
 		appVersionLogger,
-		trace.NewNoopTracerProvider().Tracer("keptn/lifecycle-operator/appversion"),
+		noop.NewTracerProvider().Tracer("keptn/lifecycle-operator/appversion"),
 		mgr.GetScheme(),
 		spanHandler,
 	)

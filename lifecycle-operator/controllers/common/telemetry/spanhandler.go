@@ -13,7 +13,7 @@ import (
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/spanhandler_mock.go . ISpanHandler
 type ISpanHandler interface {
-	GetSpan(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error)
+	GetSpan(ctx context.Context, tracer ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error)
 	UnbindSpan(reconcileObject client.Object, phase string) error
 }
 
@@ -27,7 +27,7 @@ type Handler struct {
 	mtx         sync.Mutex
 }
 
-func (r *Handler) GetSpan(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+func (r *Handler) GetSpan(ctx context.Context, tracer ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 	piWrapper, err := interfaces.NewSpanItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, nil, err

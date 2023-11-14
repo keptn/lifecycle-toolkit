@@ -15,6 +15,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
 	phasefake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
@@ -52,7 +53,7 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 	r, eventChannel, _ := setupReconciler(app)
 
-	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
 		return phase.PhaseResult{Continue: true, Result: ctrl.Result{Requeue: false}}, nil
 	}}
 
@@ -152,7 +153,7 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 		Status: status,
 	}
 	r, _, _ := setupReconciler(app)
-	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
 		return phase.PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
 	}}
 
@@ -230,7 +231,7 @@ func setupReconcilerWithMeters() *KeptnAppVersionReconciler {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) telemetry.ITracer {
 		return tr
 	}}
 
@@ -256,14 +257,14 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) telemetry.ITracer {
 		return tr
 	}}
 
 	// fake span handler
 
 	spanRecorder := &telemetryfake.ISpanHandlerMock{
-		GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+		GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 			return ctx, trace.SpanFromContext(ctx), nil
 		},
 		UnbindSpanFunc: func(reconcileObject client.Object, phase string) error { return nil },

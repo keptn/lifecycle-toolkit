@@ -18,7 +18,7 @@ import (
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/handler_mock.go . IHandler:MockHandler
 type IHandler interface {
-	HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (PhaseResult, error)
+	HandlePhase(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (PhaseResult, error)
 }
 
 type Handler struct {
@@ -42,7 +42,7 @@ func NewHandler(client client.Client, eventSender eventsender.IEvent, log logr.L
 	}
 }
 
-func (r Handler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phase apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (PhaseResult, error) {
+func (r Handler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (PhaseResult, error) {
 	requeueResult := ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {

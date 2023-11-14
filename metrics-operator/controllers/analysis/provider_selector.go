@@ -51,7 +51,7 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 			ps.log.Info("Worker: Exiting due to context.Done()")
 			return
 		default:
-			ps.log.Info("worker", "id:", id, "started  job:", j.AnalysisValueTemplateRef.Name)
+			ps.log.Info("worker", "workerID:", id, "started job:", j.AnalysisValueTemplateRef.Name)
 			templ := &metricsapi.AnalysisValueTemplate{}
 			err := ps.Client.Get(ctx,
 				types.NamespacedName{
@@ -66,6 +66,8 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 				continue
 			}
 
+			ps.log.Info("found AnalysisValueTemplate, looking up KeptnMetricsProvider", "workerID:", id, "AnalysisValueTemplate:", templ.Name, "KeptnMetricsProvider:", templ.Spec.Provider.Name)
+
 			providerRef := &metricsapi.KeptnMetricsProvider{}
 			err = ps.Client.Get(ctx,
 				types.NamespacedName{
@@ -77,6 +79,13 @@ func (ps ProvidersPool) DispatchToProviders(ctx context.Context, id int) {
 			if err != nil {
 				ps.log.Error(err, "Failed to get KeptnMetricsProvider")
 				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, ErrMsg: err.Error()}
+				continue
+			}
+
+			ps.log.Info("found KeptnMetricsProvider, preparing query", "workerID:", id, "AnalysisValueTemplate:", templ.Name, "KeptnMetricsProvider:", templ.Spec.Provider.Name, "ProviderType:", providerRef.Spec.Type, "query:", templ.Spec.Query)
+
+			if !providers.IsProviderSupported(providerRef.Spec.Type) {
+				ps.results <- metricsapi.ProviderResult{Objective: j.AnalysisValueTemplateRef, ErrMsg: fmt.Sprintf("unsupported provider: %s", providerRef.Spec.Type)}
 				continue
 			}
 

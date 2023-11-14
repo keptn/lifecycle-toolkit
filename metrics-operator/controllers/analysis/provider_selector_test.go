@@ -87,6 +87,17 @@ func TestProvidersPool(t *testing.T) {
 		},
 	}
 
+	unsupportedProvider := metricsapi.KeptnMetricsProvider{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-provider",
+			Namespace: "default",
+		},
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			Type:         "foo",
+			TargetServer: "localhost:2000",
+		},
+	}
+
 	template2 := metricsapi.AnalysisValueTemplate{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-template",
@@ -158,6 +169,12 @@ func TestProvidersPool(t *testing.T) {
 			expectedErr: "keptnmetricsproviders.metrics.keptn.sh \"my-provider\" not found",
 			analysisDef: analysisDef,
 			mockClient:  fake2.NewClient(&analysis, &analysisDef, &template),
+		},
+		{
+			name:        "Unsupported Provider",
+			expectedErr: "unsupported provider: foo",
+			analysisDef: analysisDef,
+			mockClient:  fake2.NewClient(&unsupportedProvider, &analysis, &analysisDef, &template),
 		},
 		{
 			name:        "Success",

@@ -7,7 +7,7 @@ import (
 	"context"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
-	"go.opentelemetry.io/otel/trace"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sync"
 )
@@ -18,7 +18,7 @@ import (
 //
 //		// make and configure a mocked phase.IHandler
 //		mockedIHandler := &MockHandler{
-//			HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+//			HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
 //				panic("mock out the HandlePhase method")
 //			},
 //		}
@@ -29,7 +29,7 @@ import (
 //	}
 type MockHandler struct {
 	// HandlePhaseFunc mocks the HandlePhase method.
-	HandlePhaseFunc func(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error)
+	HandlePhaseFunc func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -40,7 +40,7 @@ type MockHandler struct {
 			// CtxTrace is the ctxTrace argument value.
 			CtxTrace context.Context
 			// Tracer is the tracer argument value.
-			Tracer trace.Tracer
+			Tracer telemetry.ITracer
 			// ReconcileObject is the reconcileObject argument value.
 			ReconcileObject client.Object
 			// PhaseMoqParam is the phaseMoqParam argument value.
@@ -53,14 +53,14 @@ type MockHandler struct {
 }
 
 // HandlePhase calls HandlePhaseFunc.
-func (mock *MockHandler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+func (mock *MockHandler) HandlePhase(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
 	if mock.HandlePhaseFunc == nil {
 		panic("MockHandler.HandlePhaseFunc: method is nil but IHandler.HandlePhase was just called")
 	}
 	callInfo := struct {
 		Ctx             context.Context
 		CtxTrace        context.Context
-		Tracer          trace.Tracer
+		Tracer          telemetry.ITracer
 		ReconcileObject client.Object
 		PhaseMoqParam   apicommon.KeptnPhaseType
 		ReconcilePhase  func(phaseCtx context.Context) (apicommon.KeptnState, error)
@@ -85,7 +85,7 @@ func (mock *MockHandler) HandlePhase(ctx context.Context, ctxTrace context.Conte
 func (mock *MockHandler) HandlePhaseCalls() []struct {
 	Ctx             context.Context
 	CtxTrace        context.Context
-	Tracer          trace.Tracer
+	Tracer          telemetry.ITracer
 	ReconcileObject client.Object
 	PhaseMoqParam   apicommon.KeptnPhaseType
 	ReconcilePhase  func(phaseCtx context.Context) (apicommon.KeptnState, error)
@@ -93,7 +93,7 @@ func (mock *MockHandler) HandlePhaseCalls() []struct {
 	var calls []struct {
 		Ctx             context.Context
 		CtxTrace        context.Context
-		Tracer          trace.Tracer
+		Tracer          telemetry.ITracer
 		ReconcileObject client.Object
 		PhaseMoqParam   apicommon.KeptnPhaseType
 		ReconcilePhase  func(phaseCtx context.Context) (apicommon.KeptnState, error)

@@ -1042,7 +1042,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 
 	r, _, _ := setupReconciler(app, wi)
 
-	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
 		return phase.PhaseResult{Continue: false, Result: ctrl.Result{Requeue: false}}, nil
 	}}
 
@@ -1139,7 +1139,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcilePreDeploymentEvaluationUnexpect
 	}
 
 	mockPhaseHandler := &phasefake.MockHandler{
-		HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer trace.Tracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
 			return phase.PhaseResult{Continue: false, Result: ctrl.Result{Requeue: true}}, errors.New("unexpected error")
 		},
 	}

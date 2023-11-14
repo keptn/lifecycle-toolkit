@@ -93,7 +93,7 @@ A Keptn Analysis is implemented with three resources:
 
 Consider the following `Analysis` resource:
 
-{{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysis.yaml" >}}
+{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysis.yaml" >}}
 
 This `Analysis` resource:
 
@@ -107,7 +107,7 @@ This `Analysis` resource:
 The `AnalysisDefinition` resource references this `Analysis` resource
 by its `name` and `namespace` and can be seen here:
 
-{{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysisdefinition.yaml" >}}
+{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysisdefinition.yaml" >}}
 
 This simple definition contains a single objective, `response-time-p95`.
 For this objective, both failure and warning criteria are defined:
@@ -123,7 +123,7 @@ this means that the analysis either passes with 100%
 or fails with 0% (slower response time).
 
 The objective points to the corresponding `AnalysisValueTemplate` resource:
-{{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysisvaluetemplate.yaml" >}}
+{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysisvaluetemplate.yaml" >}}
 
 This template defines a query to a provider called `prometheus`:
 

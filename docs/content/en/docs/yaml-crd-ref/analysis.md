@@ -14,7 +14,7 @@ that are used in the `AnalysisDefinition` query.
 ## Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: Analysis
 metadata:
   name: analysis-sample
@@ -309,7 +309,7 @@ kubectl get analysis - n keptn-lifecycle-poc -oyaml
 
 ## Examples
 
-{{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysis.yaml" >}}
+{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysis.yaml" >}}
 
 This `Analysis` resource:
 
@@ -326,7 +326,7 @@ guide page.
 
 ## Files
 
-API reference: [Analysis](../crd-ref/metrics/v1alpha3/#analysis)
+API reference: [Analysis](../crd-ref/metrics/v1beta1/#analysis)
 
 ## Differences between versions
 

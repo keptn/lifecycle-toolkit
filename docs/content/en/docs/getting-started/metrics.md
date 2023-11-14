@@ -159,7 +159,7 @@ The
 file for our example looks like:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: Keptnmetric
 metadata:
   name: available-cpus
@@ -170,7 +170,7 @@ spec:
   query: "sum(kube_node_status_capacity{resources`cpu`})"
   fetchIntervalSeconds: 10
 ---
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: Keptnmetric
 metadata:
   name: availability-slo
@@ -257,7 +257,7 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/simplenode-d
         "kind": "KeptnMetric",
         "namespace": "simplenode-dev",
         "name": "available-cpus",
-        "apiVersion": "metrics.keptn.sh/v1alpha2"
+        "apiVersion": "metrics.keptn.sh/v1beta1"
       },
       "metric": {
         "name": "available-cpus",

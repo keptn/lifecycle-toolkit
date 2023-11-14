@@ -15,6 +15,7 @@ import (
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/record"
@@ -380,7 +381,7 @@ func TestTaskHandler(t *testing.T) {
 				Log:         ctrl.Log.WithName("controller"),
 				EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithObjects(initObjs...).Build(),
-				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
+				Tracer:      noop.NewTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
 			}
 			status, summary, err := handler.ReconcileTasks(context.TODO(), context.TODO(), tt.object, tt.createAttr)
@@ -451,7 +452,7 @@ func TestTaskHandler_createTask(t *testing.T) {
 				Log:         ctrl.Log.WithName("controller"),
 				EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().Build(),
-				Tracer:      trace.NewNoopTracerProvider().Tracer("tracer"),
+				Tracer:      noop.NewTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
 			}
 			name, err := handler.CreateKeptnTask(context.TODO(), "namespace", tt.object, tt.createAttr)

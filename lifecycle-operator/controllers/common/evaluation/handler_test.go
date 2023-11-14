@@ -14,6 +14,7 @@ import (
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/record"
@@ -271,7 +272,7 @@ func TestEvaluationHandler(t *testing.T) {
 				fake.NewClientBuilder().WithObjects(&tt.evalObj).Build(),
 				eventsender.NewK8sSender(fakeRecorder),
 				ctrl.Log.WithName("controller"),
-				trace.NewNoopTracerProvider().Tracer("tracer"),
+				noop.NewTracerProvider().Tracer("tracer"),
 				scheme.Scheme,
 				&spanHandlerMock)
 			status, summary, err := handler.ReconcileEvaluations(context.TODO(), context.TODO(), tt.object, tt.createAttr)
@@ -352,7 +353,7 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 				fake.NewClientBuilder().Build(),
 				eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				ctrl.Log.WithName("controller"),
-				trace.NewNoopTracerProvider().Tracer("tracer"),
+				noop.NewTracerProvider().Tracer("tracer"),
 				scheme.Scheme,
 				&telemetryfake.ISpanHandlerMock{})
 

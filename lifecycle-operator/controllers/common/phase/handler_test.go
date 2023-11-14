@@ -11,7 +11,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/stretchr/testify/require"
-	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/record"
@@ -217,7 +217,7 @@ func TestHandler(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := tt.handler.HandlePhase(context.TODO(), context.TODO(), trace.NewNoopTracerProvider().Tracer("tracer"), tt.object, tt.phase, tt.reconcilePhase)
+			result, err := tt.handler.HandlePhase(context.TODO(), context.TODO(), noop.NewTracerProvider().Tracer("tracer"), tt.object, tt.phase, tt.reconcilePhase)
 			require.Equal(t, tt.want, result)
 			require.Equal(t, tt.wantErr, err)
 			require.Equal(t, tt.wantObject.Status.Status, tt.object.Status.Status)

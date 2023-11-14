@@ -22,7 +22,6 @@ labels:
       crdGroup: metrics.keptn.sh
       keptn.sh/inject-cert: "true"
 patches:
-  - path: patches/webhook_in_keptnmetrics.yaml
 # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix.
 # patches here are for enabling the conversion webhook for each CRD
 # - path: patches/webhook_in_keptnmetricsproviders.yaml

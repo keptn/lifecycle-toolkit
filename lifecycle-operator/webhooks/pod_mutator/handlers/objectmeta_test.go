@@ -265,6 +265,25 @@ func Test_calculateVersion(t *testing.T) {
 			wantErr:       false,
 		},
 		{
+			name: "single container with annotation mismatch",
+			pod: &corev1.Pod{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "pod-name",
+				},
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{
+							Name:  "container-name",
+							Image: "image:tag1",
+						},
+					},
+				},
+			},
+			containerName: "not-container-name",
+			want:          "",
+			wantErr:       true,
+		},
+		{
 			name: "multiple containers",
 			pod: &corev1.Pod{
 				Spec: corev1.PodSpec{

@@ -63,7 +63,7 @@ spec:
     name: "my-secret-name"
     key: "apiToken"
 ---
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: my-metric-2

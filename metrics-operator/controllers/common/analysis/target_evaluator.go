@@ -1,7 +1,7 @@
 package analysis
 
 import (
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 )
 
@@ -15,7 +15,7 @@ func NewTargetEvaluator(o IOperatorEvaluator) TargetEvaluator {
 	}
 }
 
-func (te *TargetEvaluator) Evaluate(val float64, t *v1alpha3.Target) types.TargetResult {
+func (te *TargetEvaluator) Evaluate(val float64, t *metricsapi.Target) types.TargetResult {
 	result := types.TargetResult{
 		Warning: false,
 		Pass:    false,

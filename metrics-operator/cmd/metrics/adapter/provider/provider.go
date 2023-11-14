@@ -25,7 +25,7 @@ import (
 	"sigs.k8s.io/custom-metrics-apiserver/pkg/provider"
 )
 
-var keptnMetricGroupVersionResource = schema.GroupVersionResource{Group: "metrics.keptn.sh", Version: "v1alpha2", Resource: "keptnmetrics"}
+var keptnMetricGroupVersionResource = schema.GroupVersionResource{Group: "metrics.keptn.sh", Version: "v1beta1", Resource: "keptnmetrics"}
 
 var providerInstance *keptnMetricsProvider
 

@@ -30,9 +30,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
 	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
 	certwebhook "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
-	metricsv1alpha1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha1"
-	metricsv1alpha2 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
-	metricsv1alpha3 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	analysiscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
@@ -64,17 +62,7 @@ var (
 
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
-
-	utilruntime.Must(metricsv1alpha1.AddToScheme(scheme))
-	utilruntime.Must(metricsv1alpha2.AddToScheme(scheme))
-	utilruntime.Must(metricsv1alpha3.AddToScheme(scheme))
-	// v1beta1 should not be added to the scheme, as the scheme
-	// is used during conversion webhook registration ->
-	// this leads to an error during installation as v1beta1
-	// does not have a conversion path to v1alpha3
-	// v1beta1 should be added to scheme when it will become HUB version
-	// and conversion webhooks will be removed
-	// utilruntime.Must(metricsv1beta1.AddToScheme(scheme))
+	utilruntime.Must(metricsapi.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 
@@ -257,15 +245,15 @@ func main() {
 }
 
 func setupValidationWebhooks(mgr manager.Manager) {
-	if err := (&metricsv1alpha3.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
+	if err := (&metricsapi.KeptnMetric{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnMetric")
 		os.Exit(1)
 	}
-	if err := (&metricsv1alpha3.AnalysisDefinition{}).SetupWebhookWithManager(mgr); err != nil {
+	if err := (&metricsapi.AnalysisDefinition{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "AnalysisDefinition")
 		os.Exit(1)
 	}
-	if err := (&metricsv1alpha3.Analysis{}).SetupWebhookWithManager(mgr); err != nil {
+	if err := (&metricsapi.Analysis{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "Analysis")
 		os.Exit(1)
 	}

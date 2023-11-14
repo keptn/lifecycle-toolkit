@@ -1,13 +1,13 @@
 package types
 
 import (
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 )
 
 type ProviderRequest struct {
-	Objective v1alpha3.Objective
+	Objective metricsapi.Objective
 	Query     string
-	Provider  *v1alpha3.KeptnMetricsProvider
+	Provider  *metricsapi.KeptnMetricsProvider
 }
 
 type TargetResult struct {
@@ -26,17 +26,17 @@ func (t *TargetResult) IsWarn() bool {
 }
 
 type OperatorResult struct {
-	Operator  v1alpha3.Operator `json:"operator"`
-	Fulfilled bool              `json:"fulfilled"`
+	Operator  metricsapi.Operator `json:"operator"`
+	Fulfilled bool                `json:"fulfilled"`
 }
 
 type ObjectiveResult struct {
-	Result    TargetResult       `json:"result"`
-	Objective v1alpha3.Objective `json:"objective"`
-	Value     float64            `json:"value"`
-	Query     string             `json:"query"`
-	Score     float64            `json:"score"`
-	Error     error              `json:"error,omitempty"`
+	Result    TargetResult         `json:"result"`
+	Objective metricsapi.Objective `json:"objective"`
+	Value     float64              `json:"value"`
+	Query     string               `json:"query"`
+	Score     float64              `json:"score"`
+	Error     error                `json:"error,omitempty"`
 }
 
 func (o *ObjectiveResult) IsFail() bool {
@@ -73,5 +73,5 @@ func (a *AnalysisResult) GetAchievedPercentage() float64 {
 // both objects via a channel
 type AnalysisCompletion struct {
 	Result   AnalysisResult
-	Analysis v1alpha3.Analysis
+	Analysis metricsapi.Analysis
 }

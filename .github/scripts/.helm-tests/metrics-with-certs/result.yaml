@@ -235,7 +235,7 @@ spec:
               type: object
           type: object
       served: true
-      storage: true
+      storage: false
       subresources:
         status: {}
     - additionalPrinterColumns:
@@ -394,7 +394,7 @@ spec:
               type: object
           type: object
       served: true
-      storage: false
+      storage: true
       subresources:
         status: {}
 ---
@@ -751,7 +751,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
   - name: v1beta1
@@ -1081,7 +1081,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
 ---
@@ -1164,7 +1164,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -1220,7 +1220,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
 ---
@@ -1242,16 +1242,6 @@ metadata:
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: metrics-operator-0.1.0
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: 'metrics-webhook-service'
-          namespace: 'helmtests'
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: metrics.keptn.sh
   names:
     kind: KeptnMetric
@@ -1575,7 +1565,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -1741,7 +1731,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
 ---
@@ -1882,7 +1872,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
   - name: v1beta1
@@ -1942,7 +1932,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
 ---
@@ -2704,14 +2694,14 @@ webhooks:
     service:
       name: 'metrics-webhook-service'
       namespace: 'helmtests'
-      path: /validate-metrics-keptn-sh-v1alpha3-keptnmetric
+      path: /validate-metrics-keptn-sh-v1beta1-keptnmetric
   failurePolicy: Fail
   name: vkeptnmetric.kb.io
   rules:
   - apiGroups:
     - metrics.keptn.sh
     apiVersions:
-    - v1alpha3
+    - v1beta1
     operations:
     - CREATE
     - UPDATE
@@ -2724,14 +2714,14 @@ webhooks:
     service:
       name: 'metrics-webhook-service'
       namespace: 'helmtests'
-      path: /validate-metrics-keptn-sh-v1alpha3-analysis
+      path: /validate-metrics-keptn-sh-v1beta1-analysis
   failurePolicy: Fail
   name: vanalysis.kb.io
   rules:
     - apiGroups:
         - metrics.keptn.sh
       apiVersions:
-        - v1alpha3
+        - v1beta1
       operations:
         - CREATE
         - UPDATE
@@ -2744,14 +2734,14 @@ webhooks:
     service:
       name: 'metrics-webhook-service'
       namespace: 'helmtests'
-      path: /validate-metrics-keptn-sh-v1alpha3-analysisdefinition
+      path: /validate-metrics-keptn-sh-v1beta1-analysisdefinition
   failurePolicy: Fail
   name: vanalysisdefinition.kb.io
   rules:
   - apiGroups:
     - metrics.keptn.sh
     apiVersions:
-    - v1alpha3
+    - v1beta1
     operations:
     - CREATE
     - UPDATE

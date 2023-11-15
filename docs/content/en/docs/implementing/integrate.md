@@ -109,6 +109,7 @@ These keys are defined as:
    workloads.
    If the given container name does not match any container in the workload
    no version can be determined.
+   Note that there is no equivalent `app.kubernetes.io/` annotation/label for this label.
 
 Keptn automatically generates appropriate
 [KeptnApp](../yaml-crd-ref/app.md)

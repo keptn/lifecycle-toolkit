@@ -2,6 +2,7 @@ package dynatrace
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -804,8 +805,8 @@ func TestKeptnDynatraceProvider_FetchAnalysisValue(t *testing.T) {
 		require.Equal(t, "GET", r.Method)
 		require.Equal(t, "/api/v2/metrics/query", r.URL.Path)
 		require.Equal(t, "my-query", r.URL.Query().Get("metricSelector"))
-		require.Equal(t, from.String(), r.URL.Query().Get("from"))
-		require.Equal(t, to.String(), r.URL.Query().Get("to"))
+		require.Equal(t, fmt.Sprintf("%d", from.UTC().Unix()), r.URL.Query().Get("from"))
+		require.Equal(t, fmt.Sprintf("%d", to.UTC().Unix()), r.URL.Query().Get("to"))
 		require.Equal(t, 1, len(r.Header["Authorization"]))
 	}))
 	defer svr.Close()

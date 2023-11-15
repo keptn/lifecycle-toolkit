@@ -41,7 +41,7 @@ type DynatraceData struct {
 func (d *KeptnDynatraceProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
 
-	qURL := "metricSelector=" + query + "&from=" + analysis.GetFrom().String() + "&to=" + analysis.GetTo().String()
+	qURL := fmt.Sprintf("metricSelector=%s&from=%d&to=%d", query, analysis.GetFrom().UTC().Unix(), analysis.GetTo().UTC().Unix())
 	qURL = urlEncodeQuery(qURL)
 	qURL = baseURL + "v2/metrics/query?" + qURL
 

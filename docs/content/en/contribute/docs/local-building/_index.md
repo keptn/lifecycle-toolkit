@@ -1,7 +1,7 @@
 ---
 title: Build Documentation Locally
 description: This guide explains how to create a local version of the documentation
-weight: 400
+weight: 200
 ---
 
 ## Building the documentation locally

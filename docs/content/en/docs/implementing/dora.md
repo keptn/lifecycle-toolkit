@@ -23,7 +23,7 @@ Keptn starts collecting these metrics
 as soon as you apply
 [basic annotations](./integrate.md#basic-annotations)
 to the
-[Workload](https://kubernetes.io/docs/concepts/workloads/)
+[workload](https://kubernetes.io/docs/concepts/workloads/)
 resources
 ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
@@ -39,21 +39,23 @@ To view DORA metrics, run the following two commands:
 
 - Retrieve the service name with:
 
-```shell
-kubectl -n keptn-lifecycle-toolkit-system get service -l control-plane=lifecycle-operator
-```
+  ```shell
+  kubectl -n keptn-lifecycle-toolkit-system get service \
+    -l control-plane=lifecycle-operator
+  ```
 
 - Then port-forward to the name of your service:
 
-```shell
-kubectl -n keptn-lifecycle-toolkit-system port-forward service/<YOURNAME> 2222
-```
+  ```shell
+  kubectl -n keptn-lifecycle-toolkit-system port-forward \
+    service/<YOURNAME> 2222
+  ```
 
 Then view the metrics at:
 
-```shell
-http://localhost:2222/metrics
-```
+  ```shell
+  http://localhost:2222/metrics
+  ```
 
 DORA metrics are also displayed on Grafana
 or whatever dashboard application you choose.

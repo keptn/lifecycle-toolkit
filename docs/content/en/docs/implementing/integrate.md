@@ -106,7 +106,8 @@ These keys are defined as:
 * `keptn.sh/container`: Determines the name of the container in the Workload,
    from which Keptn extracts the version.
    This applies to single- and multi-container
-   workloads. If the given container name does not match any container in the Workload
+   workloads. 
+   If the given container name does not match any container in the workload
    no version can be determined.  
 
 Keptn automatically generates appropriate

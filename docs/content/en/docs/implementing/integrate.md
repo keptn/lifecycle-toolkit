@@ -106,9 +106,9 @@ These keys are defined as:
 * `keptn.sh/container`: Determines the name of the container in the Workload,
    from which Keptn extracts the version.
    This applies to single- and multi-container
-   workloads. 
+   workloads.
    If the given container name does not match any container in the workload
-   no version can be determined.  
+   no version can be determined.
 
 Keptn automatically generates appropriate
 [KeptnApp](../yaml-crd-ref/app.md)

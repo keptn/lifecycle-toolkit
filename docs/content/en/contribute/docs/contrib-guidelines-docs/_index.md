@@ -1,7 +1,7 @@
 ---
 title: Contribution guidelines for documentation
 description: Guidelines for contributing towards Keptn Lifecycle Toolkit
-weight: 300
+weight: 100
 ---
 
 The [Contribution Guidelines](../../general/contrib-guidelines-gen) page

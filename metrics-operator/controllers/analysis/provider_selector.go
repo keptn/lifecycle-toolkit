@@ -122,7 +122,7 @@ func (ps ProvidersPool) GetResult(ctx context.Context) (*metricsapi.ProviderResu
 }
 
 func (ps ProvidersPool) isProviderTypeRegistered(providerType string) bool {
-	for p, _ := range ps.providers {
+	for p := range ps.providers {
 		if p == providerType {
 			return true
 		}

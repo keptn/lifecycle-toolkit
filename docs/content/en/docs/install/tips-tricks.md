@@ -46,8 +46,8 @@ To install the latest version, use the installation commands on the
 page.
 
 To install an older release,
-specify the version with the chart `--version` flag
-in the `helm update` command for the release you are installing.
+specify the chart version with the `--version` flag
+in the `helm upgrade --install` command for the release you are installing.
 
 ## Example configurations by use-case
 

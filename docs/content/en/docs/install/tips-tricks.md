@@ -20,8 +20,8 @@ and you can install individual components
 without installing all of Keptn.
 
 Keptn is installed using the
-[keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml)
-umbrella chart.
+[Keptn](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn)
+umbrella Helm chart.
 Each subchart has its own README file describing possible configuration options,
 but configuration changes for the subcharts are added to a single `values.yaml` file.
 See

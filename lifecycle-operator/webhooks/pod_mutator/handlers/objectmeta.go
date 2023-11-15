@@ -104,13 +104,6 @@ func getImageVersion(image string) (string, error) {
 }
 
 func calculateVersion(pod *corev1.Pod, containerName string) (string, error) {
-	if len(pod.Spec.Containers) == 1 {
-		if containerName != "" && pod.Spec.Containers[0].Name != containerName {
-			return "", fmt.Errorf("The container name '%s' specified in %s does not match the name of the container in the pod", containerName, apicommon.ContainerNameAnnotation)
-		}
-		return getImageVersion(pod.Spec.Containers[0].Image)
-	}
-
 	name := ""
 	containerFound := false
 	for _, item := range pod.Spec.Containers {

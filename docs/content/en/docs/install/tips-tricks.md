@@ -36,9 +36,8 @@ compared to the installation of earlier releases:
 * Keptn v0.9.0 and later releases use
   the umbrella charts whereas earlier versions did not
 * Keptn v0.9.0 and later releases use
-  `keptn` as the value to the `NAME` option of the
-  [helm repo add](https://helm.sh/docs/helm/helm_repo_add/)
-  command whereas earlier releases used `klt`.
+  the `keptn` Helm chart, whereas earlier
+  releases used the `klt` chart.
 
 To install a version prior to v0.9.0,
 use the install command sequence that is documented for that release.

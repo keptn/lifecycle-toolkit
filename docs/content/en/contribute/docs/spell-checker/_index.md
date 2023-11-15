@@ -9,7 +9,7 @@ are run through a spell checker that is based on
 [check-spelling](https://github.com/check-spelling/check-spelling)
 Github action.
 
-Note, however, that you are still resposible for reading your text carefully.
+Note, however, that you are still responsible for reading your text carefully.
 The tool does not flag if you used a real word that is not the right word,
 if you misuse "setup" versus "set up", and so forth.
 
@@ -28,7 +28,7 @@ If you get a Spell Checker error:
      and push the new commit to resolve the errors.
 
    - If a word that is flagged is a legitimate word,
-     follow the instructions in the repor
+     follow the instructions in the report
      to propose adding it to our dictionary.
      This request will be added to your PR for review
      and, if approved, will be merged when the PR is merged.

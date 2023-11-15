@@ -41,13 +41,9 @@ compared to the installation of earlier releases:
 
 To install a version prior to v0.9.0,
 use the install command sequence that is documented for that release.
-To install the latest version use:
-  
-```shell
-helm repo add keptn https://charts.lifecycle.keptn.sh
-helm repo update
-helm search repo keptn
-```
+To install the latest version, use the installation commands on the
+[Install Keptn](install.md/#basic-installation) 
+page.
 
 To install an older release,
 specify the version with the chart `--version` flag

@@ -30,7 +30,9 @@
         "docker.io\\/bacherfl\\/.*",
         "docker.io\\/mowies\\/.*",
         "docker.io\\/odubajdt\\/.*",
-        "docker.io\\/thisthatdc\\/.*"
+        "docker.io\\/thisthatdc\\/.*",
+        "testreg\\/.*",
+        "myrep"
       ]
     },
     {

@@ -4,7 +4,7 @@
 package fake
 
 import (
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"sync"
 )
@@ -15,7 +15,7 @@ import (
 //
 //		// make and configure a mocked analysis.IAnalysisEvaluator
 //		mockedIAnalysisEvaluator := &IAnalysisEvaluatorMock{
-//			EvaluateFunc: func(values map[string]v1alpha3.ProviderResult, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult {
+//			EvaluateFunc: func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) types.AnalysisResult {
 //				panic("mock out the Evaluate method")
 //			},
 //		}
@@ -26,29 +26,29 @@ import (
 //	}
 type IAnalysisEvaluatorMock struct {
 	// EvaluateFunc mocks the Evaluate method.
-	EvaluateFunc func(values map[string]v1alpha3.ProviderResult, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult
+	EvaluateFunc func(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) types.AnalysisResult
 
 	// calls tracks calls to the methods.
 	calls struct {
 		// Evaluate holds details about calls to the Evaluate method.
 		Evaluate []struct {
 			// Values is the values argument value.
-			Values map[string]v1alpha3.ProviderResult
+			Values map[string]metricsapi.ProviderResult
 			// Ad is the ad argument value.
-			Ad *v1alpha3.AnalysisDefinition
+			Ad *metricsapi.AnalysisDefinition
 		}
 	}
 	lockEvaluate sync.RWMutex
 }
 
 // Evaluate calls EvaluateFunc.
-func (mock *IAnalysisEvaluatorMock) Evaluate(values map[string]v1alpha3.ProviderResult, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult {
+func (mock *IAnalysisEvaluatorMock) Evaluate(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) types.AnalysisResult {
 	if mock.EvaluateFunc == nil {
 		panic("IAnalysisEvaluatorMock.EvaluateFunc: method is nil but IAnalysisEvaluator.Evaluate was just called")
 	}
 	callInfo := struct {
-		Values map[string]v1alpha3.ProviderResult
-		Ad     *v1alpha3.AnalysisDefinition
+		Values map[string]metricsapi.ProviderResult
+		Ad     *metricsapi.AnalysisDefinition
 	}{
 		Values: values,
 		Ad:     ad,
@@ -64,12 +64,12 @@ func (mock *IAnalysisEvaluatorMock) Evaluate(values map[string]v1alpha3.Provider
 //
 //	len(mockedIAnalysisEvaluator.EvaluateCalls())
 func (mock *IAnalysisEvaluatorMock) EvaluateCalls() []struct {
-	Values map[string]v1alpha3.ProviderResult
-	Ad     *v1alpha3.AnalysisDefinition
+	Values map[string]metricsapi.ProviderResult
+	Ad     *metricsapi.AnalysisDefinition
 } {
 	var calls []struct {
-		Values map[string]v1alpha3.ProviderResult
-		Ad     *v1alpha3.AnalysisDefinition
+		Values map[string]metricsapi.ProviderResult
+		Ad     *metricsapi.AnalysisDefinition
 	}
 	mock.lockEvaluate.RLock()
 	calls = mock.calls.Evaluate

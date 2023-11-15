@@ -14,7 +14,7 @@ of multiple types of data provider.
 ## Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisValueTemplate
 metadata:
   name: response-time-p95
@@ -84,7 +84,7 @@ The template refers to that provider and queries it.
 
 ## Example
 
-{{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysisvaluetemplate.yaml" >}}
+{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysisvaluetemplate.yaml" >}}
 
 For a full example of how the `AnalysisValueTemplate` is used
 to implement the Keptn Analysis feature, see the
@@ -94,7 +94,7 @@ guide page.
 ## Files
 
 API reference:
-[AnalysisValueTemplate](../crd-ref/metrics/v1alpha3/#analysisvaluetemplate)
+[AnalysisValueTemplate](../crd-ref/metrics/v1beta1/#analysisvaluetemplate)
 
 ## Differences between versions
 

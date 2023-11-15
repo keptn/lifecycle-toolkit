@@ -32,6 +32,7 @@ const CreateAppEvalSpanName = "create_%s_app_evaluation"
 const CreateWorkloadEvalSpanName = "create_%s_deployment_evaluation"
 const AppTypeAnnotation = "keptn.sh/app-type"
 const KeptnGate = "keptn-prechecks-gate"
+const ContainerNameAnnotation = "keptn.sh/container"
 
 const MinKeptnNameLen = 80
 const MaxK8sObjectLength = 253

@@ -636,6 +636,49 @@ func TestIsPodAnnotated(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "Test return false when container annotation does not match container name",
+			args: args{
+				pod: &corev1.Pod{
+					Spec: corev1.PodSpec{
+						Containers: []corev1.Container{
+							{
+								Name: "container-name",
+							},
+						},
+					},
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							apicommon.ContainerNameAnnotation: "not-container-name",
+						},
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "Test return false when container annotation does not match any container name",
+			args: args{
+				pod: &corev1.Pod{
+					Spec: corev1.PodSpec{
+						Containers: []corev1.Container{
+							{
+								Name: "container-name",
+							},
+							{
+								Name: "container-name2",
+							},
+						},
+					},
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							apicommon.ContainerNameAnnotation: "not-container-name",
+						},
+					},
+				},
+			},
+			want: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -26,7 +26,7 @@ type Handler struct {
 	client.Client
 	EventSender eventsender.IEvent
 	Log         logr.Logger
-	Tracer      trace.Tracer
+	Tracer      telemetry.ITracer
 	Scheme      *runtime.Scheme
 	SpanHandler telemetry.ISpanHandler
 }

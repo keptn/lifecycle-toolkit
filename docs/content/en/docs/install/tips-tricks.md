@@ -42,7 +42,7 @@ compared to the installation of earlier releases:
 To install a version prior to v0.9.0,
 use the install command sequence that is documented for that release.
 To install the latest version, use the installation commands on the
-[Install Keptn](install.md/#basic-installation) 
+[Install Keptn](install.md/#basic-installation)
 page.
 
 To install an older release,

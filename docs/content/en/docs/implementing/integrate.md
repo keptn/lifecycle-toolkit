@@ -103,7 +103,7 @@ These keys are defined as:
    of the generated `KeptnApp` representing your Application.
    All Workloads that share the same value for this label
    are consolidated into the same `KeptnApp` resource.
-* `keptn.sh/container`: Determines the name of the container in the Workload,
+* `keptn.sh/container`: Determines the name of the container in the workload,
    from which Keptn extracts the version.
    This applies to single- and multi-container
    workloads.

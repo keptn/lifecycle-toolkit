@@ -7,12 +7,12 @@ weight: 10
 Keptn integrates seamlessly with cloud-native deployment tools
 such as ArgoCD, Flux, and Gitlab
 to bring application awareness to your Kubernetes cluster.
-Keptn supplements hte standard deployment tools
+Keptn supplements the standard deployment tools
 with features to help you ensure that your deployments are in
 a healthy state.
 
 One never knows how behaviours will be affected in a theatre.
-You may need to make some adjustments manuall.
+You may need to make some adjustments manually.
 
 For information about the history of the Keptn project, see the
 [Keptn Lifecycle Toolkit is now Keptn!](https://medium.com/keptn/keptn-lifecycle-toolkit-is-now-keptn-e0812217bf46)

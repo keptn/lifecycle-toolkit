@@ -2,10 +2,12 @@ package dynatrace
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
@@ -792,4 +794,63 @@ func setupTest(objs ...client.Object) KeptnDynatraceProvider {
 	}
 
 	return kdp
+}
+
+func TestKeptnDynatraceProvider_FetchAnalysisValue(t *testing.T) {
+	from := metav1.Now().UTC()
+	to := from.Add(5 * time.Second)
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte(dtpayload))
+		require.Nil(t, err)
+		require.Equal(t, "GET", r.Method)
+		require.Equal(t, "/api/v2/metrics/query", r.URL.Path)
+		require.Equal(t, "my-query", r.URL.Query().Get("metricSelector"))
+		require.Equal(t, fmt.Sprintf("%d", from.Unix()*1000), r.URL.Query().Get("from"))
+		require.Equal(t, fmt.Sprintf("%d", to.Unix()*1000), r.URL.Query().Get("to"))
+		require.Equal(t, 1, len(r.Header["Authorization"]))
+	}))
+	defer svr.Close()
+
+	apiTokenSecret := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "myapitoken",
+			Namespace: "",
+		},
+		Data: map[string][]byte{
+			"mykey": []byte("secret-value"),
+		},
+	}
+
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: "myapitoken",
+				},
+				Key: "mykey",
+			},
+			TargetServer: svr.URL,
+		},
+	}
+
+	analysis := metricsapi.Analysis{
+		Spec: metricsapi.AnalysisSpec{},
+		Status: metricsapi.AnalysisStatus{Timeframe: metricsapi.Timeframe{
+			From: metav1.NewTime(from),
+			To:   metav1.NewTime(to),
+		}},
+	}
+
+	fakeClient := fake.NewClient(apiTokenSecret)
+
+	kdp := KeptnDynatraceProvider{
+		HttpClient: http.Client{},
+		Log:        ctrl.Log.WithName("testytest"),
+		K8sClient:  fakeClient,
+	}
+
+	value, err := kdp.FetchAnalysisValue(context.TODO(), "my-query", analysis, &p)
+
+	require.Nil(t, err)
+	require.NotNil(t, value)
 }

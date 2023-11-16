@@ -15,6 +15,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+const metricsBasePath = "v2/metrics/query?"
+const metricSelectorParam = "metricSelector"
+
 type KeptnDynatraceProvider struct {
 	Log        logr.Logger
 	HttpClient http.Client
@@ -40,8 +43,11 @@ type DynatraceData struct {
 
 func (d *KeptnDynatraceProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
-	escapedQ := urlEncodeQuery(query)
-	qURL := baseURL + "v2/metrics/query?metricSelector=" + escapedQ + "&from=" + analysis.GetFrom().String() + "&to=" + analysis.GetTo().String()
+
+	qURL := fmt.Sprintf("%s=%s&from=%d&to=%d", metricSelectorParam, query, analysis.GetFrom().Unix()*1000, analysis.GetTo().Unix()*1000)
+	qURL = urlEncodeQuery(qURL)
+	qURL = baseURL + metricsBasePath + qURL
+
 	res, _, err := d.runQuery(ctx, qURL, *provider)
 	return res, err
 }
@@ -52,13 +58,13 @@ func (d *KeptnDynatraceProvider) EvaluateQuery(ctx context.Context, metric metri
 
 	var qURL string
 	if metric.Spec.Range != nil {
-		qURL = "metricSelector=" + metric.Spec.Query + "&from=now-" + metric.Spec.Range.Interval
+		qURL = metricSelectorParam + "=" + metric.Spec.Query + "&from=now-" + metric.Spec.Range.Interval
 	} else {
-		qURL = "metricSelector=" + metric.Spec.Query
+		qURL = metricSelectorParam + "=" + metric.Spec.Query
 	}
 
 	qURL = urlEncodeQuery(qURL)
-	qURL = baseURL + "v2/metrics/query?" + qURL
+	qURL = baseURL + metricsBasePath + qURL
 
 	return d.runQuery(ctx, qURL, provider)
 }
@@ -80,10 +86,10 @@ func (d *KeptnDynatraceProvider) EvaluateQueryForStep(ctx context.Context, metri
 		return nil, nil, fmt.Errorf("spec.range is not defined!")
 	}
 	baseURL := d.normalizeAPIURL(provider.Spec.TargetServer)
-	qURL := "metricSelector=" + metric.Spec.Query + "&from=now-" + metric.Spec.Range.Interval + "&resolution=" + metric.Spec.Range.Step
+	qURL := metricSelectorParam + "=" + metric.Spec.Query + "&from=now-" + metric.Spec.Range.Interval + "&resolution=" + metric.Spec.Range.Step
 
 	qURL = urlEncodeQuery(qURL)
-	qURL = baseURL + "v2/metrics/query?" + qURL
+	qURL = baseURL + metricsBasePath + qURL
 
 	d.Log.Info("Running query: " + qURL)
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)

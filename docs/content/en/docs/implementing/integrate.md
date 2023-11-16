@@ -20,9 +20,7 @@ to identify the workloads of interest.
 To integrate Keptn with your applications:
 
 * You must first
-[install](../install/install.md)
-and
-[enable](../install/install.md/#enable-keptn-lifecycle-operator-observability)
+[install and enable](../install/install.md#basic-installation)
 Keptn.
 * Annotate or label your workloads
 with either Keptn or Kubernetes keys.

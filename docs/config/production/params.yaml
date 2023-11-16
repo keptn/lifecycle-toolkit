@@ -4,7 +4,7 @@ versions:
 github_branch: page
 
 images:
-  - https://lifecycle.keptn.sh/images/logo-mobile.svg
+  - https://lifecycle.keptn.sh/images/logo-social.svg
 
 description: >-
   Achieve cloud-native application lifecycle orchestration with Keptn.

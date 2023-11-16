@@ -11,7 +11,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/stretchr/testify/require"
-	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/record"
@@ -28,7 +28,7 @@ func TestHandler(t *testing.T) {
 		phase          apicommon.KeptnPhaseType
 		reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)
 		wantObject     *v1alpha3.KeptnAppVersion
-		want           *PhaseResult
+		want           PhaseResult
 		wantErr        error
 		endTimeSet     bool
 	}{
@@ -42,7 +42,7 @@ func TestHandler(t *testing.T) {
 					Status: apicommon.StateDeprecated,
 				},
 			},
-			want:    &PhaseResult{Continue: false, Result: ctrl.Result{}},
+			want:    PhaseResult{Continue: false, Result: ctrl.Result{}},
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -68,7 +68,7 @@ func TestHandler(t *testing.T) {
 			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return "", fmt.Errorf("some err")
 			},
-			want:    &PhaseResult{Continue: false, Result: requeueResult},
+			want:    PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: fmt.Errorf("some err"),
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -95,7 +95,7 @@ func TestHandler(t *testing.T) {
 			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return apicommon.StatePending, nil
 			},
-			want:    &PhaseResult{Continue: false, Result: requeueResult},
+			want:    PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -122,7 +122,7 @@ func TestHandler(t *testing.T) {
 			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return apicommon.StateProgressing, nil
 			},
-			want:    &PhaseResult{Continue: false, Result: requeueResult},
+			want:    PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -149,7 +149,7 @@ func TestHandler(t *testing.T) {
 			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return apicommon.StateSucceeded, nil
 			},
-			want:    &PhaseResult{Continue: true, Result: requeueResult},
+			want:    PhaseResult{Continue: true, Result: requeueResult},
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -176,7 +176,7 @@ func TestHandler(t *testing.T) {
 			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return apicommon.StateFailed, nil
 			},
-			want:    &PhaseResult{Continue: false, Result: ctrl.Result{}},
+			want:    PhaseResult{Continue: false, Result: ctrl.Result{}},
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -204,7 +204,7 @@ func TestHandler(t *testing.T) {
 			reconcilePhase: func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 				return apicommon.StateUnknown, nil
 			},
-			want:    &PhaseResult{Continue: false, Result: requeueResult},
+			want:    PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
 			wantObject: &v1alpha3.KeptnAppVersion{
 				Status: v1alpha3.KeptnAppVersionStatus{
@@ -217,7 +217,7 @@ func TestHandler(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := tt.handler.HandlePhase(context.TODO(), context.TODO(), trace.NewNoopTracerProvider().Tracer("tracer"), tt.object, tt.phase, tt.reconcilePhase)
+			result, err := tt.handler.HandlePhase(context.TODO(), context.TODO(), noop.NewTracerProvider().Tracer("tracer"), tt.object, tt.phase, tt.reconcilePhase)
 			require.Equal(t, tt.want, result)
 			require.Equal(t, tt.wantErr, err)
 			require.Equal(t, tt.wantObject.Status.Status, tt.object.Status.Status)
@@ -225,4 +225,19 @@ func TestHandler(t *testing.T) {
 			require.Equal(t, tt.wantObject.Status.Status.IsFailed(), tt.object.IsEndTimeSet())
 		})
 	}
+}
+
+func TestNewHandler(t *testing.T) {
+	spanHandler := &telemetry.Handler{}
+	log := ctrl.Log.WithName("controller")
+	eventSender := eventsender.NewK8sSender(record.NewFakeRecorder(100))
+	client := fake.NewClientBuilder().WithScheme(scheme.Scheme).Build()
+
+	handler := NewHandler(client, eventSender, log, spanHandler)
+
+	require.NotNil(t, handler)
+	require.NotNil(t, handler.Client)
+	require.NotNil(t, handler.EventSender)
+	require.NotNil(t, handler.Log)
+	require.NotNil(t, handler.SpanHandler)
 }

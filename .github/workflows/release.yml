@@ -63,7 +63,7 @@ jobs:
 
       - name: Create release matrix
         id: build-matrix
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         env:
           CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
           KLT_TAG: ${{ steps.release.outputs.tag_name }}
@@ -144,7 +144,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Cosign
-        uses: sigstore/cosign-installer@11086d25041f77fe8fe7b9ea4e48e3b9192b8f19 # v3.1.2
+        uses: sigstore/cosign-installer@1fc5bd396d372bee37d608f955b336615edf79c8 # v3.2.0
 
       - name: Clean up image tag
         id: clean-image-tag
@@ -210,7 +210,7 @@ jobs:
     if: needs.release-please.outputs.klt-release-created == 'true'
     with:
       tag_name: ${{ needs.release-please.outputs.klt-tag-name }}
-    uses: keptn/docs-tooling/.github/workflows/release-docs.yml@v0.1.5
+    uses: ./.github/workflows/release-docs.yml
     secrets: inherit
 
   update-examples:

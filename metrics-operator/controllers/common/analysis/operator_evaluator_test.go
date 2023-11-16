@@ -3,7 +3,7 @@ package analysis
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -15,20 +15,20 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 	tests := []struct {
 		name string
 		val  float64
-		o    v1alpha3.Operator
+		o    metricsapi.Operator
 		want types.OperatorResult
 	}{
 		{
 			name: "less than - fulfilled",
 			val:  10.0,
-			o: v1alpha3.Operator{
-				LessThan: &v1alpha3.OperatorValue{
+			o: metricsapi.Operator{
+				LessThan: &metricsapi.OperatorValue{
 					FixedValue: *compValue,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					LessThan: &v1alpha3.OperatorValue{
+				Operator: metricsapi.Operator{
+					LessThan: &metricsapi.OperatorValue{
 						FixedValue: *compValue,
 					},
 				},
@@ -38,14 +38,14 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "less than - not fulfilled",
 			val:  16.0,
-			o: v1alpha3.Operator{
-				LessThan: &v1alpha3.OperatorValue{
+			o: metricsapi.Operator{
+				LessThan: &metricsapi.OperatorValue{
 					FixedValue: *compValue,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					LessThan: &v1alpha3.OperatorValue{
+				Operator: metricsapi.Operator{
+					LessThan: &metricsapi.OperatorValue{
 						FixedValue: *compValue,
 					},
 				},
@@ -55,14 +55,14 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "less than equal - fulfilled",
 			val:  15.0,
-			o: v1alpha3.Operator{
-				LessThanOrEqual: &v1alpha3.OperatorValue{
+			o: metricsapi.Operator{
+				LessThanOrEqual: &metricsapi.OperatorValue{
 					FixedValue: *compValue,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					LessThanOrEqual: &v1alpha3.OperatorValue{
+				Operator: metricsapi.Operator{
+					LessThanOrEqual: &metricsapi.OperatorValue{
 						FixedValue: *compValue,
 					},
 				},
@@ -72,14 +72,14 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "less than equal - not fulfilled",
 			val:  16.0,
-			o: v1alpha3.Operator{
-				LessThanOrEqual: &v1alpha3.OperatorValue{
+			o: metricsapi.Operator{
+				LessThanOrEqual: &metricsapi.OperatorValue{
 					FixedValue: *compValue,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					LessThanOrEqual: &v1alpha3.OperatorValue{
+				Operator: metricsapi.Operator{
+					LessThanOrEqual: &metricsapi.OperatorValue{
 						FixedValue: *compValue,
 					},
 				},
@@ -89,14 +89,14 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "equal - not fulfilled",
 			val:  16.0,
-			o: v1alpha3.Operator{
-				EqualTo: &v1alpha3.OperatorValue{
+			o: metricsapi.Operator{
+				EqualTo: &metricsapi.OperatorValue{
 					FixedValue: *compValue,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					EqualTo: &v1alpha3.OperatorValue{
+				Operator: metricsapi.Operator{
+					EqualTo: &metricsapi.OperatorValue{
 						FixedValue: *compValue,
 					},
 				},
@@ -106,14 +106,14 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "equal - fulfilled",
 			val:  15.0,
-			o: v1alpha3.Operator{
-				EqualTo: &v1alpha3.OperatorValue{
+			o: metricsapi.Operator{
+				EqualTo: &metricsapi.OperatorValue{
 					FixedValue: *compValue,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					EqualTo: &v1alpha3.OperatorValue{
+				Operator: metricsapi.Operator{
+					EqualTo: &metricsapi.OperatorValue{
 						FixedValue: *compValue,
 					},
 				},
@@ -123,14 +123,14 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "greater than - fulfilled",
 			val:  16.0,
-			o: v1alpha3.Operator{
-				GreaterThan: &v1alpha3.OperatorValue{
+			o: metricsapi.Operator{
+				GreaterThan: &metricsapi.OperatorValue{
 					FixedValue: *compValue,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					GreaterThan: &v1alpha3.OperatorValue{
+				Operator: metricsapi.Operator{
+					GreaterThan: &metricsapi.OperatorValue{
 						FixedValue: *compValue,
 					},
 				},
@@ -140,14 +140,14 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "greater than - not fulfilled",
 			val:  10.0,
-			o: v1alpha3.Operator{
-				GreaterThan: &v1alpha3.OperatorValue{
+			o: metricsapi.Operator{
+				GreaterThan: &metricsapi.OperatorValue{
 					FixedValue: *compValue,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					GreaterThan: &v1alpha3.OperatorValue{
+				Operator: metricsapi.Operator{
+					GreaterThan: &metricsapi.OperatorValue{
 						FixedValue: *compValue,
 					},
 				},
@@ -157,14 +157,14 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "greater than equal - fulfilled",
 			val:  15.0,
-			o: v1alpha3.Operator{
-				GreaterThanOrEqual: &v1alpha3.OperatorValue{
+			o: metricsapi.Operator{
+				GreaterThanOrEqual: &metricsapi.OperatorValue{
 					FixedValue: *compValue,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					GreaterThanOrEqual: &v1alpha3.OperatorValue{
+				Operator: metricsapi.Operator{
+					GreaterThanOrEqual: &metricsapi.OperatorValue{
 						FixedValue: *compValue,
 					},
 				},
@@ -174,14 +174,14 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "greater than equal - not fulfilled",
 			val:  10.0,
-			o: v1alpha3.Operator{
-				GreaterThanOrEqual: &v1alpha3.OperatorValue{
+			o: metricsapi.Operator{
+				GreaterThanOrEqual: &metricsapi.OperatorValue{
 					FixedValue: *compValue,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					GreaterThanOrEqual: &v1alpha3.OperatorValue{
+				Operator: metricsapi.Operator{
+					GreaterThanOrEqual: &metricsapi.OperatorValue{
 						FixedValue: *compValue,
 					},
 				},
@@ -191,15 +191,15 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "in range - fulfilled",
 			val:  20.0,
-			o: v1alpha3.Operator{
-				InRange: &v1alpha3.RangeValue{
+			o: metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
 					LowBound:  *compValue,
 					HighBound: *compValue2,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					InRange: &v1alpha3.RangeValue{
+				Operator: metricsapi.Operator{
+					InRange: &metricsapi.RangeValue{
 						LowBound:  *compValue,
 						HighBound: *compValue2,
 					},
@@ -210,15 +210,15 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "in range - not fulfilled",
 			val:  30.0,
-			o: v1alpha3.Operator{
-				InRange: &v1alpha3.RangeValue{
+			o: metricsapi.Operator{
+				InRange: &metricsapi.RangeValue{
 					LowBound:  *compValue,
 					HighBound: *compValue2,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					InRange: &v1alpha3.RangeValue{
+				Operator: metricsapi.Operator{
+					InRange: &metricsapi.RangeValue{
 						LowBound:  *compValue,
 						HighBound: *compValue2,
 					},
@@ -229,15 +229,15 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "not in range - fulfilled",
 			val:  30.0,
-			o: v1alpha3.Operator{
-				NotInRange: &v1alpha3.RangeValue{
+			o: metricsapi.Operator{
+				NotInRange: &metricsapi.RangeValue{
 					LowBound:  *compValue,
 					HighBound: *compValue2,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					NotInRange: &v1alpha3.RangeValue{
+				Operator: metricsapi.Operator{
+					NotInRange: &metricsapi.RangeValue{
 						LowBound:  *compValue,
 						HighBound: *compValue2,
 					},
@@ -248,15 +248,15 @@ func TestOperatorEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "not in range - not fulfilled",
 			val:  20.0,
-			o: v1alpha3.Operator{
-				NotInRange: &v1alpha3.RangeValue{
+			o: metricsapi.Operator{
+				NotInRange: &metricsapi.RangeValue{
 					LowBound:  *compValue,
 					HighBound: *compValue2,
 				},
 			},
 			want: types.OperatorResult{
-				Operator: v1alpha3.Operator{
-					NotInRange: &v1alpha3.RangeValue{
+				Operator: metricsapi.Operator{
+					NotInRange: &metricsapi.RangeValue{
 						LowBound:  *compValue,
 						HighBound: *compValue2,
 					},

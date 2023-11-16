@@ -9,10 +9,12 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/tools/record"
@@ -258,7 +260,7 @@ func TestEvaluationHandler(t *testing.T) {
 			err := v1alpha3.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			spanHandlerMock := telemetryfake.ISpanHandlerMock{
-				GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+				GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 					return context.TODO(), trace.SpanFromContext(context.TODO()), nil
 				},
 				UnbindSpanFunc: func(reconcileObject client.Object, phase string) error {
@@ -270,7 +272,7 @@ func TestEvaluationHandler(t *testing.T) {
 				fake.NewClientBuilder().WithObjects(&tt.evalObj).Build(),
 				eventsender.NewK8sSender(fakeRecorder),
 				ctrl.Log.WithName("controller"),
-				trace.NewNoopTracerProvider().Tracer("tracer"),
+				noop.NewTracerProvider().Tracer("tracer"),
 				scheme.Scheme,
 				&spanHandlerMock)
 			status, summary, err := handler.ReconcileEvaluations(context.TODO(), context.TODO(), tt.object, tt.createAttr)
@@ -351,7 +353,7 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 				fake.NewClientBuilder().Build(),
 				eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				ctrl.Log.WithName("controller"),
-				trace.NewNoopTracerProvider().Tracer("tracer"),
+				noop.NewTracerProvider().Tracer("tracer"),
 				scheme.Scheme,
 				&telemetryfake.ISpanHandlerMock{})
 

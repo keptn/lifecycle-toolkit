@@ -31,7 +31,7 @@ type Handler struct {
 	client.Client
 	EventSender eventsender.IEvent
 	Log         logr.Logger
-	Tracer      trace.Tracer
+	Tracer      telemetry.ITracer
 	Scheme      *runtime.Scheme
 	SpanHandler telemetry.ISpanHandler
 }
@@ -43,7 +43,7 @@ type CreateEvaluationAttributes struct {
 }
 
 // NewHandler creates a new instance of the Handler.
-func NewHandler(client client.Client, eventSender eventsender.IEvent, log logr.Logger, tracer trace.Tracer, scheme *runtime.Scheme, spanHandler telemetry.ISpanHandler) Handler {
+func NewHandler(client client.Client, eventSender eventsender.IEvent, log logr.Logger, tracer telemetry.ITracer, scheme *runtime.Scheme, spanHandler telemetry.ISpanHandler) Handler {
 	return Handler{
 		Client:      client,
 		EventSender: eventSender,

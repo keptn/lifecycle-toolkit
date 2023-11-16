@@ -10,7 +10,7 @@ list of Service Level Objectives (SLOs) for an `Analysis`.
 ## Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisDefinition
 metadata:
   name: <name-of-this-resource>
@@ -119,7 +119,7 @@ Each of these objectives must specify:
 ## Example
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisDefinition
 metadata:
   name: ed-my-proj-dev-svc1
@@ -156,14 +156,15 @@ guide page.
 ## Files
 
 API reference:
-[AnalysisDefinition](../crd-ref/metrics/v1alpha3/#analysisdefinition)
+[AnalysisDefinition](../crd-ref/metrics/v1beta1/#analysisdefinition)
 
 ## Differences between versions
 
 A preliminary release of the Keptn Analysis feature
-is included in Keptn v.0.8.3 but is hidden behind a feature flag.
-To preview these features, set the environment `ENABLE_ANALYSIS` to `true`
-in the `metrics-operator` deployment.
+is included in Keptn v0.8.3 and v0.9.0 but is hidden behind a feature flag.
+See the
+[Analysis](analysis.md/#differences-between-versions)
+reference page for instructions to activate the preview of this feature.
 
 ## See also
 

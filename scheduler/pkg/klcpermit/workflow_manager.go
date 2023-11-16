@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"hash/fnv"
+	"log"
 	"strings"
 
 	"github.com/keptn/lifecycle-toolkit/scheduler/pkg/tracing"
@@ -50,6 +51,7 @@ const AppAnnotation = "keptn.sh/app"
 const K8sRecommendedWorkloadAnnotations = "app.kubernetes.io/name"
 const K8sRecommendedVersionAnnotations = "app.kubernetes.io/version"
 const K8sRecommendedAppAnnotations = "app.kubernetes.io/part-of"
+const ContainerNameAnnotation = "keptn.sh/container"
 
 type Manager interface {
 	Permit(context.Context, *corev1.Pod) Status
@@ -182,8 +184,15 @@ func getCRDName(pod *corev1.Pod) string {
 	application, _ := getLabelOrAnnotation(pod, AppAnnotation, K8sRecommendedAppAnnotations)
 	workload, _ := getLabelOrAnnotation(pod, WorkloadAnnotation, K8sRecommendedWorkloadAnnotations)
 	version, versionExists := getLabelOrAnnotation(pod, VersionAnnotation, K8sRecommendedVersionAnnotations)
+	containerName, _ := getLabelOrAnnotation(pod, ContainerNameAnnotation, "")
 	if !versionExists {
-		version = calculateVersion(pod)
+
+		var err error
+
+		version, err = calculateVersion(pod, containerName)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 	return createResourceName(MaxK8sObjectLength, MinKLTNameLen, application, workload, version)
 }
@@ -206,24 +215,44 @@ func getLabelOrAnnotation(pod *corev1.Pod, primaryAnnotation string, secondaryAn
 	return "", false
 }
 
-func calculateVersion(pod *corev1.Pod) string {
-	name := ""
+func getImageVersion(image string) (string, error) {
+	splitImage := strings.Split(image, ":")
+	lenImg := len(splitImage) - 1
+	if lenImg >= 1 && splitImage[lenImg] != "" && splitImage[lenImg] != "latest" {
+		return splitImage[lenImg], nil
+	}
+	return "", fmt.Errorf("Invalid image version")
+}
 
+func calculateVersion(pod *corev1.Pod, containerName string) (string, error) {
 	if len(pod.Spec.Containers) == 1 {
-		image := strings.Split(pod.Spec.Containers[0].Image, ":")
-		if len(image) > 0 && image[1] != "" && image[1] != "latest" {
-			return image[1]
+		if containerName != "" && pod.Spec.Containers[0].Name != containerName {
+			return "", fmt.Errorf("The container name '%s' specified in %s does not match the name of the container in the pod", containerName, ContainerNameAnnotation)
 		}
+		return getImageVersion(pod.Spec.Containers[0].Image)
 	}
 
+	name := ""
+	containerFound := false
 	for _, item := range pod.Spec.Containers {
+		if item.Name == containerName {
+			containerFound = true
+			version, err := getImageVersion(item.Image)
+			if err == nil {
+				return version, nil
+			}
+		}
 		name = name + item.Name + item.Image
 		for _, e := range item.Env {
 			name = name + e.Name + e.Value
 		}
 	}
 
+	if containerName != "" && !containerFound {
+		return "", fmt.Errorf("The container name '%s' specified in %s does not match any containers in the pod", containerName, ContainerNameAnnotation)
+	}
+
 	h := fnv.New32a()
 	h.Write([]byte(name))
-	return fmt.Sprint(h.Sum32())
+	return fmt.Sprint(h.Sum32()), nil
 }

@@ -94,24 +94,37 @@ func initEmptyAnnotations(meta *metav1.ObjectMeta, size int) {
 	}
 }
 
-func calculateVersion(pod *corev1.Pod) string {
-	if len(pod.Spec.Containers) == 1 {
-		image := strings.Split(pod.Spec.Containers[0].Image, ":")
-		lenImg := len(image) - 1
-		if lenImg >= 1 && image[lenImg] != "" && image[lenImg] != "latest" {
-			return image[lenImg]
-		}
+func getImageVersion(image string) (string, error) {
+	splitImage := strings.Split(image, ":")
+	lenImg := len(splitImage) - 1
+	if lenImg >= 1 && splitImage[lenImg] != "" && splitImage[lenImg] != "latest" {
+		return splitImage[lenImg], nil
 	}
+	return "", fmt.Errorf("Invalid image version")
+}
 
+func calculateVersion(pod *corev1.Pod, containerName string) (string, error) {
 	name := ""
+	containerFound := false
 	for _, item := range pod.Spec.Containers {
+		if item.Name == containerName {
+			containerFound = true
+			version, err := getImageVersion(item.Image)
+			if err == nil {
+				return version, nil
+			}
+		}
 		name = name + item.Name + item.Image
 		for _, e := range item.Env {
 			name = name + e.Name + e.Value
 		}
 	}
 
+	if containerName != "" && !containerFound {
+		return "", fmt.Errorf("The container name '%s' specified in %s does not match any containers in the pod", containerName, apicommon.ContainerNameAnnotation)
+	}
+
 	h := fnv.New32a()
 	h.Write([]byte(name))
-	return fmt.Sprint(h.Sum32())
+	return fmt.Sprint(h.Sum32()), nil
 }

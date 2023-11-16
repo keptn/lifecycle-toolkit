@@ -13,6 +13,9 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	evalfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
+	phasefake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
@@ -50,6 +53,10 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 	r, eventChannel, _ := setupReconciler(app)
 
+	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		return phase.PhaseResult{Continue: true, Result: ctrl.Result{Requeue: false}}, nil
+	}}
+
 	tests := []struct {
 		name    string
 		req     ctrl.Request
@@ -66,16 +73,7 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 			},
 			wantErr: nil,
 			events: []string{
-				`AppPreDeployTasksStarted`,
-				`AppPreDeployTasksFinished`,
-				`AppPreDeployEvaluationsStarted`,
-				`AppPreDeployEvaluationsFinished`,
-				`AppDeployStarted`,
-				`AppDeployFinished`,
-				`AppPostDeployTasksStarted`,
-				`AppPostDeployTasksFinished`,
-				`AppPostDeployEvaluationsStarted`,
-				`AppPostDeployEvaluationsFinished`,
+				`AppCompletedFinished`,
 			},
 		},
 		{
@@ -154,7 +152,10 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 		},
 		Status: status,
 	}
-	r, eventChannel, _ := setupReconciler(app)
+	r, _, _ := setupReconciler(app)
+	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		return phase.PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
+	}}
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -164,19 +165,6 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 	}
 
 	result, err := r.Reconcile(context.WithValue(context.TODO(), CONTEXTID, req.Name), req)
-	require.Nil(t, err)
-
-	expectedEvents := []string{
-		"AppPreDeployTasksFailed",
-	}
-
-	for _, e := range expectedEvents {
-		event := <-eventChannel
-		require.Equal(t, strings.Contains(event, req.Name), true, "wrong appversion")
-		require.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
-		require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
-	}
-
 	require.Nil(t, err)
 
 	// do not requeue since we reached completion
@@ -243,7 +231,7 @@ func setupReconcilerWithMeters() *KeptnAppVersionReconciler {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) telemetry.ITracer {
 		return tr
 	}}
 
@@ -269,14 +257,14 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) telemetry.ITracer {
 		return tr
 	}}
 
 	// fake span handler
 
 	spanRecorder := &telemetryfake.ISpanHandlerMock{
-		GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+		GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 			return ctx, trace.SpanFromContext(ctx), nil
 		},
 		UnbindSpanFunc: func(reconcileObject client.Object, phase string) error { return nil },

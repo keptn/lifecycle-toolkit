@@ -12,10 +12,14 @@ ignore$
 \.npmrc$
 \.png$
 \.jpg$
-\.ttf
+\.ttf$
 \.sav$
 \.sum$
 \.xlf$
+\.svg$
+\.ico$
+\.zip$
+\.gif$
 ^\.github/actions/spelling
 _test\.go$
 ^examples/support/observability/config/

@@ -23,7 +23,7 @@ This means that:
 The observability data is an amalgamation of the following:
 
 - [DORA metrics](dora.md)
-  are collected out of the box when Keptn is enabled.
+  are collected out of the box when Keptn is enabled
 - [OpenTelemetry](https://opentelemetry.io/)
   runs traces that show everything that happens in the Kubernetes cluster
 - Custom

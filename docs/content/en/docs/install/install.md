@@ -101,7 +101,7 @@ that defines configurations specific to that component.
 All configuration changes for all components
 can be made in one `values.yaml` file.
 This is discussed more in
-[Modify Helm configuration options](#modify-helm-configuration-options)
+[Customizing the configuration of components](#customizing-the-configuration-of-components)
 below.
 
 The following table summarizes the Keptn `values.yaml` files.
@@ -117,7 +117,7 @@ The following table summarizes the Keptn `values.yaml` files.
 | [Keptn](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/README.md)                           | Installs subcharts, global configuration                                                                                  | [keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml) |
 | [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/README.md) | [Observability](../implementing/otel.md), [Release Lifecycle Management](../intro/_index.md#release-lifecycle-management) | [keptn-lifecycle-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/values.yaml) |
 | [metrics-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/README.md)    | [Keptn metrics](../implementing/evaluatemetrics.md), [Analysis](../implementing/slo.md)                                   | [keptn-metrics-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/values.yaml) |
-| [cert-manager](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md)            | [TLS Certificate management for all Keptn components](../architecture/cert-manager)                                                                       | [keptn-cert-manager/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/values.yaml) |
+| [cert-manager](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md)            | [TLS Certificate management for all Keptn components](../architecture/cert-manager.md)                                    | [keptn-cert-manager/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/values.yaml) |
 
 ## Customizing the configuration of components
 

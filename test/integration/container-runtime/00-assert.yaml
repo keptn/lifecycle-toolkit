@@ -38,7 +38,7 @@ spec:
           image: busybox:1.36.1
           env:
             - name: KEPTN_CONTEXT
-              value: ""
+              value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"pre","objectType":"Workload"}'
           command:
             - 'sh'
             - '-c'

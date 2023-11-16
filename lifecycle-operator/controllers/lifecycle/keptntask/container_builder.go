@@ -11,22 +11,24 @@ import (
 
 // ContainerBuilder implements container builder interface for python
 type ContainerBuilder struct {
-	containerSpec *klcv1alpha3.ContainerSpec
-	taskSpec      *klcv1alpha3.KeptnTaskSpec
+	containerSpec klcv1alpha3.ContainerSpec
+	taskSpec      klcv1alpha3.KeptnTaskSpec
 }
 
 func NewContainerBuilder(options BuilderOptions) *ContainerBuilder {
-	return &ContainerBuilder{
-		containerSpec: options.containerSpec,
+	builder := &ContainerBuilder{
+		containerSpec: *options.containerSpec,
 	}
+
+	if options.task != nil {
+		builder.taskSpec = options.task.Spec
+	}
+
+	return builder
 }
 
 func (c *ContainerBuilder) CreateContainer(ctx context.Context) (*corev1.Container, error) {
 	result := c.containerSpec.Container
-
-	if c.taskSpec == nil {
-		return result, nil
-	}
 
 	taskContext := c.taskSpec.Context
 
@@ -74,7 +76,7 @@ func (c *ContainerBuilder) getVolumeSource() *corev1.EmptyDirVolumeSource {
 }
 
 func (c *ContainerBuilder) generateVolume() *corev1.Volume {
-	if !taskdefinition.IsVolumeMountPresent(c.containerSpec) {
+	if !taskdefinition.IsVolumeMountPresent(&c.containerSpec) {
 		return nil
 	}
 	return &corev1.Volume{

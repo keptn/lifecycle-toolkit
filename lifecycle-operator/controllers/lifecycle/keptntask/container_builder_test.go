@@ -17,9 +17,9 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		wantContainer *v1.Container
 	}{
 		{
-			name: "defined, no",
+			name: "defined, no task spec",
 			builder: ContainerBuilder{
-				containerSpec: &v1alpha3.ContainerSpec{
+				containerSpec: v1alpha3.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 					},
@@ -32,12 +32,12 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		{
 			name: "defined, adding context",
 			builder: ContainerBuilder{
-				containerSpec: &v1alpha3.ContainerSpec{
+				containerSpec: v1alpha3.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 					},
 				},
-				taskSpec: &v1alpha3.KeptnTaskSpec{
+				taskSpec: v1alpha3.KeptnTaskSpec{
 					Context: v1alpha3.TaskContext{
 						WorkloadName: "my-workload",
 					},
@@ -56,7 +56,7 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		{
 			name: "defined, replacing context",
 			builder: ContainerBuilder{
-				containerSpec: &v1alpha3.ContainerSpec{
+				containerSpec: v1alpha3.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 						Env: []v1.EnvVar{
@@ -67,7 +67,7 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 						},
 					},
 				},
-				taskSpec: &v1alpha3.KeptnTaskSpec{
+				taskSpec: v1alpha3.KeptnTaskSpec{
 					Context: v1alpha3.TaskContext{
 						WorkloadName: "my-workload",
 					},
@@ -86,7 +86,7 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		{
 			name: "nil",
 			builder: ContainerBuilder{
-				containerSpec: &v1alpha3.ContainerSpec{
+				containerSpec: v1alpha3.ContainerSpec{
 					Container: nil,
 				},
 			},
@@ -110,7 +110,7 @@ func TestContainerBuilder_CreateVolume(t *testing.T) {
 		{
 			name: "defined without volume",
 			builder: ContainerBuilder{
-				containerSpec: &v1alpha3.ContainerSpec{
+				containerSpec: v1alpha3.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 					},
@@ -121,7 +121,7 @@ func TestContainerBuilder_CreateVolume(t *testing.T) {
 		{
 			name: "defined with volume",
 			builder: ContainerBuilder{
-				containerSpec: &v1alpha3.ContainerSpec{
+				containerSpec: v1alpha3.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 						VolumeMounts: []v1.VolumeMount{
@@ -146,7 +146,7 @@ func TestContainerBuilder_CreateVolume(t *testing.T) {
 		{
 			name: "defined with volume and limits",
 			builder: ContainerBuilder{
-				containerSpec: &v1alpha3.ContainerSpec{
+				containerSpec: v1alpha3.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 						Resources: v1.ResourceRequirements{
@@ -219,7 +219,7 @@ func Test_GenerateVolumes(t *testing.T) {
 	}
 	for _, tt := range tests {
 		builder := ContainerBuilder{
-			containerSpec: tt.spec,
+			containerSpec: *tt.spec,
 		}
 		t.Run(tt.name, func(t *testing.T) {
 			require.Equal(t, tt.want, builder.generateVolume())
@@ -268,7 +268,7 @@ func Test_GetVolumeSource(t *testing.T) {
 	}
 	for _, tt := range tests {
 		builder := ContainerBuilder{
-			containerSpec: tt.spec,
+			containerSpec: *tt.spec,
 		}
 		t.Run(tt.name, func(t *testing.T) {
 			require.Equal(t, tt.want, builder.getVolumeSource())

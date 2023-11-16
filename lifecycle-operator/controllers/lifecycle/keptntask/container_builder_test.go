@@ -27,6 +27,12 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 			},
 			wantContainer: &v1.Container{
 				Image: "image",
+				Env: []v1.EnvVar{
+					{
+						Name:  KeptnContextEnvVarName,
+						Value: `{"workloadName":"","appName":"","appVersion":"","workloadVersion":"","taskType":"","objectType":""}`,
+					},
+				},
 			},
 		},
 		{

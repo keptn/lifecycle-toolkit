@@ -30,6 +30,9 @@ func NewContainerBuilder(options BuilderOptions) *ContainerBuilder {
 
 func (c *ContainerBuilder) CreateContainer(ctx context.Context) (*corev1.Container, error) {
 	result := c.containerSpec.Container
+	if result == nil {
+		return nil, nil
+	}
 
 	taskContext := c.taskSpec.Context
 

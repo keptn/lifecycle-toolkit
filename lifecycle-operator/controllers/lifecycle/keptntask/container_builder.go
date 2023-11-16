@@ -2,6 +2,7 @@ package keptntask
 
 import (
 	"encoding/json"
+
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
 	"golang.org/x/net/context"

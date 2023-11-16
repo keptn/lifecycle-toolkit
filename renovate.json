@@ -91,7 +91,8 @@
     ],
     "ignorePaths": [
       "examples/support/observability/config/prometheus/**/*",
-      "test/prometheus/**/*"
+      "test/prometheus/**/*",
+      "test/integration/simple-deployment-container-annotation/00-install.yaml"
     ]
   }
 }

@@ -39,12 +39,13 @@ type RuntimeExecutionParams struct {
 }
 
 const (
-	Context           = "CONTEXT"
-	SecureData        = "SECURE_DATA"
-	Data              = "DATA"
-	CmdArgs           = "CMD_ARGS"
-	Script            = "SCRIPT"
-	FunctionMountName = "function-mount"
+	Context                = "CONTEXT"
+	KeptnContextEnvVarName = "KEPTN_CONTEXT"
+	SecureData             = "SECURE_DATA"
+	Data                   = "DATA"
+	CmdArgs                = "CMD_ARGS"
+	Script                 = "SCRIPT"
+	FunctionMountName      = "function-mount"
 )
 
 func (fb *RuntimeBuilder) CreateContainer(ctx context.Context) (*corev1.Container, error) {

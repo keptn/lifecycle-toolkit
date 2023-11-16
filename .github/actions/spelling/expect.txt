@@ -568,7 +568,7 @@ stdouttrace
 storageclasses
 storageversion
 sts
-subcharts
+subchart
 subdir
 subjectaccessreviews
 substitue

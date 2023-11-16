@@ -38,7 +38,7 @@ If Keptn is installed on a [vCluster](https://www.vcluster.com/) with
 Kubernetes v1.26 or earlier, some extra configuration
 needs to be added for full compatibility.
 See
-[Running Keptn with vCluster](install.md/#running-keptn-with-vcluster)
+[Running Keptn with vCluster](#running-keptn-with-vcluster)
 for more information.
 
 ## Running Keptn with vCluster

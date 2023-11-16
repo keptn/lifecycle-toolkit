@@ -2,6 +2,7 @@ package keptntask
 
 import (
 	"encoding/json"
+	"github.com/pkg/errors"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
@@ -29,10 +30,10 @@ func NewContainerBuilder(options BuilderOptions) *ContainerBuilder {
 }
 
 func (c *ContainerBuilder) CreateContainer(ctx context.Context) (*corev1.Container, error) {
-	result := c.containerSpec.Container
-	if result == nil {
-		return nil, nil
+	if c.containerSpec.Container == nil {
+		return nil, errors.New("no container definition provided")
 	}
+	result := c.containerSpec.Container
 
 	taskContext := c.taskSpec.Context
 

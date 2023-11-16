@@ -15,6 +15,7 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		name          string
 		builder       ContainerBuilder
 		wantContainer *v1.Container
+		wantError     bool
 	}{
 		{
 			name: "defined, no task spec",
@@ -97,12 +98,18 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 				},
 			},
 			wantContainer: nil,
+			wantError:     true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			container, _ := tt.builder.CreateContainer(context.TODO())
+			container, err := tt.builder.CreateContainer(context.TODO())
 			require.Equal(t, tt.wantContainer, container)
+			if tt.wantError {
+				require.NotNil(t, err)
+			} else {
+				require.Nil(t, err)
+			}
 		})
 	}
 }

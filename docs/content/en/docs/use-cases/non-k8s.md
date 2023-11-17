@@ -21,10 +21,10 @@ To do this:
 ## Install Keptn on a Kubernetes cluster
 
 You must set up a Kubernetes cluster and
-[install](../installation/install.md/#basic-installation)
+[install](../installation/_index.md#basic-installation)
 Keptn on it,
 but this can be a very lightweight, single-node KinD cluster; see
-[Create local Kubernetes cluster](../installation/k8s.md/#create-local-kubernetes-cluster).
+[Create local Kubernetes cluster](../installation/k8s.md#create-local-kubernetes-cluster).
 Keptn only triggers on-demand `KeptnTask` resources
 so resource utilization is minimal.
 
@@ -34,9 +34,9 @@ When you have Keptn installed, create a
 YAML file that defines what you want to execute
 as a `KeptnTaskDefinition` resource.
 See
-[Deployment tasks](./tasks.md)
+[Deployment tasks](../guides/tasks.md)
 and the
-[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md/)
+[KeptnTaskDefinition](../components/lifecycle-operator/crd-ref/taskdefinition.md)
 reference page for more information.
 
 For example, you might create a `test-task-definition.yaml` file
@@ -60,13 +60,13 @@ spec:
 This example uses the `container-runtime` runner,
 but you can instead use the `deno-runtime` or `python-runtime` runner.
 See
-[Runners and containers](./tasks.md#runners-and-containers)
+[Runners and containers](../guides/tasks.md#runners-and-containers)
 for more information.
 
 ## Create and apply a KeptnTask
 
 You must manually create the
-[KeptnTask](../yaml-crd-ref/task.md) resource.
+[KeptnTask](../components/lifecycle-operator/crd-ref/task.md) resource.
 In the standard operating mode, when Keptn is managing [workloads](https://kubernetes.io/docs/concepts/workloads/),
 the creation of the `KeptnTask` resource is automatic.
 

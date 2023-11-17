@@ -18,7 +18,7 @@ appropriate Keptn facilities:
   and
   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
   files into
-  [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
+  [KeptnEvaluationDefinition](../components/lifecycle-operator/crd-ref/evaluationdefinition.md)
   resources.
 
 * Keptn v1 calculations that use weighting and scoring
@@ -43,7 +43,7 @@ differs from that of Keptn v1 quality gates:
   using Helm charts and standard practices.
 * Keptn supports multiple instances of multiple data providers.
 * You must populate a
-  [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md) resource
+  [KeptnMetricsProvider](../components/metrics-operator/crd-ref/metricsprovider.md) resource
   for each instance of each data provider.
   This resource specifies the URL and namespace for the data provider
   and gives it a unique `name` that can be referenced
@@ -63,11 +63,11 @@ To implement this:
 * Transfer the information from the Keptn v1
   [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
   files into
-  [KeptnMetric](../yaml-crd-ref/metric.md) resources
+  [KeptnMetric](../components/metrics-operator/crd-ref/metric.md) resources
 * Transfer the information from the Keptn v1
   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
   files into
-  [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
+  [KeptnEvaluationDefinition](../components/lifecycle-operator/crd-ref/evaluationdefinition.md)
   resources.
 
 ## Convert Keptn v1 SLIs/SLOs to Analysis resources
@@ -96,7 +96,7 @@ The process is:
    The following command sequence converts a Keptn v1
    [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
    file to a Keptn
-   [AnalysisValueTemplate](../yaml-crd-ref/analysisvaluetemplate.md)
+   [AnalysisValueTemplate](../components/metrics-operator/crd-ref/analysisvaluetemplate.md)
    resource:
 
    ```shell
@@ -139,7 +139,7 @@ The process is:
    The process of converting the Keptn v1
    [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
    files to
-   [AnalysisDefinition](../yaml-crd-ref/analysisdefinition.md)
+   [AnalysisDefinition](../components/metrics-operator/crd-ref/analysisdefinition.md)
    resources is similar to the process of converting the SLIs.
    Use the following command sequence:
 
@@ -167,7 +167,7 @@ The process is:
 
 1. Create a `KeptnMetricsProvider` resource
 
-   A [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md)
+   A [KeptnMetricsProvider](../components/metrics-operator/crd-ref/metricsprovider.md)
    resource configures the data provider from which the values
    for the `AnalysisValueTemplate` resource are fetched.
    This same resource is used for any metrics and evaluations you are using.
@@ -187,7 +187,7 @@ The process is:
 
    Create a yaml file (such as `analysis-instance.yaml`)
    to populate the
-   [Analysis](../yaml-crd-ref/analysis.md)
+   [Analysis](../components/metrics-operator/crd-ref/analysis.md)
    resource that defines the specific analysis you want to run.
    Specify the following:
 

@@ -5,7 +5,7 @@ weight: 70
 ---
 
 A
-[KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
+[KeptnEvaluationDefinition](../components/lifecycle-operator/crd-ref/evaluationdefinition.md)
 resource contains a list of `objectives`,
 each of which checks whether a defined `KeptnMetric` resource
 meets a defined target value.
@@ -19,7 +19,7 @@ so this evaluation ensures that more than 1 CPU is available
 before the [workload](https://kubernetes.io/docs/concepts/workloads/) or application is deployed.
 
 This evaluation references the
-[KeptnMetric](../yaml-crd-ref/metric.md) resource
+[KeptnMetric](../components/metrics-operator/crd-ref/metric.md) resource
 that is named  `available-cpus`.
 This is defined in the example
 [metric.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/metric.yaml)
@@ -39,7 +39,7 @@ you must:
   to identify the `KeptnEvaluationDefinition` resource you want to run
   pre- and post-deployment for the specific [workloads](https://kubernetes.io/docs/concepts/workloads/).
 * Manually edit all
-  [KeptnApp](../yaml-crd-ref/app.md) resources
+  [KeptnApp](../components/lifecycle-operator/crd-ref/app.md) resources
   to specify the `KeptnEvaluationDefinition` to be run
   pre- and post-deployment evaluations for the `KeptnApp` itself.
 

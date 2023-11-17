@@ -6,7 +6,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 --- 
 
 The
-[Install Keptn](install.md)
+[Install Keptn](_index.md)
 page documents how to install Keptn.
 This page provides some background and more examples
 that supplement that information.
@@ -25,7 +25,7 @@ umbrella Helm chart.
 Each subchart has its own README file describing possible configuration options,
 but configuration changes for the subcharts are added to a single `values.yaml` file.
 See
-[Customizing the configuration of components](install.md/#customizing-the-configuration-of-components)
+[Customizing the configuration of components](_index.md#customizing-the-configuration-of-components)
 for an example.
 
 ## Installing older versions of Keptn
@@ -42,7 +42,8 @@ compared to the installation of earlier releases:
 To install a version prior to v0.9.0,
 use the install command sequence that is documented for that release.
 To install the latest version, use the installation commands on the
-[Install Keptn](install.md/#basic-installation)
+[Install Keptn](_index.md#basic-installation)
+[Install Keptn](_index.md#basic-installation)
 page.
 
 To install an older release,
@@ -51,7 +52,7 @@ in the `helm upgrade --install` command for the release you are installing.
 
 ## Example configurations by use-case
 
-[Control what components are installed](install.md/#customizing-the-configuration-of-components)
+[Control what components are installed](_index.md#customizing-the-configuration-of-components)
 discusses how to configure Keptn to include only the components you want.
 The following sections summarize and give examples
 of the configurations needed for different use cases.
@@ -126,7 +127,7 @@ Disable it using the following values.yaml:
 > **Note** A preliminary release of the Keptn Analysis feature
   is included in Keptn v0.8.3 and v0.9.0 but is hidden behind a feature flag.
   See the
-  [Analysis](../yaml-crd-ref/analysis.md/#differences-between-versions)
+  [Analysis](../components/metrics-operator/crd-ref/analysis.md/#differences-between-versions)
   reference page for how to activate the preview of this feature.
 >
 
@@ -144,4 +145,4 @@ or you can modify the `values.yaml` file:
 {{< docsembed path="content/en/docs/installation/assets/values-remove-certmanager.yaml" >}}
 
 For more information about using `cert-manager` with Keptn, see
-[Use Keptn with cert-manager.io](../operate/cert-manager.md).
+[Use Keptn with cert-manager.io](./configuration/cert-manager.md).

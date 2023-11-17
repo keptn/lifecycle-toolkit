@@ -5,7 +5,7 @@ weight: 10
 ---
 
 After you have successfully rolled out your application by following
-the instructions in the [integration guide](./integrate.md),
+the instructions in the [integration guide](../guides/integrate.md),
 Keptn also assists you with day 2 operations for your application.
 
 Tasks that fall under this category include:
@@ -13,11 +13,11 @@ Tasks that fall under this category include:
 * Updating the version of one or more [workloads](https://kubernetes.io/docs/concepts/workloads/)
 that are part of the same application
 * Adding a new [workload](https://kubernetes.io/docs/concepts/workloads/) to an existing application
-* Monitoring the health of your application using `KeptnMetrics`, as described [here](./evaluatemetrics.md)
+* Monitoring the health of your application using `KeptnMetrics`, as described [here](../guides/evaluatemetrics.md)
 * Optimizing the resource usage of your applications by integrating
 `KeptnMetrics` into a
 [HorizontalPodAutoscaler (HPA)](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/),
-as described [here](./evaluatemetrics.md/#using-the-horizontalpodautoscaler)
+as described [here](./hpa.md)
 
 ## Updating Workload Versions
 
@@ -84,7 +84,7 @@ of the `KeptnApp` to be executed again.
 In this example, this means that the tasks `wait-for-prometheus`,
 and `post-deployment-loadtests` will run again.
 
-If you are using the [automatic app discovery](./integrate.md#use-keptn-automatic-app-discovery),
+If you are using the [automatic app discovery](../guides/auto-app-discovery.md),
 you do not need to update the `KeptnApp` resource.
 Keptn will take care of that for you.
 

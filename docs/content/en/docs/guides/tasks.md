@@ -6,12 +6,12 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 ---
 
 A
-[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md/)
+[KeptnTaskDefinition](../components/lifecycle-operator/crd-ref/taskdefinition.md/)
 resource defines one or more "executables"
 (functions, programs, scripts, etc)
 that Keptn runs
 as part of the pre- and post-deployment phases of a
-[KeptnApp](../yaml-crd-ref/app.md) or
+[KeptnApp](../components/lifecycle-operator/crd-ref/app.md) or
 [KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 
 - pre-deployment (before the pod is scheduled)
@@ -33,7 +33,7 @@ A `KeptnTaskDefinition` includes calls to executables to be run.
 To implement a `KeptnTask`:
 
 - Define a
-  [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
+  [KeptnTaskDefinition](../components/lifecycle-operator/crd-ref/taskdefinition.md)
   resource that defines the runner to use for the container
   and the executables to be run
 pre- and post-deployment
@@ -42,7 +42,7 @@ pre- and post-deployment
   if desired, creates a `KeptnApp` resource
   that consolidates multiple workloads into a single application
 - Annotate the appropriate
-  [KeptnApp](../yaml-crd-ref/app.md)
+  [KeptnApp](../components/lifecycle-operator/crd-ref/app.md)
   resource to associate your `KeptnTaskDefinition`
   with the pre- and post-deployment tasks that should be run;
   see
@@ -104,7 +104,7 @@ can be configured in one of four different ways:
   resource that is populated with the function to execute
 
 See the
-[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
+[KeptnTaskDefinition](../components/lifecycle-operator/crd-ref/taskdefinition.md)
 reference page for the synopsis and examples for each runner.
 
 ## Executing sequential tasks
@@ -136,7 +136,7 @@ You have the following options:
   (either `deno-runtime` or `python-runtime`)
   to code the actual calls inline in the `KeptnTaskDefinition` resource.
   See
-  [Fields for pre-defined containers](../yaml-crd-ref/taskdefinition.md/#fields-for-pre-defined-containers)
+  [Fields for pre-defined containers](../components/lifecycle-operator/crd-ref/taskdefinition.md/#fields-for-pre-defined-containers)
   for more information.
 
 - Create a script that calls the functions, programs, and scripts
@@ -147,7 +147,7 @@ You have the following options:
   which can set parameters for the script if appropriate.
 
 For more details about implementing these options, see the
-[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
+[KeptnTaskDefinition](../components/lifecycle-operator/crd-ref/taskdefinition.md)
 page.
 
 ## Context
@@ -160,7 +160,7 @@ For more information, see
 
 You may need to include context information in the `function` code
 included in the YAML file that defines a
-[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
+[KeptnTaskDefinition](../components/lifecycle-operator/crd-ref/taskdefinition.md)
 resource.
 For an example of how to do this, see the
 [keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)

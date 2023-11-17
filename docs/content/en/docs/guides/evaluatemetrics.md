@@ -23,9 +23,9 @@ For an introduction to Keptn metrics, see
 
 Keptn metrics are implemented with two resources:
 
-* [KeptnMetric](../yaml-crd-ref/metric.md) --
+* [KeptnMetric](../components/metrics-operator/crd-ref/metric.md) --
   define the metric to report
-* [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md) --
+* [KeptnMetricsProvider](../components/metrics-operator/crd-ref/metricsprovider.md) --
   define the configuration for a data provider
 
 As soon as you define and apply
@@ -36,7 +36,7 @@ You do not need to do anything else.
 ### Define KeptnMetricsProvider resources
 
 You must define a
-[KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md) resource
+[KeptnMetricsProvider](../components/metrics-operator/crd-ref/metricsprovider.md) resource
 for each instance of each data provider you are using.
 
 Note the following:
@@ -65,7 +65,7 @@ To configure a data provider into your Keptn cluster:
 for links.
    Keptn supports using multiple instances of multiple data providers.
 1. Define a
-   [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md)
+   [KeptnMetricsProvider](../components/metrics-operator/crd-ref/metricsprovider.md)
    resource for each data source.
 
 For example, the `KeptnMetricProvider` resource
@@ -102,7 +102,7 @@ spec:
 
 ### Define KeptnMetric information
 
-The [KeptnMetric](../yaml-crd-ref/metric.md) resource
+The [KeptnMetric](../components/metrics-operator/crd-ref/metric.md) resource
 defines the information you want to gather,
 specified as a query for the particular observability platform
 you are using.
@@ -160,7 +160,7 @@ Note the following:
 ### Accessing Metrics via the Kubernetes Custom Metrics API
 
 `KeptnMetrics` can be retrieved using the `kubectl` command and the
-[KeptnMetric](../yaml-crd-ref/metric.md)
+[KeptnMetric](../components/metrics-operator/crd-ref/metric.md)
 API.
 This section shows how to do that.
 

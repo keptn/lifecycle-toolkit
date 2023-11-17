@@ -7,7 +7,7 @@ weight: 30
 A `KeptnTaskDefinition` defines tasks
 that Keptn runs as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
-[KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload).
+[KeptnWorkload](../../../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 
 A Keptn task executes as a
 [runner](https://docs.gitlab.com/runner/executors/kubernetes.html#how-the-runner-creates-kubernetes-pods)
@@ -156,7 +156,7 @@ spec:
       [image concepts](https://kubernetes.io/docs/concepts/containers/images/)
       and pushed to a registry
     * **other fields** -- The full list of valid fields is available at
-      [ContainerSpec](../crd-ref/lifecycle/v1alpha3/#containerspec),
+      [ContainerSpec](../../../crd-ref/lifecycle/v1alpha3/#containerspec),
       with additional information in the Kubernetes
       [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
       spec documentation.
@@ -305,7 +305,7 @@ spec:
     See
     [Passing secrets, environment variables, and modifying the python command](#passing-secrets-environment-variables-and-modifying-the-python-command)
     and
-    [Parameterized functions](../guides/tasks.md#parameterized-functions)
+    [Parameterized functions](../../../guides/tasks.md#parameterized-functions)
     for more information.
 
     * **deno example:**
@@ -321,7 +321,7 @@ spec:
     Note that, currently, only one secret can be passed
     per `KeptnTaskDefinition` resource.
 
-    See [Create secret text](../guides/tasks.md#create-secret-text)
+    See [Create secret text](../../../guides/tasks.md#create-secret-text)
     for details.
 
     * **deno example:**
@@ -333,7 +333,7 @@ spec:
 
 A Task executes the TaskDefinition of a
 [KeptnApp](app.md) or a
-[KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload).
+[KeptnWorkload](../../../crd-ref/lifecycle/v1alpha3/#keptnworkload).
 The execution is done by spawning a Kubernetes
 [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
 to handle a single Task.
@@ -358,7 +358,7 @@ and
 and in the
 [KeptnApp](app.md) resource.
 See
-[Pre- and post-deployment tasks](../guides/integrate.md#pre--and-post-deployment-checks)
+[Pre- and post-deployment tasks](../../../guides/integrate.md#pre--and-post-deployment-checks)
 for details.
 Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
@@ -371,7 +371,7 @@ either by using the `inline` syntax for a pre-defined container image
 or by creating your own image
 and running it in the Keptn `container-runtime` runner.
 See
-[Executing sequential tasks](../guides/tasks.md#executing-sequential-tasks)
+[Executing sequential tasks](../../../guides/tasks.md#executing-sequential-tasks)
 for more information.
 
 ## Examples for a container-runtime runner
@@ -567,14 +567,14 @@ directory for more example `KeptnTaskDefinition` YAML files.
 
 API Reference:
 
-* [KeptnTaskDefinition](../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
-* [KeptnTaskDefinitionList](../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinitionlist)
-* [KeptnTaskDefinitionSpec](../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinitionspec)
-* [FunctionReference](../crd-ref/lifecycle/v1alpha3/_index.md#functionreference)
-* [FunctionSpec](../crd-ref/lifecycle/v1alpha3/_index.md#runtimespec)
-* [FunctionStatus](../crd-ref/lifecycle/v1alpha3/_index.md#functionstatus)
-* [HttpReference](../crd-ref/lifecycle/v1alpha3/_index.md#httpreference)
-* [Inline](../crd-ref/lifecycle/v1alpha3/_index.md#inline)
+* [KeptnTaskDefinition](../../../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
+* [KeptnTaskDefinitionList](../../../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinitionlist)
+* [KeptnTaskDefinitionSpec](../../../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinitionspec)
+* [FunctionReference](../../../crd-ref/lifecycle/v1alpha3/_index.md#functionreference)
+* [FunctionSpec](../../../crd-ref/lifecycle/v1alpha3/_index.md#runtimespec)
+* [FunctionStatus](../../../crd-ref/lifecycle/v1alpha3/_index.md#functionstatus)
+* [HttpReference](../../../crd-ref/lifecycle/v1alpha3/_index.md#httpreference)
+* [Inline](../../../crd-ref/lifecycle/v1alpha3/_index.md#inline)
 
 ## Differences between versions
 
@@ -608,8 +608,8 @@ This modifies the synopsis in the following ways:
 ## See also
 
 * [KeptnApp](app.md)
-* [Working with tasks](../guides/tasks.md)
-* [Pre- and post-deployment tasks](../guides/integrate.md#pre--and-post-deployment-checks)
-* [KeptnApp and KeptnWorkload resources](../components/keptn-apps.md).
-* [Orchestrate deployment checks](../core-concepts/usecase-orchestrate.md)
-* [Executing sequential tasks](../guides/tasks.md#executing-sequential-tasks)
+* [Working with tasks](../../../guides/tasks.md)
+* [Pre- and post-deployment tasks](../../../guides/integrate.md#pre--and-post-deployment-checks)
+* [KeptnApp and KeptnWorkload resources](../../../components/lifecycle-operator/keptn-apps.md).
+* [Orchestrate deployment checks](../../../core-concepts/usecase-orchestrate.md)
+* [Executing sequential tasks](../../../guides/tasks.md#executing-sequential-tasks)

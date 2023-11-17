@@ -11,7 +11,7 @@ and allows using multiple observability platforms
 for different metrics at the same time.
 
 `KeptnMetric` CRs are also used as targets for
-[EvaluationDefinition](evaluationdefinition.md) CRs.
+[EvaluationDefinition](../../lifecycle-operator/crd-ref/evaluationdefinition.md) CRs.
 
 ## Yaml Synopsis
 
@@ -94,7 +94,7 @@ in the same namespace as the associated
 resource.
 `KeptnMetric` resources are used to generate metrics for the cluster
 and are used as the SLI (Service Level Indicator) for
-[KeptnEvaluationDefinition](evaluationdefinition.md)
+[KeptnEvaluationDefinition](../../lifecycle-operator/crd-ref/evaluationdefinition.md)
 resources that are used for pre- and post-deployment evaluations.
 
 `KeptnEvaluationDefinition` resources can reference metrics
@@ -159,8 +159,8 @@ spec:
 
 ## See also
 
-* [KeptnEvaluationDefinition](evaluationdefinition.md)
+* [KeptnEvaluationDefinition](../../lifecycle-operator/crd-ref/evaluationdefinition.md)
 * [KeptnMetricsProvider](metricsprovider.md)
-* Implementing [Keptn Metrics](../guides/evaluatemetrics.md)
-* [Getting started with Keptn metrics](../getting-started/metrics.md)
-* Architecture of the [Keptn Metrics Operator](../components/components/metrics-operator.md)
+* Implementing [Keptn Metrics](../../../guides/evaluatemetrics.md)
+* [Getting started with Keptn metrics](../../../getting-started/metrics.md)
+* Architecture of the [Keptn Metrics Operator](../_index.md)

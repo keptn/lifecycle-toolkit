@@ -4,11 +4,11 @@ description: Learn how to restart an unsuccessful Keptn Application Deployment.
 weight: 60
 ---
 
-A [KeptnApp](../yaml-crd-ref/app.md) can fail
+A [KeptnApp](../components/lifecycle-operator/crd-ref/app.md) can fail
 because of an unsuccessful pre-deployment evaluation
 or pre-deployment task.
 For example, this happens if the target value of a
-[KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
+[KeptnEvaluationDefinition](../components/lifecycle-operator/crd-ref/evaluationdefinition.md)
 resource is misconfigured
 or a pre-deployment evaluation checks the wrong URL.
 

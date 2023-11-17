@@ -9,7 +9,7 @@ hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.htm
 Keptn is meant to be installed
 into an existing Kubernetes cluster
 that runs your deployment software.
-See [Requirements](reqs.md) for information about supported releases
+See [Requirements](_index.md#supported-kubernetes-versions) for information about supported releases
 and advice about resources required.
 
 ## Create local Kubernetes cluster
@@ -61,7 +61,7 @@ you need to provide these components.
 Your cluster should include the following:
 
 * A supported version of Kubernetes.
-  See [Supported Kubernetes versions](reqs.md/#supported-kubernetes-versions)
+  See [Supported Kubernetes versions](_index.md#supported-kubernetes-versions)
   for details.
 
 * The
@@ -111,6 +111,6 @@ Your cluster should include the following:
   is installed as part of the Keptn software.
   If you are using another certificate manager in the cluster,
   you can configure Keptn to instead use your cert-manager.
-  See [Use Keptn with cert-manager.io](../operate/cert-manager.md)
+  See [Use Keptn with cert-manager.io](./configuration/cert-manager.md)
   for detailed instructions.
 

@@ -140,7 +140,7 @@ The webhook sync should show this:
 
 ![webhook sync](../assets/webhook.site.3.png)
 
-Incidentally, this is exactly how you can use Keptn with [applications deployed outside of Kubernetes](../guides/tasks-non-k8s-apps.md).
+Incidentally, this is exactly how you can use Keptn with [applications deployed outside of Kubernetes](../use-cases/non-k8s.md).
 
 > Note: If you want to trigger this multiple times, you must change the KeptnTask name.
 >

@@ -6,7 +6,7 @@ weight: 20
 
 Keptn running on Kubernetes versions 1.26 and older
 uses a custom
-[scheduler](../architecture/components/scheduler.md),
+[scheduler](../../components/scheduling/_index.md),
 so it does not work with
 [Virtual Kubernetes Clusters](https://www.vcluster.com/)
 ("vClusters") out of the box.
@@ -14,7 +14,7 @@ This is also an issue
 if the `lifecycleOperator.schedulingGatesEnabled` Helm value is set to `false`
 for Kubernetes version 1.27 and later.
 See
-[Keptn integration with Scheduling](../architecture/components/scheduler.md)
+[Keptn integration with Scheduling](../../components/scheduling/_index.md)
 for details.
 
 To solve this problem:

@@ -63,7 +63,7 @@ helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-
 ```
 
 For information about  advanced installation options, refer to
-[Modify Helm configuration options](install.md).
+[Modify Helm configuration options](_index.md).
 
 1. After the installation finishes, restore the manifests from you backup
 

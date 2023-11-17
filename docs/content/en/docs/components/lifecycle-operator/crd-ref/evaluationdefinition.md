@@ -5,7 +5,7 @@ weight: 50
 ---
 
 A `KeptnEvaluationDefinition` assigns target values
-to [KeptnMetric](metric.md) queries.
+to [KeptnMetric](../../metrics-operator/crd-ref/metric.md) queries.
 These are used as part of evaluation tasks
 that Keptn runs
 as part of pre- and post-analysis phases of a [workload](https://kubernetes.io/docs/concepts/workloads/) or application.
@@ -46,13 +46,13 @@ spec:
      and an `evaluationTarget` value.
 
     * **keptnMetricRef** (required) -- A reference to the
-      [KeptnMetric](metric.md) object
+      [KeptnMetric](../../metrics-operator/crd-ref/metric.md) object
 
       * **name** (required) -- Name of the referenced
-        [KeptnMetric](metric.md) object
+        [KeptnMetric](../../metrics-operator/crd-ref/metric.md) object
 
       * **namespace** -- Name of the referenced
-        [KeptnMetric](metric.md) object
+        [KeptnMetric](../../metrics-operator/crd-ref/metric.md) object
 
     * **evaluationTarget** (required) -- Desired value of the query,
        expressed as an arithmetic formula,
@@ -64,13 +64,13 @@ spec:
 ## Usage
 
 A `KeptnEvaluationDefinition` references one or more
-[KeptnMetric](metric.md) resources.
+[KeptnMetric](../../metrics-operator/crd-ref/metric.md) resources.
 When multiple `KeptnMetric`s are used,
 Keptn considers the evaluation successful
 if **all** metrics meet their `evaluationTarget`.
 
 The `KeptnMetric` resource and associated
-[KeptnMetricsProvider](metricsprovider.md)
+[KeptnMetricsProvider](../../metrics-operator/crd-ref/metricsprovider.md)
 resource must be located in the same namespace
 but the `KeptnEvaluationDefinition` resources
 can reference metrics from any namespace in the cluster.
@@ -111,7 +111,7 @@ In the `v1alpha1` and `v1alpha2` API versions,
 `KeptnEvaluationDefinition` referenced the `KeptnEvaluationProvider` CR
 to identify the data source associated with this definition
 and itself contained the queries
-that are now taken from the specified [KeptnMetric](metric.md) CRD.
+that are now taken from the specified [KeptnMetric](../../metrics-operator/crd-ref/metric.md) CRD.
 The synopsis was:
 
 ```yaml
@@ -132,11 +132,11 @@ spec:
 
 Beginning with `v1alpha3` API version,
 `KeptnEvaluationDefinition` references a `keptnMetricRef`
-that points to a [KeptnMetric](metric.md) CR,
+that points to a [KeptnMetric](../../metrics-operator/crd-ref/metric.md) CR,
 that defines the data source, the query and the namespace to use.
 The `KeptnEvaluationDefinition` merely specifies the evaluation target.
 
 ## See also
 
-* [KeptnMetricsProvider](metricsprovider.md)
-* [KeptnMetric](metric.md)
+* [KeptnMetricsProvider](../../metrics-operator/crd-ref/metricsprovider.md)
+* [KeptnMetric](../../metrics-operator/crd-ref/metric.md)

@@ -74,7 +74,7 @@ you need to do the following:
    by applying basic annotations
    to your [workload](https://kubernetes.io/docs/concepts/workloads/) resources.
    and to create appropriate
-   [KeptnApp](../yaml-crd-ref/app.md)
+   [KeptnApp](../components/lifecycle-operator/crd-ref/app.md)
    resources that aggregate
    all the [workloads](https://kubernetes.io/docs/concepts/workloads/) for a logical deployment into a single resource.
 
@@ -105,7 +105,7 @@ which allows you to trace everything done in the context of that deployment.
 - Follow the instructions in
   [OpenTelemetry observability](../guides/otel.md)
   to configure where your OpenTelemetry data is sent.
-  This requires you to define a [KeptnConfig](../yaml-crd-ref/config.md) resource
+  This requires you to define a [KeptnConfig](../components/lifecycle-operator/crd-ref/config.md) resource
   that defines the URL and port of the OpenTelemetry collector.
   For our example, this is in the
   [keptnconfig.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/setup/keptn/keptnconfig.yaml)

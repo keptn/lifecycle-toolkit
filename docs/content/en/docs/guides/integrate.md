@@ -20,7 +20,7 @@ to identify the workloads of interest.
 To integrate Keptn with your applications:
 
 * You must first
-[install and enable](../installation/install.md#basic-installation)
+[install and enable](../installation/_index.md#basic-installation)
 Keptn.
 * Annotate or label your workloads
 with either Keptn or Kubernetes keys.
@@ -33,7 +33,7 @@ with either Keptn or Kubernetes keys.
 Keptn uses these annotations to the Kubernetes workloads to create the
 [KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload)
 and
-[KeptnApp](../yaml-crd-ref/app.md)
+[KeptnApp](../components/lifecycle-operator/crd-ref/app.md)
 resources that it uses to provide observability
 and release lifecycle management.
 
@@ -62,7 +62,7 @@ the `keptn.sh` or the `kubernetes` annotations/labels,
 it creates appropriate
 [KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload)
 and
-[KeptnApp](../yaml-crd-ref/app.md)
+[KeptnApp](../components/lifecycle-operator/crd-ref/app.md)
 resources for the version it detects.
 
 The basic keptn.sh keys that can be used for annotations or labels are:
@@ -110,7 +110,7 @@ These keys are defined as:
    Note that there is no equivalent `app.kubernetes.io/` annotation/label for this label.
 
 Keptn automatically generates appropriate
-[KeptnApp](../yaml-crd-ref/app.md)
+[KeptnApp](../components/lifecycle-operator/crd-ref/app.md)
 resources that are used for observability,
 based on whether the `keptn.sh/app` or `app.kubernetes.io/part-of`
 annotation/label is populated:
@@ -128,7 +128,7 @@ annotation/label is populated:
   but not the combined workloads that constitute your deployed application.
 
 See
-[Keptn Applications and Keptn Workloads](../components/keptn-apps.md)
+[Keptn Applications and Keptn Workloads](../components/lifecycle-operator/keptn-apps.md)
 for architectural information about how `KeptnApp` and `KeptnWorkloads`
 are implemented.
 
@@ -179,19 +179,19 @@ that handles pre- and post-deployment evaluations and tasks,
 do the following:
 
 * Define the
-  [KeptnMetric](../yaml-crd-ref/metric.md)
+  [KeptnMetric](../components/metrics-operator/crd-ref/metric.md)
   and
-  [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
+  [KeptnEvaluationDefinition](../components/lifecycle-operator/crd-ref/evaluationdefinition.md)
   resources for each evaluation you want.
   A `KeptnEvaluationDefinition` compares the value
   of a `KeptnMetric` to the threshold that is specified.
 * You will also need to define the necessary
-  [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md)
+  [KeptnMetricsProvider](../components/metrics-operator/crd-ref/metricsprovider.md)
   and
   resource for each instance of each data source
   used for the `KeptnEvaluationDefinition` resources you define.
 * Define a
-  [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
+  [KeptnTaskDefinition](../components/lifecycle-operator/crd-ref/taskdefinition.md)
   resource for each task you want to execute.
   `KeptnTaskDefinition`  resources contain re-usable "functions"
   that can execute before and after the deployment.
@@ -211,7 +211,7 @@ do the following:
   to include each evaluation and task you want run
   for specific workloads.
 * Manually edit all
-  [KeptnApp](../yaml-crd-ref/app.md) resources
+  [KeptnApp](../components/lifecycle-operator/crd-ref/app.md) resources
   to specify evaluations and tasks to be run for the `KeptnApp` itself.
 
 ### Annotations to KeptnApp
@@ -234,7 +234,7 @@ keptn.sh/post-deployment-tasks: <`TaskDefinition`-name>
 The value of these annotations corresponds to the name of
 Keptn [resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 called
-[KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)
+[KeptnTaskDefinition](../components/lifecycle-operator/crd-ref/taskdefinition.md)
 resources
 These resources contain re-usable "functions"
 that can execute before and after the deployment.

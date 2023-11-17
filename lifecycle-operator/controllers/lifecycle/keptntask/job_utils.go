@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	taskdefinition "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"

@@ -2,7 +2,7 @@ package keptntask
 
 import (
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"golang.org/x/net/context"
 	corev1 "k8s.io/api/core/v1"

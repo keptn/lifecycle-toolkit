@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	"github.com/stretchr/testify/require"

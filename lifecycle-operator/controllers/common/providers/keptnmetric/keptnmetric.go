@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/types"

@@ -21,7 +21,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"

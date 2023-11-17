@@ -3,7 +3,6 @@ package keptntask
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"
 )

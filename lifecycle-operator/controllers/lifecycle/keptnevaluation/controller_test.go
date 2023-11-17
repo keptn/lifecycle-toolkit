@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"

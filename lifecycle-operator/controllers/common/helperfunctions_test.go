@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"

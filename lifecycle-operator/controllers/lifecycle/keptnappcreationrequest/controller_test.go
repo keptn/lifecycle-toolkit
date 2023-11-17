@@ -8,7 +8,7 @@ import (
 
 	"github.com/benbjohnson/clock"
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config/fake"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/api/errors"

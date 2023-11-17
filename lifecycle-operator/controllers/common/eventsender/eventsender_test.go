@@ -10,9 +10,7 @@ import (
 	"time"
 
 	ce "github.com/cloudevents/sdk-go/v2"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender/fake"
 	"github.com/stretchr/testify/require"

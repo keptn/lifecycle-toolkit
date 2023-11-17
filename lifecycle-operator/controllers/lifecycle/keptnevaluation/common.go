@@ -5,7 +5,7 @@ import (
 	"math"
 	"strconv"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 )
 
 func checkValue(objective klcv1alpha3.Objective, item *klcv1alpha3.EvaluationStatusItem) (bool, error) {

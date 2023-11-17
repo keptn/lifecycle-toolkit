@@ -31,7 +31,6 @@ type KeptnEvaluationProviderSpec struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:storageversion
 // +kubebuilder:subresource:status
 
 // KeptnEvaluationProvider is the Schema for the keptnevaluationproviders API

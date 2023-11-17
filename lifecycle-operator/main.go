@@ -30,6 +30,23 @@ import (
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
 	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
 	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
+	metricsapi "go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/otel/trace/noop"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+	ctrl "sigs.k8s.io/controller-runtime"
+	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/healthz"
+	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	"sigs.k8s.io/controller-runtime/pkg/metrics/server"
+	ctrlWebhook "sigs.k8s.io/controller-runtime/pkg/webhook"
+	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
+
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha2"
 	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
@@ -51,22 +68,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadversion"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/options"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
-	metricsapi "go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/sdk/metric"
-	"go.opentelemetry.io/otel/trace/noop"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
-	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
-	ctrl "sigs.k8s.io/controller-runtime"
-	ctrlclient "sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/healthz"
-	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	"sigs.k8s.io/controller-runtime/pkg/metrics/server"
-	ctrlWebhook "sigs.k8s.io/controller-runtime/pkg/webhook"
-	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
 var (
@@ -82,6 +83,7 @@ func init() {
 	utilruntime.Must(lifecyclev1alpha3.AddToScheme(scheme))
 	utilruntime.Must(argov1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha4.AddToScheme(scheme))
+	utilruntime.Must(lifecyclev1beta1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 

@@ -39,12 +39,12 @@ type RuntimeExecutionParams struct {
 }
 
 const (
-	Context           = "CONTEXT"
-	SecureData        = "SECURE_DATA"
-	Data              = "DATA"
-	CmdArgs           = "CMD_ARGS"
-	Script            = "SCRIPT"
-	FunctionMountName = "function-mount"
+	KeptnContextEnvVar = "KEPTN_CONTEXT"
+	SecureData         = "SECURE_DATA"
+	Data               = "DATA"
+	CmdArgs            = "CMD_ARGS"
+	Script             = "SCRIPT"
+	FunctionMountName  = "function-mount"
 )
 
 func (fb *RuntimeBuilder) CreateContainer(ctx context.Context) (*corev1.Container, error) {
@@ -67,7 +67,7 @@ func (fb *RuntimeBuilder) CreateContainer(ctx context.Context) (*corev1.Containe
 	if err != nil {
 		return nil, err
 	}
-	envVars = append(envVars, corev1.EnvVar{Name: Context, Value: string(jsonParams)})
+	envVars = append(envVars, corev1.EnvVar{Name: KeptnContextEnvVar, Value: string(jsonParams)})
 	envVars = append(envVars, corev1.EnvVar{Name: CmdArgs, Value: params.CmdParameters})
 	if params.SecureParameters != "" {
 		envVars = append(envVars, corev1.EnvVar{

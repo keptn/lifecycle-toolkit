@@ -267,4 +267,3 @@ spec:
   range:
     interval: "3m"
 ```
-

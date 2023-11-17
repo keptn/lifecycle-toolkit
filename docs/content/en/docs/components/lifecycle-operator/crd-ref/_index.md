@@ -1,6 +1,7 @@
 ---
 title: CRD Reference
 description: CRD Reference for Keptn Lifecycle Operator
+weight: 10
 ---
 
 ## CRD Reference

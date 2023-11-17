@@ -19,7 +19,6 @@ Keptn v0.9.0 and later is installed using [Helm](https://helm.sh/).
 After you install Keptn, you are ready to
 [Integrate Keptn with your applications](../guides/integrate.md).
 
-
 ## Supported Kubernetes versions
 
 Keptn requires Kubernetes v1.24.0 or later.
@@ -55,7 +54,6 @@ needs to be added for full compatibility.
 See
 [Running Keptn with vCluster](./configuration/vcluster.md)
 for more information.
-
 
 ## Basic installation
 

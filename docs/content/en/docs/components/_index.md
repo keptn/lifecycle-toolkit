@@ -10,8 +10,8 @@ Keptn consists of two main components:
 
 * Keptn Lifecycle Operator, which splits into two separate operators
   in Release 0.7.0 and later:
-    * Lifecycle-Operator
-    * Metrics-Operator
+  * Lifecycle-Operator
+  * Metrics-Operator
 * Keptn Lifecycle Scheduler
 
 ```mermaid

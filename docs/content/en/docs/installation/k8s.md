@@ -113,4 +113,3 @@ Your cluster should include the following:
   you can configure Keptn to instead use your cert-manager.
   See [Use Keptn with cert-manager.io](./configuration/cert-manager.md)
   for detailed instructions.
-

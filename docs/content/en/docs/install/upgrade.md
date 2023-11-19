@@ -42,7 +42,7 @@ To start the upgrade process, follow the steps below:
 
 1. To not loose all of your data, we encourage you to do a backup of the manifests,
 which you applied to the cluster (`Pods`, `Deployments`,
-`StatefulSets`, `DeamonSets`, `KeptnApps`,... ).
+`StatefulSets`, `DaemonSets`, `KeptnApps`,... ).
 After the re-installation of Keptn with Helm, you can re-apply
 these manifests and restart the Keptn deployment process.
 

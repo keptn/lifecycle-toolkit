@@ -1,0 +1,11 @@
+
+{{ $u := printf "%s%s/%s" "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/" (.Page.Params.currentversion) (.Get "path") }}
+    {{ with resources.GetRemote $u }}
+    {{ with .Err }}
+        {{ errorf "%s" . }}
+    {{ else }}
+        {{- highlight (.Content | htmlUnescape | safeHTML ) "yaml" -}}
+    {{ end }}
+{{ else }}
+    {{ errorf "Unable to get remote resource." }}
+{{ end }}

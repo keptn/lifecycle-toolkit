@@ -61,7 +61,6 @@ jobs:
           path: ./dist
 
       - name: Upload tag
-        if: ${{ github.event_name  != 'schedule' }}
         uses: actions/upload-artifact@v3
         with:
           name: tag
@@ -134,17 +133,14 @@ jobs:
       - name: Generate manifests
         run: |
           # Fetch tag of the images
-          TAG=$(ls tag/)
+          export TAG=$(ls tag/)
           echo "$TAG"
           mkdir scans
+          envsubst < .github/actions/deploy-klt-on-cluster/values.yaml > tmp.yaml
+          echo "used values.yaml file:"
+          cat tmp.yaml
 
-          helm template keptn-test --namespace helmtests -f .github/actions/deploy-klt-on-cluster/values.yaml ./chart \
-            --set lifecycleOperator.lifecycleOperator.image.tag=$TAG \
-            --set lifecycleOperator.scheduler.image.tag=$TAG \
-            --set lifecycleOperator.lifecycleOperator.env.functionRunnerImage=localhost:5000/keptn/deno-runtime:$TAG \
-            --set lifecycleOperator.lifecycleOperator.env.pythonRunnerImage=localhost:5000/keptn/python-runtime:$TAG \
-            --set certManager.image.tag=$TAG \
-            --set metricsOperator.image.tag=$TAG > ./scans/result.yaml
+          helm template keptn-test --namespace helmtests -f tmp.yaml ./chart > ./scans/result.yaml
 
       - name: KICS Scan
         if: matrix.tool == 'kics'
@@ -236,13 +232,22 @@ jobs:
           name: images
           path: images
 
-      - name: Trivy image scan
-        uses: aquasecurity/trivy-action@f78e9ecf42a1271402d4f484518b9313235990e1 # 0.13.1
+      - name: Trivy image scan scheduler
+        if: matrix.image == 'scheduler'
+        uses: aquasecurity/trivy-action@2b6a709cf9c4025c5438138008beaddbb02086f0 # 0.14.0
         with:
           input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
           exit-code: '1'
           trivyignores: .trivyignore
+
+      - name: Trivy image scan
+        if: matrix.image != 'scheduler'
+        uses: aquasecurity/trivy-action@2b6a709cf9c4025c5438138008beaddbb02086f0 # 0.14.0
+        with:
+          input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
 
   govulncheck:
     name: Govulncheck

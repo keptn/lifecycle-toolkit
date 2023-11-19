@@ -73,7 +73,7 @@ for a Prometheus data source that does not use a secret
 could look like:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
 metadata:
   name: prometheus-provider
@@ -87,7 +87,7 @@ The `KeptnMetricProvider` resource for a Dynatrace provider
 that uses a secret could look like:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
 metadata:
   name: dynatrace-provider
@@ -122,7 +122,7 @@ The
 file for our example looks like:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: Keptnmetric
 metadata:
   name: available-cpus
@@ -133,7 +133,7 @@ spec:
   query: "sum(kube_node_status_capacity{resources`cpu`})"
   fetchIntervalSeconds: 10
 ---
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: Keptnmetric
 metadata:
   name: availability-slo
@@ -166,7 +166,7 @@ This section shows how to do that.
 
 Metrics can also be displayed on a Grafana or other dashboard
 or they can be exposed as OpenTelemetry metrics; see
-[Access Keptn metrics as OpenTelementry metrics](otel.md/#access-keptn-metrics-as-opentelemetry-metrics)
+[Access Keptn metrics as OpenTelemetry metrics](otel.md/#access-keptn-metrics-as-opentelemetry-metrics)
 for instructions.
 
 ### Retrieve KeptnMetric values with kubectl and the KeptnMetric API
@@ -188,7 +188,7 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kube
         "kind": "KeptnMetric",
         "namespace": "podtato-kubectl",
         "name": "keptnmetric-sample",
-        "apiVersion": "metrics.keptn.sh/v1alpha1"
+        "apiVersion": "metrics.keptn.sh/v1beta1"
       },
       "metric": {
         "name": "keptnmetric-sample",
@@ -225,7 +225,7 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kube
         "kind": "KeptnMetric",
         "namespace": "keptn-lifecycle-toolkit-system",
         "name": "keptnmetric-sample",
-        "apiVersion": "metrics.keptn.sh/v1alpha3"
+        "apiVersion": "metrics.keptn.sh/v1beta1"
       },
       "metric": {
         "name": "keptnmetric-sample",
@@ -255,7 +255,7 @@ In other words, the span is
 The default value is set to be `5m` if the `range.interval` is not set.
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: good-metric
@@ -295,7 +295,7 @@ spec:
         metric:
           name: keptnmetric-sample
         describedObject:
-          apiVersion: metrics.keptn.sh/v1alpha1
+          apiVersion: metrics.keptn.sh/v1beta1
           kind: KeptnMetric
           name: keptnmetric-sample
         target:

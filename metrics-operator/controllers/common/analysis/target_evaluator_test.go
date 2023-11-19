@@ -3,7 +3,7 @@ package analysis
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -15,13 +15,13 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 	tests := []struct {
 		name string
 		val  float64
-		t    v1alpha3.Target
+		t    metricsapi.Target
 		want types.TargetResult
 	}{
 		{
 			name: "failure nor warning target set",
 			val:  10.0,
-			t:    v1alpha3.Target{},
+			t:    metricsapi.Target{},
 			want: types.TargetResult{
 				Warning: false,
 				Pass:    true,
@@ -30,17 +30,17 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "failure scenario",
 			val:  10.0,
-			t: v1alpha3.Target{
-				Failure: &v1alpha3.Operator{
-					LessThan: &v1alpha3.OperatorValue{
+			t: metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					LessThan: &metricsapi.OperatorValue{
 						FixedValue: *compValue15,
 					},
 				},
 			},
 			want: types.TargetResult{
 				FailResult: types.OperatorResult{
-					Operator: v1alpha3.Operator{
-						LessThan: &v1alpha3.OperatorValue{
+					Operator: metricsapi.Operator{
+						LessThan: &metricsapi.OperatorValue{
 							FixedValue: *compValue15,
 						},
 					},
@@ -53,30 +53,30 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "warning scenario",
 			val:  17.0,
-			t: v1alpha3.Target{
-				Failure: &v1alpha3.Operator{
-					LessThan: &v1alpha3.OperatorValue{
+			t: metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					LessThan: &metricsapi.OperatorValue{
 						FixedValue: *compValue15,
 					},
 				},
-				Warning: &v1alpha3.Operator{
-					LessThan: &v1alpha3.OperatorValue{
+				Warning: &metricsapi.Operator{
+					LessThan: &metricsapi.OperatorValue{
 						FixedValue: *compValue20,
 					},
 				},
 			},
 			want: types.TargetResult{
 				FailResult: types.OperatorResult{
-					Operator: v1alpha3.Operator{
-						LessThan: &v1alpha3.OperatorValue{
+					Operator: metricsapi.Operator{
+						LessThan: &metricsapi.OperatorValue{
 							FixedValue: *compValue15,
 						},
 					},
 					Fulfilled: false,
 				},
 				WarnResult: types.OperatorResult{
-					Operator: v1alpha3.Operator{
-						LessThan: &v1alpha3.OperatorValue{
+					Operator: metricsapi.Operator{
+						LessThan: &metricsapi.OperatorValue{
 							FixedValue: *compValue20,
 						},
 					},
@@ -89,30 +89,30 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "pass scenario",
 			val:  27.0,
-			t: v1alpha3.Target{
-				Failure: &v1alpha3.Operator{
-					LessThan: &v1alpha3.OperatorValue{
+			t: metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					LessThan: &metricsapi.OperatorValue{
 						FixedValue: *compValue15,
 					},
 				},
-				Warning: &v1alpha3.Operator{
-					LessThan: &v1alpha3.OperatorValue{
+				Warning: &metricsapi.Operator{
+					LessThan: &metricsapi.OperatorValue{
 						FixedValue: *compValue20,
 					},
 				},
 			},
 			want: types.TargetResult{
 				FailResult: types.OperatorResult{
-					Operator: v1alpha3.Operator{
-						LessThan: &v1alpha3.OperatorValue{
+					Operator: metricsapi.Operator{
+						LessThan: &metricsapi.OperatorValue{
 							FixedValue: *compValue15,
 						},
 					},
 					Fulfilled: false,
 				},
 				WarnResult: types.OperatorResult{
-					Operator: v1alpha3.Operator{
-						LessThan: &v1alpha3.OperatorValue{
+					Operator: metricsapi.Operator{
+						LessThan: &metricsapi.OperatorValue{
 							FixedValue: *compValue20,
 						},
 					},
@@ -125,17 +125,17 @@ func TestTargetEvaluator_Evaluate(t *testing.T) {
 		{
 			name: "pass scenario - only failed defined",
 			val:  17.0,
-			t: v1alpha3.Target{
-				Failure: &v1alpha3.Operator{
-					LessThan: &v1alpha3.OperatorValue{
+			t: metricsapi.Target{
+				Failure: &metricsapi.Operator{
+					LessThan: &metricsapi.OperatorValue{
 						FixedValue: *compValue15,
 					},
 				},
 			},
 			want: types.TargetResult{
 				FailResult: types.OperatorResult{
-					Operator: v1alpha3.Operator{
-						LessThan: &v1alpha3.OperatorValue{
+					Operator: metricsapi.Operator{
+						LessThan: &metricsapi.OperatorValue{
 							FixedValue: *compValue15,
 						},
 					},

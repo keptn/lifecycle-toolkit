@@ -11,21 +11,12 @@ import (
 )
 
 func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, appVersion *klcv1alpha3.KeptnAppVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
-	evaluationHandler := evaluation.EvaluationHandler{
-		Client:      r.Client,
-		EventSender: r.EventSender,
-		Log:         r.Log,
-		Tracer:      r.getTracer(),
-		Scheme:      r.Scheme,
-		SpanHandler: r.SpanHandler,
-	}
-
 	evaluationCreateAttributes := evaluation.CreateEvaluationAttributes{
 		SpanName:  fmt.Sprintf(apicommon.CreateAppEvalSpanName, checkType),
 		CheckType: checkType,
 	}
 
-	newStatus, state, err := evaluationHandler.ReconcileEvaluations(ctx, phaseCtx, appVersion, evaluationCreateAttributes)
+	newStatus, state, err := r.EvaluationHandler.ReconcileEvaluations(ctx, phaseCtx, appVersion, evaluationCreateAttributes)
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}

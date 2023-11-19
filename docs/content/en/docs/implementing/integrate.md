@@ -20,9 +20,7 @@ to identify the workloads of interest.
 To integrate Keptn with your applications:
 
 * You must first
-[install](../install/install.md)
-and
-[enable](../install/install.md/#enable-keptn-lifecycle-operator-observability)
+[install and enable](../install/install.md#basic-installation)
 Keptn.
 * Annotate or label your workloads
 with either Keptn or Kubernetes keys.
@@ -73,6 +71,7 @@ The basic keptn.sh keys that can be used for annotations or labels are:
 keptn.sh/workload: myAwesomeWorkload
 keptn.sh/version: myAwesomeWorkloadVersion
 keptn.sh/app: myAwesomeAppName
+keptn.sh/container: myAwesomeContainer
 ```
 
 Alternatively, you can use Kubernetes keys for annotations or labels.
@@ -100,8 +99,15 @@ These keys are defined as:
   (unless it is "latest").
 * `keptn.sh/app` or `app.kubernetes.io/part-of`: Determines the name
    of the generated `KeptnApp` representing your Application.
-   All Workloads that share the same value for this label
+   All workloads that share the same value for this label
    are consolidated into the same `KeptnApp` resource.
+* `keptn.sh/container`: Determines the name of the container in the workload,
+   from which Keptn extracts the version.
+   This applies to single- and multi-container
+   workloads.
+   If the given container name does not match any container in the workload
+   no version can be determined.
+   Note that there is no equivalent `app.kubernetes.io/` annotation/label for this label.
 
 Keptn automatically generates appropriate
 [KeptnApp](../yaml-crd-ref/app.md)

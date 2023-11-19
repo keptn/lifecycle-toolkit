@@ -130,7 +130,7 @@ var _ = Describe("Task", Ordered, func() {
 					g.Expect(task.Status.Status).To(Equal(apicommon.StateSucceeded))
 				}, "20s").Should(Succeed())
 			})
-			It("succeed task if taskDefiniton for Container is present in default KLT namespace", func() {
+			It("succeed task if taskDefinition for Container is present in default KLT namespace", func() {
 				By("create default KLT namespace")
 
 				ns := &v1.Namespace{

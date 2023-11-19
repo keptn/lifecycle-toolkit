@@ -8,8 +8,8 @@ import (
 
 	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -113,9 +113,9 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 	// setting up fakeclient CRD data
 
-	app := controllercommon.GetApp("myapp")
-	appfin := controllercommon.GetApp("myfinishedapp")
-	appver := controllercommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0-6b86b273", nil, lfcv1alpha3.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
+	app := testcommon.GetApp("myapp")
+	appfin := testcommon.GetApp("myfinishedapp")
+	appver := testcommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0-6b86b273", nil, lfcv1alpha3.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
 	r, _ := setupReconciler(app, appfin, appver)
 
 	for _, tt := range tests {
@@ -138,7 +138,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 
-	app := controllercommon.GetApp("myapp")
+	app := testcommon.GetApp("myapp")
 	app.Spec.Revision = uint(2)
 	app.Generation = int64(2)
 	appVersion := &lfcv1alpha3.KeptnAppVersion{
@@ -174,13 +174,13 @@ func setupReconciler(objs ...client.Object) (*KeptnAppReconciler, chan string) {
 	}
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
-	fakeClient := fake.NewClient(objs...)
+	fakeClient := testcommon.NewTestClient(objs...)
 
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppReconciler{
 		Client:      fakeClient,
 		Scheme:      scheme.Scheme,
-		EventSender: controllercommon.NewK8sSender(recorder),
+		EventSender: eventsender.NewK8sSender(recorder),
 		Log:         ctrl.Log.WithName("test-appController"),
 	}
 	return r, recorder.Events

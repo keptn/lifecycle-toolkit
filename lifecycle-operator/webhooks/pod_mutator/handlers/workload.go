@@ -9,7 +9,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	corev1 "k8s.io/api/core/v1"
@@ -22,7 +22,7 @@ import (
 type WorkloadHandler struct {
 	Client      client.Client
 	Log         logr.Logger
-	EventSender controllercommon.IEvent
+	EventSender eventsender.IEvent
 }
 
 func (a *WorkloadHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace string) error {

@@ -1,7 +1,7 @@
 package analysis
 
 import (
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 )
 
@@ -15,7 +15,7 @@ func NewAnalysisEvaluator(o IObjectiveEvaluator) AnalysisEvaluator {
 	}
 }
 
-func (ae *AnalysisEvaluator) Evaluate(values map[string]v1alpha3.ProviderResult, ad *v1alpha3.AnalysisDefinition) types.AnalysisResult {
+func (ae *AnalysisEvaluator) Evaluate(values map[string]metricsapi.ProviderResult, ad *metricsapi.AnalysisDefinition) types.AnalysisResult {
 	result := types.AnalysisResult{
 		ObjectiveResults: make([]types.ObjectiveResult, len(ad.Spec.Objectives)),
 	}

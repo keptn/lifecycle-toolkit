@@ -25,6 +25,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	operatorcommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
@@ -43,7 +44,7 @@ import (
 type KeptnAppReconciler struct {
 	client.Client
 	Scheme      *runtime.Scheme
-	EventSender controllercommon.IEvent
+	EventSender eventsender.IEvent
 	Log         logr.Logger
 }
 

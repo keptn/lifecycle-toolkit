@@ -14,7 +14,7 @@ of multiple types of data provider.
 ## Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisValueTemplate
 metadata:
   name: response-time-p95
@@ -36,7 +36,7 @@ spec:
     [Basic annotations](../implementing/integrate.md#basic-annotations)
     plus the following:
     * **app.kubernetes.io/instance** analysis-sample
-    * **app.kuberentes.io/managed-by** -- Tool used to manage
+    * **app.kubernetes.io/managed-by** -- Tool used to manage
       the operation of the application.
       Valid values are `helm` and `kustomize`.
     * **app.kubernetes.io/created-by** metrics-operator
@@ -84,7 +84,7 @@ The template refers to that provider and queries it.
 
 ## Example
 
-{{< embed path="/metrics-operator/config/samples/metrics_v1alpha3_analysisvaluetemplate.yaml" >}}
+{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysisvaluetemplate.yaml" >}}
 
 For a full example of how the `AnalysisValueTemplate` is used
 to implement the Keptn Analysis feature, see the
@@ -94,14 +94,15 @@ guide page.
 ## Files
 
 API reference:
-[AnalysisValueTemplate](../crd-ref/metrics/v1alpha3/#analysisvaluetemplate)
+[AnalysisValueTemplate](../crd-ref/metrics/v1beta1/#analysisvaluetemplate)
 
 ## Differences between versions
 
-Keptn v0.8.3 includes a preliminary release of the Keptn Analysis feature
-but is hidden behind a feature flag.
-To preview these features, set the environment `ENABLE_ANALYSIS` to `true`
-in the `metrics-operator` deployment.
+A preliminary release of the Keptn Analysis feature
+is included in Keptn v0.8.3 and v0.9.0 but is hidden behind a feature flag.
+See the
+[Analysis](analysis.md/#differences-between-versions)
+reference page for instructions to activate the preview of this feature.
 
 ## See also
 

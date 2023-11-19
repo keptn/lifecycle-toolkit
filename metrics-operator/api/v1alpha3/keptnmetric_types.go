@@ -20,9 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // KeptnMetricSpec defines the desired state of KeptnMetric
 type KeptnMetricSpec struct {
 	// Provider represents the provider object
@@ -87,7 +84,6 @@ type IntervalResult struct {
 // +kubebuilder:printcolumn:name="Query",type=string,JSONPath=`.spec.query`
 // +kubebuilder:printcolumn:name="Interval",type=string,JSONPath=`.spec.range.interval`
 // +kubebuilder:printcolumn:name="Value",type=string,JSONPath=`.status.value`
-// +kubebuilder:storageversion
 
 // KeptnMetric is the Schema for the keptnmetrics API
 type KeptnMetric struct {
@@ -109,8 +105,4 @@ type KeptnMetricList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnMetric{}, &KeptnMetricList{})
-}
-
-func (s *KeptnMetric) IsStatusSet() bool {
-	return s.Status.Value != ""
 }

@@ -14,7 +14,7 @@ referencing them by name in metric definitions.
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
 metadata:
   name: <data-source-instance-name>
@@ -86,7 +86,7 @@ on all namespaces in the cluster.
 ### Example 1: Dynatrace data provider
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
 metadata:
   name: dynatrace

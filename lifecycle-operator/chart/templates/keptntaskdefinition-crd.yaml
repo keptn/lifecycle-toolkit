@@ -1713,6 +1713,13 @@ spec:
                   within this time frame, it will be considered to be failed.
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
+              ttlSecondsAfterFinished:
+                default: 300
+                description: TTLSecondsAfterFinished controller makes a job eligible
+                  to be cleaned up after it is finished. The timer starts when the
+                  status shows up to be Complete or Failed.
+                format: int32
+                type: integer
             type: object
           status:
             description: Status describes the current state of the KeptnTaskDefinition.

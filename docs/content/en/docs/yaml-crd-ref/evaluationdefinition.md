@@ -106,6 +106,8 @@ spec:
 
 API Reference:
 
+* [KeptnEvaluationDefinition](../crd-ref/lifecycle/v1alpha3/_index.md#keptnevaluationdefinition)
+
 ## Differences between versions
 
 In the `v1alpha1` and `v1alpha2` API versions,

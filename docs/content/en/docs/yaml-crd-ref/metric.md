@@ -4,7 +4,9 @@ description: Define all workloads and checks associated with an application
 weight: 50
 ---
 
-A `KeptnMetric` is a way to capture and share data from a metric source. By creating a Custom Resource (CR) in a Kubernetes cluster to represent these metrics, it makes it easier to reuse this data across various components. This approach also enables the use of different observability platforms for various metrics simultaneously.
+A `KeptnMetric` is a way to capture and share data from a metric source.
+By creating a Custom Resource (CR) in a Kubernetes cluster to represent these metrics, it makes it easier to reuse this data across various components.
+This approach also enables the use of different observability platforms for various metrics simultaneously.
 
 `KeptnMetric` CRs are also used as targets for
 [EvaluationDefinition](evaluationdefinition.md) CRs.

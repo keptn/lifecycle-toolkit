@@ -156,7 +156,7 @@ guide page.
 ## Files
 
 API reference:
-[AnalysisDefinition](../crd-ref/metrics/v1alpha3/#analysisdefinition)
+* [AnalysisDefinition](../crd-ref/metrics/v1alpha3/#analysisdefinition)
 
 ## Differences between versions
 
@@ -169,4 +169,4 @@ in the `metrics-operator` deployment.
 
 * [Analysis](analysis.md)
 * [AnalysisValueTemplate](analysisvaluetemplate.md)
-* [Analysis](../implementing/slo.md) guide
+* [Analysis guide](../implementing/slo.md)

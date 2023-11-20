@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	lifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
@@ -28,7 +28,7 @@ func (a *AppCreationRequestHandler) Handle(ctx context.Context, pod *corev1.Pod,
 
 	a.Log.Info("Searching for AppCreationRequest", "appCreationRequest", newAppCreationRequest.Name, "namespace", newAppCreationRequest.Namespace)
 
-	appCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{}
+	appCreationRequest := &lifecycle.KeptnAppCreationRequest{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newAppCreationRequest.Name}, appCreationRequest)
 	if errors.IsNotFound(err) {
 		return a.createResource(ctx, newAppCreationRequest)
@@ -41,7 +41,7 @@ func (a *AppCreationRequestHandler) Handle(ctx context.Context, pod *corev1.Pod,
 	return nil
 }
 
-func (a *AppCreationRequestHandler) createResource(ctx context.Context, newAppCreationRequest *klcv1alpha3.KeptnAppCreationRequest) error {
+func (a *AppCreationRequestHandler) createResource(ctx context.Context, newAppCreationRequest *lifecycle.KeptnAppCreationRequest) error {
 	a.Log.Info("Creating app creation request", "appCreationRequest", newAppCreationRequest.Name, "namespace", newAppCreationRequest.Namespace)
 
 	err := a.Client.Create(ctx, newAppCreationRequest)
@@ -54,14 +54,14 @@ func (a *AppCreationRequestHandler) createResource(ctx context.Context, newAppCr
 	return nil
 }
 
-func generateResource(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha3.KeptnAppCreationRequest {
+func generateResource(ctx context.Context, pod *corev1.Pod, namespace string) *lifecycle.KeptnAppCreationRequest {
 
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 
-	kacr := &klcv1alpha3.KeptnAppCreationRequest{
+	kacr := &lifecycle.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
@@ -80,7 +80,7 @@ func generateResource(ctx context.Context, pod *corev1.Pod, namespace string) *k
 
 	appName := getAppName(&pod.ObjectMeta)
 	kacr.ObjectMeta.Name = appName
-	kacr.Spec = klcv1alpha3.KeptnAppCreationRequestSpec{
+	kacr.Spec = lifecycle.KeptnAppCreationRequestSpec{
 		AppName: appName,
 	}
 

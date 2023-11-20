@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	lifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces/fake"
 	"github.com/stretchr/testify/require"
@@ -11,8 +12,8 @@ import (
 )
 
 func TestMetricsObjectWrapper(t *testing.T) {
-	appVersion := v1alpha3.KeptnAppVersion{
-		Status: v1alpha3.KeptnAppVersionStatus{
+	appVersion := lifecycle.KeptnAppVersion{
+		Status: lifecycle.KeptnAppVersionStatus{
 			Status:       apicommon.StateFailed,
 			CurrentPhase: "test",
 		},

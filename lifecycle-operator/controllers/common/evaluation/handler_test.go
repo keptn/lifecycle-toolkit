@@ -71,7 +71,7 @@ func TestEvaluationHandler(t *testing.T) {
 			name: "evaluation not started",
 			object: &lifecycle.KeptnAppVersion{
 				Spec: lifecycle.KeptnAppVersionSpec{
-					KeptnAppSpec: lifecycle.KeptnAppSpec{
+					DeploymentTaskSpec: lifecycle.DeploymentTaskSpec{
 						PreDeploymentEvaluations: []string{"eval-def"},
 					},
 				},
@@ -102,7 +102,7 @@ func TestEvaluationHandler(t *testing.T) {
 			name: "already done evaluation",
 			object: &lifecycle.KeptnAppVersion{
 				Spec: lifecycle.KeptnAppVersionSpec{
-					KeptnAppSpec: lifecycle.KeptnAppSpec{
+					DeploymentTaskSpec: lifecycle.DeploymentTaskSpec{
 						PreDeploymentEvaluations: []string{"eval-def"},
 					},
 				},
@@ -146,7 +146,7 @@ func TestEvaluationHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: lifecycle.KeptnAppVersionSpec{
-					KeptnAppSpec: lifecycle.KeptnAppSpec{
+					DeploymentTaskSpec: lifecycle.DeploymentTaskSpec{
 						PreDeploymentEvaluations: []string{"eval-def"},
 					},
 				},
@@ -208,7 +208,7 @@ func TestEvaluationHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: lifecycle.KeptnAppVersionSpec{
-					KeptnAppSpec: lifecycle.KeptnAppSpec{
+					DeploymentTaskSpec: lifecycle.DeploymentTaskSpec{
 						PreDeploymentEvaluations: []string{"eval-def"},
 					},
 				},
@@ -325,7 +325,7 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: lifecycle.KeptnAppVersionSpec{
-					KeptnAppSpec: lifecycle.KeptnAppSpec{
+					DeploymentTaskSpec: lifecycle.DeploymentTaskSpec{
 						PreDeploymentEvaluations: []string{"eval-def"},
 					},
 				},

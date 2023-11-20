@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha2/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -14,16 +14,16 @@ import (
 func TestKeptnEvalProvider_ConvertFrom(t *testing.T) {
 	tests := []struct {
 		name    string
-		srcObj  *v1alpha3.KeptnEvaluationProvider
+		srcObj  *v1beta1.KeptnEvaluationProvider
 		wantErr bool
 		wantObj *KeptnEvaluationProvider
 	}{
 		{
-			name: "Test that conversion from v1alpha3 to v1alpha2 works",
-			srcObj: &v1alpha3.KeptnEvaluationProvider{
+			name: "Test that conversion from v1beta1 to v1alpha2 works",
+			srcObj: &v1beta1.KeptnEvaluationProvider{
 				TypeMeta: v1.TypeMeta{
 					Kind:       "KeptnEvaluationProvider",
-					APIVersion: "lifecycle.keptn.sh/v1alpha3",
+					APIVersion: "lifecycle.keptn.sh/v1beta1",
 				},
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "some-keptn-app-name",
@@ -35,7 +35,7 @@ func TestKeptnEvalProvider_ConvertFrom(t *testing.T) {
 						"some-annotation": "some-annotation-value",
 					},
 				},
-				Spec: v1alpha3.KeptnEvaluationProviderSpec{
+				Spec: v1beta1.KeptnEvaluationProviderSpec{
 					TargetServer: "my-server",
 					SecretKeyRef: corev1.SecretKeySelector{
 						LocalObjectReference: corev1.LocalObjectReference{
@@ -91,10 +91,10 @@ func TestKeptnEvalProvider_ConvertTo(t *testing.T) {
 		name    string
 		src     *KeptnEvaluationProvider
 		wantErr bool
-		wantObj *v1alpha3.KeptnEvaluationProvider
+		wantObj *v1beta1.KeptnEvaluationProvider
 	}{
 		{
-			name: "Test that conversion from v1alpha2 to v1alpha3 works",
+			name: "Test that conversion from v1alpha2 to v1beta1 works",
 			src: &KeptnEvaluationProvider{
 				TypeMeta: v1.TypeMeta{
 					Kind:       "KeptnEvaluationProvider",
@@ -121,7 +121,7 @@ func TestKeptnEvalProvider_ConvertTo(t *testing.T) {
 				},
 			},
 			wantErr: false,
-			wantObj: &v1alpha3.KeptnEvaluationProvider{
+			wantObj: &v1beta1.KeptnEvaluationProvider{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "some-keptn-app-name",
 					Namespace: "",
@@ -132,7 +132,7 @@ func TestKeptnEvalProvider_ConvertTo(t *testing.T) {
 						"some-annotation": "some-annotation-value",
 					},
 				},
-				Spec: v1alpha3.KeptnEvaluationProviderSpec{
+				Spec: v1beta1.KeptnEvaluationProviderSpec{
 					TargetServer: "my-server",
 					SecretKeyRef: corev1.SecretKeySelector{
 						LocalObjectReference: corev1.LocalObjectReference{
@@ -146,10 +146,10 @@ func TestKeptnEvalProvider_ConvertTo(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			dst := v1alpha3.KeptnEvaluationProvider{
+			dst := v1beta1.KeptnEvaluationProvider{
 				TypeMeta:   v1.TypeMeta{},
 				ObjectMeta: v1.ObjectMeta{},
-				Spec:       v1alpha3.KeptnEvaluationProviderSpec{},
+				Spec:       v1beta1.KeptnEvaluationProviderSpec{},
 			}
 			if err := tt.src.ConvertTo(&dst); (err != nil) != tt.wantErr {
 				t.Errorf("ConvertTo() error = %v, wantErr %v", err, tt.wantErr)

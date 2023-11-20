@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	lifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
@@ -31,7 +31,7 @@ func (a *WorkloadHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace
 
 	a.Log.Info("Searching for workload")
 
-	workload := &klcv1alpha3.KeptnWorkload{}
+	workload := &lifecycle.KeptnWorkload{}
 	err := a.Client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: newWorkload.Name}, workload)
 	if errors.IsNotFound(err) {
 		return a.createWorkload(ctx, newWorkload)
@@ -44,7 +44,7 @@ func (a *WorkloadHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace
 	return a.updateWorkload(ctx, workload, newWorkload)
 }
 
-func (a *WorkloadHandler) updateWorkload(ctx context.Context, workload *klcv1alpha3.KeptnWorkload, newWorkload *klcv1alpha3.KeptnWorkload) error {
+func (a *WorkloadHandler) updateWorkload(ctx context.Context, workload *lifecycle.KeptnWorkload, newWorkload *lifecycle.KeptnWorkload) error {
 	if reflect.DeepEqual(workload.Spec, newWorkload.Spec) {
 		a.Log.Info("Pod not changed, not updating anything")
 		return nil
@@ -63,7 +63,7 @@ func (a *WorkloadHandler) updateWorkload(ctx context.Context, workload *klcv1alp
 	return nil
 }
 
-func (a *WorkloadHandler) createWorkload(ctx context.Context, newWorkload *klcv1alpha3.KeptnWorkload) error {
+func (a *WorkloadHandler) createWorkload(ctx context.Context, newWorkload *lifecycle.KeptnWorkload) error {
 	a.Log.Info("Creating workload", "workload", newWorkload.Name)
 	err := a.Client.Create(ctx, newWorkload)
 	if err != nil {
@@ -75,7 +75,7 @@ func (a *WorkloadHandler) createWorkload(ctx context.Context, newWorkload *klcv1
 	return nil
 }
 
-func generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *klcv1alpha3.KeptnWorkload {
+func generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *lifecycle.KeptnWorkload {
 	version, _ := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
 	version = strings.ToLower(version)
 	preDeploymentTasks := getValuesForAnnotations(&pod.ObjectMeta, apicommon.PreDeploymentTaskAnnotation)
@@ -90,7 +90,7 @@ func generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *k
 
 	ownerRef := GetOwnerReference(&pod.ObjectMeta)
 
-	return &klcv1alpha3.KeptnWorkload{
+	return &lifecycle.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        getWorkloadName(&pod.ObjectMeta, applicationName),
 			Namespace:   namespace,
@@ -99,10 +99,10 @@ func generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *k
 				ownerRef,
 			},
 		},
-		Spec: klcv1alpha3.KeptnWorkloadSpec{
+		Spec: lifecycle.KeptnWorkloadSpec{
 			AppName:                   applicationName,
 			Version:                   version,
-			ResourceReference:         klcv1alpha3.ResourceReference{UID: ownerRef.UID, Kind: ownerRef.Kind, Name: ownerRef.Name},
+			ResourceReference:         lifecycle.ResourceReference{UID: ownerRef.UID, Kind: ownerRef.Kind, Name: ownerRef.Name},
 			PreDeploymentTasks:        preDeploymentTasks,
 			PostDeploymentTasks:       postDeploymentTasks,
 			PreDeploymentEvaluations:  preDeploymentEvaluation,

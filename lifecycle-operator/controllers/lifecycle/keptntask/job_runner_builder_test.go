@@ -1,6 +1,7 @@
 package keptntask
 
 import (
+	lifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -9,14 +10,14 @@ import (
 
 func Test_getJobRunnerBuilder(t *testing.T) {
 	runtimeBuilderOptions := BuilderOptions{
-		funcSpec: &v1alpha3.RuntimeSpec{
-			Inline: v1alpha3.Inline{
+		funcSpec: &lifecycle.RuntimeSpec{
+			Inline: lifecycle.Inline{
 				Code: "some code",
 			},
 		},
 	}
 	containerBuilderOptions := BuilderOptions{
-		containerSpec: &v1alpha3.ContainerSpec{
+		containerSpec: &lifecycle.ContainerSpec{
 			Container: &v1.Container{
 				Image: "image",
 			},

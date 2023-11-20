@@ -3,6 +3,7 @@ package interfaces
 import (
 	"testing"
 
+	lifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces/fake"
 	"github.com/stretchr/testify/require"
@@ -10,10 +11,10 @@ import (
 )
 
 func TestListItemWrapper(t *testing.T) {
-	appVersionList := v1alpha3.KeptnAppVersionList{
-		Items: []v1alpha3.KeptnAppVersion{
+	appVersionList := lifecycle.KeptnAppVersionList{
+		Items: []lifecycle.KeptnAppVersion{
 			{
-				Status: v1alpha3.KeptnAppVersionStatus{
+				Status: lifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StateFailed,
 					CurrentPhase: "test",
 				},

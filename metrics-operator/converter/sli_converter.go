@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/yaml"
 )
@@ -60,7 +60,7 @@ func (c *SLIConverter) convertMapToAnalysisValueTemplate(slis map[string]string,
 		template := &metricsapi.AnalysisValueTemplate{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AnalysisValueTemplate",
-				APIVersion: "metrics.keptn.sh/v1alpha3",
+				APIVersion: "metrics.keptn.sh/v1beta1",
 			},
 			ObjectMeta: v1.ObjectMeta{
 				Name: ConvertResourceName(key),

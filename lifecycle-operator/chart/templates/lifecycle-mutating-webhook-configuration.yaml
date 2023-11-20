@@ -28,11 +28,7 @@ webhooks:
 {{- if eq (len .Values.allowedNamespaces) 0 }}
     - key: kubernetes.io/metadata.name
       operator: NotIn
-      values:
-      - cert-manager
-      - keptn-lifecycle-toolkit-system
-      - observability
-      - monitoring
+      values:  {{ .Values.deniedNamespaces | default list | toJson }}
 {{- else }}
     - key: kubernetes.io/metadata.name
       operator: In

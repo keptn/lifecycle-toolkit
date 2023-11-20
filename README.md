@@ -43,7 +43,7 @@ Status of the different features:
 
 - ![status](https://img.shields.io/badge/status-stable-brightgreen)
   Observability: expose [OTel](https://opentelemetry.io/) metrics and traces of your deployment.
-- ![status](https://img.shields.io/badge/status-alpha-orange)
+- ![status](https://img.shields.io/badge/status-beta-yellow)
   K8s Custom Metrics: expose your Observability platform via the [Custom Metric API](https://github.com/kubernetes/design-proposals-archive/blob/main/instrumentation/custom-metrics-api.md).
 - ![status](https://img.shields.io/badge/status-beta-yellow)
   Release lifecycle: handle pre- and post-checks of your Application deployment.
@@ -66,17 +66,67 @@ The status follows the
 
 Keptn can be installed on any Kubernetes cluster
 running Kubernetes >=1.24.
-Note that Keptn is not currently compatible with
-[vcluster](https://github.com/loft-sh/vcluster).
+
+For users running [vCluster](https://www.vcluster.com/),
+please note that you may need to modify
+your configuration before installing Keptn; see
+[Running Keptn with vCluster](https://main.lifecycle.keptn.sh/docs/install/install//#running-keptn-with-vcluster)
+for more information.
 
 Use the following command sequence
 to install the latest release of Keptn:
 
 ```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
+
+### Installation with only certain namespaces allowed
+
+Keptn lifecycle orchestration is by default enabled for all namespaces except the following ones:
+
+- `kube-system`
+- `kube-public`
+- `kube-node-lease`
+- `cert-manager`
+- `keptn-lifecycle-toolkit-system`
+- `observability`
+- `monitoring`
+- `<Keptn installation namespace>`
+
+To restrict Keptn lifecycle orchestration to specific namespaces, you must specify
+those namespaces during installation via helm values.
+First you need to create a `values.yaml`
+file
+
+```yaml
+lifecycleOperator:
+  allowedNamespaces:
+  - allowed-ns-1
+  - allowed-ns-2
+```
+
+and add the values file to the helm installation command:
+
+```shell
+helm repo add keptn https://charts.lifecycle.keptn.sh
+helm repo update
+helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --values values.yaml --create-namespace --wait
+```
+
+> **Note**
+Please be aware that you still need to correctly annotate the namespaces where
+Keptn lifecycle orchestration is allowed.
+> To annotate them, use:
+
+```shell
+kubectl annotate ns <your-allowed-namespace> keptn.sh/lifecycle-toolkit='enabled'
+```
+
+> **Note**
+Please be aware that, if this option is set, adding any additional namespace
+requires the helm installation to be updated by adding the name of the new namespace to the list.
 
 ### Installation without scheduler
 
@@ -95,9 +145,9 @@ Use the following command sequence
 to install Keptn with scheduling gates enabled:
 
 ```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --set schedulingGatesEnabled=true --create-namespace --wait
+helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --set schedulingGatesEnabled=true --create-namespace --wait
 ```
 
 > **Note**
@@ -119,7 +169,7 @@ For more info about Keptn, please see our
   then installing and enabling Keptn.
 - [Implementing Keptn applications](https://lifecycle.keptn.sh/docs/implementing/)
   documents how to integrate Keptn to work with your existing deployment engine
-  and implement its variouos features.
+  and implement its various features.
 - [Architecture](https://lifecycle.keptn.sh/docs/concepts/architecture/) provides detailed technical information
   about how Keptn works.
 - [CRD Reference](https://lifecycle.keptn.sh/docs/yaml-crd-ref/) and

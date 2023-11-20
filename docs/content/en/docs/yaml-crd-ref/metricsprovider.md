@@ -19,7 +19,7 @@ for each metric definition by its name.
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
 metadata:
   name: <data-source-instance-name>
@@ -60,8 +60,8 @@ spec:
 
 * **spec**
 
-  * **type** -- The type of data provider for this instance
-  * **targetServer** -- URL of the data provider, enclosed in double quotes
+  * **type** (required) -- The type of data provider for this instance
+  * **targetServer** (required) -- URL of the data provider, enclosed in double quotes
   * **secretKeyRef**
     * **name:** -- Name of the token for this data provider
     * **key:** -- Key for this data provider
@@ -91,7 +91,7 @@ on all namespaces in the cluster.
 ### Example 1: Dynatrace data provider
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
 metadata:
   name: dynatrace

@@ -34,6 +34,20 @@ Package v1alpha3 contains API Schema definitions for the lifecycle v1alpha3 API 
 
 
 
+#### AutomountServiceAccountTokenSpec
+
+
+
+
+
+_Appears in:_
+- [KeptnTaskDefinitionSpec](#keptntaskdefinitionspec)
+
+| Field | Description |
+| --- | --- |
+| `type` _boolean_ |  |
+
+
 #### ConfigMapReference
 
 
@@ -586,6 +600,9 @@ _Appears in:_
 | `container` _[ContainerSpec](#containerspec)_ | Container contains the definition for the container that is to be used in Job based on the KeptnTaskDefinitions. |
 | `retries` _integer_ | Retries specifies how many times a job executing the KeptnTaskDefinition should be restarted in the case of an unsuccessful attempt. |
 | `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#duration-v1-meta)_ | Timeout specifies the maximum time to wait for the task to be completed successfully. If the task does not complete successfully within this time frame, it will be considered to be failed. |
+| `serviceAccount` _[ServiceAccountSpec](#serviceaccountspec)_ | ServiceAccount specifies the service account to be used in jobs to authenticate with the Kubernetes API and access cluster resources. |
+| `automountServiceAccountToken` _[AutomountServiceAccountTokenSpec](#automountserviceaccounttokenspec)_ | AutomountServiceAccountToken allows to enable K8s to assign cluster API credentials to a pod, if set to false the pod will decline the service account |
+| `ttlSecondsAfterFinished` _integer_ | TTLSecondsAfterFinished controller makes a job eligible to be cleaned up after it is finished. The timer starts when the status shows up to be Complete or Failed. |
 
 
 #### KeptnTaskDefinitionStatus
@@ -846,7 +863,7 @@ _Appears in:_
 
 
 
-
+ResourceReference represents the parent resource of Workload
 
 _Appears in:_
 - [KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)
@@ -892,6 +909,20 @@ _Appears in:_
 | Field | Description |
 | --- | --- |
 | `secret` _string_ | Secret contains the parameters that will be made available to the job executing the KeptnTask via the 'SECRET_DATA' environment variable. The 'SECRET_DATA'  environment variable's content will the same as value of the 'SECRET_DATA' key of the referenced secret. |
+
+
+#### ServiceAccountSpec
+
+
+
+
+
+_Appears in:_
+- [KeptnTaskDefinitionSpec](#keptntaskdefinitionspec)
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ |  |
 
 
 #### TaskContext

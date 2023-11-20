@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 )
 
@@ -18,7 +18,7 @@ func NewObjectiveEvaluator(t ITargetEvaluator) ObjectiveEvaluator {
 	}
 }
 
-func (oe *ObjectiveEvaluator) Evaluate(values map[string]v1alpha3.ProviderResult, obj *v1alpha3.Objective) types.ObjectiveResult {
+func (oe *ObjectiveEvaluator) Evaluate(values map[string]metricsapi.ProviderResult, obj *metricsapi.Objective) types.ObjectiveResult {
 	result := types.ObjectiveResult{
 		Score:     0.0,
 		Value:     0.0,
@@ -42,7 +42,7 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]v1alpha3.ProviderResult
 		return result
 	}
 
-	// if target fullfilled warning criteria, we return the half score
+	// if target fulfilled warning criteria, we return the half score
 	if result.IsWarn() {
 		result.Score = float64(obj.Weight) / 2
 		return result
@@ -51,7 +51,7 @@ func (oe *ObjectiveEvaluator) Evaluate(values map[string]v1alpha3.ProviderResult
 	return result
 }
 
-func getResultFromMap(values map[string]v1alpha3.ProviderResult, key string) (float64, string, error) {
+func getResultFromMap(values map[string]metricsapi.ProviderResult, key string) (float64, string, error) {
 	val, ok := values[key]
 	if !ok {
 		return 0.0, "", fmt.Errorf("required value '%s' not available", key)
@@ -64,7 +64,7 @@ func getResultFromMap(values map[string]v1alpha3.ProviderResult, key string) (fl
 	return floatVal, val.Query, nil
 }
 
-func ComputeKey(obj v1alpha3.ObjectReference) string {
+func ComputeKey(obj metricsapi.ObjectReference) string {
 	if !obj.IsNamespaceSet() {
 		return obj.Name
 	}

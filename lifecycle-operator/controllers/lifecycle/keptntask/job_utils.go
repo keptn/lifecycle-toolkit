@@ -7,9 +7,11 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	taskdefinition "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -20,12 +22,26 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	jobName := ""
 	definition, err := controllercommon.GetTaskDefinition(r.Client, r.Log, ctx, task.Spec.TaskDefinition, req.Namespace)
 	if err != nil {
+		if errors.IsNotFound(err) {
+			r.Log.Info("TaskDefinition for Task not found",
+				"task", task.Name,
+				"taskDefinition", task.Spec.TaskDefinition,
+				"namespace", task.Namespace,
+			)
+		} else {
+			// log the error, but continue to proceed with other tasks that may be created
+			r.Log.Error(err, "Could not create task",
+				"task", task.Name,
+				"taskDefinition", task.Spec.TaskDefinition,
+				"namespace", task.Namespace,
+			)
+		}
 		r.Log.Error(err, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition))
 		r.EventSender.Emit(apicommon.PhaseCreateTask, "Warning", task, apicommon.PhaseStateNotFound, fmt.Sprintf("could not find KeptnTaskDefinition: %s ", task.Spec.TaskDefinition), "")
 		return err
 	}
 
-	if controllercommon.SpecExists(definition) {
+	if taskdefinition.SpecExists(definition) {
 		jobName, err = r.createFunctionJob(ctx, req, task, definition)
 		if err != nil {
 			return err
@@ -90,11 +106,14 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 					Annotations: task.Annotations,
 				},
 				Spec: corev1.PodSpec{
-					RestartPolicy: "OnFailure",
+					RestartPolicy:                "OnFailure",
+					ServiceAccountName:           definition.GetServiceAccount(),
+					AutomountServiceAccountToken: definition.GetAutomountServiceAccountToken(),
 				},
 			},
-			BackoffLimit:          task.Spec.Retries,
-			ActiveDeadlineSeconds: task.GetActiveDeadlineSeconds(),
+			BackoffLimit:            task.Spec.Retries,
+			ActiveDeadlineSeconds:   task.GetActiveDeadlineSeconds(),
+			TTLSecondsAfterFinished: definition.Spec.TTLSecondsAfterFinished,
 		},
 	}
 	err := controllerutil.SetControllerReference(task, job, r.Scheme)
@@ -108,10 +127,10 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 		Log:           r.Log,
 		task:          task,
 		containerSpec: definition.Spec.Container,
-		funcSpec:      controllercommon.GetRuntimeSpec(definition),
+		funcSpec:      taskdefinition.GetRuntimeSpec(definition),
 		eventSender:   r.EventSender,
-		Image:         controllercommon.GetRuntimeImage(definition),
-		MountPath:     controllercommon.GetRuntimeMountPath(definition),
+		Image:         taskdefinition.GetRuntimeImage(definition),
+		MountPath:     taskdefinition.GetRuntimeMountPath(definition),
 		ConfigMap:     definition.Status.Function.ConfigMap,
 	}
 

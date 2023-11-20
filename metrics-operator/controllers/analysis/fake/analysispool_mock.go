@@ -5,7 +5,7 @@ package fake
 
 import (
 	"context"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"sync"
 )
 
@@ -26,7 +26,7 @@ import (
 //	}
 type IAnalysisPoolMock struct {
 	// DispatchAndCollectFunc mocks the DispatchAndCollect method.
-	DispatchAndCollectFunc func(ctx context.Context) (map[string]v1alpha3.ProviderResult, error)
+	DispatchAndCollectFunc func(ctx context.Context) (map[string]metricsapi.ProviderResult, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -40,7 +40,7 @@ type IAnalysisPoolMock struct {
 }
 
 // DispatchAndCollect calls DispatchAndCollectFunc.
-func (mock *IAnalysisPoolMock) DispatchAndCollect(ctx context.Context) (map[string]v1alpha3.ProviderResult, error) {
+func (mock *IAnalysisPoolMock) DispatchAndCollect(ctx context.Context) (map[string]metricsapi.ProviderResult, error) {
 	if mock.DispatchAndCollectFunc == nil {
 		panic("IAnalysisPoolMock.DispatchAndCollectFunc: method is nil but IAnalysisPool.DispatchAndCollect was just called")
 	}

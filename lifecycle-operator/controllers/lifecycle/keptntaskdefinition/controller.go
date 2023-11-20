@@ -22,8 +22,9 @@ import (
 
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -36,7 +37,7 @@ type KeptnTaskDefinitionReconciler struct {
 	client.Client
 	Scheme      *runtime.Scheme
 	Log         logr.Logger
-	EventSender controllercommon.IEvent
+	EventSender eventsender.IEvent
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptntaskdefinitions,verbs=get;list;watch;create;update;patch;delete
@@ -45,24 +46,25 @@ type KeptnTaskDefinitionReconciler struct {
 // +kubebuilder:rbac:groups=core,resources=configmaps,verbs=create;get;update;list;watch
 
 func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("Reconciling KeptnTaskDefinition")
+	requestInfo := controllercommon.GetRequestInfo(req)
+	r.Log.Info("Reconciling KeptnTaskDefinition", "requestInfo", requestInfo)
 
 	definition := &klcv1alpha3.KeptnTaskDefinition{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, definition); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
-			r.Log.Info("KeptnTaskDefinition resource not found. Ignoring since object must be deleted")
+			r.Log.Info("KeptnTaskDefinition resource not found. Ignoring since object must be deleted", "requestInfo", requestInfo)
 			return ctrl.Result{}, nil
 		}
 		r.Log.Error(err, "Failed to get the KeptnTaskDefinition")
 		return ctrl.Result{Requeue: true, RequeueAfter: 30 * time.Second}, nil
 	}
-	defSpec := common.GetRuntimeSpec(definition)
+	defSpec := taskdefinition.GetRuntimeSpec(definition)
 	if definition.Spec.Container == nil && defSpec != nil { // if the spec is well-defined
 
 		// get configmap reference either existing configmap name or inline generated one
-		cmName := controllercommon.GetCmName(definition.Name, defSpec)
+		cmName := taskdefinition.GetCmName(definition.Name, defSpec)
 
 		// get existing configmap either generated from inline or user defined
 		cm, err := r.getConfigMap(ctx, cmName, req.Namespace)
@@ -73,7 +75,7 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 
 		// generate the updated config map, this is either the existing config map or the inline one
 		functionCm := cm
-		if common.IsInline(defSpec) {
+		if taskdefinition.IsInline(defSpec) {
 			functionCm = r.generateConfigMap(defSpec, cmName, definition.Namespace)
 		}
 		// compare and handle updated and existing
@@ -86,11 +88,11 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 			r.Log.Error(err, "could not update configmap status reference for: "+definition.Name)
 			return ctrl.Result{}, nil
 		}
-		r.Log.Info("updated configmap status reference for: " + definition.Name)
+		r.Log.Info("updated configmap status reference for: "+definition.Name, "requestInfo", requestInfo)
 
 	}
 
-	r.Log.Info("Finished Reconciling KeptnTaskDefinition")
+	r.Log.Info("Finished Reconciling KeptnTaskDefinition", "requestInfo", requestInfo)
 	return ctrl.Result{}, nil
 }
 

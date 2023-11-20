@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis/fake"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	fakeEvaluator "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/fake"

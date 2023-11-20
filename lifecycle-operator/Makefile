@@ -7,7 +7,7 @@ RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
-TAG?="v0.8.2" # x-release-please-version
+TAG?="v0.8.3" # x-release-please-version
 RELEASE_IMAGE:=lifecycle-operator:$(TAG)
 CHART_APPVERSION?=""
 
@@ -25,7 +25,7 @@ ENVTEST_K8S_VERSION=1.27.1
 
 ## Tool Versions
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v5.1.1
+KUSTOMIZE_VERSION?=v5.2.1
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
 CONTROLLER_TOOLS_VERSION?=v0.13.0
 
@@ -105,17 +105,17 @@ component-test: manifests generate envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/task/... -v -timeout 30m -coverprofile cover-task.out -coverpkg "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptntask/..."
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/taskdefinition/... -v -timeout 30m -coverprofile cover-taskdefinition.out -coverpkg "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptntaskdefinition/..."
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/workload/... -v -timeout 30m -coverprofile cover-workload.out -coverpkg "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkload/..."
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/workloadinstance/... -v -timeout 30m -coverprofile cover-workloadinstance.out -coverpkg "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadinstance/..."
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./test/component/workloadversion/... -v -timeout 30m -coverprofile cover-workloadversion.out -coverpkg "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadversion/..."
 	sed -i '/mode: set/d' "cover-app.out"
 	sed -i '/mode: set/d' "cover-appversion.out"
 	sed -i '/mode: set/d' "cover-evaluation.out"
 	sed -i '/mode: set/d' "cover-task.out"
 	sed -i '/mode: set/d' "cover-taskdefinition.out"
 	sed -i '/mode: set/d' "cover-workload.out"
-	sed -i '/mode: set/d' "cover-workloadinstance.out"
+	sed -i '/mode: set/d' "cover-workloadversion.out"
 	echo "mode: set" > cover.out
-	cat cover-app.out cover-appversion.out cover-evaluation.out cover-task.out cover-taskdefinition.out cover-workload.out cover-workloadinstance.out >> cover.out
-	rm cover-app.out cover-appversion.out cover-evaluation.out cover-task.out cover-taskdefinition.out cover-workload.out cover-workloadinstance.out
+	cat cover-app.out cover-appversion.out cover-evaluation.out cover-task.out cover-taskdefinition.out cover-workload.out cover-workloadversion.out >> cover.out
+	rm cover-app.out cover-appversion.out cover-evaluation.out cover-task.out cover-taskdefinition.out cover-workload.out cover-workloadversion.out
 
 .PHONY: performance-test
 performance-test: manifests generate envtest ## Run tests.

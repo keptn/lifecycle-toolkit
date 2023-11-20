@@ -1,8 +1,8 @@
 # Image URL to use all building/pushing image targets
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v5.1.1
-CHART_APPVERSION ?= v0.8.2 # x-release-please-version
+KUSTOMIZE_VERSION?=v5.2.1
+CHART_APPVERSION ?= v0.9.0 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine
@@ -44,11 +44,19 @@ integration-test-scheduling-gates:	# to run a single test by name use --test eg.
 integration-test-scheduling-gates-local: install-prometheus
 	kubectl kuttl test --start-kind=false ./test/scheduling-gates/ --config=kuttl-test-local.yaml
 
+.PHONY: integration-test-allowed-namespaces #these tests should run on a real cluster!
+integration-test-allowed-namespaces:	# to run a single test by name use --test eg. --test=expose-keptn-metric
+	kubectl kuttl test --start-kind=false ./test/allowed-namespaces/ --config=kuttl-test.yaml
+
+.PHONY: integration-test-allowed-namespaces-local #these tests should run on a real cluster!
+integration-test-allowed-namespaces-local: install-prometheus
+	kubectl kuttl test --start-kind=false ./test/allowed-namespaces/ --config=kuttl-test-local.yaml
+
 .PHONY: load-test
 load-test:
 	kubectl apply -f ./test/load/assets/templates/namespace.yaml
 	kubectl apply -f ./test/load/assets/templates/provider.yaml
-	kube-burner init -c ./test/load/cfg.yml --metrics-profile ./test/load/metrics.yml
+	kube-burner init -c ./test/load/cfg.yml --metrics-profile ./test/load/metrics.yml --prometheus-url http://localhost:9090
 
 .PHONY: install-prometheus
 install-prometheus:

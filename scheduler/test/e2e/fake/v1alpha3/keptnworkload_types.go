@@ -75,6 +75,6 @@ func init() {
 	SchemeBuilder.Register(&KeptnWorkload{}, &KeptnWorkloadList{})
 }
 
-func (w KeptnWorkload) GetWorkloadInstanceName() string {
+func (w KeptnWorkload) GetWorkloadVersionName() string {
 	return strings.ToLower(w.Name + "-" + w.Spec.Version)
 }

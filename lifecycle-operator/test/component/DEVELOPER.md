@@ -40,7 +40,7 @@ setupManager(controllers)
 ```
 
 After that the k8s API from kubebuilder will handle its CRD
-Each Ginkgo test should be structured following the [spec bestpractices](https://onsi.github.io/ginkgo/#writing-specs)
+Each Ginkgo test should be structured following the [spec best practices](https://onsi.github.io/ginkgo/#writing-specs)
 
 As a minimum example, a test could be:
 

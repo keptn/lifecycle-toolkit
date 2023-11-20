@@ -29,13 +29,13 @@ The converter is part of `metrics-operator` image.
 
 ## Usage
 
-The converter will convert a single `slo.yaml` file into single `AnalysisDefintion` resource.
+The converter will convert a single `slo.yaml` file into single `AnalysisDefinition` resource.
 
 To run the converter, execute the following command:
 
 <!---x-release-please-start-version-->
 ```shell
-METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.2
+METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
 PATH_TO_SLO=<PATH_TO_SLO>
 ANALYSIS_VALUE_TEMPLATE_NAMESPACE=<ANALYSIS_VALUE_TEMPLATE_NAMESPACE>
 ANALYSIS_DEFINITION_NAME=<ANALYSIS_DEFINITION_NAME>

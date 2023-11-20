@@ -9,7 +9,7 @@ on:
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-tags depName=cloud-bulldozer/kube-burner
-  KUBE_BURNER_VERSION: "v1.7.8"
+  KUBE_BURNER_VERSION: "v1.7.11"
 defaults:
   run:
     shell: bash
@@ -59,12 +59,12 @@ jobs:
           path: ./collected-metrics
 
       - name: Create reports
-        if: always()
+        if: failure()
         working-directory: ./.github/scripts
         run: ./create-reports-toolkit.sh
 
       - name: Upload cluster logs
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: logs-load-tests

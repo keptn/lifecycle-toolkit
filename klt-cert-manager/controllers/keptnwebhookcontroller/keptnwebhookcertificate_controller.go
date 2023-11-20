@@ -87,24 +87,41 @@ type KeptnWebhookCertificateReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, request ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("reconciling webhook certificates",
-		"namespace", request.Namespace, "name", request.Name)
+	requestInfo := common.GetRequestInfo(request)
+	r.Log.Info("reconciling webhook certificates", "requestInfo", requestInfo)
 
+	r.Log.Info("Retrieving MutatingWebhooks")
 	mutatingWebhookConfigurations, err := r.ResourceRetriever.GetMutatingWebhooks(ctx)
 	if err != nil {
-		r.Log.Error(err, "could not find mutating webhook configuration")
+		r.Log.Error(err, "could not find mutating webhook configuration", "requestInfo", requestInfo)
 	}
+	r.Log.Info(
+		"Found MutatingWebhooks to inject certificates",
+		"numberOfItems", len(mutatingWebhookConfigurations.Items),
+		"byteSize", mutatingWebhookConfigurations.Size(),
+	)
 
+	r.Log.Info("Retrieving ValidatingWebhooks", "requestInfo", requestInfo)
 	validatingWebhookConfigurations, err := r.ResourceRetriever.GetValidatingWebhooks(ctx)
 	if err != nil {
-		r.Log.Error(err, "could not find validating webhook configuration")
+		r.Log.Error(err, "could not find validating webhook configuration", "requestInfo", requestInfo)
 	}
+	r.Log.Info(
+		"Found ValidatingWebhooks to inject certificates",
+		"numberOfItems", len(validatingWebhookConfigurations.Items),
+		"byteSize", validatingWebhookConfigurations.Size(),
+	)
 
+	r.Log.Info("Retrieving CRDs", "requestInfo", requestInfo)
 	crds, err := r.ResourceRetriever.GetCRDs(ctx)
 	if err != nil {
-		r.Log.Error(err, "could not find CRDs")
+		r.Log.Error(err, "could not find CRDs", "requestInfo", requestInfo)
 	}
-
+	r.Log.Info(
+		"Found CRDs to inject certificates",
+		"numberOfItems", len(crds.Items),
+		"byteSize", crds.Size(),
+	)
 	certSecret := newCertificateSecret(r.Client)
 
 	if err := r.setCertificates(ctx, certSecret); err != nil {
@@ -121,7 +138,7 @@ func (r *KeptnWebhookCertificateReconciler) Reconcile(ctx context.Context, reque
 	isCertSecretRecent := certSecret.isRecent()
 
 	if isCertSecretRecent && areMutatingWebhookConfigsValid && areValidatingWebhookConfigsValid && areCRDConversionsConfigValid {
-		r.Log.Info("secret for certificates up to date, skipping update")
+		r.Log.Info("secret for certificates up to date, skipping update", "requestInfo", requestInfo)
 		r.cancelMgr()
 		return reconcile.Result{RequeueAfter: common.SuccessDuration}, nil
 	}
@@ -239,6 +256,11 @@ func (r *KeptnWebhookCertificateReconciler) updateCRDConfiguration(ctx context.C
 		r.Log.Info(fmt.Sprintf("no conversion webhook config for %s, no cert will be provided", crdName))
 		return nil
 	}
+
+	r.Log.Info(
+		"Found conversion webhook in CRD, updating client certificate",
+		"crd", crdName,
+	)
 
 	// update crd
 	crd.Spec.Conversion.Webhook.ClientConfig.CABundle = bundle

@@ -1,5 +1,5 @@
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnWorkloadInstance
+apiVersion: lifecycle.keptn.sh/v1alpha4
+kind: KeptnWorkloadVersion
 metadata:
   name: work-work-0.5
 status:

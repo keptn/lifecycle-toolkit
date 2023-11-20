@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Pod
+status:
+  phase: Succeeded
+spec:
+  serviceAccountName: klt-serviceaccount
+  automountServiceAccountToken: false

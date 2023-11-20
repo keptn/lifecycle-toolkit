@@ -109,12 +109,11 @@ func (a KeptnApp) SetSpanAttributes(span trace.Span) {
 	span.SetAttributes(a.GetSpanAttributes()...)
 }
 
-func (a KeptnApp) GenerateAppVersion(previousVersion string, traceContextCarrier map[string]string) KeptnAppVersion {
+func (a KeptnApp) GenerateAppVersion(previousVersion string) KeptnAppVersion {
 	return KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
-			Annotations: traceContextCarrier,
-			Name:        a.GetAppVersionName(),
-			Namespace:   a.Namespace,
+			Name:      a.GetAppVersionName(),
+			Namespace: a.Namespace,
 		},
 		Spec: KeptnAppVersionSpec{
 			KeptnAppSpec:    a.Spec,

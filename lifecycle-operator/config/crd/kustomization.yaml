@@ -13,6 +13,7 @@ resources:
   - bases/lifecycle.keptn.sh_keptnevaluations.yaml
   - bases/options.keptn.sh_keptnconfigs.yaml
   - bases/lifecycle.keptn.sh_keptnappcreationrequests.yaml
+  - bases/lifecycle.keptn.sh_keptnworkloadversions.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 # the following config is for teaching kustomize how to do kustomization for CRDs.
 configurations:

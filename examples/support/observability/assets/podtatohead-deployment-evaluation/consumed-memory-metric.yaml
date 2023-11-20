@@ -1,4 +1,4 @@
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: consumed-memory

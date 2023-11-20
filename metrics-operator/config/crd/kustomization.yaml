@@ -22,13 +22,17 @@ labels:
       crdGroup: metrics.keptn.sh
       keptn.sh/inject-cert: "true"
 patches:
-  - path: patches/webhook_in_keptnmetrics.yaml
 # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix.
 # patches here are for enabling the conversion webhook for each CRD
 # - path: patches/webhook_in_keptnmetricsproviders.yaml
 # - path: patches/webhook_in_analyses.yaml
 # - path: patches/webhook_in_analysisdefinitions.yaml
 # - path: patches/webhook_in_analysisvaluetemplates.yaml
+# - patches/webhook_in_keptnmetrics.yaml
+# - patches/webhook_in_keptnmetricsproviders.yaml
+# - patches/webhook_in_analyses.yaml
+# - patches/webhook_in_analysisdefinitions.yaml
+# - patches/webhook_in_analysisvaluetemplates.yaml
 # +kubebuilder:scaffold:crdkustomizewebhookpatch
 # [CERTMANAGER] To enable cert-manager, uncomment all the sections with [CERTMANAGER] prefix.
 # patches here are for enabling the CA injection for each CRD
@@ -37,4 +41,9 @@ patches:
 # - path: patches/cainjection_in_analyses.yaml
 # - path: patches/cainjection_in_analysisdefinitions.yaml
 # - path: patches/cainjection_in_analysisvaluetemplates.yaml
+# - patches/cainjection_in_keptnmetrics.yaml
+# - patches/cainjection_in_keptnmetricsproviders.yaml
+# - patches/cainjection_in_analyses.yaml
+# - patches/cainjection_in_analysisdefinitions.yaml
+# - patches/cainjection_in_analysisvaluetemplates.yaml
 # +kubebuilder:scaffold:crdkustomizecainjectionpatch

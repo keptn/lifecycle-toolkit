@@ -12,12 +12,12 @@ on:
       - "**.go"
       - "**/go.mod"
       - "**/go.sum"
-      - ".golangi.yml"
+      - ".golangci.yml"
       - ".github/workflows/golangci-lint.yml"
       - "!docs/**"
 env:
   # renovate: datasource=github-releases depName=golangci/golangci-lint
-  GOLANGCI_LINT_VERSION: "v1.54.2"
+  GOLANGCI_LINT_VERSION: "v1.55.2"
   GO_VERSION: "~1.20"
 jobs:
   golangci-lint:

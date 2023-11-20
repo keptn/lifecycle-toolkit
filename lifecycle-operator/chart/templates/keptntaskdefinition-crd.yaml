@@ -9,7 +9,8 @@ metadata:
     app.kubernetes.io/part-of: keptn-lifecycle-toolkit
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
-  {{- include "chart.labels" . | nindent 4 }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+{{- include "common.annotations" ( dict "context" . ) }}
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -194,6 +195,16 @@ spec:
           spec:
             description: Spec describes the desired state of the KeptnTaskDefinition.
             properties:
+              automountServiceAccountToken:
+                description: automountServiceAccountToken allows to enable K8s to
+                  assign cluster API credentials to a pod, if set to false the pod
+                  will decline the serviceAccount
+                properties:
+                  type:
+                    type: boolean
+                required:
+                - type
+                type: object
               container:
                 description: Container contains the definition for the container that
                   is to be used in Job based on the KeptnTaskDefinitions.
@@ -1686,6 +1697,15 @@ spec:
                   attempt.
                 format: int32
                 type: integer
+              serviceAccount:
+                description: Service Account to be used in jobs to authenticate with
+                  the Kubernetes API and access cluster resources.
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+                type: object
               timeout:
                 default: 5m
                 description: Timeout specifies the maximum time to wait for the task
@@ -1693,6 +1713,13 @@ spec:
                   within this time frame, it will be considered to be failed.
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
+              ttlSecondsAfterFinished:
+                default: 300
+                description: TTLSecondsAfterFinished controller makes a job eligible
+                  to be cleaned up after it is finished. The timer starts when the
+                  status shows up to be Complete or Failed.
+                format: int32
+                type: integer
             type: object
           status:
             description: Status describes the current state of the KeptnTaskDefinition.

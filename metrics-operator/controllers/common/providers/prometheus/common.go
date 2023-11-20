@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	promapi "github.com/prometheus/client_golang/api"
 	"github.com/prometheus/common/config"
 	corev1 "k8s.io/api/core/v1"
@@ -40,7 +40,7 @@ func (r RoundTripperRetriever) GetRoundTripper(ctx context.Context, provider met
 		}
 		return nil, err
 	}
-	return config.NewBasicAuthRoundTripper(secret.User, secret.Password, "", promapi.DefaultRoundTripper), nil
+	return config.NewBasicAuthRoundTripper(secret.User, secret.Password, "", "", promapi.DefaultRoundTripper), nil
 }
 
 func getPrometheusSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (*SecretData, error) {

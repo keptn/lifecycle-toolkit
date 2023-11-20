@@ -6,8 +6,8 @@ import "strings"
 // input and checks, if the resulting string matches the maxLen condition.
 // If it does not match, it reduces the subparts, starting with the first
 // one (but leaving its length at least in minSubstrLen so it's not deleted
-// completely) adn continuing with the rest if needed.
-// Let's take WorkloadInstance as an example (3 parts: app, workload, version).
+// completely) and continuing with the rest if needed.
+// Let's take WorkloadVersion as an example (3 parts: app, workload, version).
 // First the app name is reduced if needed (only to minSubstrLen),
 // afterwards workload and the version is not reduced at all. This pattern is
 // chosen to not reduce only one part of the name (that can be completely gone

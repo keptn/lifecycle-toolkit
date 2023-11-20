@@ -1,0 +1,29 @@
+CHART NAME: {{ .Chart.Name  }}
+CHART VERSION: {{ .Chart.Version  }}
+KEPTN VERSION: {{ .Chart.AppVersion  }}
+
+** Please be patient while the chart is being deployed **
+
+The following controllers have been deployed:
+
+  {{- if .Values.certManager.enabled }}
+  - keptn-cert-manager
+  {{- end }}
+  {{- if .Values.lifecycleOperator.enabled }}
+  - keptn-lifecycle-operator
+  {{- end }}
+  {{- if .Values.metricsOperator.enabled }}
+  - keptn-metrics-operator
+  {{- end }}
+
+Check the status of the pods by running this command:
+
+  kubectl get pods --namespace {{ include "common.names.namespace" . | quote }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+Read the keptn documentation to start working with the controllers:
+
+    https://lifecycle.keptn.sh/
+
+For any bug and issues, use:
+
+    https://github.com/keptn/lifecycle-toolkit/issues

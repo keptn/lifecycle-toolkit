@@ -32,6 +32,7 @@ const CreateAppEvalSpanName = "create_%s_app_evaluation"
 const CreateWorkloadEvalSpanName = "create_%s_deployment_evaluation"
 const AppTypeAnnotation = "keptn.sh/app-type"
 const KeptnGate = "keptn-prechecks-gate"
+const ContainerNameAnnotation = "keptn.sh/container"
 
 const MinKeptnNameLen = 80
 const MaxK8sObjectLength = 253
@@ -204,7 +205,7 @@ func MergeMaps(m1 map[string]string, m2 map[string]string) map[string]string {
 	return merged
 }
 
-// IsOwnerSupported returns whether the owner of the given object is supported to be considered a KeptnWorklooad
+// IsOwnerSupported returns whether the owner of the given object is supported to be considered a KeptnWorkload
 func IsOwnerSupported(owner metav1.OwnerReference) bool {
 	return owner.Kind == "ReplicaSet" || owner.Kind == "Deployment" || owner.Kind == "StatefulSet" || owner.Kind == "DaemonSet" || owner.Kind == "Rollout"
 }

@@ -1,4 +1,4 @@
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: $NAME
@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: test-prometheus
-          image: curlimages/curl:8.3.0
+          image: curlimages/curl:8.4.0
           args:
             - /bin/sh
             - -ec
@@ -33,7 +33,7 @@ spec:
               fi
               exit 1
         - name: test-api-endpoint
-          image: curlimages/curl:8.3.0
+          image: curlimages/curl:8.4.0
           # yamllint disable rule:line-length
           args:
             - /bin/sh

@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"

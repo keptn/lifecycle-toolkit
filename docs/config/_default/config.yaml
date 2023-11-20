@@ -1,23 +1,15 @@
 _merge: deep
 title: Keptn
+baseURL: /
 
 module:
   hugoVersion:
     extended: true
   imports:
-    - path: github.com/keptn/docs-tooling
-      ignoreConfig: false
-      mounts:
-        - source: static
-          target: static
-        - source: layouts
-          target: layouts
-        - source: data
-          target: data
-        - source: assets
-          target: assets
-        - source: archetypes
-          target: archetypes
+    - disable: false
+      path: github.com/google/docsy
+    - disable: false
+      path: github.com/google/docsy/dependencies
     - path: github.com/keptn/community
       ignoreConfig: false
       mounts:
@@ -27,12 +19,17 @@ module:
             - "mentorship"
         - source: "README.md"
           target: "./content/community/_index.md"
-
   proxy: direct
+
 languages:
   en:
     title: Keptn
     contentDir: "content/en"
+
+enableEmoji: true
+enableGitInfo: false
+enableMissingTranslationPlaceholders: true
+enableRobotsTXT: true
 
 menu:
   main:
@@ -49,3 +46,14 @@ menu:
 
 ignoreErrors:
   - "error-remote-getjson"
+
+outputs:
+  home:
+    - HTML
+  page:
+    - HTML
+
+permalinks: blog = "/:section/:year/:month/:day/:slug/"
+taxonomies:
+  category: categories
+  tag: tags

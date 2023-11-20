@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	promapi "github.com/prometheus/client_golang/api"
 	"github.com/prometheus/common/config"
@@ -140,7 +140,7 @@ func Test_GetRoundtripper(t *testing.T) {
 				},
 			},
 			k8sClient: fake.NewClient(goodsecret),
-			want:      config.NewBasicAuthRoundTripper("myuser", "mytoken", "", promapi.DefaultRoundTripper),
+			want:      config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
 			wantErr:   false,
 		},
 		{

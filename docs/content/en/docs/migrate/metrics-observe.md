@@ -99,8 +99,10 @@ The process is:
    [AnalysisValueTemplate](../yaml-crd-ref/analysisvaluetemplate.md)
    resource:
 
+   <!---x-release-please-start-version-->
+
    ```shell
-   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.9.0
+   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
    PATH_TO_SLI=sli.yaml
    KEPTN_PROVIDER_NAME=my-prometheus-provider
    KEPTN_PROVIDER_NAMESPACE=keptn-lifecycle-poc
@@ -110,6 +112,8 @@ The process is:
      --keptn-provider-name=$KEPTN_PROVIDER_NAME \
      --keptn-provider-namespace=$KEPTN_PROVIDER_NAMESPACE > analysis-value-template.yaml
    ```
+
+   <!---x-release-please-end-->
 
    This command creates an `AnalysisValueTemplate` resource
    for each SLI that is defined in the `sli.yaml` file.
@@ -143,8 +147,10 @@ The process is:
    resources is similar to the process of converting the SLIs.
    Use the following command sequence:
 
+   <!---x-release-please-start-version-->
+
    ```shell
-   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.9.0
+   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
    PATH_TO_SLO=slo.yaml
    ANALYSIS_VALUE_TEMPLATE_NAMESPACE=keptn-lifecycle-poc
    ANALYSIS_DEFINITION_NAME=my-project-ad
@@ -154,6 +160,8 @@ The process is:
      --analysis-value-template-namespace=$ANALYSIS_VALUE_TEMPLATE_NAMESPACE \
      --analysis-definition-name=$ANALYSIS_DEFINITION_NAME > analysis-definition.yaml
    ```
+
+   <!---x-release-please-end-->
 
    The result of this command yields an `AnalysisDefinition` resource
    that is defined in a file called `analysis-definition.yaml`.

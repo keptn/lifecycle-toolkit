@@ -100,7 +100,7 @@ The process is:
    resource:
 
    ```shell
-   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.2
+   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.9.0
    PATH_TO_SLI=sli.yaml
    KEPTN_PROVIDER_NAME=my-prometheus-provider
    KEPTN_PROVIDER_NAMESPACE=keptn-lifecycle-poc
@@ -144,7 +144,7 @@ The process is:
    Use the following command sequence:
 
    ```shell
-   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.2
+   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.9.0
    PATH_TO_SLO=slo.yaml
    ANALYSIS_VALUE_TEMPLATE_NAMESPACE=keptn-lifecycle-poc
    ANALYSIS_DEFINITION_NAME=my-project-ad

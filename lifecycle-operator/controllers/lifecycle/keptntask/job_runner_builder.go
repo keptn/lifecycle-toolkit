@@ -12,7 +12,7 @@ import (
 
 // JobRunnerBuilder is the interface that describes the operations needed to help build job specs of a task
 type JobRunnerBuilder interface {
-	// CreateContainerWithVolumes returns a job container and volumes based on the task definition spec
+	// CreateContainer returns a job container based on the task definition spec
 	CreateContainer(ctx context.Context) (*corev1.Container, error)
 	CreateVolume(ctx context.Context) (*corev1.Volume, error)
 }

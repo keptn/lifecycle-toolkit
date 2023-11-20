@@ -15,11 +15,12 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		name          string
 		builder       ContainerBuilder
 		wantContainer *v1.Container
+		wantError     bool
 	}{
 		{
-			name: "defined",
+			name: "defined, no task spec",
 			builder: ContainerBuilder{
-				spec: &v1alpha3.ContainerSpec{
+				containerSpec: v1alpha3.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 					},
@@ -27,22 +28,88 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 			},
 			wantContainer: &v1.Container{
 				Image: "image",
+				Env: []v1.EnvVar{
+					{
+						Name:  KeptnContextEnvVarName,
+						Value: `{"workloadName":"","appName":"","appVersion":"","workloadVersion":"","taskType":"","objectType":""}`,
+					},
+				},
+			},
+		},
+		{
+			name: "defined, adding context",
+			builder: ContainerBuilder{
+				containerSpec: v1alpha3.ContainerSpec{
+					Container: &v1.Container{
+						Image: "image",
+					},
+				},
+				taskSpec: v1alpha3.KeptnTaskSpec{
+					Context: v1alpha3.TaskContext{
+						WorkloadName: "my-workload",
+					},
+				},
+			},
+			wantContainer: &v1.Container{
+				Image: "image",
+				Env: []v1.EnvVar{
+					{
+						Name:  KeptnContextEnvVarName,
+						Value: `{"workloadName":"my-workload","appName":"","appVersion":"","workloadVersion":"","taskType":"","objectType":""}`,
+					},
+				},
+			},
+		},
+		{
+			name: "defined, replacing context",
+			builder: ContainerBuilder{
+				containerSpec: v1alpha3.ContainerSpec{
+					Container: &v1.Container{
+						Image: "image",
+						Env: []v1.EnvVar{
+							{
+								Name:  KeptnContextEnvVarName,
+								Value: `foo`,
+							},
+						},
+					},
+				},
+				taskSpec: v1alpha3.KeptnTaskSpec{
+					Context: v1alpha3.TaskContext{
+						WorkloadName: "my-workload",
+					},
+				},
+			},
+			wantContainer: &v1.Container{
+				Image: "image",
+				Env: []v1.EnvVar{
+					{
+						Name:  KeptnContextEnvVarName,
+						Value: `{"workloadName":"my-workload","appName":"","appVersion":"","workloadVersion":"","taskType":"","objectType":""}`,
+					},
+				},
 			},
 		},
 		{
 			name: "nil",
 			builder: ContainerBuilder{
-				spec: &v1alpha3.ContainerSpec{
+				containerSpec: v1alpha3.ContainerSpec{
 					Container: nil,
 				},
 			},
 			wantContainer: nil,
+			wantError:     true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			container, _ := tt.builder.CreateContainer(context.TODO())
+			container, err := tt.builder.CreateContainer(context.TODO())
 			require.Equal(t, tt.wantContainer, container)
+			if tt.wantError {
+				require.NotNil(t, err)
+			} else {
+				require.Nil(t, err)
+			}
 		})
 	}
 }
@@ -56,7 +123,7 @@ func TestContainerBuilder_CreateVolume(t *testing.T) {
 		{
 			name: "defined without volume",
 			builder: ContainerBuilder{
-				spec: &v1alpha3.ContainerSpec{
+				containerSpec: v1alpha3.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 					},
@@ -67,7 +134,7 @@ func TestContainerBuilder_CreateVolume(t *testing.T) {
 		{
 			name: "defined with volume",
 			builder: ContainerBuilder{
-				spec: &v1alpha3.ContainerSpec{
+				containerSpec: v1alpha3.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 						VolumeMounts: []v1.VolumeMount{
@@ -92,7 +159,7 @@ func TestContainerBuilder_CreateVolume(t *testing.T) {
 		{
 			name: "defined with volume and limits",
 			builder: ContainerBuilder{
-				spec: &v1alpha3.ContainerSpec{
+				containerSpec: v1alpha3.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 						Resources: v1.ResourceRequirements{
@@ -165,7 +232,7 @@ func Test_GenerateVolumes(t *testing.T) {
 	}
 	for _, tt := range tests {
 		builder := ContainerBuilder{
-			spec: tt.spec,
+			containerSpec: *tt.spec,
 		}
 		t.Run(tt.name, func(t *testing.T) {
 			require.Equal(t, tt.want, builder.generateVolume())
@@ -214,7 +281,7 @@ func Test_GetVolumeSource(t *testing.T) {
 	}
 	for _, tt := range tests {
 		builder := ContainerBuilder{
-			spec: tt.spec,
+			containerSpec: *tt.spec,
 		}
 		t.Run(tt.name, func(t *testing.T) {
 			require.Equal(t, tt.want, builder.getVolumeSource())

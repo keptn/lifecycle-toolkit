@@ -160,7 +160,7 @@ file for our example looks like:
 
 ```yaml
 apiVersion: metrics.keptn.sh/v1alpha2
-kind: Keptnmetric
+kind: KeptnMetric
 metadata:
   name: available-cpus
   namespace: simplenode-dev

@@ -17,8 +17,6 @@ limitations under the License.
 package v1alpha2
 
 import (
-	"strings"
-
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -54,14 +52,4 @@ type KeptnMetricsProviderList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnMetricsProvider{}, &KeptnMetricsProviderList{})
-}
-
-func (p *KeptnMetricsProvider) HasSecretDefined() bool {
-	if p.Spec.SecretKeyRef == (corev1.SecretKeySelector{}) {
-		return false
-	}
-	if strings.TrimSpace(p.Spec.SecretKeyRef.Name) == "" || strings.TrimSpace(p.Spec.SecretKeyRef.Key) == "" {
-		return false
-	}
-	return true
 }

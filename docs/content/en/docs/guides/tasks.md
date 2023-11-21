@@ -166,11 +166,11 @@ For an example of how to do this, see the
 [keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)
 file.
 
-A context environment variable is available via `Deno.env.get("CONTEXT")`.
+A context environment variable is available via `Deno.env.get("KEPTN_CONTEXT")`.
 It can be used like this:
   
 ```javascript
-let context = Deno.env.get("CONTEXT");
+let context = Deno.env.get("KEPTN_CONTEXT");
     
 if (context.objectType == "Application") {
     let application_name = contextdata.appName;

@@ -23,7 +23,7 @@ When Keptn is successfully monitoring your deployments, it can also run arbitrar
 - post-deployment (after the post is scheduled)
 
 > Pre and post deployments can also run on a KeptnApp level.
-> See [annotations to KeptnApp](../implementing/integrate.md#annotations-to-keptnapp)
+> See [annotations to KeptnApp](../guides/integrate.md#annotations-to-keptnapp)
 
 ## Prerequisites: Deploy webhook sink
 
@@ -140,7 +140,7 @@ The webhook sync should show this:
 
 ![webhook sync](../assets/webhook.site.3.png)
 
-Incidentally, this is exactly how you can use Keptn with [applications deployed outside of Kubernetes](../implementing/tasks-non-k8s-apps.md).
+Incidentally, this is exactly how you can use Keptn with [applications deployed outside of Kubernetes](../use-cases/non-k8s.md).
 
 > Note: If you want to trigger this multiple times, you must change the KeptnTask name.
 >
@@ -219,7 +219,7 @@ Do this by using the `keptn.sh/pre-deployment-tasks` label.
 ## Further Information
 
 There is a lot more you can do with KeptnTasks.
-See [pre and post deployment checks page](../implementing/integrate.md#pre--and-post-deployment-checks) to find out more.
+See [pre and post deployment checks page](../guides/integrate.md#pre--and-post-deployment-checks) to find out more.
 
 ## What's next?
 

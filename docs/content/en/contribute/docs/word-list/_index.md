@@ -68,7 +68,7 @@ It is important to use the related terminology correctly:
   Most of the time, we recommend just using the term "resource".
 
 * The first occurence of a CRD name in a section should be a link to the
-  [CRD YAML Reference](../../../docs/yaml-crd-ref)
+  CRD YAML Reference under the right [component](../../../docs/components)
   page if there is one.
   Otherwise, it should be a link to the appropriate spot in the
   [API Reference](../../../docs/crd-ref)

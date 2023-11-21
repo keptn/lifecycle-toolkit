@@ -55,7 +55,7 @@ spec:
     or in the Keptn installation namespace.
   * **context** (required) -- Contextual information about the task execution
     * **appName** (required) -- Name of the
-      [KeptnApp](./app.md) resource
+      [KeptnApp](app.md) resource
       for which the `KeptnTask` is being executed.
     * **appVersion** (required) -- Version of the `KeptnApp` resource
       for which the `KeptnTask` is being executed.
@@ -85,7 +85,7 @@ spec:
   * **secureParameters** -- Secure parameters that are passed
     to the job that executes the `KeptnTask`.
     These are stored and accessed as Kubernetes `Secrets` in the cluster.
-    See [Working with secrets](../../../guides/tasks.md#working-with-secrets)
+    See [Working with secrets](../../guides/tasks.md#working-with-secrets)
     for more information.
   * **checkType** -- Defines whether task is part of pre- or post-deployment phase.
     Keptn populates this field based on annotations
@@ -117,7 +117,7 @@ so `helloworldtask-1` becomes `helloworldtask-2`, etc.
 
 For a full example of how to create a `KeptnTask` resource
 to use for a deployment being done outside of Kubernetes, see
-[Keptn for Non-Kubernetes Applications](../../../use-cases/non-k8s.md).
+[Keptn for Non-Kubernetes Applications](../../use-cases/non-k8s.md).
 
 ## Files
 
@@ -131,4 +131,4 @@ in Keptn v0.8.0.
 ## See also
 
 * [KeptnTaskDefinition](taskdefinition.md)
-* [Keptn for Non-Kubernetes Applications](../../../use-cases/non-k8s.md)
+* [Keptn for Non-Kubernetes Applications](../../use-cases/non-k8s.md)

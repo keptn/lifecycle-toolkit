@@ -321,7 +321,7 @@ This `Analysis` resource:
   will be substituted for this string.
 
 For a full example of how to implement the Keptn Analysis feature, see the
-[Analysis](../../../guides/slo.md)
+[Analysis](../../guides/slo.md)
 guide page.
 
 ## Files

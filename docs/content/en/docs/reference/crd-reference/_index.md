@@ -1,10 +1,9 @@
 ---
 title: CRD Reference
-description: CRD Reference for Keptn Lifecycle Operator
-weight: 10
+description: Reference pages for the manifest files that must be populated
+weight: 100
+hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
-
-## CRD Reference
 
 This section provides comprehensive reference information about the
 manifest files that must be populated for Keptn
@@ -14,7 +13,7 @@ Each CRD is an object of an API library.
 In addition to the CRDs documented in this section,
 Keptn populates many resources on its own.
 For a comprehensive list of all Keptn resources, see
-[API Reference](../crd-ref).
+[API Reference](../../crd-ref).
 
 For more information about CRDs and APIs, see the Kubernetes documentation:
 

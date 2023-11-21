@@ -69,7 +69,7 @@ when the app discovery feature generates the `KeptnApp` resource:
     that failed to deploy, perhaps because a
     `preDeploymentEvaluation` or `preDeploymentTask` failed.
     See
-    [Restart an Application Deployment](../../../guides/restart-application-deployment.md)
+    [Restart an Application Deployment](../../guides/restart-application-deployment.md)
     for a longer discussion of this.
   - **workloads**
     - **name** (required) -- name of this Kubernetes
@@ -121,10 +121,10 @@ into the repository of the deployment engine
 and is then deployed by that deployment engine.
 
 A `KeptnApp` resource is created automatically, using the
-[automatic application discovery](../../../guides/auto-app-discovery.md)
+[automatic application discovery](../../guides/auto-app-discovery.md)
 feature to generate a `KeptnApp` resource
 based on the
-[basic annotations](../../../guides/integrate.md#basic-annotations)
+[basic annotations](../../guides/integrate.md#basic-annotations)
 that are applied to any of the workload resources.
 This allows you to use the Keptn observability features for existing resources
 without manually populating any Keptn related resources.
@@ -170,9 +170,9 @@ spec:
 
 - [KeptnTaskDefinition](taskdefinition.md)
 - [KeptnEvaluationDefinition](evaluationdefinition.md)
-- [Working with tasks](../../../guides/tasks.md)
-- [Architecture of KeptnWorkloads and KeptnTasks](../keptn-apps.md)
-- [Pre- and post-deployment tasks](../../../guides/integrate.md#pre--and-post-deployment-checks)
-- [Orchestrate deployment checks](../../../core-concepts/usecase-orchestrate.md)
-- [Use Keptn automatic app discovery](../../../guides/auto-app-discovery.md)
-- [Restart an Application Deployment](../../../guides/restart-application-deployment.md)
+- [Working with tasks](../../guides/tasks.md)
+- [Architecture of KeptnWorkloads and KeptnTasks](../../components/lifecycle-operator/keptn-apps.md)
+- [Pre- and post-deployment tasks](../../guides/integrate.md#pre--and-post-deployment-checks)
+- [Orchestrate deployment checks](../../core-concepts/usecase-orchestrate.md)
+- [Use Keptn automatic app discovery](../../guides/auto-app-discovery.md)
+- [Restart an Application Deployment](../../guides/restart-application-deployment.md)

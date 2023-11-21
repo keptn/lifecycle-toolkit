@@ -75,7 +75,7 @@ and application health checks
 | `podAnnotations`          | adds pod level annotations                                                                                                                      | `{}`                                                                             |
 | `schedulingGatesEnabled`  | enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version | `false`                                                                          |
 | `allowedNamespaces`       | specifies the allowed namespaces for the lifecycle orchestration functionality                                                                  | `[]`                                                                             |
-| `deniedNamespaces`        | specifies a list of namespaces where the lifecycle orchestration functionality is disabled, ignored if `allowedNamespaces`` is set              | `["cert-manager","keptn-lifecycle-toolkit-system","observability","monitoring"]` |
+| `deniedNamespaces`        | specifies a list of namespaces where the lifecycle orchestration functionality is disabled, ignored if `allowedNamespaces` is set               | `["cert-manager","keptn-lifecycle-toolkit-system","observability","monitoring"]` |
 
 ### Keptn Scheduler
 

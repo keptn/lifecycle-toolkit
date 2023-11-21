@@ -174,7 +174,7 @@ podAnnotations: {}
 schedulingGatesEnabled: false
 ## @param  allowedNamespaces specifies the allowed namespaces for the lifecycle orchestration functionality
 allowedNamespaces: []
-## @param  deniedNamespaces specifies a list of namespaces where the lifecycle orchestration functionality is disabled, ignored if `allowedNamespaces`` is set
+## @param  deniedNamespaces specifies a list of namespaces where the lifecycle orchestration functionality is disabled, ignored if `allowedNamespaces` is set
 deniedNamespaces:
   - cert-manager
   - keptn-lifecycle-toolkit-system

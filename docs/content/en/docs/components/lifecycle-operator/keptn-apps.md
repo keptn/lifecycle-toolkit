@@ -8,7 +8,7 @@ weight: 110
 ## Keptn Workloads
 
 A
-[KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/#keptnworkload)
+[KeptnWorkload](../../crd-ref/lifecycle/v1alpha3/_index.md#keptnworkload)
 resource augments a Kubernetes
 [Workload](https://kubernetes.io/docs/concepts/workloads/)
 with the ability to handle extra phases.
@@ -31,7 +31,7 @@ as soon as the workload manifest is applied.
 
 ## Keptn Applications
 
-A [KeptnApp](./crd-ref/app.md)
+A [KeptnApp](../../reference/crd-reference/app.md)
 resource combines multiple Kubernetes
 [workloads](https://kubernetes.io/docs/concepts/workloads/)
 into a single entity
@@ -86,7 +86,7 @@ The timeout is provided because it may take some time
 to apply all `KeptnWorkload` resources to the cluster.
 This interval can be modified for the cluster by changing the value
 of the `keptnAppCreationRequestTimeoutSeconds` field in the
-[KeptnConfig](./crd-ref/config.md)
+[KeptnConfig](../../reference/crd-reference/config.md)
 resource.
 
 ## How basic annotations are implemented
@@ -108,7 +108,7 @@ In other words:
   again first in the annotations, then in the labels.
 
 Keptn automatically generates appropriate
-[KeptnApp](./crd-ref/app.md)
+[KeptnApp](../../reference/crd-reference/app.md)
 resources that are used for observability,
 based on whether the `keptn.sh/app` or `app.kubernetes.io/part-of`
 annotation/label is populated:

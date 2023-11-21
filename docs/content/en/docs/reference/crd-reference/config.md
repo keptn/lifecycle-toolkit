@@ -69,12 +69,12 @@ spec:
 
 API Reference:
 
-* [KeptnTaskDefinition](../../../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
+* [KeptnTaskDefinition](../../crd-ref/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
 
 ## Differences between versions
 
 ## See also
 
 * [KeptnApp](./app.md)
-* [OpenTelemetry observability](../../../guides/otel.md)
-* [Keptn automatic app discovery](../../../guides/auto-app-discovery.md)
+* [OpenTelemetry observability](../../guides/otel.md)
+* [Keptn automatic app discovery](../../guides/auto-app-discovery.md)

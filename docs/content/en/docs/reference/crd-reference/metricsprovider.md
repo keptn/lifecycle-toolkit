@@ -43,7 +43,7 @@ spec:
 * **metadata**
   * **name** -- Unique name of this provider,
     used to reference the provider for the
-    [KeptnEvaluationDefinition](../../lifecycle-operator/crd-ref/evaluationdefinition.md)
+    [KeptnEvaluationDefinition](evaluationdefinition.md)
     and [KeptnMetric](metric.md) resources.
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
@@ -75,7 +75,7 @@ in the same namespace as the
 resources that are associated with it.
 `KeptnMetric` resources are used to generate metrics for the cluster
 and are used as the SLI (Service Level Indicator) for
-[KeptnEvaluationDefinition](../../lifecycle-operator/crd-ref/evaluationdefinition.md)
+[KeptnEvaluationDefinition](evaluationdefinition.md)
 resources that are used for pre- and post-deployment evaluations.
 
 `KeptnEvaluationDefinition` resources can reference metrics
@@ -107,7 +107,7 @@ spec:
 
 API Reference:
 
-* [KeptnEvaluationDefinition](../../../crd-ref/lifecycle/)
+* [KeptnEvaluationDefinition](../../crd-ref/lifecycle/)
 
 ## Differences between versions
 
@@ -145,5 +145,5 @@ for the `KeptnEvaluationDefinition` resource.
 
 ## See also
 
-* [KeptnEvaluationDefinition](../../lifecycle-operator/crd-ref/evaluationdefinition.md)
+* [KeptnEvaluationDefinition](evaluationdefinition.md)
 * [KeptnMetric](metric.md)

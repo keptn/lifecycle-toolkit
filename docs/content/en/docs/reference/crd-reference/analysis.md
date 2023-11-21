@@ -326,7 +326,7 @@ guide page.
 
 ## Files
 
-API reference: [Analysis](../../../crd-ref/metrics/v1beta1/#analysis)
+API reference: [Analysis](../../crd-ref/metrics/v1beta1/_index.md#analysis)
 
 ## Differences between versions
 
@@ -347,11 +347,11 @@ To preview these features, do one of the following for your Keptn cluster:
   file
 
 See
-[Customizing the configuration of components](../../../installation/_index.md#customizing-the-configuration-of-components)
+[Customizing the configuration of components](../../installation/_index.md#customizing-the-configuration-of-components)
 for more information.
 
 ## See also
 
 * [AnalysisDefinition](analysisdefinition.md)
 * [AnalysisValueTemplate](analysisvaluetemplate.md)
-* [Analysis](../../../guides/slo.md) guide
+* [Analysis](../../guides/slo.md) guide

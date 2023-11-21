@@ -150,13 +150,13 @@ spec:
 ```
 
 For an example of how to implement the Keptn Analysis feature, see the
-[Analysis](../../../guides/slo.md)
+[Analysis](../../guides/slo.md)
 guide page.
 
 ## Files
 
 API reference:
-[AnalysisDefinition](../../../crd-ref/metrics/v1beta1/_index.md#analysisdefinition)
+[AnalysisDefinition](../../crd-ref/metrics/v1beta1/_index.md#analysisdefinition)
 
 ## Differences between versions
 
@@ -170,4 +170,4 @@ reference page for instructions to activate the preview of this feature.
 
 * [Analysis](analysis.md)
 * [AnalysisValueTemplate](analysisvaluetemplate.md)
-* [Analysis](../../../guides/slo.md) guide
+* [Analysis](../../guides/slo.md) guide

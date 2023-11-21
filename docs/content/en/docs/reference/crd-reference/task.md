@@ -121,7 +121,7 @@ to use for a deployment being done outside of Kubernetes, see
 
 ## Files
 
-[API reference](../../../crd-ref/lifecycle/v1alpha3/#keptntaskspec)
+[API reference](../../crd-ref/lifecycle/v1alpha3/#keptntaskspec)
 
 ## Differences between versions
 

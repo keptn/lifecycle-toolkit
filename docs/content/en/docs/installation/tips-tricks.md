@@ -127,7 +127,7 @@ Disable it using the following values.yaml:
 > **Note** A preliminary release of the Keptn Analysis feature
   is included in Keptn v0.8.3 and v0.9.0 but is hidden behind a feature flag.
   See the
-  [Analysis](../components/metrics-operator/crd-ref/analysis.md/#differences-between-versions)
+  [Analysis](../reference/crd-reference/analysis.md/#differences-between-versions)
   reference page for how to activate the preview of this feature.
 >
 

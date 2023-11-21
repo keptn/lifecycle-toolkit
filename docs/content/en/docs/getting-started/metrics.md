@@ -82,7 +82,7 @@ as well as the Kubernetes CLI.
 ### Define metrics providers
 
 Populate a
-[KeptnMetricsProvider](../components/metrics-operator/crd-ref/metricsprovider.md)
+[KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
 resource for each external observability platform you want to use.
 
 For our example, we define two observability platforms:
@@ -139,7 +139,7 @@ spec:
 
 ### Define KeptnMetric information
 
-The [KeptnMetric](../components/metrics-operator/crd-ref/metric.md) resource
+The [KeptnMetric](../reference/crd-reference/metric.md) resource
 defines the information you want to gather,
 specified as a query for the particular observability platform
 you are using.

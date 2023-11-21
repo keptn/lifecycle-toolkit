@@ -100,7 +100,7 @@ To integrate OpenTelemetry into Keptn:
   for the `Deployment` resource(s)
   to integrate Keptn into your Kubernetes cluster.
 - To expose OpenTelemetry metrics,
-  define a [KeptnConfig](../components/lifecycle-operator/crd-ref/config.md) resource
+  define a [KeptnConfig](../reference/crd-reference/config.md) resource
   that has the `spec.OTelCollectorUrl` field populated
   with the URL of the OpenTelemetry collector.
 

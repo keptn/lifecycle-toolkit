@@ -17,27 +17,27 @@ Some considerations for Keptn:
 * Keptn primarily operates on Kubernetes
   [Workload](https://kubernetes.io/docs/concepts/workloads/)
   resources and
-  [KeptnApp](../../components/lifecycle-operator/crd-ref/app.md)
-  [KeptnApp](../../components/lifecycle-operator/crd-ref/app.md)
+  [KeptnApp](../../reference/crd-reference/app.md)
+  [KeptnApp](../../reference/crd-reference/app.md)
   resources
   that are activated and defined by annotations to each workload.
-* [KeptnMetricsProvider](../../components/metrics-operator/crd-ref/metricsprovider.md)
+* [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)
   resources need to be located
   in the same namespace as the associated
-  [KeptnMetric](../../components/metrics-operator/crd-ref/metric.md)
+  [KeptnMetric](../../reference/crd-reference/metric.md)
   resources.
   But
-  [KeptnEvaluationDefinition](../../components/lifecycle-operator/crd-ref/evaluationdefinition.md)
+  [KeptnEvaluationDefinition](../../reference/crd-reference/evaluationdefinition.md)
   resources that are used for pre- and post-deployment
   can reference metrics from any namespace.
   So you can create `KeptnMetrics` in a centralized namespace
   (such as `keptn-lifecycle-toolkit`)
   and access those metrics in evaluations on all namespaces in the cluster.
 * Analysis related resources
-  ([Analysis](../../components/metrics-operator/crd-ref/analysis.md),
-  [AnalysisDefinition](../../components/metrics-operator/crd-ref/analysisdefinition.md),
+  ([Analysis](../../reference/crd-reference/analysis.md),
+  [AnalysisDefinition](../../reference/crd-reference/analysisdefinition.md),
   and
-  [AnalysisValueTemplate](../../components/metrics-operator/crd-ref/analysisvaluetemplate.md))
+  [AnalysisValueTemplate](../../reference/crd-reference/analysisvaluetemplate.md))
   reference each other via a `name` and, optionally, a `namespace` field.
   The `Analysis` resource references the `AnalysisDefinition` resource,
   which then references the `AnalysisValueTemplate` resources.

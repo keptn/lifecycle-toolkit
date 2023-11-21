@@ -43,14 +43,14 @@ and can be displayed on dashboard tools, such as Grafana.
 > **Note** A preliminary release of the Keptn Analysis feature
   is included in Keptn v0.8.3 and v0.9.0 but is hidden behind a feature flag.
   See the
-  [Analysis](../components/metrics-operator/crd-ref/analysis.md/#differences-between-versions)
+  [Analysis](../reference/crd-reference/analysis.md/#differences-between-versions)
   reference page for instructions to activate the preview of this feature.
 
 ## Keptn Analysis basics
 
 A Keptn Analysis is implemented with three resources:
 
-* [AnalysisValueTemplate](../components/metrics-operator/crd-ref/analysisvaluetemplate.md)
+* [AnalysisValueTemplate](../reference/crd-reference/analysisvaluetemplate.md)
   defines the SLI with the `KeptnMetricsProvider` (data source)
   and the query to perform for each SLI
 
@@ -59,11 +59,11 @@ A Keptn Analysis is implemented with three resources:
   One `Analysis` can use data from multiple instances
   of multiple types of data provider;
   you must define a
-  [KeptnMetricsProvider](../components/metrics-operator/crd-ref/metricsprovider.md)
+  [KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
   resource for each instance of each data provider you are using.
   The template refers to that provider and queries it.
 
-* [AnalysisDefinition](../components/metrics-operator/crd-ref/analysisdefinition.md)
+* [AnalysisDefinition](../reference/crd-reference/analysisdefinition.md)
   define the list of SLOs for an `Analysis`
 
   An `AnalysisDefinition` resource contains a list of objectives to satisfy.
@@ -77,7 +77,7 @@ A Keptn Analysis is implemented with three resources:
     defining the data provider from which to gather the data
     and how to compute the Analysis
 
-* [Analysis](../components/metrics-operator/crd-ref/analysis.md)
+* [Analysis](../reference/crd-reference/analysis.md)
   define the specific configurations and the Analysis to report.
 
   An `Analysis` resource customizes the templates

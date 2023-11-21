@@ -82,7 +82,7 @@ you need to do the following:
    to integrate Keptn into your Kubernetes cluster
    by applying basic annotations to your `Deployment` resource.
    This also creates appropriate
-   [KeptnApp](../components/lifecycle-operator/crd-ref/app.md) resources
+   [KeptnApp](../reference/crd-reference/app.md) resources
    which aggregate [workloads](https://kubernetes.io/docs/concepts/workloads/) that are combined into the released product,
    regardless of the tools being used.
 
@@ -90,7 +90,7 @@ you need to do the following:
 
 An `evaluation` is a KeptnMetric that has a defined target value.
 Evaluations are resources that are defined in a
-[KeptnEvaluationDefinition](../components/lifecycle-operator/crd-ref/evaluationdefinition.md)
+[KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)
 yaml file.
 In our example, evaluations are defined in the
 [keptn-evaluations.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-evaluations.yaml)
@@ -122,7 +122,7 @@ You could include objectives and additional metrics in this evaluation.
 ## Define tasks to be performed pre- and post-deployment
 
 Tasks are resources that are defined in a
-[KeptnTaskDefinition](../components/lifecycle-operator/crd-ref/taskdefinition.md)
+[KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 file.
 In our example, the tasks are defined in the
 [keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)

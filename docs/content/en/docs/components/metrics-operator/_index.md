@@ -54,18 +54,18 @@ which can be used to gain insight into the behavior and performance
 of applications running on a Kubernetes cluster.
 
 The **Metrics controller** fetches metrics from an SLI provider.
-The controller reconciles a [`KeptnMetric`](../../components/metrics-operator/crd-ref/metric.md)
+The controller reconciles a [`KeptnMetric`](../../reference/crd-reference/metric.md)
 resource and updates its status with the metric value
 provided by the selected metric provider.
 Each `KeptnMetric` is identified by `name`
 and is associated with an instance of an observability platform
 that is defined in a
-[KeptnMetricsProvider](../../components/metrics-operator/crd-ref/metricsprovider.md)
+[KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)
 resource.
 
 The steps in which the controller fetches metrics are given below:
 
-1. When a [`KeptnMetric`](../../components/metrics-operator/crd-ref/metric.md)
+1. When a [`KeptnMetric`](../../reference/crd-reference/metric.md)
    resource is found or modified,
    the controller checks whether the metric has been updated
    within the interval that is defined in the `spec.fetchintervalseconds` field.

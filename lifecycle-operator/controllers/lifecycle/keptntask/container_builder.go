@@ -44,7 +44,7 @@ func (c *ContainerBuilder) CreateContainer(ctx context.Context) (*corev1.Contain
 
 	foundKeptnContextVar := false
 	for i, envVar := range result.Env {
-		if envVar.Name == KeptnContextEnvVarName {
+		if envVar.Name == KeptnContextEnvVar {
 			foundKeptnContextVar = true
 			result.Env[i].Value = string(jsonContext)
 		}
@@ -52,7 +52,7 @@ func (c *ContainerBuilder) CreateContainer(ctx context.Context) (*corev1.Contain
 
 	if !foundKeptnContextVar {
 		result.Env = append(result.Env, corev1.EnvVar{
-			Name:  KeptnContextEnvVarName,
+			Name:  KeptnContextEnvVar,
 			Value: string(jsonContext),
 		})
 	}

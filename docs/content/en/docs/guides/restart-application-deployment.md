@@ -1,7 +1,7 @@
 ---
 title: Redeploy/Restart an Application
 description: Learn how to restart an unsuccessful Keptn Application Deployment.
-weight: 60
+weight: 600
 ---
 
 A [KeptnApp](../components/lifecycle-operator/crd-ref/app.md) can fail

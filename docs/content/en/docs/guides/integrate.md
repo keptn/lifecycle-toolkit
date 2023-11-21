@@ -1,7 +1,7 @@
 ---
 title: Integrate Keptn with your Applications
 description: How to integrate Keptn into your Kubernetes cluster
-weight: 20
+weight: 200
 ---
 
 Keptn works

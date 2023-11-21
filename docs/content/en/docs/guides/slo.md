@@ -1,7 +1,7 @@
 ---
 title: Analysis
 description: How to implement Keptn Analyses
-weight: 40
+weight: 400
 ---
 
 The Keptn Metrics Operator Analysis feature

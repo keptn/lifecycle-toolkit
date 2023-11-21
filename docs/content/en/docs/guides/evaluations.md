@@ -1,7 +1,7 @@
 ---
 title: Evaluations
 description: Understand Keptn evaluations and how to use them
-weight: 70
+weight: 700
 ---
 
 A

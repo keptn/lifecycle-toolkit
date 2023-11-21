@@ -1,7 +1,7 @@
 ---
 title: Deployment tasks
 description: Learn how to work with Keptn tasks
-weight: 50
+weight: 500
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 

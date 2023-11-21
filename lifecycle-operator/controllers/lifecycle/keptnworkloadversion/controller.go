@@ -19,6 +19,7 @@ package keptnworkloadversion
 import (
 	"context"
 	"fmt"
+	context2 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -105,6 +106,8 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 
 	appTraceContextCarrier := propagation.MapCarrier(workloadVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
+
+	ctxAppTrace = context2.ContextWithAppMetadata(ctxAppTrace, workloadVersion.Status.ContextMetadata)
 
 	// this will be the parent span for all phases of the WorkloadVersion
 	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), workloadVersion, "")
@@ -324,6 +327,12 @@ func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx conte
 		return true, controllererrors.ErrNoMatchingAppVersionFound
 	}
 
+	workloadVersion.Status.ContextMetadata = appVersion.Spec.Metadata
+
+	if err := r.Status().Update(ctx, workloadVersion); err != nil {
+		return true, err
+	}
+
 	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
 	if !appPreEvalStatus.IsSucceeded() {
 		r.sendUnfinishedPreEvaluationEvents(appPreEvalStatus, phase, workloadVersion)
@@ -342,6 +351,7 @@ func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx conte
 			return true, err
 		}
 	}
+
 	return false, nil
 }
 

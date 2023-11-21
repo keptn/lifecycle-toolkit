@@ -79,7 +79,8 @@ type KeptnWorkloadVersionStatus struct {
 	PhaseTraceIDs common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
 	// Status represents the overall status of the KeptnWorkloadVersion.
 	// +kubebuilder:default:=Pending
-	Status common.KeptnState `json:"status,omitempty"`
+	Status          common.KeptnState `json:"status,omitempty"`
+	ContextMetadata map[string]string `json:"contextMetadata,omitempty"`
 }
 
 // +kubebuilder:object:root=true

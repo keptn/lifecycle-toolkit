@@ -2,6 +2,8 @@ package telemetry
 
 import (
 	"context"
+	context2 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
+	"go.opentelemetry.io/otel/attribute"
 	"sync"
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
@@ -51,6 +53,16 @@ func (r *Handler) GetSpan(ctx context.Context, tracer ITracer, reconcileObject c
 	)
 
 	piWrapper.SetSpanAttributes(span)
+
+	// also get attributes from context
+	if meta, ok := context2.GetAppMetadataFromContext(ctx); ok {
+		for key, value := range meta {
+			span.SetAttributes(attribute.KeyValue{
+				Key:   attribute.Key(key),
+				Value: attribute.StringValue(value),
+			})
+		}
+	}
 
 	if phase != "" {
 		traceContextCarrier := propagation.MapCarrier{}

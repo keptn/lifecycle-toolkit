@@ -152,6 +152,7 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *lifecycl
 	}
 
 	appVersion.Spec.LinkedTraces = appContext.Spec.LinkedTraces
+	appVersion.Spec.Metadata = appContext.Spec.Metadata
 
 	err := controllerutil.SetControllerReference(app, &appVersion, r.Scheme)
 	if err != nil {

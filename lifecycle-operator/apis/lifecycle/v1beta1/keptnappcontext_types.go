@@ -54,6 +54,8 @@ type KeptnAppContextSpec struct {
 	TraceParent string `json:"traceParent"`
 	// +optional
 	LinkedTraces []string `json:"linkedTraces"`
+	// +optional
+	Metadata map[string]string `json:"metadata"`
 }
 
 // KeptnAppContextStatus defines the observed state of KeptnAppContext

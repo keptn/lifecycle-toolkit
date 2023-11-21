@@ -86,6 +86,8 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 
 	// check if we already have an app that has not been created by this controller
 
+	// TODO: going forward, all apps are going to be created by Keptn.
+	// What we have to look (and wait) for, is going to be the KeptnAppContext
 	appFound := false
 	keptnApp := &lifecycle.KeptnApp{}
 	name := req.NamespacedName

@@ -3,6 +3,7 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+	"github.com/go-logr/logr"
 	"reflect"
 	"strings"
 	"testing"
@@ -328,6 +329,46 @@ func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 			require.NotNil(t, ctx)
 			require.NotNil(t, endFunc)
 
+		})
+	}
+}
+
+func TestKeptnAppVersionReconciler_getLinkedTraces(t *testing.T) {
+	type fields struct {
+		Log logr.Logger
+	}
+	type args struct {
+		version *lifecycle.KeptnAppVersion
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   []trace.Link
+	}{
+		{
+			name: "get linked trace",
+			fields: fields{
+				Log: ctrl.Log.WithName("test-appVersionController"),
+			},
+			args: args{
+				version: &lifecycle.KeptnAppVersion{
+					Spec: lifecycle.KeptnAppVersionSpec{
+						LinkedTraces: []string{"00-c088f5c586bab8649159ccc39a9862f7-f8622898331ffba3-01"},
+					},
+				},
+			},
+			want: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := &KeptnAppVersionReconciler{
+				Log: tt.fields.Log,
+			}
+			if got := r.getLinkedTraces(tt.args.version); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("getLinkedTraces() = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

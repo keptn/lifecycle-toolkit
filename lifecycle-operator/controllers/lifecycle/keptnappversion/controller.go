@@ -19,6 +19,7 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+	context2 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"strings"
 	"time"
 
@@ -232,6 +233,7 @@ func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appV
 
 	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
+	ctxAppTrace = context2.ContextWithAppMetadata(ctxAppTrace, appVersion.Spec.Metadata)
 
 	endFunc := func() {
 		if appVersion.IsEndTimeSet() {

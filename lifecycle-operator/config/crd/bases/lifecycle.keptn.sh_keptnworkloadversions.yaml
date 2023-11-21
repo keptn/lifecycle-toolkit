@@ -450,6 +450,10 @@ spec:
           status:
             description: Status describes the current state of the KeptnWorkloadVersion.
             properties:
+              contextMetadata:
+                additionalProperties:
+                  type: string
+                type: object
               currentPhase:
                 description: 'CurrentPhase indicates the current phase of the KeptnWorkloadVersion.
                   This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment

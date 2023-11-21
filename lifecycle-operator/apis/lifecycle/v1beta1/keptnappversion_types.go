@@ -68,6 +68,8 @@ type KeptnAppVersionSpec struct {
 	TraceId map[string]string `json:"traceId,omitempty"`
 	// +optional
 	LinkedTraces []string `json:"linkedTraces"`
+	// +optional
+	Metadata map[string]string `json:"metadata"`
 }
 
 // KeptnAppVersionStatus defines the observed state of KeptnAppVersion

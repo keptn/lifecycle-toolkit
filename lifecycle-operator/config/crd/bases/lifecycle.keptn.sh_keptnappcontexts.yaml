@@ -38,6 +38,10 @@ spec:
                 items:
                   type: string
                 type: array
+              metadata:
+                additionalProperties:
+                  type: string
+                type: object
               postDeploymentEvaluations:
                 description: PostDeploymentEvaluations is a list of all evaluations
                   to be performed during the post-deployment phase of the KeptnApp.

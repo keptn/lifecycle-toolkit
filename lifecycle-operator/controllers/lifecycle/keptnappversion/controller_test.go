@@ -265,7 +265,7 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 	// fake span handler
 
 	spanRecorder := &telemetryfake.ISpanHandlerMock{
-		GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+		GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string, links ...trace.Link) (context.Context, trace.Span, error) {
 			return ctx, trace.SpanFromContext(ctx), nil
 		},
 		UnbindSpanFunc: func(reconcileObject client.Object, phase string) error { return nil },

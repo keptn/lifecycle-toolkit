@@ -19,6 +19,7 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -94,7 +95,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	currentPhase := apicommon.PhaseAppPreDeployment
 
-	ctxAppTrace, spanAppTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), appVersion, "")
+	ctxAppTrace, spanAppTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), appVersion, "", r.getLinkedTraces(appVersion)...)
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}
@@ -160,6 +161,39 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	// AppVersion is completed at this place
 	return r.finishKeptnAppVersionReconcile(ctx, appVersion, spanAppTrace)
+}
+
+func (r *KeptnAppVersionReconciler) getLinkedTraces(version *klcv1alpha3.KeptnAppVersion) []trace.Link {
+	result := make([]trace.Link, len(version.Spec.LinkedTraces))
+
+	for i, linkedTrace := range version.Spec.LinkedTraces {
+		r.Log.Info("Adding Link to trace", "linkedTrace", linkedTrace)
+		split := strings.Split(linkedTrace, "-")
+
+		if len(split) != 4 {
+			continue
+		}
+
+		traceID, err := trace.TraceIDFromHex(split[1])
+		if err != nil {
+			r.Log.Info("Could not extract traceID from linked trace", "linkedTrace", linkedTrace, "err", err)
+			continue
+		}
+
+		spanID, err := trace.SpanIDFromHex(split[2])
+		if err != nil {
+			r.Log.Info("Could not extract spanID from linked trace", "linkedTrace", linkedTrace, "err", err)
+			continue
+		}
+
+		result[i] = trace.Link{
+			SpanContext: trace.NewSpanContext(trace.SpanContextConfig{
+				TraceID: traceID,
+				SpanID:  spanID,
+			}),
+		}
+	}
+	return result
 }
 
 func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.Context, appVersion *klcv1alpha3.KeptnAppVersion, spanAppTrace trace.Span) (ctrl.Result, error) {

@@ -66,6 +66,8 @@ type KeptnAppVersionSpec struct {
 	PreviousVersion string `json:"previousVersion,omitempty"`
 	// TraceId contains the OpenTelemetry trace ID.
 	TraceId map[string]string `json:"traceId,omitempty"`
+	// +optional
+	LinkedTraces []string `json:"linkedTraces"`
 }
 
 // KeptnAppVersionStatus defines the observed state of KeptnAppVersion

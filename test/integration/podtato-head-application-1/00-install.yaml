@@ -4,14 +4,12 @@ metadata:
   name: podtato-head
 spec:
   version: "1.3"
-  preDeploymentEvaluations:
-    - available-cpus
+  linkedTraces:
+    - 00-463df3609cbbf800c7d493b4a58c9e99-266b925fdecd0f53-01
   preDeploymentTasks:
     - pre-deployment-hello
   postDeploymentTasks:
     - post-deployment-hello
-  postDeploymentEvaluations:
-    - available-cpus
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -31,8 +29,6 @@ spec:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-entry
         keptn.sh/version: 0.1.0
-        keptn.sh/pre-deployment-evaluations: available-cpus
-        keptn.sh/post-deployment-evaluations: available-cpus
         keptn.sh/pre-deployment-tasks: pre-deployment-hello
         keptn.sh/post-deployment-tasks: post-deployment-hello
     spec:

@@ -54,6 +54,7 @@ type KeptnAppReconciler struct {
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversion,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversion/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversion/finalizers,verbs=update
+// +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappcontexts,verbs=get;list;watch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -145,6 +146,12 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *lifecycl
 	appVersion := app.GenerateAppVersion(previousVersion)
 
 	appVersion.Spec.DeploymentTaskSpec = appContext.Spec.DeploymentTaskSpec
+
+	appVersion.Spec.TraceId = map[string]string{
+		"traceparent": appContext.Spec.TraceParent,
+	}
+
+	appVersion.Spec.LinkedTraces = appContext.Spec.LinkedTraces
 
 	err := controllerutil.SetControllerReference(app, &appVersion, r.Scheme)
 	if err != nil {

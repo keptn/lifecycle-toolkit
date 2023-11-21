@@ -34,6 +34,10 @@ spec:
           spec:
             description: KeptnAppContextSpec defines the desired state of KeptnAppContext
             properties:
+              linkedTraces:
+                items:
+                  type: string
+                type: array
               postDeploymentEvaluations:
                 description: PostDeploymentEvaluations is a list of all evaluations
                   to be performed during the post-deployment phase of the KeptnApp.
@@ -66,6 +70,8 @@ spec:
                 items:
                   type: string
                 type: array
+              traceParent:
+                type: string
             type: object
           status:
             description: KeptnAppContextStatus defines the observed state of KeptnAppContext

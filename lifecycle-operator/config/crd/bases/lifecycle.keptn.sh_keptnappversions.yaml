@@ -849,6 +849,10 @@ spec:
               appName:
                 description: AppName is the name of the KeptnApp.
                 type: string
+              linkedTraces:
+                items:
+                  type: string
+                type: array
               postDeploymentEvaluations:
                 description: PostDeploymentEvaluations is a list of all evaluations
                   to be performed during the post-deployment phase of the KeptnApp.

@@ -30,7 +30,7 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 				Image: "image",
 				Env: []v1.EnvVar{
 					{
-						Name:  KeptnContextEnvVarName,
+						Name:  KeptnContextEnvVar,
 						Value: `{"workloadName":"","appName":"","appVersion":"","workloadVersion":"","taskType":"","objectType":""}`,
 					},
 				},
@@ -54,7 +54,7 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 				Image: "image",
 				Env: []v1.EnvVar{
 					{
-						Name:  KeptnContextEnvVarName,
+						Name:  KeptnContextEnvVar,
 						Value: `{"workloadName":"my-workload","appName":"","appVersion":"","workloadVersion":"","taskType":"","objectType":""}`,
 					},
 				},
@@ -68,7 +68,7 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 						Image: "image",
 						Env: []v1.EnvVar{
 							{
-								Name:  KeptnContextEnvVarName,
+								Name:  KeptnContextEnvVar,
 								Value: `foo`,
 							},
 						},
@@ -84,7 +84,7 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 				Image: "image",
 				Env: []v1.EnvVar{
 					{
-						Name:  KeptnContextEnvVarName,
+						Name:  KeptnContextEnvVar,
 						Value: `{"workloadName":"my-workload","appName":"","appVersion":"","workloadVersion":"","taskType":"","objectType":""}`,
 					},
 				},

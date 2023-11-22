@@ -12,7 +12,8 @@ One of these is the
 [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
 (HPA).
 
-HPA can make use of the [Keptn Metrics](../getting-started/metrics.md) custom API
+HPA can make use of the Keptn Metrics
+[custom API](https://kubernetes.io/docs/reference/external-api/custom-metrics.v1beta2/)
 in order to scale the number of replicas of the Workloads based on the current
 load by using metrics such as CPU throttling, memory consumption or response time.
 
@@ -35,7 +36,7 @@ refer to the [official Prometheus documentation](https://prometheus.io/docs/prom
 
 ### Deploy sample application
 
-In the next step, we need to deploy our application to the cluster.
+As a first step, we need to deploy our application to the cluster.
 For this we are going to
 use a single service `podtato-head` application.
 

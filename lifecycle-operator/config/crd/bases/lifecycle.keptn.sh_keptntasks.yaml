@@ -454,6 +454,10 @@ spec:
                     description: AppVersion the version of the KeptnApp the KeptnTask
                       is being executed for.
                     type: string
+                  metadata:
+                    additionalProperties:
+                      type: string
+                    type: object
                   objectType:
                     description: ObjectType indicates whether the KeptnTask is being
                       executed for a KeptnApp or KeptnWorkload.

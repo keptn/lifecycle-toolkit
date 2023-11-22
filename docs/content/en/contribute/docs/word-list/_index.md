@@ -57,7 +57,7 @@ The Keptn project is a "toolkit" with three use cases, named:
 The Keptn documentation frequently uses Kubernetes terminology.
 Here are some guidelines for using these terms in Keptn documentation.
 
-* Do not duplicate information from the Kubernetes documenation
+* Do not duplicate information from the Kubernetes documentation
   into the Keptn documentation.
   We should not be maintaining documentation
   for software in other projects and products.

@@ -19,5 +19,5 @@ If your Keptn instance is not installed in the
 it with your custom one.
 
 > **Warning**
-Please be aware that uninstallation of Keptn from you cluster
-will cause loss of all your data.
+Please be aware that uninstalling Keptn from you cluster
+will cause loss of all your Keptn data.

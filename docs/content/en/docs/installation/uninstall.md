@@ -1,9 +1,7 @@
 ---
 title: Uninstall
 description: How to uninstall Keptn
-layout: quickstart
 weight: 10
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
 If you installed the previous version of Keptn using `helm`,
@@ -19,5 +17,5 @@ If your Keptn instance is not installed in the
 it with your custom one.
 
 > **Warning**
-Please be aware that uninstalling Keptn from you cluster
+Please be aware that uninstalling Keptn from your cluster
 will cause loss of all your Keptn data.

@@ -107,7 +107,11 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	appTraceContextCarrier := propagation.MapCarrier(workloadVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
 
-	ctxAppTrace = context2.ContextWithAppMetadata(ctxAppTrace, workloadVersion.Status.ContextMetadata)
+	ctxAppTrace = context2.ContextWithAppMetadata(
+		ctxAppTrace,
+		workloadVersion.Status.ContextMetadata,
+		workloadVersion.Spec.Metadata,
+	)
 
 	// this will be the parent span for all phases of the WorkloadVersion
 	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), workloadVersion, "")

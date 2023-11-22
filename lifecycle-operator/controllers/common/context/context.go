@@ -6,8 +6,14 @@ import (
 
 const keptnAppContextKey = "keptnAppContextMeta"
 
-func ContextWithAppMetadata(ctx context.Context, appContextMeta map[string]string) context.Context {
-	return context.WithValue(ctx, keptnAppContextKey, appContextMeta)
+func ContextWithAppMetadata(ctx context.Context, appContextMeta ...map[string]string) context.Context {
+	mergedMap := map[string]string{}
+	for _, meta := range appContextMeta {
+		for key, value := range meta {
+			mergedMap[key] = value
+		}
+	}
+	return context.WithValue(ctx, keptnAppContextKey, mergedMap)
 }
 
 func GetAppMetadataFromContext(ctx context.Context) (map[string]string, bool) {

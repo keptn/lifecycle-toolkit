@@ -3,6 +3,7 @@ package task
 import (
 	"context"
 	"fmt"
+	context2 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -124,7 +125,7 @@ func (r Handler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, r
 }
 
 //nolint:dupl
-func (r Handler) CreateKeptnTask(ctx context.Context, namespace string, reconcileObject client.Object, taskCreateAttributes CreateTaskAttributes) (string, error) {
+func (r Handler) CreateKeptnTask(ctx context.Context, phaseCtx context.Context, namespace string, reconcileObject client.Object, taskCreateAttributes CreateTaskAttributes) (string, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return "", err
@@ -133,6 +134,9 @@ func (r Handler) CreateKeptnTask(ctx context.Context, namespace string, reconcil
 	phase := apicommon.PhaseCreateTask
 
 	newTask := piWrapper.GenerateTask(taskCreateAttributes.Definition, taskCreateAttributes.CheckType)
+	if metadata, ok := context2.GetAppMetadataFromContext(phaseCtx); ok {
+		newTask.Spec.Context.Metadata = metadata
+	}
 	err = controllerutil.SetControllerReference(reconcileObject, &newTask, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference:")
@@ -172,7 +176,7 @@ func (r Handler) handleTaskNotExists(ctx context.Context, phaseCtx context.Conte
 		return controllererrors.ErrCannotGetKeptnTaskDefinition
 	}
 	taskCreateAttributes.Definition = *definition
-	taskName, err = r.CreateKeptnTask(ctx, piWrapper.GetNamespace(), reconcileObject, taskCreateAttributes)
+	taskName, err = r.CreateKeptnTask(ctx, phaseCtx, piWrapper.GetNamespace(), reconcileObject, taskCreateAttributes)
 	if err != nil {
 		return err
 	}

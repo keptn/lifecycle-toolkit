@@ -107,6 +107,20 @@ func generateWorkload(ctx context.Context, pod *corev1.Pod, namespace string) *l
 			PostDeploymentTasks:       postDeploymentTasks,
 			PreDeploymentEvaluations:  preDeploymentEvaluation,
 			PostDeploymentEvaluations: postDeploymentEvaluation,
+			Metadata:                  parseWorkloadMetadata(getValuesForAnnotations(&pod.ObjectMeta, apicommon.MetadataAnnotation)),
 		},
 	}
+}
+
+func parseWorkloadMetadata(annotations []string) map[string]string {
+	result := make(map[string]string, len(annotations))
+	for _, value := range annotations {
+		split := strings.Split(value, "=")
+
+		if len(split) != 2 {
+			continue
+		}
+		result[split[0]] = split[1]
+	}
+	return result
 }

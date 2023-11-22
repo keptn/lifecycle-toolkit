@@ -80,7 +80,8 @@ type TaskContext struct {
 	TaskType string `json:"taskType"`
 	// ObjectType indicates whether the KeptnTask is being executed for a KeptnApp or KeptnWorkload.
 	// +optional
-	ObjectType string `json:"objectType"`
+	ObjectType string            `json:"objectType"`
+	Metadata   map[string]string `json:"metadata,omitempty"`
 }
 
 type TaskParameters struct {

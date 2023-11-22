@@ -455,7 +455,7 @@ func TestTaskHandler_createTask(t *testing.T) {
 				Tracer:      noop.NewTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
 			}
-			name, err := handler.CreateKeptnTask(context.TODO(), "namespace", tt.object, tt.createAttr)
+			name, err := handler.CreateKeptnTask(context.TODO(), nil, "namespace", tt.object, tt.createAttr)
 			require.True(t, strings.Contains(name, tt.wantName))
 			require.Equal(t, tt.wantErr, err)
 		})

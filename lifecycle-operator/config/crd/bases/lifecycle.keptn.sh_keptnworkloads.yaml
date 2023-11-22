@@ -309,6 +309,10 @@ spec:
               app:
                 description: AppName is the name of the KeptnApp containing the KeptnWorkload.
                 type: string
+              metadata:
+                additionalProperties:
+                  type: string
+                type: object
               postDeploymentEvaluations:
                 description: PostDeploymentEvaluations is a list of all evaluations
                   to be performed during the post-deployment phase of the KeptnWorkload.

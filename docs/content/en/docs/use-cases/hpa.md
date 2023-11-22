@@ -4,7 +4,7 @@ description: Using the HorizontalPodAutoscaler
 weight: 20
 ---
 
-## Scalling Workloads based on Keptn metrics
+## Scaling Workloads based on Keptn metrics
 
 Kubernetes provides us with a lot of built-in capabilities to ensure
 running enough replicas in order to meet the current demand of the Workloads.
@@ -23,7 +23,7 @@ For more information oabout installation please refer to the official
 [installation guide](../installation/_index.md).
 
 > **Note**
-Plase be aware that Keptn Lifecycle Operator does not need to be installed for this use-case.
+Please be aware that Keptn Lifecycle Operator does not need to be installed for this use-case.
 
 ### Installation of metrics provider (optional)
 
@@ -94,7 +94,7 @@ spec:
 ```
 
 Please create a `podtato-kubectl` namespace and apply the above manifest
-to your cluster and continue with the nexts steps.
+to your cluster and continue with the next steps.
 After applying, please make sure that the application is up and running:
 
 ```shell
@@ -133,7 +133,7 @@ spec:
     interval: "30s"
 ```
 
-For more informaton about the `KeptnMetric` and `KeptnMericsProvider` custom resources,
+For more information about the `KeptnMetric` and `KeptnMetricsProvider` custom resources,
 please refer to the official [CRD documentation](../crd-ref/metrics/v1beta1/_index.md).
 
 After a few seconds we should be able to see values for the `cpu-throttling` metrics:
@@ -196,7 +196,7 @@ target value of `5` for this metric is reached, or the number of replicas
 has reached a maximum of `10`.
 
 Now if the load of the application is high enough, we will be able to see
-the automatic scalling of our application:
+the automatic scaling of our application:
 
 ```shell
 $ kubectl describe  horizontalpodautoscalers.autoscaling -n podtato-kubectl podtato-hpa
@@ -219,7 +219,7 @@ Events:
   ----    ------             ----                 ----                       -------
   Normal  SuccessfulRescale  7m18s (x5 over 16h)  horizontal-pod-autoscaler  New size: 4; reason: KeptnMetric metric cpu-throttling above target
   Normal  SuccessfulRescale  6m18s                horizontal-pod-autoscaler  New size: 7; reason: KeptnMetric metric cpu-throttling above target
-  Normal  SuccessfulRescale  6m3s (x4 over 16h)   horizontal-pod-autoscaler  New size: 10; reason: KeptnMetric metric cpu-throttling above targett
+  Normal  SuccessfulRescale  6m3s (x4 over 16h)   horizontal-pod-autoscaler  New size: 10; reason: KeptnMetric metric cpu-throttling above target
 ```
 
 If we retrieve the pods of our application, we can see that instead of

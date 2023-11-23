@@ -208,8 +208,11 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 	taskDefinitionName := "my-task-definition"
 	token := true
 	var ttlSecondsAfterFinished int32 = 100
+	imagePullSecret := []v1.LocalObjectReference{{
+		Name: "my-docker-secret",
+	}}
 
-	taskDefinition := makeTaskDefinitionWithServiceAccount(taskDefinitionName, namespace, svcAccname, &token, &ttlSecondsAfterFinished)
+	taskDefinition := makeTaskDefinitionWithServiceAccount(taskDefinitionName, namespace, svcAccname, &token, &ttlSecondsAfterFinished, imagePullSecret)
 	taskDefinition.Spec.ServiceAccount.Name = svcAccname
 	fakeClient := testcommon.NewTestClient(taskDefinition)
 	task := makeTask(taskName, namespace, taskDefinitionName)
@@ -336,7 +339,7 @@ func makeConfigMap(name, namespace string) *v1.ConfigMap {
 	}
 }
 
-func makeTaskDefinitionWithServiceAccount(name, namespace, serviceAccountName string, token *bool, ttlSeconds *int32) *klcv1alpha3.KeptnTaskDefinition {
+func makeTaskDefinitionWithServiceAccount(name, namespace, serviceAccountName string, token *bool, ttlSeconds *int32, imagePullSecrets []v1.LocalObjectReference) *klcv1alpha3.KeptnTaskDefinition {
 	return &klcv1alpha3.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
@@ -352,6 +355,7 @@ func makeTaskDefinitionWithServiceAccount(name, namespace, serviceAccountName st
 			Container: &klcv1alpha3.ContainerSpec{
 				Container: &v1.Container{},
 			},
+			ImagePullSecrets: imagePullSecrets,
 			ServiceAccount: &klcv1alpha3.ServiceAccountSpec{
 				Name: serviceAccountName,
 			},

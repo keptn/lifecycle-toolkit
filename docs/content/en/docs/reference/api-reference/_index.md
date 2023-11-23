@@ -19,9 +19,9 @@ Keptn APIs follow API versioning conventions recommended by Kubernetes.
 
 Keptn generates most of the resources it needs
 without requiring manual input.
-[Lifecycle CRD Reference](../reference/crd-reference)
+[Lifecycle CRD Reference](../crd-reference)
 and
-[Metrics CRD Reference](../reference/crd-reference)
+[Metrics CRD Reference](../crd-reference)
 contains reference pages for the manifests
 that must be populated manually.
 
@@ -35,7 +35,7 @@ Use `kubectl` to inspect the current contents of any Keptn resource:
    kubectl get keptnapps -n namespace1
    ```
 
-1. Get the current manifest for the specified resource.
+2. Get the current manifest for the specified resource.
    For example, to view the manifest for the `my-keptn-app` resource
    in the `namespace1` namespace, the command is:
 

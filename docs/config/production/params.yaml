@@ -14,4 +14,4 @@ description: >-
 
 algolia_docsearch: false
 offlineSearch: false
-gcs_engine_id: '37a611225469c41ae' # needs to be replaced with a search engine ID from the keptn google account
+gcs_engine_id: '765817a15a3374e11'

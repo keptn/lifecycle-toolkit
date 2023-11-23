@@ -237,3 +237,8 @@ For more information on using `cert-manager` with Keptn, see
 
 For the full list of Helm values, see the
 [keptn-cert-manager Helm chart README](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md).
+
+## Uninstalling Keptn
+
+To uninstall Keptn from your cluster, please follow the steps
+on the [Uninstall page](./uninstall.md).

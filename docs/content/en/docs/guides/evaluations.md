@@ -68,5 +68,5 @@ Note the following:
   has no effect on whether other evaluations are completed.
 * The results of each evaluation
   is written to a
-  [KeptnEvaluation](../crd-ref/lifecycle/v1alpha3/#keptnevaluation)
+  [KeptnEvaluation](../reference/api-reference/lifecycle/v1alpha3/#keptnevaluation)
   resource.

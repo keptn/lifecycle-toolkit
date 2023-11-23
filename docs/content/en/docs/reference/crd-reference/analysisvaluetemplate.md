@@ -94,7 +94,7 @@ guide page.
 ## Files
 
 API reference:
-[AnalysisValueTemplate](../../crd-ref/metrics/v1beta1/#analysisvaluetemplate)
+[AnalysisValueTemplate](../api-reference/metrics/v1beta1/#analysisvaluetemplate)
 
 ## Differences between versions
 

@@ -6719,11 +6719,7 @@ webhooks:
       - lifecycle-operator
     - key: kubernetes.io/metadata.name
       operator: NotIn
-      values:
-      - cert-manager
-      - keptn-lifecycle-toolkit-system
-      - observability
-      - monitoring
+      values:  ["foo","bar"]
     - key: kubernetes.io/metadata.name
       operator: NotIn
       values:

@@ -42,59 +42,7 @@ As a first step, we need to deploy our application to the cluster.
 For this we are going to
 use a single service `podtato-head` application.
 
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: podtato-head-entry
-  namespace: podtato-kubectl
-  labels:
-    app: podtato-head
-spec:
-  selector:
-    matchLabels:
-      component: podtato-head-entry
-  template:
-    metadata:
-      labels:
-        component: podtato-head-entry
-    spec:
-      terminationGracePeriodSeconds: 5
-      containers:
-      - name: server
-        image: ghcr.io/podtato-head/entry:0.2.7
-        imagePullPolicy: Always
-        resources:
-          limits:
-            cpu: 5m
-            memory: 128Mi
-          requests:
-            cpu: 1m
-            memory: 64Mi
-        ports:
-        - containerPort: 9000
-        env:
-        - name: PODTATO_PORT
-          value: "9000"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: podtato-head-entry
-  namespace: podtato-kubectl
-  labels:
-    app: podtato-head
-spec:
-  selector:
-    component: podtato-head-entry
-  ports:
-  - name: http
-    port: 9000
-    protocol: TCP
-    nodePort: 30900
-    targetPort: 9000
-  type: NodePort
-```
+{{< embed path="/docs/assets/hpa/sample-app.yaml" >}}
 
 Please create a `podtato-kubectl` namespace and apply the above manifest
 to your cluster and continue with the next steps.
@@ -113,28 +61,7 @@ These metrics are
 exposed via custom metrics API, what gives us the possibility to configure HPA
 to react on the values of these metrics:
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetricsProvider
-metadata:
-  name: prometheus-provider
-  namespace: podtato-kubectl
-spec:
-  type: prometheus
-  targetServer: <your-metrics-provider-server>
----
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetric
-metadata:
-  name: cpu-throttling
-spec:
-  provider:
-    name: prometheus-provider
-  query: 'avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-kubectl"}))'
-  fetchIntervalSeconds: 10
-  range:
-    interval: "30s"
-```
+{{< embed path="/docs/assets/hpa/keptnmetric.yaml" >}}
 
 For more information about the `KeptnMetric` and `KeptnMetricsProvider` custom resources,
 please refer to the official [CRD documentation](../crd-ref/metrics/v1beta1/_index.md).
@@ -166,32 +93,7 @@ our cluster in the status of our `KeptnMetric` custom resource, we can configure
 a `HorizontalPodAutoscaler` to make use of this information and therefore scale
 our application automatically:
 
-```yaml
-apiVersion: autoscaling/v
-kind: HorizontalPodAutoscaler
-metadata:
-  name: podtato-hpa
-  namespace: podtato-kubectl
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: podtato-head-entry
-  minReplicas: 1
-  maxReplicas: 10
-  metrics:
-    - type: Object
-      object:
-        metric:
-          name: cpu-throttling
-        describedObject:
-          apiVersion: metrics.keptn.sh/v1beta1
-          kind: KeptnMetric
-          name: cpu-throttling
-        target:
-          type: Value
-          value: "5"
-```
+{{< embed path="/docs/assets/hpa/hpa.yaml" >}}
 
 As we can see in this example, we are now referring to the `KeptnMetric`
 we applied earlier, and tell HPA to scale up our application, until our

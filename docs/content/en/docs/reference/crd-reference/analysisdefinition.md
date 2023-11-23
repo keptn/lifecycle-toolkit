@@ -156,7 +156,7 @@ guide page.
 ## Files
 
 API reference:
-[AnalysisDefinition](../../crd-ref/metrics/v1beta1/_index.md#analysisdefinition)
+[AnalysisDefinition](../../reference/metrics/v1beta1/_index.md#analysisdefinition)
 
 ## Differences between versions
 

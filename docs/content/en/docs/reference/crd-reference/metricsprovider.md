@@ -107,7 +107,7 @@ spec:
 
 API Reference:
 
-* [KeptnEvaluationDefinition](../../crd-ref/lifecycle/)
+* [KeptnEvaluationDefinition](../../reference/lifecycle/)
 
 ## Differences between versions
 

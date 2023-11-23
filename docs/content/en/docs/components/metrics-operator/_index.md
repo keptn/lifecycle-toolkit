@@ -85,7 +85,7 @@ The steps in which the controller fetches metrics are given below:
      in the `status` field of the `KeptnMetric` object.
    * If the evaluation fails,
      the error and reason is written to the
-     [KeptnMetricStatus](../../crd-ref/metrics/v1beta1/#keptnmetricstatus)
+     [KeptnMetricStatus](../../reference/metrics/v1beta1/#keptnmetricstatus)
      resource.
      The error is described in both human-readable language
      and as raw data to help identify the source of the problem

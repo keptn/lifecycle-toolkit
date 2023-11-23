@@ -31,7 +31,7 @@ with either Keptn or Kubernetes keys.
     are required only for the Release lifecycle management feature.
 
 Keptn uses these annotations to the Kubernetes workloads to create the
-[KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload)
+[KeptnWorkload](../reference/lifecycle/v1alpha3/#keptnworkload)
 and
 [KeptnApp](../reference/crd-reference/app.md)
 resources that it uses to provide observability
@@ -60,7 +60,7 @@ resources in the namespaces where Keptn is enabled.
 If Keptn finds any of these resources and the resource has either
 the `keptn.sh` or the `kubernetes` annotations/labels,
 it creates appropriate
-[KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload)
+[KeptnWorkload](../reference/lifecycle/v1alpha3/#keptnworkload)
 and
 [KeptnApp](../reference/crd-reference/app.md)
 resources for the version it detects.
@@ -88,7 +88,7 @@ These keys are defined as:
 
 * `keptn.sh/workload` or `app.kubernetes.io/name`: Determines the name
   of the generated
-  [KeptnWorkload](../crd-ref/lifecycle/v1alpha3/#keptnworkload)
+  [KeptnWorkload](../reference/lifecycle/v1alpha3/#keptnworkload)
   resource.
 * `keptn.sh/version` or `app.kubernetes.io/version`:
   Determines the version of the `KeptnWorkload`

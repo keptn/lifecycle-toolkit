@@ -101,7 +101,7 @@ in the root directory of your `lifecycle-toolkit` clone:
 #### CRD Reference
 
 The
-[CRD Reference](../../../docs/crd-reference/)
+[CRD Reference](../../../docs/reference/crd-reference/)
 pages
 describe the YAML files used to populate resources
 for the small set of CRDs that users must populate themselves.

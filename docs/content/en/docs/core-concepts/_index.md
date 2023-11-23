@@ -60,7 +60,7 @@ deployment durations and failures across multiple deployment strategies.
 
 * Provides observability data for standard Kubernetes [workload](https://kubernetes.io/docs/concepts/workloads/) resources
   as well as
-  [KeptnApp](../reference/crd-reference/app/)
+  [KeptnApp](../reference/crd-reference/app.md)
   resources (which connect logically related [workloads](https://kubernetes.io/docs/concepts/workloads/))
   using different deployment strategies.
 

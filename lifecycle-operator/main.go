@@ -23,6 +23,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	ce "github.com/cloudevents/sdk-go/v2"
@@ -445,7 +446,7 @@ func serveMetrics() {
 	log.Printf("serving metrics at localhost:2222/metrics")
 
 	http.Handle("/metrics", promhttp.Handler())
-	err := http.ListenAndServe(":2222", nil)
+	err := http.ListenAndServe(":"+strconv.Itoa(envconfig.KeptnDoraMetricsPort), nil)
 	if err != nil {
 		fmt.Printf("error serving http: %v", err)
 		return

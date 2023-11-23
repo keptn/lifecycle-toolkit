@@ -13,7 +13,7 @@ spec:
       - '-c'
       - 'sleep 30'
   imagePullSecrets:
-  - name: my-registry-secret
+    - name: my-registry-secret
 ---
 apiVersion: apps/v1
 kind: Deployment

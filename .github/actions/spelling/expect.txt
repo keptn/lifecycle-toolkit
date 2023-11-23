@@ -225,7 +225,7 @@ hidechildren
 homedata
 homeobservability
 homeorchestrate
-horizontalpodautoscaler
+horizontalpodautoscalers
 hpa
 hreflang
 htmltest

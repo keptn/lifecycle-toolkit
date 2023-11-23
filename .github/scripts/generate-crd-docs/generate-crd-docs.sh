@@ -17,6 +17,7 @@ RENDERER='markdown'
 RENDERER_CONFIG_FILE_TEMPLATE_PATH='.github/scripts/generate-crd-docs/crd-docs-generator-config'
 RENDERER_CONFIG_FILE=$RENDERER_CONFIG_FILE_TEMPLATE_PATH'.yaml'
 PATH=$PATH:$(go env GOPATH)/bin
+DOCS_PATH=./docs/content/en/docs/reference/api-reference/
 
 echo "Checking if code generator tool is installed..."
 if ! test -s crd-ref-docs; then
@@ -31,7 +32,7 @@ echo "Running CRD docs auto-generator..."
 for api_group in "$OPERATOR_API_ROOT"*; do
 
   sanitized_api_group="${api_group#$OPERATOR_API_ROOT}"
-  INDEX_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/_index.md"
+  INDEX_PATH="$DOCS_PATH$sanitized_api_group/_index.md"
 
   if [ ! -f "$INDEX_PATH" ]; then
     echo "API group index file doesn't exist for group $sanitized_api_group. Creating it now..."
@@ -44,7 +45,7 @@ for api_group in "$OPERATOR_API_ROOT"*; do
   for api_version in "$api_group"/*; do
     sanitized_api_version="${api_version#$OPERATOR_API_ROOT$sanitized_api_group/}"
 
-    OUTPUT_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/$sanitized_api_version"
+    OUTPUT_PATH="$DOCS_PATH$sanitized_api_group/$sanitized_api_version"
 
     renderer_config_file="$RENDERER_CONFIG_FILE_TEMPLATE_PATH-$sanitized_api_group-$sanitized_api_version.yaml"
     if [ ! -f "$renderer_config_file" ]; then
@@ -80,7 +81,7 @@ done
 
 
 sanitized_api_group="metrics"
-INDEX_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/_index.md"
+INDEX_PATH="$DOCS_PATH$sanitized_api_group/_index.md"
 
 if [ ! -f "$INDEX_PATH" ]; then
   echo "API group index file doesn't exist for group $sanitized_api_group. Creating it now..."
@@ -93,7 +94,7 @@ fi
 
 for api_version in "$METRICS_API_ROOT"*; do
   sanitized_api_version="${api_version#$METRICS_API_ROOT}"
-  OUTPUT_PATH="./docs/content/en/docs/crd-ref/$sanitized_api_group/$sanitized_api_version"
+  OUTPUT_PATH="$DOCS_PATH$sanitized_api_group/$sanitized_api_version"
 
   echo "Arguments:"
   echo "TEMPLATE_DIR: $TEMPLATE_DIR"

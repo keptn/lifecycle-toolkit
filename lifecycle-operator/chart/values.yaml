@@ -91,6 +91,8 @@ lifecycleOperator:
     keptnWorkloadVersionControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel Deprecated: Use keptnWorkloadVersionControllerLogLevel instead. Sets the log level of Keptn WorkloadVersion Controller
     keptnWorkloadInstanceControllerLogLevel: "0"
+## @param   lifecycleOperator.env.keptnDoraMetricsPort sets the port for accessing lifecycle metrics in prom format
+    keptnDoraMetricsPort: "2222"
 ## @param   lifecycleOperator.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
     optionsControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.otelCollectorUrl Sets the URL for the open telemetry collector

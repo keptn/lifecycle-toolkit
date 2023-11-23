@@ -241,4 +241,4 @@ For the full list of Helm values, see the
 ## Uninstalling Keptn
 
 To uninstall Keptn from your cluster, please follow the steps
-on [uninstall page](./uninstall.md).
+on the [Uninstall page](./uninstall.md).

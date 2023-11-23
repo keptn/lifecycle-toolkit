@@ -6,7 +6,7 @@ weight: 20
 
 ## Scaling Workloads based on Keptn metrics
 
-Kubernetes provides us with a lot of built-in capabilities to ensure
+Kubernetes provides many built-in capabilities to ensure
 running enough replicas in order to meet the current demand of the Workloads.
 One of these is the
 [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
@@ -14,21 +14,23 @@ One of these is the
 
 HPA can make use of the Keptn Metrics
 [custom API](https://kubernetes.io/docs/reference/external-api/custom-metrics.v1beta2/)
-in order to scale the number of replicas of the Workloads based on the current
-load by using metrics such as CPU throttling, memory consumption or response time.
+to scale the number of replicas of the Workloads based on the current
+load.
+It does this by using metrics such as CPU throttling, memory consumption, or response time.
 
 ### Installation of Keptn Metrics Operator
 
-To use HPA with custom metrics API, Keptn Metrics Operator needs to be installed on our cluster.
+To use HPA with the custom metrics API,
+Keptn Metrics Operator must be installed on the cluster.
 For more information about installation please refer to the official
 [installation guide](../installation/_index.md).
 
 > **Note**
-Please be aware that Keptn Lifecycle Operator does not need to be installed for this use-case.
+The Keptn Lifecycle Operator does not need to be installed for this use-case.
 
 ### Installation of metrics provider (optional)
 
-If you do not have metrics provider installed on your cluster yet, please do so.
+If you do not yet have a metrics provider installed on your cluster yet, please do so.
 
 For this tutorial we are going to use [Prometheus](https://prometheus.io/).
 For more information about how to install Prometheus into your cluster, please
@@ -157,9 +159,9 @@ Status:
 
 Here we can see that the value of the `cpu-throttling` metric is `1.63`
 
-### Setup HorizontalPodAutoscaler
+### Set up HorizontalPodAutoscaler
 
-And now that we are able to retrieve the value of our metric, and have it stored in
+Now that we are able to retrieve the value of our metric, and have it stored in
 our cluster in the status of our `KeptnMetric` custom resource, we can configure
 a `HorizontalPodAutoscaler` to make use of this information and therefore scale
 our application automatically:
@@ -192,11 +194,11 @@ spec:
 ```
 
 As we can see in this example, we are now referring to the `KeptnMetric`
-we applied earlier, and tell `HPA` to scale up our application, until our
+we applied earlier, and tell HPA to scale up our application, until our
 target value of `5` for this metric is reached, or the number of replicas
 has reached a maximum of `10`.
 
-Now if the load of the application is high enough, we will be able to see
+If the load of the application is high enough, we will be able to see
 the automatic scaling of our application:
 
 ```shell
@@ -223,7 +225,7 @@ Events:
   Normal  SuccessfulRescale  6m3s (x4 over 16h)   horizontal-pod-autoscaler  New size: 10; reason: KeptnMetric metric cpu-throttling above target
 ```
 
-If we retrieve the pods of our application, we can see that instead of
+If we retrieve the pods of our application, we can see that, instead of
 a single instance at the beginning, there are currently 10 instances running:
 
 ```shell

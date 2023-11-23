@@ -443,7 +443,7 @@ func main() {
 }
 
 func serveMetrics(metricsPort int) {
-	log.Printf("serving metrics at localhost:2222/metrics")
+	log.Printf("serving metrics at %s/metrics", metricsPort)
 
 	http.Handle("/metrics", promhttp.Handler())
 	err := http.ListenAndServe(":"+strconv.Itoa(metricsPort), nil)

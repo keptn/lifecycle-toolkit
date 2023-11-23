@@ -44,7 +44,7 @@ spec:
             - '-c'
             - 'sleep 30'
       imagePullSecrets:
-      - name: my-registry-secret
+        - name: my-registry-secret
 status:
   conditions:
     - type: Complete

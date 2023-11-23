@@ -442,11 +442,11 @@ func main() {
 
 }
 
-func serveMetrics() {
+func serveMetrics(env *envConfig) {
 	log.Printf("serving metrics at localhost:2222/metrics")
 
 	http.Handle("/metrics", promhttp.Handler())
-	err := http.ListenAndServe(":"+strconv.Itoa(envconfig.KeptnDoraMetricsPort), nil)
+	err := http.ListenAndServe(":"+strconv.Itoa(env.KeptnDoraMetricsPort), nil)
 	if err != nil {
 		fmt.Printf("error serving http: %v", err)
 		return

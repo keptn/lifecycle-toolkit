@@ -1,13 +1,12 @@
 ---
 title: API Reference
-description: Reference information about the KLT CRDs
+description: Reference information about the APIs that Keptn provides
 weight: 100
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-This section provides comprehensive reference information about all
-[Custom Resource Definitions (CRDs)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-that are defined for the Keptn Lifecycle Toolkit.
+This section provides comprehensive reference information about all APIs
+that are defined In Keptn.
 This section is auto-generated from source code.
 
 Each CRD is an object of an API library.

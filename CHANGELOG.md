@@ -1,5 +1,97 @@
 # Changelog
 
+## [0.10.0](https://github.com/keptn/lifecycle-toolkit/compare/klt-v0.9.0...klt-v0.10.0) (2023-11-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **lifecycle-operator:** The environment variable giving deno and python runtime access to context information has been renamed from `CONTEXT` to `KEPTN_CONTEXT`
+* **metrics-operator:** Metrics APIs were updated to version `v1beta1` (without changing any behaviour), since they are more stable now. Resources using any of the alpha versions are no longer supported. Please update your resources manually to the new API version after you upgraded Keptn.
+* **metrics-operator:** The Analysis feature is officially released! Learn more about [here](https://lifecycle.keptn.sh/docs/implementing/slo/).
+
+### Features
+
+* add configurable service account to KeptnTasks ([#2254](https://github.com/keptn/lifecycle-toolkit/issues/2254)) ([e7db66f](https://github.com/keptn/lifecycle-toolkit/commit/e7db66f91a638759d9d95ef34fa22f59a8a37f9d))
+* configure spell checker github action ([#2316](https://github.com/keptn/lifecycle-toolkit/issues/2316)) ([fe7904d](https://github.com/keptn/lifecycle-toolkit/commit/fe7904dd669c92ed43e938b4cc2f61b673144b5a))
+* introduce configurable TTLSecondsAfterFinished for tasks ([#2404](https://github.com/keptn/lifecycle-toolkit/issues/2404)) ([8341dbf](https://github.com/keptn/lifecycle-toolkit/commit/8341dbf256b23d342226b9c44a2057e4fd775854))
+* **lifecycle-operator:** add `KEPTN_CONTEXT` to task container env vars ([#2516](https://github.com/keptn/lifecycle-toolkit/issues/2516)) ([a18a833](https://github.com/keptn/lifecycle-toolkit/commit/a18a83306fed5636a971565e12b2e71d315b75b4))
+* **lifecycle-operator:** add option to exclude additional namespaces ([#2536](https://github.com/keptn/lifecycle-toolkit/issues/2536)) ([fd42ac7](https://github.com/keptn/lifecycle-toolkit/commit/fd42ac7325927fa6f2f0cfe6875f055fd2cd1be0))
+* **lifecycle-operator:** rename CONTEXT to KEPTN_CONTEXT in task runtimes ([#2521](https://github.com/keptn/lifecycle-toolkit/issues/2521)) ([a7322bd](https://github.com/keptn/lifecycle-toolkit/commit/a7322bd9266fa1589d77b06675d70d1a9e6c29ac))
+* **metrics-operator:** introduce v1beta1 API version ([#2467](https://github.com/keptn/lifecycle-toolkit/issues/2467)) ([97acdbf](https://github.com/keptn/lifecycle-toolkit/commit/97acdbff522c99d0b050b123fd8e632c4bf0d29a))
+* **metrics-operator:** release Analysis feature ([#2457](https://github.com/keptn/lifecycle-toolkit/issues/2457)) ([fb1f4ac](https://github.com/keptn/lifecycle-toolkit/commit/fb1f4ac72ef9548454dcbfde382793ddaef7f7f1))
+* **metrics-operator:** use v1beta1 in operator logic ([94f17c1](https://github.com/keptn/lifecycle-toolkit/commit/94f17c1535213a5c93e87c85bf321612cdc1d765))
+
+
+### Bug Fixes
+
+* **lifecycle-operator:** adopt KeptnApp name from either Keptn or k8s label ([#2440](https://github.com/keptn/lifecycle-toolkit/issues/2440)) ([3185943](https://github.com/keptn/lifecycle-toolkit/commit/318594309af9653253f84b35f86e9b6675c572ca))
+* links for api docs ([#2557](https://github.com/keptn/lifecycle-toolkit/issues/2557)) ([84f5588](https://github.com/keptn/lifecycle-toolkit/commit/84f5588a0d8687e7266d4c772ec36650fdf4524e))
+* security issues ([#2481](https://github.com/keptn/lifecycle-toolkit/issues/2481)) ([c538504](https://github.com/keptn/lifecycle-toolkit/commit/c53850481e1d7d161f2865801d563925426ee462))
+
+
+### Other
+
+* adapt helm chart pipeline to substitue local paths before syncing with charts repository ([#2397](https://github.com/keptn/lifecycle-toolkit/issues/2397)) ([045b359](https://github.com/keptn/lifecycle-toolkit/commit/045b359218ba66dde85b87cb16d784bc4384183a))
+* add config for spell checker action, fix typos ([#2443](https://github.com/keptn/lifecycle-toolkit/issues/2443)) ([eac178f](https://github.com/keptn/lifecycle-toolkit/commit/eac178f650962208449553086d54d26d27fa4da3))
+* add example of values.yaml ([#2400](https://github.com/keptn/lifecycle-toolkit/issues/2400)) ([b7105db](https://github.com/keptn/lifecycle-toolkit/commit/b7105db6bc9ffa269405ec47986920e03cdab029))
+* add more dictionaries to spell checker action ([#2449](https://github.com/keptn/lifecycle-toolkit/issues/2449)) ([3ad38bf](https://github.com/keptn/lifecycle-toolkit/commit/3ad38bf38a727f6127e91203a53d5b5df5278ec8))
+* backport updated install page ([#2517](https://github.com/keptn/lifecycle-toolkit/issues/2517)) ([a5aa98a](https://github.com/keptn/lifecycle-toolkit/commit/a5aa98a314ba2661d3d39379c7a9d84b60ed4e0c))
+* exclude busybox from renovate update ([#2518](https://github.com/keptn/lifecycle-toolkit/issues/2518)) ([6f72328](https://github.com/keptn/lifecycle-toolkit/commit/6f72328f589d0f5ea08792c2e649747007de6466))
+* fix helm chart sync workflow ([#2407](https://github.com/keptn/lifecycle-toolkit/issues/2407)) ([0bd6ea9](https://github.com/keptn/lifecycle-toolkit/commit/0bd6ea92abb6d034bad0efab07c558ab70607843))
+* fix renovate config ([#2466](https://github.com/keptn/lifecycle-toolkit/issues/2466)) ([1765f4b](https://github.com/keptn/lifecycle-toolkit/commit/1765f4bd4f54db6406e55ec7ae06fe38391e61f9))
+* fix yq command for helm chart sync ([#2406](https://github.com/keptn/lifecycle-toolkit/issues/2406)) ([55c7562](https://github.com/keptn/lifecycle-toolkit/commit/55c756214099b92b58997820ea80d0ba3458ff6c))
+* improve docs release ([#2420](https://github.com/keptn/lifecycle-toolkit/issues/2420)) ([edf6f91](https://github.com/keptn/lifecycle-toolkit/commit/edf6f91d00808b68f28f2c9166ec223522c169cb))
+* **lifecycle-operator:** introduce PhaseHandler interface to be used in KeptnWorkloadVersion reconciler ([#2450](https://github.com/keptn/lifecycle-toolkit/issues/2450)) ([7d4b431](https://github.com/keptn/lifecycle-toolkit/commit/7d4b431af5a6e9deec03784b04267d9711c93f17))
+* remove manifests usage from security-scans ([#2334](https://github.com/keptn/lifecycle-toolkit/issues/2334)) ([5b0a29f](https://github.com/keptn/lifecycle-toolkit/commit/5b0a29f9c039d7a8b37c02e81b415768519594e4))
+* remove test images from renovate config ([#2373](https://github.com/keptn/lifecycle-toolkit/issues/2373)) ([513e064](https://github.com/keptn/lifecycle-toolkit/commit/513e06460863d6842e13d0615d9081dfa24f5114))
+* revert Chart.yaml to point to local repositories ([#2394](https://github.com/keptn/lifecycle-toolkit/issues/2394)) ([ff3bdb1](https://github.com/keptn/lifecycle-toolkit/commit/ff3bdb10652a16064b0ed3c5b0c66ccf83e426f1))
+* update renovate config to ignore test repos ([#2451](https://github.com/keptn/lifecycle-toolkit/issues/2451)) ([8bf50a6](https://github.com/keptn/lifecycle-toolkit/commit/8bf50a64b0b75f4bb0b8a5d53a813761c6ad1782))
+* update renovate file to allow more makefile regex patterns, pin markdownlint version ([#2510](https://github.com/keptn/lifecycle-toolkit/issues/2510)) ([32f49c1](https://github.com/keptn/lifecycle-toolkit/commit/32f49c1b9b8ca92c91d7f0fcb8bd3dd93ca92b7f))
+* use different image for opengraph metadata ([#2515](https://github.com/keptn/lifecycle-toolkit/issues/2515)) ([cd3633d](https://github.com/keptn/lifecycle-toolkit/commit/cd3633d132f86401909d73b87b5ba2df798eecd4))
+* use new search engine ID ([#2546](https://github.com/keptn/lifecycle-toolkit/issues/2546)) ([6a88c0a](https://github.com/keptn/lifecycle-toolkit/commit/6a88c0a5cccc8cf7057bec2f4c4d1e24f28a7a93))
+* use templated values in install action and security workflow ([#2366](https://github.com/keptn/lifecycle-toolkit/issues/2366)) ([ecbf054](https://github.com/keptn/lifecycle-toolkit/commit/ecbf054e5a75702dacfcc90c15b7803a86476bfa))
+
+
+### Docs
+
+* adapt SLI and SLO converters in migration guide ([#2533](https://github.com/keptn/lifecycle-toolkit/issues/2533)) ([540ca90](https://github.com/keptn/lifecycle-toolkit/commit/540ca90121f00fc175dec2c017fcc3e7b7eee09d))
+* add documentation for keptn.sh/container annotation ([#2500](https://github.com/keptn/lifecycle-toolkit/issues/2500)) ([0578587](https://github.com/keptn/lifecycle-toolkit/commit/0578587190895e451eb51bcecd700b5a4eaeaddb))
+* add installation tips and tricks page ([#2442](https://github.com/keptn/lifecycle-toolkit/issues/2442)) ([d3b7256](https://github.com/keptn/lifecycle-toolkit/commit/d3b7256008767c0c0db3136d9c54a205b1e3ab3d))
+* adjust open graph metadata ([#2437](https://github.com/keptn/lifecycle-toolkit/issues/2437)) ([1779751](https://github.com/keptn/lifecycle-toolkit/commit/1779751e75a6866fac6f6cd15118e757996ee122))
+* analysis feature in 0.9.0 ([#2424](https://github.com/keptn/lifecycle-toolkit/issues/2424)) ([a6e6a60](https://github.com/keptn/lifecycle-toolkit/commit/a6e6a60456ef6a9227f786d8da499bf95667f177))
+* brief info about contributing ref pages ([#2446](https://github.com/keptn/lifecycle-toolkit/issues/2446)) ([910b43a](https://github.com/keptn/lifecycle-toolkit/commit/910b43aeb2abec927046a70df82a25d584c54758))
+* clarify scheduler architecture info ([#2389](https://github.com/keptn/lifecycle-toolkit/issues/2389)) ([4618def](https://github.com/keptn/lifecycle-toolkit/commit/4618def40b01e1e4f968e8cd7a1fd08619b7d788))
+* fix typo ([#2542](https://github.com/keptn/lifecycle-toolkit/issues/2542)) ([79700e6](https://github.com/keptn/lifecycle-toolkit/commit/79700e6d16910d87b41981b4509bd3a4b6d56d06))
+* fix weights for contrib/docs files ([#2503](https://github.com/keptn/lifecycle-toolkit/issues/2503)) ([e96a10c](https://github.com/keptn/lifecycle-toolkit/commit/e96a10c2a8cfe340f3ff8c1a07837618735b29ef))
+* improve HPA user guide ([#2540](https://github.com/keptn/lifecycle-toolkit/issues/2540)) ([841214c](https://github.com/keptn/lifecycle-toolkit/commit/841214c5bf3c6882c07e248d80cfb518b689aac3))
+* introduce uninstall page ([#2543](https://github.com/keptn/lifecycle-toolkit/issues/2543)) ([33c7ecc](https://github.com/keptn/lifecycle-toolkit/commit/33c7ecc2ab47a05926430e2c4ea137bbc5c6253f))
+* move auto-generated API reference to /reference folder ([#2544](https://github.com/keptn/lifecycle-toolkit/issues/2544)) ([149f26c](https://github.com/keptn/lifecycle-toolkit/commit/149f26c647d5fe931d25f545bc08f973b5bafa0a))
+* move docs-tooling into repo ([#2460](https://github.com/keptn/lifecycle-toolkit/issues/2460)) ([d69989e](https://github.com/keptn/lifecycle-toolkit/commit/d69989e647966ffc44f7e17c43c9b18cea228f0b))
+* remove duplicated DORA section from otel.md ([#2511](https://github.com/keptn/lifecycle-toolkit/issues/2511)) ([d89fed3](https://github.com/keptn/lifecycle-toolkit/commit/d89fed3b9c26782057f5ae8f8c85e054ea4bbf86))
+* remove manifest install instructions ([#2395](https://github.com/keptn/lifecycle-toolkit/issues/2395)) ([c64f99e](https://github.com/keptn/lifecycle-toolkit/commit/c64f99e4184d0052982f5860a1ebd2ed6e82526d))
+* restructure content ([#2522](https://github.com/keptn/lifecycle-toolkit/issues/2522)) ([c2d8bd9](https://github.com/keptn/lifecycle-toolkit/commit/c2d8bd933228b7b9f7e19356ab395add1804b737))
+* unify styling of implementing folder ([#2398](https://github.com/keptn/lifecycle-toolkit/issues/2398)) ([70cff9f](https://github.com/keptn/lifecycle-toolkit/commit/70cff9ff4a90b33ebfa2eb84ccccf473b290562d))
+* update list of primary doc folders/titles ([#2445](https://github.com/keptn/lifecycle-toolkit/issues/2445)) ([6085e7e](https://github.com/keptn/lifecycle-toolkit/commit/6085e7e13969cb900c6169b453636d2267aee2c8))
+* use metrics v1beta1 API version ([#2496](https://github.com/keptn/lifecycle-toolkit/issues/2496)) ([57c548d](https://github.com/keptn/lifecycle-toolkit/commit/57c548d790eb4e39c32c0159f98be1fb57ae43c5))
+
+
+### Dependency Updates
+
+* update actions/checkout action to v4 ([#2502](https://github.com/keptn/lifecycle-toolkit/issues/2502)) ([6445bb4](https://github.com/keptn/lifecycle-toolkit/commit/6445bb4ae0140d31248caf1f56e887a98763ed50))
+* update actions/github-script action to v7 ([#2488](https://github.com/keptn/lifecycle-toolkit/issues/2488)) ([bdc0cd9](https://github.com/keptn/lifecycle-toolkit/commit/bdc0cd94e88d998df69abb943dc40a4e87765eff))
+* update amannn/action-semantic-pull-request action to v5.4.0 ([#2422](https://github.com/keptn/lifecycle-toolkit/issues/2422)) ([69817bd](https://github.com/keptn/lifecycle-toolkit/commit/69817bd989766cff315a7db8051f35bfc41c129d))
+* update aquasecurity/trivy-action action to v0.13.1 ([#2403](https://github.com/keptn/lifecycle-toolkit/issues/2403)) ([aa6bacc](https://github.com/keptn/lifecycle-toolkit/commit/aa6bacc15aa1a246db786bd561f33cd76a9130e6))
+* update aquasecurity/trivy-action action to v0.14.0 ([#2475](https://github.com/keptn/lifecycle-toolkit/issues/2475)) ([6967bfa](https://github.com/keptn/lifecycle-toolkit/commit/6967bfa7e0784f608a682b2f8ae90beb82834e09))
+* update dependency argoproj/argo-cd to v2.8.5 ([#2377](https://github.com/keptn/lifecycle-toolkit/issues/2377)) ([d6809bc](https://github.com/keptn/lifecycle-toolkit/commit/d6809bc5df9634e4b3c7f2d178fa32f48d3fb5e9))
+* update dependency argoproj/argo-cd to v2.8.6 ([#2410](https://github.com/keptn/lifecycle-toolkit/issues/2410)) ([8505da0](https://github.com/keptn/lifecycle-toolkit/commit/8505da0c331170cd8f689f83fa4fdeaf263e585e))
+* update dependency argoproj/argo-cd to v2.9.0 ([#2469](https://github.com/keptn/lifecycle-toolkit/issues/2469)) ([14bcca4](https://github.com/keptn/lifecycle-toolkit/commit/14bcca42418c443270bca2b12d953b92582f6797))
+* update dependency argoproj/argo-cd to v2.9.1 ([#2524](https://github.com/keptn/lifecycle-toolkit/issues/2524)) ([8ef9c7d](https://github.com/keptn/lifecycle-toolkit/commit/8ef9c7d12c02757a7aec34bfdee3c9fa5b3340c1))
+* update dependency cloud-bulldozer/kube-burner to v1.7.11 ([#2477](https://github.com/keptn/lifecycle-toolkit/issues/2477)) ([0173d6e](https://github.com/keptn/lifecycle-toolkit/commit/0173d6e4014587df25b5249c858b2d61c7466f5f))
+* update dependency golangci/golangci-lint to v1.55.2 ([#2430](https://github.com/keptn/lifecycle-toolkit/issues/2430)) ([d4d5c53](https://github.com/keptn/lifecycle-toolkit/commit/d4d5c534960094653e7739dd779e616a2fa2e4cf))
+* update dependency jaegertracing/jaeger to v1.51.0 ([#2414](https://github.com/keptn/lifecycle-toolkit/issues/2414)) ([840eb76](https://github.com/keptn/lifecycle-toolkit/commit/840eb7692d6374e35cf14b67300a7d365cacd04e))
+* update otel/opentelemetry-collector docker tag to v0.89.0 ([#2525](https://github.com/keptn/lifecycle-toolkit/issues/2525)) ([0b5b021](https://github.com/keptn/lifecycle-toolkit/commit/0b5b021c438c94c7cd83514f8710a5191a0143ab))
+* update sigstore/cosign-installer action to v3.2.0 ([#2476](https://github.com/keptn/lifecycle-toolkit/issues/2476)) ([28bed76](https://github.com/keptn/lifecycle-toolkit/commit/28bed767861f4bd2232a52e29454d28aca07c620))
+
 ## [0.9.0](https://github.com/keptn/lifecycle-toolkit/compare/klt-v0.8.2...klt-v0.9.0) (2023-10-31)
 
 

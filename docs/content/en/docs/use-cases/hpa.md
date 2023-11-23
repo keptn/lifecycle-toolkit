@@ -7,22 +7,22 @@ weight: 20
 ## Scaling Workloads based on Keptn metrics
 
 Kubernetes provides many built-in capabilities to ensure
-running enough replicas in order to meet the current demand of the Workloads.
+that enough replicas are running in order to meet the current demand of your [workloads](https://kubernetes.io/docs/concepts/workloads/).
 One of these is the
 [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
 (HPA).
 
-HPA can make use of the Keptn Metrics
+An HPA can make use of the Keptn Metrics
 [custom API](https://kubernetes.io/docs/reference/external-api/custom-metrics.v1beta2/)
-to scale the number of replicas of the Workloads based on the current
+to scale the number of replicas of [workloads](https://kubernetes.io/docs/concepts/workloads/) based on the current
 load.
 It does this by using metrics such as CPU throttling, memory consumption, or response time.
 
 ### Installation of Keptn Metrics Operator
 
-To use HPA with the custom metrics API,
+To use an HPA with the custom metrics API, the
 Keptn Metrics Operator must be installed on the cluster.
-For more information about installation please refer to the official
+For more information about installation please refer to the
 [installation guide](../installation/_index.md).
 
 > **Note**
@@ -30,15 +30,15 @@ The Keptn Lifecycle Operator does not need to be installed for this use-case.
 
 ### Installation of metrics provider (optional)
 
-If you do not yet have a metrics provider installed on your cluster yet, please do so.
+If you do not have a metrics provider installed on your cluster yet, please do so.
 
 For this tutorial we are going to use [Prometheus](https://prometheus.io/).
 For more information about how to install Prometheus into your cluster, please
-refer to the [official Prometheus documentation](https://prometheus.io/docs/prometheus/latest/installation/).
+refer to the [Prometheus documentation](https://prometheus.io/docs/prometheus/latest/installation/).
 
 ### Deploy sample application
 
-As a first step, we need to deploy our application to the cluster.
+First, we need to deploy our application to the cluster.
 For this we are going to
 use a single service `podtato-head` application.
 
@@ -58,15 +58,15 @@ podtato-head-entry-58d6485d9b-ld9x2         1/1     Running     (2m ago)
 To be able to react on the metrics of our application, we need to create
 `KeptnMetrics` and `KeptnMetricsProvider` custom resources.
 These metrics are
-exposed via custom metrics API, what gives us the possibility to configure HPA
-to react on the values of these metrics:
+exposed via the custom metrics API, which gives us the possibility to configure
+the HPA to react on the values of these metrics:
 
 {{< embed path="/docs/assets/hpa/keptnmetric.yaml" >}}
 
 For more information about the `KeptnMetric` and `KeptnMetricsProvider` custom resources,
-please refer to the official [CRD documentation](../crd-ref/metrics/v1beta1/_index.md).
+please refer to the [CRD documentation](../crd-ref/metrics/v1beta1/).
 
-After a few seconds we should be able to see values for the `cpu-throttling` metrics:
+After a few seconds we should be able to see values for the `cpu-throttling` metric:
 
 ```shell
 $ kubectl describe  keptnmetrics.metrics.keptn.sh cpu-throttling -n podtato-kubectl
@@ -86,7 +86,7 @@ Status:
 
 Here we can see that the value of the `cpu-throttling` metric is `1.63`
 
-### Set up HorizontalPodAutoscaler
+### Set up the HorizontalPodAutoscaler
 
 Now that we are able to retrieve the value of our metric, and have it stored in
 our cluster in the status of our `KeptnMetric` custom resource, we can configure
@@ -96,7 +96,7 @@ our application automatically:
 {{< embed path="/docs/assets/hpa/hpa.yaml" >}}
 
 As we can see in this example, we are now referring to the `KeptnMetric`
-we applied earlier, and tell HPA to scale up our application, until our
+we applied earlier, and tell the HPA to scale up our application, until our
 target value of `5` for this metric is reached, or the number of replicas
 has reached a maximum of `10`.
 

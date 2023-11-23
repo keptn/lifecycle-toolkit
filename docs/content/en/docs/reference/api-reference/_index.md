@@ -1,13 +1,12 @@
 ---
 title: API Reference
-description: Reference information about the KLT CRDs
+description: Reference information about the APIs that Keptn provides
 weight: 100
 hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
 ---
 
-This section provides comprehensive reference information about all
-[Custom Resource Definitions (CRDs)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-that are defined for the Keptn Lifecycle Toolkit.
+This section provides comprehensive reference information about all APIs
+that are defined In Keptn.
 This section is auto-generated from source code.
 
 Each CRD is an object of an API library.
@@ -19,9 +18,9 @@ Keptn APIs follow API versioning conventions recommended by Kubernetes.
 
 Keptn generates most of the resources it needs
 without requiring manual input.
-[Lifecycle CRD Reference](../reference/crd-reference)
+[Lifecycle CRD Reference](../crd-reference)
 and
-[Metrics CRD Reference](../reference/crd-reference)
+[Metrics CRD Reference](../crd-reference)
 contains reference pages for the manifests
 that must be populated manually.
 
@@ -35,7 +34,7 @@ Use `kubectl` to inspect the current contents of any Keptn resource:
    kubectl get keptnapps -n namespace1
    ```
 
-1. Get the current manifest for the specified resource.
+2. Get the current manifest for the specified resource.
    For example, to view the manifest for the `my-keptn-app` resource
    in the `namespace1` namespace, the command is:
 

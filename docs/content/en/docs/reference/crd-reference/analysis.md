@@ -326,7 +326,7 @@ guide page.
 
 ## Files
 
-API reference: [Analysis](../../crd-ref/metrics/v1beta1/_index.md#analysis)
+API reference: [Analysis](../api-reference/metrics/v1beta1/_index.md#analysis)
 
 ## Differences between versions
 

@@ -50,7 +50,7 @@ Some key points:
     section for pages that describe the Keptn manifests
     that you populate manually for Keptn.
   * See the
-    [API Reference](../crd-ref)
+    [API Reference](../reference/api-reference/)
     for a comprehensive reference to all resources
     defined for Keptn.
 

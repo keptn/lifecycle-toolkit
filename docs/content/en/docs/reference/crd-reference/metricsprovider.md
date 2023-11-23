@@ -107,7 +107,7 @@ spec:
 
 API Reference:
 
-* [KeptnEvaluationDefinition](../../reference/lifecycle/)
+* [KeptnEvaluationDefinition](../api-reference/lifecycle/)
 
 ## Differences between versions
 

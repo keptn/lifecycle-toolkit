@@ -13,7 +13,7 @@ Each CRD is an object of an API library.
 In addition to the CRDs documented in this section,
 Keptn populates many resources on its own.
 For a comprehensive list of all Keptn resources, see
-[API Reference](../../reference/).
+[API Reference](../api-reference/).
 
 For more information about CRDs and APIs, see the Kubernetes documentation:
 

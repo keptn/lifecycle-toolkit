@@ -7,7 +7,7 @@ weight: 30
 A `KeptnTaskDefinition` defines tasks
 that Keptn runs as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
-[KeptnWorkload](../../reference/lifecycle/v1alpha3/_index.md#keptnworkload).
+[KeptnWorkload](../api-reference/lifecycle/v1alpha3/_index.md#keptnworkload).
 
 A Keptn task executes as a
 [runner](https://docs.gitlab.com/runner/executors/kubernetes.html#how-the-runner-creates-kubernetes-pods)
@@ -156,7 +156,7 @@ spec:
       [image concepts](https://kubernetes.io/docs/concepts/containers/images/)
       and pushed to a registry
     * **other fields** -- The full list of valid fields is available at
-      [ContainerSpec](../../reference/lifecycle/v1alpha3/_index.md#containerspec),
+      [ContainerSpec](../api-reference/lifecycle/v1alpha3/_index.md#containerspec),
       with additional information in the Kubernetes
       [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
       spec documentation.
@@ -333,7 +333,7 @@ spec:
 
 A Task executes the TaskDefinition of a
 [KeptnApp](app.md) or a
-[KeptnWorkload](../../reference/lifecycle/v1alpha3/#keptnworkload).
+[KeptnWorkload](../api-reference/lifecycle/v1alpha3/#keptnworkload).
 The execution is done by spawning a Kubernetes
 [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
 to handle a single Task.
@@ -567,14 +567,14 @@ directory for more example `KeptnTaskDefinition` YAML files.
 
 API Reference:
 
-* [KeptnTaskDefinition](../../reference/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
-* [KeptnTaskDefinitionList](../../reference/lifecycle/v1alpha3/_index.md#keptntaskdefinitionlist)
-* [KeptnTaskDefinitionSpec](../../reference/lifecycle/v1alpha3/_index.md#keptntaskdefinitionspec)
-* [FunctionReference](../../reference/lifecycle/v1alpha3/_index.md#functionreference)
-* [FunctionSpec](../../reference/lifecycle/v1alpha3/_index.md#runtimespec)
-* [FunctionStatus](../../reference/lifecycle/v1alpha3/_index.md#functionstatus)
-* [HttpReference](../../reference/lifecycle/v1alpha3/_index.md#httpreference)
-* [Inline](../../reference/lifecycle/v1alpha3/_index.md#inline)
+* [KeptnTaskDefinition](../api-reference/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
+* [KeptnTaskDefinitionList](../api-reference/lifecycle/v1alpha3/_index.md#keptntaskdefinitionlist)
+* [KeptnTaskDefinitionSpec](../api-reference/lifecycle/v1alpha3/_index.md#keptntaskdefinitionspec)
+* [FunctionReference](../api-reference/lifecycle/v1alpha3/_index.md#functionreference)
+* [FunctionSpec](../api-reference/lifecycle/v1alpha3/_index.md#runtimespec)
+* [FunctionStatus](../api-reference/lifecycle/v1alpha3/_index.md#functionstatus)
+* [HttpReference](../api-reference/lifecycle/v1alpha3/_index.md#httpreference)
+* [Inline](../api-reference/lifecycle/v1alpha3/_index.md#inline)
 
 ## Differences between versions
 

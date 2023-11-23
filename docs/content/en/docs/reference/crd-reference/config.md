@@ -69,7 +69,7 @@ spec:
 
 API Reference:
 
-* [KeptnTaskDefinition](../../reference/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
+* [KeptnTaskDefinition](../api-reference/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
 
 ## Differences between versions
 

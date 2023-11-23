@@ -30,7 +30,7 @@ func TestMetricServer_disabledServer(t *testing.T) {
 
 	tInstance := &serverManager{
 		ticker:        clock.New().Ticker(3 * time.Second),
-		ofClient:      openfeature.NewClient("klt-test"),
+		ofClient:      openfeature.NewClient("keptn-test"),
 		exposeMetrics: false,
 		k8sClient:     fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 	}
@@ -74,7 +74,7 @@ func TestMetricServer_happyPath(t *testing.T) {
 
 	tInstance := &serverManager{
 		ticker:        clock.New().Ticker(3 * time.Second),
-		ofClient:      openfeature.NewClient("klt-test"),
+		ofClient:      openfeature.NewClient("keptn-test"),
 		exposeMetrics: true,
 		k8sClient:     k8sClient,
 	}
@@ -127,7 +127,7 @@ func TestMetricServer_noMetric(t *testing.T) {
 
 	tInstance := &serverManager{
 		ticker:        clock.New().Ticker(3 * time.Second),
-		ofClient:      openfeature.NewClient("klt-test"),
+		ofClient:      openfeature.NewClient("keptn-test"),
 		exposeMetrics: true,
 		k8sClient:     k8sClient,
 	}

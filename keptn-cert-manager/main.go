@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/kelseyhightower/envconfig"
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
+	"github.com/keptn/lifecycle-toolkit/keptn-cert-manager/controllers/keptnwebhookcontroller"
 	corev1 "k8s.io/api/core/v1"
 	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -37,9 +37,9 @@ func init() {
 }
 
 type envConfig struct {
-	KeptnNamespace        string `envconfig:"NAMESPACE" default:"keptn-lifecycle-toolkit-system"`
-	KLTLabelSelectorKey   string `envconfig:"LABEL_SELECTOR_KEY" default:"keptn.sh/inject-cert"`
-	KLTLabelSelectorValue string `envconfig:"LABEL_SELECTOR_VALUE" default:"true"`
+	KeptnNamespace          string `envconfig:"NAMESPACE" default:"keptn-lifecycle-toolkit-system"`
+	KeptnLabelSelectorKey   string `envconfig:"LABEL_SELECTOR_KEY" default:"keptn.sh/inject-cert"`
+	KeptnLabelSelectorValue string `envconfig:"LABEL_SELECTOR_VALUE" default:"true"`
 }
 
 func main() {
@@ -107,7 +107,7 @@ func main() {
 		Log:           ctrl.Log.WithName("KeptnWebhookCert Controller"),
 		Namespace:     env.KeptnNamespace,
 		MatchLabels: map[string]string{
-			env.KLTLabelSelectorKey: env.KLTLabelSelectorValue,
+			env.KeptnLabelSelectorKey: env.KeptnLabelSelectorValue,
 		},
 	})
 	if err = certificateReconciler.SetupWithManager(mgr); err != nil {

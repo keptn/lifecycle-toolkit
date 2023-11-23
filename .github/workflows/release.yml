@@ -16,16 +16,16 @@ env:
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
   CONTROLLER_TOOLS_VERSION: "v0.13.0"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
-  PUBLISHABLE_ITEMS: '[".", "lifecycle-operator", "metrics-operator", "klt-cert-manager", "runtimes/deno-runtime", "runtimes/python-runtime", "scheduler"]'
+  PUBLISHABLE_ITEMS: '[".", "lifecycle-operator", "metrics-operator", "keptn-cert-manager", "runtimes/deno-runtime", "runtimes/python-runtime", "scheduler"]'
 
 jobs:
   release-please:
     runs-on: ubuntu-22.04
     outputs:
-      klt-release-created: ${{ steps.release.outputs.release_created }}
-      klt-tag-name: ${{ steps.release.outputs.tag_name }}
-      cert-manager-release-created: ${{ steps.release.outputs.klt-cert-manager--release_created }}
-      cert-manager-tag-name: ${{ steps.release.outputs.klt-cert-manager--tag_name }}
+      keptn-release-created: ${{ steps.release.outputs.release_created }}
+      keptn-tag-name: ${{ steps.release.outputs.tag_name }}
+      cert-manager-release-created: ${{ steps.release.outputs.keptn-cert-manager--release_created }}
+      cert-manager-tag-name: ${{ steps.release.outputs.keptn-cert-manager--tag_name }}
       metrics-operator-release-created: ${{ steps.release.outputs.metrics-operator--release_created }}
       metrics-operator-tag-name: ${{ steps.release.outputs.metrics-operator--tag_name }}
       releases-created: ${{ steps.release.outputs.releases_created }}
@@ -46,7 +46,7 @@ jobs:
       - name: Debug info
         env:
           CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
-          KLT_TAG: ${{ steps.release.outputs.tag_name }}
+          KEPTN_TAG: ${{ steps.release.outputs.tag_name }}
           PATHS_RELEASED: ${{ steps.release.outputs.paths_released }}
           ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', fromJson(steps.release.outputs.paths_released)[0])] }}
           FULL_RELEASE_OUTPUT: ${{ toJSON(steps.release.outputs) }}
@@ -54,11 +54,11 @@ jobs:
           echo "PATHS_RELEASE_JSON: ${PATHS_RELEASE_JSON}"
           echo "FULL RELEASE OUTPUT: ${FULL_RELEASE_OUTPUT}"
           echo "CHANGED_ITEMS: ${CHANGED_ITEMS}"
-          echo "KLT_TAG: ${KLT_TAG}"
+          echo "KEPTN_TAG: ${KEPTN_TAG}"
           echo "ARTIFACT_TAG_NAME: ${ARTIFACT_TAG_NAME}"
           echo "PATHS_RELEASED: ${PATHS_RELEASED}"
-          echo "CERT_MANAGER_TAG_NAME: ${{ steps.release.outputs.klt-cert-manager--tag_name }}"
-          echo "KLT_TAG_NAME: ${{ steps.release.outputs.tag_name }}"
+          echo "CERT_MANAGER_TAG_NAME: ${{ steps.release.outputs.keptn-cert-manager--tag_name }}"
+          echo "KEPTN_TAG_NAME: ${{ steps.release.outputs.tag_name }}"
           echo "METRICS_OPERATOR_TAG_NAME: ${{ steps.release.outputs.metrics-operator--tag_name }}"
 
       - name: Create release matrix
@@ -66,7 +66,7 @@ jobs:
         uses: actions/github-script@v7
         env:
           CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
-          KLT_TAG: ${{ steps.release.outputs.tag_name }}
+          KEPTN_TAG: ${{ steps.release.outputs.tag_name }}
           ARTIFACT_TAG_NAME: ${{ steps.release.outputs[format('{0}--tag_name', fromJson(steps.release.outputs.paths_released)[0])] }}
         with:
           script: |
@@ -90,7 +90,7 @@ jobs:
                             tagName: process.env.ARTIFACT_TAG_NAME
                         });
                         break;
-                    case "klt-cert-manager":
+                    case "keptn-cert-manager":
                         releaseMatrix.push({
                             name: "certificate-operator",
                             folder: item,
@@ -152,7 +152,7 @@ jobs:
           IMAGE_TAG: ${{ matrix.config.tagName }}
         run: |
           # Remove artifact prefix from tag so that we get clean image tags
-          temp="${IMAGE_TAG##klt-}"
+          temp="${IMAGE_TAG##keptn-}"
           temp="${temp##cert-manager-}"
           temp="${temp##python-runtime-}"
           temp="${temp##deno-runtime-}"
@@ -207,9 +207,9 @@ jobs:
     name: Update Documentation
     needs:
       - release-please
-    if: needs.release-please.outputs.klt-release-created == 'true'
+    if: needs.release-please.outputs.keptn-release-created == 'true'
     with:
-      tag_name: ${{ needs.release-please.outputs.klt-tag-name }}
+      tag_name: ${{ needs.release-please.outputs.keptn-tag-name }}
     uses: ./.github/workflows/release-docs.yml
     secrets: inherit
 
@@ -217,8 +217,8 @@ jobs:
     name: Update examples
     needs:
       - release-please
-    if: needs.release-please.outputs.klt-release-created == 'true'
+    if: needs.release-please.outputs.keptn-release-created == 'true'
     with:
-      tag_name: ${{ needs.release-please.outputs.klt-tag-name }}
+      tag_name: ${{ needs.release-please.outputs.keptn-tag-name }}
     uses: ./.github/workflows/release-examples.yml
     secrets: inherit

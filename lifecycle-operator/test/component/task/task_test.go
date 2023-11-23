@@ -77,8 +77,8 @@ var _ = Describe("Task", Ordered, func() {
 					g.Expect(task.Status.Status).To(Equal(apicommon.StateFailed))
 				}, "20s").Should(Succeed())
 			})
-			It("succeed task if taskDefinition for Deno is present in default KLT namespace", func() {
-				By("create default KLT namespace")
+			It("succeed task if taskDefinition for Deno is present in default Keptn namespace", func() {
+				By("create default Keptn namespace")
 
 				ns := &v1.Namespace{
 					ObjectMeta: metav1.ObjectMeta{
@@ -130,8 +130,8 @@ var _ = Describe("Task", Ordered, func() {
 					g.Expect(task.Status.Status).To(Equal(apicommon.StateSucceeded))
 				}, "20s").Should(Succeed())
 			})
-			It("succeed task if taskDefinition for Container is present in default KLT namespace", func() {
-				By("create default KLT namespace")
+			It("succeed task if taskDefinition for Container is present in default Keptn namespace", func() {
+				By("create default Keptn namespace")
 
 				ns := &v1.Namespace{
 					ObjectMeta: metav1.ObjectMeta{

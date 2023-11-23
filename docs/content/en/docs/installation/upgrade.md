@@ -11,9 +11,9 @@ you can upgrade to the latest version
 by running the same command sequence used to install Keptn:
 
 ```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn klt/klt \
+helm upgrade --install keptn keptn/keptn \
    -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
@@ -57,9 +57,9 @@ kubectl delete -f \
 1. Use Helm to install a clean version of Keptn:
 
 ```shell
-helm repo add klt https://charts.lifecycle.keptn.sh
+helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn klt/klt -n keptn-lifecycle-toolkit-system --create-namespace --wait
+helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --create-namespace --wait
 ```
 
 For information about  advanced installation options, refer to

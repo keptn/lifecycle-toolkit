@@ -1,5 +1,5 @@
-name: "Deploy Keptn Lifecycle Toolkit on GH cluster"
-description: "Creates a Kind cluster and deploys Keptn Lifecycle Toolkit"
+name: "Deploy Keptn on GH cluster"
+description: "Creates a Kind cluster and deploys Keptn"
 inputs:
   kind-version:
     required: false
@@ -73,7 +73,7 @@ runs:
 
         for chart_dir in ./lifecycle-operator/chart \
                 ./metrics-operator/chart \
-                ./klt-cert-manager/chart \
+                ./keptn-cert-manager/chart \
                 ./chart; do
             cd "$chart_dir"
             echo "updating charts for" $chart_dir
@@ -82,7 +82,7 @@ runs:
             cd -  # Return to the previous directory
         done
 
-        cd .github/actions/deploy-klt-on-cluster
+        cd .github/actions/deploy-keptn-on-cluster
 
         if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_on" ]; then
           echo "  allowedNamespaces: [allowed-ns-test]" >> values.yaml

@@ -58,7 +58,7 @@
     {
       "matchPackageNames": [
         "ghcr.io/keptn/certificate-operator",
-        "github.com/keptn/lifecycle-toolkit/klt-cert-manager"
+        "github.com/keptn/lifecycle-toolkit/keptn-cert-manager"
       ],
       "groupName": "keptn/cert-manager"
     }

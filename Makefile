@@ -75,7 +75,7 @@ metrics-operator-test:
 
 .PHONY: certmanager-test
 certmanager-test:
-	$(MAKE) -C klt-cert-manager test
+	$(MAKE) -C keptn-cert-manager test
 
 .PHONY: operator-test
 operator-test:
@@ -125,11 +125,11 @@ build-deploy-scheduler:
 
 .PHONY: build-deploy-certmanager
 build-deploy-certmanager:
-	$(MAKE) -C klt-cert-manager release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
-	$(MAKE) -C klt-cert-manager push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
-	$(MAKE) -C klt-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
+	$(MAKE) -C keptn-cert-manager release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C keptn-cert-manager push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C keptn-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
 	kubectl create namespace keptn-lifecycle-toolkit-system --dry-run=client -o yaml | kubectl apply -f -
-	kubectl apply -f klt-cert-manager/config/rendered/release.yaml
+	kubectl apply -f keptn-cert-manager/config/rendered/release.yaml
 
 .PHONY: build-deploy-dev-environment
 build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-metrics-operator build-deploy-scheduler
@@ -147,7 +147,7 @@ metrics-operator-lint:
 
 .PHONY: certmanager-lint
 certmanager-lint:
-	$(MAKE) -C klt-cert-manager lint
+	$(MAKE) -C keptn-cert-manager lint
 
 .PHONY: operator-lint
 operator-lint:

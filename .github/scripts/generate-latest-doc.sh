@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Keptn Lifecycle Toolkit Documentation generation
+# Keptn Documentation generation
 #
 # This script supports the release of the latest version of the documentation
 # The final files are available under the docs/release folder

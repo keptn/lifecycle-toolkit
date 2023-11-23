@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Keptn Lifecycle Toolkit Helm Testing
+# Keptn Helm Testing
 #
 # This script supports the comparison of standard values and expected templated results to helm chart
 # it is used to make sure changes to the chart are intentional and produce expected outcomes
@@ -17,7 +17,7 @@ echo "running Helm tests"
 
     for chart_dir in ./lifecycle-operator/chart \
             ./metrics-operator/chart \
-            ./klt-cert-manager/chart \
+            ./keptn-cert-manager/chart \
             ./chart; do
         # shellcheck disable=SC2164
         cd "$chart_dir"

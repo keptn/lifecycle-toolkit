@@ -133,7 +133,7 @@ func TestTaskHandler(t *testing.T) {
 			unbindSpanCalls: 0,
 		},
 		{
-			name: "task not started - taskDefinition in default KLT namespace",
+			name: "task not started - taskDefinition in default Keptn namespace",
 			object: &v1alpha3.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",

@@ -1,14 +1,14 @@
 apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnApp
 metadata:
-  name: "some-klt-app1"
+  name: "some-keptn-app1"
 spec:
   version: "1.2.3"
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnAppVersion
 metadata:
-  name: "some-klt-app-version-1"
+  name: "some-keptn-app-version-1"
 spec:
   appName: podtato-head
   preDeploymentTasks:

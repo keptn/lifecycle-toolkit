@@ -1,6 +1,6 @@
 dependencies:
 - name: keptn-cert-manager
-  repository: file://../klt-cert-manager/chart
+  repository: file://../keptn-cert-manager/chart
   version: 0.2.0
 - name: keptn-lifecycle-operator
   repository: file://../lifecycle-operator/chart

@@ -1,6 +1,6 @@
 # Choosing where to add documentation
 
-If the change to the docs needs to reflect the next version of KLT, please edit them here, following the instructions
+If the change to the docs needs to reflect the next version of Keptn, please edit them here, following the instructions
 below.
 For already existing documentation versions directly edit them
 from <https://github.com/keptn-sandbox/lifecycle-toolkit-docs> or from <https://lifecycle.keptn.sh/>.
@@ -75,7 +75,7 @@ It should allow bleeding-edge users and contributors to see the current state an
 - build-environment: production
 - config folder: [production](./config/production/)
 
-This documentation set contains all released versions of KLT and is stored in an orphaned branch called `page`.
+This documentation set contains all released versions of Keptn and is stored in an orphaned branch called `page`.
 
 Each version has its own `docs` folder named `docs-<version>`.
 Except for the latest version which will be within the `docs` folder.

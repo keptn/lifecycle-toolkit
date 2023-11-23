@@ -180,7 +180,7 @@ func Test_Getkeptnmetric(t *testing.T) {
 			wantError: false,
 		},
 		{
-			name: "objective without namespace and existing keptnmetric in default KLT namespace",
+			name: "objective without namespace and existing keptnmetric in default Keptn namespace",
 			objective: klcv1alpha3.Objective{
 				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
 					Name: "metric",

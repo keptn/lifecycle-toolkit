@@ -74,6 +74,7 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 	require.NotEmpty(t, resultingJob.OwnerReferences)
 	require.Len(t, resultingJob.Spec.Template.Spec.Containers, 1)
 	require.Len(t, resultingJob.Spec.Template.Spec.Containers[0].Env, 5)
+	require.Len(t, resultingJob.Spec.Template.Spec.ImagePullSecrets, 1)
 	require.Equal(t, map[string]string{
 		"label1": "label2",
 	}, resultingJob.Labels)
@@ -251,6 +252,7 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 	require.NotNil(t, resultingJob, "generateJob function return a valid Job")
 
 	require.NotNil(t, resultingJob.Spec.Template.Spec.Containers)
+	require.Equal(t, "my-docker-secret", resultingJob.Spec.Template.Spec.ImagePullSecrets[0].Name, "ImagePullSecret is not assigned correctly")
 	require.Equal(t, resultingJob.Spec.Template.Spec.ServiceAccountName, svcAccname)
 	require.Equal(t, resultingJob.Spec.Template.Spec.AutomountServiceAccountToken, &token)
 	require.Equal(t, resultingJob.Spec.TTLSecondsAfterFinished, &ttlSecondsAfterFinished)

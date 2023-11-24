@@ -1,0 +1,264 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kuberentes.io/instance: certificate-operator
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: serviceaccount
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+  name: certificate-operator
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: certificate-operator-role
+  namespace: keptn-lifecycle-toolkit-system
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resourceNames:
+  - keptn-certs
+  resources:
+  - secrets
+  verbs:
+  - get
+  - patch
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/instance: leader-election-role
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: role
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+  name: leader-election-role
+  namespace: keptn-lifecycle-toolkit-system
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: certificate-operator-role
+rules:
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - mutatingwebhookconfigurations
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - validatingwebhookconfigurations
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/instance: certificate-operator-leader-election-rolebinding
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: rolebinding
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+  name: certificate-operator-leader-election-rolebinding
+  namespace: keptn-lifecycle-toolkit-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: certificate-operator
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/instance: certificate-operator-rolebinding
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: rolebinding
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+  name: certificate-operator-role-binding
+  namespace: keptn-lifecycle-toolkit-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: certificate-operator-role
+subjects:
+- kind: ServiceAccount
+  name: certificate-operator
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/instance: certificate-operator-rolebinding
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: clusterrolebinding
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+  name: certificate-operator-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: certificate-operator-role
+subjects:
+- kind: ServiceAccount
+  name: certificate-operator
+  namespace: keptn-lifecycle-toolkit-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: keptn-cert-manager
+    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/instance: certificate-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: deployment
+    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    control-plane: certificate-operator
+  name: certificate-operator
+  namespace: keptn-lifecycle-toolkit-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      control-plane: certificate-operator
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: certificate-operator
+      labels:
+        control-plane: certificate-operator
+    spec:
+      containers:
+      - args:
+        - --leader-elect
+        command:
+        - /manager
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: LABEL_SELECTOR_KEY
+          value: keptn.sh/inject-cert
+        - name: LABEL_SELECTOR_VALUE
+          value: "true"
+        image: geoffrey13/certificate-operator:202310111697020205
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: certificate-operator
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 25m
+            memory: 64Mi
+          requests:
+            cpu: 5m
+            memory: 16Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65532
+          runAsUser: 65532
+          seccompProfile:
+            type: RuntimeDefault
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: certificate-operator
+      terminationGracePeriodSeconds: 10

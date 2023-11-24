@@ -23,7 +23,7 @@ the [keptn-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/ke
 How it works:
 
 * The certificate is created as a secret
-in the `keptn-lifecycle-toolkit-system` namespace
+in the `keptn-system` namespace
 with a renewal threshold of 12 hours.
 * If the certificate expires,
 the [keptn-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/keptn-cert-manager/README.md)
@@ -49,11 +49,11 @@ because of an invalid certificate.
 To solve this, delete the certificate and restart the operator.
 
 The Keptn cert-manager certificate is stored as a secret in the
-`keptn-lifecycle-toolkit-system` namespace.
+`keptn-system` namespace.
 To retrieve it:
 
 ```shell
-kubectl get secrets -n keptn-lifecycle-toolkit-system
+kubectl get secrets -n keptn-system
 ```
 
 This returns something like:
@@ -67,5 +67,5 @@ Specify the `NAME` of the Keptn certificate (`keptn-certs` in this case)
 to delete the Keptn certificate:
 
 ```shell
-kubectl delete secret keptn-certs -n keptn-lifecycle-toolkit-system
+kubectl delete secret keptn-certs -n keptn-system
 ```

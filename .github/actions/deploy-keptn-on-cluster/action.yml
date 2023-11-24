@@ -98,6 +98,6 @@ runs:
         echo "installing with values.yaml file:"
         cat tmp.yaml
 
-        helm install -n keptn-lifecycle-toolkit-system --create-namespace keptn ../../../chart \
+        helm install -n keptn-system --create-namespace keptn ../../../chart \
           --values ./tmp.yaml \
           --debug --wait --timeout 1m

@@ -177,7 +177,7 @@ allowedNamespaces: []
 ## @param  deniedNamespaces specifies a list of namespaces where the lifecycle orchestration functionality is disabled, ignored if `allowedNamespaces` is set
 deniedNamespaces:
   - cert-manager
-  - keptn-lifecycle-toolkit-system
+  - keptn-system
   - observability
   - monitoring
 

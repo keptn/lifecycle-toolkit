@@ -42,7 +42,7 @@ To do so, please create a port-forward
 for the `jaeger-query` service:
 
 ```shell
-kubectl port-forward -n keptn-lifecycle-toolkit-system svc/jaeger-query 16686 
+kubectl port-forward -n keptn-system svc/jaeger-query 16686 
 ```
 
 Afterwards, you can view the Jaeger UI in the browser at

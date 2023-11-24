@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr/testr"
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates/fake"
+	"github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/certificates/fake"
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"

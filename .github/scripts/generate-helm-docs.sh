@@ -31,7 +31,7 @@ echo "Generating lifecycle operator readme now..."
 readme-generator --values=./lifecycle-operator/chart/values.yaml --readme=./lifecycle-operator/chart/README.md
 
 echo "Generating keptn cert manager readme now..."
-readme-generator --values=./klt-cert-manager/chart/values.yaml --readme=./klt-cert-manager/chart/README.md
+readme-generator --values=./keptn-cert-manager/chart/values.yaml --readme=./keptn-cert-manager/chart/README.md
 
 echo "Generating keptn metrics operator readme now..."
 readme-generator --values=./metrics-operator/chart/values.yaml --readme=./metrics-operator/chart/README.md

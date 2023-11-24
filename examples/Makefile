@@ -9,9 +9,9 @@ install: install-observability
 	@echo "-----------------------------------"
 	@echo "Create Namespace and install Keptn-lifecycle-toolkit"
 	@echo "-----------------------------------"
-	helm repo add klt https://charts.lifecycle.keptn.sh
+	helm repo add keptn https://charts.lifecycle.keptn.sh
 	helm repo update
-	helm upgrade --install keptn klt/klt -n $(TOOLKIT_NAMESPACE) --create-namespace --wait
+	helm upgrade --install keptn keptn/keptn -n $(TOOLKIT_NAMESPACE) --create-namespace --wait
 	kubectl apply -f support/keptn/keptnconfig.yaml -n $(TOOLKIT_NAMESPACE)
 
 .PHONY: install-observability

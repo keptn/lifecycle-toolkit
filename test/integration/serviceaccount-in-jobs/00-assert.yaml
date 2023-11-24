@@ -3,5 +3,5 @@ kind: Pod
 status:
   phase: Succeeded
 spec:
-  serviceAccountName: klt-serviceaccount
+  serviceAccountName: keptn-serviceaccount
   automountServiceAccountToken: false

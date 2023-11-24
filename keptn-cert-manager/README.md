@@ -1,15 +1,15 @@
-# klt-cert-manager
+# keptn-cert-manager
 
 The Keptn certificate manager ensures that the webhooks of an operator can obtain a valid certificate
 to access the Kubernetes API server.
 
 ## Description
 
-This `klt-cert-manager` operator should only be installed when paired with the Lifecycle Toolkit operator versions 0.6.0
+This `keptn-cert-manager` operator should only be installed when paired with the Lifecycle Toolkit operator versions 0.6.0
 or above.
 The TLS certificate is mounted as a volume in the LT operator pod and is renewed every 12 hours or every time the LT
 operator deployment changes.
-The `klt-cert-manager` retrieves all `MutatingWebhookConfigurations`, `ValidatingWebhookConfigurations` and
+The `keptn-cert-manager` retrieves all `MutatingWebhookConfigurations`, `ValidatingWebhookConfigurations` and
 `CustomResourceDefinitions` based on a label selector that can be defined using the following environment variables:
 
 - `LABEL_SELECTOR_KEY`: Label key used or identifying resources for certificate injection.
@@ -29,14 +29,14 @@ metadata:
   name: keptnconfigs.options.keptn.sh
 ````
 
-## Using the klt-cert-manager library
+## Using the keptn-cert-manager library
 
-The functionality provided by this operator can also be added to other operators by using the `klt-cert-manager` as
+The functionality provided by this operator can also be added to other operators by using the `keptn-cert-manager` as
 a library.
 To do this, add the library as a dependency to your application:
 
 ```shell
-go get github.com/keptn/lifecycle-toolkit/klt-cert-manager
+go get github.com/keptn/lifecycle-toolkit/keptn-cert-manager
 ```
 
 Then, in your operator's setup logic, an instance of the `KeptnWebhookCertificateReconciler` can be
@@ -51,10 +51,10 @@ import (
     "os"
     "sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 
-    "github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
-    "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
-    certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
-    "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
+    "github.com/keptn/lifecycle-toolkit/keptn-cert-manager/controllers/keptnwebhookcontroller"
+    "github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/certificates"
+    certCommon "github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/common"
+    "github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/webhook"
     // +kubebuilder:scaffold:imports
 )
 
@@ -183,7 +183,7 @@ import (
     "log"
     "os"
     
-    "github.com/keptn/lifecycle-toolkit/klt-cert-manager/controllers/keptnwebhookcontroller"
+    "github.com/keptn/lifecycle-toolkit/keptn-cert-manager/controllers/keptnwebhookcontroller"
     // +kubebuilder:scaffold:imports
 )
 

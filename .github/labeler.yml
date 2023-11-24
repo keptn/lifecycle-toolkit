@@ -12,7 +12,7 @@ metrics-operator:
   - metrics-operator/**/*
 
 cert-manager:
-  - klt-cert-manager/**/*
+  - keptn-cert-manager/**/*
 
 ops:
   - .github/**/*

@@ -16,14 +16,14 @@ This page explains how the documentation source files are organized.
 ## Primary documentation set
 
 The source for the
-[Keptn Lifecycle Toolkit](https://lifecycle.keptn.sh/docs)
+[Keptn](https://lifecycle.keptn.sh/docs)
 documentation is stored under
 the *docs/content/en/docs* directory in the repository.
 
 The subdirectories correspond to the contents listed in the right frame.
 In the order they appear in the rendered docs, the subdirectories are:
 
-* **intro** (Introduction to the Keptn Lifecycle Toolkit):
+* **intro** (Introduction to the Keptn):
   A brief overview of Keptn, its features and use cases, and its history
 * **getting-started** (Getting started):
   A hands-on exercise that demonstrates the capabilities of Keptn
@@ -59,7 +59,7 @@ In the order they appear in the rendered docs, the subdirectories are:
 * **yaml-crd-ref** (CRD Reference):
   Reference pages for the CRs that users must populate.
   This is a subset of the CRDs documented in the *API Reference* section
-* **migrate** (Migrating to the Keptn Lifecycle Toolkit):
+* **migrate** (Migrating to the Keptn):
   Information to help users who are migrating to Keptn
   from Keptn v1
 
@@ -173,7 +173,7 @@ of the documentation includes the following fields:
 ```yaml
 ---
 title: Installation and Upgrade
-description: Learn how to install and upgrade the Keptn Lifecycle Toolkit
+description: Learn how to install and upgrade the Keptn
 weight: 30
 ---
 ```

@@ -6,14 +6,14 @@
   "pull-request-title-pattern": "chore: release${component} ${version}",
   "packages": {
     ".": {
-      "package-name": "klt",
+      "package-name": "keptn",
       "changelog-path": "CHANGELOG.md",
       "release-type": "go",
       "prerelease": false,
-      "monorepo-tags": "klt",
+      "monorepo-tags": "keptn",
       "draft": false,
       "exclude-paths": [
-        "klt-cert-manager",
+        "keptn-cert-manager",
         "lifecycle-operator",
         "metrics-operator",
         "scheduler",
@@ -30,7 +30,7 @@
         "docs/content/en/docs/getting-started/_index.md"
       ]
     },
-    "klt-cert-manager": {
+    "keptn-cert-manager": {
       "package-name": "cert-manager",
       "changelog-path": "CHANGELOG.md",
       "release-type": "go",

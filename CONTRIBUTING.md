@@ -1,7 +1,7 @@
-# Contributing to the Keptn Lifecycle Toolkit
+# Contributing to the Keptn
 
 We are thrilled to have you join us as a contributor!
-The Keptn Lifecycle Toolkit is a community-driven project and we
+The Keptn is a community-driven project and we
 greatly value collaboration.
 There are various ways to contribute to the Lifecycle Toolkit, and
 all contributions are highly valued.
@@ -30,7 +30,7 @@ If you want to work on it, just post a comment on the issue.
 along with your first pull request.
 
 This document lays out how to get you started in contributing to
-Keptn Lifecycle Toolkit, so please read on.
+Keptn, so please read on.
 
 ## How to Start?
 
@@ -59,7 +59,7 @@ Please check [Linter Requirements](docs/content/en/contribute/docs/linter-requir
 
 See [Working with Git](docs/content/en/contribute/general/git)
 
-Your PR will usually be reviewed by the Keptn Lifecycle Toolkit team within a
+Your PR will usually be reviewed by the Keptn team within a
 couple of days, but feel free to let us know about your PR
 [via Slack](https://cloud-native.slack.com/channels/keptn-lifecycle-toolkit-dev).
 

@@ -27,7 +27,7 @@ The steps are:
 
 * Install `cert-manager.io` if it is not already installed.
 * Add the `Certificate` and `Issuer` CRs for `cert-manager.io`.
-* (optional) Install Keptn without the built-in `klt-cert-manager` via Helm
+* (optional) Install Keptn without the built-in `keptn-cert-manager` via Helm
 
 ## Add the CR(s) for cert-manager.io
 
@@ -47,13 +47,13 @@ spec:
   - metrics-webhook-service.<your-namespace>.svc.cluster.local
   issuerRef:
     kind: Issuer
-    name: klt-selfsigned-issuer
+    name: keptn-selfsigned-issuer
   secretName: keptn-certs
 ---
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: klt-selfsigned-issuer
+  name: keptn-selfsigned-issuer
   namespace: <your-namespace>
 spec:
   selfSigned: {}

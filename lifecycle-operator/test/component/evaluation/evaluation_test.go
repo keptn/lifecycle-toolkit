@@ -108,7 +108,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 				err = k8sClient.Delete(context.TODO(), metric)
 				common.LogErrorIfPresent(err)
 			})
-			It("KeptnEvaluationController Should succeed, as it finds KeptnEvaluationDefinition in default KLT namespace", func() {
+			It("KeptnEvaluationController Should succeed, as it finds KeptnEvaluationDefinition in default Keptn namespace", func() {
 				By("Create EvaluationDefinition")
 
 				evaluationDefinition = makeEvaluationDefinition(evaluationDefinitionName, KeptnNamespace, metricName)

@@ -11,7 +11,7 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/kubeutils"
+	"github.com/keptn/lifecycle-toolkit/keptn-cert-manager/kubeutils"
 )
 
 var serialNumberLimit = new(big.Int).Lsh(big.NewInt(1), 128)

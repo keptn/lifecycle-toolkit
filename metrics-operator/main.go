@@ -182,7 +182,7 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("klt"), env.ExposeKeptnMetrics, metricServerTickerInterval)
+	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("keptn"), env.ExposeKeptnMetrics, metricServerTickerInterval)
 
 	metricsLogger := ctrl.Log.WithName("KeptnMetric Controller")
 	if err = (&metricscontroller.KeptnMetricReconciler{

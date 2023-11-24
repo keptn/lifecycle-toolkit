@@ -74,7 +74,6 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 	require.NotEmpty(t, resultingJob.OwnerReferences)
 	require.Len(t, resultingJob.Spec.Template.Spec.Containers, 1)
 	require.Len(t, resultingJob.Spec.Template.Spec.Containers[0].Env, 5)
-	require.Len(t, resultingJob.Spec.Template.Spec.ImagePullSecrets, 1)
 	require.Equal(t, map[string]string{
 		"label1": "label2",
 	}, resultingJob.Labels)

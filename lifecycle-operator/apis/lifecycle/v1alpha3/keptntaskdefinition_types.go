@@ -65,6 +65,7 @@ type KeptnTaskDefinitionSpec struct {
 	// +kubebuilder:default:=300
 	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
 	// ImagePullSecrets is an optional field to specify the names of secrets to use for pulling container images
+	// +optional
 	ImagePullSecrets []v1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
 }
 

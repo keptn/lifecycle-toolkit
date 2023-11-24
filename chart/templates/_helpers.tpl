@@ -73,3 +73,13 @@ Usage:
         {{- tpl (.value | toYaml) .context }}
     {{- end }}
 {{- end -}}
+
+{{/*
+Checks for the imagePullPolicy */}}
+{{- define "common.imagePullPolicy" -}}
+  {{- if .Values.global.imagePullPolicy -}}
+    {{- .Values.global.imagePullPolicy -}}
+  {{- else -}}
+    {{- default .Values.image.pullPolicy "" -}}
+  {{- end -}}
+{{- end -}}

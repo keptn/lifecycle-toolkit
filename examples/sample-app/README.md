@@ -37,7 +37,7 @@ To enable Slack notification add `post-deployment-notification` in as a postDepl
     - post-deployment-notification
 ```
 
-## Deploy the Observability Part and Keptn-lifecycle-toolkit
+## Deploy the Observability Part and Keptn
 
 ```make install```
 

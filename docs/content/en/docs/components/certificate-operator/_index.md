@@ -18,7 +18,7 @@ Keptn includes a Mutating Webhook
 that requires TLS certificates to be mounted as a volume in its pod.
 In version 0.6.0 and later, the certificate creation
 is handled automatically by
-the [keptn-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/klt-cert-manager/README.md).
+the [keptn-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/keptn-cert-manager/README.md).
 
 How it works:
 
@@ -26,7 +26,7 @@ How it works:
 in the `keptn-lifecycle-toolkit-system` namespace
 with a renewal threshold of 12 hours.
 * If the certificate expires,
-the [keptn-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/klt-cert-manager/README.md)
+the [keptn-cert-manager](https://github.com/keptn/lifecycle-toolkit/blob/main/keptn-cert-manager/README.md)
 renews it.
 * The Keptn `lifecycle-operator` waits for a valid certificate to be ready.
 * When the certificate is ready,

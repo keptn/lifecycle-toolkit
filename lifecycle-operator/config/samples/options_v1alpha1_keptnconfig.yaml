@@ -4,9 +4,9 @@ metadata:
   labels:
     app.kubernetes.io/name: keptnconfig
     app.kubernetes.io/instance: keptnconfig-sample
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/created-by: keptn-lifecycle-toolkit
+    app.kubernetes.io/created-by: keptn
     control-plane: lifecycle-operator
   name: keptnconfig-sample
 spec:

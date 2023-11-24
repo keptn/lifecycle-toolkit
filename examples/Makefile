@@ -7,7 +7,7 @@ GRAFANA_PORT_FORWARD ?= 3000
 .PHONY: install
 install: install-observability
 	@echo "-----------------------------------"
-	@echo "Create Namespace and install Keptn-lifecycle-toolkit"
+	@echo "Create Namespace and install Keptn"
 	@echo "-----------------------------------"
 	helm repo add keptn https://charts.lifecycle.keptn.sh
 	helm repo update
@@ -69,7 +69,7 @@ uninstall-argo: undeploy-podtatohead
 .PHONY: uninstall
 uninstall: uninstall-observability uninstall-argo
 	@echo "-----------------------------------"
-	@echo "Uninstall Keptn-lifecycle-toolkit"
+	@echo "Uninstall Keptn"
 	@echo "-----------------------------------"
 	helm uninstall keptn -n $(TOOLKIT_NAMESPACE)
 	kubectl delete ns $(TOOLKIT_NAMESPACE) --ignore-not-found=true

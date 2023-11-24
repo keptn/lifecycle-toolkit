@@ -25,7 +25,7 @@ metadata:
   name: lifecycle-operator
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     control-plane: lifecycle-operator
     keptn.sh/inject-cert: "true"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}

@@ -11,7 +11,7 @@ metadata:
   name: metrics-operator
   namespace: system
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     control-plane: metrics-operator
     app.kubernetes.io/component: metrics-operator
     keptn.sh/inject-cert: "true"

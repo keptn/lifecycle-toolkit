@@ -9,7 +9,7 @@ and [Prometheus](https://prometheus.io).
 The application deployed uses an example of pre-Deployment Evaluation
 based on prometheus metrics.
 
-- To install the whole demo, including Keptn-lifecycle-toolkit,
+- To install the whole demo, including Keptn,
   execute the following command:
 
   ```shell

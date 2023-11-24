@@ -4,7 +4,7 @@ metadata:
   name: lifecycle-operator
   namespace: system
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/component: lifecycle-operator
     control-plane: lifecycle-operator
     keptn.sh/inject-cert: "true"

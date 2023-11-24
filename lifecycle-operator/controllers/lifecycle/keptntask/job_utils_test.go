@@ -251,7 +251,7 @@ func TestKeptnTaskReconciler_generateJob(t *testing.T) {
 	require.NotNil(t, resultingJob, "generateJob function return a valid Job")
 
 	require.NotNil(t, resultingJob.Spec.Template.Spec.Containers)
-	require.Equal(t, "my-docker-secret", resultingJob.Spec.Template.Spec.ImagePullSecrets[0].Name, "ImagePullSecret is not assigned correctly")
+	require.Equal(t, resultingJob.Spec.Template.Spec.ImagePullSecrets[0].Name, imagePullSecret[0].Name, "ImagePullSecret is not assigned correctly")
 	require.Equal(t, resultingJob.Spec.Template.Spec.ServiceAccountName, svcAccname)
 	require.Equal(t, resultingJob.Spec.Template.Spec.AutomountServiceAccountToken, &token)
 	require.Equal(t, resultingJob.Spec.TTLSecondsAfterFinished, &ttlSecondsAfterFinished)

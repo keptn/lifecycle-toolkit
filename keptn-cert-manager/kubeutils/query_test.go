@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr/testr"
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/fake"
+	"github.com/keptn/lifecycle-toolkit/keptn-cert-manager/fake"
 )
 
 func TestKubeQuery(t *testing.T) {

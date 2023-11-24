@@ -34,7 +34,7 @@ jobs:
           - name: "scheduler"
             folder: "scheduler/"
           - name: "certificate-operator"
-            folder: "klt-cert-manager/"
+            folder: "keptn-cert-manager/"
     steps:
       - name: Check out code
         uses: actions/checkout@v4

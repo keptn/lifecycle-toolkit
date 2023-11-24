@@ -9,13 +9,13 @@ ignore: |
   dashboards/grafana
   lifecycle-operator/config/crd/bases/*
   metrics-operator/config/crd/bases/*
-  klt-cert-manager/config/crd/bases/*
+  keptn-cert-manager/config/crd/bases/*
   lifecycle-operator/config/rbac/role.yaml
   metrics-operator/config/rbac/role.yaml
-  klt-cert-manager/config/rbac/role.yaml
+  keptn-cert-manager/config/rbac/role.yaml
   helm/chart
   metrics-operator/chart
-  klt-cert-manager/chart
+  keptn-cert-manager/chart
   lifecycle-operator/chart
   .github/scripts/.helm-tests
 

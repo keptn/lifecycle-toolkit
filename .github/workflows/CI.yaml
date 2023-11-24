@@ -83,7 +83,7 @@ jobs:
           - name: "scheduler"
             folder: "scheduler/"
           - name: "certificate-operator"
-            folder: "klt-cert-manager/"
+            folder: "keptn-cert-manager/"
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -129,7 +129,7 @@ jobs:
           - name: "python-runtime"
             folder: "runtimes/python-runtime/"
           - name: "certificate-operator"
-            folder: "klt-cert-manager/"
+            folder: "keptn-cert-manager/"
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -242,10 +242,10 @@ jobs:
           - name: keptn-metrics-operator
             path: metrics-operator/chart
           - name: keptn-cert-manager
-            path: klt-cert-manager/chart
+            path: keptn-cert-manager/chart
     runs-on: ubuntu-22.04
     steps:
-      - name: Check out klt repo
+      - name: Check out keptn repo
         uses: actions/checkout@v4
 
       - name: Check out helm-charts repo
@@ -267,7 +267,7 @@ jobs:
           helm dependency update
           helm dependency build
 
-      - name: Copy chart from klt to helm repo
+      - name: Copy chart from keptn to helm repo
         run: rsync -av --delete --exclude='charts/*.tgz' ./${{ matrix.config.path }}/ ./helm-charts-repository/charts/${{ matrix.config.name }}/
 
       - name: Create Pull Request

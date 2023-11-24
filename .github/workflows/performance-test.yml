@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup cluster
-        uses: ./.github/actions/deploy-klt-on-cluster
+        uses: ./.github/actions/deploy-keptn-on-cluster
         with:
           runtime_tag: ${{ inputs.runtime_tag }}
 

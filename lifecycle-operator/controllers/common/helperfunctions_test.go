@@ -159,7 +159,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 			wantError: false,
 		},
 		{
-			name: "taskDef found in default KLT namespace",
+			name: "taskDef found in default Keptn namespace",
 			taskDef: &klcv1alpha3.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "taskDef",
@@ -243,7 +243,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 			wantError: false,
 		},
 		{
-			name: "evalDef found in default KLT namespace",
+			name: "evalDef found in default Keptn namespace",
 			evalDef: &klcv1alpha3.KeptnEvaluationDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "evalDef",

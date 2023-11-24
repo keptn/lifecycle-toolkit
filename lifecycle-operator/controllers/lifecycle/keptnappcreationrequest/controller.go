@@ -37,7 +37,6 @@ import (
 )
 
 const (
-	managedByKLT   = "klt" //TODO deprecate and remove in the next version
 	managedByKeptn = "keptn"
 )
 
@@ -291,5 +290,5 @@ func computeVersionFromWorkloads(workloads []lifecycle.KeptnWorkload) string {
 
 func appIsManagedByKeptn(keptnApp *lifecycle.KeptnApp) bool {
 	annotation := common.K8sRecommendedManagedByAnnotations
-	return keptnApp.Labels[annotation] == managedByKLT || keptnApp.Labels[annotation] == managedByKeptn
+	return keptnApp.Labels[annotation] == managedByKeptn
 }

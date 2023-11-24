@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: klt-serviceaccount
+  name: keptn-serviceaccount
 automountServiceAccountToken: false
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha3
@@ -10,7 +10,7 @@ metadata:
   name: task-serviceaccount
 spec:
   serviceAccount:
-    name: klt-serviceaccount
+    name: keptn-serviceaccount
   automountServiceAccountToken:
     type: false
   retries: 0

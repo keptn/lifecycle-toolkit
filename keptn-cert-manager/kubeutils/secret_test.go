@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr/testr"
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/fake"
+	"github.com/keptn/lifecycle-toolkit/keptn-cert-manager/fake"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

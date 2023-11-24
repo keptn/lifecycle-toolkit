@@ -131,7 +131,7 @@ func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
 	require.NotNil(t, resp)
 	require.True(t, resp.Allowed)
 
-	// if we get an unsupported owner for the pod, we expect not to have any KLT resources to have been created
+	// if we get an unsupported owner for the pod, we expect not to have any Keptn resources to have been created
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
 
 	err := fakeClient.Get(context.Background(), types.NamespacedName{

@@ -27,7 +27,7 @@ manifests/
 /scheduler/config/rendered/release.yaml
 /lifecycle-operator/config/rendered/release.yaml
 /metrics-operator/config/rendered/release.yaml
-/klt-cert-manager/config/rendered/release.yaml
+/keptn-cert-manager/config/rendered/release.yaml
 # macOS
 .DS_Store
 

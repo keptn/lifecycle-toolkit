@@ -3,7 +3,7 @@ package webhook
 import (
 	"flag"
 
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
+	"github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/certificates"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 )

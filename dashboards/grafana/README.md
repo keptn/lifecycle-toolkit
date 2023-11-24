@@ -1,6 +1,6 @@
 # Grafana Dashboards for the Lifecycle Toolkit
 
-This folder contains the Grafana dashboards for the Keptn Lifecycle Toolkit.
+This folder contains the Grafana dashboards for the Keptn.
 
 ## Installing the dashboards
 

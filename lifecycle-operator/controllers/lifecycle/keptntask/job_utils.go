@@ -109,6 +109,7 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 					RestartPolicy:                "OnFailure",
 					ServiceAccountName:           definition.GetServiceAccount(),
 					AutomountServiceAccountToken: definition.GetAutomountServiceAccountToken(),
+					ImagePullSecrets:             definition.Spec.ImagePullSecrets,
 				},
 			},
 			BackoffLimit:            task.Spec.Retries,

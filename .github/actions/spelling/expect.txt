@@ -245,6 +245,7 @@ ifeq
 ifile
 ifndef
 IHandler
+imagepullsecret
 IManager
 IMeter
 Infof

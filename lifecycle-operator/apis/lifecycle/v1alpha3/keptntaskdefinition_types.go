@@ -64,6 +64,9 @@ type KeptnTaskDefinitionSpec struct {
 	// The timer starts when the status shows up to be Complete or Failed.
 	// +kubebuilder:default:=300
 	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
+	// ImagePullSecrets is an optional field to specify the names of secrets to use for pulling container images
+	// +optional
+	ImagePullSecrets []v1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
 }
 
 type RuntimeSpec struct {

@@ -603,6 +603,7 @@ _Appears in:_
 | `serviceAccount` _[ServiceAccountSpec](#serviceaccountspec)_ | ServiceAccount specifies the service account to be used in jobs to authenticate with the Kubernetes API and access cluster resources. |
 | `automountServiceAccountToken` _[AutomountServiceAccountTokenSpec](#automountserviceaccounttokenspec)_ | AutomountServiceAccountToken allows to enable K8s to assign cluster API credentials to a pod, if set to false the pod will decline the service account |
 | `ttlSecondsAfterFinished` _integer_ | TTLSecondsAfterFinished controller makes a job eligible to be cleaned up after it is finished. The timer starts when the status shows up to be Complete or Failed. |
+| `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#localobjectreference-v1-core) array_ | ImagePullSecrets is an optional field to specify the names of secrets to use for pulling container images |
 
 
 #### KeptnTaskDefinitionStatus

@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
     app.kubernetes.io/component: keptn-cert-manager
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     control-plane: certificate-operator
     {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
     {{- include "common.annotations" ( dict "context" . ) }}

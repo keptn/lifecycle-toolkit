@@ -27,9 +27,9 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
-	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
-	certwebhook "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
+	"github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/certificates"
+	certCommon "github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/common"
+	certwebhook "github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/webhook"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	analysiscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis"

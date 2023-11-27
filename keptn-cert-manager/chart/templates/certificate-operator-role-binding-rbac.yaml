@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
     {{- include "common.annotations" ( dict "context" . ) }}
 roleRef:

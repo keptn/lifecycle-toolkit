@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/instance: certificate-operator
     app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/managed-by: kustomize
 spec:
   selector:

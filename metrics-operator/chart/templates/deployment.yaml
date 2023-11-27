@@ -4,7 +4,7 @@ metadata:
   name: metrics-operator
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/component: metrics-operator
     control-plane: metrics-operator
     keptn.sh/inject-cert: "true"

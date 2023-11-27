@@ -7,7 +7,7 @@ metadata:
   namespace: "helmtests"
   labels:
     app.kubernetes.io/component: rbac
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
@@ -100,7 +100,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -365,7 +365,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -428,7 +428,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -1247,7 +1247,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -1317,7 +1317,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -1702,7 +1702,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -1895,7 +1895,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -2077,7 +2077,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -2489,7 +2489,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -4249,7 +4249,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -4541,7 +4541,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -5331,7 +5331,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -6323,7 +6323,7 @@ metadata:
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
@@ -6421,7 +6421,7 @@ metadata:
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
@@ -6514,7 +6514,7 @@ metadata:
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
@@ -6538,7 +6538,7 @@ metadata:
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
@@ -6667,7 +6667,7 @@ metadata:
   namespace: "helmtests"
   labels:
     app.kubernetes.io/component: keptn-cert-manager
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     control-plane: certificate-operator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -6751,7 +6751,7 @@ metadata:
   name: lifecycle-operator
   namespace: "helmtests"
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     control-plane: lifecycle-operator
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -6965,7 +6965,7 @@ metadata:
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     keptn.sh/inject-cert: "true"
-    app.kubernetes.io/part-of: "keptn-lifecycle-toolkit"
+    app.kubernetes.io/part-of: "keptn"
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator

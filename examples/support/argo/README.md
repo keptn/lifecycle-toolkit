@@ -5,7 +5,7 @@ using Keptn and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/).
 
 ## TL;DR
 
-* You can install ArgoCD and Keptn-lifecycle-toolkit using: `make install`
+* You can install ArgoCD and Keptn using: `make install`
 * Install argo CLI according to the instructions [here](https://argo-cd.readthedocs.io/en/stable/cli_installation/)
 * Afterward, you can fetch the secret for the ArgoCD CLI using: `make argo-get-password`
 * Then you can port-forward the ArgoUI using: `make port-forward-argocd`

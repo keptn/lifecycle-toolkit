@@ -67,8 +67,6 @@ spec:
           value: {{ .Values.lifecycleOperator.env.functionRunnerImage | quote }}
         - name: PYTHON_RUNNER_IMAGE
           value: {{ .Values.lifecycleOperator.env.pythonRunnerImage | quote }}
-        - name: OTEL_COLLECTOR_URL
-          value: {{ .Values.lifecycleOperator.env.otelCollectorUrl | quote }}
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
           value: {{ .Values.lifecycleOperator.env.keptnAppControllerLogLevel | quote
             }}
@@ -203,8 +201,6 @@ spec:
         - /bin/kube-scheduler
         - --config=/etc/kubernetes/scheduler-config.yaml
         env:
-        - name: OTEL_COLLECTOR_URL
-          value: {{ .Values.scheduler.env.otelCollectorUrl | quote }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
         image: {{ include "common.images.image" ( dict "imageRoot" .Values.scheduler.image "global" .Values.global ) }}

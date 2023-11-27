@@ -301,7 +301,6 @@ func setupReconciler(withConfig *optionsv1alpha1.KeptnConfig) *KeptnConfigReconc
 		fakeClient,
 		fakeClient.Scheme(),
 		ctrl.Log.WithName("test-keptnconfig-controller"),
-		"",
 	)
 	r.config = &fakeconfig.MockConfig{
 		SetCloudEventsEndpointFunc:    func(endpoint string) {},

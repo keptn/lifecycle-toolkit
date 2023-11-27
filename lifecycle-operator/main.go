@@ -101,8 +101,6 @@ type envConfig struct {
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
 	SchedulingGatesEnabled bool `envconfig:"SCHEDULING_GATES_ENABLED" default:"false"`
-
-	KeptnOptionsCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
 
 const KeptnLifecycleActiveMetric = "keptn_lifecycle_active"
@@ -359,7 +357,6 @@ func main() {
 		mgr.GetClient(),
 		mgr.GetScheme(),
 		configLogger,
-		env.KeptnOptionsCollectorURL,
 	)
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")

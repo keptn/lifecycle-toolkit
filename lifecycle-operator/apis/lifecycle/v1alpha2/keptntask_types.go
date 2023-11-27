@@ -78,8 +78,6 @@ type KeptnTaskStatus struct {
 	StartTime metav1.Time `json:"startTime,omitempty"`
 	// +optional
 	EndTime metav1.Time `json:"endTime,omitempty"`
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 }
 
 // +kubebuilder:object:root=true

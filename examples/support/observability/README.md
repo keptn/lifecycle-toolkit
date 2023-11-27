@@ -42,7 +42,7 @@ To do so, please create a port-forward
 for the `jaeger-query` service:
 
 ```shell
-kubectl port-forward -n keptn-lifecycle-toolkit-system svc/jaeger-query 16686 
+kubectl port-forward -n keptn-system svc/jaeger-query 16686 
 ```
 
 Afterwards, you can view the Jaeger UI in the browser at
@@ -99,6 +99,3 @@ Now, you should be able to see it in the
 under `Dashboards > General`.
 
 ![Screenshot of a dashboard in Grafana](./assets/grafana_dashboard.png)
-
-<!-- markdownlint-disable-next-line MD033 MD013 -->
-<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

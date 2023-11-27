@@ -36,7 +36,7 @@ spec:
   timeframe:
     recent: 5m
   args:
-    "ns": "keptn-lifecycle-toolkit-system"
+    "ns": "keptn-system"
   analysisDefinition:
     name: ed-my-proj-dev-svc1
 ---

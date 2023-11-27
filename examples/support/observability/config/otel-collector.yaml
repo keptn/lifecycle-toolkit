@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: otel-collector-conf
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
   labels:
     app: opentelemetry
     component: otel-collector-conf
@@ -51,7 +51,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: otel-collector
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
   labels:
     app: opentelemetry
     component: otel-collector
@@ -74,7 +74,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: otel-collector
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
   labels:
     app: opentelemetry
     component: otel-collector
@@ -140,7 +140,7 @@ metadata:
   labels:
     serviceapp: otel-collector
   name: otel-collector
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
 spec:
   endpoints:
     - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -148,7 +148,7 @@ spec:
       port: metrics
   namespaceSelector:
     matchNames:
-      - keptn-lifecycle-toolkit-system
+      - keptn-system
   selector:
     matchLabels:
       app: opentelemetry

@@ -110,7 +110,6 @@ type Timeframe struct {
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
 	// +optional
-	// +optional
 	Recent metav1.Duration `json:"recent,omitempty"`
 }
 

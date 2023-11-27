@@ -81,7 +81,6 @@ type Analysis struct {
 	metav1.TypeMeta `json:",inline"`
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-
 	// +optional
 	Spec AnalysisSpec `json:"spec,omitempty"`
 	// +optional

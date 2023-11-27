@@ -1,7 +1,7 @@
 ---
 title: KeptnApp
 description: Define all workloads and checks associated with an application
-weight: 20
+weight: 29
 ---
 
 A `KeptnApp` resource lists all the [workloads](https://kubernetes.io/docs/concepts/workloads/)

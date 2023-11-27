@@ -126,7 +126,6 @@ func main() {
 	// The exporter embeds a default OpenTelemetry Reader and
 	// implements prometheus.Collector, allowing it to be used as
 	// both a Reader and Collector.
-	metricsPort := env.KeptnDoraMetricsPort
 	exporter, err := otelprom.New()
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
@@ -144,7 +143,9 @@ func main() {
 	keptnMeters := telemetry.SetUpKeptnTaskMeters(meter)
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
-	go serveMetrics(metricsPort)
+	ch := make(chan int)
+	go serveMetrics(ch)
+	ch <- env.KeptnDoraMetricsPort
 
 	// As recommended by the kubebuilder docs, webhook registration should be disabled if running locally. See https://book.kubebuilder.io/cronjob-tutorial/running.html#running-webhooks-locally for reference
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -442,8 +443,9 @@ func main() {
 
 }
 
-func serveMetrics(metricsPort int) {
-	log.Printf("serving metrics at %s/metrics", metricsPort)
+func serveMetrics(ch chan int) {
+	metricsPort := <-ch
+	log.Printf("serving metrics at :%d/metrics", metricsPort)
 	http.Handle("/metrics", promhttp.Handler())
 	err := http.ListenAndServe(":"+strconv.Itoa(metricsPort), nil)
 	if err != nil {

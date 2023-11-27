@@ -27,7 +27,7 @@ KeptnConfig is the Schema for the keptnconfigs API
 _Appears in:_
 - [KeptnConfigList](#keptnconfiglist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `options.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnConfig` | | |
@@ -44,7 +44,7 @@ KeptnConfigList contains a list of KeptnConfig
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `options.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnConfigList` | | |
@@ -61,7 +61,7 @@ KeptnConfigSpec defines the desired state of KeptnConfig
 _Appears in:_
 - [KeptnConfig](#keptnconfig)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `OTelCollectorUrl` _string_ | OTelCollectorUrl can be used to set the Open Telemetry collector that the lifecycle operator should use || ✓ |
 | `keptnAppCreationRequestTimeoutSeconds` _integer_ | KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery searches for workload to put into the same auto-generated KeptnApp |30| ✓ |

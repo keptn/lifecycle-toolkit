@@ -35,7 +35,7 @@ Analysis is the Schema for the analyses API
 _Appears in:_
 - [AnalysisList](#analysislist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `Analysis` | | |
@@ -53,7 +53,7 @@ AnalysisDefinition is the Schema for the analysisdefinitions APIs
 _Appears in:_
 - [AnalysisDefinitionList](#analysisdefinitionlist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `AnalysisDefinition` | | |
@@ -70,7 +70,7 @@ AnalysisDefinitionList contains a list of AnalysisDefinition
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `AnalysisDefinitionList` | | |
@@ -87,7 +87,7 @@ AnalysisDefinitionSpec defines the desired state of AnalysisDefinition
 _Appears in:_
 - [AnalysisDefinition](#analysisdefinition)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `objectives` _[Objective](#objective) array_ | Objectives defines a list of objectives to evaluate for an analysis || x |
 | `totalScore` _[TotalScore](#totalscore)_ | TotalScore defines the required score for an analysis to be successful || x |
@@ -101,7 +101,7 @@ AnalysisList contains a list of Analysis
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `AnalysisList` | | |
@@ -118,7 +118,7 @@ AnalysisSpec defines the desired state of Analysis
 _Appears in:_
 - [Analysis](#analysis)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `timeframe` _[Timeframe](#timeframe)_ | Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate. Please note that either a combination of 'from' and 'to' or the 'recent' property may be set. If neither is set, the Analysis can not be added to the cluster. || x |
 | `args` _object (keys:string, values:string)_ | Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})". || x |
@@ -145,13 +145,13 @@ AnalysisStatus stores the status of the overall analysis returns also pass or wa
 _Appears in:_
 - [Analysis](#analysis)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `timeframe` _[Timeframe](#timeframe)_ | Timeframe describes the time frame which is evaluated by the Analysis || x |
 | `raw` _string_ | Raw contains the raw result of the SLO computation || x |
 | `pass` _boolean_ | Pass returns whether the SLO is satisfied || x |
 | `warning` _boolean_ | Warning returns whether the analysis returned a warning || x |
-| `state` _[AnalysisState](#analysisstate)_ | State describes the current state of the Analysis (Pending/Progressing/Completed) || x |
+| `state` _string_ | State describes the current state of the Analysis (Pending/Progressing/Completed) || x |
 | `storedValues` _object (keys:string, values:[ProviderResult](#providerresult))_ | StoredValues contains all analysis values that have already been retrieved successfully || x |
 
 
@@ -164,7 +164,7 @@ AnalysisValueTemplate is the Schema for the analysisvaluetemplates API
 _Appears in:_
 - [AnalysisValueTemplateList](#analysisvaluetemplatelist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `AnalysisValueTemplate` | | |
@@ -181,7 +181,7 @@ AnalysisValueTemplateList contains a list of AnalysisValueTemplate
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `AnalysisValueTemplateList` | | |
@@ -198,7 +198,7 @@ AnalysisValueTemplateSpec defines the desired state of AnalysisValueTemplate
 _Appears in:_
 - [AnalysisValueTemplate](#analysisvaluetemplate)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `provider` _[ObjectReference](#objectreference)_ | Provider refers to the KeptnMetricsProvider which should be used to retrieve the data || x |
 | `query` _string_ | Query represents the query to be run. It can include placeholders that are defined using the go template syntax. More info on go templating - https://pkg.go.dev/text/template || x |
@@ -213,7 +213,7 @@ _Appears in:_
 _Appears in:_
 - [KeptnMetricStatus](#keptnmetricstatus)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `value` _string_ | Value represents the resulting value || x |
 | `range` _[RangeSpec](#rangespec)_ | Range represents the time range for which this data was queried || x |
@@ -230,7 +230,7 @@ KeptnMetric is the Schema for the keptnmetrics API
 _Appears in:_
 - [KeptnMetricList](#keptnmetriclist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `KeptnMetric` | | |
@@ -247,7 +247,7 @@ KeptnMetricList contains a list of KeptnMetric
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `KeptnMetricList` | | |
@@ -264,7 +264,7 @@ KeptnMetricSpec defines the desired state of KeptnMetric
 _Appears in:_
 - [KeptnMetric](#keptnmetric)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `provider` _[ProviderRef](#providerref)_ | Provider represents the provider object || x |
 | `query` _string_ | Query represents the query to be run || x |
@@ -281,7 +281,7 @@ KeptnMetricStatus defines the observed state of KeptnMetric
 _Appears in:_
 - [KeptnMetric](#keptnmetric)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `value` _string_ | Value represents the resulting value || x |
 | `rawValue` _integer array_ | RawValue represents the resulting value in raw format || x |
@@ -299,7 +299,7 @@ KeptnMetricsProvider is the Schema for the keptnmetricsproviders API
 _Appears in:_
 - [KeptnMetricsProviderList](#keptnmetricsproviderlist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `KeptnMetricsProvider` | | |
@@ -316,7 +316,7 @@ KeptnMetricsProviderList contains a list of KeptnMetricsProvider
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `KeptnMetricsProviderList` | | |
@@ -333,7 +333,7 @@ KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
 _Appears in:_
 - [KeptnMetricsProvider](#keptnmetricsprovider)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `type` _string_ | Type represents the provider type. This can be one of prometheus, dynatrace, datadog, dql. || x |
 | `targetServer` _string_ | TargetServer defined the URL at which the metrics provider is reachable with included port and protocol. || x |
@@ -352,7 +352,7 @@ _Appears in:_
 - [Objective](#objective)
 - [ProviderResult](#providerresult)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `name` _string_ | Name defines the name of the referenced object || x |
 | `namespace` _string_ | Namespace defines the namespace of the referenced object || x |
@@ -367,7 +367,7 @@ Objective defines an objective for analysis
 _Appears in:_
 - [AnalysisDefinitionSpec](#analysisdefinitionspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `analysisValueTemplateRef` _[ObjectReference](#objectreference)_ | AnalysisValueTemplateRef refers to the appropriate AnalysisValueTemplate || x |
 | `target` _[Target](#target)_ | Target defines failure or warning criteria || x |
@@ -384,7 +384,7 @@ Operator specifies the supported operators for value comparisons
 _Appears in:_
 - [Target](#target)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `lessThanOrEqual` _[OperatorValue](#operatorvalue)_ | LessThanOrEqual represents '<=' operator || x |
 | `lessThan` _[OperatorValue](#operatorvalue)_ | LessThan represents '<' operator || x |
@@ -404,7 +404,7 @@ OperatorValue represents the value to which the result is compared
 _Appears in:_
 - [Operator](#operator)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `fixedValue` _[Quantity](https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity)_ | FixedValue defines the value for comparison || x |
 
@@ -418,7 +418,7 @@ ProviderRef represents the provider object
 _Appears in:_
 - [KeptnMetricSpec](#keptnmetricspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `name` _string_ | Name of the provider || x |
 
@@ -432,7 +432,7 @@ ProviderResult stores reference of already collected provider query associated t
 _Appears in:_
 - [AnalysisStatus](#analysisstatus)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `objectiveReference` _[ObjectReference](#objectreference)_ | Objective store reference to corresponding objective template || x |
 | `query` _string_ | Query represents the executed query || x |
@@ -450,7 +450,7 @@ _Appears in:_
 - [IntervalResult](#intervalresult)
 - [KeptnMetricSpec](#keptnmetricspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `interval` _string_ | Interval specifies the duration of the time interval for the data query |5m| ✓ |
 | `step` _string_ | Step represents the query resolution step width for the data query || x |
@@ -467,7 +467,7 @@ RangeValue represents a range which the value should fit
 _Appears in:_
 - [Operator](#operator)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `lowBound` _[Quantity](https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity)_ | LowBound defines the lower bound of the range || x |
 | `highBound` _[Quantity](https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity)_ | HighBound defines the higher bound of the range || x |
@@ -482,7 +482,7 @@ Target defines the failure and warning criteria
 _Appears in:_
 - [Objective](#objective)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `failure` _[Operator](#operator)_ | Failure defines limits up to which an analysis fails || x |
 | `warning` _[Operator](#operator)_ | Warning defines limits where the result does not pass or fail || x |
@@ -498,7 +498,7 @@ _Appears in:_
 - [AnalysisSpec](#analysisspec)
 - [AnalysisStatus](#analysisstatus)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `from` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | From is the time of start for the query. This field follows RFC3339 time format || x |
 | `to` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | To is the time of end for the query. This field follows RFC3339 time format || x |
@@ -514,7 +514,7 @@ TotalScore defines the required score for an analysis to be successful
 _Appears in:_
 - [AnalysisDefinitionSpec](#analysisdefinitionspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `passPercentage` _integer_ | PassPercentage defines the threshold to reach for an analysis to pass || x |
 | `warningPercentage` _integer_ | WarningPercentage defines the threshold to reach for an analysis to pass with a 'warning' status || x |

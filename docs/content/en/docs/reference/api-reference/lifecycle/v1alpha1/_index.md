@@ -41,7 +41,7 @@ Package v1alpha1 contains API Schema definitions for the lifecycle v1alpha1 API 
 _Appears in:_
 - [FunctionSpec](#functionspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `name` _string_ |  || x |
 
@@ -58,10 +58,10 @@ _Appears in:_
 - [KeptnAppVersionStatus](#keptnappversionstatus)
 - [KeptnWorkloadInstanceStatus](#keptnworkloadinstancestatus)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `evaluationDefinitionName` _string_ |  || x |
-| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `status` _string_ |  |Pending| x |
 | `evaluationName` _string_ |  || x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
@@ -76,10 +76,10 @@ _Appears in:_
 _Appears in:_
 - [KeptnEvaluationStatus](#keptnevaluationstatus)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `value` _string_ |  || x |
-| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  || x |
+| `status` _string_ |  || x |
 | `message` _string_ |  || x |
 
 
@@ -92,7 +92,7 @@ _Appears in:_
 _Appears in:_
 - [FunctionSpec](#functionspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `name` _string_ |  || x |
 
@@ -106,7 +106,7 @@ _Appears in:_
 _Appears in:_
 - [KeptnTaskDefinitionSpec](#keptntaskdefinitionspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `functionRef` _[FunctionReference](#functionreference)_ |  || x |
 | `inline` _[Inline](#inline)_ |  || x |
@@ -125,7 +125,7 @@ _Appears in:_
 _Appears in:_
 - [KeptnTaskDefinitionStatus](#keptntaskdefinitionstatus)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `configMap` _string_ | INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run "make" to regenerate code after modifying this file || x |
 
@@ -139,7 +139,7 @@ _Appears in:_
 _Appears in:_
 - [FunctionSpec](#functionspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `url` _string_ |  || x |
 
@@ -153,7 +153,7 @@ _Appears in:_
 _Appears in:_
 - [FunctionSpec](#functionspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `code` _string_ |  || x |
 
@@ -167,7 +167,7 @@ KeptnApp is the Schema for the keptnapps API
 _Appears in:_
 - [KeptnAppList](#keptnapplist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnApp` | | |
@@ -184,7 +184,7 @@ KeptnAppList contains a list of KeptnApp
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnAppList` | | |
@@ -202,7 +202,7 @@ _Appears in:_
 - [KeptnApp](#keptnapp)
 - [KeptnAppVersionSpec](#keptnappversionspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `version` _string_ |  || x |
 | `workloads` _[KeptnWorkloadRef](#keptnworkloadref) array_ |  || x |
@@ -221,7 +221,7 @@ KeptnAppStatus defines the observed state of KeptnApp
 _Appears in:_
 - [KeptnApp](#keptnapp)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `currentVersion` _string_ |  || x |
 
@@ -235,7 +235,7 @@ KeptnAppVersion is the Schema for the keptnappversions API
 _Appears in:_
 - [KeptnAppVersionList](#keptnappversionlist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnAppVersion` | | |
@@ -252,7 +252,7 @@ KeptnAppVersionList contains a list of KeptnAppVersion
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnAppVersionList` | | |
@@ -269,7 +269,7 @@ KeptnAppVersionSpec defines the desired state of KeptnAppVersion
 _Appears in:_
 - [KeptnAppVersion](#keptnappversion)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `version` _string_ |  || x |
 | `workloads` _[KeptnWorkloadRef](#keptnworkloadref) array_ |  || x |
@@ -291,21 +291,21 @@ KeptnAppVersionStatus defines the observed state of KeptnAppVersion
 _Appears in:_
 - [KeptnAppVersion](#keptnappversion)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `preDeploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
-| `postDeploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
-| `preDeploymentEvaluationStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
-| `postDeploymentEvaluationStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
-| `workloadOverallStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `preDeploymentStatus` _string_ |  |Pending| x |
+| `postDeploymentStatus` _string_ |  |Pending| x |
+| `preDeploymentEvaluationStatus` _string_ |  |Pending| x |
+| `postDeploymentEvaluationStatus` _string_ |  |Pending| x |
+| `workloadOverallStatus` _string_ |  |Pending| x |
 | `workloadStatus` _[WorkloadStatus](#workloadstatus) array_ |  || x |
 | `currentPhase` _string_ |  || x |
 | `preDeploymentTaskStatus` _[TaskStatus](#taskstatus) array_ |  || x |
 | `postDeploymentTaskStatus` _[TaskStatus](#taskstatus) array_ |  || x |
 | `preDeploymentEvaluationTaskStatus` _[EvaluationStatus](#evaluationstatus) array_ |  || x |
 | `postDeploymentEvaluationTaskStatus` _[EvaluationStatus](#evaluationstatus) array_ |  || x |
-| `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ |  || x |
-| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `phaseTraceIDs` _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_ |  || x |
+| `status` _string_ |  |Pending| x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 
@@ -319,7 +319,7 @@ KeptnEvaluation is the Schema for the keptnevaluations API
 _Appears in:_
 - [KeptnEvaluationList](#keptnevaluationlist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnEvaluation` | | |
@@ -337,7 +337,7 @@ KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions API
 _Appears in:_
 - [KeptnEvaluationDefinitionList](#keptnevaluationdefinitionlist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnEvaluationDefinition` | | |
@@ -354,7 +354,7 @@ KeptnEvaluationDefinitionList contains a list of KeptnEvaluationDefinition
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnEvaluationDefinitionList` | | |
@@ -371,7 +371,7 @@ KeptnEvaluationDefinitionSpec defines the desired state of KeptnEvaluationDefini
 _Appears in:_
 - [KeptnEvaluationDefinition](#keptnevaluationdefinition)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `source` _string_ |  || x |
 | `objectives` _[Objective](#objective) array_ |  || x |
@@ -385,7 +385,7 @@ KeptnEvaluationList contains a list of KeptnEvaluation
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnEvaluationList` | | |
@@ -404,7 +404,7 @@ KeptnEvaluationSpec defines the desired state of KeptnEvaluation
 _Appears in:_
 - [KeptnEvaluation](#keptnevaluation)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `workload` _string_ |  || x |
 | `workloadVersion` _string_ |  || x |
@@ -414,7 +414,7 @@ _Appears in:_
 | `retries` _integer_ |  |10| x |
 | `retryInterval` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ |  |5s| ✓ |
 | `failAction` _string_ |  || x |
-| `checkType` _[CheckType](#checktype)_ |  || x |
+| `checkType` _string_ |  || x |
 
 
 #### KeptnEvaluationStatus
@@ -426,11 +426,11 @@ KeptnEvaluationStatus defines the observed state of KeptnEvaluation
 _Appears in:_
 - [KeptnEvaluation](#keptnevaluation)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `retryCount` _integer_ |  |0| x |
 | `evaluationStatus` _object (keys:string, values:[EvaluationStatusItem](#evaluationstatusitem))_ |  || x |
-| `overallStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `overallStatus` _string_ |  |Pending| x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 
@@ -444,7 +444,7 @@ KeptnTask is the Schema for the keptntasks API
 _Appears in:_
 - [KeptnTaskList](#keptntasklist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnTask` | | |
@@ -462,7 +462,7 @@ KeptnTaskDefinition is the Schema for the keptntaskdefinitions API
 _Appears in:_
 - [KeptnTaskDefinitionList](#keptntaskdefinitionlist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnTaskDefinition` | | |
@@ -479,7 +479,7 @@ KeptnTaskDefinitionList contains a list of KeptnTaskDefinition
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnTaskDefinitionList` | | |
@@ -496,7 +496,7 @@ KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
 _Appears in:_
 - [KeptnTaskDefinition](#keptntaskdefinition)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `function` _[FunctionSpec](#functionspec)_ |  || x |
 
@@ -510,7 +510,7 @@ KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
 _Appears in:_
 - [KeptnTaskDefinition](#keptntaskdefinition)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `function` _[FunctionStatus](#functionstatus)_ | INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run "make" to regenerate code after modifying this file || x |
 
@@ -523,7 +523,7 @@ KeptnTaskList contains a list of KeptnTask
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnTaskList` | | |
@@ -540,7 +540,7 @@ KeptnTaskSpec defines the desired state of KeptnTask
 _Appears in:_
 - [KeptnTask](#keptntask)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `workload` _string_ |  || x |
 | `workloadVersion` _string_ |  || x |
@@ -550,7 +550,7 @@ _Appears in:_
 | `context` _[TaskContext](#taskcontext)_ |  || x |
 | `parameters` _[TaskParameters](#taskparameters)_ |  || x |
 | `secureParameters` _[SecureParameters](#secureparameters)_ |  || x |
-| `checkType` _[CheckType](#checktype)_ |  || x |
+| `checkType` _string_ |  || x |
 
 
 #### KeptnTaskStatus
@@ -562,10 +562,10 @@ KeptnTaskStatus defines the observed state of KeptnTask
 _Appears in:_
 - [KeptnTask](#keptntask)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `jobName` _string_ |  || x |
-| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `status` _string_ |  |Pending| x |
 | `message` _string_ |  || x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
@@ -580,7 +580,7 @@ KeptnWorkload is the Schema for the keptnworkloads API
 _Appears in:_
 - [KeptnWorkloadList](#keptnworkloadlist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnWorkload` | | |
@@ -598,7 +598,7 @@ KeptnWorkloadInstance is the Schema for the keptnworkloadinstances API
 _Appears in:_
 - [KeptnWorkloadInstanceList](#keptnworkloadinstancelist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnWorkloadInstance` | | |
@@ -615,7 +615,7 @@ KeptnWorkloadInstanceList contains a list of KeptnWorkloadInstance
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnWorkloadInstanceList` | | |
@@ -632,7 +632,7 @@ KeptnWorkloadInstanceSpec defines the desired state of KeptnWorkloadInstance
 _Appears in:_
 - [KeptnWorkloadInstance](#keptnworkloadinstance)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `app` _string_ |  || x |
 | `version` _string_ |  || x |
@@ -655,13 +655,13 @@ KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance
 _Appears in:_
 - [KeptnWorkloadInstance](#keptnworkloadinstance)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `preDeploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
-| `deploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
-| `preDeploymentEvaluationStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
-| `postDeploymentEvaluationStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
-| `postDeploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `preDeploymentStatus` _string_ |  |Pending| x |
+| `deploymentStatus` _string_ |  |Pending| x |
+| `preDeploymentEvaluationStatus` _string_ |  |Pending| x |
+| `postDeploymentEvaluationStatus` _string_ |  |Pending| x |
+| `postDeploymentStatus` _string_ |  |Pending| x |
 | `preDeploymentTaskStatus` _[TaskStatus](#taskstatus) array_ |  || x |
 | `postDeploymentTaskStatus` _[TaskStatus](#taskstatus) array_ |  || x |
 | `preDeploymentEvaluationTaskStatus` _[EvaluationStatus](#evaluationstatus) array_ |  || x |
@@ -669,8 +669,8 @@ _Appears in:_
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 | `currentPhase` _string_ |  || x |
-| `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ |  || x |
-| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `phaseTraceIDs` _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_ |  || x |
+| `status` _string_ |  |Pending| x |
 
 
 #### KeptnWorkloadList
@@ -681,7 +681,7 @@ KeptnWorkloadList contains a list of KeptnWorkload
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnWorkloadList` | | |
@@ -700,7 +700,7 @@ _Appears in:_
 - [KeptnAppVersionSpec](#keptnappversionspec)
 - [WorkloadStatus](#workloadstatus)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `name` _string_ |  || x |
 | `version` _string_ |  || x |
@@ -716,7 +716,7 @@ _Appears in:_
 - [KeptnWorkload](#keptnworkload)
 - [KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `app` _string_ |  || x |
 | `version` _string_ |  || x |
@@ -736,7 +736,7 @@ KeptnWorkloadStatus defines the observed state of KeptnWorkload
 _Appears in:_
 - [KeptnWorkload](#keptnworkload)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `currentVersion` _string_ |  || x |
 
@@ -750,7 +750,7 @@ _Appears in:_
 _Appears in:_
 - [KeptnEvaluationDefinitionSpec](#keptnevaluationdefinitionspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `name` _string_ |  || x |
 | `query` _string_ |  || x |
@@ -767,9 +767,9 @@ _Appears in:_
 - [KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)
 - [KeptnWorkloadSpec](#keptnworkloadspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `uid` _[UID](#uid)_ |  || x |
+| `uid` _string_ |  || x |
 | `kind` _string_ |  || x |
 | `name` _string_ |  || x |
 
@@ -784,7 +784,7 @@ _Appears in:_
 - [FunctionSpec](#functionspec)
 - [KeptnTaskSpec](#keptntaskspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `secret` _string_ |  || x |
 
@@ -798,7 +798,7 @@ _Appears in:_
 _Appears in:_
 - [KeptnTaskSpec](#keptntaskspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `workloadName` _string_ |  || x |
 | `appName` _string_ |  || x |
@@ -818,7 +818,7 @@ _Appears in:_
 - [FunctionSpec](#functionspec)
 - [KeptnTaskSpec](#keptntaskspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `map` _object (keys:string, values:string)_ |  || x |
 
@@ -833,10 +833,10 @@ _Appears in:_
 - [KeptnAppVersionStatus](#keptnappversionstatus)
 - [KeptnWorkloadInstanceStatus](#keptnworkloadinstancestatus)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `taskDefinitionName` _string_ |  || x |
-| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `status` _string_ |  |Pending| x |
 | `taskName` _string_ |  || x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
@@ -851,9 +851,9 @@ _Appears in:_
 _Appears in:_
 - [KeptnAppVersionStatus](#keptnappversionstatus)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `workload` _[KeptnWorkloadRef](#keptnworkloadref)_ |  || x |
-| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `status` _string_ |  |Pending| x |
 
 

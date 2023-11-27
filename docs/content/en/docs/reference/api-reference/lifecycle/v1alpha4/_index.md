@@ -27,7 +27,7 @@ KeptnWorkloadVersion is the Schema for the keptnworkloadversions API
 _Appears in:_
 - [KeptnWorkloadVersionList](#keptnworkloadversionlist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha4` | | |
 | `kind` _string_ | `KeptnWorkloadVersion` | | |
@@ -44,7 +44,7 @@ KeptnWorkloadVersionList contains a list of KeptnWorkloadVersion
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha4` | | |
 | `kind` _string_ | `KeptnWorkloadVersionList` | | |
@@ -61,7 +61,7 @@ KeptnWorkloadVersionSpec defines the desired state of KeptnWorkloadVersion
 _Appears in:_
 - [KeptnWorkloadVersion](#keptnworkloadversion)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `app` _string_ | AppName is the name of the KeptnApp containing the KeptnWorkload. || x |
 | `version` _string_ | Version defines the version of the KeptnWorkload. || x |
@@ -84,13 +84,13 @@ KeptnWorkloadVersionStatus defines the observed state of KeptnWorkloadVersion
 _Appears in:_
 - [KeptnWorkloadVersion](#keptnworkloadversion)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `preDeploymentStatus` _[KeptnState](#keptnstate)_ | PreDeploymentStatus indicates the current status of the KeptnWorkloadVersion's PreDeployment phase. |Pending| x |
-| `deploymentStatus` _[KeptnState](#keptnstate)_ | DeploymentStatus indicates the current status of the KeptnWorkloadVersion's Deployment phase. |Pending| x |
-| `preDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ | PreDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadVersion's PreDeploymentEvaluation phase. |Pending| x |
-| `postDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ | PostDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadVersion's PostDeploymentEvaluation phase. |Pending| x |
-| `postDeploymentStatus` _[KeptnState](#keptnstate)_ | PostDeploymentStatus indicates the current status of the KeptnWorkloadVersion's PostDeployment phase. |Pending| x |
+| `preDeploymentStatus` _string_ | PreDeploymentStatus indicates the current status of the KeptnWorkloadVersion's PreDeployment phase. |Pending| x |
+| `deploymentStatus` _string_ | DeploymentStatus indicates the current status of the KeptnWorkloadVersion's Deployment phase. |Pending| x |
+| `preDeploymentEvaluationStatus` _string_ | PreDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadVersion's PreDeploymentEvaluation phase. |Pending| x |
+| `postDeploymentEvaluationStatus` _string_ | PostDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadVersion's PostDeploymentEvaluation phase. |Pending| x |
+| `postDeploymentStatus` _string_ | PostDeploymentStatus indicates the current status of the KeptnWorkloadVersion's PostDeployment phase. |Pending| x |
 | `preDeploymentTaskStatus` _[ItemStatus](../v1alpha3/#itemstatus) array_ | PreDeploymentTaskStatus indicates the current state of each preDeploymentTask of the KeptnWorkloadVersion. || x |
 | `postDeploymentTaskStatus` _[ItemStatus](../v1alpha3/#itemstatus) array_ | PostDeploymentTaskStatus indicates the current state of each postDeploymentTask of the KeptnWorkloadVersion. || x |
 | `preDeploymentEvaluationTaskStatus` _[ItemStatus](../v1alpha3/#itemstatus) array_ | PreDeploymentEvaluationTaskStatus indicates the current state of each preDeploymentEvaluation of the KeptnWorkloadVersion. || x |
@@ -98,7 +98,7 @@ _Appears in:_
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | StartTime represents the time at which the deployment of the KeptnWorkloadVersion started. || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | EndTime represents the time at which the deployment of the KeptnWorkloadVersion finished. || x |
 | `currentPhase` _string_ | CurrentPhase indicates the current phase of the KeptnWorkloadVersion. This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment - PostDeploymentTasks - PostDeploymentEvaluations || x |
-| `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadVersion || x |
-| `status` _[KeptnState](#keptnstate)_ | Status represents the overall status of the KeptnWorkloadVersion. |Pending| x |
+| `phaseTraceIDs` _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadVersion || x |
+| `status` _string_ | Status represents the overall status of the KeptnWorkloadVersion. |Pending| x |
 
 

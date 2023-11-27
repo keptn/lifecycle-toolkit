@@ -29,7 +29,7 @@ KeptnMetric is the Schema for the keptnmetrics API
 _Appears in:_
 - [KeptnMetricList](#keptnmetriclist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnMetric` | | |
@@ -46,7 +46,7 @@ KeptnMetricList contains a list of KeptnMetric
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnMetricList` | | |
@@ -63,7 +63,7 @@ KeptnMetricSpec defines the desired state of KeptnMetric
 _Appears in:_
 - [KeptnMetric](#keptnmetric)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `provider` _[ProviderRef](#providerref)_ | Provider represents the provider object || x |
 | `query` _string_ | Query represents the query to be run || x |
@@ -79,7 +79,7 @@ KeptnMetricStatus defines the observed state of KeptnMetric
 _Appears in:_
 - [KeptnMetric](#keptnmetric)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `value` _string_ | Value represents the resulting value || x |
 | `rawValue` _integer array_ | RawValue represents the resulting value in raw format || x |
@@ -95,7 +95,7 @@ KeptnMetricsProvider is the Schema for the keptnmetricsproviders API
 _Appears in:_
 - [KeptnMetricsProviderList](#keptnmetricsproviderlist)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnMetricsProvider` | | |
@@ -112,7 +112,7 @@ KeptnMetricsProviderList contains a list of KeptnMetricsProvider
 
 
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnMetricsProviderList` | | |
@@ -129,7 +129,7 @@ KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
 _Appears in:_
 - [KeptnMetricsProvider](#keptnmetricsprovider)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `targetServer` _string_ |  || x |
 | `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#secretkeyselector-v1-core)_ |  || x |
@@ -144,7 +144,7 @@ ProviderRef represents the provider object
 _Appears in:_
 - [KeptnMetricSpec](#keptnmetricspec)
 
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `name` _string_ | Name of the provider || x |
 

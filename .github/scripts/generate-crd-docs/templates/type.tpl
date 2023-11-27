@@ -16,7 +16,7 @@ _Appears in:_
 {{- end }}
 
 {{ if $type.Members -}}
-| Field | Description | Default | Optional
+| Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 {{ if $type.GVK -}}
 | `apiVersion` _string_ | `{{ $type.GVK.Group }}/{{ $type.GVK.Version }}` | | |
@@ -24,7 +24,7 @@ _Appears in:_
 {{ end -}}
 
 {{ range $type.Members -}}
-| `{{ .Name }}` _{{ markdownRenderType .Type }}_ | {{ template "type_members" . }} |
+| `{{ .Name }}` {{ if .Type.IsAlias }}_{{  markdownRenderTypeLink .Type.UnderlyingType  }}_{{else}}_{{ markdownRenderType .Type }}_{{ end }} | {{ template "type_members" . }} |
 {{- if index .Markers "kubebuilder:default" -}}
 {{- with index (index .Markers "kubebuilder:default") 0 -}}
  {{ .Value -}}

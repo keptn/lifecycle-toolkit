@@ -23,7 +23,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 
 	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	ce "github.com/cloudevents/sdk-go/v2"
@@ -447,7 +446,7 @@ func serveMetrics(ch chan int) {
 	metricsPort := <-ch
 	log.Printf("serving metrics at :%d/metrics", metricsPort)
 	http.Handle("/metrics", promhttp.Handler())
-	err := http.ListenAndServe(":"+strconv.Itoa(metricsPort), nil)
+	err := http.ListenAndServe(":"+fmt.Sprint(metricsPort), nil)
 	if err != nil {
 		fmt.Printf("error serving http: %v", err)
 		return

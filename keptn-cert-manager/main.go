@@ -37,7 +37,7 @@ func init() {
 }
 
 type envConfig struct {
-	KeptnNamespace          string `envconfig:"NAMESPACE" default:"keptn-lifecycle-toolkit-system"`
+	KeptnNamespace          string `envconfig:"NAMESPACE" default:"keptn-system"`
 	KeptnLabelSelectorKey   string `envconfig:"LABEL_SELECTOR_KEY" default:"keptn.sh/inject-cert"`
 	KeptnLabelSelectorValue string `envconfig:"LABEL_SELECTOR_VALUE" default:"true"`
 }

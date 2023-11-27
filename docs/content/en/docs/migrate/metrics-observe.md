@@ -262,7 +262,7 @@ The process is:
          name: my-project-ad
          namespace: keptn-lifecycle-poc
        args:
-         ns: keptn-lifecycle-toolkit-system
+         ns: keptn-system
          project: my-project
        timeframe:
          from: "2023-09-14T11:20:19Z"

@@ -79,7 +79,7 @@ to install the latest release of Keptn:
 ```shell
 helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --create-namespace --wait
+helm upgrade --install keptn keptn/keptn -n keptn-system --create-namespace --wait
 ```
 
 ### Installation with only certain namespaces allowed
@@ -90,7 +90,7 @@ Keptn lifecycle orchestration is by default enabled for all namespaces except th
 - `kube-public`
 - `kube-node-lease`
 - `cert-manager`
-- `keptn-lifecycle-toolkit-system`
+- `keptn-system`
 - `observability`
 - `monitoring`
 - `<Keptn installation namespace>`
@@ -112,7 +112,7 @@ and add the values file to the helm installation command:
 ```shell
 helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --values values.yaml --create-namespace --wait
+helm upgrade --install keptn keptn/keptn -n keptn-system --values values.yaml --create-namespace --wait
 ```
 
 > **Note**
@@ -147,7 +147,7 @@ to install Keptn with scheduling gates enabled:
 ```shell
 helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --set schedulingGatesEnabled=true --create-namespace --wait
+helm upgrade --install keptn keptn/keptn -n keptn-system --set schedulingGatesEnabled=true --create-namespace --wait
 ```
 
 > **Note**
@@ -327,11 +327,11 @@ Please find more information in the [LICENSE](LICENSE) file.
 
 <!-- markdownlint-disable-next-line MD033 -->
 <a href="https://github.com/keptn/lifecycle-toolkit/graphs/contributors">
-<!-- markdownlint-disable-next-line MD033 -->
+<!-- markdownlint-disable-next-line MD033 MD045 -->
   <img src="https://contrib.rocks/image?repo=keptn/lifecycle-toolkit" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).
 
-<!-- markdownlint-disable-next-line MD033 MD013 -->
+<!-- markdownlint-disable-next-line MD033 MD013 MD045 -->
 <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

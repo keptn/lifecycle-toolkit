@@ -18,3 +18,4 @@ description: Reference information for {{ $groupVersion.GroupVersionString }}
 {{ end }}
 
 {{- end -}}
+<!-- markdownlint-enable -->

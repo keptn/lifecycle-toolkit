@@ -127,7 +127,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `configMap` _string_ | INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run "make" to regenerate code after modifying this file || ✓ |
+| `configMap` _string_ |  || ✓ |
 
 
 #### HttpReference
@@ -512,7 +512,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `function` _[FunctionStatus](#functionstatus)_ | INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run "make" to regenerate code after modifying this file || ✓ |
+| `function` _[FunctionStatus](#functionstatus)_ |  || ✓ |
 
 
 #### KeptnTaskList

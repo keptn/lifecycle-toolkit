@@ -113,7 +113,7 @@ spec:
         - containerPort: 9443
           name: webhook-server
           protocol: TCP
-        - containerPort: {{ .Values.lifecycleOperator.env.keptnDoraMetricsPort }}
+        - containerPort: 2222
           name: metrics
           protocol: TCP
         resources: {{- toYaml .Values.lifecycleOperator.resources | nindent 10 }}

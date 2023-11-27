@@ -34,44 +34,65 @@ import (
 // KeptnWorkloadInstanceSpec defines the desired state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceSpec struct {
 	KeptnWorkloadSpec `json:",inline"`
-	WorkloadName      string            `json:"workloadName"`
-	PreviousVersion   string            `json:"previousVersion,omitempty"`
-	TraceId           map[string]string `json:"traceId,omitempty"`
+	WorkloadName      string `json:"workloadName"`
+	// +optional
+	PreviousVersion string `json:"previousVersion,omitempty"`
+	// +optional
+	TraceId map[string]string `json:"traceId,omitempty"`
 }
 
 // KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceStatus struct {
 	// +kubebuilder:default:=Pending
+	// +optional
 	PreDeploymentStatus common.KeptnState `json:"preDeploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
+	// +optional
 	DeploymentStatus common.KeptnState `json:"deploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
+	// +optional
 	PreDeploymentEvaluationStatus common.KeptnState `json:"preDeploymentEvaluationStatus,omitempty"`
 	// +kubebuilder:default:=Pending
+	// +optional
 	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	PostDeploymentStatus               common.KeptnState   `json:"postDeploymentStatus,omitempty"`
-	PreDeploymentTaskStatus            []ItemStatus        `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus           []ItemStatus        `json:"postDeploymentTaskStatus,omitempty"`
-	PreDeploymentEvaluationTaskStatus  []ItemStatus        `json:"preDeploymentEvaluationTaskStatus,omitempty"`
-	PostDeploymentEvaluationTaskStatus []ItemStatus        `json:"postDeploymentEvaluationTaskStatus,omitempty"`
-	StartTime                          metav1.Time         `json:"startTime,omitempty"`
-	EndTime                            metav1.Time         `json:"endTime,omitempty"`
-	CurrentPhase                       string              `json:"currentPhase,omitempty"`
-	PhaseTraceIDs                      common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
+	// +optional
+	PostDeploymentStatus common.KeptnState `json:"postDeploymentStatus,omitempty"`
+	// +optional
+	PreDeploymentTaskStatus []ItemStatus `json:"preDeploymentTaskStatus,omitempty"`
+	// +optional
+	PostDeploymentTaskStatus []ItemStatus `json:"postDeploymentTaskStatus,omitempty"`
+	// +optional
+	PreDeploymentEvaluationTaskStatus []ItemStatus `json:"preDeploymentEvaluationTaskStatus,omitempty"`
+	// +optional
+	PostDeploymentEvaluationTaskStatus []ItemStatus `json:"postDeploymentEvaluationTaskStatus,omitempty"`
+	// +optional
+	StartTime metav1.Time `json:"startTime,omitempty"`
+	// +optional
+	EndTime metav1.Time `json:"endTime,omitempty"`
+	// +optional
+	CurrentPhase string `json:"currentPhase,omitempty"`
+	// +optional
+	PhaseTraceIDs common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
 	// +kubebuilder:default:=Pending
+	// +optional
 	Status common.KeptnState `json:"status,omitempty"`
 }
 
 type ItemStatus struct {
 	// DefinitionName is the name of the EvaluationDefinition/TaskDefinition
+	// +optional
 	DefinitionName string `json:"definitionName,omitempty"`
 	// +kubebuilder:default:=Pending
+	// +optional
 	Status common.KeptnState `json:"status,omitempty"`
 	// Name is the name of the Evaluation/Task
-	Name      string      `json:"name,omitempty"`
+	// +optional
+	Name string `json:"name,omitempty"`
+	// +optional
 	StartTime metav1.Time `json:"startTime,omitempty"`
-	EndTime   metav1.Time `json:"endTime,omitempty"`
+	// +optional
+	EndTime metav1.Time `json:"endTime,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -89,10 +110,13 @@ type ItemStatus struct {
 
 // KeptnWorkloadInstance is the Schema for the keptnworkloadinstances API
 type KeptnWorkloadInstance struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnWorkloadInstanceSpec   `json:"spec,omitempty"`
+	// +optional
+	Spec KeptnWorkloadInstanceSpec `json:"spec,omitempty"`
+	// +optional
 	Status KeptnWorkloadInstanceStatus `json:"status,omitempty"`
 }
 
@@ -101,6 +125,7 @@ type KeptnWorkloadInstance struct {
 // KeptnWorkloadInstanceList contains a list of KeptnWorkloadInstance
 type KeptnWorkloadInstanceList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnWorkloadInstance `json:"items"`
 }

@@ -24,6 +24,7 @@ import (
 // AnalysisDefinitionSpec defines the desired state of AnalysisDefinition
 type AnalysisDefinitionSpec struct {
 	// Objectives defines a list of objectives to evaluate for an analysis
+	// +optional
 	Objectives []Objective `json:"objectives,omitempty" yaml:"objectives,omitempty"`
 	// TotalScore defines the required score for an analysis to be successful
 	TotalScore TotalScore `json:"totalScore" yaml:"totalScore"`
@@ -46,20 +47,25 @@ type Objective struct {
 	// AnalysisValueTemplateRef refers to the appropriate AnalysisValueTemplate
 	AnalysisValueTemplateRef ObjectReference `json:"analysisValueTemplateRef" yaml:"analysisValueTemplateRef"`
 	// Target defines failure or warning criteria
+	// +optional
 	Target Target `json:"target,omitempty" yaml:"target,omitempty"`
 	// Weight can be used to emphasize the importance of one Objective over the others
 	// +kubebuilder:default:=1
+	// +optional
 	Weight int `json:"weight,omitempty" yaml:"weight,omitempty"`
 	// KeyObjective defines whether the whole analysis fails when this objective's target is not met
 	// +kubebuilder:default:=false
+	// +optional
 	KeyObjective bool `json:"keyObjective,omitempty" yaml:"keyObjective,omitempty"`
 }
 
 // Target defines the failure and warning criteria
 type Target struct {
 	// Failure defines limits up to which an analysis fails
+	// +optional
 	Failure *Operator `json:"failure,omitempty" yaml:"failure,omitempty"`
 	// Warning defines limits where the result does not pass or fail
+	// +optional
 	Warning *Operator `json:"warning,omitempty" yaml:"warning,omitempty"`
 }
 
@@ -80,18 +86,25 @@ type RangeValue struct {
 // Operator specifies the supported operators for value comparisons
 type Operator struct {
 	// LessThanOrEqual represents '<=' operator
+	// +optional
 	LessThanOrEqual *OperatorValue `json:"lessThanOrEqual,omitempty" yaml:"lessThanOrEqual,omitempty"`
 	// LessThan represents '<' operator
+	// +optional
 	LessThan *OperatorValue `json:"lessThan,omitempty" yaml:"lessThan,omitempty"`
 	// GreaterThan represents '>' operator
+	// +optional
 	GreaterThan *OperatorValue `json:"greaterThan,omitempty" yaml:"greaterThan,omitempty"`
 	// GreaterThanOrEqual represents '>=' operator
+	// +optional
 	GreaterThanOrEqual *OperatorValue `json:"greaterThanOrEqual,omitempty" yaml:"greaterThanOrEqual,omitempty"`
 	// EqualTo represents '==' operator
+	// +optional
 	EqualTo *OperatorValue `json:"equalTo,omitempty" yaml:"equalTo,omitempty"`
 	// InRange represents operator checking the value is inclusively in the defined range, e.g. 2 <= x <= 5
+	// +optional
 	InRange *RangeValue `json:"inRange,omitempty" yaml:"inRange,omitempty"`
 	// NotInRange represents operator checking the value is exclusively out of the defined range, e.g. x < 2 AND x > 5
+	// +optional
 	NotInRange *RangeValue `json:"notInRange,omitempty" yaml:"notInRange,omitempty"`
 }
 
@@ -101,11 +114,14 @@ type Operator struct {
 
 // AnalysisDefinition is the Schema for the analysisdefinitions APIs
 type AnalysisDefinition struct {
-	metav1.TypeMeta   `json:",inline" yaml:",inline"`
+	metav1.TypeMeta `json:",inline" yaml:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 
+	// +optional
 	Spec AnalysisDefinitionSpec `json:"spec,omitempty" yaml:"spec,omitempty"`
 	// unused field
+	// +optional
 	Status string `json:"status,omitempty"`
 }
 
@@ -114,6 +130,7 @@ type AnalysisDefinition struct {
 // AnalysisDefinitionList contains a list of AnalysisDefinition resources
 type AnalysisDefinitionList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []AnalysisDefinition `json:"items"`
 }

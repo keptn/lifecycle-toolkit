@@ -39,20 +39,24 @@ type KeptnWorkloadSpec struct {
 	// PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnWorkload.
 	// The items of this list refer to the names of KeptnTaskDefinitions
 	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
+	// +optional
 	PreDeploymentTasks []string `json:"preDeploymentTasks,omitempty"`
 	// PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnWorkload.
 	// The items of this list refer to the names of KeptnTaskDefinitions
 	// located in the same namespace as the KeptnWorkload, or in the Keptn namespace.
+	// +optional
 	PostDeploymentTasks []string `json:"postDeploymentTasks,omitempty"`
 	// PreDeploymentEvaluations is a list of all evaluations to be performed
 	// during the pre-deployment phase of the KeptnWorkload.
 	// The items of this list refer to the names of KeptnEvaluationDefinitions
 	// located in the same namespace as the KeptnWorkload, or in the Keptn namespace.
+	// +optional
 	PreDeploymentEvaluations []string `json:"preDeploymentEvaluations,omitempty"`
 	// PostDeploymentEvaluations is a list of all evaluations to be performed
 	// during the post-deployment phase of the KeptnWorkload.
 	// The items of this list refer to the names of KeptnEvaluationDefinitions
 	// located in the same namespace as the KeptnWorkload, or in the Keptn namespace.
+	// +optional
 	PostDeploymentEvaluations []string `json:"postDeploymentEvaluations,omitempty"`
 	// ResourceReference is a reference to the Kubernetes resource
 	// (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing.
@@ -62,6 +66,7 @@ type KeptnWorkloadSpec struct {
 // KeptnWorkloadStatus defines the observed state of KeptnWorkload
 type KeptnWorkloadStatus struct {
 	// CurrentVersion indicates the version that is currently deployed or being reconciled.
+	// +optional
 	CurrentVersion string `json:"currentVersion,omitempty"`
 }
 
@@ -73,12 +78,15 @@ type KeptnWorkloadStatus struct {
 
 // KeptnWorkload is the Schema for the keptnworkloads API
 type KeptnWorkload struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// Spec describes the desired state of the KeptnWorkload.
+	// +optional
 	Spec KeptnWorkloadSpec `json:"spec,omitempty"`
 	// Status describes the current state of the KeptnWorkload.
+	// +optional
 	Status KeptnWorkloadStatus `json:"status,omitempty"`
 }
 
@@ -87,6 +95,7 @@ type KeptnWorkload struct {
 // KeptnWorkloadList contains a list of KeptnWorkload
 type KeptnWorkloadList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnWorkload `json:"items"`
 }

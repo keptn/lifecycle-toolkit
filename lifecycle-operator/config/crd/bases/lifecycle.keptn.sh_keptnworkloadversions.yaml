@@ -204,6 +204,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -235,6 +237,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -266,6 +270,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -297,6 +303,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array

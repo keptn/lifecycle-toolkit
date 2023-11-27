@@ -25,31 +25,42 @@ import (
 
 // KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
 type KeptnTaskDefinitionSpec struct {
+	// +optional
 	Function FunctionSpec `json:"function,omitempty"`
 }
 
 type FunctionSpec struct {
-	FunctionReference  FunctionReference  `json:"functionRef,omitempty"`
-	Inline             Inline             `json:"inline,omitempty"`
-	HttpReference      HttpReference      `json:"httpRef,omitempty"`
+	// +optional
+	FunctionReference FunctionReference `json:"functionRef,omitempty"`
+	// +optional
+	Inline Inline `json:"inline,omitempty"`
+	// +optional
+	HttpReference HttpReference `json:"httpRef,omitempty"`
+	// +optional
 	ConfigMapReference ConfigMapReference `json:"configMapRef,omitempty"`
-	Parameters         TaskParameters     `json:"parameters,omitempty"`
-	SecureParameters   SecureParameters   `json:"secureParameters,omitempty"`
+	// +optional
+	Parameters TaskParameters `json:"parameters,omitempty"`
+	// +optional
+	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 }
 
 type ConfigMapReference struct {
+	// +optional
 	Name string `json:"name,omitempty"`
 }
 
 type FunctionReference struct {
+	// +optional
 	Name string `json:"name,omitempty"`
 }
 
 type Inline struct {
+	// +optional
 	Code string `json:"code,omitempty"`
 }
 
 type HttpReference struct {
+	// +optional
 	Url string `json:"url,omitempty"`
 }
 
@@ -58,14 +69,12 @@ type ContainerSpec struct {
 
 // KeptnTaskDefinitionStatus defines the observed state of KeptnTaskDefinition
 type KeptnTaskDefinitionStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// +optional
 	Function FunctionStatus `json:"function,omitempty"`
 }
 
 type FunctionStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// +optional
 	ConfigMap string `json:"configMap,omitempty"`
 }
 
@@ -74,10 +83,13 @@ type FunctionStatus struct {
 
 // KeptnTaskDefinition is the Schema for the keptntaskdefinitions API
 type KeptnTaskDefinition struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnTaskDefinitionSpec   `json:"spec,omitempty"`
+	// +optional
+	Spec KeptnTaskDefinitionSpec `json:"spec,omitempty"`
+	// +optional
 	Status KeptnTaskDefinitionStatus `json:"status,omitempty"`
 }
 
@@ -86,6 +98,7 @@ type KeptnTaskDefinition struct {
 // KeptnTaskDefinitionList contains a list of KeptnTaskDefinition
 type KeptnTaskDefinitionList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnTaskDefinition `json:"items"`
 }

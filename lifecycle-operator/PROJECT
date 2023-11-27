@@ -2,7 +2,7 @@ domain: keptn.sh
 layout:
 - go.kubebuilder.io/v3
 multigroup: true
-projectName: keptn
+projectName: lifecycle-operator
 repo: github.com/keptn/lifecycle-toolkit/lifecycle-operator
 resources:
 - api:

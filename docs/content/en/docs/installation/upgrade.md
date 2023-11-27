@@ -14,7 +14,7 @@ by running the same command sequence used to install Keptn:
 helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
 helm upgrade --install keptn keptn/keptn \
-   -n keptn-lifecycle-toolkit-system --create-namespace --wait
+   -n keptn-system --create-namespace --wait
 ```
 
 Use the `--set` flag or download and edit the `values.yaml` file
@@ -59,7 +59,7 @@ kubectl delete -f \
 ```shell
 helm repo add keptn https://charts.lifecycle.keptn.sh
 helm repo update
-helm upgrade --install keptn keptn/keptn -n keptn-lifecycle-toolkit-system --create-namespace --wait
+helm upgrade --install keptn keptn/keptn -n keptn-system --create-namespace --wait
 ```
 
 For information about  advanced installation options, refer to

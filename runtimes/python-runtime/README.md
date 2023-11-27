@@ -67,7 +67,7 @@ We can call the hellopy.py script downloading it directly from github
 docker run -e "SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/python-runtime/samples/hellopy.py" -it lifecycle-toolkit/runtimes/python-runtime:${VERSION}
 ```
 
-<!-- markdownlint-disable-next-line MD033 MD013 -->
+<!-- markdownlint-disable-next-line MD033 MD013 MD045 -->
 <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />
 
 ### Environment Variables

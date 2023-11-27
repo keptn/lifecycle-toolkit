@@ -18,4 +18,4 @@ spec:
     nodename: test # can be any key/value pair; NOT only project/stage/service
   analysisDefinition:
     name: ad-my-proj-dev-svc1
-    namespace: keptn-lifecycle-toolkit-system
+    namespace: keptn-system

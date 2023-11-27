@@ -201,6 +201,8 @@ spec:
         - /bin/kube-scheduler
         - --config=/etc/kubernetes/scheduler-config.yaml
         env:
+        - name: OTEL_COLLECTOR_URL
+          value: {{ .Values.scheduler.env.otelCollectorUrl | quote }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
         image: {{ include "common.images.image" ( dict "imageRoot" .Values.scheduler.image "global" .Values.global ) }}

@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	context2 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -135,7 +137,12 @@ func (r Handler) CreateKeptnTask(ctx context.Context, phaseCtx context.Context, 
 
 	newTask := piWrapper.GenerateTask(taskCreateAttributes.Definition, taskCreateAttributes.CheckType)
 	if metadata, ok := context2.GetAppMetadataFromContext(phaseCtx); ok {
+		traceContextCarrier := &propagation.MapCarrier{}
+		otel.GetTextMapPropagator().Inject(phaseCtx, traceContextCarrier)
 		newTask.Spec.Context.Metadata = metadata
+		for _, key := range traceContextCarrier.Keys() {
+			newTask.Spec.Context.Metadata[key] = traceContextCarrier.Get(key)
+		}
 	}
 	err = controllerutil.SetControllerReference(reconcileObject, &newTask, r.Scheme)
 	if err != nil {

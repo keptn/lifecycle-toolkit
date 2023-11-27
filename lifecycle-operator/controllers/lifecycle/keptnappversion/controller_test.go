@@ -334,6 +334,7 @@ func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 }
 
 func TestKeptnAppVersionReconciler_getLinkedTraces(t *testing.T) {
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 	type fields struct {
 		Log logr.Logger
 	}

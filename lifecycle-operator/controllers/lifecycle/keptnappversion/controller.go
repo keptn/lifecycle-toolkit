@@ -20,7 +20,7 @@ import (
 	"context"
 	"fmt"
 	context2 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
-	"strings"
+	"go.opentelemetry.io/otel/attribute"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -96,7 +96,13 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	currentPhase := apicommon.PhaseAppPreDeployment
 
-	ctxAppTrace, spanAppTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), appVersion, "", r.getLinkedTraces(appVersion)...)
+	ctxAppTrace, spanAppTrace, err := r.SpanHandler.GetSpan(
+		ctxAppTrace,
+		r.getTracer(),
+		appVersion,
+		"",
+		r.getLinkedTraces(appVersion)...,
+	)
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}
@@ -169,30 +175,50 @@ func (r *KeptnAppVersionReconciler) getLinkedTraces(version *klcv1alpha3.KeptnAp
 
 	for i, linkedTrace := range version.Spec.LinkedTraces {
 		r.Log.Info("Adding Link to trace", "linkedTrace", linkedTrace)
-		split := strings.Split(linkedTrace, "-")
 
-		if len(split) != 4 {
-			continue
-		}
+		traceContextCarrier := propagation.MapCarrier(map[string]string{
+			"traceparent": linkedTrace,
+		})
 
-		traceID, err := trace.TraceIDFromHex(split[1])
-		if err != nil {
-			r.Log.Info("Could not extract traceID from linked trace", "linkedTrace", linkedTrace, "err", err)
-			continue
-		}
+		linkedCtx := context.Background()
+		linkedCtx = otel.GetTextMapPropagator().Extract(linkedCtx, traceContextCarrier)
 
-		spanID, err := trace.SpanIDFromHex(split[2])
-		if err != nil {
-			r.Log.Info("Could not extract spanID from linked trace", "linkedTrace", linkedTrace, "err", err)
-			continue
-		}
+		link := trace.LinkFromContext(linkedCtx, attribute.KeyValue{
+			Key:   "ot-span-reference-type",
+			Value: attribute.StringValue("follows-from"),
+		})
+		result[i] = link
+		/*
+			split := strings.Split(linkedTrace, "-")
 
-		result[i] = trace.Link{
-			SpanContext: trace.NewSpanContext(trace.SpanContextConfig{
-				TraceID: traceID,
-				SpanID:  spanID,
-			}),
-		}
+			if len(split) != 4 {
+				continue
+			}
+
+			traceID, err := trace.TraceIDFromHex(split[1])
+			if err != nil {
+				r.Log.Info("Could not extract traceID from linked trace", "linkedTrace", linkedTrace, "err", err)
+				continue
+			}
+
+			spanID, err := trace.SpanIDFromHex(split[2])
+			if err != nil {
+				r.Log.Info("Could not extract spanID from linked trace", "linkedTrace", linkedTrace, "err", err)
+				continue
+			}
+
+			result[i] = trace.Link{
+				SpanContext: trace.NewSpanContext(
+					trace.SpanContextConfig{
+						TraceID:    traceID,
+						SpanID:     spanID,
+						Remote:     true,
+						TraceFlags: trace.FlagsSampled,
+					},
+				),
+			}
+		*/
+
 	}
 	return result
 }
@@ -233,7 +259,9 @@ func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appV
 
 	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
-	ctxAppTrace = context2.ContextWithAppMetadata(ctxAppTrace, appVersion.Spec.Metadata)
+	ctxAppTrace = context2.ContextWithAppMetadata(ctxAppTrace, appVersion.Spec.Metadata, map[string]string{
+		"traceParent": appVersion.Spec.TraceId["traceparent"],
+	})
 
 	endFunc := func() {
 		if appVersion.IsEndTimeSet() {

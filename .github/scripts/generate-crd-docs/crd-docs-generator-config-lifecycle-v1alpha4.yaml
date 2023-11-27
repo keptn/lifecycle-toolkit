@@ -23,6 +23,3 @@ render:
     - name: MapCarrier
       package: "go.opentelemetry.io/otel/propagation"
       link: https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier
-    - name: KeptnState
-      package: "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4/common"
-      link: https://go.dev/ref/spec#String_types

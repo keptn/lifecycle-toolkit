@@ -327,11 +327,11 @@ Please find more information in the [LICENSE](LICENSE) file.
 
 <!-- markdownlint-disable-next-line MD033 -->
 <a href="https://github.com/keptn/lifecycle-toolkit/graphs/contributors">
-<!-- markdownlint-disable-next-line MD033 -->
+<!-- markdownlint-disable-next-line MD033 MD045 -->
   <img src="https://contrib.rocks/image?repo=keptn/lifecycle-toolkit" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).
 
-<!-- markdownlint-disable-next-line MD033 MD013 -->
+<!-- markdownlint-disable-next-line MD033 MD013 MD045 -->
 <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

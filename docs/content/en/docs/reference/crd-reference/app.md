@@ -173,6 +173,7 @@ spec:
 - [Working with tasks](../../guides/tasks.md)
 - [Architecture of KeptnWorkloads and KeptnTasks](../../components/lifecycle-operator/keptn-apps.md)
 - [Pre- and post-deployment tasks](../../guides/integrate.md#pre--and-post-deployment-checks)
-- [Orchestrate deployment checks](../../core-concepts/usecase-orchestrate.md)
+- Getting started with
+  [Release Lifecycle Management](../../getting-started/lifecycle-management/)
 - [Use Keptn automatic app discovery](../../guides/auto-app-discovery.md)
 - [Restart an Application Deployment](../../guides/restart-application-deployment.md)

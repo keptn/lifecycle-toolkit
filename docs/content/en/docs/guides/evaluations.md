@@ -4,6 +4,17 @@ description: Understand Keptn evaluations and how to use them
 weight: 700
 ---
 
+A Keptn evaluation does a simple evaluation of the metrics data you capture,
+to answer a question such as "Do I have more than four CPUs available?".
+It can be defined to run before or after your software is deployed.
+
+More complex calculations that use weighting and scoring
+can be implemented using the Keptn
+[analysis](slo.md)
+feature.
+
+## KeptnEvaluationDefinition
+
 A
 [KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)
 resource contains a list of `objectives`,
@@ -25,6 +36,8 @@ This is defined in the example
 [metric.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/metric.yaml)
 file:
 {{< embed path="/examples/sample-app/base/metric.yaml" >}}
+
+## Run an evaluation
 
 To run an evaluation on one of your
 [Workloads](https://kubernetes.io/docs/concepts/workloads/)

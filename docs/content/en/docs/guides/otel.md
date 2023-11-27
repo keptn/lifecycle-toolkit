@@ -52,7 +52,7 @@ you must have the following on your cluster:
 
   - The Prometheus Operator must have the required permissions
     to watch resources of your Keptn namespace
-    (default is `keptn-lifecycle-toolkit-system`).
+    (default is `keptn-system`).
     See
     [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/)).
 
@@ -113,7 +113,7 @@ using this manifest, the command is:
 
 ```shell
 kubectl apply -f config/otel-collector.yaml \
-    -n keptn-lifecycle-toolkit-system
+    -n keptn-system
 ```
 
 Use the following command to confirm that the pod
@@ -121,7 +121,7 @@ for the `otel-collector` deployment is up and running:
 
 ```shell
 $ kubectl get pods -lapp=opentelemetry \
-    -n keptn-lifecycle-toolkit-system
+    -n keptn-system
 
 NAME                              READY   STATUS    RESTARTS      AGE
 otel-collector-6fc4cc84d6-7hnvp   1/1     Running   0             92m
@@ -133,7 +133,7 @@ you can edit the Collector `ConfigMap` with the following command:
 
 ```shell
 kubectl edit configmap otel-collector-conf \
-    -n keptn-lifecycle-toolkit-system
+    -n keptn-system
 ```
 
 When the `otel-collector` pod is up and running,
@@ -142,7 +142,7 @@ so they can pick up the new configuration:
 
 ```shell
 kubectl rollout restart deployment \
-    -n keptn-lifecycle-toolkit-system keptn-scheduler lifecycle-operator
+    -n keptn-system keptn-scheduler lifecycle-operator
 ```
 
 Keptn begins to collect OpenTelemetry metrics
@@ -157,7 +157,7 @@ via port `9999` of the Keptn metrics-operator.
 To access the metrics, use the following command:
 
 ```shell
-kubectl port-forward deployment/metrics-operator 9999 -n keptn-lifecycle-toolkit-system
+kubectl port-forward deployment/metrics-operator 9999 -n keptn-system
 ```
 
 You can access the metrics from your browser at: `http://localhost:9999`

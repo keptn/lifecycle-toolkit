@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: keptn-certs
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
   annotations:
     mycert: "true"  # make sure this is the latest secret
 ---
@@ -12,7 +12,7 @@ kind: Deployment
 metadata:
   labels:
     control-plane: metrics-operator
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
 status:
   readyReplicas: 1
 ---
@@ -21,6 +21,6 @@ kind: Deployment
 metadata:
   labels:
     control-plane: lifecycle-operator
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
 status:
   readyReplicas: 1

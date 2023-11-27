@@ -1,4 +1,4 @@
-LFC_NAMESPACE ?= keptn-lifecycle-toolkit-system
+LFC_NAMESPACE ?= keptn-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 ARGO_NAMESPACE ?= argocd
 # renovate: datasource=github-tags depName=argoproj/argo-cd

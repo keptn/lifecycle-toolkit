@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: metrics-operator
   name: response-time-p95
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
 spec:
   provider:
     name: prometheus

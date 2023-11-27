@@ -34,6 +34,3 @@ If you prefer to prepare the dashboards for the examples and importing them as j
 ```shell
 make import-json
 ```
-
-<!-- markdownlint-disable-next-line MD033 MD013 MD045 -->
-<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

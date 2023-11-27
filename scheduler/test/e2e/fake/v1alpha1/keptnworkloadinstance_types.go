@@ -37,19 +37,14 @@ type KeptnWorkloadInstanceSpec struct {
 // KeptnWorkloadInstanceStatus defines the observed state of KeptnWorkloadInstance
 type KeptnWorkloadInstanceStatus struct {
 	// +kubebuilder:default:=Pending
-	// +kubebuilder:validation:Type=string
 	PreDeploymentStatus common.KeptnState `json:"preDeploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	// +kubebuilder:validation:Type=string
 	DeploymentStatus common.KeptnState `json:"deploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	// +kubebuilder:validation:Type=string
 	PreDeploymentEvaluationStatus common.KeptnState `json:"preDeploymentEvaluationStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	// +kubebuilder:validation:Type=string
 	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	// +kubebuilder:validation:Type=string
 	PostDeploymentStatus               common.KeptnState  `json:"postDeploymentStatus,omitempty"`
 	PreDeploymentTaskStatus            []TaskStatus       `json:"preDeploymentTaskStatus,omitempty"`
 	PostDeploymentTaskStatus           []TaskStatus       `json:"postDeploymentTaskStatus,omitempty"`
@@ -64,7 +59,6 @@ type KeptnWorkloadInstanceStatus struct {
 
 type TaskStatus struct {
 	TaskDefinitionName string `json:"taskDefinitionName,omitempty"`
-	// +kubebuilder:validation:Type=string
 	// +kubebuilder:default:=Pending
 	Status    common.KeptnState `json:"status,omitempty"`
 	TaskName  string            `json:"taskName,omitempty"`
@@ -74,7 +68,6 @@ type TaskStatus struct {
 
 type EvaluationStatus struct {
 	EvaluationDefinitionName string `json:"evaluationDefinitionName,omitempty"`
-	// +kubebuilder:validation:Type=string
 	// +kubebuilder:default:=Pending
 	Status         common.KeptnState `json:"status,omitempty"`
 	EvaluationName string            `json:"evaluationName,omitempty"`

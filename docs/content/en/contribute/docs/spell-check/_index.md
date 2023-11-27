@@ -47,20 +47,20 @@ For more details about handling errors that are found, see the
 
 For full technical details about the spell checker, see:
 
-* [check-spelling documentation](https://docs.check-spelling.dev/)
-* [check-spelling/.github repository](https://github.com/check-spelling/check-spelling/tree/main/.github)
+- [check-spelling documentation](https://docs.check-spelling.dev/)
+- [check-spelling/.github repository](https://github.com/check-spelling/check-spelling/tree/main/.github)
 
 The Keptn spell checker checks both documentation and code for spelling,
 based on a set of dictionaries:
 
-* We use general English language and technical terminology
+- We use general English language and technical terminology
   from dictionaries that are provided and maintained by check-spelling.
   The configuration is specified in the
   [check-spelling-configuration/README[(https://github.com/check-spelling/check-spelling/blob/main/.github/actions/spelling/README.md)
   file.
-* We also use the specialized technical dictionaries provided by check-spelling
+- We also use the specialized technical dictionaries provided by check-spelling
   for Kubernetes and Go.
-* The
+- The
   [spelling](https://github.com/keptn/lifecycle-toolkit/tree/main/.github/actions/spelling)
   folder contains files that are specific to Keptn.
   [expect.txt](https://github.com/keptn/lifecycle-toolkit/tree/main/.github/actions/spelling)

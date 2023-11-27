@@ -12,17 +12,24 @@ The Keptn deno runtime uses [Deno](https://deno.com/)
 to execute Javascript/Typescript code.
 Keptn uses this runtime to run [KeptnTask](https://lifecycle.keptn.sh/docs/tasks/write-tasks/)
 for pre- and post-checks.
-Keptn passes parameters of `KeptnTask`s and
-[Context](https://lifecycle.keptn.sh/docs/concepts/tasks/#context) information
-to the runtime via the special environmental variable `DATA`.
-It also supports mounting Kubernetes secrets making them accessible via the `SECURE_DATA` env var.
+
+### Environment Variables
+
+Keptn passes the following environment variables to the runtime:
+
+* `DATA`: JSON encoded object containing the parameters specified in `spec.parameters` of a `KeptnTask`.
+* `SECURE_DATA`: Contains the value of the secret referenced in the `spec.secureParameters` field of a `KeptnTask`.
+* `KEPTN_CONTEXT`: JSON encoded object containing context information for the task.
+
 You can then read the data with the following snippet of code.
 
 ```js
 const data = Deno.env.get("DATA")!;
 const secret = Deno.env.get("SECURE_DATA")!;
+const context = Deno.env.get("KEPTN_CONTEXT")!;
 console.log(data);
 console.log(secret);
+console.log(context);
 ```
 
 `KeptnTask`s can be tested locally with the runtime using the following command.

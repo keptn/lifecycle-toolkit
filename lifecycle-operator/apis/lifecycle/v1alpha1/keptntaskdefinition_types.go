@@ -74,8 +74,6 @@ type KeptnTaskDefinitionStatus struct {
 }
 
 type FunctionStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 	// +optional
 	ConfigMap string `json:"configMap,omitempty"`
 }

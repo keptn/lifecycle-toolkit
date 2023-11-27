@@ -332,6 +332,3 @@ Please find more information in the [LICENSE](LICENSE) file.
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).
-
-<!-- markdownlint-disable-next-line MD033 MD013 MD045 -->
-<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

@@ -25,3 +25,9 @@ render:
     - name: KeptnState
       package: "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha1/common"
       link: https://go.dev/ref/spec#String_types
+    - name: KeptnState
+      package: "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha2/common"
+      link: https://go.dev/ref/spec#String_types
+    - name: KeptnState
+      package: "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+      link: https://go.dev/ref/spec#String_types

@@ -60,7 +60,7 @@ _Appears in:_
 | Field | Description | Default | Optional
 | --- | --- | --- | --- |
 | `value` _string_ |  || x |
-| `status` _[KeptnState](#keptnstate)_ |  || x |
+| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  || x |
 | `message` _string_ |  || x |
 
 
@@ -152,7 +152,7 @@ _Appears in:_
 | Field | Description | Default | Optional
 | --- | --- | --- | --- |
 | `definitionName` _string_ | DefinitionName is the name of the EvaluationDefinition/TaskDefinition || x |
-| `status` _[KeptnState](#keptnstate)_ |  |Pending| x |
+| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
 | `name` _string_ | Name is the name of the Evaluation/Task || x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
@@ -295,11 +295,11 @@ _Appears in:_
 
 | Field | Description | Default | Optional
 | --- | --- | --- | --- |
-| `preDeploymentStatus` _[KeptnState](#keptnstate)_ |  |Pending| x |
-| `postDeploymentStatus` _[KeptnState](#keptnstate)_ |  |Pending| x |
-| `preDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ |  |Pending| x |
-| `postDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ |  |Pending| x |
-| `workloadOverallStatus` _[KeptnState](#keptnstate)_ |  |Pending| x |
+| `preDeploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `postDeploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `preDeploymentEvaluationStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `postDeploymentEvaluationStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `workloadOverallStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
 | `workloadStatus` _[WorkloadStatus](#workloadstatus) array_ |  || x |
 | `currentPhase` _string_ |  || x |
 | `preDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
@@ -307,7 +307,7 @@ _Appears in:_
 | `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
 | `postDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
 | `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ |  || x |
-| `status` _[KeptnState](#keptnstate)_ |  |Pending| x |
+| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 
@@ -432,7 +432,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `retryCount` _integer_ |  |0| x |
 | `evaluationStatus` _object (keys:string, values:[EvaluationStatusItem](#evaluationstatusitem))_ |  || x |
-| `overallStatus` _[KeptnState](#keptnstate)_ |  |Pending| x |
+| `overallStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 
@@ -567,7 +567,7 @@ _Appears in:_
 | Field | Description | Default | Optional
 | --- | --- | --- | --- |
 | `jobName` _string_ |  || x |
-| `status` _[KeptnState](#keptnstate)_ |  |Pending| x |
+| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
 | `message` _string_ |  || x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
@@ -659,11 +659,11 @@ _Appears in:_
 
 | Field | Description | Default | Optional
 | --- | --- | --- | --- |
-| `preDeploymentStatus` _[KeptnState](#keptnstate)_ |  |Pending| x |
-| `deploymentStatus` _[KeptnState](#keptnstate)_ |  |Pending| x |
-| `preDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ |  |Pending| x |
-| `postDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ |  |Pending| x |
-| `postDeploymentStatus` _[KeptnState](#keptnstate)_ |  |Pending| x |
+| `preDeploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `deploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `preDeploymentEvaluationStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `postDeploymentEvaluationStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
+| `postDeploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
 | `preDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
 | `postDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
 | `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
@@ -672,7 +672,7 @@ _Appears in:_
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
 | `currentPhase` _string_ |  || x |
 | `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ |  || x |
-| `status` _[KeptnState](#keptnstate)_ |  |Pending| x |
+| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
 
 
 #### KeptnWorkloadList
@@ -837,6 +837,6 @@ _Appears in:_
 | Field | Description | Default | Optional
 | --- | --- | --- | --- |
 | `workload` _[KeptnWorkloadRef](#keptnworkloadref)_ |  || x |
-| `status` _[KeptnState](#keptnstate)_ |  |Pending| x |
+| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
 
 

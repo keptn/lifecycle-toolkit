@@ -85,7 +85,7 @@ _Appears in:_
 | Field | Description | Default | Optional
 | --- | --- | --- | --- |
 | `value` _string_ | Value represents the value of the KeptnMetric being evaluated. || x |
-| `status` _[KeptnState](#keptnstate)_ | Status indicates the status of the objective being evaluated. || x |
+| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ | Status indicates the status of the objective being evaluated. || x |
 | `message` _string_ | Message contains additional information about the evaluation of an objective. This can include explanations about why an evaluation has failed (e.g. due to a missed objective), or if there was any error during the evaluation of the objective. || x |
 
 
@@ -158,7 +158,7 @@ _Appears in:_
 | Field | Description | Default | Optional
 | --- | --- | --- | --- |
 | `definitionName` _string_ | DefinitionName is the name of the EvaluationDefinition/TaskDefinition || x |
-| `status` _[KeptnState](#keptnstate)_ |  |Pending| x |
+| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ |  |Pending| x |
 | `name` _string_ | Name is the name of the Evaluation/Task || x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | StartTime represents the time at which the Item (Evaluation/Task) started. || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | EndTime represents the time at which the Item (Evaluation/Task) started. || x |
@@ -349,11 +349,11 @@ _Appears in:_
 
 | Field | Description | Default | Optional
 | --- | --- | --- | --- |
-| `preDeploymentStatus` _[KeptnState](#keptnstate)_ | PreDeploymentStatus indicates the current status of the KeptnAppVersion's PreDeployment phase. |Pending| x |
-| `postDeploymentStatus` _[KeptnState](#keptnstate)_ | PostDeploymentStatus indicates the current status of the KeptnAppVersion's PostDeployment phase. |Pending| x |
-| `preDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ | PreDeploymentEvaluationStatus indicates the current status of the KeptnAppVersion's PreDeploymentEvaluation phase. |Pending| x |
-| `postDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ | PostDeploymentEvaluationStatus indicates the current status of the KeptnAppVersion's PostDeploymentEvaluation phase. |Pending| x |
-| `workloadOverallStatus` _[KeptnState](#keptnstate)_ | WorkloadOverallStatus indicates the current status of the KeptnAppVersion's Workload deployment phase. |Pending| x |
+| `preDeploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ | PreDeploymentStatus indicates the current status of the KeptnAppVersion's PreDeployment phase. |Pending| x |
+| `postDeploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ | PostDeploymentStatus indicates the current status of the KeptnAppVersion's PostDeployment phase. |Pending| x |
+| `preDeploymentEvaluationStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ | PreDeploymentEvaluationStatus indicates the current status of the KeptnAppVersion's PreDeploymentEvaluation phase. |Pending| x |
+| `postDeploymentEvaluationStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ | PostDeploymentEvaluationStatus indicates the current status of the KeptnAppVersion's PostDeploymentEvaluation phase. |Pending| x |
+| `workloadOverallStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ | WorkloadOverallStatus indicates the current status of the KeptnAppVersion's Workload deployment phase. |Pending| x |
 | `workloadStatus` _[WorkloadStatus](#workloadstatus) array_ | WorkloadStatus contains the current status of each KeptnWorkload that is part of the KeptnAppVersion. || x |
 | `currentPhase` _string_ | CurrentPhase indicates the current phase of the KeptnAppVersion. || x |
 | `preDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ | PreDeploymentTaskStatus indicates the current state of each preDeploymentTask of the KeptnAppVersion. || x |
@@ -361,7 +361,7 @@ _Appears in:_
 | `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ | PreDeploymentEvaluationTaskStatus indicates the current state of each preDeploymentEvaluation of the KeptnAppVersion. || x |
 | `postDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ | PostDeploymentEvaluationTaskStatus indicates the current state of each postDeploymentEvaluation of the KeptnAppVersion. || x |
 | `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnAppVersion. || x |
-| `status` _[KeptnState](#keptnstate)_ | Status represents the overall status of the KeptnAppVersion. |Pending| x |
+| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ | Status represents the overall status of the KeptnAppVersion. |Pending| x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | StartTime represents the time at which the deployment of the KeptnAppVersion started. || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | EndTime represents the time at which the deployment of the KeptnAppVersion finished. || x |
 
@@ -485,7 +485,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `retryCount` _integer_ | RetryCount indicates how many times the KeptnEvaluation has been attempted already. |0| x |
 | `evaluationStatus` _object (keys:string, values:[EvaluationStatusItem](#evaluationstatusitem))_ | EvaluationStatus describes the status of each objective of the KeptnEvaluationDefinition referenced by the KeptnEvaluation. || x |
-| `overallStatus` _[KeptnState](#keptnstate)_ | OverallStatus describes the overall status of the KeptnEvaluation. The Overall status is derived from the status of the individual objectives of the KeptnEvaluationDefinition referenced by the KeptnEvaluation. |Pending| x |
+| `overallStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ | OverallStatus describes the overall status of the KeptnEvaluation. The Overall status is derived from the status of the individual objectives of the KeptnEvaluationDefinition referenced by the KeptnEvaluation. |Pending| x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | StartTime represents the time at which the KeptnEvaluation started. || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | EndTime represents the time at which the KeptnEvaluation finished. || x |
 
@@ -642,7 +642,7 @@ _Appears in:_
 | Field | Description | Default | Optional
 | --- | --- | --- | --- |
 | `jobName` _string_ | JobName is the name of the Job executing the Task. || x |
-| `status` _[KeptnState](#keptnstate)_ | Status represents the overall state of the KeptnTask. |Pending| x |
+| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ | Status represents the overall state of the KeptnTask. |Pending| x |
 | `message` _string_ | Message contains information about unexpected errors encountered during the execution of the KeptnTask. || x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | StartTime represents the time at which the KeptnTask started. || x |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | EndTime represents the time at which the KeptnTask finished. || x |
@@ -735,11 +735,11 @@ _Appears in:_
 
 | Field | Description | Default | Optional
 | --- | --- | --- | --- |
-| `preDeploymentStatus` _[KeptnState](#keptnstate)_ | PreDeploymentStatus indicates the current status of the KeptnWorkloadInstance's PreDeployment phase. |Pending| x |
-| `deploymentStatus` _[KeptnState](#keptnstate)_ | DeploymentStatus indicates the current status of the KeptnWorkloadInstance's Deployment phase. |Pending| x |
-| `preDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ | PreDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadInstance's PreDeploymentEvaluation phase. |Pending| x |
-| `postDeploymentEvaluationStatus` _[KeptnState](#keptnstate)_ | PostDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadInstance's PostDeploymentEvaluation phase. |Pending| x |
-| `postDeploymentStatus` _[KeptnState](#keptnstate)_ | PostDeploymentStatus indicates the current status of the KeptnWorkloadInstance's PostDeployment phase. |Pending| x |
+| `preDeploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ | PreDeploymentStatus indicates the current status of the KeptnWorkloadInstance's PreDeployment phase. |Pending| x |
+| `deploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ | DeploymentStatus indicates the current status of the KeptnWorkloadInstance's Deployment phase. |Pending| x |
+| `preDeploymentEvaluationStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ | PreDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadInstance's PreDeploymentEvaluation phase. |Pending| x |
+| `postDeploymentEvaluationStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ | PostDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadInstance's PostDeploymentEvaluation phase. |Pending| x |
+| `postDeploymentStatus` _[KeptnState](https://go.dev/ref/spec#String_types)_ | PostDeploymentStatus indicates the current status of the KeptnWorkloadInstance's PostDeployment phase. |Pending| x |
 | `preDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ | PreDeploymentTaskStatus indicates the current state of each preDeploymentTask of the KeptnWorkloadInstance. || x |
 | `postDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ | PostDeploymentTaskStatus indicates the current state of each postDeploymentTask of the KeptnWorkloadInstance. || x |
 | `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ | PreDeploymentEvaluationTaskStatus indicates the current state of each preDeploymentEvaluation of the KeptnWorkloadInstance. || x |
@@ -748,7 +748,7 @@ _Appears in:_
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | EndTime represents the time at which the deployment of the KeptnWorkloadInstance finished. || x |
 | `currentPhase` _string_ | CurrentPhase indicates the current phase of the KeptnWorkloadInstance. This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment - PostDeploymentTasks - PostDeploymentEvaluations || x |
 | `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadInstance || x |
-| `status` _[KeptnState](#keptnstate)_ | Status represents the overall status of the KeptnWorkloadInstance. |Pending| x |
+| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ | Status represents the overall status of the KeptnWorkloadInstance. |Pending| x |
 
 
 #### KeptnWorkloadList
@@ -946,6 +946,6 @@ _Appears in:_
 | Field | Description | Default | Optional
 | --- | --- | --- | --- |
 | `workload` _[KeptnWorkloadRef](#keptnworkloadref)_ | Workload refers to a KeptnWorkload that is part of the KeptnAppVersion. || x |
-| `status` _[KeptnState](#keptnstate)_ | Status indicates the current status of the KeptnWorkload. |Pending| x |
+| `status` _[KeptnState](https://go.dev/ref/spec#String_types)_ | Status indicates the current status of the KeptnWorkload. |Pending| x |
 
 

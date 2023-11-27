@@ -5,7 +5,7 @@ weight: 375
 ---
 
 All PRs that are pushed to a Keptn repository
-are run through a spell checker that is based on
+are run through a spell checker that is based on the
 [check-spelling](https://github.com/check-spelling/check-spelling)
 Github action.
 
@@ -39,3 +39,42 @@ If you get a Spell Checker error:
      as part of your PR.
      It will be reviewed and, if approved,
      merged as part of your PR.
+
+For more details about handling errors that are found, see the
+[Check-spelling docs](https://docs.check-spelling.dev/Showcase.html).
+
+## Implementation details
+
+For full technical details about the spell checker, see:
+
+* [check-spelling documentation](https://docs.check-spelling.dev/)
+* [check-spelling/.github repository](https://github.com/check-spelling/check-spelling/tree/main/.github)
+
+The Keptn spell checker checks both documentation and code for spelling,
+based on a set of dictionaries:
+
+* We use general English language and technical terminology
+  from dictionaries that are provided and maintained by check-spelling.
+  The configuration is specified in the
+  [check-spelling-configuration/README[(https://github.com/check-spelling/check-spelling/blob/main/.github/actions/spelling/README.md)
+  file.
+* We also use the specialized technical dictionaries provided by check-spelling
+  for Kubernetes and Go.
+* The
+  [spelling](https://github.com/keptn/lifecycle-toolkit/tree/main/.github/actions/spelling)
+  folder contains files that are specific to Keptn.
+  [expect.txt](https://github.com/keptn/lifecycle-toolkit/tree/main/.github/actions/spelling)
+  lists Keptn terms for both documentation and code.
+
+Check-spelling supports both American and British spelling
+and both are allowed in the Keptn documentation.
+
+check-spelling provides a number of dictionaries for non-English libraries
+but we do not currently use those.
+
+Note that Check-spelling does not check for proper capitalization of terms.
+All dictionary terms are listed with lowercase letters.
+Check-spelling recognizes capitalized versions of these words but,
+if capitalized words are listed in a dictionary,
+check-spelling rejects non-capitalized forms
+which are common in code.

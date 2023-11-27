@@ -32,15 +32,18 @@ import (
 
 // KeptnTaskSpec defines the desired state of KeptnTask
 type KeptnTaskSpec struct {
-	Workload         string           `json:"workload"`
-	WorkloadVersion  string           `json:"workloadVersion"`
-	AppName          string           `json:"app"`
-	AppVersion       string           `json:"appVersion"`
-	TaskDefinition   string           `json:"taskDefinition"`
-	Context          TaskContext      `json:"context"`
-	Parameters       TaskParameters   `json:"parameters,omitempty"`
+	Workload        string      `json:"workload"`
+	WorkloadVersion string      `json:"workloadVersion"`
+	AppName         string      `json:"app"`
+	AppVersion      string      `json:"appVersion"`
+	TaskDefinition  string      `json:"taskDefinition"`
+	Context         TaskContext `json:"context"`
+	// +optional
+	Parameters TaskParameters `json:"parameters,omitempty"`
+	// +optional
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
-	Type             common.CheckType `json:"checkType,omitempty"`
+	// +optional
+	Type common.CheckType `json:"checkType,omitempty"`
 }
 
 type TaskContext struct {
@@ -53,21 +56,28 @@ type TaskContext struct {
 }
 
 type TaskParameters struct {
+	// +optional
 	Inline map[string]string `json:"map,omitempty"`
 }
 
 type SecureParameters struct {
+	// +optional
 	Secret string `json:"secret,omitempty"`
 }
 
 // KeptnTaskStatus defines the observed state of KeptnTask
 type KeptnTaskStatus struct {
+	// +optional
 	JobName string `json:"jobName,omitempty"`
 	// +kubebuilder:default:=Pending
-	Status    common.KeptnState `json:"status,omitempty"`
-	Message   string            `json:"message,omitempty"`
-	StartTime metav1.Time       `json:"startTime,omitempty"`
-	EndTime   metav1.Time       `json:"endTime,omitempty"`
+	// +optional
+	Status common.KeptnState `json:"status,omitempty"`
+	// +optional
+	Message string `json:"message,omitempty"`
+	// +optional
+	StartTime metav1.Time `json:"startTime,omitempty"`
+	// +optional
+	EndTime metav1.Time `json:"endTime,omitempty"`
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -83,10 +93,13 @@ type KeptnTaskStatus struct {
 
 // KeptnTask is the Schema for the keptntasks API
 type KeptnTask struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnTaskSpec   `json:"spec,omitempty"`
+	// +optional
+	Spec KeptnTaskSpec `json:"spec,omitempty"`
+	// +optional
 	Status KeptnTaskStatus `json:"status,omitempty"`
 }
 
@@ -95,6 +108,7 @@ type KeptnTask struct {
 // KeptnTaskList contains a list of KeptnTask
 type KeptnTaskList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnTask `json:"items"`
 }

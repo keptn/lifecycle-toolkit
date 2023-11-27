@@ -30,15 +30,18 @@ type KeptnConfigSpec struct {
 
 	// OTelCollectorUrl can be used to set the Open Telemetry collector that the lifecycle operator should use
 	// +optional
+	// +optional
 	OTelCollectorUrl string `json:"OTelCollectorUrl,omitempty"`
 
 	// KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery
 	// searches for workload to put into the same auto-generated KeptnApp
 	// +kubebuilder:default:=30
 	// +optional
+	// +optional
 	KeptnAppCreationRequestTimeoutSeconds uint `json:"keptnAppCreationRequestTimeoutSeconds,omitempty"`
 
 	// CloudEventsEndpoint can be used to set the endpoint where Cloud Events should be posted by the lifecycle operator
+	// +optional
 	// +optional
 	CloudEventsEndpoint string `json:"cloudEventsEndpoint,omitempty"`
 }
@@ -48,11 +51,14 @@ type KeptnConfigSpec struct {
 
 // KeptnConfig is the Schema for the keptnconfigs API
 type KeptnConfig struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
+	// +optional
 	Spec KeptnConfigSpec `json:"spec,omitempty"`
 	// unused field
+	// +optional
 	Status string `json:"status,omitempty"`
 }
 
@@ -61,6 +67,7 @@ type KeptnConfig struct {
 // KeptnConfigList contains a list of KeptnConfig
 type KeptnConfigList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnConfig `json:"items"`
 }

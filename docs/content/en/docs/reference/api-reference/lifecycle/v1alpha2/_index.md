@@ -43,7 +43,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `name` _string_ |  || x |
+| `name` _string_ |  || ✓ |
 
 
 
@@ -61,7 +61,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `value` _string_ |  || x |
 | `status` _string_ |  || x |
-| `message` _string_ |  || x |
+| `message` _string_ |  || ✓ |
 
 
 #### FunctionReference
@@ -75,7 +75,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `name` _string_ |  || x |
+| `name` _string_ |  || ✓ |
 
 
 #### FunctionSpec
@@ -89,12 +89,12 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `functionRef` _[FunctionReference](#functionreference)_ |  || x |
-| `inline` _[Inline](#inline)_ |  || x |
-| `httpRef` _[HttpReference](#httpreference)_ |  || x |
-| `configMapRef` _[ConfigMapReference](#configmapreference)_ |  || x |
-| `parameters` _[TaskParameters](#taskparameters)_ |  || x |
-| `secureParameters` _[SecureParameters](#secureparameters)_ |  || x |
+| `functionRef` _[FunctionReference](#functionreference)_ |  || ✓ |
+| `inline` _[Inline](#inline)_ |  || ✓ |
+| `httpRef` _[HttpReference](#httpreference)_ |  || ✓ |
+| `configMapRef` _[ConfigMapReference](#configmapreference)_ |  || ✓ |
+| `parameters` _[TaskParameters](#taskparameters)_ |  || ✓ |
+| `secureParameters` _[SecureParameters](#secureparameters)_ |  || ✓ |
 
 
 #### FunctionStatus
@@ -108,7 +108,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `configMap` _string_ | INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run "make" to regenerate code after modifying this file || x |
+| `configMap` _string_ | INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run "make" to regenerate code after modifying this file || ✓ |
 
 
 #### HttpReference
@@ -122,7 +122,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `url` _string_ |  || x |
+| `url` _string_ |  || ✓ |
 
 
 #### Inline
@@ -136,7 +136,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `code` _string_ |  || x |
+| `code` _string_ |  || ✓ |
 
 
 #### ItemStatus
@@ -151,11 +151,11 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `definitionName` _string_ | DefinitionName is the name of the EvaluationDefinition/TaskDefinition || x |
-| `status` _string_ |  |Pending| x |
-| `name` _string_ | Name is the name of the Evaluation/Task || x |
-| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
-| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
+| `definitionName` _string_ | DefinitionName is the name of the EvaluationDefinition/TaskDefinition || ✓ |
+| `status` _string_ |  |Pending| ✓ |
+| `name` _string_ | Name is the name of the Evaluation/Task || ✓ |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |
 
 
 #### KeptnApp
@@ -171,9 +171,9 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnApp` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
-| `spec` _[KeptnAppSpec](#keptnappspec)_ |  || x |
-| `status` _[KeptnAppStatus](#keptnappstatus)_ |  || x |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `spec` _[KeptnAppSpec](#keptnappspec)_ |  || ✓ |
+| `status` _[KeptnAppStatus](#keptnappstatus)_ |  || ✓ |
 
 
 #### KeptnAppList
@@ -188,7 +188,7 @@ KeptnAppList contains a list of KeptnApp
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnAppList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
 | `items` _[KeptnApp](#keptnapp) array_ |  || x |
 
 
@@ -205,12 +205,12 @@ _Appears in:_
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `version` _string_ |  || x |
-| `revision` _integer_ |  |1| x |
-| `workloads` _[KeptnWorkloadRef](#keptnworkloadref) array_ |  || x |
-| `preDeploymentTasks` _string array_ |  || x |
-| `postDeploymentTasks` _string array_ |  || x |
-| `preDeploymentEvaluations` _string array_ |  || x |
-| `postDeploymentEvaluations` _string array_ |  || x |
+| `revision` _integer_ |  |1| ✓ |
+| `workloads` _[KeptnWorkloadRef](#keptnworkloadref) array_ |  || ✓ |
+| `preDeploymentTasks` _string array_ |  || ✓ |
+| `postDeploymentTasks` _string array_ |  || ✓ |
+| `preDeploymentEvaluations` _string array_ |  || ✓ |
+| `postDeploymentEvaluations` _string array_ |  || ✓ |
 
 
 #### KeptnAppStatus
@@ -224,7 +224,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `currentVersion` _string_ |  || x |
+| `currentVersion` _string_ |  || ✓ |
 
 
 #### KeptnAppVersion
@@ -240,9 +240,9 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnAppVersion` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
-| `spec` _[KeptnAppVersionSpec](#keptnappversionspec)_ |  || x |
-| `status` _[KeptnAppVersionStatus](#keptnappversionstatus)_ |  || x |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `spec` _[KeptnAppVersionSpec](#keptnappversionspec)_ |  || ✓ |
+| `status` _[KeptnAppVersionStatus](#keptnappversionstatus)_ |  || ✓ |
 
 
 #### KeptnAppVersionList
@@ -257,7 +257,7 @@ KeptnAppVersionList contains a list of KeptnAppVersion
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnAppVersionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
 | `items` _[KeptnAppVersion](#keptnappversion) array_ |  || x |
 
 
@@ -273,15 +273,15 @@ _Appears in:_
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `version` _string_ |  || x |
-| `revision` _integer_ |  |1| x |
-| `workloads` _[KeptnWorkloadRef](#keptnworkloadref) array_ |  || x |
-| `preDeploymentTasks` _string array_ |  || x |
-| `postDeploymentTasks` _string array_ |  || x |
-| `preDeploymentEvaluations` _string array_ |  || x |
-| `postDeploymentEvaluations` _string array_ |  || x |
+| `revision` _integer_ |  |1| ✓ |
+| `workloads` _[KeptnWorkloadRef](#keptnworkloadref) array_ |  || ✓ |
+| `preDeploymentTasks` _string array_ |  || ✓ |
+| `postDeploymentTasks` _string array_ |  || ✓ |
+| `preDeploymentEvaluations` _string array_ |  || ✓ |
+| `postDeploymentEvaluations` _string array_ |  || ✓ |
 | `appName` _string_ |  || x |
-| `previousVersion` _string_ |  || x |
-| `traceId` _object (keys:string, values:string)_ |  || x |
+| `previousVersion` _string_ |  || ✓ |
+| `traceId` _object (keys:string, values:string)_ |  || ✓ |
 
 
 #### KeptnAppVersionStatus
@@ -295,21 +295,21 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `preDeploymentStatus` _string_ |  |Pending| x |
-| `postDeploymentStatus` _string_ |  |Pending| x |
-| `preDeploymentEvaluationStatus` _string_ |  |Pending| x |
-| `postDeploymentEvaluationStatus` _string_ |  |Pending| x |
-| `workloadOverallStatus` _string_ |  |Pending| x |
-| `workloadStatus` _[WorkloadStatus](#workloadstatus) array_ |  || x |
-| `currentPhase` _string_ |  || x |
-| `preDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
-| `postDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
-| `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
-| `postDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
-| `phaseTraceIDs` _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_ |  || x |
-| `status` _string_ |  |Pending| x |
-| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
-| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
+| `preDeploymentStatus` _string_ |  |Pending| ✓ |
+| `postDeploymentStatus` _string_ |  |Pending| ✓ |
+| `preDeploymentEvaluationStatus` _string_ |  |Pending| ✓ |
+| `postDeploymentEvaluationStatus` _string_ |  |Pending| ✓ |
+| `workloadOverallStatus` _string_ |  |Pending| ✓ |
+| `workloadStatus` _[WorkloadStatus](#workloadstatus) array_ |  || ✓ |
+| `currentPhase` _string_ |  || ✓ |
+| `preDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  || ✓ |
+| `postDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  || ✓ |
+| `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  || ✓ |
+| `postDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  || ✓ |
+| `phaseTraceIDs` _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_ |  || ✓ |
+| `status` _string_ |  |Pending| ✓ |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |
 
 
 #### KeptnEvaluation
@@ -325,9 +325,9 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnEvaluation` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
-| `spec` _[KeptnEvaluationSpec](#keptnevaluationspec)_ |  || x |
-| `status` _[KeptnEvaluationStatus](#keptnevaluationstatus)_ |  || x |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `spec` _[KeptnEvaluationSpec](#keptnevaluationspec)_ |  || ✓ |
+| `status` _[KeptnEvaluationStatus](#keptnevaluationstatus)_ |  || ✓ |
 
 
 #### KeptnEvaluationDefinition
@@ -343,9 +343,9 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnEvaluationDefinition` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
-| `spec` _[KeptnEvaluationDefinitionSpec](#keptnevaluationdefinitionspec)_ |  || x |
-| `status` _string_ | unused field || x |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `spec` _[KeptnEvaluationDefinitionSpec](#keptnevaluationdefinitionspec)_ |  || ✓ |
+| `status` _string_ | unused field || ✓ |
 
 
 #### KeptnEvaluationDefinitionList
@@ -360,7 +360,7 @@ KeptnEvaluationDefinitionList contains a list of KeptnEvaluationDefinition
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnEvaluationDefinitionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
 | `items` _[KeptnEvaluationDefinition](#keptnevaluationdefinition) array_ |  || x |
 
 
@@ -391,7 +391,7 @@ KeptnEvaluationList contains a list of KeptnEvaluation
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnEvaluationList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
 | `items` _[KeptnEvaluation](#keptnevaluation) array_ |  || x |
 
 
@@ -408,15 +408,15 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `workload` _string_ |  || x |
+| `workload` _string_ |  || ✓ |
 | `workloadVersion` _string_ |  || x |
-| `appName` _string_ |  || x |
-| `appVersion` _string_ |  || x |
+| `appName` _string_ |  || ✓ |
+| `appVersion` _string_ |  || ✓ |
 | `evaluationDefinition` _string_ |  || x |
-| `retries` _integer_ |  |10| x |
+| `retries` _integer_ |  |10| ✓ |
 | `retryInterval` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ |  |5s| ✓ |
-| `failAction` _string_ |  || x |
-| `checkType` _string_ |  || x |
+| `failAction` _string_ |  || ✓ |
+| `checkType` _string_ |  || ✓ |
 
 
 #### KeptnEvaluationStatus
@@ -433,8 +433,8 @@ _Appears in:_
 | `retryCount` _integer_ |  |0| x |
 | `evaluationStatus` _object (keys:string, values:[EvaluationStatusItem](#evaluationstatusitem))_ |  || x |
 | `overallStatus` _string_ |  |Pending| x |
-| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
-| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |
 
 
 #### KeptnTask
@@ -450,9 +450,9 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnTask` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
-| `spec` _[KeptnTaskSpec](#keptntaskspec)_ |  || x |
-| `status` _[KeptnTaskStatus](#keptntaskstatus)_ |  || x |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `spec` _[KeptnTaskSpec](#keptntaskspec)_ |  || ✓ |
+| `status` _[KeptnTaskStatus](#keptntaskstatus)_ |  || ✓ |
 
 
 #### KeptnTaskDefinition
@@ -468,9 +468,9 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnTaskDefinition` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
-| `spec` _[KeptnTaskDefinitionSpec](#keptntaskdefinitionspec)_ |  || x |
-| `status` _[KeptnTaskDefinitionStatus](#keptntaskdefinitionstatus)_ |  || x |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `spec` _[KeptnTaskDefinitionSpec](#keptntaskdefinitionspec)_ |  || ✓ |
+| `status` _[KeptnTaskDefinitionStatus](#keptntaskdefinitionstatus)_ |  || ✓ |
 
 
 #### KeptnTaskDefinitionList
@@ -485,7 +485,7 @@ KeptnTaskDefinitionList contains a list of KeptnTaskDefinition
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnTaskDefinitionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
 | `items` _[KeptnTaskDefinition](#keptntaskdefinition) array_ |  || x |
 
 
@@ -500,7 +500,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `function` _[FunctionSpec](#functionspec)_ |  || x |
+| `function` _[FunctionSpec](#functionspec)_ |  || ✓ |
 
 
 #### KeptnTaskDefinitionStatus
@@ -514,7 +514,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `function` _[FunctionStatus](#functionstatus)_ | INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run "make" to regenerate code after modifying this file || x |
+| `function` _[FunctionStatus](#functionstatus)_ | INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run "make" to regenerate code after modifying this file || ✓ |
 
 
 #### KeptnTaskList
@@ -529,7 +529,7 @@ KeptnTaskList contains a list of KeptnTask
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnTaskList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
 | `items` _[KeptnTask](#keptntask) array_ |  || x |
 
 
@@ -550,9 +550,9 @@ _Appears in:_
 | `appVersion` _string_ |  || x |
 | `taskDefinition` _string_ |  || x |
 | `context` _[TaskContext](#taskcontext)_ |  || x |
-| `parameters` _[TaskParameters](#taskparameters)_ |  || x |
-| `secureParameters` _[SecureParameters](#secureparameters)_ |  || x |
-| `checkType` _string_ |  || x |
+| `parameters` _[TaskParameters](#taskparameters)_ |  || ✓ |
+| `secureParameters` _[SecureParameters](#secureparameters)_ |  || ✓ |
+| `checkType` _string_ |  || ✓ |
 
 
 #### KeptnTaskStatus
@@ -566,11 +566,11 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `jobName` _string_ |  || x |
-| `status` _string_ |  |Pending| x |
-| `message` _string_ |  || x |
-| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
-| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
+| `jobName` _string_ |  || ✓ |
+| `status` _string_ |  |Pending| ✓ |
+| `message` _string_ |  || ✓ |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |
 
 
 #### KeptnWorkload
@@ -586,9 +586,9 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnWorkload` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
-| `spec` _[KeptnWorkloadSpec](#keptnworkloadspec)_ |  || x |
-| `status` _[KeptnWorkloadStatus](#keptnworkloadstatus)_ |  || x |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `spec` _[KeptnWorkloadSpec](#keptnworkloadspec)_ |  || ✓ |
+| `status` _[KeptnWorkloadStatus](#keptnworkloadstatus)_ |  || ✓ |
 
 
 #### KeptnWorkloadInstance
@@ -604,9 +604,9 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnWorkloadInstance` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
-| `spec` _[KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)_ |  || x |
-| `status` _[KeptnWorkloadInstanceStatus](#keptnworkloadinstancestatus)_ |  || x |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `spec` _[KeptnWorkloadInstanceSpec](#keptnworkloadinstancespec)_ |  || ✓ |
+| `status` _[KeptnWorkloadInstanceStatus](#keptnworkloadinstancestatus)_ |  || ✓ |
 
 
 #### KeptnWorkloadInstanceList
@@ -621,7 +621,7 @@ KeptnWorkloadInstanceList contains a list of KeptnWorkloadInstance
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnWorkloadInstanceList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
 | `items` _[KeptnWorkloadInstance](#keptnworkloadinstance) array_ |  || x |
 
 
@@ -638,14 +638,14 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `app` _string_ |  || x |
 | `version` _string_ |  || x |
-| `preDeploymentTasks` _string array_ |  || x |
-| `postDeploymentTasks` _string array_ |  || x |
-| `preDeploymentEvaluations` _string array_ |  || x |
-| `postDeploymentEvaluations` _string array_ |  || x |
+| `preDeploymentTasks` _string array_ |  || ✓ |
+| `postDeploymentTasks` _string array_ |  || ✓ |
+| `preDeploymentEvaluations` _string array_ |  || ✓ |
+| `postDeploymentEvaluations` _string array_ |  || ✓ |
 | `resourceReference` _[ResourceReference](#resourcereference)_ |  || x |
 | `workloadName` _string_ |  || x |
-| `previousVersion` _string_ |  || x |
-| `traceId` _object (keys:string, values:string)_ |  || x |
+| `previousVersion` _string_ |  || ✓ |
+| `traceId` _object (keys:string, values:string)_ |  || ✓ |
 
 
 #### KeptnWorkloadInstanceStatus
@@ -659,20 +659,20 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `preDeploymentStatus` _string_ |  |Pending| x |
-| `deploymentStatus` _string_ |  |Pending| x |
-| `preDeploymentEvaluationStatus` _string_ |  |Pending| x |
-| `postDeploymentEvaluationStatus` _string_ |  |Pending| x |
-| `postDeploymentStatus` _string_ |  |Pending| x |
-| `preDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
-| `postDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
-| `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
-| `postDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  || x |
-| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
-| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || x |
-| `currentPhase` _string_ |  || x |
-| `phaseTraceIDs` _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_ |  || x |
-| `status` _string_ |  |Pending| x |
+| `preDeploymentStatus` _string_ |  |Pending| ✓ |
+| `deploymentStatus` _string_ |  |Pending| ✓ |
+| `preDeploymentEvaluationStatus` _string_ |  |Pending| ✓ |
+| `postDeploymentEvaluationStatus` _string_ |  |Pending| ✓ |
+| `postDeploymentStatus` _string_ |  |Pending| ✓ |
+| `preDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  || ✓ |
+| `postDeploymentTaskStatus` _[ItemStatus](#itemstatus) array_ |  || ✓ |
+| `preDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  || ✓ |
+| `postDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ |  || ✓ |
+| `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |
+| `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |
+| `currentPhase` _string_ |  || ✓ |
+| `phaseTraceIDs` _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_ |  || ✓ |
+| `status` _string_ |  |Pending| ✓ |
 
 
 #### KeptnWorkloadList
@@ -687,7 +687,7 @@ KeptnWorkloadList contains a list of KeptnWorkload
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnWorkloadList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
 | `items` _[KeptnWorkload](#keptnworkload) array_ |  || x |
 
 
@@ -722,10 +722,10 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `app` _string_ |  || x |
 | `version` _string_ |  || x |
-| `preDeploymentTasks` _string array_ |  || x |
-| `postDeploymentTasks` _string array_ |  || x |
-| `preDeploymentEvaluations` _string array_ |  || x |
-| `postDeploymentEvaluations` _string array_ |  || x |
+| `preDeploymentTasks` _string array_ |  || ✓ |
+| `postDeploymentTasks` _string array_ |  || ✓ |
+| `preDeploymentEvaluations` _string array_ |  || ✓ |
+| `postDeploymentEvaluations` _string array_ |  || ✓ |
 | `resourceReference` _[ResourceReference](#resourcereference)_ |  || x |
 
 
@@ -740,7 +740,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `currentVersion` _string_ |  || x |
+| `currentVersion` _string_ |  || ✓ |
 
 
 #### Objective
@@ -788,7 +788,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `secret` _string_ |  || x |
+| `secret` _string_ |  || ✓ |
 
 
 #### TaskContext
@@ -822,7 +822,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `map` _object (keys:string, values:string)_ |  || x |
+| `map` _object (keys:string, values:string)_ |  || ✓ |
 
 
 #### WorkloadStatus
@@ -836,7 +836,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `workload` _[KeptnWorkloadRef](#keptnworkloadref)_ |  || x |
-| `status` _string_ |  |Pending| x |
+| `workload` _[KeptnWorkloadRef](#keptnworkloadref)_ |  || ✓ |
+| `status` _string_ |  |Pending| ✓ |
 
 

@@ -31,9 +31,9 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnMetric` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
-| `spec` _[KeptnMetricSpec](#keptnmetricspec)_ |  || x |
-| `status` _[KeptnMetricStatus](#keptnmetricstatus)_ |  || x |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `spec` _[KeptnMetricSpec](#keptnmetricspec)_ |  || ✓ |
+| `status` _[KeptnMetricStatus](#keptnmetricstatus)_ |  || ✓ |
 
 
 #### KeptnMetricList
@@ -48,7 +48,7 @@ KeptnMetricList contains a list of KeptnMetric
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnMetricList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
 | `items` _[KeptnMetric](#keptnmetric) array_ |  || x |
 
 

@@ -31,9 +31,9 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `options.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnConfig` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
-| `spec` _[KeptnConfigSpec](#keptnconfigspec)_ |  || x |
-| `status` _string_ | unused field || x |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `spec` _[KeptnConfigSpec](#keptnconfigspec)_ |  || ✓ |
+| `status` _string_ | unused field || ✓ |
 
 
 #### KeptnConfigList
@@ -48,7 +48,7 @@ KeptnConfigList contains a list of KeptnConfig
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `options.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnConfigList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
 | `items` _[KeptnConfig](#keptnconfig) array_ |  || x |
 
 

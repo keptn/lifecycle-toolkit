@@ -60,7 +60,6 @@ type KeptnEvaluationSpec struct {
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
 	// +optional
-	// +optional
 	RetryInterval metav1.Duration `json:"retryInterval,omitempty"`
 	// +optional
 	FailAction string `json:"failAction,omitempty"`

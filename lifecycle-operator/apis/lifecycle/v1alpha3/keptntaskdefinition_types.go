@@ -30,21 +30,17 @@ type KeptnTaskDefinitionSpec struct {
 	// Function contains the definition for the function that is to be executed in KeptnTasks based on
 	// the KeptnTaskDefinitions.
 	// +optional
-	// +optional
 	Function *RuntimeSpec `json:"function,omitempty"`
 	// Python contains the definition for the python function that is to be executed in KeptnTasks based on
 	//	the KeptnTaskDefinitions.
-	// +optional
 	// +optional
 	Python *RuntimeSpec `json:"python,omitempty"`
 	// Deno contains the definition for the Deno function that is to be executed in KeptnTasks based on
 	//	the KeptnTaskDefinitions.
 	// +optional
-	// +optional
 	Deno *RuntimeSpec `json:"deno,omitempty"`
 	// Container contains the definition for the container that is to be used in Job based on
 	// the KeptnTaskDefinitions.
-	// +optional
 	// +optional
 	Container *ContainerSpec `json:"container,omitempty"`
 	// Retries specifies how many times a job executing the KeptnTaskDefinition should be restarted in the case
@@ -58,7 +54,6 @@ type KeptnTaskDefinitionSpec struct {
 	// +kubebuilder:default:="5m"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
-	// +optional
 	// +optional
 	Timeout metav1.Duration `json:"timeout,omitempty"`
 	// ServiceAccount specifies the service account to be used in jobs to authenticate with the Kubernetes API and access cluster resources.
@@ -74,7 +69,6 @@ type KeptnTaskDefinitionSpec struct {
 	// +optional
 	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
 	// ImagePullSecrets is an optional field to specify the names of secrets to use for pulling container images
-	// +optional
 	// +optional
 	ImagePullSecrets []v1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
 }

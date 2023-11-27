@@ -63,7 +63,6 @@ type KeptnTaskSpec struct {
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
 	// +optional
-	// +optional
 	Timeout metav1.Duration `json:"timeout,omitempty"`
 }
 

@@ -97,7 +97,7 @@ spec:
           value: {{ .Values.lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel
             | quote }}
         - name: KEPTN_DORA_METRICS_PORT
-          value: {{ .Values.lifecycleOperator.env.keptnDoraMetricsPort | quote}}
+          value: {{ .Values.lifecycleOperator.env.keptnDoraMetricsPort | quote }}
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
           value: {{ .Values.lifecycleOperator.env.optionsControllerLogLevel | quote
             }}

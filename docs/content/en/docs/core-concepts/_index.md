@@ -1,6 +1,6 @@
 ---
 title: Core Concepts
-description: An introduction to Keptn and the usecases.
+description: An introduction to Keptn and the use cases.
 weight: 10
 ---
 

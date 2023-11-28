@@ -46,11 +46,11 @@ cascade:
 </div>
 <div class="usecasebox">
 
-## Use Cases
+## Use cases
 
-We extend the K8s APIs with the following Use Cases:
+We extend the K8s APIs with the following use cases:
 
-<div class="row usecases">
+<div class="row use cases">
 {{% blocks/feature icon="home homeobservability" title="Deployment Observability" %}}
 Make ANY Kubernetes Deployment observable
 

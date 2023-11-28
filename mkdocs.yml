@@ -1,7 +1,7 @@
 site_name: Keptn - Supercharge Your Deployments
 theme:
   name: material
-  custom_dir: overrides
+  custom_dir: docs-new/overrides
   palette:
     # Palette toggle for light mode
     - scheme: default
@@ -29,8 +29,8 @@ theme:
     - content.action.view
 repo_name: keptn/lifecycle-toolkit
 repo_url: https://github.com/keptn/lifecycle-toolkit
-site_url: https://lifecycle.keptn.sh
-edit_uri: edit/main/docs/
+site_url: https://keptn.sh
+edit_uri: edit/main/docs-new/
 site_description: >-
   Achieve cloud-native application lifecycle orchestration with Keptn.
   Enhance Kubernetes monitoring, streamline metrics ingestion, and
@@ -59,34 +59,6 @@ plugins:
 
 nav:
   - Home:
-      - index.md
+      - docs-new/index.md
   - Documentation:
-      - docs/index.md
-      - Tests: docs/tests.md
-      - Core Concepts: docs/intro/index.md
-      - Get Started:
-          - docs/getting-started/index.md
-          - Get started with Metrics: docs/getting-started/metrics.md
-      - Installation:
-          - docs/install/index.md
-          - Install Keptn: docs/install/install.md
-      - Guides:
-          - docs/guides/index.md
-          - Integrate Keptn with your Applications: docs/guides/integrate.md
-          - Evaluations: docs/guides/evaluations.md
-      - API Reference:
-          - docs/crd-ref/index.md
-          - Lifecycle API:
-              - docs/crd-ref/lifecycle/index.md
-              - v1alpha1: docs/crd-ref/lifecycle/v1alpha1/index.md
-              - v1alpha2: docs/crd-ref/lifecycle/v1alpha2/index.md
-              - v1alpha3: docs/crd-ref/lifecycle/v1alpha3/index.md
-              - v1alpha4: docs/crd-ref/lifecycle/v1alpha4/index.md
-  - Contributing:
-      - contributing/index.md
-      - Software Contributions:
-          - contributing/software/index.md
-          - Development Environment:
-              - contributing/software/dev-env/index.md
-  - Community:
-      - community/index.md
+      - docs-new/docs/index.md

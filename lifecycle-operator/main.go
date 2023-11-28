@@ -444,7 +444,7 @@ func main() {
 
 func serveMetrics(ch chan int) {
 	metricsPort := <-ch
-	log.Printf("serving metrics at :%d/metrics", metricsPort)
+	log.Printf("serving metrics at localhost:%d/metrics", metricsPort)
 	http.Handle("/metrics", promhttp.Handler())
 	err := http.ListenAndServe(":"+fmt.Sprint(metricsPort), nil)
 	if err != nil {

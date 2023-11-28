@@ -679,7 +679,7 @@ func TestGetDQLCannotPostQuery_EvaluateQuery(t *testing.T) {
 
 func TestDQLInitClientWithSecret_EvaluateQuery(t *testing.T) {
 
-	namespace := "keptn-lifecycle-toolkit-system"
+	namespace := "keptn-system"
 
 	mySecret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
@@ -1047,7 +1047,7 @@ func TestGetDQLCannotPostQuery_EvaluateQueryForStep(t *testing.T) {
 
 func TestDQLInitClientWithSecret_EvaluateQueryForStep(t *testing.T) {
 
-	namespace := "keptn-lifecycle-toolkit-system"
+	namespace := "keptn-system"
 
 	mySecret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{

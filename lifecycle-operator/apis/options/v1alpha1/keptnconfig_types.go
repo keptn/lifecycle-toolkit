@@ -48,11 +48,14 @@ type KeptnConfigSpec struct {
 
 // KeptnConfig is the Schema for the keptnconfigs API
 type KeptnConfig struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
+	// +optional
 	Spec KeptnConfigSpec `json:"spec,omitempty"`
 	// unused field
+	// +optional
 	Status string `json:"status,omitempty"`
 }
 
@@ -61,6 +64,7 @@ type KeptnConfig struct {
 // KeptnConfigList contains a list of KeptnConfig
 type KeptnConfigList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnConfig `json:"items"`
 }

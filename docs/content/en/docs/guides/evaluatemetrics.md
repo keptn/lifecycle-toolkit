@@ -50,7 +50,7 @@ Note the following:
   on all namespaces in the cluster,
   create `KeptnMetricsProvider` and `KeptnMetric` resources
   in a centralized namespace
-  such as `keptn-lifecycle-toolkit-system`.
+  such as `keptn-system`.
 
 To configure a data provider into your Keptn cluster:
 
@@ -223,7 +223,7 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kube
     {
       "describedObject": {
         "kind": "KeptnMetric",
-        "namespace": "keptn-lifecycle-toolkit-system",
+        "namespace": "keptn-system",
         "name": "keptnmetric-sample",
         "apiVersion": "metrics.keptn.sh/v1beta1"
       },

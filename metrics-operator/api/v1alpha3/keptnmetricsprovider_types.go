@@ -31,6 +31,7 @@ type KeptnMetricsProviderSpec struct {
 	TargetServer string `json:"targetServer"`
 	// +kubebuilder:validation:Optional
 	// SecretKeyRef defines an optional secret for access credentials to the metrics provider.
+	// +optional
 	SecretKeyRef corev1.SecretKeySelector `json:"secretKeyRef,omitempty"`
 }
 
@@ -40,11 +41,14 @@ type KeptnMetricsProviderSpec struct {
 
 // KeptnMetricsProvider is the Schema for the keptnmetricsproviders API
 type KeptnMetricsProvider struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
+	// +optional
 	Spec KeptnMetricsProviderSpec `json:"spec,omitempty"`
 	// unused field
+	// +optional
 	Status string `json:"status,omitempty"`
 }
 
@@ -53,6 +57,7 @@ type KeptnMetricsProvider struct {
 // KeptnMetricsProviderList contains a list of KeptnMetricsProvider
 type KeptnMetricsProviderList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnMetricsProvider `json:"items"`
 }

@@ -31,7 +31,7 @@ Some considerations for Keptn:
   resources that are used for pre- and post-deployment
   can reference metrics from any namespace.
   So you can create `KeptnMetrics` in a centralized namespace
-  (such as `keptn-lifecycle-toolkit-system`)
+  (such as `keptn-system`)
   and access those metrics in evaluations on all namespaces in the cluster.
 * Analysis related resources
   ([Analysis](../../reference/crd-reference/analysis.md),

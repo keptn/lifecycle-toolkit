@@ -129,6 +129,7 @@ spec:
                 type: string
               deploymentStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               endTime:
                 format: date-time
@@ -145,6 +146,7 @@ spec:
                 type: object
               postDeploymentEvaluationStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               postDeploymentEvaluationTaskStatus:
                 items:
@@ -161,11 +163,14 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
               postDeploymentStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               postDeploymentTaskStatus:
                 items:
@@ -178,6 +183,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                     taskDefinitionName:
                       type: string
@@ -187,6 +194,7 @@ spec:
                 type: array
               preDeploymentEvaluationStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               preDeploymentEvaluationTaskStatus:
                 items:
@@ -203,11 +211,14 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
               preDeploymentStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               preDeploymentTaskStatus:
                 items:
@@ -220,6 +231,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                     taskDefinitionName:
                       type: string
@@ -232,6 +245,7 @@ spec:
                 type: string
               status:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
             type: object
         type: object
@@ -352,6 +366,7 @@ spec:
                 type: string
               deploymentStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               endTime:
                 format: date-time
@@ -366,6 +381,7 @@ spec:
                 type: object
               postDeploymentEvaluationStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               postDeploymentEvaluationTaskStatus:
                 items:
@@ -384,11 +400,14 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
               postDeploymentStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               postDeploymentTaskStatus:
                 items:
@@ -407,11 +426,14 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
               preDeploymentEvaluationStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               preDeploymentEvaluationTaskStatus:
                 items:
@@ -430,11 +452,14 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
               preDeploymentStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               preDeploymentTaskStatus:
                 items:
@@ -453,6 +478,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -461,6 +488,7 @@ spec:
                 type: string
               status:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
             type: object
         type: object
@@ -656,6 +684,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -687,6 +717,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -718,6 +750,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -749,6 +783,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array

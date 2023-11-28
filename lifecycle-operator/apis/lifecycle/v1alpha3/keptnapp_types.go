@@ -36,32 +36,39 @@ type KeptnAppSpec struct {
 	// This can be used for restarting a KeptnApp which failed to deploy,
 	// e.g. due to a failed preDeploymentEvaluation/preDeploymentTask.
 	// +kubebuilder:default:=1
+	// +optional
 	Revision uint `json:"revision,omitempty"`
 	// Workloads is a list of all KeptnWorkloads that are part of the KeptnApp.
+	// +optional
 	Workloads []KeptnWorkloadRef `json:"workloads,omitempty"`
 	// PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp.
 	// The items of this list refer to the names of KeptnTaskDefinitions
 	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
+	// +optional
 	PreDeploymentTasks []string `json:"preDeploymentTasks,omitempty"`
 	// PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp.
 	// The items of this list refer to the names of KeptnTaskDefinitions
 	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
+	// +optional
 	PostDeploymentTasks []string `json:"postDeploymentTasks,omitempty"`
 	// PreDeploymentEvaluations is a list of all evaluations to be performed
 	// during the pre-deployment phase of the KeptnApp.
 	// The items of this list refer to the names of KeptnEvaluationDefinitions
 	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
+	// +optional
 	PreDeploymentEvaluations []string `json:"preDeploymentEvaluations,omitempty"`
 	// PostDeploymentEvaluations is a list of all evaluations to be performed
 	// during the post-deployment phase of the KeptnApp.
 	// The items of this list refer to the names of KeptnEvaluationDefinitions
 	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
+	// +optional
 	PostDeploymentEvaluations []string `json:"postDeploymentEvaluations,omitempty"`
 }
 
 // KeptnAppStatus defines the observed state of KeptnApp
 type KeptnAppStatus struct {
 	// CurrentVersion indicates the version that is currently deployed or being reconciled.
+	// +optional
 	CurrentVersion string `json:"currentVersion,omitempty"`
 }
 
@@ -79,12 +86,15 @@ type KeptnWorkloadRef struct {
 
 // KeptnApp is the Schema for the keptnapps API
 type KeptnApp struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// Spec describes the desired state of the KeptnApp.
+	// +optional
 	Spec KeptnAppSpec `json:"spec,omitempty"`
 	// Status describes the current state of the KeptnApp.
+	// +optional
 	Status KeptnAppStatus `json:"status,omitempty"`
 }
 
@@ -93,6 +103,7 @@ type KeptnApp struct {
 // KeptnAppList contains a list of KeptnApp
 type KeptnAppList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnApp `json:"items"`
 }

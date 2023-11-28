@@ -42,6 +42,7 @@ type KeptnMetricReference struct {
 	// Name is the name of the referenced KeptnMetric.
 	Name string `json:"name"`
 	// Namespace is the namespace where the referenced KeptnMetric is located.
+	// +optional
 	Namespace string `json:"namespace,omitempty"`
 }
 
@@ -52,12 +53,15 @@ type KeptnMetricReference struct {
 
 // KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions API
 type KeptnEvaluationDefinition struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// Spec describes the desired state of the KeptnEvaluationDefinition.
+	// +optional
 	Spec KeptnEvaluationDefinitionSpec `json:"spec,omitempty"`
 	// unused field
+	// +optional
 	Status string `json:"status,omitempty"`
 }
 
@@ -66,6 +70,7 @@ type KeptnEvaluationDefinition struct {
 // KeptnEvaluationDefinitionList contains a list of KeptnEvaluationDefinition
 type KeptnEvaluationDefinitionList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnEvaluationDefinition `json:"items"`
 }

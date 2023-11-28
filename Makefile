@@ -120,7 +120,7 @@ build-deploy-scheduler:
 	$(MAKE) -C scheduler release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C scheduler push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C scheduler release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
-	kubectl create namespace keptn-lifecycle-toolkit-system --dry-run=client -o yaml | kubectl apply -f -
+	kubectl create namespace keptn-system --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -f scheduler/config/rendered/release.yaml
 
 .PHONY: build-deploy-certmanager
@@ -128,7 +128,7 @@ build-deploy-certmanager:
 	$(MAKE) -C keptn-cert-manager release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C keptn-cert-manager push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C keptn-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
-	kubectl create namespace keptn-lifecycle-toolkit-system --dry-run=client -o yaml | kubectl apply -f -
+	kubectl create namespace keptn-system --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -f keptn-cert-manager/config/rendered/release.yaml
 
 .PHONY: build-deploy-dev-environment

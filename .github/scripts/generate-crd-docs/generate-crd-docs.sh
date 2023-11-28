@@ -8,7 +8,7 @@
 # Inputs: None
 
 # renovate: datasource=github-releases depName=elastic/crd-ref-docs
-GENERATOR_VERSION=v0.0.9
+GENERATOR_VERSION=v0.0.10
 API_DOMAIN="keptn.sh"
 OPERATOR_API_ROOT='lifecycle-operator/apis/'
 METRICS_API_ROOT='metrics-operator/api/'
@@ -71,7 +71,7 @@ for api_group in "$OPERATOR_API_ROOT"*; do
       --source-path="./$api_version" \
       --renderer="$RENDERER" \
       --config "$renderer_config_file" \
-      --max-depth 10 \
+      --max-depth 15 \
       --output-path "$OUTPUT_PATH/_index.md"
     echo "---------------------"
   done
@@ -115,7 +115,7 @@ for api_version in "$METRICS_API_ROOT"*; do
     --source-path="./$api_version" \
     --renderer="$RENDERER" \
     --config "$RENDERER_CONFIG_FILE" \
-    --max-depth 10 \
+    --max-depth 15 \
     --output-path "$OUTPUT_PATH/_index.md"
   echo "---------------------"
 done

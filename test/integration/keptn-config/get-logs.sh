@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="keptn-lifecycle-toolkit-system"
+NAMESPACE="keptn-system"
 RETRY_COUNT=3
 SLEEP_TIME=5
 

@@ -1,7 +1,7 @@
 ---
 title: KeptnConfig
 description: Define configuration values
-weight: 10
+weight: 40
 ---
 
 `KeptnConfig` defines Keptn configuration values.

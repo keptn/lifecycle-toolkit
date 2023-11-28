@@ -142,9 +142,7 @@ func main() {
 	keptnMeters := telemetry.SetUpKeptnTaskMeters(meter)
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
-	ch := make(chan int)
-	go serveMetrics(ch)
-	ch <- env.KeptnDoraMetricsPort
+	go serveMetrics(env.KeptnDoraMetricsPort)
 
 	// As recommended by the kubebuilder docs, webhook registration should be disabled if running locally. See https://book.kubebuilder.io/cronjob-tutorial/running.html#running-webhooks-locally for reference
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -442,8 +440,7 @@ func main() {
 
 }
 
-func serveMetrics(ch chan int) {
-	metricsPort := <-ch
+func serveMetrics(metricsPort int) {
 	log.Printf("serving metrics at localhost:%d/metrics", metricsPort)
 	http.Handle("/metrics", promhttp.Handler())
 	err := http.ListenAndServe(":"+fmt.Sprint(metricsPort), nil)

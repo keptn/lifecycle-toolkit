@@ -35,7 +35,7 @@ If you get a Spell Checker error:
 
    - If your PR includes a file that should not be spell-checked,
      you can add it to the
-     [excludes.txt](https://github.com/check-spelling/check-spelling/blob/main/.github/actions/spelling/excludes.txt) file
+     [excludes.txt](https://github.com/keptn/lifecycle-toolkit/blob/main/.github/actions/spelling/excludes.txt) file
      as part of your PR.
      It will be reviewed and, if approved,
      merged as part of your PR.

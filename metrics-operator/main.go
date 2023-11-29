@@ -72,6 +72,7 @@ type envConfig struct {
 	KeptnMetricControllerLogLevel int    `envconfig:"METRICS_CONTROLLER_LOG_LEVEL" default:"0"`
 	AnalysisControllerLogLevel    int    `envconfig:"ANALYSIS_CONTROLLER_LOG_LEVEL" default:"0"`
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
+	EnableCustomMetricsApiService bool   `envconfig:"ENABLE_CUSTOM_METRICS_API_SERVICE" default:"true"`
 }
 
 //nolint:gocyclo,funlen
@@ -182,8 +183,9 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("keptn"), env.ExposeKeptnMetrics, metricServerTickerInterval)
-
+	if env.EnableCustomMetricsApiService {
+		keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("keptn"), env.ExposeKeptnMetrics, metricServerTickerInterval)
+	}
 	metricsLogger := ctrl.Log.WithName("KeptnMetric Controller")
 	if err = (&metricscontroller.KeptnMetricReconciler{
 		Client:          mgr.GetClient(),

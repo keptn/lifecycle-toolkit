@@ -47,6 +47,8 @@ spec:
               fieldPath: metadata.name
         - name: EXPOSE_KEPTN_METRICS
           value: {{ .Values.env.exposeKeptnMetrics | quote }}
+        - name: ENABLE_CUSTOM_METRICS_API_SERVICE
+          value: "true"
         - name: METRICS_CONTROLLER_LOG_LEVEL
           value: {{ .Values.env.metricsControllerLogLevel | quote
             }}

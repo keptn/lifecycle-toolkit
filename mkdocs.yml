@@ -31,6 +31,7 @@ repo_name: keptn/lifecycle-toolkit
 repo_url: https://github.com/keptn/lifecycle-toolkit
 site_url: https://keptn.sh
 edit_uri: edit/main/docs-new/
+docs_dir: docs-new
 site_description: >-
   Achieve cloud-native application lifecycle orchestration with Keptn.
   Enhance Kubernetes monitoring, streamline metrics ingestion, and

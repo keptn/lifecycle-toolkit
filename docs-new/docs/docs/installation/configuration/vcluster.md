@@ -1,8 +1,4 @@
----
-title: vCluster installation
-description: Running Keptn with vCluster
-weight: 20
----
+# vCluster installation
 
 Keptn running on Kubernetes versions 1.26 and older
 uses a custom

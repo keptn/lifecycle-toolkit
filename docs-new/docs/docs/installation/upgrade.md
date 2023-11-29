@@ -1,10 +1,4 @@
----
-title: Upgrade
-description: How to upgrade to the latest version of Keptn
-layout: quickstart
-weight: 10
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
----
+# Upgrade
 
 If you installed the previous version of Keptn using `helm`,
 you can upgrade to the latest version

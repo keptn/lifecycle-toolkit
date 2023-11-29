@@ -1,10 +1,4 @@
----
-title: Kubernetes cluster
-description: Bring or install a Kubernetes cluster 
-layout: quickstart
-weight: 1000
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
----
+# Kubernetes cluster
 
 Keptn is meant to be installed
 into an existing Kubernetes cluster

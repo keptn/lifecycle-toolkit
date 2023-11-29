@@ -1,9 +1,4 @@
----
-title: Keptn Metrics Operator
-linktitle: Metrics Operator
-description: Basic understanding of Keptn's Metrics Operator
-weight: 80
----
+# Keptn Metrics Operator
 
 The Keptn Metrics Operator collects, processes,
 and analyzes metrics data from a variety of sources.

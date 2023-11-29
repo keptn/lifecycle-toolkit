@@ -1,8 +1,4 @@
----
-title: AnalysisValueTemplate
-description: Define the data source and query for each SLI
-weight: 26
----
+# AnalysisValueTemplate
 
 An `AnalysisValueTemplate` resource
 defines a Service Level Indicator (SLI),

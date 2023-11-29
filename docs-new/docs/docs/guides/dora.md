@@ -1,8 +1,4 @@
----
-title: DORA metrics
-description: Access DORA metrics for your cluster
-weight: 1000
----
+# DORA metrics
 
 DORA metrics are an industry-standard set of measurements
 that are included in Keptn;

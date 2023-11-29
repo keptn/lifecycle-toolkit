@@ -1,9 +1,4 @@
----
-title: Troubleshooting Guide
-linktitle: Troubleshooting Guide
-description: Troubleshoot common problems with Keptn
-weight: 100
----
+# Troubleshooting Guide
 
 Welcome to the Keptn troubleshooting guide.
 

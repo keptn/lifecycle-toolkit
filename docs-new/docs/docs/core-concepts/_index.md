@@ -1,8 +1,4 @@
----
-title: Core Concepts
-description: An introduction to Keptn and the usecases.
-weight: 10
----
+# Core Concepts
 
 Keptn integrates seamlessly with cloud-native deployment tools
 such as ArgoCD, Flux, and Gitlab

@@ -1,9 +1,4 @@
----
-title: Keptn integration with Scheduling
-linktitle: Scheduler and Scheduling Gates
-description: Scheduler and Scheduling Gates
-weight: 80
----
+# Keptn integration with Scheduling
 
 Keptn integrates with Kubernetes scheduling to block
 the deployment of applications that do not satisfy Keptn defined pre-deployment checks.

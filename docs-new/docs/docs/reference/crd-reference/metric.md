@@ -1,8 +1,4 @@
----
-title: KeptnMetric
-description: Define all workloads and checks associated with an application
-weight: 60
----
+# KeptnMetric
 
 A `KeptnMetric` represents a metric that is collected from a provider.
 Providing the metrics as a CR in a Kubernetes cluster

@@ -1,8 +1,4 @@
----
-title: KeptnEvaluationDefinition
-description: Define an evaluation query
-weight: 45
----
+# KeptnEvaluationDefinition
 
 A `KeptnEvaluationDefinition` assigns target values
 to [KeptnMetric](metric.md) queries.

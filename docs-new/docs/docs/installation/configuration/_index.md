@@ -1,5 +1,1 @@
----
-title: Configuration
-description: Configuration
-weight: 30
----
+# Configuration

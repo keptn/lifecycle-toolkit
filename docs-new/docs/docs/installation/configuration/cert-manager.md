@@ -1,8 +1,4 @@
----
-title: Keptn + cert-manager.io
-description: Replace the default Keptn cert-manager
-weight: 30
----
+# Keptn + cert-manager.io
 
 
 Keptn includes
@@ -49,22 +45,3 @@ spec:
     kind: Issuer
     name: keptn-selfsigned-issuer
   secretName: keptn-certs
----
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: keptn-selfsigned-issuer
-  namespace: <your-namespace>
-spec:
-  selfSigned: {}
-```
-
-Note the following about these fields:
-
-* The `apiVersion` field refers to the API for the cert-manager.
-* The value of the `.spec.secretName` field as well as the `.metadata.name` of the `Certificate` CR
-  must be `keptn-certs`.
-* Substitute the namespace placeholders with your namespace, where Keptn is installed.
-
-See the [CA Injector](https://cert-manager.io/docs/concepts/ca-injector/)
-documentation for more details.

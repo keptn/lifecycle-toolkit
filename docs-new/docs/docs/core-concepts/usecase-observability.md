@@ -1,8 +1,4 @@
----
-title: Standardize observability
-description: How Keptn standardizes access to observability data for Kubernetes deployments
-weight: 10
----
+# Standardize observability
 
 Keptn makes any Kubernetes deployment observable.
 In other words, it creates a distributed, end-to-end trace

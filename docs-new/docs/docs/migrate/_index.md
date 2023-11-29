@@ -1,9 +1,4 @@
----
-title: Migrating to Keptn
-description: Notes to help you migrate from Keptn v1 to Keptn
-weight: 900
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
----
+# Migrating to Keptn
 
 Keptn uses a different paradigm than that used for Keptn v1
 and so migration from Keptn v1 is not a straight-forward process.

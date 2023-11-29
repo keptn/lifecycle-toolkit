@@ -1,8 +1,4 @@
----
-title: Analysis
-description: How to implement Keptn Analyses
-weight: 400
----
+# Analysis
 
 The Keptn Metrics Operator Analysis feature
 allows you to validate a deployment or release

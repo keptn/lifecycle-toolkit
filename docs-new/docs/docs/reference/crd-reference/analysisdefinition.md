@@ -1,8 +1,4 @@
----
-title: AnalysisDefinition
-description: Define SLOs for an Analysis
-weight: 23
----
+# AnalysisDefinition
 
 An `AnalysisDefinition` resource defines the
 list of Service Level Objectives (SLOs) for an `Analysis`.

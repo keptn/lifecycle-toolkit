@@ -1,9 +1,4 @@
----
-title: Installation Tips and Tricks
-description: Supplemental installation information
-weight: 38
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
---- 
+# Installation Tips and Tricks 
 
 The
 [Install Keptn](_index.md)

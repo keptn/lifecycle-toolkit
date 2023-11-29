@@ -1,6 +1,2 @@
----
-title: Use Cases
-description: 
-weight: 40
----
+# Use Cases
 

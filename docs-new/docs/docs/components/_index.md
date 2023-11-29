@@ -1,8 +1,4 @@
----
-title: Components
-description: Understand the details of how Keptn works
-weight: 50
----
+# Components
 
 ### Keptn Components
 

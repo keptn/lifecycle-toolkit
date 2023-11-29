@@ -1,8 +1,4 @@
----
-title: How to structure your namespaces
-description: 
-weight: 10
----
+# How to structure your namespaces
 
 You have significant flexibility to decide how many namespaces to use
 and how to set them up.

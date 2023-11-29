@@ -1,8 +1,4 @@
----
-title: Keptn + HorizontalPodAutoscaler
-description: Using the HorizontalPodAutoscaler
-weight: 20
----
+# Keptn + HorizontalPodAutoscaler
 
 ## Scaling Workloads based on Keptn metrics
 
@@ -115,32 +111,4 @@ Max replicas:                                                     10
 Deployment pods:                                                  10 current / 10 desired
 Conditions:
   Type            Status  Reason               Message
-  ----            ------  ------               -------
-  AbleToScale     True    ScaleDownStabilized  recent recommendations were higher than current one, applying the highest recent recommendation
-  ScalingActive   True    ValidMetricFound     the HPA was able to successfully calculate a replica count from KeptnMetric metric cpu-throttling
-  ScalingLimited  True    TooManyReplicas      the desired replica count is more than the maximum replica count
-Events:
-  Type    Reason             Age                  From                       Message
-  ----    ------             ----                 ----                       -------
-  Normal  SuccessfulRescale  7m18s (x5 over 16h)  horizontal-pod-autoscaler  New size: 4; reason: KeptnMetric metric cpu-throttling above target
-  Normal  SuccessfulRescale  6m18s                horizontal-pod-autoscaler  New size: 7; reason: KeptnMetric metric cpu-throttling above target
-  Normal  SuccessfulRescale  6m3s (x4 over 16h)   horizontal-pod-autoscaler  New size: 10; reason: KeptnMetric metric cpu-throttling above target
-```
-
-If we retrieve the pods of our application, we can see that, instead of
-a single instance at the beginning, there are currently 10 instances running:
-
-```shell
-$ kubectl get pods -n podtato-kubectl
-NAME                                      READY   STATUS    RESTARTS   AGE
-podtato-head-entry-795b4bf76c-22vl8       1/1     Running   0          4m50s
-podtato-head-entry-795b4bf76c-4mqz5       1/1     Running   0          4m50s
-podtato-head-entry-795b4bf76c-g5bcr       1/1     Running   0          5m5s
-podtato-head-entry-795b4bf76c-h22pq       1/1     Running   0          6m5s
-podtato-head-entry-795b4bf76c-kgcgb       1/1     Running   0          4m50s
-podtato-head-entry-795b4bf76c-kkt82       1/1     Running   0          5m5s
-podtato-head-entry-795b4bf76c-lmfnx       1/1     Running   0          6m5s
-podtato-head-entry-795b4bf76c-pnq2f       1/1     Running   0          15m
-podtato-head-entry-795b4bf76c-r5dx4       1/1     Running   0          5m5s
-podtato-head-entry-795b4bf76c-vwdj7       1/1     Running   0          6m5s
-```
+  

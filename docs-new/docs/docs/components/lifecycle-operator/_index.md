@@ -1,9 +1,4 @@
----
-title: Keptn Lifecycle Operator
-linktitle: Lifecycle Operator
-description: Basic understanding of the Keptn Lifecycle Operator
-weight: 80
----
+# Keptn Lifecycle Operator
 
 
 **Keptn's Lifecycle Operator** is

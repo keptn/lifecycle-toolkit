@@ -1,8 +1,4 @@
----
-title: Analysis
-description: Define specific configurations and the Analysis to report
-weight: 20
----
+# Analysis
 
 An `Analysis` resource customizes the templates
 that are defined in an

@@ -1,9 +1,4 @@
----
-title: API Reference
-description: Reference information about the APIs that Keptn provides
-weight: 100
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
----
+# API Reference
 
 This section provides comprehensive reference information about all APIs
 that are defined In Keptn.

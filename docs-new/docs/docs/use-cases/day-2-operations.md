@@ -1,8 +1,4 @@
----
-title: Day 2 Operations
-description: How to operate and maintain your Keptn Apps
-weight: 10
----
+# Day 2 Operations
 
 After you have successfully rolled out your application by following
 the instructions in the [integration guide](../guides/integrate.md),

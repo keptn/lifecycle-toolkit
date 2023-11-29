@@ -1,8 +1,4 @@
----
-title: Evaluations
-description: Understand Keptn evaluations and how to use them
-weight: 700
----
+# Evaluations
 
 A
 [KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)

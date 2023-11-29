@@ -1,8 +1,4 @@
----
-title: KeptnApp
-description: Define all workloads and checks associated with an application
-weight: 29
----
+# KeptnApp
 
 A `KeptnApp` resource lists all the [workloads](https://kubernetes.io/docs/concepts/workloads/)
 that constitute a logical application.

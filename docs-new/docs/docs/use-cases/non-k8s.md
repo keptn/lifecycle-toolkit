@@ -1,8 +1,4 @@
----
-title: Keptn - Kubernetes
-description: Using Keptn with Non-Kubernetes Applications
-weight: 30
----
+# Keptn - Kubernetes
 
 
 Keptn Tasks running on a Kubernetes cluster

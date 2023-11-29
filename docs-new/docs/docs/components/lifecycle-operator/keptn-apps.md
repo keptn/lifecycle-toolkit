@@ -1,9 +1,4 @@
----
-title: KeptnApp and KeptnWorkload resources
-linktitle: Keptn Applications and Keptn Workloads
-description: How Keptn applications work
-weight: 110
----
+# KeptnApp and KeptnWorkload resources
 
 ## Keptn Workloads
 

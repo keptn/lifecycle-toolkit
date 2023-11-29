@@ -1,9 +1,4 @@
----
-title: Flow of deployment
-linktitle: Flow of deployment
-description: Understand the execution flow of a deployment
-weight: 100
----
+# Flow of deployment
 
 Keptn deploys a
 [Kubernetes Workload](https://kubernetes.io/docs/concepts/workloads/)

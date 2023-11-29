@@ -1,8 +1,4 @@
----
-title: KeptnTask
-description: Define a run of a KeptnTaskDefinition
-weight: 83
----
+# KeptnTask
 
 Keptn uses KeptnTask resources internally
 to manage tasks (and their underlying Kubernetes Job resources)

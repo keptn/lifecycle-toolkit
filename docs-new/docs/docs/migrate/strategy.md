@@ -1,9 +1,4 @@
----
-title: Migration strategy
-description: Considerations for architecting the migration
-weight: 10
-hidechildren: false # this flag hides all sub-pages in the sidebar-multicard.html
----
+# Migration strategy
 
 > **Note**
 This section is under development.

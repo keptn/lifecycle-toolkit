@@ -1,8 +1,4 @@
----
-title: Uninstall
-description: How to uninstall Keptn
-weight: 10
----
+# Uninstall
 
 > **Warning**
 Please be aware that uninstalling Keptn from your cluster

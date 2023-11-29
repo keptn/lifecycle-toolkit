@@ -1,8 +1,4 @@
----
-title: Manage release lifecycle
-description: How Keptn orchestrates pre- and post-deployment evaluations and tasks
-weight: 20
----
+# Manage release lifecycle
 
 In this exercise, we will configure Keptn
 to run deployment checks as part of your deployment.

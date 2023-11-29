@@ -1,8 +1,4 @@
----
-title: Integrate Keptn with your Applications
-description: How to integrate Keptn into your Kubernetes cluster
-weight: 200
----
+# Integrate Keptn with your Applications
 
 Keptn works
 on top of the default scheduler for the cluster,

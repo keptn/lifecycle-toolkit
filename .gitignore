@@ -1,4 +1,6 @@
 bin/
+site/
+.cache/
 
 # Binaries for programs and plugins
 *.exe

@@ -160,7 +160,7 @@ The webhook sync should show this:
 Incidentally, this is exactly how you can use Keptn with
 [applications deployed outside of Kubernetes](../use-cases/non-k8s.md).
 
-> Note: If you want to trigger this manifest multiple times,
+> Note: If you want to trigger this task multiple times,
 you must change the value of the `name` field
 in he `KeptnTask` resource each time.
 >

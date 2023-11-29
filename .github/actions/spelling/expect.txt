@@ -141,6 +141,7 @@ Dockerfiles
 docsearch
 docsembed
 docsy
+donath
 dql
 draggable
 DTAPI
@@ -177,6 +178,7 @@ favicons
 fetchintervalseconds
 fieldpath
 fieldref
+flyout
 fontawesome
 ftp
 fullname
@@ -571,6 +573,7 @@ spanhandler
 spanitem
 spdx
 spf
+squidfunk
 stakeholders
 standalone
 statefulset

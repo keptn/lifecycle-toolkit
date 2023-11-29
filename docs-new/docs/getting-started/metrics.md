@@ -164,3 +164,123 @@ spec:
     name: dev-prometheus
   query: "sum(kube_node_status_capacity{resources`cpu`})"
   fetchIntervalSeconds: 10
+---
+apiVersion: metrics.keptn.sh/v1beta1
+kind: Keptnmetric
+metadata:
+  name: availability-slo
+  namespace: simplenode-dev
+spec:
+  provider:
+    name: dev-dynatrace
+  query: "func:slo.availability_simplenodeservice"
+  fetchIntervalSeconds: 10
+```
+
+Note the following:
+
+- Populate one YAML file per metric
+  then apply all of them.
+- Each metric is assigned a unique `name`.
+- The value of the `spec.provider.name` field
+  must correspond to the name assigned in
+  the `metadata.name` field of a `KeptnMetricsProvider` resource.
+- Information is fetched in on a continuous basis
+  at a rate specified
+  by the value of the `spec.fetchIntervalSeconds` field.
+
+### View available metrics
+
+Use the following command to view
+the metrics that are configured in your cluster.
+This example displays the two metrics we configured above:
+
+```shell
+kubectl get KeptnMetrics -A
+```
+
+```shell
+NAMESPACE       NAME              PROVIDER       QUERY
+simplenode-dev  availability-slo  dev-dynatrace  func:slo.availability_simplenodeservice
+simplenode-dev  available-cpus    dev-prometheus sum(kube_node_status_capacity{resource=`cpu`})
+```
+
+## Run the metrics
+
+As soon as you define your `KeptnMetricsProvider` and `KeptnMetric` resources,
+Keptn begins collecting the metrics you defined.
+You do not need to do anything else.
+
+## Observing the metrics
+
+The metrics can be retrieved
+through CRs and through the Kubernetes Metric API.
+
+The syntax to retrieve metrics from the CR is:
+
+```shell
+kubectl get keptnmetrics.metrics.keptn.sh -n <namespace> <metric-name>
+```
+
+For example, the output for the `available-cpus` metric looks like:
+
+```shell
+$ kubectl get keptnmetrics.metrics.keptn.sh -n simplenode-dev available-cpus
+
+NAME             PROVIDER     QUERY                                           VALUE
+cpu-throttling   my-provider  sum(kube_node_status_capacity{resource=`cpu`})   6.000
+```
+
+The syntax to retrieve metrics through the Kubernetes API  is:
+
+```yaml
+kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/<namespace>/keptnmetrics.metrics.sh/<metric-name>/<metric-name>"
+```
+
+For example, the output for the `available-cpus` looks like:
+
+```yaml
+$ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/simplenode-dev/keptnmetrics.metrics.sh/available-cpus/available-cpus"
+
+{
+  "kind": "MetricValueList",
+  "apiVersion": "custom.metrics.k8s.io/v1beta2",
+  "metadata": {},
+  "items": [
+    {
+      "describedObject": {
+        "kind": "KeptnMetric",
+        "namespace": "simplenode-dev",
+        "name": "available-cpus",
+        "apiVersion": "metrics.keptn.sh/v1beta1"
+      },
+      "metric": {
+        "name": "available-cpus",
+        "selector": {}
+      },
+      "timestamp": "2023-05-11T08:05:36Z",
+      "value": "6"
+    }
+  ]
+}
+```
+
+You can also display the metrics graphically using a dashboard such as Grafana.
+
+## Implementing autoscaling with HPA
+
+The Kubernetes HorizontalPodAutoscaler (HPA)
+uses metrics to provide autoscaling for the cluster.
+HPA can retrieve KeptnMetrics and use those metrics to implement HPA.
+See
+Using the [HorizontalPodAutoscaler](../use-cases/hpa.md)
+for detailed information.
+
+## Learn more
+
+To learn more about the Keptn Metrics Server, see:
+
+- Architecture:
+  [Keptn Metrics Operator](../components/metrics-operator/_index.md)
+- More information about implementing Keptn Metrics:
+  [Keptn Metrics](../guides/evaluatemetrics.md)

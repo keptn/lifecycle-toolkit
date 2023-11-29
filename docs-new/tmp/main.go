@@ -26,6 +26,27 @@ func init() {
 }
 
 func main() {
+	errs()
+	//fmt.Println(out)
+}
+
+func errs() {
+	b, err := os.ReadFile(file)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	content := string(b)
+	//out := content
+	if strings.Contains(content, split) {
+		s := strings.Split(content, split)
+		if len(s) > 3 {
+			l.Printf("Warning: Missing content for %s\n", file)
+		}
+	}
+}
+
+func rename() {
 	b, err := os.ReadFile(file)
 	if err != nil {
 		fmt.Println(err)
@@ -46,5 +67,4 @@ func main() {
 		}
 	}
 	os.WriteFile(file, []byte(out), 0644)
-	//fmt.Println(out)
 }

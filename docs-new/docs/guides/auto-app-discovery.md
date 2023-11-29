@@ -44,4 +44,68 @@ metadata:
   name: podtato-kubectl
   annotations:
     keptn.sh/lifecycle-toolkit: "enabled"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-frontend
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: podtato-head-frontend
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/version: 0.1.0
+    spec:
+      containers:
+        - name: podtato-head-frontend
+          image: podtato-head-frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-hat
+  namespace: podtato-kubectl
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: podtato-head-hat
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/version: 0.1.1
+    spec:
+      containers:
+        - name: podtato-head-hat
+          image: podtato-head-hat
 ```
+
+Applying these resources results in the creation
+of the following `KeptnApp` resource:
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnApp
+metadata:
+  name: podtato-head
+  namespace: podtato-kubectl
+  annotations:
+    app.kubernetes.io/managed-by: "keptn"
+spec:
+  version: "<version string based on a hash of all containing workloads>"
+  workloads:
+  - name: podtato-head-frontend
+    version: 0.1.0
+  - name: podtato-head-hat
+    version: 1.1.1
+```
+
+With the `KeptnApp` resource created,
+you get observability of your application's deployments
+by using the OpenTelemetry tracing features
+that are provided by Keptn:
+
+![Application deployment trace](../assets/trace.png)
+

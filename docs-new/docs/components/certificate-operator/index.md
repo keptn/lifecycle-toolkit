@@ -1,6 +1,6 @@
 # Keptn Certificate Manager
 
-### Keptn Cert Manager
+## Keptn Cert Manager
 
 The Keptn Cert Manager automatically configures TLS certificates to
 [secure communication with the Kubernetes API](https://kubernetes.io/docs/concepts/security/controlling-access/#transport-security).

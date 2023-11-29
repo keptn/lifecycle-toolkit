@@ -60,7 +60,6 @@ The steps to implement metrics in an existing cluster are:
 1. Configure the metrics you want to use:
    - [Define metrics providers](#define-metrics-providers)
    - [Define KeptnMetric information](#define-keptnmetric-information)
-   - [View available metrics](#view-available-metrics)
 
 If you want to create your own cluster to run this exercise,
 follow the instructions in [Installation](../installation/index.md).

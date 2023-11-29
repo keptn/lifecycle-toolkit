@@ -1,6 +1,6 @@
 # Components
 
-### Keptn Components
+## Keptn Components
 
 Keptn consists of two main components:
 

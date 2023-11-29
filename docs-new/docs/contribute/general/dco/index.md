@@ -1,6 +1,6 @@
 # DCO
 
-### Developer Certification of Origin (DCO)
+## Developer Certification of Origin (DCO)
 
 Keptn requires the Developer Certificate of Origin (DCO) process
 to be followed for each commit.

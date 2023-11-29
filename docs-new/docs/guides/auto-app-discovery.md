@@ -44,4 +44,4 @@ metadata:
   name: podtato-kubectl
   annotations:
     keptn.sh/lifecycle-toolkit: "enabled"
-
+```

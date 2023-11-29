@@ -1,6 +1,5 @@
 # Keptn Lifecycle Operator
 
-
 **Keptn's Lifecycle Operator** is
 a Kubernetes [operator](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 that automates the deployment and management

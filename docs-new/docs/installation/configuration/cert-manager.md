@@ -1,6 +1,5 @@
 # Keptn + cert-manager.io
 
-
 Keptn includes
 a light-weight, customized cert-manager
 that is used to register Webhooks to the [KubeAPI](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/).

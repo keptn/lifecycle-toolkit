@@ -7,7 +7,7 @@ weight: 375
 All PRs that are pushed to a Keptn repository
 are run through a spell checker that is based on the
 [check-spelling](https://github.com/check-spelling/check-spelling)
-Github action.
+GitHub action.
 
 Note, however, that you are still responsible for reading your text carefully.
 The tool does not flag if you used a real word that is not the right word,

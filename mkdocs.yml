@@ -60,6 +60,6 @@ plugins:
 
 nav:
   - Home:
-      - docs-new/index.md
+      - index.md
   - Documentation:
-      - docs-new/docs/index.md
+      - docs/index.md

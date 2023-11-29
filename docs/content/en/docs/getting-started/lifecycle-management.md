@@ -29,7 +29,7 @@ and
 [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/).
 
 > Pre and post deployments can also run on a `KeptnApp` level.
-> A `KeptnApp` concatenates multiple workloads into a single application.
+> A `KeptnApp` groups multiple workloads into a single application.
 > See [annotations to KeptnApp](../guides/integrate.md#annotations-to-keptnapp)
 
 ## Prerequisites: Deploy webhook sink

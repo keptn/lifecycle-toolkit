@@ -1,8 +1,4 @@
----
-title: Codespaces
-description: Use GitHub Codespaces to contribute documentation and software
-weight: 200
----
+# Codespaces
 
 Use GitHub codespaces as a pre-built and pre-configured development environment.
 This is especially useful for Windows users

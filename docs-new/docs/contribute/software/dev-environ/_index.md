@@ -1,8 +1,4 @@
----
-title: Software development environment
-description: How to set up and use the development environment to develop and test Keptn software
-weight: 30
----
+# Software development environment
 
 This page gives instructions and hints for setting up a development environment
 and then develop, test, and deploy your software changes in that environment.

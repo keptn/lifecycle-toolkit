@@ -1,8 +1,4 @@
----
-title: Software contributions
-description: Information about contributing software
-weight: 200
----
+# Software contributions
 
 This section is under development.
 Contents are not complete,

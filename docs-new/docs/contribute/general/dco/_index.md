@@ -1,8 +1,4 @@
----
-title: DCO
-description: Working with DCO
-weight: 200
----
+# DCO
 
 ### Developer Certification of Origin (DCO)
 

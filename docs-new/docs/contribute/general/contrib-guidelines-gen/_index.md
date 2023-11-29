@@ -1,8 +1,4 @@
----
-title: Contribution Guidelines
-description: Guidelines for contributing towards Keptn
-weight: 300
----
+# Contribution Guidelines
 
 Before using Keptn
 as a contributor to the Keptn `lifecycle-toolkit` repository,

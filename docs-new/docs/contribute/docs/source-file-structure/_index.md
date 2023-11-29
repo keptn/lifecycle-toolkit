@@ -1,8 +1,4 @@
----
-title: Source File Structure
-description: Structure source files with Metadata
-weight: 400
----
+# Source File Structure
 
 The source files for the Keptn documentation
 are stored in the same github repository as the source code.
@@ -171,64 +167,3 @@ As an example, the metadata section for the *Installation and upgrade* section
 of the documentation includes the following fields:
 
 ```yaml
----
-title: Installation and Upgrade
-description: Learn how to install and upgrade the Keptn
-weight: 30
----
-```
-
-The meaning of these fields is:
-
-* **title** -- title displayed for the section or file
-* **description** -- subtext displayed for the section or subsection
-* **weight** -- order in which section or subsection is displayed
-  relative to other sections and subsections at the same level.
-
-In this case, the weight of 30 means that this section is displayed
-after sections that have weights of 29 and lower
-and before sections that have weights of 31 and higher.
-If two files have the same weight,
-their order is determined alphabetically,
-but this is a bad practice.
-When you create a new section or a new page,
-be sure to check the weight of the files
-that immediately precede and follow this file
-to be sure that you are not assigning the same weight to your new file.
-
-The system for assigning weights for the docs landing page
-allows for maximum flexibility as we create new sections:
-
-* General introductory material uses weight values under 100.
-* Guide material about using specific Keptn features
-  use weight value of 2**.
-* Reference material uses weight values of 5**.
-* Other documents use weight values of 7**.
-
-Some other fields are sometimes used in the metadata, including:
-
-* **icon** -- optional field specifying an icon associated with the section
-* **layout** -- layout template to be used for rendering the section
-* **hidden** -- if set to `true`, this page is not included in the
-  documentation set that is built
-* **hidechildren** -- if set to `true`,
-  the listing in the right margin of subsections of this page is omitted.
-  In most cases, that listing is a convenient navigational aid for the reader
-  but it can be omitted in special cases.
-
-You can use these fields if you need them
-but check the rendering carefully
-to ensure that they are playing out as they should.
-
-## Subdirectory structure
-
-Each subdirectory contains topical subdirectories for each chapter in that section.
-Each topical subdirectory may contain:
-
-* An *_index.md* or *index.md* file that has the metadata discussed above
-  plus the text for the section.
-  If this is a subdirectory that contains subdirectories for other pages,
-  the *_index.md* or *index.md* file
-  contains introductory content for the section.
-* An *assets* subdirectory where graphical files for that topic are stored.
-  No *assets* subdirectory is present if the topic has no graphics.

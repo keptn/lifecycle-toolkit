@@ -1,8 +1,4 @@
----
-title: Technologies and concepts you should know
-description: Technologies to get familiar before working with Keptn
-weight: 100
----
+# Technologies and concepts you should know
 
 You should understand some related technologies
 to effectively use and contribute to Keptn.

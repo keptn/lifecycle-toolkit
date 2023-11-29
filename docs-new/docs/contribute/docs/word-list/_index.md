@@ -1,8 +1,4 @@
----
-title: Word list
-description: Proper use of terms for the Keptn project documentation
-weight: 800
----
+# Word list
 
 This document summarizes information
 about the proper use of terminology for the Keptn project.

@@ -1,8 +1,4 @@
----
-title: General information about contributing
-description: Information relevant to all contributions
-weight: 100
----
+# General information about contributing
 
 This section is under development.
 Contents are not complete,

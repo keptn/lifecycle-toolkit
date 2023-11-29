@@ -1,8 +1,4 @@
----
-title: Documentation contributions
-description: Information about contributing to the Keptn documentation
-weight: 300
----
+# Documentation contributions
 
 This section is under development.
 Contents are not complete,

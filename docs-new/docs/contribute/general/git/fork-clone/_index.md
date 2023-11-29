@@ -1,8 +1,4 @@
----
-title: Fork and clone the repository
-description: How to get a local version of the Keptn repository
-weight: 20
----
+# Fork and clone the repository
 
 Perform the following steps to create a copy
 of the Keptn repository on your local machine:

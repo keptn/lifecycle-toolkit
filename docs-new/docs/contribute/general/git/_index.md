@@ -1,8 +1,4 @@
----
-title: Working with Git
-description: Using Git to contribute software and docs
-weight: 200
----
+# Working with Git
 
 Keptn source for software and documentation is stored in the
 [Keptn lifecycle-toolkit repository](https://github.com/keptn/lifecycle-toolkit).

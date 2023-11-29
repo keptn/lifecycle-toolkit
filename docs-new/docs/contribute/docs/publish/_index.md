@@ -1,8 +1,4 @@
----
-title: Published Doc Structure
-description: Structure of the published documentation
-weight: 450
----
+# Published Doc Structure
 
 New writing goes to the `main` branch and can be viewed on the Releases -> development dropdown menu.
 We have staging and production levels for our documentation which are as follows:

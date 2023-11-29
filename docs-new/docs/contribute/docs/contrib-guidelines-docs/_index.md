@@ -1,8 +1,4 @@
----
-title: Contribution guidelines for documentation
-description: Guidelines for contributing towards Keptn
-weight: 100
----
+# Contribution guidelines for documentation
 
 The [Contribution Guidelines](../../general/contrib-guidelines-gen) page
 contains guidelines that are relevant

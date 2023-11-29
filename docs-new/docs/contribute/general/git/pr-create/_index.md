@@ -1,8 +1,4 @@
----
-title: Create PR
-description: Create and submit a PR with your changes
-weight: 40
----
+# Create PR
 
 When you have completed the checking and testing of your work
 on your local branch as described in

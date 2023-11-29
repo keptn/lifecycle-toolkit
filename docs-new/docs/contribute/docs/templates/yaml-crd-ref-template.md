@@ -1,8 +1,4 @@
----
-title: CRD name
-description: template for new CRD reference pages
-weight: 20
----
+# CRD name
 
 Copy this template to create a new CRD reference page.
 

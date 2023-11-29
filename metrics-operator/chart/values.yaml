@@ -121,6 +121,8 @@ env:
   metricsControllerLogLevel: "0"
 ## @param   env.analysisControllerLogLevel  sets the log level of Analysis Controller
   analysisControllerLogLevel: "0"
+## @param   env.enableCustomMetricsAPIService enable/disable the K8s APIService installation
+  enableCustomMetricsAPIService: "true"
 image:
 ## @param     image.registry specify the container registry for the metrics-operator image
   registry: ghcr.io

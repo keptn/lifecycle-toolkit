@@ -60,7 +60,7 @@ the HPA to react on the values of these metrics:
 {% include "./assets/hpa/keptnmetric.yaml" %}
 
 For more information about the `KeptnMetric` and `KeptnMetricsProvider` custom resources,
-please refer to the [CRD documentation](../reference/api-reference/metrics/v1beta1/).
+please refer to the [CRD documentation](../reference/api-reference/metrics/v1beta1/index.md).
 
 After a few seconds we should be able to see values for the `cpu-throttling` metric:
 

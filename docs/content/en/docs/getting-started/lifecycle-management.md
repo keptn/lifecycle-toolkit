@@ -117,7 +117,7 @@ spec:
 
 ### Verify it works
 
-Verify that the `KeptnTaskDefinition` resource shown above above actually works.
+Verify that the `KeptnTaskDefinition` resource shown above actually works.
 
 Trigger an on-demand task execution
 to verify that the job and pod function correctly.

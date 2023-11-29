@@ -229,6 +229,7 @@ homeorchestrate
 horizontalpodautoscalers
 hpa
 hreflang
+hsla
 htmltest
 httpref
 httpreference
@@ -365,6 +366,7 @@ kwv
 labelledby
 lastmod
 lastword
+Lato
 lfc
 Lifcycle
 lifecyclekeptnsh
@@ -433,6 +435,7 @@ nodename
 nolint
 nonroot
 noreply
+nowrap
 nsa
 oac
 oauth
@@ -462,6 +465,7 @@ otlpgrpc
 otlptrace
 otlptracegrpc
 OUTDIR
+overriden
 owide
 oyaml
 pagelinks
@@ -519,12 +523,15 @@ replicasets
 replicationcontrollers
 resourcereference
 Rexed
+rgb
 rgba
 RLock
 Roboto
 rolebinding
 rollme
 roundtripper
+rst
+rtd
 runhelloworld
 RUnlock
 runsendevent

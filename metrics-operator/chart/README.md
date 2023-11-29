@@ -72,6 +72,7 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 | `env.exposeKeptnMetrics`                            | enable metrics exporter                                       | `true`                   |
 | `env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller                      | `0`                      |
 | `env.analysisControllerLogLevel`                    | sets the log level of Analysis Controller                     | `0`                      |
+| `env.enableCustomMetricsAPIService`                 | enable/disable the K8s APIService installation                | `true`                   |
 | `image.registry`                                    | specify the container registry for the metrics-operator image | `ghcr.io`                |
 | `image.repository`                                  | specify registry for manager image                            | `keptn/metrics-operator` |
 | `image.tag`                                         | select tag for manager image                                  | `v0.8.3`                 |

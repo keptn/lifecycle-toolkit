@@ -46,7 +46,7 @@ spec:
 
 ## Usage
 
-Each cluster must have atleast one `KeptnConfig` CRD
+Each cluster must have at least one `KeptnConfig` CRD
 that describes all configurations for that cluster.
 
 ## Example

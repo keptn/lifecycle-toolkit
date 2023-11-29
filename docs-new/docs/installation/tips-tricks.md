@@ -1,4 +1,4 @@
-# Installation Tips and Tricks 
+# Installation Tips and Tricks
 
 The
 [Install Keptn](index.md)

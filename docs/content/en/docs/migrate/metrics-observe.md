@@ -339,4 +339,3 @@ spec:
 
 This way, you can use the same `AnalysisDefinition`
 and `AnalysisValueTemplates` for multiple services within the same project.
-~

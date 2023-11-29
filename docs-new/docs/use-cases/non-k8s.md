@@ -1,6 +1,5 @@
 # Keptn - Kubernetes
 
-
 Keptn Tasks running on a Kubernetes cluster
 can be triggered for [workloads](https://kubernetes.io/docs/concepts/workloads/) and applications
 that are deployed outside of Kubernetes.

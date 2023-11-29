@@ -48,7 +48,7 @@ For more details about handling errors that are found, see the
 For full technical details about the spell checker, see:
 
 - [check-spelling documentation](https://docs.check-spelling.dev/)
-- [check-spelling/.github repository](https://github.com/check-spelling/check-spelling/tree/main/.github)
+- [check-spelling GitHub repository](https://github.com/check-spelling/check-spelling)
 
 The Keptn spell checker checks both documentation and code for spelling,
 based on a set of dictionaries:

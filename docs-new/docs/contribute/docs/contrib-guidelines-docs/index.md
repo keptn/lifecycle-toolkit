@@ -57,7 +57,7 @@ that are relevant only to documentation
   the syntax is:
 
   ```md
-  {{</*embed path="/examples/sample-app/version-3/app-pre-deploy-eval.yaml"*/>}}
+  {%/*include "examples/sample-app/version-3/app-pre-deploy-eval.yaml"*/%}
 
   ```
 

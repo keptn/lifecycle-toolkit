@@ -322,7 +322,7 @@ guide page.
 
 ## Files
 
-API reference: [Analysis](../api-reference/metrics/v1beta1/_index.md#analysis)
+API reference: [Analysis](../api-reference/metrics/v1beta1/index.md#analysis)
 
 ## Differences between versions
 
@@ -343,7 +343,7 @@ To preview these features, do one of the following for your Keptn cluster:
   file
 
 See
-[Customizing the configuration of components](../../installation/_index.md#customizing-the-configuration-of-components)
+[Customizing the configuration of components](../../installation/index.md#customizing-the-configuration-of-components)
 for more information.
 
 ## See also

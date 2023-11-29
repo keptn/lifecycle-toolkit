@@ -3,7 +3,7 @@
 A `KeptnTaskDefinition` defines tasks
 that Keptn runs as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
-[KeptnWorkload](../api-reference/lifecycle/v1alpha3/_index.md#keptnworkload).
+[KeptnWorkload](../api-reference/lifecycle/v1alpha3/index.md#keptnworkload).
 
 A Keptn task executes as a
 [runner](https://docs.gitlab.com/runner/executors/kubernetes.html#how-the-runner-creates-kubernetes-pods)
@@ -152,7 +152,7 @@ spec:
       [image concepts](https://kubernetes.io/docs/concepts/containers/images/)
       and pushed to a registry
     * **other fields** -- The full list of valid fields is available at
-      [ContainerSpec](../api-reference/lifecycle/v1alpha3/_index.md#containerspec),
+      [ContainerSpec](../api-reference/lifecycle/v1alpha3/index.md#containerspec),
       with additional information in the Kubernetes
       [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
       spec documentation.

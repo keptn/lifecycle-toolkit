@@ -57,4 +57,4 @@ DORA metrics are also displayed on Grafana
 or whatever dashboard application you choose.
 For example:
 
-![DORA metrics](../assets/dynatrace_dora_dashboard.png)
+![DORA metrics](./assets/dynatrace_dora_dashboard.png)

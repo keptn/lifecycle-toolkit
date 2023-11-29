@@ -19,7 +19,7 @@ It does this by using metrics such as CPU throttling, memory consumption, or res
 To use an HPA with the custom metrics API, the
 Keptn Metrics Operator must be installed on the cluster.
 For more information about installation please refer to the
-[installation guide](../installation/_index.md).
+[installation guide](../installation/index.md).
 
 > **Note**
 The Keptn Lifecycle Operator does not need to be installed for this use-case.

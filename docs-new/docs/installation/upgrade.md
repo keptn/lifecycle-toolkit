@@ -13,7 +13,7 @@ helm upgrade --install keptn keptn/keptn \
 
 Use the `--set` flag or download and edit the `values.yaml` file
 to modify the configuration as discussed on the
-[Install Keptn](/) page.
+[Install Keptn](./index.md) page.
 
 > **Warning**
 If you installed your Keptn instance from the Manifest,
@@ -57,7 +57,7 @@ helm upgrade --install keptn keptn/keptn -n keptn-system --create-namespace --wa
 ```
 
 For information about  advanced installation options, refer to
-[Modify Helm configuration options](_index.md).
+[Modify Helm configuration options](./index.md).
 
 1. After the installation finishes, restore the manifests from you backup
 

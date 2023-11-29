@@ -7,7 +7,7 @@ making contributions towards the repository.
 
 These guidelines are appropriate for both software and documentation.
 For additional guidelines that are relevant only to documentation, see
-[Contribution guidelines for documentation](../../docs/contrib-guidelines-docs).
+[Contribution guidelines for documentation](../../docs/contrib-guidelines-docs/index.md).
 
 ## Guidelines for contributing
 

@@ -103,7 +103,7 @@ spec:
 
 API Reference:
 
-* [KeptnEvaluationDefinition](../api-reference/lifecycle/)
+* [KeptnEvaluationDefinition](../api-reference/lifecycle/index.md)
 
 ## Differences between versions
 

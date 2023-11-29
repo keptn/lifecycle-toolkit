@@ -1,7 +1,7 @@
 # Create local branch
 
 After you
-[fork and clone](../fork-clone)
+[fork and clone](../fork-clone/index.md)
 the Keptn repository and set `upstream` in your local machine,
 you need to create a local branch where you will make your changes.
 
@@ -34,7 +34,7 @@ then create a PR to add these changes to the documentation set.
     or at `localhost:1314/docs-dev`
     to ensure that it is rendering correctly
     and that all links are valid..
-    See [Build Documentation Locally](../../../docs/local-building)
+    See [Build Documentation Locally](../../../docs/local-building/index.md)
     for more information.
   * Run `make markdownlint-fix` to check and fix the markdown code.
 
@@ -45,4 +45,4 @@ then create a PR to add these changes to the documentation set.
 
 When you have completed the checking and testing of your work,
 it is time to push your changes and create a PR that can be reviewed.
-See [Create PR](../pr-create) for details.
+See [Create PR](../pr-create/index.md) for details.

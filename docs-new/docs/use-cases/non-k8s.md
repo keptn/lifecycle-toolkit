@@ -17,7 +17,7 @@ To do this:
 ## Install Keptn on a Kubernetes cluster
 
 You must set up a Kubernetes cluster and
-[install](../installation/_index.md#basic-installation)
+[install](../installation/index.md#basic-installation)
 Keptn on it,
 but this can be a very lightweight, single-node KinD cluster; see
 [Create local Kubernetes cluster](../installation/k8s.md#create-local-kubernetes-cluster).

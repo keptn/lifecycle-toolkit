@@ -51,5 +51,5 @@ of the Keptn repository on your local machine:
      ```
 
 You are now ready to
-[create a local branch](../branch-create)
+[create a local branch](../branch-create/index.md)
 and begin to create the software or documentation modifications.

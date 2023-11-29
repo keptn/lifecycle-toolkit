@@ -7,7 +7,7 @@ to make them more robust.
 This tutorial introduces these tools.
 
 > This tutorial assumes you have already completed the
-[Getting started with Keptn Observability](../getting-started/)
+[Getting started with Keptn Observability](../getting-started/index.md)
 exercise.
 > Please ensure you've finished that before attempting this guide.
 
@@ -51,7 +51,7 @@ Open a browser and go to `http://localhost:8084`
 
 You should see a page like this with a unique URL (your ID will be different).
 
-![webhook.site page](../assets/webhook.site.1.png)
+![webhook.site page](./assets/webhook.site.1.png)
 
 Make a note of that unique URL.
 
@@ -62,7 +62,7 @@ The page should remain blank, but when toggling back to `http://localhost:8084`,
 
 Every request sent to that unique URL will be logged here.
 
-![webhook.site entry](../assets/webhook.site.2.png)
+![webhook.site entry](./assets/webhook.site.2.png)
 
 ## Add a Post Deployment Task
 

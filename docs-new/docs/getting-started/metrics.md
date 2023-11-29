@@ -39,7 +39,7 @@ as you implement the functionality "from scratch"
 on your local Kubernetes deployment cluster.
 
 This is the first of three exercises in the
-[Introducing Keptn](_index.md)
+[Introducing Keptn](index.md)
 series.
 After completing this exercise,
 you may want to do the other exercises:
@@ -56,14 +56,14 @@ you may want to do the other exercises:
 
 The steps to implement metrics in an existing cluster are:
 
-1. [Install Keptn](../installation/_index.md)
+1. [Install Keptn](../installation/index.md)
 1. Configure the metrics you want to use:
    - [Define metrics providers](#define-metrics-providers)
    - [Define KeptnMetric information](#define-keptnmetric-information)
    - [View available metrics](#view-available-metrics)
 
 If you want to create your own cluster to run this exercise,
-follow the instructions in [Installation](../installation/_index.md).
+follow the instructions in [Installation](../installation/index.md).
 
 ## Define metrics to use
 

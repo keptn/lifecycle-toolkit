@@ -9,11 +9,11 @@ and questions that you have.
 
 Before you begin the migration project,
 we suggest that you run through the exercises in
-[Getting started](../getting-started/)
+[Getting started](../getting-started/index.md)
 to familiarize yourself with how Keptn works.
 When you are ready to begin the migration,
 follow the instructions in
-[Installation and upgrade](../installation)
+[Installation and upgrade](../installation/index.md)
 to set up your Kubernetes cluster
 and install Keptn on it.
 
@@ -39,13 +39,13 @@ Some key points:
   [shipyard.yaml](https://keptn.sh/docs/1.0.x/reference/files/shipyard/)
   file as Keptn v1 does.
   * See the
-    [Lifecycle CRD Reference](../reference/crd-reference)
+    [Lifecycle CRD Reference](../reference/crd-reference/index.md)
     and
-    [Metrics CRD Reference](../reference/crd-reference)
+    [Metrics CRD Reference](../reference/crd-reference/index.md)
     section for pages that describe the Keptn manifests
     that you populate manually for Keptn.
   * See the
-    [API Reference](../reference/api-reference/)
+    [API Reference](../reference/api-reference/index.md)
     for a comprehensive reference to all resources
     defined for Keptn.
 
@@ -90,7 +90,7 @@ Some key points:
 
 For in-depth information about Keptn components
 and how they work, see the
-[Architecture](../components)
+[Architecture](../components/index.md)
 section.
 
 ## Disposition of Keptn v1 components in Keptn

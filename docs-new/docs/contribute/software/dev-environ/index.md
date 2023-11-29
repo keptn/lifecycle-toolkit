@@ -23,11 +23,11 @@ To prepare to contribute to the Keptn project, we recommend that you:
   * [keptn-cert-manager](https://github.com/keptn/lifecycle-toolkit/tree/main/keptn-cert-manager)
 
   Each of these is described in the
-  [Architecture](../../../docs/components/)
+  [Architecture](../../../components/index.md)
   section of the documentation
   and most include a *README* file with more information.
 * Study the material in
-  [Technologies and concepts you should know](../../general/technologies).
+  [Technologies and concepts you should know](../../general/technologies/index.md).
 * Create an account for yourself on
   [GitHub](https://github.com)
   if you do not already have an account.
@@ -39,7 +39,7 @@ When you view the
 [lifecycle-toolkit](https://github.com/keptn/lifecycle-toolkit)
 repository, you see that Keptn is composed of multiple components,
 each of which is discussed in the Architecture
-[Architecture](../../../docs/components/)
+[Architecture](../../../components/index.md)
 documentation:
 
 * Three Kubernetes operators
@@ -53,7 +53,7 @@ you also see the `runtimes` directory.
 This defines the runners that you can use when defining
 tasks to be run either pre- or post-deployment.
 These are discussed in
-[Runners and containers](../../../docs/guides/tasks.md#runners-and-containers).
+[Runners and containers](../../../guides/tasks.md#runners-and-containers).
 
 ## Install software
 
@@ -64,13 +64,13 @@ you need to install the following on your system:
   which allows software applications to run in isolated environments
   and makes it easier to deploy and manage them.
 * A Kubernetes cluster running an appropriate version of Kubernetes.
-  See [Supported Kubernetes versions](../../../docs/installation/_index.md#supported-kubernetes-versions)
+  See [Supported Kubernetes versions](../../../installation/index.md#supported-kubernetes-versions)
   for details.
   Most contributors create a local
   Kubernetes-in-Docker(KinD) cluster.
   This is adequate for developing software for Keptn.
   See
-  [Kubernetes cluster](../../../docs/installation/k8s.md/#create-local-kubernetes-cluster)
+  [Kubernetes cluster](../../../installation/k8s.md#create-local-kubernetes-cluster)
   for instructions.
 * [**kubectl**](https://kubernetes.io/docs/tasks/tools/):
   a command-line interface tool used for deploying
@@ -86,7 +86,7 @@ you need to install the following on your system:
 ## First steps
 
 1. Follow the instructions in
-   [Fork and clone the repository](../../general/git/fork-clone/)
+   [Fork and clone the repository](../../general/git/fork-clone/index.md)
    to get a local copy of the software.
 
 1. Keptn provides a tool that deploys the development version of the software
@@ -114,7 +114,7 @@ you need to install the following on your system:
 You are now ready to make your changes to the source code.
 
 1. Follow the instructions in
-   [Create local branch](../../general/git/branch-create/)
+   [Create local branch](../../general/git/branch-create/index.md)
    to create a branch for your changes.
 
 1. Make your changes to the appropriate component.
@@ -170,8 +170,8 @@ Study these errors, modify your code, and rerun the test until it passes.
 
 When all the tests have passed,
 you can follow the instructions in
-[Create PR](../../general/git/pr-create/)
+[Create PR](../../general/git/pr-create/index.md)
 to create your PR.
 Be sure to monitor your PR as discussed in
-[PR review process](../../general/git/review/)
+[PR review process](../../general/git/review/index.md)
 until it is merged.

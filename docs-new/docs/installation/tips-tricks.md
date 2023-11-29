@@ -1,7 +1,7 @@
 # Installation Tips and Tricks 
 
 The
-[Install Keptn](_index.md)
+[Install Keptn](index.md)
 page documents how to install Keptn.
 This page provides some background and more examples
 that supplement that information.
@@ -20,7 +20,7 @@ umbrella Helm chart.
 Each subchart has its own README file describing possible configuration options,
 but configuration changes for the subcharts are added to a single `values.yaml` file.
 See
-[Customizing the configuration of components](_index.md#customizing-the-configuration-of-components)
+[Customizing the configuration of components](index.md#customizing-the-configuration-of-components)
 for an example.
 
 ## Installing older versions of Keptn
@@ -37,8 +37,8 @@ compared to the installation of earlier releases:
 To install a version prior to v0.9.0,
 use the install command sequence that is documented for that release.
 To install the latest version, use the installation commands on the
-[Install Keptn](_index.md#basic-installation)
-[Install Keptn](_index.md#basic-installation)
+[Install Keptn](index.md#basic-installation)
+[Install Keptn](index.md#basic-installation)
 page.
 
 To install an older release,
@@ -47,7 +47,7 @@ in the `helm upgrade --install` command for the release you are installing.
 
 ## Example configurations by use-case
 
-[Control what components are installed](_index.md#customizing-the-configuration-of-components)
+[Control what components are installed](index.md#customizing-the-configuration-of-components)
 discusses how to configure Keptn to include only the components you want.
 The following sections summarize and give examples
 of the configurations needed for different use cases.

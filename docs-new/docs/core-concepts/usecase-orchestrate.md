@@ -52,7 +52,7 @@ The steps to implement pre- and post-deployment orchestration are:
 * [Integrate evaluations and tasks into the cluster](#integrate-evaluations-and-tasks-into-the-cluster)
 
 This is the third of three exercises in the
-[Introducing Keptn](_index.md)
+[Introducing Keptn](index.md)
 series.
 You may want to complete the other exercises before doing this exercise
 although that is not required:
@@ -71,7 +71,7 @@ and did not previously set up your cluster for the
 you need to do the following:
 
 1. Follow the instructions in
-   [Install and update](../installation/_index.md)
+   [Install and update](../installation/index.md)
    to install and enable Keptn on your cluster.
 1. Follow the instructions in
    [Annotate workload](../guides/integrate.md#basic-annotations)

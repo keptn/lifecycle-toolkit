@@ -1,6 +1,6 @@
 # Contribution guidelines for documentation
 
-The [Contribution Guidelines](../../general/contrib-guidelines-gen) page
+The [Contribution Guidelines](../../general/contrib-guidelines-gen/index.md) page
 contains guidelines that are relevant
 for both documentation and software contributions.
 This page lists additional guidelines
@@ -86,7 +86,7 @@ that are relevant only to documentation
 
 * Always build the documentation locally to check the formatting
   and verify that all links are working properly.
-  See [Build Documentation Locally](../local-building)
+  See [Build Documentation Locally](../local-building/index.md)
   for details.
 
 * Always run the following to fix most markdown issues in your PR
@@ -96,5 +96,5 @@ that are relevant only to documentation
   make markdownlint-fix
   ```
 
-  See [Markdownlint](../linter-requirements/#markdownlint)
+  See [Markdownlint](../linter-requirements/index.md#markdownlint)
   for details.

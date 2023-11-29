@@ -39,7 +39,7 @@ It is based on the
 example.
 
 This is the second of three exercises in the
-[Introducing Keptn](_index.md)
+[Introducing Keptn](index.md)
 series:
 
 - In the
@@ -62,7 +62,7 @@ or on a local cluster you are creating for this exercise,
 you need to do the following:
 
 1. Follow the instructions in
-   [Install and update](../installation)
+   [Install and update](../installation/index.md)
    to install and enable Keptn on your cluster.
 1. Follow the instructions in
    [Basic annotations](../guides/integrate.md#basic-annotations)

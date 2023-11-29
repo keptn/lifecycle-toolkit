@@ -1,7 +1,7 @@
 # PR review process
 
 After you
-[create your PR](../pr-create),
+[create your PR](../pr-create/index.md),
 your PR must be approved and then merged
 before it becomes part of the Keptn product.
 This page discusses what you need to do during the review phase.

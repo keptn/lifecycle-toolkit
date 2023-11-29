@@ -11,7 +11,7 @@ Below are some common problems and their solutions:
 If you are facing an issue where Keptn is installed but does not seem to be aware of your
 [workloads](https://kubernetes.io/docs/concepts/workloads/), follow these steps:
 
-1. Ensure that the namespace you wish to target is [annotated correctly](_index.md#basic-installation).
+1. Ensure that the namespace you wish to target is [annotated correctly](index.md#basic-installation).
 2. Make sure your [workloads](https://kubernetes.io/docs/concepts/workloads/)
    (e.g., Deployment manifests) have the [three required annotations](https://lifecycle.keptn.sh/docs/implementing/integrate/#annotate-workloads).
 

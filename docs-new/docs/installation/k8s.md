@@ -3,7 +3,7 @@
 Keptn is meant to be installed
 into an existing Kubernetes cluster
 that runs your deployment software.
-See [Requirements](_index.md#supported-kubernetes-versions) for information about supported releases
+See [Requirements](index.md#supported-kubernetes-versions) for information about supported releases
 and advice about resources required.
 
 ## Create local Kubernetes cluster
@@ -55,7 +55,7 @@ you need to provide these components.
 Your cluster should include the following:
 
 * A supported version of Kubernetes.
-  See [Supported Kubernetes versions](_index.md#supported-kubernetes-versions)
+  See [Supported Kubernetes versions](index.md#supported-kubernetes-versions)
   for details.
 
 * The

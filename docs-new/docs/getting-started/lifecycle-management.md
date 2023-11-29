@@ -222,4 +222,3 @@ See [pre and post deployment checks page](../guides/integrate.md#pre--and-post-d
 Keptn can also run pre and post deployment SLO evaluations.
 
 Continue the Keptn learning journey by adding evaluations.
-

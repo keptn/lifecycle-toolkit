@@ -108,4 +108,3 @@ by using the OpenTelemetry tracing features
 that are provided by Keptn:
 
 ![Application deployment trace](../assets/trace.png)
-

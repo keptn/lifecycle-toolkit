@@ -41,7 +41,7 @@ If you get a Spell Checker error:
      merged as part of your PR.
 
 For more details about handling errors that are found, see the
-[Check-spelling docs](https://docs.check-spelling.dev/Showcase.html).
+[Check-spelling docs](https://docs.check-spelling.dev/).
 
 ## Implementation details
 

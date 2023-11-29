@@ -120,7 +120,7 @@ spec:
 Verify that the `KeptnTaskDefinition` resource shown above actually works.
 
 Trigger an on-demand task execution
-to verify that the job and pod function correctly.
+to verify that the job and pod are working correctly.
 
 In the following steps we will have Keptn orchestrate this for us automatically.
 

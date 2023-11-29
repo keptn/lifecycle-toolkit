@@ -69,7 +69,7 @@ based on a set of dictionaries:
 Check-spelling supports both American and British spelling
 and both are allowed in the Keptn documentation.
 
-Check-spelling provides a number of dictionaries for non-English languages
+Check-spelling provides dictionaries for  number of non-English languages
 but we do not currently use those.
 
 Note that Check-spelling does not check for proper capitalization of terms.

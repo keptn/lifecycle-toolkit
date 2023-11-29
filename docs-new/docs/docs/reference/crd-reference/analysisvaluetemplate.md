@@ -80,7 +80,7 @@ The template refers to that provider and queries it.
 
 ## Example
 
-{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysisvaluetemplate.yaml" >}}
+{% include "../../assets/crd/analysis-template.yaml" %}
 
 For a full example of how the `AnalysisValueTemplate` is used
 to implement the Keptn Analysis feature, see the

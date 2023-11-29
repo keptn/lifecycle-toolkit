@@ -1,0 +1,10 @@
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetric
+metadata:
+  name: available-cpus
+  namespace: podtato-kubectl
+spec:
+  provider:
+    name: my-provider
+  query: "sum(kube_node_status_capacity{resource='cpu'})"
+  fetchIntervalSeconds: 10

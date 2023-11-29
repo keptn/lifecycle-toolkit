@@ -329,7 +329,7 @@ spec:
 
 A Task executes the TaskDefinition of a
 [KeptnApp](app.md) or a
-[KeptnWorkload](../api-reference/lifecycle/v1alpha3/#keptnworkload).
+[KeptnWorkload](../api-reference/lifecycle/v1alpha3/index.md#keptnworkload).
 The execution is done by spawning a Kubernetes
 [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
 to handle a single Task.
@@ -378,7 +378,7 @@ For an example of a `KeptnTaskDefinition` that defines a custom container.
 This is a trivial example that just runs `busybox`,
 then spawns a shell and runs the `sleep 30` command:
 
-{{< embed path="/examples/sample-app/base/container-task.yaml" >}}
+{% include "../../assets/crd/task-definition.yaml" %}
 
 This task is then referenced in the
 [app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml)

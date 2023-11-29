@@ -42,7 +42,7 @@ let's assume the following example, including
 a [workload](https://kubernetes.io/docs/concepts/workloads/) called `podtato-head-frontend` that includes a pre-task and
 a pre-evaluation.
 
-{{< docsembed path="content/en/docs/guides/assets/deployment-initial.yaml" >}}
+{% include "./assets/deployment-initial.yaml" %}
 
 Now, let's assume that the configuration of that [workload](https://kubernetes.io/docs/concepts/workloads/) needs to be changed.
 In this example we assume that the image of that [workload](https://kubernetes.io/docs/concepts/workloads/)
@@ -55,7 +55,7 @@ of the result of any task or evaluation, e.g., when the previously used image ha
 and the image must be updated as quickly as possible.
 To do that, change `podtato-head-frontend` as follows:
 
-{{< docsembed path="content/en/docs/guides/assets/deployment-new-image.yaml" >}}
+{% include "./assets/deployment-new-image.yaml" %}
 
 * **Update the configuration *and* the version label:**
 Doing so causes the `KeptnWorkload` that is associated
@@ -64,7 +64,7 @@ and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`
 are executed before the updated pods are scheduled.
 In this case, the deployment should be changed as follows:
 
-{{< docsembed path="content/en/docs/guides/assets/deployment-new-image-and-version.yaml" >}}
+{% include "./assets/deployment-new-image-and-version.yaml" %}
 
 If you have defined the related `KeptnApp` resource yourself,
 this must also be updated to refer to the updated `KeptnWorkload`.
@@ -73,7 +73,7 @@ this updated deployment is not able to progress otherwise.
 Therefore, make sure that the version of `podtato-head-frontend`
 is updated accordingly:
 
-{{< docsembed path="content/en/docs/guides/assets/app-updated-version.yaml" >}}
+{% include "./assets/app-updated-version.yaml" %}
 
 Updating the `KeptnApp` also causes all pre-/post-tasks/evaluations
 of the `KeptnApp` to be executed again.
@@ -129,7 +129,7 @@ For example, to add the deployment `podtato-head-left-leg` to the
 `podtato-head` application, the configuration for that new deployment
 would look like this, with the required label being set:
 
-{{< docsembed path="content/en/docs/guides/assets/new-deployment.yaml" >}}
+{% include "./assets/new-deployment.yaml" %}
 
 The `KeptnApp`, if defined by the user, should contain the
 reference to the newly added [workload](https://kubernetes.io/docs/concepts/workloads/).
@@ -138,7 +138,7 @@ progress if it is not part of a `KeptnApp`.
 For automatically discovered apps this is done
 automatically.
 
-{{< docsembed path="content/en/docs/guides/assets/app-with-new-workload.yaml" >}}
+{% include "./assets/app-with-new-workload.yaml" %}
 
 After applying the updated manifests, you can monitor the status
 of the application and related [workloads](https://kubernetes.io/docs/concepts/workloads/) using the following commands:

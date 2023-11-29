@@ -305,7 +305,7 @@ kubectl get analysis - n keptn-lifecycle-poc -oyaml
 
 ## Examples
 
-{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysis.yaml" >}}
+{% include "../../assets/crd/analysis.yaml" %}
 
 This `Analysis` resource:
 

@@ -34,7 +34,7 @@ to wait for the Keptn checks before binding the pod to a node.
 
 For example, a pod gated by Keptn looks like the following:
 
-{{< embed path="/docs/assets/scheduler-gates/gated.yaml" >}}
+{% include "./assets/gated.yaml" %}
 
 If the `pre-deployment` checks have finished successfully,
 the WorkloadVersion Controller removes the gate from the Pod.
@@ -45,7 +45,7 @@ When removing the gate,
 the WorkloadVersion controller also adds the following annotation so that,
 if the spec is updated, the Pod is not gated again:
 
-{{< embed path="/docs/assets/scheduler-gates/gate-removed.yaml" >}}
+{% include "./assets/gate-removed.yaml" %}
 
 ## Keptn Scheduler for K8s 1.26 and earlier
 
@@ -72,7 +72,7 @@ If the annotations are present, the Webhook assigns the **Keptn Scheduler** to t
 This ensures that the Keptn Scheduler only gets Pods that have been annotated for it.
 A Pod `test-pod` modified by the Mutating Webhook looks as follows:
 
-{{< embed path="/docs/assets/scheduler-gates/scheduler.yaml" >}}
+{% include "./assets/scheduler.yaml" %}
 
 If the Pod is annotated with Keptn specific annotations, the Keptn Scheduler retrieves
 the WorkloadVersion CRD that is associated with the Pod.

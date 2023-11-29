@@ -60,7 +60,7 @@ you do not need to install the Keptn Metrics Operator.
 To disable it, set the `metricsOperator.enabled` value
 to `false` as in the following:
 
-{{< docsembed path="content/en/docs/installation/assets/values-only-lifecycle.yaml" >}}
+{% include "./assets/values-only-lifecycle.yaml" %}
 
 Note that, if you want to run pre- and/or post-deployment
 [evaluations](../guides/evaluations.md)
@@ -106,7 +106,7 @@ If you are only interested in Metrics,
 you do not need the Keptn Lifecycle Operator.
 Disable it using the following values.yaml:
 
-{{< docsembed path="content/en/docs/installation/assets/values-only-metrics.yaml" >}}
+{% include "./assets/values-only-metrics.yaml" %}
 
 For more information about implementing Metrics, see the
 [Metrics User Guide](../guides/evaluatemetrics.md).
@@ -117,7 +117,7 @@ To enable Keptn Analysis in your cluster,
 you again do not need the Keptn Lifcycle Operator.
 Disable it using the following values.yaml:
 
-{{< docsembed path="content/en/docs/installation/assets/values-only-metrics.yaml" >}}
+{% include "./assets/values-only-metrics.yaml" %}
 
 > **Note** A preliminary release of the Keptn Analysis feature
   is included in Keptn v0.8.3 and v0.9.0 but is hidden behind a feature flag.
@@ -137,7 +137,7 @@ you can disable the Keptn `cert-manager` by using the
 to the `helm upgrade` command line
 or you can modify the `values.yaml` file:
 
-{{< docsembed path="content/en/docs/installation/assets/values-remove-certmanager.yaml" >}}
+{% include "./assets/values-remove-certmanager.yaml" %}
 
 For more information about using `cert-manager` with Keptn, see
 [Use Keptn with cert-manager.io](./configuration/cert-manager.md).

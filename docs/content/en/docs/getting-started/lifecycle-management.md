@@ -46,7 +46,7 @@ To implement this:
    This provides a place on your cluster to which web requests are sent
    and from which they can be viewed.
 
-1. Execute the following commnands to apply the web hook:
+1. Execute the following commands to apply the web hook:
 
    > Note: If you have your own endpoint, you can skip this step.
 
@@ -242,7 +242,7 @@ Do this by using the `keptn.sh/pre-deployment-tasks` label or annotation.
 
 ## Further Information
 
-You can do much more with `KeptnTask` resourcess.
+You can do much more with `KeptnTask` resources.
 See the
 [pre and post deployment checks](../guides/integrate.md#pre--and-post-deployment-checks)
 page and the

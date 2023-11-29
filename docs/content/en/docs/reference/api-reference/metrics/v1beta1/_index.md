@@ -11,7 +11,6 @@ description: Reference information about the Metrics API
 - [ProviderResult](#ProviderResult)
 - [Timeframe](#Timeframe)
 
-
 <a id='Analysis'></a>
 ## Analysis
 

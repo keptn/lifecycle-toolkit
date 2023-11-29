@@ -142,6 +142,7 @@ docsearch
 docsembed
 docsy
 dql
+draggable
 DTAPI
 dtclient
 dupl
@@ -152,6 +153,7 @@ elasticquota
 elif
 Emoji
 ENABLEGITINFO
+endblock
 endgroup
 envconfig
 envsubst
@@ -175,6 +177,7 @@ favicons
 fetchintervalseconds
 fieldpath
 fieldref
+fontawesome
 ftp
 fullname
 functionref
@@ -365,6 +368,8 @@ lastword
 lfc
 Lifcycle
 lifecyclekeptnsh
+linecap
+linejoin
 linkedin
 linktitle
 linting
@@ -498,6 +503,7 @@ providerref
 providerresult
 pyfunction
 pygments
+pymdown
 pyyaml
 quickstart
 rangespec
@@ -565,7 +571,9 @@ statefultest
 stdouttrace
 storageclasses
 storageversion
+striptags
 sts
+stylesheet
 subchart
 subdir
 subjectaccessreviews

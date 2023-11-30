@@ -159,4 +159,4 @@ spec:
 * [KeptnMetricsProvider](metricsprovider.md)
 * Implementing [Keptn Metrics](../../guides/evaluatemetrics.md)
 * [Getting started with Keptn metrics](../../getting-started/metrics.md)
-* Architecture of the [Keptn Metrics Operator](../../components/metrics-operator/index.md)
+* Architecture of the [Keptn Metrics Operator](../../components/metrics-operator.md)

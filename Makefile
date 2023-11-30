@@ -5,7 +5,7 @@ KUSTOMIZE_VERSION?=v5.2.1
 CHART_APPVERSION ?= v0.9.0 # x-release-please-version
 
 # renovate: datasource=docker depName=squidfunk/mkdocs-material
-MKDOCS_DOCKER_IMAGE=squidfunk/mkdocs-material:9.4.14
+MKDOCS_DOCKER_IMAGE_VERSION=squidfunk/mkdocs-material:9.4.14
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine
@@ -147,7 +147,7 @@ docs-build:
 		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
 		-v ${PWD}/requirements.txt:/requirements.txt \
 		--entrypoint "" \
-		${MKDOCS_DOCKER_IMAGE} \
+		${MKDOCS_DOCKER_IMAGE_VERSION} \
 		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs build -q'
 
 .PHONY: docs-serve
@@ -157,7 +157,7 @@ docs-serve:
 		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
 		-v ${PWD}/requirements.txt:/requirements.txt \
 		--entrypoint "" \
-		${MKDOCS_DOCKER_IMAGE} \
+		${MKDOCS_DOCKER_IMAGE_VERSION} \
 		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs serve -a 0.0.0.0:8000'
 
 yamllint:

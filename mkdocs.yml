@@ -106,9 +106,9 @@ nav:
               - docs/components/lifecycle-operator/index.md
               - Flow of deployment: docs/components/lifecycle-operator/deployment-flow.md
               - Keptn Applications and Keptn Workloads: docs/components/lifecycle-operator/keptn-apps.md
-          - Metrics Operator: docs/components/metrics-operator/index.md
-          - Scheduler and Scheduling Gates: docs/components/scheduling/index.md
-          - Keptn Certificate Manager: docs/components/certificate-operator/index.md
+          - Metrics Operator: docs/components/metrics-operator.md
+          - Scheduler and Scheduling Gates: docs/components/scheduling.md
+          - Keptn Certificate Manager: docs/components/certificate-operator.md
       - Reference:
           - docs/reference/index.md
           - API Reference:
@@ -148,25 +148,25 @@ nav:
       - docs/contribute/index.md
       - General information about contributing:
           - docs/contribute/general/index.md
-          - Technologies and concepts you should know: docs/contribute/general/technologies/index.md
-          - Codespaces: docs/contribute/general/codespace/index.md
-          - DCO: docs/contribute/general/dco/index.md
+          - Technologies and concepts you should know: docs/contribute/general/technologies.md
+          - Codespaces: docs/contribute/general/codespace.md
+          - DCO: docs/contribute/general/dco.md
           - Working with Git:
               - docs/contribute/general/git/index.md
-              - Fork and clone the repository: docs/contribute/general/git/fork-clone/index.md
-              - Create local branch: docs/contribute/general/git/branch-create/index.md
-              - Create PR: docs/contribute/general/git/pr-create/index.md
-              - PR review process: docs/contribute/general/git/review/index.md
-          - Contribution Guidelines: docs/contribute/general/contrib-guidelines-gen/index.md
+              - Fork and clone the repository: docs/contribute/general/git/fork-clone.md
+              - Create local branch: docs/contribute/general/git/branch-create.md
+              - Create PR: docs/contribute/general/git/pr-create.md
+              - PR review process: docs/contribute/general/git/review.md
+          - Contribution Guidelines: docs/contribute/general/contrib-guidelines-gen.md
       - Software contributions:
           - docs/contribute/software/index.md
-          - Software development environment: docs/contribute/software/dev-environ/index.md
+          - Software development environment: docs/contribute/software/dev-environ.md
       - Documentation contributions:
           - docs/contribute/docs/index.md
-          - CRD name: docs/contribute/docs/templates/yaml-crd-ref-template.md
-          - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs/index.md
-          - Build Documentation Locally: docs/contribute/docs/local-building/index.md
-          - Linter Requirements: docs/contribute/docs/linter-requirements/index.md
-          - Source File Structure: docs/contribute/docs/source-file-structure/index.md
-          - Published Doc Structure: docs/contribute/docs/publish/index.md
-          - Word list: docs/contribute/docs/word-list/index.md
+          - CRD name: docs/contribute/docs/yaml-crd-ref-template.md
+          - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs.md
+          - Build Documentation Locally: docs/contribute/docs/local-building.md
+          - Linter Requirements: docs/contribute/docs/linter-requirements.md
+          - Source File Structure: docs/contribute/docs/source-file-structure.md
+          - Published Doc Structure: docs/contribute/docs/publish.md
+          - Word list: docs/contribute/docs/word-list.md

@@ -139,7 +139,7 @@ spec:
       target:
         failure:
           <operator>:
-            fixedValue: <quantity> |
+            fixedValue: <integer-quantity> |
             inRange: | notInRange:
               lowBound: <integer-quantity>
               highBound: <integer-quantity>

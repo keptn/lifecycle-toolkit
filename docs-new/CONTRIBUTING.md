@@ -23,16 +23,12 @@ If you need help getting started,
 feel free to ask for help on the `#help-contributing` or `#keptn-docs` channels on the [Keptn Slack](https://keptn.sh/community/#slack).
 We were all new to this once and are happy to help you!
 
-## Guidelines for Contributing
-
-Please check [Contribution Guidelines](content/en/contribute/docs/contrib-guidelines-docs/_index.md).
-
 ## Building the Documentation Locally
 
 To build and deploy the documentation in a docker container, execute
 
 ```shell
-make serve
+make docs-serve
 ```
 
 This will setup a docker container, install all needed dependencies,
@@ -41,16 +37,3 @@ build the documentation and serve it.
 The URL on which your local documentation website is deployed will be
 displayed in the logs.
 By default is should be `http://0.0.0.0:8000/`
-
-## Interacting with github
-
-The documentation source is stored on github.com
-and you use the standard github facilities to modify it.
-Please check [Working with Git](content/en/contribute/general/git/_index.md).
-
-### Developer Certification of Origin (DCO)
-
-All commits must be accompanied by a DCO sign-off.
- See
-[DCO](content/en/contribute/general/dco)
-for more information.

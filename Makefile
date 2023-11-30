@@ -136,10 +136,10 @@ build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator bui
 
 include docs/Makefile
 
-.PHONY: mkdocs-deploy
-mkdocs-deploy:
+.PHONY: docs-deploy
+docs-deploy:
 	$(MAKE) -C docs-new install
-	$(MAKE) -C docs-new deploy
+	$(MAKE) -C docs-new serve
 
 yamllint:
 	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .

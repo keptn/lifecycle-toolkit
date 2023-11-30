@@ -40,7 +40,7 @@ implemented using
 [Kubernetes scheduling gates](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness/),
 unless the `schedulingGatesEnabled` Helm value is set to `false`.
 See
-[Keptn integration with Scheduling](../components/scheduling/index.md)
+[Keptn integration with Scheduling](../components/scheduling.md)
 for details.
 
 If Keptn is installed on a [vCluster](https://www.vcluster.com/) with
@@ -142,7 +142,7 @@ The following table summarizes the Keptn `values.yaml` files.
 | [Keptn](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/README.md)                           | Installs subcharts, global configuration                                                                                    | [keptn/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn/values.yaml) |
 | [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/README.md) | [Observability](../guides/otel.md), [Release Lifecycle Management](../core-concepts/index.md#release-lifecycle-management) | [keptn-lifecycle-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-lifecycle-operator/values.yaml) |
 | [metrics-operator](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/README.md)    | [Keptn metrics](../guides/evaluatemetrics.md), [Analysis](../guides/slo.md)                                                 | [keptn-metrics-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/values.yaml) |
-| [cert-manager](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md)            | [TLS Certificate management for all Keptn components](../components/certificate-operator/index.md)                         | [keptn-cert-manager/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/values.yaml) |
+| [cert-manager](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md)            | [TLS Certificate management for all Keptn components](../components/certificate-operator.md)                         | [keptn-cert-manager/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/values.yaml) |
 
 ## Customizing the configuration of components
 
@@ -230,7 +230,7 @@ you can disable Keptn `cert-manager` by setting the
 {% include "./assets/values-remove-certmanager.yaml" %}
 
 For more information on using `cert-manager` with Keptn, see
-[Use Keptn with cert-manager.io](../components/certificate-operator/index.md).
+[Use Keptn with cert-manager.io](../components/certificate-operator.md).
 
 For the full list of Helm values, see the
 [keptn-cert-manager Helm chart README](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md).

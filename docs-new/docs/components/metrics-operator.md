@@ -22,7 +22,7 @@ so they are compatible with the Kubernetes
 (HPA), which enables the horizontal scaling of workloads
 based on metrics collected from multiple observability platforms.
 See
-[Using the HorizontalPodAutoscaler](../../use-cases/hpa.md)
+[Using the HorizontalPodAutoscaler](../use-cases/hpa.md)
 for instructions.
 
 The Metrics Operator consists of the following components:
@@ -49,18 +49,18 @@ which can be used to gain insight into the behavior and performance
 of applications running on a Kubernetes cluster.
 
 The **Metrics controller** fetches metrics from an SLI provider.
-The controller reconciles a [`KeptnMetric`](../../reference/crd-reference/metric.md)
+The controller reconciles a [`KeptnMetric`](../reference/crd-reference/metric.md)
 resource and updates its status with the metric value
 provided by the selected metric provider.
 Each `KeptnMetric` is identified by `name`
 and is associated with an instance of an observability platform
 that is defined in a
-[KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)
+[KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
 resource.
 
 The steps in which the controller fetches metrics are given below:
 
-1. When a [`KeptnMetric`](../../reference/crd-reference/metric.md)
+1. When a [`KeptnMetric`](../reference/crd-reference/metric.md)
    resource is found or modified,
    the controller checks whether the metric has been updated
    within the interval that is defined in the `spec.fetchintervalseconds` field.
@@ -80,7 +80,7 @@ The steps in which the controller fetches metrics are given below:
      in the `status` field of the `KeptnMetric` object.
    * If the evaluation fails,
      the error and reason is written to the
-     [KeptnMetricStatus](../../reference/api-reference/metrics/v1beta1/index.md#keptnmetricstatus)
+     [KeptnMetricStatus](../reference/api-reference/metrics/v1beta1/index.md#keptnmetricstatus)
      resource.
      The error is described in both human-readable language
      and as raw data to help identify the source of the problem

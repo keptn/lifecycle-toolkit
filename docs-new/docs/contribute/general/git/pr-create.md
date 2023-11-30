@@ -2,7 +2,7 @@
 
 When you have completed the checking and testing of your work
 on your local branch as described in
-[Create local branch](../branch-create/index.md),
+[Create local branch](./branch-create.md),
 it is time to push your changes and create a PR that can be reviewed.
 This is a two-step process:
 
@@ -193,4 +193,4 @@ The most common errors for documentation PRs are:
 
 When you have resolved all build errors
 you move into the
-[PR review process](../review/index.md).
+[PR review process](./review.md).

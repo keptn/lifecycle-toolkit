@@ -141,11 +141,21 @@ PWD=$(shell pwd)
 
 .PHONY: docs-build
 docs-build:
-	docker run --rm -it -v ${PWD}/docs-new:/docs-new -v ${PWD}/mkdocs.yml:/mkdocs.yml -v ${PWD}/requirements.txt:/requirements.txt --entrypoint "" ${MKDOCS_DOCKER_IMAGE} sh -c 'cd /; ls -la .; pip3 install -r requirements.txt; mkdocs build'
+	docker run --rm -it -v ${PWD}/docs-new:/docs-new \
+						-v ${PWD}/mkdocs.yml:/mkdocs.yml \
+						-v ${PWD}/requirements.txt:/requirements.txt \
+						--entrypoint "" \
+						${MKDOCS_DOCKER_IMAGE} \
+						sh -c 'cd /; pip3 install -r requirements.txt -q; mkdocs build -q'
 
 .PHONY: docs-serve
 docs-serve: docs-build
-	docker run --rm -it -p 8000:8000 -v ${PWD}/site:/site -w /site --entrypoint "" ${MKDOCS_DOCKER_IMAGE} python3 -m http.server --bind 0.0.0.0 8000
+	docker run --rm -it -p 8000:8000 \
+						-v ${PWD}/site:/site \
+						-w /site \
+						--entrypoint "" \
+						${MKDOCS_DOCKER_IMAGE} \
+						python3 -m http.server --bind 0.0.0.0 8000
 
 yamllint:
 	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .

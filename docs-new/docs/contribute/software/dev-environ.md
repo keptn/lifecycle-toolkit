@@ -23,7 +23,7 @@ To prepare to contribute to the Keptn project, we recommend that you:
   * [keptn-cert-manager](https://github.com/keptn/lifecycle-toolkit/tree/main/keptn-cert-manager)
 
   Each of these is described in the
-  [Architecture](../../components/index.md)
+  [Components](../../components/index.md)
   section of the documentation
   and most include a *README* file with more information.
 * Study the material in
@@ -39,7 +39,7 @@ When you view the
 [lifecycle-toolkit](https://github.com/keptn/lifecycle-toolkit)
 repository, you see that Keptn is composed of multiple components,
 each of which is discussed in the Architecture
-[Architecture](../../components/index.md)
+[Components](../../components/index.md)
 documentation:
 
 * Three Kubernetes operators

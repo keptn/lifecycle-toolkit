@@ -138,7 +138,6 @@ include docs/Makefile
 
 .PHONY: docs-deploy
 docs-deploy:
-	$(MAKE) -C docs-new install
 	$(MAKE) -C docs-new serve
 
 yamllint:

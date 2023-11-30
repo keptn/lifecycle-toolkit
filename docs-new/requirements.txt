@@ -1,2 +1,4 @@
 mkdocs
-mkdocs-material[imaging]
+mkdocs-material
+mkdocs-include-markdown-plugin
+mkdocs-git-revision-date-localized-plugin

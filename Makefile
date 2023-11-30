@@ -146,7 +146,7 @@ docs-build:
 						-v ${PWD}/requirements.txt:/requirements.txt \
 						--entrypoint "" \
 						${MKDOCS_DOCKER_IMAGE} \
-						sh -c 'cd /; pip3 install -r requirements.txt -q; mkdocs build -q'
+						sh -c 'cd /; pip install -r requirements.txt -q; mkdocs build -q'
 
 .PHONY: docs-serve
 docs-serve: docs-build

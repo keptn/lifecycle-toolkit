@@ -134,8 +134,12 @@ build-deploy-certmanager:
 .PHONY: build-deploy-dev-environment
 build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-metrics-operator build-deploy-scheduler
 
-
 include docs/Makefile
+
+.PHONY: mkdocs-deploy
+mkdocs-deploy:
+	$(MAKE) -C docs-new install
+	$(MAKE) -C docs-new deploy
 
 yamllint:
 	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .

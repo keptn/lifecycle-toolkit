@@ -1,7 +1,11 @@
 .PHONY: install
 install:
-	pip install mkdocs "mkdocs-material[imaging]"
+	pip install -r requirements.txt
 
-.PHONY: deploy
-deploy:
+.PHONY: serve
+serve:
 	mkdocs serve
+
+.PHONY: build
+build:
+	mkdocs build

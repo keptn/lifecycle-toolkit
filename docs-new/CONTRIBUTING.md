@@ -29,24 +29,18 @@ Please check [Contribution Guidelines](content/en/contribute/docs/contrib-guidel
 
 ## Building the Documentation Locally
 
-First, you need to have `mkdocs` installed on your system.
-To install it, execute
+To build and deploy the documentation in a docker container, execute
 
 ```shell
-make install
+make serve
 ```
 
-This will use `pip` to install `mkdocs` on your system.
-Please make sure `pip` is installed on your local system.
-
-To build and deploy the documentation locally, execute
-
-```shell
-make deploy
-```
+This will setup a docker container, install all needed dependencies,
+build the documentation and serve it.
 
 The URL on which your local documentation website is deployed will be
 displayed in the logs.
+By default is should be `http://0.0.0.0:8000/`
 
 ## Interacting with github
 

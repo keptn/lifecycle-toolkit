@@ -157,7 +157,7 @@ All files in the directories are built.
 
 The order in which the files are displayed
 is determined by their order in the `nav` field
-of the `.mkdocs.yaml` file.
+of the `mkdocs.yml` file.
 
 ## Subdirectory structure
 

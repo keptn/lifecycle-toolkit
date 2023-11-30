@@ -145,7 +145,7 @@ spec:
               highBound: <integer-quantity>
         warning:
           <operator>:
-            fixedValue: <quantity> |
+            fixedValue: <integer-quantity> |
             inRange: | notInRange:
               lowBound: <integer-quantity>
               highBound: <integer-quantity>

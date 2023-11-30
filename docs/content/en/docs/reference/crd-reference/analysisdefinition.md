@@ -70,12 +70,13 @@ spec:
         [Analysis](analysis.md)
         resource after the analysis runs.
 
-        Use a Kubernetes
+        To use a value that includes a fraction, use a Kubernetes
         [quantity](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/)
-        value for these fields rather than a `float`.
+        value rather than a `float`.
         For example, use the `3m` quantity
         rather than the nearly equivalent `0.003` float;
         the `float` value causes `Invalid value` errors.
+        A whole number (integer) is also a legal `quantity` value.
         * **failure** -- criteria for failure, specified as
           `operator: <quantity>`.
           This can be specified either as an absolute value
@@ -139,16 +140,16 @@ spec:
       target:
         failure:
           <operator>:
-            fixedValue: <integer-quantity> |
+            fixedValue: [<integer> | <quantity> |
             inRange: | notInRange:
-              lowBound: <integer-quantity>
-              highBound: <integer-quantity>
+              lowBound: <integer> | <quantity>
+              highBound: <integer> | <quantity>
         warning:
           <operator>:
-            fixedValue: <integer-quantity> |
+            fixedValue: [<integer> | <quantity>] |
             inRange: | notInRange:
-              lowBound: <integer-quantity>
-              highBound: <integer-quantity>
+              lowBound: <integer> | <quantity>
+              highBound: <integer> | <quantity>
       weight: <integer>
       keyObjective: <boolean>
   totalScore:

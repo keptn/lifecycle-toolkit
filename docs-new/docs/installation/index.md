@@ -152,7 +152,9 @@ Use the subcomponent's parent value as the root for your configuration.
 
 Here is an example `values.yaml` altering global and metrics operator values:
 
-{{< docsembed path="content/en/docs/installation/assets/values-advance-changes.yaml" >}}
+```yaml
+{% include "./assets/values-advance-changes.yaml" %}
+```
 
 Note the additional values that are specified
 in the `metricsOperator` section.

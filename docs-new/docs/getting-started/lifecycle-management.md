@@ -134,7 +134,7 @@ runsendevent1-*****   1/1           6s         2m
 
 The webhook sync should show this:
 
-![webhook sync](../assets/webhook.site.3.png)
+![webhook sync](./assets/webhook.site.3.png)
 
 Incidentally, this is exactly how you can use Keptn with [applications deployed outside of Kubernetes](../use-cases/non-k8s.md).
 

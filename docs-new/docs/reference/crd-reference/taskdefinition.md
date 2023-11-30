@@ -563,14 +563,14 @@ directory for more example `KeptnTaskDefinition` YAML files.
 
 API Reference:
 
-* [KeptnTaskDefinition](../api-reference/lifecycle/v1alpha3/_index.md#keptntaskdefinition)
-* [KeptnTaskDefinitionList](../api-reference/lifecycle/v1alpha3/_index.md#keptntaskdefinitionlist)
-* [KeptnTaskDefinitionSpec](../api-reference/lifecycle/v1alpha3/_index.md#keptntaskdefinitionspec)
-* [FunctionReference](../api-reference/lifecycle/v1alpha3/_index.md#functionreference)
-* [FunctionSpec](../api-reference/lifecycle/v1alpha3/_index.md#runtimespec)
-* [FunctionStatus](../api-reference/lifecycle/v1alpha3/_index.md#functionstatus)
-* [HttpReference](../api-reference/lifecycle/v1alpha3/_index.md#httpreference)
-* [Inline](../api-reference/lifecycle/v1alpha3/_index.md#inline)
+* [KeptnTaskDefinition](../api-reference/lifecycle/v1alpha3/index.md#keptntaskdefinition)
+* [KeptnTaskDefinitionList](../api-reference/lifecycle/v1alpha3/index.md#keptntaskdefinitionlist)
+* [KeptnTaskDefinitionSpec](../api-reference/lifecycle/v1alpha3/index.md#keptntaskdefinitionspec)
+* [FunctionReference](../api-reference/lifecycle/v1alpha3/index.md#functionreference)
+* [FunctionSpec](../api-reference/lifecycle/v1alpha3/index.md#runtimespec)
+* [FunctionStatus](../api-reference/lifecycle/v1alpha3/index.md#functionstatus)
+* [HttpReference](../api-reference/lifecycle/v1alpha3/index.md#httpreference)
+* [Inline](../api-reference/lifecycle/v1alpha3/index.md#inline)
 
 ## Differences between versions
 

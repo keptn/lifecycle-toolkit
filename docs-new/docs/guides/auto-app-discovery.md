@@ -107,4 +107,4 @@ you get observability of your application's deployments
 by using the OpenTelemetry tracing features
 that are provided by Keptn:
 
-![Application deployment trace](../assets/trace.png)
+![Application deployment trace](./assets/trace.png)

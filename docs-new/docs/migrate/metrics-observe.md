@@ -1,8 +1,4 @@
----
-title: Migrate Quality Gates
-description: How to translate Quality Gates into Keptn Metrics and evaluations
-weight: 40
----
+# Migrate Quality Gates
 
 The SLIs and SLOs used for Keptn v1 quality gates can be ported to
 appropriate Keptn facilities:

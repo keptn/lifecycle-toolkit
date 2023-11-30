@@ -1,5 +1,6 @@
 // VERSION WARNINGS
 window.addEventListener("DOMContentLoaded", function() {
+    return; //TODO: decide if we want this
     var rtdData = window['READTHEDOCS_DATA'] || { version: 'latest' };
     var margin = 30;
     var headerHeight = document.getElementsByClassName("md-header")[0].offsetHeight;

@@ -30,15 +30,15 @@ spec:
       weight: <integer>
       keyObjective: <boolean>
   totalScore:
-    passPercentage: 90
-    warningPercentage: 75
+    passPercentage: <min-percentage-to-pass>
+    warningPercentage: <min-percentage-for-warning>
 ```
 
 ## Fields
 
 * **apiVersion** -- API version being used
 * **kind** -- Resource type.
-   Must be set to `AnalysisDefinition`.
+  Must be set to `AnalysisDefinition`.
 * **metadata**
   * **name** -- Unique name of this analysis definition.
     Names must comply with the
@@ -69,6 +69,13 @@ spec:
         of the
         [Analysis](analysis.md)
         resource after the analysis runs.
+
+        Use a Kubernetes
+        [quantity](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/)
+        value for these fields rather than a `float`.
+        For example, use the `3m` quantity
+        rather than the nearly equivalent `0.003` float;
+        the `float` value causes `Invalid value` errors.
         * **failure** -- criteria for failure, specified as
           `operator: <quantity>`.
           This can be specified either as an absolute value
@@ -132,21 +139,21 @@ spec:
       target:
         failure:
           <operator>:
-            fixedValue: integer> |
+            fixedValue: <quantity> |
             inRange: | notInRange:
               lowBound: <integer-quantity>
               highBound: <integer-quantity>
         warning:
           <operator>:
-            fixedValue: integer> |
+            fixedValue: <quantity> |
             inRange: | notInRange:
               lowBound: <integer-quantity>
               highBound: <integer-quantity>
       weight: <integer>
       keyObjective: <boolean>
   totalScore:
-    passPercentage: <integer-percentage>
-    warningPercentage: <integer-percentage>
+    passPercentage: <min-percentage-to-pass>
+    warningPercentage: <min-percentage-for-warning>
 ```
 
 For an example of how to implement the Keptn Analysis feature, see the

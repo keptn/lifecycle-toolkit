@@ -115,6 +115,13 @@ For this objective, both failure and warning criteria are defined:
 * The objective fails if the percentile 95 is less than 600
 * A warning is issued when the value is between 300 and 500
 
+Use a Kubernetes
+[quantity](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/)
+value for the value fields rather than a `float`.
+For example, use the `3m` quantity
+rather than the equivalent `0.003` float;
+the `float` value causes `Invalid value` errors.
+
 The total score shows that this `Analysis`
 should have an overall score of 90% to pass or 75% to get a warning.
 Since only one objective is defined,

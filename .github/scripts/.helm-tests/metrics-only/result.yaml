@@ -1400,6 +1400,12 @@ spec:
     - jsonPath: .status.value
       name: Value
       type: string
+    - jsonPath: .spec.range.step
+      name: Step
+      type: string
+    - jsonPath: .spec.range.aggregation
+      name: Aggregation
+      type: string
     name: v1alpha3
     schema:
       openAPIV3Schema:

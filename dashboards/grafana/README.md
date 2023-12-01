@@ -48,3 +48,4 @@ Craft personalized Grafana dashboards tailored to your specific needs by explori
 ## Modifying the Dashboards
 
 Refine and adapt visualizations in existing Grafana dashboards to meet evolving requirements. Visit the [relevant sections](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/modify-dashboard-settings/) of the Grafana documentation to gain insights on adjusting, enhancing, or reconfiguring dashboards efficiently. Learn about editing panels, incorporating new data sources, applying filters, and optimizing dashboard layouts.
+

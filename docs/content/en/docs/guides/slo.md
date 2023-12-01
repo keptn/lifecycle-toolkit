@@ -69,13 +69,13 @@ A Keptn Analysis is implemented with three resources:
   An `AnalysisDefinition` resource contains a list of objectives to satisfy.
   Each of these objectives must specify:
 
+  * The `AnalysisValueTemplate` resource that contains the SLIs,
+    defining the data provider from which to gather the data
+    and how to compute the Analysis
   * Failure or warning target criteria
   * Whether the objective is a key objective
     meaning that its failure fails the Analysis
   * Weight of the objective on the overall Analysis
-  * The `AnalysisValueTemplate` resource that contains the SLIs,
-    defining the data provider from which to gather the data
-    and how to compute the Analysis
 
 * [Analysis](../reference/crd-reference/analysis.md)
   define the specific configurations and the Analysis to report.

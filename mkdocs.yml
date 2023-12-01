@@ -56,7 +56,8 @@ plugins:
   - social
   - include-markdown:
       trailing_newlines: false
-  - git-revision-date-localized
+  - git-revision-date-localized:
+      fallback_to_build_date: true
 
 nav:
   - Home:

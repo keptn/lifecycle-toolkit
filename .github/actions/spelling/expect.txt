@@ -684,3 +684,4 @@ yml
 YOURNAME
 yourregistry
 youtube
+squidfunk

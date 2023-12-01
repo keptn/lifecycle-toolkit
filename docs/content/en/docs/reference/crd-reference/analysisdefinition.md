@@ -19,7 +19,7 @@ spec:
   objectives:
     - analysisValueTemplateRef:
         name: <name-of-referenced-analysisValueTemplate-resource>
-        namespace: <namespace-of-referenced-analysisvalueTemplate-resource>
+        namespace: <namespace-of-referenced-analysisValueTemplate-resource>
       target:
         failure:
           <operator>:

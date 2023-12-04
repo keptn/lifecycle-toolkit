@@ -134,9 +134,10 @@ func main() {
 		return
 	}
 
-	// Start the custom metrics adapter
-	go startCustomMetricsAdapter(env.PodNamespace)
-
+	if env.EnableCustomMetricsAPIService {
+		// Start the custom metrics adapter
+		go startCustomMetricsAdapter(env.PodNamespace)
+	}
 	disableCacheFor := []ctrlclient.Object{&corev1.Secret{}}
 
 	opt := ctrl.Options{
@@ -183,9 +184,9 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	if env.EnableCustomMetricsApiService {
-		keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("keptn"), env.ExposeKeptnMetrics, metricServerTickerInterval)
-	}
+
+	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("keptn"), env.ExposeKeptnMetrics, metricServerTickerInterval)
+
 	metricsLogger := ctrl.Log.WithName("KeptnMetric Controller")
 	if err = (&metricscontroller.KeptnMetricReconciler{
 		Client:          mgr.GetClient(),

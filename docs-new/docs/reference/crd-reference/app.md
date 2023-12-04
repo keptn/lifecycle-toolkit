@@ -20,7 +20,7 @@ apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
   name: <app-name>
-  namespace: <app-namespace>
+  namespace: <application-namespace>
 spec:
   version: "x.y"
   revision: x
@@ -53,6 +53,7 @@ when the app discovery feature generates the `KeptnApp` resource:
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
+  - **namespace** -- Namespace of this application.
 
 - **spec**
   - **version** (required) -- version of the Keptn application.

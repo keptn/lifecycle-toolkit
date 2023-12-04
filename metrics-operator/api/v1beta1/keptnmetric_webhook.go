@@ -39,7 +39,7 @@ func (r *KeptnMetric) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/validate-metrics-keptn-sh-v1beta1-keptnmetric,mutating=false,failurePolicy=fail,sideEffects=None,groups=metrics.keptn.sh,resources=keptnmetrics,verbs=create;update,versions=v1beta1,name=vkeptnmetric.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/validate-metrics-keptn-sh-v1beta1-keptnmetric,mutating=false,failurePolicy=fail,sideEffects=None,groups=metrics.keptn.sh,resources=keptnmetrics,verbs=create;update,versions=v1beta1,name=keptnmetric.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &KeptnMetric{}
 

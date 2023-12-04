@@ -9486,7 +9486,7 @@ webhooks:
       namespace: 'helmtests'
       path: /validate-metrics-keptn-sh-v1beta1-keptnmetric
   failurePolicy: Fail
-  name: vkeptnmetric.kb.io
+  name: keptnmetric.kb.io
   rules:
   - apiGroups:
     - metrics.keptn.sh

@@ -53,7 +53,7 @@ when the app discovery feature generates the `KeptnApp` resource:
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
-  * **namespace** -- Namespace of this application.
+  - **namespace** -- Namespace of this application.
 
 - **spec**
   - **version** (required) -- version of the Keptn application.

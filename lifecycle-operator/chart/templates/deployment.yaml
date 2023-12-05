@@ -131,8 +131,6 @@ spec:
           seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
         volumeMounts:
-        - mountPath: /tmp/k8s-webhook-server/serving-certs/
-          name: certs-dir
         - mountPath: /tmp/metrics-adapter/serving-certs
           name: adapter-certs-dir
         {{- if .Values.lifecycleOperator.livenessProbe }}
@@ -161,8 +159,6 @@ spec:
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10
       volumes:
-      - emptyDir: {}
-        name: certs-dir
       - emptyDir: {}
         name: adapter-certs-dir
 {{- if .Values.lifecycleOperator.topologySpreadConstraints }}

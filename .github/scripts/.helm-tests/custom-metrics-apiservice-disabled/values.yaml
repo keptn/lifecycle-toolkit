@@ -6,10 +6,9 @@ metricsOperator:
   enabled: true
   image:
     tag: v0.0.0
+  customMetricsAPIService:
+    enabled: "false"
 
 global:
   commonLabels:
     app.kubernetes.io/version: vmyversion
-
-customMetricsAPIService:
-  enabled: "false"

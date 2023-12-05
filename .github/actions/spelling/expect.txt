@@ -28,6 +28,7 @@ annadreal
 apicommon
 apierr
 apierrors
+apiservice
 APIURL
 apk
 appcreationrequest

@@ -2308,6 +2308,8 @@ spec:
               fieldPath: metadata.name
         - name: EXPOSE_KEPTN_METRICS
           value: "true"
+        - name: ENABLE_CUSTOM_METRICS_API_SERVICE
+          value: "true"
         - name: METRICS_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: ANALYSIS_CONTROLLER_LOG_LEVEL

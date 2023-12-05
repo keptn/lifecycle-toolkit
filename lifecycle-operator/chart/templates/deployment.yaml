@@ -130,9 +130,6 @@ spec:
             }}
           seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
-        volumeMounts:
-        - mountPath: /tmp/metrics-adapter/serving-certs
-          name: adapter-certs-dir
         {{- if .Values.lifecycleOperator.livenessProbe }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.livenessProbe "context" $) | nindent 10 }}
          {{- else }}
@@ -158,9 +155,6 @@ spec:
         runAsNonRoot: true
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10
-      volumes:
-      - emptyDir: {}
-        name: adapter-certs-dir
 {{- if .Values.lifecycleOperator.topologySpreadConstraints }}
       topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.topologySpreadConstraints "context" $) | nindent 8 }}
 {{- end }}

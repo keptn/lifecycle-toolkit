@@ -2051,27 +2051,6 @@ rules:
   - list
   - watch
 ---
-# Source: keptn/charts/metricsOperator/templates/metrics-operator-hpa-controller-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: metrics-operator-hpa-controller
-  namespace: "helmtests"
-  labels:
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: 'metrics-operator-server-resources'
-subjects:
-- kind: ServiceAccount
-  name: horizontal-pod-autoscaler
-  namespace: 'helmtests'
----
 # Source: keptn/charts/metricsOperator/templates/metrics-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -2374,50 +2353,6 @@ spec:
         name: certs-dir
       - emptyDir: {}
         name: adapter-certs-dir
----
-# Source: keptn/charts/metricsOperator/templates/v1beta1.custom.metrics.k8s.io.yaml
-apiVersion: apiregistration.k8s.io/v1
-kind: APIService
-metadata:
-  name: v1beta1.custom.metrics.k8s.io
-  namespace: "helmtests"
-  labels:
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
-spec:
-  group: custom.metrics.k8s.io
-  groupPriorityMinimum: 100
-  insecureSkipTLSVerify: true
-  service:
-    name: 'metrics-operator-service'
-    namespace: 'helmtests'
-  version: v1beta1
-  versionPriority: 100
----
-# Source: keptn/charts/metricsOperator/templates/v1beta2.custom.metrics.k8s.io.yaml
-apiVersion: apiregistration.k8s.io/v1
-kind: APIService
-metadata:
-  name: v1beta2.custom.metrics.k8s.io
-  namespace: "helmtests"
-  labels:
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
-spec:
-  group: custom.metrics.k8s.io
-  groupPriorityMinimum: 100
-  insecureSkipTLSVerify: true
-  service:
-    name: 'metrics-operator-service'
-    namespace: 'helmtests'
-  version: v1beta2
-  versionPriority: 200
 ---
 # Source: keptn/charts/metricsOperator/templates/metrics-validating-webhook-configuration.yaml
 apiVersion: admissionregistration.k8s.io/v1

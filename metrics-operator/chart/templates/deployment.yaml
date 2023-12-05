@@ -87,8 +87,6 @@ spec:
           seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
         volumeMounts:
-        - mountPath: /tmp/k8s-webhook-server/serving-certs/
-          name: certs-dir
         - mountPath: /tmp/metrics-adapter/serving-certs
           name: adapter-certs-dir
         {{- if .Values.livenessProbe }}
@@ -117,8 +115,6 @@ spec:
       serviceAccountName: metrics-operator
       terminationGracePeriodSeconds: 10
       volumes:
-      - emptyDir: {}
-        name: certs-dir
       - emptyDir: {}
         name: adapter-certs-dir
 {{- if .Values.topologySpreadConstraints }}

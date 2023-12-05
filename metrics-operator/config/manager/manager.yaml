@@ -38,8 +38,6 @@ spec:
         #   type: RuntimeDefault
       volumes:
         - emptyDir: {}
-          name: certs-dir
-        - emptyDir: {}
           name: adapter-certs-dir
       containers:
         - command:
@@ -114,8 +112,6 @@ spec:
               cpu: 10m
               memory: 64Mi
           volumeMounts:
-            - name: certs-dir
-              mountPath: /tmp/k8s-webhook-server/serving-certs/
             - name: adapter-certs-dir
               mountPath: /tmp/metrics-adapter/serving-certs
       serviceAccountName: metrics-operator

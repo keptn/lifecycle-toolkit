@@ -93,7 +93,6 @@ annotations: {}
 podAnnotations: {}
 ## @param     kubernetesClusterDomain overrides cluster.local
 kubernetesClusterDomain: cluster.local
-## @extra   customMetricsAPIService
 customMetricsAPIService:
 ## @param   customMetricsAPIService.enabled enable/disable the K8s APIService installation
   enabled: "true"

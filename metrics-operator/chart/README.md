@@ -56,7 +56,8 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 | `annotations`                          | add deployment level annotations                                                                                                                              | `{}`                |
 | `podAnnotations`                       | adds pod level annotations                                                                                                                                    | `{}`                |
 | `kubernetesClusterDomain`              | overrides cluster.local                                                                                                                                       | `cluster.local`     |
-| `enableCustomMetricsAPIService`        | enable/disable the K8s APIService installation                                                                                                                | `true`              |
+| `customMetricsAPIService`              | enable/disable the K8s APIService installation                                                                                                                |                     |
+| `customMetricsAPIService.enabled`      |                                                                                                                                                               | `true`              |
 
 ### Keptn Metrics Operator controller
 

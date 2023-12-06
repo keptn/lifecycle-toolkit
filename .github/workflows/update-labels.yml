@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Update Labels
-        uses: actions/labeler@v4
+        uses: actions/labeler@v5
         with:
           sync-labels: true

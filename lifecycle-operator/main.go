@@ -34,6 +34,7 @@ import (
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha2"
 	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	lifecyclev1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	lifecyclev1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
@@ -82,6 +83,7 @@ func init() {
 	utilruntime.Must(lifecyclev1alpha3.AddToScheme(scheme))
 	utilruntime.Must(argov1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha4.AddToScheme(scheme))
+	utilruntime.Must(lifecyclev1beta1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 

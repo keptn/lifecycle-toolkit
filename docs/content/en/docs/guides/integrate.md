@@ -5,25 +5,33 @@ weight: 200
 ---
 
 Keptn works
-on top of the default scheduler for the cluster,
-so it can trace all activities of all deployment workloads on the cluster,
-no matter what tool is used for the deployment.
-This same mechanism allows Keptn to inject pre- and post-deployment checks
-into all deployment workloads.
+on top of the default scheduler for the cluster.
+This allows it to:
+
+- Trace all activities of all deployment workloads on the cluster,
+  no matter what tool is used for the deployment
+- Inject pre- and post-deployment checks into all deployment workloads.
+
 Keptn monitors resources
 that have been applied into the Kubernetes cluster
 and reacts if it finds a workload with special annotations/labels.
-Keptn uses metadata
-that is added to the Kubernetes workloads
+Keptn uses metadata that is added to the Kubernetes workloads
 to identify the workloads of interest.
 
-To integrate Keptn with your applications:
+To integrate Keptn with your workloads:
 
 * You must first
 [install and enable](../installation/_index.md#basic-installation)
 Keptn.
-* Annotate or label your workloads
+* Annotate or label your
+[workloads](https://kubernetes.io/docs/concepts/workloads/)
+([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+[StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
+[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
+and
+[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 with either Keptn or Kubernetes keys.
+
   * [Basic annotations](#basic-annotations)
     or labels
     are required for all Keptn features except Keptn metrics.
@@ -100,7 +108,9 @@ These keys are defined as:
 * `keptn.sh/app` or `app.kubernetes.io/part-of`: Determines the name
    of the generated `KeptnApp` representing your Application.
    All workloads that share the same value for this label
-   are consolidated into the same `KeptnApp` resource.
+   are consolidated into the same `KeptnApp` resource
+   that you can generate following the instructions in
+   [Auto app discovery](auto-app-discovery.md).
 * `keptn.sh/container`: Determines the name of the container in the workload,
    from which Keptn extracts the version.
    This applies to single- and multi-container
@@ -213,62 +223,3 @@ do the following:
 * Manually edit all
   [KeptnApp](../reference/crd-reference/app.md) resources
   to specify evaluations and tasks to be run for the `KeptnApp` itself.
-
-### Annotations to KeptnApp
-
-The annotations to workloads do not define the tasks and evaluations
-to be run for `KeptnApp` resources themselves.
-To define pre- and post-deployment evaluations and tasks for a `KeptnApp`,
-you must manually edit the YAML file to add them.
-
-Specify one of the following annotations/labels
-for each evaluation or task you want to execute:
-
-```yaml
-keptn.sh/pre-deployment-evaluations: <`EvaluationDefinition`-name>
-keptn.sh/pre-deployment-tasks: <`TaskDefinition`-name>
-keptn.sh/post-deployment-evaluations: <`EvaluationDefinition`-name>
-keptn.sh/post-deployment-tasks: <`TaskDefinition`-name>
-```
-
-The value of these annotations corresponds to the name of
-Keptn [resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-called
-[KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
-resources
-These resources contain re-usable "functions"
-that can execute before and after the deployment.
-For example, before the deployment starts,
-you might run a check for open problems in your infrastructure
-and invoke a pipeline to run performance tests.
-The deployment is kept in a pending state
-until the infrastructure is capable of accepting deployments again.
-
-If everything is fine, the deployment continues and afterward,
-a Slack notification is sent with the result of the deployment
-
-## Example of pre- and post-deployment actions
-
-A comprehensive example of pre- and post-deployment
-evaluations and tasks can be found in our
-[examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
-where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
-to run some simple pre-deployment checks.
-
-To run the example, use the following commands:
-
-```shell
-cd ./examples/podtatohead-deployment/
-kubectl apply -f .
-```
-
-Afterward, you can monitor the status of the deployment using
-
-```shell
-kubectl get keptnworkloadversion -n podtato-kubectl -w
-```
-
-The deployment for a Workload stays in a `Pending`
-state until the respective pre-deployment check is successfully completed.
-Afterwards, the deployment starts and when the workload is deployed,
-the post-deployment checks start.

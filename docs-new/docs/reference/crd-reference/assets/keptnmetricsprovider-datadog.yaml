@@ -15,5 +15,5 @@ metadata:
   name: datadog-secret
 data:
   DD_CLIENT_API_KEY: api-key
-  DD_CLIENT_API_KEY: app-key
+  DD_CLIENT_APP_KEY: app-key
 type: Opaque

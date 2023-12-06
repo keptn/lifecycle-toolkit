@@ -16,7 +16,7 @@ You can also define
 that are run pre- and post-deployment
 
 Use the
-[Analysis](slo)
+[Analysis](slo.md)
 feature if you want to do more complex investigations
 that may include multiple criteria with weights and scoring applied.
 
@@ -40,7 +40,7 @@ To implement evaluations, you must:
    and
    [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
    with
-   [basic annotations](integrate/#basic-annotations).
+   [basic annotations](integrate.md/#basic-annotations).
 1. Generate the required
    [KeptnApp](../reference/crd-reference/app.md)
    resources following the instructions in

@@ -50,7 +50,7 @@ To implement evaluations, you must:
    resource for each piece of data
    (defined as a query from one of your data sources)
    that you need for your evaluations.
-1. [Create KetnEvaluationDefinition](#create-keptnevaluationdefinition-resources)
+1. [Create KeptnEvaluationDefinition](#create-keptnevaluationdefinition-resources)
    resources for each evaluation you want to perform.
 1. Annotate the appropriate `KeptnApp`
    resources for each `KeptnEvaluationDefinition` resource

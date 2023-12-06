@@ -82,20 +82,19 @@ in a centralized namespace (e.g. in `keptn-system`)
 and access those metrics in evaluations
 on all namespaces in the cluster.
 
-Metrics providers may require authorization data.
-These can be stored in a `Secret` and referenced in `KeptnMetricsProvider`.
-Configuration and creation of Secret for metrics provider
-differs from one provider to another.
-The secret holding the data must have a specific structure
+Metrics providers may require authentication data.
+These can be stored in a `Secret` and referenced in the `KeptnMetricsProvider`.
+Those Secret resources need to be configured differently for each metrics provider.
+The `Secret` holding the data must have a specific structure
 and contain the required data fields.
-For detailed information please look at the [examples section](#examples).
+For detailed information please look at the [Examples section](#examples).
 
 ## Examples
 
 ### Prometheus
 
 An example of Prometheus as a metrics provider with a Secret holding
-the authorization data looks like the following:
+the authentication data looks like the following:
 
 ```yaml
 {% include "./assets/keptnmetricsprovider-prometheus.yaml" %}
@@ -109,7 +108,7 @@ Setting this field won't have any effect.
 ### Datadog
 
 An example of Datadog as a metrics provider with a Secret holding
-the authorization data looks like the following:
+the authentication data looks like the following:
 
 ```yaml
 {% include "./assets/keptnmetricsprovider-datadog.yaml" %}
@@ -124,7 +123,7 @@ Setting this field won't have any effect.
 ### Dynatrace and DQL
 
 An example of Dynatrace as a metrics provider with a Secret holding
-the authorization data looks like the following:
+the authentication data looks like the following:
 
 ```yaml
 {% include "./assets/keptnmetricsprovider-dynatrace.yaml" %}

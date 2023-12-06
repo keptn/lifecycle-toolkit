@@ -57,6 +57,7 @@ To implement evaluations, you must:
    you want to run pre- and/or post-deployment
 
 ## Create KeptnEvaluationDefinition resources
+
 A
 [KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)
 resource contains a list of `objectives`,

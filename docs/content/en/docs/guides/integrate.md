@@ -20,10 +20,10 @@ to identify the workloads of interest.
 
 To integrate Keptn with your workloads:
 
-* You must first
+- You must first
 [install and enable](../installation/_index.md#basic-installation)
 Keptn.
-* Annotate or label your
+- Annotate or label your
 [workloads](https://kubernetes.io/docs/concepts/workloads/)
 ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
@@ -32,10 +32,10 @@ and
 [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 with either Keptn or Kubernetes keys.
 
-  * [Basic annotations](#basic-annotations)
+  - [Basic annotations](#basic-annotations)
     or labels
     are required for all Keptn features except Keptn metrics.
-  * [Pre- and post-deployment checks](#basic-annotations)
+  - [Pre- and post-deployment checks](#basic-annotations)
     are required only for the Release lifecycle management feature.
 
 Keptn uses these annotations to the Kubernetes workloads to create the
@@ -94,24 +94,24 @@ app.kubernetes.io/part-of: myAwesomeAppName
 
 These keys are defined as:
 
-* `keptn.sh/workload` or `app.kubernetes.io/name`: Determines the name
+- `keptn.sh/workload` or `app.kubernetes.io/name`: Determines the name
   of the generated
   [KeptnWorkload](../reference/api-reference/lifecycle/v1alpha3/#keptnworkload)
   resource.
-* `keptn.sh/version` or `app.kubernetes.io/version`:
+- `keptn.sh/version` or `app.kubernetes.io/version`:
   Determines the version of the `KeptnWorkload`
   that represents the Workload.
   If the Workload has no `version` annotation/labels
   and the pod has only one container,
   Keptn takes the image tag as version
   (unless it is "latest").
-* `keptn.sh/app` or `app.kubernetes.io/part-of`: Determines the name
+- `keptn.sh/app` or `app.kubernetes.io/part-of`: Determines the name
    of the generated `KeptnApp` representing your Application.
    All workloads that share the same value for this label
    are consolidated into the same `KeptnApp` resource
    that you can generate following the instructions in
    [Auto app discovery](auto-app-discovery.md).
-* `keptn.sh/container`: Determines the name of the container in the workload,
+- `keptn.sh/container`: Determines the name of the container in the workload,
    from which Keptn extracts the version.
    This applies to single- and multi-container
    workloads.
@@ -125,12 +125,12 @@ resources that are used for observability,
 based on whether the `keptn.sh/app` or `app.kubernetes.io/part-of`
 annotation/label is populated:
 
-* If either of these annotations/labels are populated,
+- If either of these annotations/labels are populated,
   Keptn automatically generates a `KeptnApp` resource
   that includes all workloads that have the same annotation/label,
   thus creating a `KeptnApp` resource for each defined grouping
 
-* If only the `workload` and `version` annotations/labels are available
+- If only the `workload` and `version` annotations/labels are available
   (in other words, neither the `keptn.sh/app`
   or `app.kubernetes.io/part-of` annotation/label is populated),
   Keptn creates a `KeptnApp` resource for each `KeptnWorkload`
@@ -151,18 +151,18 @@ or
 Both annotations and labels are can be attached to Kubernetes objects.
 Some key differences between the two:
 
-* Annotations
-  * Are not used to identify and select objects
-  * Can contain up to 262144 chars
-  * Metadata in an annotation can be small or large,
+- Annotations
+  - Are not used to identify and select objects
+  - Can contain up to 262144 chars
+  - Metadata in an annotation can be small or large,
     structured or unstructured,
     and can include characters not permitted by labels
 
-* Labels
-  * Can be used to select objects
+- Labels
+  - Can be used to select objects
     and to find collections of objects that satisfy certain conditions
-  * Can contain up to 63 chars
-  * Are appropriate for identifying attributes of objects
+  - Can contain up to 63 chars
+  - Are appropriate for identifying attributes of objects
     that are meaningful and relevant to users
     but do not directly imply semantics to the core system
 
@@ -170,9 +170,9 @@ Annotations take precedence over labels,
 and the `keptn.sh` keys take precedence over `app.kubernetes.io` keys.
 In other words:
 
-* The operator first checks if the `keptn.sh` key is present
+- The operator first checks if the `keptn.sh` key is present
   in the annotations, and then in the labels.
-* If neither is the case, it looks for the `app.kubernetes.io` equivalent,
+- If neither is the case, it looks for the `app.kubernetes.io` equivalent,
   again first in the annotations, then in the labels.
 
 In general, annotations are more appropriate than labels
@@ -188,19 +188,19 @@ To implement the Keptn Release Lifecycle feature
 that handles pre- and post-deployment evaluations and tasks,
 do the following:
 
-* Define the
+- Define the
   [KeptnMetric](../reference/crd-reference/metric.md)
   and
   [KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)
   resources for each evaluation you want.
   A `KeptnEvaluationDefinition` compares the value
   of a `KeptnMetric` to the threshold that is specified.
-* You will also need to define the necessary
+- You will also need to define the necessary
   [KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
   and
   resource for each instance of each data source
   used for the `KeptnEvaluationDefinition` resources you define.
-* Define a
+- Define a
   [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
   resource for each task you want to execute.
   `KeptnTaskDefinition`  resources contain re-usable "functions"
@@ -213,13 +213,13 @@ do the following:
   See
   [Working with Keptn tasks](./tasks.md)
   for more information.
-* Annotate your [Workloads](https://kubernetes.io/docs/concepts/workloads/)
+- Annotate your [Workloads](https://kubernetes.io/docs/concepts/workloads/)
   [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
   [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
   and
   [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
   to include each evaluation and task you want run
   for specific workloads.
-* Manually edit all
+- Manually edit all
   [KeptnApp](../reference/crd-reference/app.md) resources
   to specify evaluations and tasks to be run for the `KeptnApp` itself.

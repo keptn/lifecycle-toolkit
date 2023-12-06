@@ -1,11 +1,11 @@
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
   name: "some-keptn-app2"
 spec:
   version: "1.2.3"
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnAppVersion
 metadata:
   name: "some-keptn-app-version-2"
@@ -26,7 +26,7 @@ spec:
     - name: podtato-head-left-arm
       version: 0.2.7
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnWorkloadInstance
 metadata:
   annotations:
@@ -51,7 +51,7 @@ spec:
     - post-deployment-evaluation
   workloadName: some-keptn-workload-instance-2
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha1
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnEvaluationProvider
 metadata:
   name: some-evaluation-provider-2

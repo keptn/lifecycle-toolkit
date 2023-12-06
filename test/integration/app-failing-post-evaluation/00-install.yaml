@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
   name: podtato-head
@@ -40,7 +40,7 @@ spec:
             - name: PODTATO_PORT
               value: "9000"
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnEvaluationDefinition
 metadata:
   name: available-cpus

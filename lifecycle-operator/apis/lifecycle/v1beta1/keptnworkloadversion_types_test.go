@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
@@ -26,28 +25,28 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 			PostDeploymentEvaluationStatus: common.StateFailed,
 			DeploymentStatus:               common.StateFailed,
 			Status:                         common.StateFailed,
-			PreDeploymentTaskStatus: []v1beta1.ItemStatus{
+			PreDeploymentTaskStatus: []ItemStatus{
 				{
 					DefinitionName: "defname",
 					Status:         common.StateFailed,
 					Name:           "taskname",
 				},
 			},
-			PostDeploymentTaskStatus: []v1beta1.ItemStatus{
+			PostDeploymentTaskStatus: []ItemStatus{
 				{
 					DefinitionName: "defname2",
 					Status:         common.StateFailed,
 					Name:           "taskname2",
 				},
 			},
-			PreDeploymentEvaluationTaskStatus: []v1beta1.ItemStatus{
+			PreDeploymentEvaluationTaskStatus: []ItemStatus{
 				{
 					DefinitionName: "defname3",
 					Status:         common.StateFailed,
 					Name:           "taskname3",
 				},
 			},
-			PostDeploymentEvaluationTaskStatus: []v1beta1.ItemStatus{
+			PostDeploymentEvaluationTaskStatus: []ItemStatus{
 				{
 					DefinitionName: "defname4",
 					Status:         common.StateFailed,
@@ -57,7 +56,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 			CurrentPhase: common.PhaseAppDeployment.ShortName,
 		},
 		Spec: KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: v1beta1.KeptnWorkloadSpec{
+			KeptnWorkloadSpec: KeptnWorkloadSpec{
 				PreDeploymentTasks:        []string{"task1", "task2"},
 				PostDeploymentTasks:       []string{"task3", "task4"},
 				PreDeploymentEvaluations:  []string{"task5", "task6"},
@@ -129,7 +128,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 	require.Equal(t, []string{"task5", "task6"}, workload.GetPreDeploymentEvaluations())
 	require.Equal(t, []string{"task7", "task8"}, workload.GetPostDeploymentEvaluations())
 
-	require.Equal(t, []v1beta1.ItemStatus{
+	require.Equal(t, []ItemStatus{
 		{
 			DefinitionName: "defname",
 			Status:         common.StateFailed,
@@ -137,7 +136,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 		},
 	}, workload.GetPreDeploymentTaskStatus())
 
-	require.Equal(t, []v1beta1.ItemStatus{
+	require.Equal(t, []ItemStatus{
 		{
 			DefinitionName: "defname2",
 			Status:         common.StateFailed,
@@ -145,7 +144,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 		},
 	}, workload.GetPostDeploymentTaskStatus())
 
-	require.Equal(t, []v1beta1.ItemStatus{
+	require.Equal(t, []ItemStatus{
 		{
 			DefinitionName: "defname3",
 			Status:         common.StateFailed,
@@ -153,7 +152,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 		},
 	}, workload.GetPreDeploymentEvaluationTaskStatus())
 
-	require.Equal(t, []v1beta1.ItemStatus{
+	require.Equal(t, []ItemStatus{
 		{
 			DefinitionName: "defname4",
 			Status:         common.StateFailed,
@@ -184,7 +183,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 	require.Equal(t, "trace1.workloadname.version.phase", workload.GetSpanKey("phase"))
 
 	retries := int32(5)
-	task := workload.GenerateTask(v1beta1.KeptnTaskDefinition{
+	task := workload.GenerateTask(KeptnTaskDefinition{
 		ObjectMeta: v1.ObjectMeta{
 			Name: "task-def",
 			Labels: map[string]string{
@@ -194,15 +193,15 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 				"annotation1": "annotation2",
 			},
 		},
-		Spec: v1beta1.KeptnTaskDefinitionSpec{
+		Spec: KeptnTaskDefinitionSpec{
 			Timeout: v1.Duration{
 				Duration: 5 * time.Second,
 			},
 			Retries: &retries,
 		},
 	}, common.PostDeploymentCheckType)
-	require.Equal(t, v1beta1.KeptnTaskSpec{
-		Context: v1beta1.TaskContext{
+	require.Equal(t, KeptnTaskSpec{
+		Context: TaskContext{
 			AppName:         workload.GetAppName(),
 			WorkloadVersion: workload.GetVersion(),
 			WorkloadName:    workload.GetParentName(),
@@ -210,8 +209,8 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 			ObjectType:      "Workload",
 		},
 		TaskDefinition:   "task-def",
-		Parameters:       v1beta1.TaskParameters{},
-		SecureParameters: v1beta1.SecureParameters{},
+		Parameters:       TaskParameters{},
+		SecureParameters: SecureParameters{},
 		Type:             common.PostDeploymentCheckType,
 		Timeout: v1.Duration{
 			Duration: 5 * time.Second,
@@ -227,12 +226,12 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 		"annotation1": "annotation2",
 	}, task.Annotations)
 
-	evaluation := workload.GenerateEvaluation(v1beta1.KeptnEvaluationDefinition{
+	evaluation := workload.GenerateEvaluation(KeptnEvaluationDefinition{
 		ObjectMeta: v1.ObjectMeta{
 			Name: "eval-def",
 		},
 	}, common.PostDeploymentCheckType)
-	require.Equal(t, v1beta1.KeptnEvaluationSpec{
+	require.Equal(t, KeptnEvaluationSpec{
 		AppName:              workload.GetAppName(),
 		WorkloadVersion:      workload.GetVersion(),
 		Workload:             workload.GetParentName(),

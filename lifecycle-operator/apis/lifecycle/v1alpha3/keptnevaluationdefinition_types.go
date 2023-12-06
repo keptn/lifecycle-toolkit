@@ -48,6 +48,7 @@ type KeptnMetricReference struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 // +kubebuilder:resource:path=keptnevaluationdefinitions,shortName=ked
 
 // KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions API

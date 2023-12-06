@@ -111,6 +111,7 @@ type WorkloadStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:storageversion
 // +kubebuilder:resource:path=keptnappversions,shortName=kav
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appName`

@@ -59,8 +59,8 @@ spec:
   * **type** (required) -- The type of data provider for this instance
   * **targetServer** (required) -- URL of the data provider, enclosed in double quotes
   * **secretKeyRef**
-    * **name:** -- Name of the token for this data provider
-    * **key:** -- Key for this data provider
+    * **name:** -- Name of the secret used by the provider
+    * **key:** -- Key of the secret to select from
     * **optional** -- Specify whether the Secret or its key must be defined
 
 ## Usage
@@ -89,24 +89,28 @@ for metrics provider differs from one provider to another.
 The secret holding the data must have a specific structure
 and contain the required data fields.
 
-## Prometheus
+### Prometheus
 
 An example of Prometheus as a metrics provider with a Secret holding
 the authorization data looks like the following:
 
-{% include "./assets/keptnmetricsprovider-prometheus.md" %}
+```yaml
+{% include "./assets/keptnmetricsprovider-prometheus.yaml" %}
+```
 
 > **Note**
 Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not needed,
 as `user` and `password` key names are required to be present in the linked Secret.
 Setting this field won't have any effect.
 
-## Datadog
+### Datadog
 
 An example of Datadog as a metrics provider with a Secret holding
 the authorization data looks like the following:
 
-{% include "./assets/keptnmetricsprovider-datadog.md" %}
+```yaml
+{% include "./assets/keptnmetricsprovider-datadog.yaml" %}
+```
 
 > **Note**
 Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not needed,
@@ -114,12 +118,14 @@ as `DD_CLIENT_API_KEY` and `DD_CLIENT_API_KEY` key names are required to be
 present in the linked Secret.
 Setting this field won't have any effect.
 
-## Dynatrace and DQL
+### Dynatrace and DQL
 
 An example of Dynatrace as a metrics provider with a Secret holding
 the authorization data looks like the following:
 
-{% include "./assets/keptnmetricsprovider-dynatrace.md" %}
+```yaml
+{% include "./assets/keptnmetricsprovider-dynatrace.yaml" %}
+```
 
 > **Note**
 When using Dynatrace as metrics provider you have the possibility to

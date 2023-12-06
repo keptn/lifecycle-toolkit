@@ -1,0 +1,21 @@
+```yaml
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetricsProvider
+metadata:
+  name: dynatrace-provider
+  namespace: podtato-kubectl
+spec:
+  type: dynatrace | dql
+  targetServer: "<dynatrace-tenant-url>"
+  secretKeyRef:
+    name: dt-api-token
+    key: myCustomTokenKey
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dt-api-token
+data:
+  myCustomTokenKey: my-token
+type: Opaque
+```

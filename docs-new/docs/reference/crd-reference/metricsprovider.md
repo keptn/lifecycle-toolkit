@@ -84,20 +84,48 @@ on all namespaces in the cluster.
 
 ## Examples
 
-### Example 1: Dynatrace data provider
+Configuration and creation of Secret with authorization data (if needed)
+for metrics provider differs from one provider to another.
+The secret holding the data must have a specific structure
+and contain the required data fields.
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetricsProvider
-metadata:
-  name: dynatrace
-  namespace: podtato-kubectl
-spec:
-  targetServer: "<dynatrace-tenant-url>"
-  secretKeyRef:
-    name: dt-api-token
-    key: DT_TOKEN
-```
+## Prometheus
+
+An example of Prometheus as a metrics provider with a Secret holding
+the authorization data looks like the following:
+
+{% include "./assets/keptnmetricsprovider-prometheus.md" %}
+
+> **Note**
+Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not needed,
+as `user` and `password` key names are required to be present in the linked Secret.
+Setting this field won't have any effect.
+
+## Datadog
+
+An example of Datadog as a metrics provider with a Secret holding
+the authorization data looks like the following:
+
+{% include "./assets/keptnmetricsprovider-datadog.md" %}
+
+> **Note**
+Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not needed,
+as `DD_CLIENT_API_KEY` and `DD_CLIENT_API_KEY` key names are required to be
+present in the linked Secret.
+Setting this field won't have any effect.
+
+## Dynatrace and DQL
+
+An example of Dynatrace as a metrics provider with a Secret holding
+the authorization data looks like the following:
+
+{% include "./assets/keptnmetricsprovider-dynatrace.md" %}
+
+> **Note**
+When using Dynatrace as metrics provider you have the possibility to
+define the key name of your DT token stored in a secret, which in
+comparison to Datadog or Prometheus is not possible.
+For this example `myCustomTokenKey` was used.
 
 ## Files
 

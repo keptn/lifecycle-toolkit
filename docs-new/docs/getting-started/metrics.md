@@ -90,47 +90,12 @@ including multiple instances of each observability platform.
 Each one must be assigned a unique name,
 identified by the type of platform it is
 and the URL of the target server.
-If the target server is protected by a `secret`,
+If the target server is protected by a `Secret`,
 provide information about the token and key.
 
-> Note: The video and example application use an older syntax
-  of the `KeptnMetricsProvider` and `KeptnMetric` resources.
-  The syntax shown in this document and the reference page
-  is correct for v0.7.1 and later.
-
-Definition of
-[dev-prometheus](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-prometheus-provider.yaml)
-data source:
-
-```yaml
-kind: KeptnMetricsProvider
-metadata:
-  name: dev-prometheus
-  namespace: simplenode-dev
-spec:
-  type: prometheus
-  targetserver: "http://prometheus-k8s-monitoring-svc.cluster.local:9090"
-```
-
-Definition of the
-[dev-dynatrace](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/dynatrace-provider.yaml.tmp)
-data source.
-Note that the `dev-dynatrace` server is protected by a secret key
-so that information is included in the provider definition:
-
-```yaml
-kind: KeptnMetricsProvider
-metadata:
-  name: dev-dynatrace
-  namespace: simplenode-dev
-spec:
-  type: dynatrace
-  targetServer: "https://hci34192.live.dynatrace.com"
-  secretKeyRef:
-    name: dynatrace
-    key: DT_TOKEN
-...
-```
+An example how to specify a `KeptnMetricsProvider` with a `Secret`,
+refer to the [example section](../reference/crd-reference/metricsprovider.md#examples)
+of `KeptnMetricsProvider` CRD reference page.
 
 ### Define KeptnMetric information
 

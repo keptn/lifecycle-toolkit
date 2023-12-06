@@ -82,13 +82,13 @@ in a centralized namespace (e.g. in `keptn-system`)
 and access those metrics in evaluations
 on all namespaces in the cluster.
 
-Metrics providers may require authorization data. These can be stored in
-a `Secret` and referenced in `KeptnMetricsProvider`.
-Configuration and creation of Secret
-for metrics provider differs from one provider to another.
+Metrics providers may require authorization data.
+These can be stored in a `Secret` and referenced in `KeptnMetricsProvider`.
+Configuration and creation of Secret for metrics provider
+differs from one provider to another.
 The secret holding the data must have a specific structure
 and contain the required data fields.
-For detailed information please look at the following examples section.
+For detailed information please look at the [examples section](#examples).
 
 ## Examples
 

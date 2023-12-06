@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD041 -->
 ```yaml
 apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
@@ -19,3 +20,4 @@ data:
   user: user
 type: Opaque
 ```
+<!-- markdownlint-enable MD041 -->

@@ -65,7 +65,7 @@ nav:
   - Documentation:
       - docs/index.md
       - Core Concepts:
-          - docs/core-concepts/index.md
+          - docs/core-concepts/_index.md
           - Standardize Observability: docs/core-concepts/usecase-observability.md
           - Manage Release Lifecycle Observability: docs/core-concepts/usecase-orchestrate.md
       - Get Started:

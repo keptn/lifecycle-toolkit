@@ -50,7 +50,7 @@ cascade:
 
 We extend the K8s APIs with the following use cases:
 
-<div class="row use cases">
+<div class="row usecases">
 {{% blocks/feature icon="home homeobservability" title="Deployment Observability" %}}
 Make ANY Kubernetes Deployment observable
 

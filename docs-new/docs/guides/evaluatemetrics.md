@@ -48,53 +48,9 @@ Note the following:
   in a centralized namespace
   such as `keptn-system`.
 
-To configure a data provider into your Keptn cluster:
-
-1. Create a secret if your data provider uses one.
-   See
-   [Create secret text](./tasks.md#create-secret-text).
-1. Install and configure each instance of each data provider
-   into your Keptn cluster,
-   following the instructions provided by the data source provider.
-   See
-   [Prepare your cluster for Keptn](../installation/k8s.md/#prepare-your-cluster-for-keptn)
-for links.
-   Keptn supports using multiple instances of multiple data providers.
-1. Define a
-   [KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
-   resource for each data source.
-
-For example, the `KeptnMetricProvider` resource
-for a Prometheus data source that does not use a secret
-could look like:
-
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetricsProvider
-metadata:
-  name: prometheus-provider
-  namespace: simplenode-dev
-spec:
-  type: prometheus
-  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
-```
-
-The `KeptnMetricProvider` resource for a Dynatrace provider
-that uses a secret could look like:
-
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetricsProvider
-metadata:
-  name: dynatrace-provider
-  namespace: podtato-kubectl
-spec:
-  type: dynatrace
-  targetServer: "<dynatrace-tenant-url>"
-  secretKeyRef:
-    name: dt-api-token
-    key: DT_TOKEN
-```
+For an example of how to specify a KeptnMetricsProvider with a Secret,
+refer to the [example section](../reference/crd-reference/metricsprovider.md#examples)
+of the KeptnMetricsProvider CRD reference page.
 
 ### Define KeptnMetric information
 

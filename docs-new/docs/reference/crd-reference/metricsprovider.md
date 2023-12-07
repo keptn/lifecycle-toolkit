@@ -60,7 +60,7 @@ spec:
   * **targetServer** (required) -- URL of the data provider, enclosed in double quotes
   * **secretKeyRef**
     * **name:** -- Name of the secret used by the provider
-    * **key:** -- Key of the secret to select from
+    * **key:** -- Key of the secret from which to select
     * **optional** -- Specify whether the Secret or its key must be defined
 
 ## Usage
@@ -101,7 +101,7 @@ the authentication data looks like the following:
 ```
 
 > **Note**
-Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not needed,
+Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
 as `user` and `password` key names are required to be present in the linked Secret.
 Setting this field won't have any effect.
 
@@ -115,10 +115,10 @@ the authentication data looks like the following:
 ```
 
 > **Note**
-Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not needed,
-as `DD_CLIENT_API_KEY` and `DD_CLIENT_API_KEY` key names are required to be
+Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
+as `DD_CLIENT_API_KEY` and `DD_CLIENT_API_KEY` key names must be
 present in the linked Secret.
-Setting this field won't have any effect.
+Setting this field has no effect.
 
 ### Dynatrace and DQL
 
@@ -130,9 +130,9 @@ the authentication data looks like the following:
 ```
 
 > **Note**
-When using Dynatrace as metrics provider you have the possibility to
-define the key name of your DT token stored in a secret, which in
-comparison to Datadog or Prometheus is not possible.
+When using Dynatrace as metrics provider you can
+define the key name of your DT token stored in a secret, 
+which is not possible for Datadog or Prometheus.
 For this example `myCustomTokenKey` was used.
 
 ## Files

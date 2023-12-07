@@ -93,9 +93,9 @@ and the URL of the target server.
 If the target server is protected by a `Secret`,
 provide information about the token and key.
 
-An example how to specify a `KeptnMetricsProvider` with a `Secret`,
+For an example of how to specify a `KeptnMetricsProvider` with a `Secret`,
 refer to the [example section](../reference/crd-reference/metricsprovider.md#examples)
-of `KeptnMetricsProvider` CRD reference page.
+of the `KeptnMetricsProvider` CRD reference page.
 
 ### Define KeptnMetric information
 

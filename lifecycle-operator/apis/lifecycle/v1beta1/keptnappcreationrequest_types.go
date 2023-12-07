@@ -34,7 +34,6 @@ type KeptnAppCreationRequestSpec struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:storageversion
 
 // KeptnAppCreationRequest is the Schema for the keptnappcreationrequests API
 type KeptnAppCreationRequest struct {

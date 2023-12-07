@@ -131,7 +131,7 @@ the authentication data looks like the following:
 
 > **Note**
 When using Dynatrace as metrics provider you can
-define the key name of your DT token stored in a secret, 
+define the key name of your DT token stored in a secret,
 which is not possible for Datadog or Prometheus.
 For this example `myCustomTokenKey` was used.
 

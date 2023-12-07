@@ -3,6 +3,7 @@ package common
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"math/rand"
 	"strconv"
 
@@ -36,6 +37,9 @@ const ContainerNameAnnotation = "keptn.sh/container"
 
 const MinKeptnNameLen = 80
 const MaxK8sObjectLength = 253
+
+var ErrCannotCastKeptnAppVersion = errors.New("cannot cast KeptnAppVersion to v1alpha3")
+var ErrCannotCastKeptnApp = errors.New("cannot cast KeptnApp to v1alpha3")
 
 type AppType string
 

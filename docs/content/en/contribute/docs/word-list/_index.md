@@ -62,7 +62,7 @@ Here are some guidelines for using these terms in Keptn documentation.
   We should not be maintaining documentation
   for software in other projects and products.
 
-* Kubernetes concepts and objects (such as workload, job, resource)
+* Kubernetes concepts and objects (such as workload or resource)
   should be lowercase unless they are the proper name of an object.
 
 * The first instance of one of these terms in a section

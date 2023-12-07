@@ -83,9 +83,9 @@ and access those metrics in evaluations
 on all namespaces in the cluster.
 
 Metrics providers may require authentication data.
-These can be stored in a `Secret` and referenced in the `KeptnMetricsProvider`.
+These can be stored in a secret and referenced in the `KeptnMetricsProvider`.
 Those Secret resources need to be configured differently for each metrics provider.
-The `Secret` holding the data must have a specific structure
+The secret holding the data must have a specific structure
 and contain the required data fields.
 For detailed information please look at the [Examples section](#examples).
 

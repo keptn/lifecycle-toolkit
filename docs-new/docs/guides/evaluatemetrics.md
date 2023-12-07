@@ -48,7 +48,7 @@ Note the following:
   in a centralized namespace
   such as `keptn-system`.
 
-For an example of how to specify a `KeptnMetricsProvider` with a `Secret`,
+For an example of how to specify a `KeptnMetricsProvider` with a secret,
 refer to the [example section](../reference/crd-reference/metricsprovider.md#examples)
 of the `KeptnMetricsProvider` CRD reference page.
 

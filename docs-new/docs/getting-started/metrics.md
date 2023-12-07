@@ -90,10 +90,10 @@ including multiple instances of each observability platform.
 Each one must be assigned a unique name,
 identified by the type of platform it is
 and the URL of the target server.
-If the target server is protected by a `Secret`,
+If the target server is protected by a secret,
 provide information about the token and key.
 
-For an example of how to specify a `KeptnMetricsProvider` with a `Secret`,
+For an example of how to specify a `KeptnMetricsProvider` with a secret,
 refer to the [example section](../reference/crd-reference/metricsprovider.md#examples)
 of the `KeptnMetricsProvider` CRD reference page.
 

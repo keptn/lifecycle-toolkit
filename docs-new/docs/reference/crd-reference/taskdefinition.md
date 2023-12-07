@@ -354,7 +354,7 @@ and
 and in the
 [KeptnApp](app.md) resource.
 See
-[Pre- and post-deployment tasks](../../guides/integrate.md#pre--and-post-deployment-checks)
+[Pre- and post-deployment tasks](../../guides/integrate.md#prepost-deployment-checks)
 for details.
 Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
@@ -605,7 +605,7 @@ This modifies the synopsis in the following ways:
 
 * [KeptnApp](app.md)
 * [Working with tasks](../../guides/tasks.md)
-* [Pre- and post-deployment tasks](../../guides/integrate.md#pre--and-post-deployment-checks)
+* [Pre- and post-deployment tasks](../../guides/integrate.md#prepost-deployment-checks)
 * [KeptnApp and KeptnWorkload resources](../../components/lifecycle-operator/keptn-apps.md).
 * [Orchestrate deployment checks](../../core-concepts/usecase-orchestrate.md)
 * [Executing sequential tasks](../../guides/tasks.md#executing-sequential-tasks)

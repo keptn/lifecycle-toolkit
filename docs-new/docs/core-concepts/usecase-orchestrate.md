@@ -169,7 +169,7 @@ is protected by a secret, the task definition also specifies that secret.
 ## Integrate evaluations and tasks into the cluster
 
 Follow the instructions in
-[Annotate workload](../guides/integrate.md#pre--and-post-deployment-checks)
+[Annotate workload](../guides/integrate.md#prepost-deployment-checks)
 to integrate the evaluations and tasks you defined
 into the cluster
 by applying annotations to the `Deployment` resource.

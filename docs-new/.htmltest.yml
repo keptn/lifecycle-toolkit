@@ -1,0 +1,11 @@
+CheckDoctype: false
+IgnoreDirectoryMissingTrailingSlash: true
+IgnoreDirs:
+  - favicons
+  - community/
+IgnoreURLs:
+  - "linkedin.com"
+  - "localhost"
+  - "twitter.com"
+  - "fonts.gstatic.com"
+StripQueryString: false

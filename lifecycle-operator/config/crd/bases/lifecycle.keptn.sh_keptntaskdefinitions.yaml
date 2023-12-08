@@ -1610,6 +1610,20 @@ spec:
                         type: string
                     type: object
                 type: object
+              imagePullSecrets:
+                description: ImagePullSecrets is an optional field to specify the
+                  names of secrets to use for pulling container images
+                items:
+                  description: LocalObjectReference contains enough information to
+                    let you locate the referenced object inside the same namespace.
+                  properties:
+                    name:
+                      description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                        TODO: Add other useful fields. apiVersion, kind, uid?'
+                      type: string
+                  type: object
+                  x-kubernetes-map-type: atomic
+                type: array
               python:
                 description: Python contains the definition for the python function
                   that is to be executed in KeptnTasks based on the KeptnTaskDefinitions.

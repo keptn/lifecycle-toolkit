@@ -48,7 +48,7 @@ var _ = BeforeSuite(func() {
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 
-	ns = common.MakeKLTDefaultNamespace(k8sClient, KeptnNamespace)
+	ns = common.MakeKeptnDefaultNamespace(k8sClient, KeptnNamespace)
 	close(readyToStart)
 })
 

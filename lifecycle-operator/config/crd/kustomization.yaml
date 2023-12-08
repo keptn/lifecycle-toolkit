@@ -24,7 +24,7 @@ kind: Kustomization
 labels:
   - includeSelectors: true
     pairs:
-      app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+      app.kubernetes.io/part-of: keptn
       crdGroup: lifecycle.keptn.sh
       keptn.sh/inject-cert: "true"
 patches:

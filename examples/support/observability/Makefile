@@ -1,6 +1,6 @@
 # renovate: datasource=github-tags depName=jaegertracing/jaeger-operator
-JAEGER_VERSION ?= v1.49.0
-TOOLKIT_NAMESPACE ?= keptn-lifecycle-toolkit-system
+JAEGER_VERSION ?= v1.51.0
+TOOLKIT_NAMESPACE ?= keptn-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
 

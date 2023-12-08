@@ -1,7 +1,7 @@
 ---
 title: AnalysisDefinition
 description: Define SLOs for an Analysis
-weight: 6
+weight: 23
 ---
 
 An `AnalysisDefinition` resource defines the
@@ -123,12 +123,12 @@ apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisDefinition
 metadata:
   name: ed-my-proj-dev-svc1
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
 spec:
   objectives:
     - analysisValueTemplateRef:
         name: response-time-p95
-        namespace: keptn-lifecycle-toolkit-system
+        namespace: keptn-system
       target:
         failure:
           <operator>:

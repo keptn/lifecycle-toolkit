@@ -26,14 +26,14 @@ For more information, see the Kubernetes
 [Install Tools](https://kubernetes.io/docs/tasks/tools/)
 documentation.
 
-The [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
+The [Keptn: Installation and KeptnTask Creation in Minutes](https://www.youtube.com/watch?v=Hh01bBwZ_qM)
 video  demonstrates how to create a KinD cluster.
 on which you can install Keptn.
 The basic steps are:
 
 1. Download, install, and run [Docker](https://docs.docker.com/get-docker/)
-1. Download [KinD](https://kind.sigs.k8s.io/)
-1. Create the local KinD cluster with the following command:
+2. Download [KinD](https://kind.sigs.k8s.io/)
+3. Create the local KinD cluster with the following command:
 
    ```shell
    kind create cluster
@@ -43,7 +43,7 @@ The basic steps are:
    [KinD Quick Start Guide](https://kind.sigs.k8s.io/docs/user/quick-start/)
    for more information
 
-1. When the cluster has been created,
+4. When the cluster has been created,
    run the following to verify that the cluster is working
    and that it is running a supported version of Kubernetes
    with the following command:

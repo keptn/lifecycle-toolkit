@@ -7,7 +7,7 @@ metadata:
   namespace: "helmtests"
   labels:
     app.kubernetes.io/component: rbac
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
@@ -62,7 +62,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -407,7 +407,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -1094,7 +1094,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -1233,7 +1233,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -1750,7 +1750,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -2133,7 +2133,7 @@ metadata:
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
@@ -2297,7 +2297,7 @@ metadata:
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
@@ -2321,7 +2321,7 @@ metadata:
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
@@ -2441,7 +2441,7 @@ metadata:
   namespace: "helmtests"
   labels:
     app.kubernetes.io/component: keptn-cert-manager
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     control-plane: certificate-operator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -2525,7 +2525,7 @@ metadata:
   name: metrics-operator
   namespace: "helmtests"
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/component: metrics-operator
     control-plane: metrics-operator
     keptn.sh/inject-cert: "true"
@@ -2570,6 +2570,8 @@ spec:
               fieldPath: metadata.name
         - name: EXPOSE_KEPTN_METRICS
           value: "true"
+        - name: ENABLE_CUSTOM_METRICS_API_SERVICE
+          value: "true"
         - name: METRICS_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: ANALYSIS_CONTROLLER_LOG_LEVEL
@@ -2608,8 +2610,6 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - mountPath: /tmp/k8s-webhook-server/serving-certs/
-          name: certs-dir
         - mountPath: /tmp/metrics-adapter/serving-certs
           name: adapter-certs-dir
         livenessProbe:
@@ -2630,8 +2630,6 @@ spec:
       serviceAccountName: metrics-operator
       terminationGracePeriodSeconds: 10
       volumes:
-      - emptyDir: {}
-        name: certs-dir
       - emptyDir: {}
         name: adapter-certs-dir
 ---

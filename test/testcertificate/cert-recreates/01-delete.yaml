@@ -3,4 +3,4 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: keptn-certs
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system

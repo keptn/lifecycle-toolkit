@@ -1,7 +1,7 @@
 ---
 title: AnalysisValueTemplate
 description: Define the data source and query for each SLI
-weight: 8
+weight: 26
 ---
 
 An `AnalysisValueTemplate` resource

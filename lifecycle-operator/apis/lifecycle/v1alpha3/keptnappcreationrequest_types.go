@@ -37,12 +37,15 @@ type KeptnAppCreationRequestSpec struct {
 
 // KeptnAppCreationRequest is the Schema for the keptnappcreationrequests API
 type KeptnAppCreationRequest struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// Spec describes the desired state of the KeptnAppCreationRequest.
+	// +optional
 	Spec KeptnAppCreationRequestSpec `json:"spec,omitempty"`
 	// Status describes the current state of the KeptnAppCreationRequest.
+	// +optional
 	Status string `json:"status,omitempty"`
 }
 
@@ -51,6 +54,7 @@ type KeptnAppCreationRequest struct {
 // KeptnAppCreationRequestList contains a list of KeptnAppCreationRequest
 type KeptnAppCreationRequestList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnAppCreationRequest `json:"items"`
 }

@@ -1,7 +1,7 @@
 ---
 title: KeptnConfig
 description: Define configuration values
-weight: 10
+weight: 40
 ---
 
 `KeptnConfig` defines Keptn configuration values.
@@ -58,7 +58,7 @@ and that the automatic app discovery should be run every 40 seconds:
 apiVersion: options.keptn.sh/v1alpha2
 kind: KeptnConfig
 metadata:
-  name: klt-config
+  name: keptn-config
 spec:
   OTelCollectorUrl: 'otel-collector:4317'
   keptnAppCreationRequestTimeoutSeconds: 40

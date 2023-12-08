@@ -67,7 +67,7 @@ items:
         app.kubernetes.io/part-of: kube-prometheus
         app.kubernetes.io/version: 2.39.1
       name: prometheus-k8s
-      namespace: keptn-lifecycle-toolkit-system
+      namespace: keptn-system
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: Role

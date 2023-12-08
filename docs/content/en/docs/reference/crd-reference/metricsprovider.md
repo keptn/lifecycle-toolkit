@@ -1,7 +1,7 @@
 ---
 title: KeptnMetricsProvider
 description: Define a data provider used for metrics and evaluations
-weight: 55
+weight: 64
 ---
 
 `KeptnMetricsProvider` defines an instance of the data provider
@@ -82,7 +82,7 @@ resources that are used for pre- and post-deployment evaluations.
 from any namespace.
 This means that you can create `KeptnMetricsProvider`
 and `KeptnMetric` resources
-in a centralized namespace (e.g. in `keptn-lifecycle-toolkit-system`)
+in a centralized namespace (e.g. in `keptn-system`)
 and access those metrics in evaluations
 on all namespaces in the cluster.
 

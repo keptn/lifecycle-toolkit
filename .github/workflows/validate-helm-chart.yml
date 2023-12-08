@@ -30,7 +30,7 @@ jobs:
           - name: keptn-metrics-operator
             path: metrics-operator/chart
           - name: keptn-cert-manager
-            path: klt-cert-manager/chart
+            path: keptn-cert-manager/chart
     steps:
       - name: Check out code
         uses: actions/checkout@v4

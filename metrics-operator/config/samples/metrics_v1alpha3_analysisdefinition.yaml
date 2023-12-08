@@ -2,12 +2,12 @@ apiVersion: metrics.keptn.sh/v1alpha3
 kind: AnalysisDefinition
 metadata:
   name: ed-my-proj-dev-svc1
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
 spec:
   objectives:
     - analysisValueTemplateRef:
         name: response-time-p95
-        namespace: keptn-lifecycle-toolkit-system
+        namespace: keptn-system
       target:
         failure:
           lessThan:

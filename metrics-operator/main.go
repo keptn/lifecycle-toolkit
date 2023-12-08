@@ -27,9 +27,9 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
-	"github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/certificates"
-	certCommon "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/common"
-	certwebhook "github.com/keptn/lifecycle-toolkit/klt-cert-manager/pkg/webhook"
+	"github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/certificates"
+	certCommon "github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/common"
+	certwebhook "github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/webhook"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/cmd/metrics/adapter"
 	analysiscontroller "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis"
@@ -72,6 +72,7 @@ type envConfig struct {
 	KeptnMetricControllerLogLevel int    `envconfig:"METRICS_CONTROLLER_LOG_LEVEL" default:"0"`
 	AnalysisControllerLogLevel    int    `envconfig:"ANALYSIS_CONTROLLER_LOG_LEVEL" default:"0"`
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
+	EnableCustomMetricsAPIService bool   `envconfig:"ENABLE_CUSTOM_METRICS_API_SERVICE" default:"true"`
 }
 
 //nolint:gocyclo,funlen
@@ -133,9 +134,10 @@ func main() {
 		return
 	}
 
-	// Start the custom metrics adapter
-	go startCustomMetricsAdapter(env.PodNamespace)
-
+	if env.EnableCustomMetricsAPIService {
+		// Start the custom metrics adapter
+		go startCustomMetricsAdapter(env.PodNamespace)
+	}
 	disableCacheFor := []ctrlclient.Object{&corev1.Secret{}}
 
 	opt := ctrl.Options{
@@ -182,7 +184,8 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("klt"), env.ExposeKeptnMetrics, metricServerTickerInterval)
+
+	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("keptn"), env.ExposeKeptnMetrics, metricServerTickerInterval)
 
 	metricsLogger := ctrl.Log.WithName("KeptnMetric Controller")
 	if err = (&metricscontroller.KeptnMetricReconciler{

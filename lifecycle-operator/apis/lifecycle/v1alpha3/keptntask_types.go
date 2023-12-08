@@ -41,15 +41,19 @@ type KeptnTaskSpec struct {
 	// +optional
 	Context TaskContext `json:"context"`
 	// Parameters contains parameters that will be passed to the job that executes the task.
+	// +optional
 	Parameters TaskParameters `json:"parameters,omitempty"`
 	// SecureParameters contains secure parameters that will be passed to the job that executes the task.
 	// These will be stored and accessed as secrets in the cluster.
+	// +optional
 	SecureParameters SecureParameters `json:"secureParameters,omitempty"`
 	// Type indicates whether the KeptnTask is part of the pre- or postDeployment phase.
+	// +optional
 	Type common.CheckType `json:"checkType,omitempty"`
 	// Retries indicates how many times the KeptnTask can be attempted in the case of an error
 	// before considering the KeptnTask to be failed.
 	// +kubebuilder:default:=10
+	// +optional
 	Retries *int32 `json:"retries,omitempty"`
 	// Timeout specifies the maximum time to wait for the task to be completed successfully.
 	// If the task does not complete successfully within this time frame, it will be
@@ -88,6 +92,7 @@ type TaskParameters struct {
 	// executing the KeptnTask via the 'DATA' environment variable.
 	// The 'DATA'  environment variable's content will be a json
 	// encoded string containing all properties of the map provided.
+	// +optional
 	Inline map[string]string `json:"map,omitempty"`
 }
 
@@ -96,23 +101,30 @@ type SecureParameters struct {
 	// executing the KeptnTask via the 'SECRET_DATA' environment variable.
 	// The 'SECRET_DATA'  environment variable's content will the same as value of the 'SECRET_DATA'
 	// key of the referenced secret.
+	// +optional
 	Secret string `json:"secret,omitempty"`
 }
 
 // KeptnTaskStatus defines the observed state of KeptnTask
 type KeptnTaskStatus struct {
 	// JobName is the name of the Job executing the Task.
+	// +optional
 	JobName string `json:"jobName,omitempty"`
 	// Status represents the overall state of the KeptnTask.
 	// +kubebuilder:default:=Pending
+	// +optional
 	Status common.KeptnState `json:"status,omitempty"`
 	// Message contains information about unexpected errors encountered during the execution of the KeptnTask.
+	// +optional
 	Message string `json:"message,omitempty"`
 	// StartTime represents the time at which the KeptnTask started.
+	// +optional
 	StartTime metav1.Time `json:"startTime,omitempty"`
 	// EndTime represents the time at which the KeptnTask finished.
+	// +optional
 	EndTime metav1.Time `json:"endTime,omitempty"`
 	// Reason contains more information about the reason for the last transition of the Job executing the KeptnTask.
+	// +optional
 	Reason string `json:"reason,omitempty"`
 }
 
@@ -128,12 +140,15 @@ type KeptnTaskStatus struct {
 
 // KeptnTask is the Schema for the keptntasks API
 type KeptnTask struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// Spec describes the desired state of the KeptnTask.
+	// +optional
 	Spec KeptnTaskSpec `json:"spec,omitempty"`
 	// Status describes the current state of the KeptnTask.
+	// +optional
 	Status KeptnTaskStatus `json:"status,omitempty"`
 }
 
@@ -142,6 +157,7 @@ type KeptnTask struct {
 // KeptnTaskList contains a list of KeptnTask
 type KeptnTaskList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnTask `json:"items"`
 }

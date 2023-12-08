@@ -32,21 +32,27 @@ import (
 
 // KeptnEvaluationSpec defines the desired state of KeptnEvaluation
 type KeptnEvaluationSpec struct {
-	Workload             string `json:"workload,omitempty"`
-	WorkloadVersion      string `json:"workloadVersion"`
-	AppName              string `json:"appName,omitempty"`
+	// +optional
+	Workload        string `json:"workload,omitempty"`
+	WorkloadVersion string `json:"workloadVersion"`
+	// +optional
+	AppName string `json:"appName,omitempty"`
+	// +optional
 	AppVersion           string `json:"appVersion,omitempty"`
 	EvaluationDefinition string `json:"evaluationDefinition"`
 	// +kubebuilder:default:=10
+	// +optional
 	Retries int `json:"retries,omitempty"`
 	// +optional
 	// +kubebuilder:default:="5s"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
 	// +optional
-	RetryInterval metav1.Duration  `json:"retryInterval,omitempty"`
-	FailAction    string           `json:"failAction,omitempty"`
-	Type          common.CheckType `json:"checkType,omitempty"`
+	RetryInterval metav1.Duration `json:"retryInterval,omitempty"`
+	// +optional
+	FailAction string `json:"failAction,omitempty"`
+	// +optional
+	Type common.CheckType `json:"checkType,omitempty"`
 }
 
 // KeptnEvaluationStatus defines the observed state of KeptnEvaluation
@@ -56,14 +62,17 @@ type KeptnEvaluationStatus struct {
 	EvaluationStatus map[string]EvaluationStatusItem `json:"evaluationStatus"`
 	// +kubebuilder:default:=Pending
 	OverallStatus common.KeptnState `json:"overallStatus"`
-	StartTime     metav1.Time       `json:"startTime,omitempty"`
-	EndTime       metav1.Time       `json:"endTime,omitempty"`
+	// +optional
+	StartTime metav1.Time `json:"startTime,omitempty"`
+	// +optional
+	EndTime metav1.Time `json:"endTime,omitempty"`
 }
 
 type EvaluationStatusItem struct {
-	Value   string            `json:"value"`
-	Status  common.KeptnState `json:"status"`
-	Message string            `json:"message,omitempty"`
+	Value  string            `json:"value"`
+	Status common.KeptnState `json:"status"`
+	// +optional
+	Message string `json:"message,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -79,10 +88,13 @@ type EvaluationStatusItem struct {
 
 // KeptnEvaluation is the Schema for the keptnevaluations API
 type KeptnEvaluation struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnEvaluationSpec   `json:"spec,omitempty"`
+	// +optional
+	Spec KeptnEvaluationSpec `json:"spec,omitempty"`
+	// +optional
 	Status KeptnEvaluationStatus `json:"status,omitempty"`
 }
 
@@ -91,6 +103,7 @@ type KeptnEvaluation struct {
 // KeptnEvaluationList contains a list of KeptnEvaluation
 type KeptnEvaluationList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnEvaluation `json:"items"`
 }

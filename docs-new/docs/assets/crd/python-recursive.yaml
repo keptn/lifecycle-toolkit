@@ -1,0 +1,11 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: scheduled-deployment-2
+spec:
+  python:
+    parameters:
+      map:
+        mydata: "my-other-data"
+    functionRef:
+      name: scheduled-deployment-inline

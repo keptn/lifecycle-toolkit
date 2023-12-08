@@ -31,17 +31,22 @@ import (
 
 // KeptnWorkloadSpec defines the desired state of KeptnWorkload
 type KeptnWorkloadSpec struct {
-	AppName                   string            `json:"app"`
-	Version                   string            `json:"version"`
-	PreDeploymentTasks        []string          `json:"preDeploymentTasks,omitempty"`
-	PostDeploymentTasks       []string          `json:"postDeploymentTasks,omitempty"`
-	PreDeploymentEvaluations  []string          `json:"preDeploymentEvaluations,omitempty"`
+	AppName string `json:"app"`
+	Version string `json:"version"`
+	// +optional
+	PreDeploymentTasks []string `json:"preDeploymentTasks,omitempty"`
+	// +optional
+	PostDeploymentTasks []string `json:"postDeploymentTasks,omitempty"`
+	// +optional
+	PreDeploymentEvaluations []string `json:"preDeploymentEvaluations,omitempty"`
+	// +optional
 	PostDeploymentEvaluations []string          `json:"postDeploymentEvaluations,omitempty"`
 	ResourceReference         ResourceReference `json:"resourceReference"`
 }
 
 // KeptnWorkloadStatus defines the observed state of KeptnWorkload
 type KeptnWorkloadStatus struct {
+	// +optional
 	CurrentVersion string `json:"currentVersion,omitempty"`
 }
 
@@ -52,10 +57,13 @@ type KeptnWorkloadStatus struct {
 
 // KeptnWorkload is the Schema for the keptnworkloads API
 type KeptnWorkload struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnWorkloadSpec   `json:"spec,omitempty"`
+	// +optional
+	Spec KeptnWorkloadSpec `json:"spec,omitempty"`
+	// +optional
 	Status KeptnWorkloadStatus `json:"status,omitempty"`
 }
 
@@ -64,6 +72,7 @@ type KeptnWorkload struct {
 // KeptnWorkloadList contains a list of KeptnWorkload
 type KeptnWorkloadList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnWorkload `json:"items"`
 }

@@ -121,7 +121,7 @@ jobs:
 
           for chart_dir in ./lifecycle-operator/chart \
                   ./metrics-operator/chart \
-                  ./klt-cert-manager/chart \
+                  ./keptn-cert-manager/chart \
                   ./chart; do
               cd "$chart_dir"
               echo "updating charts for" $chart_dir
@@ -136,7 +136,7 @@ jobs:
           export TAG=$(ls tag/)
           echo "$TAG"
           mkdir scans
-          envsubst < .github/actions/deploy-klt-on-cluster/values.yaml > tmp.yaml
+          envsubst < .github/actions/deploy-keptn-on-cluster/values.yaml > tmp.yaml
           echo "used values.yaml file:"
           cat tmp.yaml
 
@@ -259,7 +259,7 @@ jobs:
           - "lifecycle-operator"
           - "metrics-operator"
           - "scheduler"
-          - "klt-cert-manager"
+          - "keptn-cert-manager"
     steps:
       - name: Set up Go 1.x
         uses: actions/setup-go@v4

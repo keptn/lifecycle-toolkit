@@ -25,7 +25,7 @@ metadata:
   name: lifecycle-operator
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     control-plane: lifecycle-operator
     keptn.sh/inject-cert: "true"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
@@ -67,8 +67,6 @@ spec:
           value: {{ .Values.lifecycleOperator.env.functionRunnerImage | quote }}
         - name: PYTHON_RUNNER_IMAGE
           value: {{ .Values.lifecycleOperator.env.pythonRunnerImage | quote }}
-        - name: OTEL_COLLECTOR_URL
-          value: {{ .Values.lifecycleOperator.env.otelCollectorUrl | quote }}
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
           value: {{ .Values.lifecycleOperator.env.keptnAppControllerLogLevel | quote
             }}
@@ -96,6 +94,8 @@ spec:
         - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
           value: {{ .Values.lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel
             | quote }}
+        - name: KEPTN_DORA_METRICS_PORT
+          value: {{ .Values.lifecycleOperator.env.keptnDoraMetricsPort | quote }}
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
           value: {{ .Values.lifecycleOperator.env.optionsControllerLogLevel | quote
             }}
@@ -130,11 +130,6 @@ spec:
             }}
           seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
-        volumeMounts:
-        - mountPath: /tmp/k8s-webhook-server/serving-certs/
-          name: certs-dir
-        - mountPath: /tmp/metrics-adapter/serving-certs
-          name: adapter-certs-dir
         {{- if .Values.lifecycleOperator.livenessProbe }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.livenessProbe "context" $) | nindent 10 }}
          {{- else }}
@@ -160,11 +155,6 @@ spec:
         runAsNonRoot: true
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10
-      volumes:
-      - emptyDir: {}
-        name: certs-dir
-      - emptyDir: {}
-        name: adapter-certs-dir
 {{- if .Values.lifecycleOperator.topologySpreadConstraints }}
       topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.topologySpreadConstraints "context" $) | nindent 8 }}
 {{- end }}

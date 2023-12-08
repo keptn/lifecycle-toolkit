@@ -30,7 +30,7 @@ func TestMetricServer_disabledServer(t *testing.T) {
 
 	tInstance := &serverManager{
 		ticker:        clock.New().Ticker(3 * time.Second),
-		ofClient:      openfeature.NewClient("klt-test"),
+		ofClient:      openfeature.NewClient("keptn-test"),
 		exposeMetrics: false,
 		k8sClient:     fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 	}
@@ -53,7 +53,7 @@ func TestMetricServer_happyPath(t *testing.T) {
 	var metric = metricsapi.KeptnMetric{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "sample-metric",
-			Namespace: "keptn-lifecycle-toolkit-system",
+			Namespace: "keptn-system",
 		},
 		Spec: metricsapi.KeptnMetricSpec{
 			Provider: metricsapi.ProviderRef{
@@ -74,7 +74,7 @@ func TestMetricServer_happyPath(t *testing.T) {
 
 	tInstance := &serverManager{
 		ticker:        clock.New().Ticker(3 * time.Second),
-		ofClient:      openfeature.NewClient("klt-test"),
+		ofClient:      openfeature.NewClient("keptn-test"),
 		exposeMetrics: true,
 		k8sClient:     k8sClient,
 	}
@@ -106,7 +106,7 @@ func TestMetricServer_happyPath(t *testing.T) {
 
 	require.Eventually(t, func() bool {
 		cli := &http.Client{}
-		req, _ := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:9999/api/v1/metrics/keptn-lifecycle-toolkit-system/sample-metric", nil)
+		req, _ := http.NewRequestWithContext(context.TODO(), http.MethodGet, "http://localhost:9999/api/v1/metrics/keptn-system/sample-metric", nil)
 		resp, err = cli.Do(req)
 		return err == nil
 	}, 10*time.Second, time.Second)
@@ -118,7 +118,7 @@ func TestMetricServer_happyPath(t *testing.T) {
 	require.Nil(t, err)
 	newStr = buf.String()
 
-	require.Contains(t, newStr, "\"metric\":\"sample-metric\",\"namespace\":\"keptn-lifecycle-toolkit-system\",\"value\":\"12\"")
+	require.Contains(t, newStr, "\"metric\":\"sample-metric\",\"namespace\":\"keptn-system\",\"value\":\"12\"")
 }
 
 func TestMetricServer_noMetric(t *testing.T) {
@@ -127,7 +127,7 @@ func TestMetricServer_noMetric(t *testing.T) {
 
 	tInstance := &serverManager{
 		ticker:        clock.New().Ticker(3 * time.Second),
-		ofClient:      openfeature.NewClient("klt-test"),
+		ofClient:      openfeature.NewClient("keptn-test"),
 		exposeMetrics: true,
 		k8sClient:     k8sClient,
 	}

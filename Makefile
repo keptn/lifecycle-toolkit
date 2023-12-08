@@ -4,6 +4,10 @@
 KUSTOMIZE_VERSION?=v5.2.1
 CHART_APPVERSION ?= v0.9.0 # x-release-please-version
 
+# renovate: datasource=docker depName=squidfunk/mkdocs-material
+MKDOCS_DOCKER_IMAGE_VERSION=9.4.14
+MKDOCS_DOCKER_IMAGE=squidfunk/mkdocs-material
+
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine
 
@@ -75,7 +79,7 @@ metrics-operator-test:
 
 .PHONY: certmanager-test
 certmanager-test:
-	$(MAKE) -C klt-cert-manager test
+	$(MAKE) -C keptn-cert-manager test
 
 .PHONY: operator-test
 operator-test:
@@ -120,22 +124,42 @@ build-deploy-scheduler:
 	$(MAKE) -C scheduler release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C scheduler push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
 	$(MAKE) -C scheduler release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
-	kubectl create namespace keptn-lifecycle-toolkit-system --dry-run=client -o yaml | kubectl apply -f -
+	kubectl create namespace keptn-system --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -f scheduler/config/rendered/release.yaml
 
 .PHONY: build-deploy-certmanager
 build-deploy-certmanager:
-	$(MAKE) -C klt-cert-manager release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
-	$(MAKE) -C klt-cert-manager push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
-	$(MAKE) -C klt-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
-	kubectl create namespace keptn-lifecycle-toolkit-system --dry-run=client -o yaml | kubectl apply -f -
-	kubectl apply -f klt-cert-manager/config/rendered/release.yaml
+	$(MAKE) -C keptn-cert-manager release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C keptn-cert-manager push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C keptn-cert-manager release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
+	kubectl create namespace keptn-system --dry-run=client -o yaml | kubectl apply -f -
+	kubectl apply -f keptn-cert-manager/config/rendered/release.yaml
 
 .PHONY: build-deploy-dev-environment
 build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-metrics-operator build-deploy-scheduler
 
-
 include docs/Makefile
+
+PWD=$(shell pwd)
+
+.PHONY: docs-build
+docs-build:
+	docker run --rm -it -v ${PWD}/docs-new:/docs-new \
+		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
+		-v ${PWD}/requirements.txt:/requirements.txt \
+		--entrypoint "" \
+		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
+		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs build -q'
+
+.PHONY: docs-serve
+docs-serve:
+	docker run --rm -it -p 8000:8000 \
+		-v ${PWD}/docs-new:/docs-new \
+		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
+		-v ${PWD}/requirements.txt:/requirements.txt \
+		--entrypoint "" \
+		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
+		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs serve -a 0.0.0.0:8000'
 
 yamllint:
 	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .
@@ -147,7 +171,7 @@ metrics-operator-lint:
 
 .PHONY: certmanager-lint
 certmanager-lint:
-	$(MAKE) -C klt-cert-manager lint
+	$(MAKE) -C keptn-cert-manager lint
 
 .PHONY: operator-lint
 operator-lint:

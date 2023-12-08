@@ -1,6 +1,6 @@
 apiVersion: v2
 name: keptn
-description: A Helm chart for Keptn Lifecycle Toolkit, a set of tools to enable cloud-native application lifecycle management
+description: A Helm chart for Keptn, a set of tools to enable cloud-native application lifecycle management
 icon: "https://raw.githubusercontent.com/cncf/artwork/master/projects/keptn/icon/color/keptn-icon-color.svg"
 home: https://keptn.sh
 sources:
@@ -53,7 +53,7 @@ dependencies:
     version: 0.2.0
     alias: certManager
     condition: certManager.enabled
-    repository: file://../klt-cert-manager/chart
+    repository: file://../keptn-cert-manager/chart
   - name: keptn-lifecycle-operator
     version: 0.1.0
     alias: lifecycleOperator

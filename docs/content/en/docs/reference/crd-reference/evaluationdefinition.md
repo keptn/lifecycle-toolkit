@@ -1,7 +1,7 @@
 ---
 title: KeptnEvaluationDefinition
 description: Define an evaluation query
-weight: 50
+weight: 45
 ---
 
 A `KeptnEvaluationDefinition` assigns target values
@@ -76,7 +76,7 @@ but the `KeptnEvaluationDefinition` resources
 can reference metrics from any namespace in the cluster.
 This means that you can create `KeptnMetricsProvider`
 and `KeptnMetric` resources
-in a centralized namespace (e.g. in `keptn-lifecycle-toolkit-system`)
+in a centralized namespace (e.g. in `keptn-system`)
 and use those metrics in evaluations
 on all namespaces in the cluster.
 

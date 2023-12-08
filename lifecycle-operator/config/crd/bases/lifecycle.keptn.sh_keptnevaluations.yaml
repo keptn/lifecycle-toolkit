@@ -95,6 +95,8 @@ spec:
                     message:
                       type: string
                     status:
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                     value:
                       type: string
@@ -105,6 +107,7 @@ spec:
                 type: object
               overallStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               retryCount:
                 default: 0
@@ -201,6 +204,8 @@ spec:
                     message:
                       type: string
                     status:
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                     value:
                       type: string
@@ -211,6 +216,7 @@ spec:
                 type: object
               overallStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               retryCount:
                 default: 0

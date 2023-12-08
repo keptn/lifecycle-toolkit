@@ -1,7 +1,7 @@
 ---
 title: KeptnTask
 description: Define a run of a KeptnTaskDefinition
-weight: 40
+weight: 83
 ---
 
 Keptn uses KeptnTask resources internally

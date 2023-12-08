@@ -30,7 +30,7 @@ jobs:
           key: kube-burner-${{ env.KUBE_BURNER_VERSION }}
 
       - name: Setup cluster
-        uses: ./.github/actions/deploy-klt-on-cluster
+        uses: ./.github/actions/deploy-keptn-on-cluster
         with:
           runtime_tag: ${{ inputs.runtime_tag }}
 

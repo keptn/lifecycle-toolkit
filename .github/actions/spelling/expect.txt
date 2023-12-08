@@ -18,7 +18,6 @@ Analysislog
 analysismetrics
 analysispool
 analysisspec
-analysisstate
 analysisstatus
 analysistypes
 analysisvaluetemplate
@@ -29,6 +28,7 @@ annadreal
 apicommon
 apierr
 apierrors
+apiservice
 APIURL
 apk
 appcreationrequest
@@ -67,7 +67,6 @@ BUILDPLATFORM
 buildx
 CACHEDIR
 cainjection
-canonical
 carryforward
 certificatehandler
 certmanager
@@ -143,7 +142,9 @@ Dockerfiles
 docsearch
 docsembed
 docsy
+donath
 dql
+draggable
 DTAPI
 dtclient
 dupl
@@ -154,6 +155,7 @@ elasticquota
 elif
 Emoji
 ENABLEGITINFO
+endblock
 endgroup
 envconfig
 envsubst
@@ -177,6 +179,8 @@ favicons
 fetchintervalseconds
 fieldpath
 fieldref
+flyout
+fontawesome
 ftp
 fullname
 functionref
@@ -228,6 +232,7 @@ homeorchestrate
 horizontalpodautoscalers
 hpa
 hreflang
+hsla
 htmltest
 httpref
 httpreference
@@ -245,6 +250,7 @@ ifeq
 ifile
 ifndef
 IHandler
+imagepullsecret
 IManager
 IMeter
 Infof
@@ -363,10 +369,12 @@ kwv
 labelledby
 lastmod
 lastword
+Lato
 lfc
 Lifcycle
 lifecyclekeptnsh
-lightbox
+linecap
+linejoin
 linkedin
 linktitle
 linting
@@ -395,6 +403,7 @@ metricsserver
 metricstypes
 mindepth
 minio
+mkdocs
 mlc
 mockserver
 moq
@@ -429,6 +438,7 @@ nodename
 nolint
 nonroot
 noreply
+nowrap
 nsa
 oac
 oauth
@@ -458,6 +468,7 @@ otlpgrpc
 otlptrace
 otlptracegrpc
 OUTDIR
+overriden
 owide
 oyaml
 pagelinks
@@ -499,6 +510,7 @@ providerref
 providerresult
 pyfunction
 pygments
+pymdown
 pyyaml
 quickstart
 rangespec
@@ -508,19 +520,21 @@ readinessprobe
 readyz
 realpath
 redis
-referrerpolicy
 relref
 remediations
 replicasets
 replicationcontrollers
 resourcereference
 Rexed
+rgb
 rgba
 RLock
 Roboto
 rolebinding
 rollme
 roundtripper
+rst
+rtd
 runhelloworld
 RUnlock
 runsendevent
@@ -560,6 +574,7 @@ spanhandler
 spanitem
 spdx
 spf
+squidfunk
 stakeholders
 standalone
 statefulset
@@ -567,7 +582,9 @@ statefultest
 stdouttrace
 storageclasses
 storageversion
+striptags
 sts
+stylesheet
 subchart
 subdir
 subjectaccessreviews
@@ -668,3 +685,4 @@ yml
 YOURNAME
 yourregistry
 youtube
+squidfunk

@@ -3,4 +3,9 @@ kind: KeptnApp
 metadata:
   name: keptnapp-sample
 spec:
-# TODO(user): Add fields here
+  version: "1.3"
+  workloads:
+    - name: podtato-head-entry
+      version: 0.1.0
+  postDeploymentEvaluations:
+    - available-cpus

@@ -2,5 +2,10 @@ apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnAppVersion
 metadata:
   name: keptnappversion-sample
-spec:
-# TODO(user): Add fields here
+status:
+  currentPhase: AppPostDeployEvaluations
+  postDeploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Failed
+  preDeploymentEvaluationStatus: Succeeded
+  status: Failed
+  workloadOverallStatus: Succeeded

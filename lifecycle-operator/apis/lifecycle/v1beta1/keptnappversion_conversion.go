@@ -64,7 +64,7 @@ func (src *KeptnAppVersion) ConvertTo(dstRaw conversion.Hub) error {
 	dst.Status.CurrentPhase = src.Status.CurrentPhase
 
 	// Set sensible defaults for new fields
-	dst.Spec.Revision = 1
+	dst.Spec.Revision = src.Spec.Revision
 
 	// Convert changed fields
 	for _, item := range src.Status.PreDeploymentTaskStatus {

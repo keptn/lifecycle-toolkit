@@ -40,7 +40,7 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 				Spec: v1alpha3.KeptnAppVersionSpec{
 					KeptnAppSpec: v1alpha3.KeptnAppSpec{
 						Version:  "1.2.3",
-						Revision: 1,
+						Revision: 0,
 						Workloads: []v1alpha3.KeptnWorkloadRef{
 							{
 								Name:    "workload-1",
@@ -460,7 +460,7 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 				Spec: v1alpha3.KeptnAppVersionSpec{
 					KeptnAppSpec: v1alpha3.KeptnAppSpec{
 						Version:  "1.2.3",
-						Revision: 1,
+						Revision: 0,
 						Workloads: []v1alpha3.KeptnWorkloadRef{
 							{
 								Name:    "workload-1",

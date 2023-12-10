@@ -3,4 +3,7 @@ kind: KeptnEvaluation
 metadata:
   name: keptnevaluation-sample
 spec:
-# TODO(user): Add fields here
+  appName: my-app
+  workload: new-workload
+  workloadVersion: "1.0.0"
+  evaluationDefinition: my-app-evaluation

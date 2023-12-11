@@ -102,6 +102,8 @@ type envConfig struct {
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
 	SchedulingGatesEnabled bool `envconfig:"SCHEDULING_GATES_ENABLED" default:"false"`
+
+	CertManagerEnabled bool `envconfig:"CERT_MANAGER_ENABLED" default:"false"`
 }
 
 const KeptnLifecycleActiveMetric = "keptn_lifecycle_active"
@@ -399,7 +401,7 @@ func main() {
 	// Set the metric value as soon as the operator starts
 	setupLog.Info("Keptn lifecycle-operator is alive")
 	keptnLifecycleActive.Add(context.Background(), 1)
-	if !disableWebhook {
+	if !disableWebhook && env.CertManagerEnabled {
 		webhookBuilder = webhookBuilder.SetCertificateWatcher(
 			certificates.NewCertificateWatcher(
 				mgr.GetAPIReader(),

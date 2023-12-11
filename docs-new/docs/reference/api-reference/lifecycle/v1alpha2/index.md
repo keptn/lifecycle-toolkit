@@ -1,4 +1,7 @@
 # v1alpha2
+
+Reference information for lifecycle.keptn.sh/v1alpha2
+
 <!-- markdownlint-disable -->
 
 ## Packages

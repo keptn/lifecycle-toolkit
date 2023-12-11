@@ -1,4 +1,3 @@
----
-title: $API_GROUP API
-description: Reference information about the $API_GROUP API
----
+# $API_GROUP API
+
+Reference information about the $API_GROUP API

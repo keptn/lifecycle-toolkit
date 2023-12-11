@@ -4,15 +4,6 @@ description: Understand Keptn evaluations and how to use them
 weight: 700
 ---
 
-A Keptn evaluation does a simple evaluation of the metrics data you capture,
-to answer a question such as "Do I have more than four CPUs available?".
-It can be defined to run before or after your software is deployed.
-
-More complex calculations that use weighting and scoring
-can be implemented using the Keptn
-[analysis](slo.md)
-feature.
-
 ## KeptnEvaluationDefinition
 
 A

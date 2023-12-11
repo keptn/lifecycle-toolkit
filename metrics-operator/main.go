@@ -73,6 +73,7 @@ type envConfig struct {
 	AnalysisControllerLogLevel    int    `envconfig:"ANALYSIS_CONTROLLER_LOG_LEVEL" default:"0"`
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
 	EnableCustomMetricsAPIService bool   `envconfig:"ENABLE_CUSTOM_METRICS_API_SERVICE" default:"true"`
+	CertManagerEnabled            bool   `envconfig:"CERT_MANAGER_ENABLED" default:"true"`
 }
 
 //nolint:gocyclo,funlen
@@ -167,7 +168,7 @@ func main() {
 	}
 
 	var webhookBuilder certwebhook.Builder
-	if !disableWebhook {
+	if !disableWebhook && env.CertManagerEnabled {
 		webhookBuilder = certwebhook.NewWebhookServerBuilder().
 			LoadCertOptionsFromFlag().
 			SetPort(9443).

@@ -57,6 +57,8 @@ spec:
             }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
+        - name: CERT_MANAGER_ENABLED
+          value: {{ .Values.certManager.enabled | quote }}
         image: {{- include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) | indent 1}}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         name: metrics-operator

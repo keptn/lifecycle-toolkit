@@ -4,16 +4,16 @@ description: Understand Keptn evaluations and how to use them
 weight: 700
 ---
 
-An evaluation is run either pre- or post-deployment
-to do a simple comparison of a metric value to a target value.
-For example, an evaluation can check whether more than four CPUs are available,
-whether a remote database is accessible,
+A Keptn evaluation does a simple evaluation of the metrics data you capture,
+to answer a question such as "Do I have more than four CPUs available?"
+or "Is my remote database accessible?"
 or check for other problems in your infrastructure.
-The deployment is kept in a pending state
-until the infrastructure is capable of accepting deployments again.
-You can also define
-[deployment tasks](tasks.md)
-that are run pre- and post-deployment
+It can be defined to run before or after your software is deployed.
+
+When an evaluation is run pre-deployment,
+the deployment is kept in a pending state
+until the result of the evaluations show
+that the infrastructure is capable of accepting deployments again.
 
 Use the
 [Analysis](slo.md)

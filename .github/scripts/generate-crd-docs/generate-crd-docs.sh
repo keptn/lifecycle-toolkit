@@ -50,8 +50,12 @@ for api_group in "$OPERATOR_API_ROOT"*; do
 
     renderer_config_file="$RENDERER_CONFIG_FILE_TEMPLATE_PATH-$sanitized_api_group-$sanitized_api_version.yaml"
     if [ ! -f "$renderer_config_file" ]; then
+      echo "Using default configuration..."
       renderer_config_file=$RENDERER_CONFIG_FILE
+    else
+      echo "Using API version specific configuration..."
     fi
+
 
     echo "Arguments:"
     echo "TEMPLATE_DIR: $TEMPLATE_DIR"

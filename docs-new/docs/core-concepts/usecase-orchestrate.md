@@ -47,8 +47,8 @@ example.
 The steps to implement pre- and post-deployment orchestration are:
 
 * [Using this exercise](#using-this-exercise)
-* [Define evaluations to be performed pre- and post-deployment](#define-evaluations-to-be-performed-pre--and-post-deployment)
-* [Define tasks to be performed pre- and post-deployment](#define-tasks-to-be-performed-pre--and-post-deployment)
+* [Define evaluations to be performed pre- and post-deployment](#define-evaluations-to-be-performed-prepost-deployment)
+* [Define tasks to be performed pre- and post-deployment](#define-tasks-to-be-performed-prepost-deployment)
 * [Integrate evaluations and tasks into the cluster](#integrate-evaluations-and-tasks-into-the-cluster)
 
 This is the third of three exercises in the
@@ -82,7 +82,7 @@ you need to do the following:
    which aggregate [workloads](https://kubernetes.io/docs/concepts/workloads/) that are combined into the released product,
    regardless of the tools being used.
 
-## Define evaluations to be performed pre- and post-deployment
+## Define evaluations to be performed pre/post deployment
 
 An `evaluation` is a KeptnMetric that has a defined target value.
 Evaluations are resources that are defined in a
@@ -115,7 +115,7 @@ The `evaluationTarget` is set to be `>4`,
 so this evaluation makes sure that more than 4 CPUs are available.
 You could include objectives and additional metrics in this evaluation.
 
-## Define tasks to be performed pre- and post-deployment
+## Define tasks to be performed pre/post deployment
 
 Tasks are resources that are defined in a
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)

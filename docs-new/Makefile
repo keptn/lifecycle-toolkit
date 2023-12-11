@@ -24,6 +24,7 @@ docs-build:
 		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
 		-v ${PWD}/requirements.txt:/requirements.txt \
 		-v ${PWD}/site:/site \
+		-v ${PWD}/.git:/.git \
 		--entrypoint "" \
 		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
 		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs build'
@@ -35,6 +36,7 @@ docs-serve:
 		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
 		-v ${PWD}/requirements.txt:/requirements.txt \
 		-v ${PWD}/site:/site \
+		-v ${PWD}/.git:/.git \
 		--entrypoint "" \
 		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
 		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs serve -a 0.0.0.0:$(PORT)'
@@ -47,6 +49,7 @@ htmltest: docs-build
 	$(DOCKER_CMD) \
 		-v $(PWD)/docs-new/.htmltest.yml:/.htmltest.yml \
 		-v ${PWD}/site:/site \
+		-v ${PWD}/tmp/.htmltest:/tmp/.htmltest \
 		wjdp/htmltest:$(HTMLTEST_VERSION) -c /.htmltest.yml /site
 
 .PHONY: lint lint-fix

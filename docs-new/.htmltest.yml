@@ -9,3 +9,4 @@ IgnoreURLs:
   - "twitter.com"
   - "fonts.gstatic.com"
 StripQueryString: false
+OutputDir: /tmp/.htmltest

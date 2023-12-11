@@ -33,6 +33,7 @@ jobs:
         with:
           path: |
             docs/tmp/.htmltest
+            tmp/.htmltest
           key: ${{ runner.os }}-htmltest
 
       - name: Cache Hugo packages

@@ -103,7 +103,7 @@ type envConfig struct {
 
 	SchedulingGatesEnabled bool `envconfig:"SCHEDULING_GATES_ENABLED" default:"false"`
 
-	CertManagerEnabled bool `envconfig:"CERT_MANAGER_ENABLED" default:"false"`
+	CertManagerEnabled bool `envconfig:"CERT_MANAGER_ENABLED" default:"true"`
 }
 
 const KeptnLifecycleActiveMetric = "keptn_lifecycle_active"

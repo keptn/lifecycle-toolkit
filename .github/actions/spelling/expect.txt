@@ -622,6 +622,7 @@ unmarshal
 unmarshalling
 urlset
 usecasebox
+usecases
 usr
 utilruntime
 validatingwebhookconfigurations

@@ -5,7 +5,7 @@ KUSTOMIZE_VERSION?=v5.3.0
 CHART_APPVERSION ?= v0.9.0 # x-release-please-version
 
 # renovate: datasource=docker depName=squidfunk/mkdocs-material
-MKDOCS_DOCKER_IMAGE_VERSION=9.4.14
+MKDOCS_DOCKER_IMAGE_VERSION=9.5.1
 MKDOCS_DOCKER_IMAGE=squidfunk/mkdocs-material
 
 # renovate: datasource=docker depName=cytopia/yamllint

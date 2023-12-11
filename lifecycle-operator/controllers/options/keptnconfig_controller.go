@@ -73,6 +73,12 @@ func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		r.initConfig()
 	}
 
+	if r.LastAppliedSpec.BlockDeployment != cfg.Spec.BlockDeployment {
+		r.Log.Info("BlockDeployment configuration changed. Updating Controller Logic")
+
+		r.config.SetBlockDeployment(cfg.Spec.BlockDeployment)
+	}
+
 	// reconcile config values
 	r.config.SetCreationRequestTimeout(time.Duration(cfg.Spec.KeptnAppCreationRequestTimeoutSeconds) * time.Second)
 	r.config.SetCloudEventsEndpoint(cfg.Spec.CloudEventsEndpoint)

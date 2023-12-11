@@ -41,6 +41,7 @@ type KeptnConfigSpec struct {
 	// CloudEventsEndpoint can be used to set the endpoint where Cloud Events should be posted by the lifecycle operator
 	// +optional
 	CloudEventsEndpoint string `json:"cloudEventsEndpoint,omitempty"`
+	BlockDeployment     bool   `json:"blockDeployment, omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -56,7 +57,8 @@ type KeptnConfig struct {
 	Spec KeptnConfigSpec `json:"spec,omitempty"`
 	// unused field
 	// +optional
-	Status string `json:"status,omitempty"`
+	Status          string `json:"status,omitempty"`
+	BlockDeployment bool   `json:"block-deployment,omitempty"`
 }
 
 // +kubebuilder:object:root=true

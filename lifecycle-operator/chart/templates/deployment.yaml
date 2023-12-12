@@ -45,10 +45,12 @@ spec:
         kubectl.kubernetes.io/default-container: lifecycle-operator
         metrics.dynatrace.com/port: "2222"
         metrics.dynatrace.com/scrape: "true"
+        {{- if .Values.global.caInjectionAnnotations }}
+        {{- toYaml .Values.global.caInjectionAnnotations | nindent 8 }}
+        {{- end }}
         {{- if .Values.podAnnotations }}
         {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
         {{- end }}
-    spec:
       containers:
       - args:
         - --leader-elect

@@ -23,3 +23,4 @@ metrics, observability, health checks, with pre- and post-deployment evaluations
 | `global.imagePullSecrets`  | Global Docker registry secret names as an array                           | `[]`  |
 | `global.commonLabels`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |
 | `global.commonAnnotations` | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |
+| `global.caInjectionAnnotations` | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |

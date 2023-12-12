@@ -267,3 +267,8 @@ schedulerConfig:
         - name: KLCPermit
 ## @param scheduler.tolerations adds tolerations for scheduler
     schedulerName: keptn-scheduler
+
+## @section Keptn
+certManager:
+  ## @param certManager.enabled Enable this value to install Keptn Certificate Manager
+  enabled: true

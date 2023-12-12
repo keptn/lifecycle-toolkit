@@ -169,3 +169,8 @@ resources:
   requests:
     cpu: 10m
     memory: 64Mi
+
+## @section Keptn
+certManager:
+  ## @param certManager.enabled Enable this value to install Keptn Certificate Manager
+  enabled: true

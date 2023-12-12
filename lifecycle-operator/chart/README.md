@@ -97,3 +97,9 @@ and application health checks
 | `schedulerConfig.leaderElection.leaderElect`                 | enables leader election for multiple replicas of the scheduler | `false`               |
 | `schedulerConfig.profiles[0].plugins.permit.enabled[0].name` | enables permit plugin                                          | `KLCPermit`           |
 | `scheduler.tolerations`                                      | adds tolerations for scheduler                                 | `[]`                  |
+
+### Keptn
+
+| Name                  | Description                                            | Value  |
+| --------------------- | ------------------------------------------------------ | ------ |
+| `certManager.enabled` | Enable this value to install Keptn Certificate Manager | `true` |

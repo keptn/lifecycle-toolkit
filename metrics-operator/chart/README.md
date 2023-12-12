@@ -80,3 +80,9 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 | `livenessProbe`                                     | custom livenessprobe for manager container                    |                          |
 | `readinessProbe`                                    | custom readinessprobe for manager container                   |                          |
 | `resources`                                         | specify limits and requests for manager container             |                          |
+
+### Keptn
+
+| Name                  | Description                                            | Value  |
+| --------------------- | ------------------------------------------------------ | ------ |
+| `certManager.enabled` | Enable this value to install Keptn Certificate Manager | `true` |

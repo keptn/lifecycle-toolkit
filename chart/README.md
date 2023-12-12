@@ -9,11 +9,10 @@ metrics, observability, health checks, with pre- and post-deployment evaluations
 
 ### Keptn
 
-| Name                        | Description                                            | Value  |
-| --------------------------- | ------------------------------------------------------ | ------ |
-| `certManager.enabled`       | Enable this value to install Keptn Certificate Manager | `true` |
-| `lifecycleOperator.enabled` | Enable this value to install Keptn Lifecycle Operator  | `true` |
-| `metricsOperator.enabled`   | Enable this value to install Keptn Metrics Operator    | `true` |
+| Name                        | Description                                           | Value  |
+| --------------------------- | ----------------------------------------------------- | ------ |
+| `lifecycleOperator.enabled` | Enable this value to install Keptn Lifecycle Operator | `true` |
+| `metricsOperator.enabled`   | Enable this value to install Keptn Metrics Operator   | `true` |
 
 ### Global parameters
 

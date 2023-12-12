@@ -215,7 +215,7 @@ Do this by using the `keptn.sh/pre-deployment-tasks` label.
 ## Further Information
 
 There is a lot more you can do with KeptnTasks.
-See [pre and post deployment checks page](../guides/integrate.md#pre--and-post-deployment-checks) to find out more.
+See [pre and post deployment checks page](../guides/integrate.md#prepost-deployment-checks) to find out more.
 
 ## What's next?
 

@@ -40,7 +40,7 @@ you must:
   pre- and post-deployment evaluations for the `KeptnApp` itself.
 
 See
-[Pre- and post-deployment checks](./integrate.md#pre--and-post-deployment-checks)
+[Pre- and post-deployment checks](./integrate.md#prepost-deployment-checks)
 for details.
 
 Note the following:

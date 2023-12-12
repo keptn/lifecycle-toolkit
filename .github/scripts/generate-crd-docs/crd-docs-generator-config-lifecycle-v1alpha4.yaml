@@ -7,10 +7,10 @@ render:
   knownTypes:
     - name: ResourceReference
       package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3
-      link: ../v1alpha3/#resourcereference
+      link: ../v1alpha3/index.md#resourcereference
     - name: ItemStatus
       package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3
-      link: ../v1alpha3/#itemstatus
+      link: ../v1alpha3/index.md#itemstatus
     - name: Quantity
       package: "k8s.io/apimachinery/pkg/api/resource"
       link: https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity

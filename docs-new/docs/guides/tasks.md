@@ -41,7 +41,7 @@ pre- and post-deployment
   resource to associate your `KeptnTaskDefinition`
   with the pre- and post-deployment tasks that should be run;
   see
-  [Pre- and post-deployment tasks and checks](./integrate.md#pre--and-post-deployment-checks)
+  [Pre- and post-deployment tasks and checks](./integrate.md#prepost-deployment-checks)
   for more information
 
 This page provides information to help you create your tasks:

@@ -38,9 +38,7 @@ To implement a `KeptnTask`:
   and the executables to be run
 pre- and post-deployment
 - Apply [basic-annotations](./integrate.md#basic-annotations)
-  to your workloads to integrate your task with Kubernetes and,
-  if desired, creates a `KeptnApp` resource
-  that consolidates multiple workloads into a single application
+  to your workloads to integrate your tasks with Kubernetes.
 - Generate the required
   [KeptnApp](../reference/crd-reference/app.md)
   resources following the instructions in
@@ -48,10 +46,7 @@ pre- and post-deployment
 - Annotate the appropriate
   [KeptnApp](../reference/crd-reference/app.md)
   resource to associate your `KeptnTaskDefinition`
-  with the pre- and post-deployment tasks that should be run;
-  see
-  [Pre- and post-deployment tasks and checks](./integrate.md#pre--and-post-deployment-checks)
-  for more information
+  with the pre- and post-deployment tasks that should be run.
 
 This page provides information to help you create your tasks:
 

@@ -1,7 +1,7 @@
 ---
 title: Integrate Keptn with your Applications
 description: How to integrate Keptn into your Kubernetes cluster
-weight: 200
+weight: 100
 ---
 
 Keptn works
@@ -181,45 +181,3 @@ because they store references, names, and version information
 so the 63 char limitation is quite restrictive.
 However, labels can be used if you specifically need them
 and can accommodate the size restriction.
-
-## Pre- and post-deployment checks
-
-To implement the Keptn Release Lifecycle feature
-that handles pre- and post-deployment evaluations and tasks,
-do the following:
-
-- Define the
-  [KeptnMetric](../reference/crd-reference/metric.md)
-  and
-  [KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)
-  resources for each evaluation you want.
-  A `KeptnEvaluationDefinition` compares the value
-  of a `KeptnMetric` to the threshold that is specified.
-- You will also need to define the necessary
-  [KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
-  and
-  resource for each instance of each data source
-  used for the `KeptnEvaluationDefinition` resources you define.
-- Define a
-  [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
-  resource for each task you want to execute.
-  `KeptnTaskDefinition`  resources contain re-usable "functions"
-  that can execute before and after the deployment.
-  For example, before the deployment starts,
-  you might run a check for open problems in your infrastructure
-  and invoke a pipeline to run performance tests.
-  The deployment is kept in a pending state
-  until the infrastructure is capable of accepting deployments again.
-  See
-  [Working with Keptn tasks](./tasks.md)
-  for more information.
-- Annotate your [Workloads](https://kubernetes.io/docs/concepts/workloads/)
-  [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
-  [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
-  and
-  [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
-  to include each evaluation and task you want run
-  for specific workloads.
-- Manually edit all
-  [KeptnApp](../reference/crd-reference/app.md) resources
-  to specify evaluations and tasks to be run for the `KeptnApp` itself.

@@ -38,7 +38,7 @@ To implement evaluations, you must:
    [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
    [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
    and
-   [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+   [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/))
    with
    [basic annotations](integrate.md/#basic-annotations).
 1. Generate the required
@@ -52,9 +52,9 @@ To implement evaluations, you must:
    that you need for your evaluations.
 1. [Create KeptnEvaluationDefinition](#create-keptnevaluationdefinition-resources)
    resources for each evaluation you want to perform.
-1. Annotate the appropriate `KeptnApp`
-   resources for each `KeptnEvaluationDefinition` resource
-   you want to run pre- and/or post-deployment
+1. Manually edit the appropriate `KeptnApp` resources
+   to anotate them for each `KeptnEvaluationDefinition` resource
+   you want to run pre- and/or post-deployment.
 
 ## Create KeptnEvaluationDefinition resources
 
@@ -112,7 +112,7 @@ you must manually edit the
 YAML file to provide an annotation
 for each `KeptnEvaluationDefinition` resource to be run
 pre- and post-deployment.
-The annotations are:
+The annotations for evaluations are:
 
 ```yaml
 keptn.sh/pre-deployment-evaluations: <evaluation-name>

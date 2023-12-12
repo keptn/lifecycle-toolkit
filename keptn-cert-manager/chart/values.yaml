@@ -4,6 +4,8 @@
 
 ##
 global:
+  ## @param global.certManagerEnabled Enable this value to install Keptn Certificate Manager
+  certManagerEnabled: "true"
   ## @param global.imageRegistry Global container image registry
   imageRegistry: ""
 

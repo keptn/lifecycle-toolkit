@@ -6563,10 +6563,10 @@ spec:
           value: "0"
         - name: SCHEDULING_GATES_ENABLED
           value: "false"
-        - name: CERT_MANAGER_ENABLED
-          value: "false"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
+        - name: CERT_MANAGER_ENABLED
+          value: "false"
         image: testreg/myrep:v0.0.1
         imagePullPolicy: Always
         name: lifecycle-operator

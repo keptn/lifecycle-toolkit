@@ -22,14 +22,14 @@ At the end of the analysis,
 the status returns whether your objective failed, passed,
 or passed with a warning.
 This is similar to the functionality provided by the Keptn v1
-[Quality Gates](https://keptn.sh/docs/1.0.x/define/quality-gates/)
+[Quality Gates](https://v1.keptn.sh/docs/1.0.x/define/quality-gates/)
 feature.
 
 Converters are provided to
 to migrate most Keptn v1
-[SLIs](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+[SLIs](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
 and
-[SLOs](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+[SLOs](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
 to Keptn Analysis SLIs and SLOs.
 For more information,see:
 

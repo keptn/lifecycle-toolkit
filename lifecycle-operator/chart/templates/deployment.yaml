@@ -105,7 +105,7 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
         - name: CERT_MANAGER_ENABLED
-          value: {{ .Values.certManager.enabled | quote 
+          value: {{ .Values.global.certManagerEnabled | quote 
           }}
         image: {{ include "common.images.image" ( dict "imageRoot" .Values.lifecycleOperator.image "global" .Values.global ) }}
         imagePullPolicy: {{ .Values.lifecycleOperator.imagePullPolicy }}

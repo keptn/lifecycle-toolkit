@@ -13,6 +13,7 @@ and application health checks
 
 | Name                                                    | Description                                                                                                                                                   | Value               |
 | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| `global.certManagerEnabled`                             | Enable this value to install Keptn Certificate Manager                                                                                                        | `true`              |
 | `global.imageRegistry`                                  | Global container image registry                                                                                                                               | `""`                |
 | `global.imagePullSecrets`                               | Global Docker registry secret names as an array                                                                                                               | `[]`                |
 | `global.commonLabels`                                   | Common annotations to add to all Keptn resources. Evaluated as a template                                                                                     | `{}`                |
@@ -97,9 +98,3 @@ and application health checks
 | `schedulerConfig.leaderElection.leaderElect`                 | enables leader election for multiple replicas of the scheduler | `false`               |
 | `schedulerConfig.profiles[0].plugins.permit.enabled[0].name` | enables permit plugin                                          | `KLCPermit`           |
 | `scheduler.tolerations`                                      | adds tolerations for scheduler                                 | `[]`                  |
-
-### Keptn
-
-| Name                  | Description                                            | Value  |
-| --------------------- | ------------------------------------------------------ | ------ |
-| `certManager.enabled` | Enable this value to install Keptn Certificate Manager | `true` |

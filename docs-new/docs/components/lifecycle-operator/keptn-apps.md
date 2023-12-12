@@ -64,7 +64,7 @@ for the `KeptnApp` resource itself:
   that contain the identifications required
   to run the Keptn observability features.
 * You must manually add the annotations described in
-  [Pre- and post-deployment checks](../../guides/integrate.md#pre--and-post-deployment-checks)
+  [Pre- and post-deployment checks](../../guides/integrate.md#prepost-deployment-checks)
   to the basic `KeptnApp` manifest to define
   the evaluations and tasks you want to run pre- and post-deployment.
 

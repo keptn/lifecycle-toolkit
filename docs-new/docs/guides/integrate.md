@@ -168,7 +168,7 @@ so the 63 char limitation is quite restrictive.
 However, labels can be used if you specifically need them
 and can accommodate the size restriction.
 
-## Pre- and post-deployment checks
+## Pre/Post-deployment checks
 
 To implement the Keptn Release Lifecycle feature
 that handles pre- and post-deployment evaluations and tasks,

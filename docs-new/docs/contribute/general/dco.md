@@ -72,13 +72,13 @@ Your builds will fail and can not be merged if the DCO check fails.
 Do any of the following
 to implement the DCO signoff on each commit:
 
-* [Add **-s** or **--signoff**](#sign-off-with-git-commit--s)
+* [Add **-s** or **--signoff**](#sign-off-while-committing)
   to your usual `git commit` commands
 * [Manually add text](#manually-add-text-to-commit-description)
   to your commit body
 * [Automate DCO](#automate-dco)
 
-## Sign off with git commit -s
+## Sign off while committing
 
 Use the **-s** or **--signoff** flag to the `git commit` command
 to sign off on a commit.

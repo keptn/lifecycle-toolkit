@@ -4,7 +4,9 @@ metadata:
   name: keptntaskdefinitions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
+{{- if and .Values.global.caInjectionAnnotations (not (empty .Values.global.caInjectionAnnotations)) }}
+{{ .Values.global.caInjectionAnnotations | toYaml | nindent 4| trimPrefix "\n"}}
+{{- end }}
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh

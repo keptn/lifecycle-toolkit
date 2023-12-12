@@ -3,7 +3,9 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: lifecycle-validating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
+{{- if and .Values.global.caInjectionAnnotations (not (empty .Values.global.caInjectionAnnotations)) }}
+{{ .Values.global.caInjectionAnnotations | toYaml | nindent 4| trimPrefix "\n"}}
+{{- end }}
   labels:
     keptn.sh/inject-cert: "true"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}

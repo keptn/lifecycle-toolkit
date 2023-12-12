@@ -1,3 +1,3 @@
 # Guides
 
-This section will help you with guides about specific features of Keptn.
+This section provides comprehensive guides about specific features of Keptn.

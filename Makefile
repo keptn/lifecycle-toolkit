@@ -147,9 +147,10 @@ docs-build:
 	docker run --rm -it -v ${PWD}/docs-new:/docs-new \
 		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
 		-v ${PWD}/requirements.txt:/requirements.txt \
+		-v ${PWD}/.git:/.git \
 		--entrypoint "" \
 		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
-		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs build -q'
+		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs build'
 
 .PHONY: docs-serve
 docs-serve:
@@ -157,6 +158,7 @@ docs-serve:
 		-v ${PWD}/docs-new:/docs-new \
 		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
 		-v ${PWD}/requirements.txt:/requirements.txt \
+		-v ${PWD}/.git:/.git \
 		--entrypoint "" \
 		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
 		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs serve -a 0.0.0.0:8000'

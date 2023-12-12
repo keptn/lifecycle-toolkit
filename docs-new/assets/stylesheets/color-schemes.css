@@ -2,6 +2,14 @@
     --md-primary-fg-color:        #006bb8;
     --md-primary-fg-color--light: #006bb8;
     --md-primary-fg-color--dark:  #006bb8;
+
+    --md-primary-bg-color:               hsla(0, 0%, 100%, 1);
+    --md-primary-bg-color--light:        hsla(0, 0%, 100%, 0.7);
+
+    --md-accent-fg-color:                #d8e6f4;
+    --md-accent-fg-color--transparent:   hsla(231, 48%, 48% , 0.1);
+    --md-accent-bg-color:                hsla(0, 0%, 100%, 1);
+    --md-accent-bg-color--light:         hsla(0, 0%, 100%, 0.7);
 }
 [data-md-color-scheme="slate"] {
     --md-primary-fg-color:        #006bb8;

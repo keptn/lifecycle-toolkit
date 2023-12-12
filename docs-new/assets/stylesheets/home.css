@@ -7,9 +7,10 @@
     height: 100%;
 }
 
-.tx-container {
+.gradient-container {
     padding-top: .0rem;
-    background: linear-gradient(to bottom, var(--md-primary-fg-color), var(--md-accent-fg-color) 99%,#fff 99%)
+    background: linear-gradient(to bottom, var(--md-primary-fg-color), var(--md-accent-fg-color),#fff 99%)
+    /*background: linear-gradient(to bottom, var(--md-primary-fg-color), #d8e6f4,#fff 99%)*/
 }
 
 .tx-hero {

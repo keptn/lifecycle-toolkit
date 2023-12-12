@@ -10,20 +10,20 @@
 {{ super() }}
 
 <!-- Main site Entry button descriptions -->
+<div class="gradient-container">
 <section class="tx-container">
     <div class="md-grid md-typeset">
         <div class="tx-hero">
             <div class="tx-hero__image">
-                <img src="/assets/higher-compliance.png" draggable="false" alt="graphic of sea men hoisting an anchor">
             </div>
             <div class="tx-hero__content">
-                <h1> Keptn </h1>
+                <img src="/assets/keptn-logo-white.svg" draggable="false" alt="graphic of sea men hoisting an anchor">
                 <p>Supercharge your deployments with Keptn!</p>
-                <a href="{{ page.next_page.url | url }}" data-proofer-ignore title="{{ page.next_page.title | striptags }}" class="md-button md-button--primary">
+                <a href="/docs/getting-started/" data-proofer-ignore title="Get started" class="md-button md-button--primary">
                     Get started
                 </a>
-                <a href="{{ config.repo_url }}" data-proofer-ignore title="{{ lang.t('source.link.title') }}" class="md-button">
-                    Go to GitHub
+                <a href="/docs/" data-proofer-ignore title="Documentation" class="md-button">
+                    Documentation
                 </a>
             </div>
         </div>
@@ -33,31 +33,73 @@
 <!-- Main site box descriptions -->
 <div class="top-hr">
     <div class="feature-item">
+        <img src="/assets/capabilities-04.svg" draggable="false" alt="a man holding a sheet of paper with cog on it">
         <h2>
             Deployment Observability
         </h2>
         <p>Make ANY Kubernetes Deployment observable</p>
     </div>
     <div class="feature-item">
+        <img src="/assets/capabilities-03.svg" draggable="false" alt="a man holding a sheet of paper with cog on it">
         <h2>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path
-                        d="M16 17v2H2v-2s0-4 7-4 7 4 7 4m-3.5-9.5A3.5 3.5 0 109 11a3.5 3.5 0 003.5-3.5m3.44 5.5A5.32 5.32 0 0118 17v2h4v-2s0-3.63-6.06-4M15 4a3.39 3.39 0 00-1.93.59 5 5 0 010 5.82A3.39 3.39 0 0015 11a3.5 3.5 0 000-7z" />
-            </svg>Gather metrics from anywhere
+            Gather metrics from anywhere
         </h2>
         <p>Standardize access for all Observability Data for K8s</p>
     </div>
     <div class="feature-item">
+        <img src="/assets/capabilities-01.svg" draggable="false" alt="a man holding a sheet of paper with cog on it">
         <h2>
-            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M20.4 14.5L16 10 4 20"/></svg>
             Orchestrate Deployment Checks
         </h2>
         <p>Gain confidence in your work with pre-/post-deployment checks</p>
     </div>
 </div>
 
-<div class="top-hr">
-    <div class="hr">
+    <div class="top-hr">
+        <div class="hr">
+        </div>
+    </div>
+</div>
+<div class="mx-auto">
+    <div class="mb-4 d-none d-md-block " >
+        <picture >
+            <img alt="keptn" src="/assets/keptn-logo-white.svg">
+        </picture>
+    </div>
+    <h2 class="styled display-3 mt-0 mb-4">Cloud native application lifecycle orchestration </h2>
+    <div>
+        <a class="btn btn-lg btn-primary mr-3 mb-4" href="/docs">
+            Docs <i class="fas fa-arrow-alt-circle-right ml-2"></i>
+        </a>
+        <a class="btn btn-lg btn-secondary mr-3 mb-4" href="/docs/getting-started/">
+            Get Started <i class="fa-solid fa-rocket ml-2"></i>
+        </a>
+    </div>
+</div>
+<div class="usecasebox">
+
+    ## Use Cases
+
+    We extend the K8s APIs with the following Use Cases:
+
+    <div class="row usecases">
+        Make ANY Kubernetes Deployment observable
+
+        <a class="btn btn-lg -bg-light mr-3 mb-4" href="#deployment-observability">
+            read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
+        </a>
+        Standardize access for all Observability Data for K8s
+
+        <a class="btn btn-lg -bg-light mr-3 mb-4" href="#gather-metrics-from-anywhere">
+            read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
+        </a>
+
+        Gain confidence in your work with pre-/post-deployment checks
+
+        <a class="btn btn-lg -bg-light mr-3 mb-4" href="#orchestrate-deployment-checks">
+            read more <i class="fas fa-arrow-alt-circle-down ml-2"></i>
+        </a>
+
     </div>
 </div>
 

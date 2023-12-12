@@ -119,6 +119,7 @@ cyclomatic
 cytopia
 daemonset
 dario
+databranch
 datadog
 datasource
 datetime
@@ -198,6 +199,8 @@ getjson
 getopt
 gexec
 gha
+ghrs
+ghtoken
 ginkgotypes
 Gitlab
 gke
@@ -217,6 +220,7 @@ govulncheck
 grafana
 graphql
 groupversion
+gstatic
 gtag
 GVK
 haspopup
@@ -270,6 +274,7 @@ ITracer
 jaegertracing
 javascript
 jetstack
+jgehrcke
 Jhb
 jsonschema
 jwt
@@ -496,6 +501,7 @@ prebuilt
 Predeployment
 PREDEPLOYMENTEVALUATIONSTATUS
 PREDEPLOYMENTSTATUS
+prepost
 prepostdeployment
 prepostevaluation
 previewer
@@ -685,8 +691,3 @@ yml
 YOURNAME
 yourregistry
 youtube
-squidfunk
-databranch
-ghtoken
-jgehrcke
-ghrs

@@ -9,11 +9,11 @@ If you are new to Keptn, please check out the following sections:
 the installation procedure for Keptn
 and provides information about special configuration options
 that are available.
-- [Guides](../guides/index.md) provide detailed and comprehensive how-to information
+- [Guides](guides/index.md) provides detailed and comprehensive how-to information
 for Keptn features and capabilities.
-- [Reference](../reference/index.md) provides comprehensive information
+- [Reference](reference/index.md) provides comprehensive information
 about the CRDs and APIs that define how Keptn behaves.
-- [Components](../components/index.md) provides architectural information
+- [Components](components/index.md) provides architectural information
 about how Keptn functionality is implemented
 for people who want a deeper understanding of Keptn
 or who need this information to troubleshoot their systems.

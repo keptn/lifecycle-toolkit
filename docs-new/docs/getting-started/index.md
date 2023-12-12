@@ -1,3 +1,5 @@
 # Get started
 
-This section will guide you through some tutorials that show how to bootstrap and use Keptn.
+This section provides tutorials to familiarize you
+with some basic Keptin features
+and point you to other documentation that has more comprehensive information.

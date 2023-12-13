@@ -1,5 +1,4 @@
 ---
-{{- if eq .Values.global.certManagerEnabled "true" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -93,5 +92,4 @@ spec:
 {{- end }}
 {{- if .Values.tolerations }}
       tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
-{{- end }}
 {{- end }}

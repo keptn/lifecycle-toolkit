@@ -378,6 +378,8 @@ Lato
 lfc
 Lifcycle
 lifecyclekeptnsh
+linecap
+linejoin
 linkedin
 linktitle
 linting
@@ -579,7 +581,7 @@ spanitem
 spdx
 spf
 squidfunk
-Stakeholders
+stakeholders
 standalone
 statefulset
 statefultest
@@ -645,8 +647,8 @@ undeploy
 unmarshal
 unmarshalling
 urlset
+usecase
 usecasebox
-usecases
 usr
 utilruntime
 validatingwebhookconfigurations

@@ -1,5 +1,5 @@
 global:
-  certManagerEnabled: "false"
+  certManagerEnabled: false
   imageRegistry: "testreg"
   commonLabels:
     app.kubernetes.io/version: vmyversion

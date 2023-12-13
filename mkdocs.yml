@@ -52,6 +52,7 @@ extra:
 extra_javascript:
   - assets/javascripts/versions.js
 extra_css:
+  - assets/stylesheets/home.css
   - assets/stylesheets/versions.css
   - assets/stylesheets/color-schemes.css
 plugins:

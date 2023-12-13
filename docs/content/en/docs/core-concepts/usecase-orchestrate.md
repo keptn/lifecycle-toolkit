@@ -177,8 +177,8 @@ into the cluster
 by applying annotations to the `Deployment` resource.
 Follow the instructions in the guides:
 
-- [Deployment tasks](../guides/tasks.md/#annotations-to-keptnapp)
-- [Evaluations](../guides/evaluations/#annotate-the-keptnapp-resource)
+* [Deployment tasks](../guides/tasks.md/#annotations-to-keptnapp)
+* [Evaluations](../guides/evaluations.md/#annotate-the-keptnapp-resource)
 
 See the
 [simplenode-dev-deployment.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-deployment.yaml)

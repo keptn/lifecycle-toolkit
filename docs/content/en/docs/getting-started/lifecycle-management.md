@@ -19,12 +19,12 @@ exercise.
 
 When Keptn is successfully monitoring your deployments, it can also run arbitrary tasks and SLO evaluations:
 
-- pre-deployment (before the pod is scheduled) and
+- pre-deployment (before the pod is scheduled)
 - post-deployment (after the post is scheduled)
 
 > Pre/post deployments can also run on a KeptnApp level.
   See
-  [Annotations to KeptnApp](../../guides/tasks.md/#annotations-to-keptnapp).
+  [Annotations to KeptnApp](../guides/tasks.md/#annotations-to-keptnapp).
 
 ## Prerequisites: Deploy webhook sink
 

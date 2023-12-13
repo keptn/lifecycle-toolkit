@@ -348,7 +348,7 @@ By default, the size of this volume is 1GB.
 If the memory limit for the container is set,
 the size of the volume is 50% of the memory allocated for the node.
 
-A task can be executed either predeployment or post-deployment
+A task can be executed either pre-deployment or post-deployment
 as specified in the pod template specs of your Workloads
 ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),

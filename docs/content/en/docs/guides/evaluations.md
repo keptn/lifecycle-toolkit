@@ -53,7 +53,7 @@ To implement evaluations, you must:
 1. [Create KeptnEvaluationDefinition](#create-keptnevaluationdefinition-resources)
    resources for each evaluation you want to perform.
 1. Manually edit the appropriate `KeptnApp` resources
-   to anotate them for each `KeptnEvaluationDefinition` resource
+   to annotate them for each `KeptnEvaluationDefinition` resource
    you want to run pre- and/or post-deployment.
 
 ## Create KeptnEvaluationDefinition resources

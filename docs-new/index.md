@@ -6,4 +6,3 @@ social:
 ---
 
 Keptn - Supercharge your Deployments
-dsd

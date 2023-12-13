@@ -229,9 +229,9 @@ spec:
 1. When the pods are running,
    Keptn automatically creates a `KeptnTask` resource
    for version `0.0.2` of this `KeptnApp`.
-1. The `KeptnTask` creates a Kubernetes `job`.
-1. The Kubernetes `job` creates a Kubernetes `pod`.
-1. The `pod` runs `curl` and sends a new event to the event sink.
+1. The `KeptnTask` creates a Kubernetes `Job`.
+1. The Kubernetes `Job` creates a Kubernetes `Pod`.
+1. The `Pod` runs `curl` and sends a new event to the event sink.
 
 ### Pre-deployment Tasks
 

@@ -1,13 +1,13 @@
 # Deployment tasks
 
 A
-[KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
+[KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md/)
 resource defines one or more "executables"
 (functions, programs, scripts, etc)
 that Keptn runs
 as part of the pre- and post-deployment phases of a
 [KeptnApp](../reference/crd-reference/app.md) or
-[KeptnWorkload](../reference/api-reference/lifecycle/v1alpha3/index.md#keptnworkload).
+[KeptnWorkload](../reference/api-reference/lifecycle/v1alpha3/#keptnworkload).
 
 - pre-deployment (before the pod is scheduled)
 - post-deployment (after the pod is scheduled)
@@ -18,7 +18,7 @@ These `KeptnTask` resources and the
 are part of the Keptn Release Lifecycle Management.
 
 A
-[KeptnTask](../reference/api-reference/lifecycle/v1alpha3/index.md#keptntask)
+[KeptnTask](../reference/api-reference/lifecycle/v1alpha3/#keptntask)
 executes as a runner in an application
 [container](https://kubernetes.io/docs/concepts/containers/),
 which runs as part of a Kubernetes
@@ -33,16 +33,15 @@ To implement a `KeptnTask`:
   and the executables to be run
 pre- and post-deployment
 - Apply [basic-annotations](./integrate.md#basic-annotations)
-  to your workloads to integrate your task with Kubernetes and,
-  if desired, creates a `KeptnApp` resource
-  that consolidates multiple workloads into a single application
+  to your workloads to integrate your tasks with Kubernetes.
+- Generate the required
+  [KeptnApp](../reference/crd-reference/app.md)
+  resources following the instructions in
+  [Auto app discovery](auto-app-discovery.md).
 - Annotate the appropriate
   [KeptnApp](../reference/crd-reference/app.md)
   resource to associate your `KeptnTaskDefinition`
-  with the pre- and post-deployment tasks that should be run;
-  see
-  [Pre- and post-deployment tasks and checks](./integrate.md#pre--and-post-deployment-checks)
-  for more information
+  with the pre- and post-deployment tasks that should be run.
 
 This page provides information to help you create your tasks:
 
@@ -68,8 +67,8 @@ to define the task.
 The `spec` section of the `KeptnTaskDefinition`
 defines the runner to use for the container:
 
-Keptn provides a general Kubernetes that you can configure
-to do almost anything you want:
+Keptn provides a general Kubernetes container
+that you can configure to do almost anything you want:
 
 - The `container-runtime` runner provides
   a pure custom Kubernetes application container
@@ -101,6 +100,55 @@ can be configured in one of four different ways:
 See the
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 reference page for the synopsis and examples for each runner.
+
+## Annotations to KeptnApp
+
+To define pre- and post-deployment tasks,
+you must manually edit the YAML files
+to add annotations for your tasks to the appropriate
+[KeptnApp](../reference/crd-reference/app.md)
+resource.
+
+Specify one of the following annotations/labels
+for each task you want to execute:
+
+```yaml
+keptn.sh/pre-deployment-tasks: <task-name>
+keptn.sh/post-deployment-tasks: <task-name>
+```
+
+The value of each annotation corresponds
+to the value of the `name` field of the
+[KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
+resource.
+
+## Example of pre- and post-deployment actions
+
+A comprehensive example of pre- and post-deployment
+evaluations and tasks can be found in our
+[examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
+where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
+to run some simple pre-deployment checks.
+
+To run the example, download then example
+then issue the following commands:
+
+```shell
+cd ./examples/podtatohead-deployment/
+kubectl apply -f .
+```
+
+Afterward, use the following command
+to  monitor the status of the deployment:
+
+```shell
+kubectl get keptnworkloadversion -n podtato-kubectl -w
+```
+
+The deployment for a Workload stays in a `Pending`
+state until all pre-deployment tasks and evaluations compete successfully.
+Afterwards, the deployment starts and when the workload is deployed,
+the post-deployment checks start.
 
 ## Executing sequential tasks
 

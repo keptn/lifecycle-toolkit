@@ -1,23 +1,37 @@
 documentation:
-  - docs/**/*
-  - "**/*.md"
+  - changed-files:
+      - any-glob-to-any-file:
+          - docs/**/*
+          - "**/*.md"
 
 lifecycle-operator:
-  - lifecycle-operator/**/*
+  - changed-files:
+      - any-glob-to-any-file:
+          - lifecycle-operator/**/*
 
 scheduler:
-  - scheduler/**/*
+  - changed-files:
+      - any-glob-to-any-file:
+          - scheduler/**/*
 
 metrics-operator:
-  - metrics-operator/**/*
+  - changed-files:
+      - any-glob-to-any-file:
+          - metrics-operator/**/*
 
 cert-manager:
-  - keptn-cert-manager/**/*
+  - changed-files:
+      - any-glob-to-any-file:
+          - keptn-cert-manager/**/*
 
 ops:
-  - .github/**/*
-  - netlify.toml
-  - .markdownlint-cli2.yml
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/**/*
+          - netlify.toml
+          - .markdownlint-cli2.yml
 
 helm:
-  - helm/**/*
+  - changed-files:
+      - any-glob-to-any-file:
+          - helm/**/*

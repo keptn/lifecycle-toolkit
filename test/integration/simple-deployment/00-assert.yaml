@@ -5,17 +5,19 @@ collectors:
   - type: pod
     selector: app=test
   - type: command
-    command: kubectl logs -l app=test -n $NAMESPACE
+    command: kubectl logs -l app=test -n keptn-lifecycle-toolkit-system
   - type: command
-    command: kubectl describe deployment test -n $NAMESPACE
+    command: kubectl describe deployment test -n keptn-lifecycle-toolkit-system
   - type: command
-    command: kubectl get crd -n $NAMESPACE
+    command: kubectl get crd -n keptn-lifecycle-toolkit-system
+  - type: command
+    command: kubectl describe keptnapp,keptnappversion,keptnworkload,keptnworkloadversion,keptntask -n keptn-lifecycle-toolkit-system
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     app: test
-  name: test
 status:
+  phase: Running
   readyReplicas: 1

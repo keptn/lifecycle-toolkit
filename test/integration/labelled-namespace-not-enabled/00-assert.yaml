@@ -9,7 +9,7 @@ collectors:
   - type: pod
     selector: control-plane=lifecycle-operator
   - type: command
-    command: kubectl logs -l control-plane=lifecycle-operator -n $NAMESPACE
+    command: kubectl logs -l control-plane=lifecycle-operator -n keptn-lifecycle-toolkit-system
 ---
 apiVersion: v1
 kind: Pod

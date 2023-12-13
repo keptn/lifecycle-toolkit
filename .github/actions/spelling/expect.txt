@@ -647,8 +647,8 @@ undeploy
 unmarshal
 unmarshalling
 urlset
-usecase
 usecasebox
+usecases
 usr
 utilruntime
 validatingwebhookconfigurations

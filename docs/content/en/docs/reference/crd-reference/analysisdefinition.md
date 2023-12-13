@@ -29,7 +29,7 @@ spec:
             highBound: <integer> | <quantity>
         warning:
           <operator>:
-            fixedValue: <integer> | <quantity>]
+            fixedValue: <integer> | <quantity>
           inRange: | notInRange:
             lowBound: <integer> | <quantity>
             highBound: <integer> | <quantity>

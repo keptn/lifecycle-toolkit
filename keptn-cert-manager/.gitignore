@@ -32,3 +32,5 @@ load-report.*
 
 config/rendered/release.yaml
 chart/rendered.yaml
+
+chart/charts/*.tgz

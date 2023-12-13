@@ -137,7 +137,7 @@ metadata:
   name: keptnapps.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -402,7 +402,7 @@ metadata:
   name: keptnappcreationrequests.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -465,7 +465,7 @@ metadata:
   name: keptnappversions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -1284,7 +1284,7 @@ metadata:
   name: keptnconfigs.options.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -1354,7 +1354,7 @@ metadata:
   name: keptnevaluations.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -1739,7 +1739,7 @@ metadata:
   name: keptnevaluationdefinitions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -1932,7 +1932,7 @@ metadata:
   name: keptnevaluationproviders.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -2114,7 +2114,7 @@ metadata:
   name: keptntasks.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -2526,7 +2526,7 @@ metadata:
   name: keptntaskdefinitions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -4286,7 +4286,7 @@ metadata:
   name: keptnworkloads.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -4578,7 +4578,7 @@ metadata:
   name: keptnworkloadinstances.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -5368,7 +5368,7 @@ metadata:
   name: keptnworkloadversions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -5696,7 +5696,7 @@ metadata:
   name: analyses.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -6041,7 +6041,7 @@ metadata:
   name: analysisdefinitions.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -6728,7 +6728,7 @@ metadata:
   name: analysisvaluetemplates.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -6867,7 +6867,7 @@ metadata:
   name: keptnmetrics.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -7378,7 +7378,7 @@ metadata:
   name: keptnmetricsproviders.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -9368,7 +9368,7 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: lifecycle-mutating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn"
@@ -9421,7 +9421,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: lifecycle-validating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -9457,7 +9457,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: metrics-validating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test

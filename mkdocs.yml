@@ -29,6 +29,7 @@ theme:
     - content.action.view
     - search.suggest
     - search.highlight
+site_url: keptn.readthedocs.io
 repo_name: keptn/lifecycle-toolkit
 repo_url: https://github.com/keptn/lifecycle-toolkit
 edit_uri: edit/main/docs-new/
@@ -52,7 +53,6 @@ extra:
 extra_javascript:
   - assets/javascripts/versions.js
 extra_css:
-  - assets/stylesheets/home.css
   - assets/stylesheets/versions.css
   - assets/stylesheets/color-schemes.css
 plugins:

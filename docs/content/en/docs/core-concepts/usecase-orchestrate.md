@@ -172,11 +172,14 @@ is protected by a secret, the task definition also specifies that secret.
 
 ## Integrate evaluations and tasks into the cluster
 
-Follow the instructions in
-[Annotate workload](../guides/integrate.md#pre--and-post-deployment-checks)
-to integrate the evaluations and tasks you defined
+You must integrate the evaluations and tasks you defined
 into the cluster
 by applying annotations to the `Deployment` resource.
+Follow the instructions in the guides:
+
+- [Deployment tasks](../guides/tasks.md/#annotations-to-keptnapp)
+- [Evaluations](../guides/evaluations/#annotate-the-keptnapp-resource)
+
 See the
 [simplenode-dev-deployment.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/simplenode-dev-deployment.yaml)
 file for an example.

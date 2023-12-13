@@ -1,11 +1,11 @@
 ---
 title: KeptnTaskDefinition
-description: Define tasks that can be run pre- or post-deployment
+description: Define tasks that can be run pre/post-deployment
 weight: 86
 ---
 
 A `KeptnTaskDefinition` defines tasks
-that Keptn runs as part of the pre- and post-deployment phases of a
+that Keptn runs as part of the pre/ post-deployment phases of a
 [KeptnApp](./app.md) or
 [KeptnWorkload](../api-reference/lifecycle/v1alpha3/_index.md#keptnworkload).
 
@@ -161,9 +161,9 @@ spec:
       [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
       spec documentation.
 
-## Synopsis for pre-defined containers
+## Synopsis for predefined containers
 
-The pre-defined containers allow you to easily define a task
+The predefined containers allow you to easily define a task
 using either Deno or Python syntax.
 You do not need to specify the image, volumes, and so forth.
 Instead, just provide either a Deno or Python script
@@ -216,7 +216,7 @@ spec:
         secret: <secret-name>
 ```
 
-### Fields for pre-defined containers
+### Fields for predefined containers
 
 * **spec** -- choose either `deno` or `python`
   * **deno** -- Specify that the task uses the `deno-runtime`
@@ -348,7 +348,7 @@ By default, the size of this volume is 1GB.
 If the memory limit for the container is set,
 the size of the volume is 50% of the memory allocated for the node.
 
-A task can be executed either pre-deployment or post-deployment
+A task can be executed either predeployment or post-deployment
 as specified in the pod template specs of your Workloads
 ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
@@ -358,7 +358,7 @@ and
 and in the
 [KeptnApp](app.md) resource.
 See
-[Pre- and post-deployment tasks](../../guides/integrate.md#pre--and-post-deployment-checks)
+[Annotations to KeptnApp](../../guides/tasks.md/#annotations-to-keptnapp)
 for details.
 Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
@@ -367,7 +367,7 @@ and the revised code is picked up without additional changes.
 All `KeptnTaskDefinition` resources specified to the `KeptnApp` resource
 at the same stage (either pre- or post-deployment) run in parallel.
 You can run multiple executables sequentially
-either by using the `inline` syntax for a pre-defined container image
+either by using the `inline` syntax for a predefined container image
 or by creating your own image
 and running it in the Keptn `container-runtime` runner.
 See
@@ -609,7 +609,6 @@ This modifies the synopsis in the following ways:
 
 * [KeptnApp](app.md)
 * [Working with tasks](../../guides/tasks.md)
-* [Pre- and post-deployment tasks](../../guides/integrate.md#pre--and-post-deployment-checks)
 * [KeptnApp and KeptnWorkload resources](../../components/lifecycle-operator/keptn-apps.md).
 * [Orchestrate deployment checks](../../core-concepts/usecase-orchestrate.md)
 * [Executing sequential tasks](../../guides/tasks.md#executing-sequential-tasks)

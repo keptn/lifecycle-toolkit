@@ -55,16 +55,16 @@ based on a set of dictionaries:
 
 - We use general English language and technical terminology
   from dictionaries that are provided and maintained by check-spelling.
-  The configuration is specified in the
-  [check-spelling-configuration/README[(https://github.com/check-spelling/check-spelling/blob/main/.github/actions/spelling/README.md)
-  file.
-- We also use the specialized technical dictionaries provided by check-spelling
-  for Kubernetes and Go.
-- The
-  [spelling](https://github.com/keptn/lifecycle-toolkit/tree/main/.github/actions/spelling)
-  folder contains files that are specific to Keptn.
+  The configuration is specified in files in the
+  [.github/actions/spelling](https://github.com/keptn/lifecycle-toolkit/tree/main/.github/actions/spelling)
+  directory.
   [expect.txt](https://github.com/keptn/lifecycle-toolkit/tree/main/.github/actions/spelling)
   lists Keptn terms for both documentation and code.
+- We also use the specialized technical dictionaries provided by check-spelling
+  for Kubernetes and Go.
+  The dictionaries we use are specified in the
+  [.github/workflows/spell-checker.yml](https://github.com/keptn/lifecycle-toolkit/blob/main/.github/workflows/spell-checker.yml)
+  file.
 
 Check-spelling supports both American and British spelling
 and both are allowed in the Keptn documentation.

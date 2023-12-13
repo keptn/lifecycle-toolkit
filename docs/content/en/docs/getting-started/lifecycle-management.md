@@ -162,7 +162,7 @@ Incidentally, this is exactly how you can use Keptn with
 
 > Note: If you want to trigger this task multiple times,
 you must change the value of the `name` field
-in he `KeptnTask` resource each time.
+in the `KeptnTask` resource each time.
 >
 > For example, change `runsendevent1` to `runsendevent2`.
 

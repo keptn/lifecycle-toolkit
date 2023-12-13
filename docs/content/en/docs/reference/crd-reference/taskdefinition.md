@@ -1,7 +1,7 @@
 ---
 title: KeptnTaskDefinition
 description: Define tasks that can be run pre- or post-deployment
-weight: 30
+weight: 86
 ---
 
 A `KeptnTaskDefinition` defines tasks

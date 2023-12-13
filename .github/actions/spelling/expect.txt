@@ -28,6 +28,7 @@ annadreal
 apicommon
 apierr
 apierrors
+apiservice
 APIURL
 apk
 appcreationrequest
@@ -118,6 +119,7 @@ cyclomatic
 cytopia
 daemonset
 dario
+databranch
 datadog
 datasource
 datetime
@@ -141,7 +143,9 @@ Dockerfiles
 docsearch
 docsembed
 docsy
+donath
 dql
+draggable
 DTAPI
 dtclient
 dupl
@@ -152,6 +156,7 @@ elasticquota
 elif
 Emoji
 ENABLEGITINFO
+endblock
 endgroup
 envconfig
 envsubst
@@ -175,6 +180,8 @@ favicons
 fetchintervalseconds
 fieldpath
 fieldref
+flyout
+fontawesome
 ftp
 fullname
 functionref
@@ -192,6 +199,8 @@ getjson
 getopt
 gexec
 gha
+ghrs
+ghtoken
 ginkgotypes
 Gitlab
 gke
@@ -211,6 +220,7 @@ govulncheck
 grafana
 graphql
 groupversion
+gstatic
 gtag
 GVK
 haspopup
@@ -226,6 +236,7 @@ homeorchestrate
 horizontalpodautoscalers
 hpa
 hreflang
+hsla
 htmltest
 httpref
 httpreference
@@ -263,6 +274,7 @@ ITracer
 jaegertracing
 javascript
 jetstack
+jgehrcke
 Jhb
 jsonschema
 jwt
@@ -362,6 +374,7 @@ kwv
 labelledby
 lastmod
 lastword
+Lato
 lfc
 Lifcycle
 lifecyclekeptnsh
@@ -393,6 +406,7 @@ metricsserver
 metricstypes
 mindepth
 minio
+mkdocs
 mlc
 mockserver
 moq
@@ -427,6 +441,7 @@ nodename
 nolint
 nonroot
 noreply
+nowrap
 nsa
 oac
 oauth
@@ -456,6 +471,7 @@ otlpgrpc
 otlptrace
 otlptracegrpc
 OUTDIR
+overriden
 owide
 oyaml
 pagelinks
@@ -483,6 +499,7 @@ prebuilt
 Predeployment
 PREDEPLOYMENTEVALUATIONSTATUS
 PREDEPLOYMENTSTATUS
+prepost
 prepostdeployment
 prepostevaluation
 previewer
@@ -497,6 +514,7 @@ providerref
 providerresult
 pyfunction
 pygments
+pymdown
 pyyaml
 quickstart
 rangespec
@@ -512,12 +530,15 @@ replicasets
 replicationcontrollers
 resourcereference
 Rexed
+rgb
 rgba
 RLock
 Roboto
 rolebinding
 rollme
 roundtripper
+rst
+rtd
 runhelloworld
 RUnlock
 runsendevent
@@ -557,6 +578,7 @@ spanhandler
 spanitem
 spdx
 spf
+squidfunk
 Stakeholders
 standalone
 statefulset
@@ -564,7 +586,9 @@ statefultest
 stdouttrace
 storageclasses
 storageversion
+striptags
 sts
+stylesheet
 subchart
 subdir
 subjectaccessreviews

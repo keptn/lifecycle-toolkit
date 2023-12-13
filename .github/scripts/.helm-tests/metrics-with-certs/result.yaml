@@ -2564,6 +2564,8 @@ spec:
               fieldPath: metadata.name
         - name: EXPOSE_KEPTN_METRICS
           value: "true"
+        - name: ENABLE_CUSTOM_METRICS_API_SERVICE
+          value: "true"
         - name: METRICS_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: ANALYSIS_CONTROLLER_LOG_LEVEL
@@ -2602,8 +2604,6 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
-        - mountPath: /tmp/k8s-webhook-server/serving-certs/
-          name: certs-dir
         - mountPath: /tmp/metrics-adapter/serving-certs
           name: adapter-certs-dir
         livenessProbe:
@@ -2624,8 +2624,6 @@ spec:
       serviceAccountName: metrics-operator
       terminationGracePeriodSeconds: 10
       volumes:
-      - emptyDir: {}
-        name: certs-dir
       - emptyDir: {}
         name: adapter-certs-dir
 ---

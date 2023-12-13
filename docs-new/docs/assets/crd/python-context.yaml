@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  SECURE_DATA: dG9rZW46IG15dG9rZW4=
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: pre-deployment-hello
+  annotations:
+    python: test
+spec:
+  python:
+    parameters:
+      map:
+        user: "myuser"
+    secureParameters:
+      secret: mysecret
+    cmdParameters: "-h"
+    inline:
+      code: |
+        import os
+        import yaml
+        data = os.getenv('DATA')
+        dct = yaml.safe_load(data)
+        USER= dct['user']
+        PASSWORD = os.environ.get('SECURE_DATA')
+        print(USER,PASSWORD)

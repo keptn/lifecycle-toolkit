@@ -6795,8 +6795,6 @@ spec:
           value: "ghcr.io/keptn/deno-runtime:v1.0.2"
         - name: PYTHON_RUNNER_IMAGE
           value: "ghcr.io/keptn/python-runtime:v1.0.1"
-        - name: OTEL_COLLECTOR_URL
-          value: "otel-collector:4317"
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL
@@ -6815,6 +6813,8 @@ spec:
           value: "0"
         - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
           value: "0"
+        - name: KEPTN_DORA_METRICS_PORT
+          value: "2222"
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: SCHEDULING_GATES_ENABLED
@@ -6849,11 +6849,6 @@ spec:
           runAsUser: 65532
           seccompProfile:
             type: RuntimeDefault
-        volumeMounts:
-        - mountPath: /tmp/k8s-webhook-server/serving-certs/
-          name: certs-dir
-        - mountPath: /tmp/metrics-adapter/serving-certs
-          name: adapter-certs-dir
         livenessProbe:
           httpGet:
             path: /healthz
@@ -6871,11 +6866,6 @@ spec:
         runAsNonRoot: true
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10
-      volumes:
-      - emptyDir: {}
-        name: certs-dir
-      - emptyDir: {}
-        name: adapter-certs-dir
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: apps/v1

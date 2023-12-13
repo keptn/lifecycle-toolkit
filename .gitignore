@@ -1,4 +1,7 @@
 bin/
+site/
+.cache/
+tmp/
 
 # Binaries for programs and plugins
 *.exe
@@ -50,3 +53,5 @@ readme-generator-for-helm/
 /out.yaml
 /test.yaml
 **helm_tests_output.yaml
+
+/docs-new/site

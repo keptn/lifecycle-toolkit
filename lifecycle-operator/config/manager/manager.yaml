@@ -31,11 +31,6 @@ spec:
         # versions < 1.19 or on vendors versions which do NOT support this field by default (i.e. Openshift < 4.11 ).
         # seccompProfile:
         #   type: RuntimeDefault
-      volumes:
-        - emptyDir: {}
-          name: certs-dir
-        - emptyDir: {}
-          name: adapter-certs-dir
       containers:
         - command:
             - /manager
@@ -64,8 +59,6 @@ spec:
               value: ghcr.io/keptn/deno-runtime:v0.8.1
             - name: PYTHON_RUNNER_IMAGE
               value: ghcr.io/keptn/python-runtime:v0.8.1
-            - name: OTEL_COLLECTOR_URL
-              value: otel-collector:4317
             - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
               value: "0"
             - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL
@@ -120,10 +113,5 @@ spec:
             requests:
               cpu: 5m
               memory: 64Mi
-          volumeMounts:
-            - name: certs-dir
-              mountPath: /tmp/k8s-webhook-server/serving-certs/
-            - name: adapter-certs-dir
-              mountPath: /tmp/metrics-adapter/serving-certs
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10

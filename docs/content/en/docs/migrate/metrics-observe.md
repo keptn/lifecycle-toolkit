@@ -14,9 +14,9 @@ appropriate Keptn facilities:
   [Keptn Evaluations](../guides/evaluations.md)
   to do a simple evaluation of the metrics data you capture.
   To implement this, transfer the information from the Keptn v1
-  [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+  [sli.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
   and
-  [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+  [slo.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
   files into
   [KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)
   resources.
@@ -49,9 +49,9 @@ differs from that of Keptn v1 quality gates:
   and gives it a unique `name` that can be referenced
   for Keptn Metrics (which are also used for Evaluations) and Analysis.
 * Queries and objectives that are specified in your Keptn v1
-  [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+  [sli.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
   and
-  [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+  [slo.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
   files are transferred/converted into Keptn resources.
 
 ## Transfer Keptn v1 SLIs/SLOs to evaluation resources
@@ -61,11 +61,11 @@ Simple comparisons of data can be implemented as
 To implement this:
 
 * Transfer the information from the Keptn v1
-  [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+  [sli.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
   files into
   [KeptnMetric](../reference/crd-reference/metric.md) resources
 * Transfer the information from the Keptn v1
-  [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+  [slo.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
   files into
   [KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)
   resources.
@@ -74,7 +74,7 @@ To implement this:
 
 The Keptn Analysis feature provides capabilities
 similar to those of the Keptn v1
-[Quality Gates](https://keptn.sh/docs/1.0.x/define/quality-gates/)
+[Quality Gates](https://v1.keptn.sh/docs/1.0.x/define/quality-gates/)
 feature
 but it uses Kubernetes resources to define the analysis to be done
 rather than the configuration files used for Keptn v1.
@@ -94,7 +94,7 @@ The process is:
 1. Convert the SLIs to `AnalysisValueTemplates` resources
 
    The following command sequence converts a Keptn v1
-   [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+   [sli.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
    file to a Keptn
    [AnalysisValueTemplate](../reference/crd-reference/analysisvaluetemplate.md)
    resource:
@@ -141,7 +141,7 @@ The process is:
 1. Convert the SLO to an `AnalysisDefinition` resource:
 
    The process of converting the Keptn v1
-   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+   [slo.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
    files to
    [AnalysisDefinition](../reference/crd-reference/analysisdefinition.md)
    resources is similar to the process of converting the SLIs.
@@ -339,4 +339,3 @@ spec:
 
 This way, you can use the same `AnalysisDefinition`
 and `AnalysisValueTemplates` for multiple services within the same project.
-~

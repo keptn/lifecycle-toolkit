@@ -98,11 +98,10 @@ type envConfig struct {
 	KeptnWorkloadControllerLogLevel           int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadVersionControllerLogLevel    int `envconfig:"KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadInstanceControllerLogLevel   int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnDoraMetricsPort                      int `envconfig:"KEPTN_DORA_METRICS_PORT" default:"2222"`
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
 	SchedulingGatesEnabled bool `envconfig:"SCHEDULING_GATES_ENABLED" default:"false"`
-
-	KeptnOptionsCollectorURL string `envconfig:"OTEL_COLLECTOR_URL" default:""`
 }
 
 const KeptnLifecycleActiveMetric = "keptn_lifecycle_active"
@@ -124,7 +123,6 @@ func main() {
 	// The exporter embeds a default OpenTelemetry Reader and
 	// implements prometheus.Collector, allowing it to be used as
 	// both a Reader and Collector.
-
 	exporter, err := otelprom.New()
 	if err != nil {
 		setupLog.Error(err, "unable to start OTel")
@@ -142,7 +140,7 @@ func main() {
 	keptnMeters := telemetry.SetUpKeptnTaskMeters(meter)
 
 	// Start the prometheus HTTP server and pass the exporter Collector to it
-	go serveMetrics()
+	go serveMetrics(env.KeptnDoraMetricsPort)
 
 	// As recommended by the kubebuilder docs, webhook registration should be disabled if running locally. See https://book.kubebuilder.io/cronjob-tutorial/running.html#running-webhooks-locally for reference
 	flag.BoolVar(&disableWebhook, "disable-webhook", false, "Disable the registration of webhooks.")
@@ -359,7 +357,6 @@ func main() {
 		mgr.GetClient(),
 		mgr.GetScheme(),
 		configLogger,
-		env.KeptnOptionsCollectorURL,
 	)
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")
@@ -440,11 +437,10 @@ func main() {
 
 }
 
-func serveMetrics() {
-	log.Printf("serving metrics at localhost:2222/metrics")
-
+func serveMetrics(metricsPort int) {
+	log.Printf("serving metrics at localhost:%d/metrics", metricsPort)
 	http.Handle("/metrics", promhttp.Handler())
-	err := http.ListenAndServe(":2222", nil)
+	err := http.ListenAndServe(":"+fmt.Sprint(metricsPort), nil)
 	if err != nil {
 		fmt.Printf("error serving http: %v", err)
 		return

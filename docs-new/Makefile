@@ -39,7 +39,7 @@ docs-serve:
 		-v ${PWD}/.git:/.git \
 		--entrypoint "" \
 		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
-		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs serve -a 0.0.0.0:$(PORT)'
+		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs serve --dirty -a 0.0.0.0:$(PORT)'
 
 .PHONY: htmltest
 

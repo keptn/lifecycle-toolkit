@@ -51,6 +51,7 @@ spec:
         {{- if .Values.podAnnotations }}
         {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
         {{- end }}
+    spec:
       containers:
       - args:
         - --leader-elect

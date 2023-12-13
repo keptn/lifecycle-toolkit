@@ -16,8 +16,8 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-  logo: assets/keptn-icon-white.svg
-  favicon: https://lifecycle.keptn.sh/images/logo-mobile.svg
+  logo: assets/images/keptn-icon-white.svg
+  favicon: assets/images/logo-mobile.svg
   features:
     - navigation.tabs
     - navigation.tracking

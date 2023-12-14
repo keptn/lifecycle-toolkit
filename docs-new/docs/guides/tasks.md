@@ -1,13 +1,13 @@
 # Deployment tasks
 
 A
-[KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md/)
+[KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 resource defines one or more "executables"
 (functions, programs, scripts, etc)
 that Keptn runs
 as part of the pre- and post-deployment phases of a
 [KeptnApp](../reference/crd-reference/app.md) or
-[KeptnWorkload](../reference/api-reference/lifecycle/v1alpha3/#keptnworkload).
+[KeptnWorkload](../reference/api-reference/lifecycle/v1alpha3/index.md#keptnworkload).
 
 - pre-deployment (before the pod is scheduled)
 - post-deployment (after the pod is scheduled)
@@ -18,7 +18,7 @@ These `KeptnTask` resources and the
 are part of the Keptn Release Lifecycle Management.
 
 A
-[KeptnTask](../reference/api-reference/lifecycle/v1alpha3/#keptntask)
+[KeptnTask](../reference/api-reference/lifecycle/v1alpha3/index.md#keptntask)
 executes as a runner in an application
 [container](https://kubernetes.io/docs/concepts/containers/),
 which runs as part of a Kubernetes
@@ -179,7 +179,7 @@ You have the following options:
   (either `deno-runtime` or `python-runtime`)
   to code the actual calls inline in the `KeptnTaskDefinition` resource.
   See
-  [Fields for pre-defined containers](../reference/crd-reference/taskdefinition.md/#fields-for-pre-defined-containers)
+  [Fields for pre-defined containers](../reference/crd-reference/taskdefinition.md#fields-for-predefined-containers)
   for more information.
 
 - Create a script that calls the functions, programs, and scripts

@@ -18,12 +18,12 @@ that may include multiple criteria with weights and scoring applied.
 
 To implement evaluations, you must:
 
-1. [Install and enable Keptn](../installation)
+1. [Install and enable Keptn](../installation/index.md)
    in your cluster.
    You will need both the
    Keptn Metrics Operator (`metrics-operator`)
    and the Keptn Lifecycle Operator (`lifecycle-operator`)
-   [components](../components).
+   [components](../components/index.md).
 1. Define a
    [KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
    resource for each data source you want to use for evaluations.
@@ -36,7 +36,7 @@ To implement evaluations, you must:
    and
    [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/))
    with
-   [basic annotations](integrate.md/#basic-annotations).
+   [basic annotations](integrate.md#basic-annotations).
 1. Generate the required
    [KeptnApp](../reference/crd-reference/app.md)
    resources following the instructions in
@@ -97,7 +97,7 @@ Note the following:
   has no effect on whether other evaluations are completed.
 * The results of each evaluation
   is written to a
-  [KeptnEvaluation](../reference/api-reference/lifecycle/v1alpha3/#keptnevaluation)
+  [KeptnEvaluation](../reference/api-reference/lifecycle/v1alpha3/index.md#keptnevaluation)
   resource.
 
 ## Annotate the KeptnApp resource

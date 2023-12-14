@@ -17,7 +17,7 @@ to identify the workloads of interest.
 To integrate Keptn with your workloads:
 
 - You must first
-[install and enable](../installation/_index.md#basic-installation)
+[install and enable](../installation/index.md#basic-installation)
 Keptn.
 - Annotate or label your
 [workloads](https://kubernetes.io/docs/concepts/workloads/)
@@ -35,7 +35,7 @@ with either Keptn or Kubernetes keys.
     are required only for the Release lifecycle management feature.
 
 Keptn uses these annotations to the Kubernetes workloads to create the
-[KeptnWorkload](../reference/api-reference/lifecycle/v1alpha3/#keptnworkload)
+[KeptnWorkload](../reference/api-reference/lifecycle/v1alpha3/index.md#keptnworkload)
 and
 [KeptnApp](../reference/crd-reference/app.md)
 resources that it uses to provide observability
@@ -64,7 +64,7 @@ resources in the namespaces where Keptn is enabled.
 If Keptn finds any of these resources and the resource has either
 the `keptn.sh` or the `kubernetes` annotations/labels,
 it creates appropriate
-[KeptnWorkload](../reference/api-reference/lifecycle/v1alpha3/#keptnworkload)
+[KeptnWorkload](../reference/api-reference/lifecycle/v1alpha3/index.md#keptnworkload)
 and
 [KeptnApp](../reference/crd-reference/app.md)
 resources for the version it detects.
@@ -92,7 +92,7 @@ These keys are defined as:
 
 - `keptn.sh/workload` or `app.kubernetes.io/name`: Determines the name
   of the generated
-  [KeptnWorkload](../reference/api-reference/lifecycle/v1alpha3/#keptnworkload)
+  [KeptnWorkload](../reference/api-reference/lifecycle/v1alpha3/index.md#keptnworkload)
   resource.
 - `keptn.sh/version` or `app.kubernetes.io/version`:
   Determines the version of the `KeptnWorkload`

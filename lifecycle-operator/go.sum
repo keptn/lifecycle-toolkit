@@ -1,7 +1,7 @@
 dario.cat/mergo v1.0.0 h1:AGCNq9Evsj31mOgNPcLyXc+4PNABt905YmuqPYYpBWk=
 dario.cat/mergo v1.0.0/go.mod h1:uNxQE+84aUszobStD9th8a29P2fMDhsBdgRYvZOxGmk=
-github.com/argoproj/argo-rollouts v1.6.3 h1:h6qsSv3Jf3Gve0WtU979Q6/iamVwm1jm6UwtsjZQSQU=
-github.com/argoproj/argo-rollouts v1.6.3/go.mod h1:X2kTiBaYCSounmw1kmONdIZTwJNzNQYC0SrXUgSw9UI=
+github.com/argoproj/argo-rollouts v1.6.4 h1:mPa08VDNNk1/1Tq7I4QvWe5p+eDaBzVFVo1TmBpHk1I=
+github.com/argoproj/argo-rollouts v1.6.4/go.mod h1:X2kTiBaYCSounmw1kmONdIZTwJNzNQYC0SrXUgSw9UI=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/benbjohnson/clock v1.3.5 h1:VvXlSJBzZpA/zum6Sj74hxwYI2DIxRWuNIoXAzHZz5o=
 github.com/benbjohnson/clock v1.3.5/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=

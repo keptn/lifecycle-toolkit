@@ -1,0 +1,16 @@
+global:
+  # change all installed operator registries
+  # e.g. the metrics operator image will be localhost:5000/keptn/metrics-operator:v0.0.0
+  imageRegistry: "localhost:5000"
+  commonLabels:
+    app.kubernetes.io/version: myversion # this label will be added to all installed resources
+
+certManager:
+  enabled: true
+lifecycleOperator:
+  enabled: false   # lifecycle operator won't be installed
+metricsOperator:
+  enabled: true
+  image:
+    tag: v0.0.0 # metrics operator will use this image tag
+  imagePullPolicy: Never

@@ -4,6 +4,8 @@ description: Understand Keptn evaluations and how to use them
 weight: 700
 ---
 
+## KeptnEvaluationDefinition
+
 A
 [KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)
 resource contains a list of `objectives`,
@@ -25,6 +27,8 @@ This is defined in the example
 [metric.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/metric.yaml)
 file:
 {{< embed path="/examples/sample-app/base/metric.yaml" >}}
+
+## Run an evaluation
 
 To run an evaluation on one of your
 [Workloads](https://kubernetes.io/docs/concepts/workloads/)

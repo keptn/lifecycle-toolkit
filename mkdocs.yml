@@ -29,7 +29,7 @@ theme:
     - content.action.view
     - search.suggest
     - search.highlight
-site_url: !!ENV READTHEDOCS_CANONICAL_URL
+site_url: !ENV READTHEDOCS_CANONICAL_URL
 repo_name: keptn/lifecycle-toolkit
 repo_url: https://github.com/keptn/lifecycle-toolkit
 edit_uri: edit/main/docs-new/

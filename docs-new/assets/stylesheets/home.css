@@ -33,7 +33,7 @@ body {
 
 .gradient-container {
     padding-top: .0rem;
-    background: linear-gradient(to bottom, var(--md-primary-fg-color), var(--md-accent-fg-color),var(--md-primary-bg-color));
+    background: linear-gradient(to bottom, var(--md-primary-fg-color), var(--md-accent-fg-color),var(--md-default-bg-color));
 }
 
 .tx-hero {
@@ -44,7 +44,7 @@ body {
 
 .tx-hero h1 {
     margin-bottom: 1rem;
-    color: currentColor;
+    color: var(--md-default-fg-color--light);
     font-weight: 700
 }
 
@@ -92,7 +92,6 @@ body {
 }
 
 .feature-item h2 {
-    color: #333;
     font-weight: 300;
     font-size: 25px;
     white-space: nowrap;
@@ -109,7 +108,6 @@ body {
     line-height: 1.8em;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    color: #111;
     margin: 0 0 10px;
     display: block;
 }

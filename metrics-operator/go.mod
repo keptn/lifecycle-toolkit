@@ -9,7 +9,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20231211075630-e386ec643fa7
-	github.com/open-feature/go-sdk v1.8.0
+	github.com/open-feature/go-sdk v1.9.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.17.0
 	github.com/prometheus/client_model v0.5.0

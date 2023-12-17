@@ -152,12 +152,6 @@ page.
 
 ## Context
 
-A Kubernetes context is a set of access parameters
-that contains a Kubernetes cluster, a user, a namespace,
-the application name, workload name, and version.
-For more information, see
-[Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
-
 You may need to include context information in the `function` code
 included in the YAML file that defines a
 [KeptnTaskDefinition](../yaml-crd-ref/taskdefinition.md)

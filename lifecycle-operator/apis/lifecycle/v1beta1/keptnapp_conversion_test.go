@@ -77,7 +77,7 @@ func TestKeptnApp_ConvertFrom(t *testing.T) {
 					},
 				},
 				Spec: KeptnAppSpec{
-					Version: "1.2.3",
+					Version:  "1.2.3",
 					Revision: 1,
 					Workloads: []KeptnWorkloadRef{
 						{
@@ -151,7 +151,7 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 					},
 				},
 				Spec: KeptnAppSpec{
-					Version: "1.2.3",
+					Version:  "1.2.3",
 					Revision: 1,
 					Workloads: []KeptnWorkloadRef{
 						{

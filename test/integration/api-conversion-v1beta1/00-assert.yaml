@@ -77,4 +77,3 @@ spec:
     kind: ReplicaSet
     name: my-replica-set
     uid: 957f825e-4025-4ea8-ad22-9292877ff7eb
-

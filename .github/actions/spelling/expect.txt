@@ -122,7 +122,6 @@ dario
 databranch
 datadog
 datasource
-datetime
 davidanson
 dawidd
 dco
@@ -145,7 +144,6 @@ docsembed
 docsy
 donath
 dql
-draggable
 DTAPI
 dtclient
 dupl
@@ -176,7 +174,6 @@ Eventqueue
 eventsender
 exampleuser
 fakeclient
-favicons
 fetchintervalseconds
 fieldpath
 fieldref
@@ -223,7 +220,6 @@ groupversion
 gstatic
 gtag
 GVK
-haspopup
 healthz
 hellopy
 helloworldtask
@@ -235,7 +231,6 @@ homeobservability
 homeorchestrate
 horizontalpodautoscalers
 hpa
-hreflang
 hsla
 htmltest
 httpref
@@ -272,7 +267,7 @@ ITarget
 itemstatus
 ITracer
 jaegertracing
-javascript
+javascripts
 jetstack
 jgehrcke
 Jhb
@@ -371,7 +366,6 @@ kustomizeconfig
 kuttl
 kwi
 kwv
-labelledby
 lastmod
 lastword
 Lato
@@ -381,7 +375,6 @@ lifecyclekeptnsh
 linkedin
 linktitle
 linting
-listitem
 livenessprobe
 loadtests
 LOCALBIN
@@ -430,7 +423,6 @@ myservice
 myuser
 myversion
 namespacedelete
-nbsp
 netlify
 Neue
 nifi
@@ -441,7 +433,6 @@ nodename
 nolint
 nonroot
 noreply
-nowrap
 nsa
 oac
 oauth
@@ -482,7 +473,6 @@ persistentvolumes
 phaseitem
 pid
 pipefail
-placeholders
 poc
 poddisruptionbudgets
 podgroups
@@ -580,7 +570,7 @@ spanitem
 spdx
 spf
 squidfunk
-Stakeholders
+stakeholders
 standalone
 statefulset
 statefultest
@@ -588,7 +578,6 @@ stdouttrace
 storageclasses
 storageversion
 sts
-stylesheet
 subchart
 subdir
 subjectaccessreviews
@@ -624,13 +613,10 @@ timeseries
 timespan
 timezone
 tmp
-tmpl
-toc
 tocstop
 tokenreviews
 toml
 totalscore
-tpl
 tplvalues
 traceparent
 tracerfactory
@@ -671,6 +657,7 @@ webhooknamespaces
 website
 whitespaces
 whykeptn
+Wiesinger
 wjdp
 wli
 Wls
@@ -682,7 +669,6 @@ WORKLOADOVERALLSTATUS
 workloadsstate
 workloadstatus
 workloadversion
-xhtml
 xxxx
 XXXXXXXXXXXXXXXXXXXXXXXX
 yannh

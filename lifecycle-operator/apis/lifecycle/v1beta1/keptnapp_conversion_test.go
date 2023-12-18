@@ -36,7 +36,7 @@ func TestKeptnApp_ConvertFrom(t *testing.T) {
 				},
 				Spec: v1alpha3.KeptnAppSpec{
 					Version:  "1.2.3",
-					Revision: 0,
+					Revision: 1,
 					Workloads: []v1alpha3.KeptnWorkloadRef{
 						{
 							Name:    "workload-1",
@@ -78,6 +78,7 @@ func TestKeptnApp_ConvertFrom(t *testing.T) {
 				},
 				Spec: KeptnAppSpec{
 					Version: "1.2.3",
+					Revision: 1,
 					Workloads: []KeptnWorkloadRef{
 						{
 							Name:    "workload-1",
@@ -151,6 +152,7 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 				},
 				Spec: KeptnAppSpec{
 					Version: "1.2.3",
+					Revision: 1,
 					Workloads: []KeptnWorkloadRef{
 						{
 							Name:    "workload-1",
@@ -192,7 +194,7 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 				},
 				Spec: v1alpha3.KeptnAppSpec{
 					Version:  "1.2.3",
-					Revision: 0,
+					Revision: 1,
 					Workloads: []v1alpha3.KeptnWorkloadRef{
 						{
 							Name:    "workload-1",

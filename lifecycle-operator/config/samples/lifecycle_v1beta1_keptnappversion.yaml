@@ -2,10 +2,13 @@ apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnAppVersion
 metadata:
   name: keptnappversion-sample
-status:
-  currentPhase: AppPostDeployEvaluations
-  postDeploymentStatus: Succeeded
-  postDeploymentEvaluationStatus: Failed
-  preDeploymentEvaluationStatus: Succeeded
-  status: Failed
-  workloadOverallStatus: Succeeded
+spec:
+  appName: podtato-head
+  preDeploymentTasks:
+    - pre-deployment-task
+  preDeploymentEvaluations:
+    - pre-deployment-evaluation
+  postDeploymentTasks:
+    - post-deployment-task
+  postDeploymentEvaluations:
+    - post-deployment-evaluation

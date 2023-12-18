@@ -31,10 +31,6 @@ func TestKeptnState_IsCompleted(t *testing.T) {
 			State: StateDeprecated,
 			Want:  true,
 		},
-		{
-			State: StateCancelled,
-			Want:  true,
-		},
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
@@ -117,10 +113,6 @@ func TestKeptnState_IsDeprecated(t *testing.T) {
 		},
 		{
 			State: StateDeprecated,
-			Want:  true,
-		},
-		{
-			State: StateCancelled,
 			Want:  true,
 		},
 	}

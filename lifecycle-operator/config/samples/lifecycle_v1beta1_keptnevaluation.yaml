@@ -7,3 +7,5 @@ spec:
   workload: new-workload
   workloadVersion: "1.0.0"
   evaluationDefinition: my-app-evaluation
+status:
+  retryCount: 2

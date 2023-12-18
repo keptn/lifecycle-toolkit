@@ -378,8 +378,6 @@ Lato
 lfc
 Lifcycle
 lifecyclekeptnsh
-linecap
-linejoin
 linkedin
 linktitle
 linting
@@ -563,6 +561,7 @@ serrors
 serviceaccount
 serviceaccountspec
 serviceport
+setuptools
 shellcheck
 SHELLFLAGS
 shortcode
@@ -588,7 +587,6 @@ statefultest
 stdouttrace
 storageclasses
 storageversion
-striptags
 sts
 stylesheet
 subchart
@@ -658,6 +656,7 @@ vcluster
 Vec
 versioned
 versioning
+virtualenv
 visualise
 visualised
 vkeptnmetric

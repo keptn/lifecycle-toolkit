@@ -16,8 +16,8 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-  logo: assets/keptn-icon-white.svg
-  favicon: https://lifecycle.keptn.sh/images/logo-mobile.svg
+  logo: assets/images/keptn-icon-white.svg
+  favicon: assets/images/logo-mobile.svg
   features:
     - navigation.tabs
     - navigation.tracking
@@ -27,6 +27,9 @@ theme:
     - search.highlight
     - content.action.edit
     - content.action.view
+    - search.suggest
+    - search.highlight
+site_url: !ENV READTHEDOCS_CANONICAL_URL
 repo_name: keptn/lifecycle-toolkit
 repo_url: https://github.com/keptn/lifecycle-toolkit
 edit_uri: edit/main/docs-new/
@@ -51,7 +54,9 @@ extra_javascript:
   - assets/javascripts/versions.js
 extra_css:
   - assets/stylesheets/versions.css
+  - assets/stylesheets/color-schemes.css
 plugins:
+  - search
   - social
   - include-markdown:
       trailing_newlines: false

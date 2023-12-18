@@ -36,20 +36,18 @@ import (
 // KeptnConfigReconciler reconciles a KeptnConfig object
 type KeptnConfigReconciler struct {
 	client.Client
-	Scheme              *runtime.Scheme
-	Log                 logr.Logger
-	LastAppliedSpec     *optionsv1alpha1.KeptnConfigSpec
-	DefaultCollectorURL string
-	config              config.IConfig
+	Scheme          *runtime.Scheme
+	Log             logr.Logger
+	LastAppliedSpec *optionsv1alpha1.KeptnConfigSpec
+	config          config.IConfig
 }
 
-func NewReconciler(client client.Client, scheme *runtime.Scheme, log logr.Logger, collectorUrl string) *KeptnConfigReconciler {
+func NewReconciler(client client.Client, scheme *runtime.Scheme, log logr.Logger) *KeptnConfigReconciler {
 	return &KeptnConfigReconciler{
-		Client:              client,
-		Scheme:              scheme,
-		Log:                 log,
-		config:              config.Instance(),
-		DefaultCollectorURL: collectorUrl,
+		Client: client,
+		Scheme: scheme,
+		Log:    log,
+		config: config.Instance(),
 	}
 }
 
@@ -99,9 +97,7 @@ func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha
 }
 
 func (r *KeptnConfigReconciler) initConfig() {
-	r.LastAppliedSpec = &optionsv1alpha1.KeptnConfigSpec{
-		OTelCollectorUrl: r.DefaultCollectorURL,
-	}
+	r.LastAppliedSpec = &optionsv1alpha1.KeptnConfigSpec{}
 }
 
 // SetupWithManager sets up the controller with the Manager.

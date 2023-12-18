@@ -5,7 +5,7 @@ using Keptn and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/).
 
 ## TL;DR
 
-* You can install ArgoCD and Keptn-lifecycle-toolkit using: `make install`
+* You can install ArgoCD and Keptn using: `make install`
 * Install argo CLI according to the instructions [here](https://argo-cd.readthedocs.io/en/stable/cli_installation/)
 * Afterward, you can fetch the secret for the ArgoCD CLI using: `make argo-get-password`
 * Then you can port-forward the ArgoUI using: `make port-forward-argocd`
@@ -89,6 +89,3 @@ In the meanwhile you can watch the progress of the deployment using:
 After some time all resources should be in a succeeded state.
 In the Argo-UI you will see that the application is in
 sync.
-
-<!-- markdownlint-disable-next-line MD033 MD013 -->
-<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

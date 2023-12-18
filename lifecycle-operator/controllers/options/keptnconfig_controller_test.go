@@ -9,7 +9,7 @@ import (
 	"github.com/go-logr/logr"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
 	fakeconfig "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config/fake"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -46,7 +46,7 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 				ctx: context.TODO(),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{
-						Namespace: "keptn-lifecycle-toolkit-system",
+						Namespace: "keptn-system",
 						Name:      "empty-config",
 					},
 				},
@@ -54,7 +54,7 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			reconcileConfig: &optionsv1alpha1.KeptnConfig{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "empty-config",
-					Namespace: "keptn-lifecycle-toolkit-system",
+					Namespace: "keptn-system",
 				},
 				Spec: optionsv1alpha1.KeptnConfigSpec{
 					OTelCollectorUrl: "",
@@ -70,7 +70,7 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 				ctx: context.TODO(),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{
-						Namespace: "keptn-lifecycle-toolkit-system",
+						Namespace: "keptn-system",
 						Name:      "empty-config",
 					},
 				},
@@ -78,7 +78,7 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			reconcileConfig: &optionsv1alpha1.KeptnConfig{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "empty-config",
-					Namespace: "keptn-lifecycle-toolkit-system",
+					Namespace: "keptn-system",
 				},
 				Spec: optionsv1alpha1.KeptnConfigSpec{
 					OTelCollectorUrl: "",
@@ -93,7 +93,7 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 				ctx: context.TODO(),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{
-						Namespace: "keptn-lifecycle-toolkit-system",
+						Namespace: "keptn-system",
 						Name:      "not-found-config",
 					},
 				},
@@ -101,7 +101,7 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			reconcileConfig: &optionsv1alpha1.KeptnConfig{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "empty-config",
-					Namespace: "keptn-lifecycle-toolkit-system",
+					Namespace: "keptn-system",
 				},
 				Spec: optionsv1alpha1.KeptnConfigSpec{
 					OTelCollectorUrl: "",
@@ -116,7 +116,7 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 				ctx: context.TODO(),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{
-						Namespace: "keptn-lifecycle-toolkit-system",
+						Namespace: "keptn-system",
 						Name:      "config1",
 					},
 				},
@@ -127,7 +127,7 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			reconcileConfig: &optionsv1alpha1.KeptnConfig{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "config1",
-					Namespace: "keptn-lifecycle-toolkit-system",
+					Namespace: "keptn-system",
 				},
 				Spec: optionsv1alpha1.KeptnConfigSpec{
 					OTelCollectorUrl:                      "url1",
@@ -295,13 +295,12 @@ func setupReconciler(withConfig *optionsv1alpha1.KeptnConfig) *KeptnConfigReconc
 	}
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
-	fakeClient := fake.NewClient(withConfig)
+	fakeClient := testcommon.NewTestClient(withConfig)
 
 	r := NewReconciler(
 		fakeClient,
 		fakeClient.Scheme(),
 		ctrl.Log.WithName("test-keptnconfig-controller"),
-		"",
 	)
 	r.config = &fakeconfig.MockConfig{
 		SetCloudEventsEndpointFunc:    func(endpoint string) {},

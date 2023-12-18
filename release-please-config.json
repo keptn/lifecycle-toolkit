@@ -6,14 +6,14 @@
   "pull-request-title-pattern": "chore: release${component} ${version}",
   "packages": {
     ".": {
-      "package-name": "klt",
+      "package-name": "keptn",
       "changelog-path": "CHANGELOG.md",
       "release-type": "go",
       "prerelease": false,
-      "monorepo-tags": "klt",
+      "monorepo-tags": "keptn",
       "draft": false,
       "exclude-paths": [
-        "klt-cert-manager",
+        "keptn-cert-manager",
         "lifecycle-operator",
         "metrics-operator",
         "scheduler",
@@ -23,14 +23,14 @@
       "extra-files": [
         "README.md",
         "operator/config/manager/manager.yaml",
-        "helm/chart/Chart.yaml",
+        "chart/Chart.yaml",
         "Makefile",
-        "helm/chart/values.yaml",
-        "helm/chart/README.md",
+        "chart/values.yaml",
+        "chart/README.md",
         "docs/content/en/docs/getting-started/_index.md"
       ]
     },
-    "klt-cert-manager": {
+    "keptn-cert-manager": {
       "package-name": "cert-manager",
       "changelog-path": "CHANGELOG.md",
       "release-type": "go",
@@ -38,7 +38,9 @@
       "prerelease": false,
       "draft": false,
       "extra-files": [
-        "Makefile"
+        "Makefile",
+        "chart/Chart.yaml",
+        "chart/values.yaml"
       ]
     },
     "lifecycle-operator": {
@@ -50,7 +52,9 @@
       "prerelease": false,
       "draft": false,
       "extra-files": [
-        "Makefile"
+        "Makefile",
+        "chart/Chart.yaml",
+        "chart/values.yaml"
       ]
     },
     "scheduler": {
@@ -75,7 +79,9 @@
       "extra-files": [
         "Makefile",
         "converter/sli_converter.md",
-        "converter/slo_converter.md"
+        "converter/slo_converter.md",
+        "chart/Chart.yaml",
+        "chart/values.yaml"
       ]
     },
     "runtimes/python-runtime": {

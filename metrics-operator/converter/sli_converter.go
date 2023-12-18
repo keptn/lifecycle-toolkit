@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/yaml"
 )
@@ -22,12 +22,12 @@ func NewSLIConverter() *SLIConverter {
 }
 
 func (c *SLIConverter) Convert(fileContent []byte, provider string, namespace string) (string, error) {
-	//check that provider and namespace is set
+	// check that provider and namespace is set
 	if err := c.validateInput(provider, namespace); err != nil {
 		return "", err
 	}
 
-	// unmarshall content
+	// unmarshal content
 	content := &SLI{}
 	err := yaml.Unmarshal(fileContent, content)
 	if err != nil {
@@ -60,7 +60,7 @@ func (c *SLIConverter) convertMapToAnalysisValueTemplate(slis map[string]string,
 		template := &metricsapi.AnalysisValueTemplate{
 			TypeMeta: v1.TypeMeta{
 				Kind:       "AnalysisValueTemplate",
-				APIVersion: "metrics.keptn.sh/v1alpha3",
+				APIVersion: "metrics.keptn.sh/v1beta1",
 			},
 			ObjectMeta: v1.ObjectMeta{
 				Name: ConvertResourceName(key),
@@ -99,7 +99,7 @@ func convertQuery(query string) string {
 	// followed by unlimited occurrences of uppercase letters and numbers
 	// examples: $LIST, $L, $L2T, $L555
 	re := regexp.MustCompile(`\$\b[A-Z][A-Z0-9]*\b`)
-	//get all substrings matching regex
+	// get all substrings matching regex
 	variables := re.FindAllStringSubmatch(query, -1)
 	if len(variables) == 0 {
 		return query

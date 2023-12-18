@@ -32,7 +32,7 @@ func TestSpanHandler_GetAndUnbindSpan_AppVersion(t *testing.T) {
 }
 
 func doAssert(t *testing.T, obj client.Object) {
-	r := SpanHandler{}
+	r := Handler{}
 	phase := "pre"
 	tracer := otel.Tracer("keptn/test")
 	ctx, span, err := r.GetSpan(context.TODO(), tracer, obj, phase)
@@ -57,7 +57,7 @@ func TestSpanHandler_GetSpan(t *testing.T) {
 	wi.Spec.WorkloadName = "test"
 	wi.Spec.Version = "test"
 
-	r := SpanHandler{}
+	r := Handler{}
 	phase := apicommon.PhaseAppDeployment.ShortName
 	tracer := otel.Tracer("keptn/test")
 

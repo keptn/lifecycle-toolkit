@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"log"
 
 	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	"github.com/go-logr/logr"
@@ -94,12 +95,18 @@ func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *c
 	postDeploymentChecks, _ = GetLabelOrAnnotation(sourceResource, apicommon.PostDeploymentTaskAnnotation, "")
 	preEvaluationChecks, _ = GetLabelOrAnnotation(sourceResource, apicommon.PreDeploymentEvaluationAnnotation, "")
 	postEvaluationChecks, _ = GetLabelOrAnnotation(sourceResource, apicommon.PostDeploymentEvaluationAnnotation, "")
+	containerName, _ := GetLabelOrAnnotation(sourceResource, apicommon.ContainerNameAnnotation, "")
 
 	if gotWorkloadName {
 		setMapKey(targetPod.Annotations, apicommon.WorkloadAnnotation, workloadName)
 
 		if !gotVersion {
-			setMapKey(targetPod.Annotations, apicommon.VersionAnnotation, calculateVersion(targetPod))
+			version, err := calculateVersion(targetPod, containerName)
+			if err != nil {
+				log.Println(err)
+				return false
+			}
+			setMapKey(targetPod.Annotations, apicommon.VersionAnnotation, version)
 		} else {
 			setMapKey(targetPod.Annotations, apicommon.VersionAnnotation, version)
 		}
@@ -116,13 +123,19 @@ func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *c
 }
 
 func isPodAnnotated(pod *corev1.Pod) bool {
+	containerName, _ := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.ContainerNameAnnotation, "")
 	_, gotWorkloadAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
 	_, gotVersionAnnotation := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.VersionAnnotation, apicommon.K8sRecommendedVersionAnnotations)
 
 	if gotWorkloadAnnotation {
 		if !gotVersionAnnotation {
 			initEmptyAnnotations(&pod.ObjectMeta, 1)
-			pod.Annotations[apicommon.VersionAnnotation] = calculateVersion(pod)
+			version, err := calculateVersion(pod, containerName)
+			if err != nil {
+				log.Println(err)
+			} else {
+				pod.Annotations[apicommon.VersionAnnotation] = version
+			}
 		}
 		return true
 	}

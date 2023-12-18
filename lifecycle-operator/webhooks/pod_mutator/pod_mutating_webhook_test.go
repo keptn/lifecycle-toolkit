@@ -10,12 +10,11 @@ import (
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator/handlers"
 	fakehandler "github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator/handlers/fake"
 	"github.com/stretchr/testify/require"
-	"go.opentelemetry.io/otel/trace"
 	admissionv1 "k8s.io/api/admission/v1"
 	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -37,23 +36,18 @@ const testKeptnWorkload = "my-workload-my-workload"
 const testDeployment = "my-deployment"
 
 func TestPodMutatingWebhookHandleDisabledNamespace(t *testing.T) {
-	fakeClient := fakeclient.NewClient(&corev1.Namespace{
+	fakeClient := testcommon.NewTestClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: testNamespace,
 		},
 	})
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
 		Client:      fakeClient,
-		Tracer:      tr,
 		Decoder:     decoder,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         testr.New(t),
 	}
 
@@ -83,7 +77,7 @@ func TestPodMutatingWebhookHandleDisabledNamespace(t *testing.T) {
 }
 
 func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
-	fakeClient := fakeclient.NewClient(&corev1.Namespace{
+	fakeClient := testcommon.NewTestClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: testNamespace,
 			Annotations: map[string]string{
@@ -92,17 +86,12 @@ func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
 		},
 	})
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
 		Client:      fakeClient,
-		Tracer:      tr,
 		Decoder:     decoder,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         testr.New(t),
 	}
 
@@ -142,7 +131,7 @@ func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
 	require.NotNil(t, resp)
 	require.True(t, resp.Allowed)
 
-	// if we get an unsupported owner for the pod, we expect not to have any KLT resources to have been created
+	// if we get an unsupported owner for the pod, we expect not to have any Keptn resources to have been created
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
 
 	err := fakeClient.Get(context.Background(), types.NamespacedName{
@@ -165,7 +154,7 @@ func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
 }
 
 func TestPodMutatingWebhookHandleSingleService(t *testing.T) {
-	fakeClient := fakeclient.NewClient(&corev1.Namespace{
+	fakeClient := testcommon.NewTestClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: testNamespace,
 			Annotations: map[string]string{
@@ -174,18 +163,10 @@ func TestPodMutatingWebhookHandleSingleService(t *testing.T) {
 		},
 	})
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
 	decoder := admission.NewDecoder(runtime.NewScheme())
 	log := testr.New(t)
 
-	wh := NewPodMutator(fakeClient,
-		tr,
-		decoder,
-		controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		log, false)
+	wh := NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), log, false)
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
@@ -291,20 +272,15 @@ func TestPodMutatingWebhookHandleSchedulingGatesGateRemoved(t *testing.T) {
 			},
 		},
 	}
-	fakeClient := fakeclient.NewClient(ns, pod)
-
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
+	fakeClient := testcommon.NewTestClient(ns, pod)
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
 		SchedulingGatesEnabled: true,
 		Client:                 fakeClient,
-		Tracer:                 tr,
 		Decoder:                decoder,
-		EventSender:            controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender:            eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:                    testr.New(t),
 	}
 
@@ -356,23 +332,12 @@ func TestPodMutatingWebhookHandleSchedulingGates(t *testing.T) {
 			},
 		},
 	}
-	fakeClient := fakeclient.NewClient(ns, pod)
-
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
+	fakeClient := testcommon.NewTestClient(ns, pod)
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh :=
-		NewPodMutator(
-			fakeClient,
-			tr,
-			decoder,
-			controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-			testr.New(t),
-			true,
-		)
+		NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), true)
 
 	request := generateRequest(pod, t)
 
@@ -424,7 +389,7 @@ func TestPodMutatingWebhookHandleSchedulingGates(t *testing.T) {
 }
 
 func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t *testing.T) {
-	fakeClient := fakeclient.NewClient(&corev1.Namespace{
+	fakeClient := testcommon.NewTestClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: testNamespace,
 			Annotations: map[string]string{
@@ -448,19 +413,9 @@ func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t
 		},
 	})
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
-
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
-	wh := NewPodMutator(fakeClient,
-		tr,
-		decoder,
-		controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		testr.New(t),
-		false,
-	)
+	wh := NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), false)
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
@@ -533,7 +488,7 @@ func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t
 }
 
 func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
-	fakeClient := fakeclient.NewClient(&corev1.Namespace{
+	fakeClient := testcommon.NewTestClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: testNamespace,
 			Annotations: map[string]string{
@@ -542,16 +497,9 @@ func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
 		},
 	})
 
-	pod, _, _, tr, decoder := setupTestData()
+	pod, _, _, decoder := setupTestData()
 
-	wh := NewPodMutator(
-		fakeClient,
-		tr,
-		decoder,
-		controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
-		testr.New(t),
-		false,
-	)
+	wh := NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), false)
 
 	request := generateRequest(pod, t)
 
@@ -597,7 +545,7 @@ func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
 
 func TestPodMutatingWebhookHandleErrorPaths(t *testing.T) {
 
-	pod, dp, ns, tr, decoder := setupTestData()
+	pod, dp, ns, decoder := setupTestData()
 
 	tests := []struct {
 		name            string
@@ -638,7 +586,7 @@ func TestPodMutatingWebhookHandleErrorPaths(t *testing.T) {
 				},
 			},
 			message:   "bad workload",
-			client:    fakeclient.NewClient(pod, dp, ns),
+			client:    testcommon.NewTestClient(pod, dp, ns),
 			decoder:   decoder,
 			errorCode: http.StatusBadRequest,
 		},
@@ -656,7 +604,7 @@ func TestPodMutatingWebhookHandleErrorPaths(t *testing.T) {
 			},
 			message:   "bad app",
 			decoder:   decoder,
-			client:    fakeclient.NewClient(pod, dp, ns),
+			client:    testcommon.NewTestClient(pod, dp, ns),
 			errorCode: http.StatusBadRequest,
 		},
 	}
@@ -666,7 +614,6 @@ func TestPodMutatingWebhookHandleErrorPaths(t *testing.T) {
 
 			wh := PodMutatingWebhook{
 				Decoder:  tt.decoder,
-				Tracer:   tr,
 				Log:      testr.New(t),
 				Client:   tt.client,
 				Workload: tt.workloadHandler,
@@ -705,7 +652,7 @@ func generateRequest(pod *corev1.Pod, t *testing.T) admissionv1.AdmissionRequest
 	}
 }
 
-func setupTestData() (*corev1.Pod, *v1.Deployment, *corev1.Namespace, *fakeclient.ITracerMock, *admission.Decoder) {
+func setupTestData() (*corev1.Pod, *v1.Deployment, *corev1.Namespace, *admission.Decoder) {
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testPod,
@@ -744,9 +691,6 @@ func setupTestData() (*corev1.Pod, *v1.Deployment, *corev1.Namespace, *fakeclien
 		},
 	}
 
-	tr := &fakeclient.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
 	decoder := admission.NewDecoder(runtime.NewScheme())
-	return pod, dp, ns, tr, decoder
+	return pod, dp, ns, decoder
 }

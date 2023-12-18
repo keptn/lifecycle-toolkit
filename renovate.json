@@ -30,7 +30,9 @@
         "docker.io\\/bacherfl\\/.*",
         "docker.io\\/mowies\\/.*",
         "docker.io\\/odubajdt\\/.*",
-        "docker.io\\/thisthatdc\\/.*"
+        "docker.io\\/thisthatdc\\/.*",
+        "testreg\\/.*",
+        "myrep"
       ]
     },
     {
@@ -56,7 +58,7 @@
     {
       "matchPackageNames": [
         "ghcr.io/keptn/certificate-operator",
-        "github.com/keptn/lifecycle-toolkit/klt-cert-manager"
+        "github.com/keptn/lifecycle-toolkit/keptn-cert-manager"
       ],
       "groupName": "keptn/cert-manager"
     }
@@ -71,7 +73,7 @@
         "(^|\\/).*\\.sh$"
       ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)\\s.*?_VERSION ?(\\??=|\\: ?) ?\\\"?(?<currentValue>.+?)?\\\"?\\s"
+        "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)\\s.*?_VERSION ?(=|\\?=|:=|\\+=) ?\\\"?(?<currentValue>.+?)?\\\"?\\s"
       ]
     }
   ],
@@ -89,7 +91,8 @@
     ],
     "ignorePaths": [
       "examples/support/observability/config/prometheus/**/*",
-      "test/prometheus/**/*"
+      "test/prometheus/**/*",
+      "test/integration/simple-deployment-container-annotation/00-install.yaml"
     ]
   }
 }

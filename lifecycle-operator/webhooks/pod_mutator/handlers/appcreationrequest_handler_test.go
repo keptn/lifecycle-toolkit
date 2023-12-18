@@ -9,10 +9,9 @@ import (
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
-	"go.opentelemetry.io/otel/trace"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -30,11 +29,8 @@ var errAppCreate = errors.New("bad")
 
 func TestAppHandlerHandle(t *testing.T) {
 
-	mockEventSender := common.NewK8sSender(record.NewFakeRecorder(100))
+	mockEventSender := eventsender.NewK8sSender(record.NewFakeRecorder(100))
 	log := testr.New(t)
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
@@ -72,13 +68,13 @@ func TestAppHandlerHandle(t *testing.T) {
 		{
 			name:    "Create AppCreationRequest inherit from workload",
 			pod:     pod,
-			client:  fake.NewClient(),
+			client:  testcommon.NewTestClient(),
 			wantReq: singleServiceCreationReq,
 		},
 		{
 			name:    "AppCreationRequest already exists",
 			pod:     pod,
-			client:  fake.NewClient(singleServiceCreationReq),
+			client:  testcommon.NewTestClient(singleServiceCreationReq),
 			wantReq: singleServiceCreationReq,
 		},
 		{
@@ -93,7 +89,7 @@ func TestAppHandlerHandle(t *testing.T) {
 						apicommon.VersionAnnotation:  "0.1",
 					},
 				}},
-			client: fake.NewClient(),
+			client: testcommon.NewTestClient(),
 			wantReq: &klcv1alpha3.KeptnAppCreationRequest{
 				TypeMeta: metav1.TypeMeta{
 					Kind:       "KeptnAppCreationRequest",
@@ -135,7 +131,6 @@ func TestAppHandlerHandle(t *testing.T) {
 				Client:      tt.client,
 				Log:         log,
 				EventSender: mockEventSender,
-				Tracer:      tr,
 			}
 			err := appHandler.Handle(context.TODO(), tt.pod, namespace)
 
@@ -158,16 +153,13 @@ func TestAppHandlerHandle(t *testing.T) {
 }
 
 func TestAppHandlerCreateAppSucceeds(t *testing.T) {
-	fakeClient := fake.NewClient()
+	fakeClient := testcommon.NewTestClient()
 	logger := logr.Discard()
-	eventSender := common.NewK8sSender(record.NewFakeRecorder(100))
-	tracer := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
+	eventSender := eventsender.NewK8sSender(record.NewFakeRecorder(100))
+
 	appHandler := &AppCreationRequestHandler{
 		Client:      fakeClient,
 		Log:         logger,
-		Tracer:      tracer,
 		EventSender: eventSender,
 	}
 
@@ -176,7 +168,7 @@ func TestAppHandlerCreateAppSucceeds(t *testing.T) {
 	newAppCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{Name: name},
 	}
-	err := appHandler.createResource(ctx, newAppCreationRequest, trace.SpanFromContext(ctx))
+	err := appHandler.createResource(ctx, newAppCreationRequest)
 
 	require.Nil(t, err)
 	creationReq := &klcv1alpha3.KeptnAppCreationRequest{}
@@ -186,16 +178,13 @@ func TestAppHandlerCreateAppSucceeds(t *testing.T) {
 }
 
 func TestAppHandlerCreateAppFails(t *testing.T) {
-	fakeClient := fake.NewClient()
+	fakeClient := testcommon.NewTestClient()
 	logger := logr.Discard()
-	eventSender := common.NewK8sSender(record.NewFakeRecorder(100))
-	tracer := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
+	eventSender := eventsender.NewK8sSender(record.NewFakeRecorder(100))
+
 	appHandler := &AppCreationRequestHandler{
 		Client:      fakeClient,
 		Log:         logger,
-		Tracer:      tracer,
 		EventSender: eventSender,
 	}
 
@@ -203,7 +192,7 @@ func TestAppHandlerCreateAppFails(t *testing.T) {
 	newAppCreationRequest := &klcv1alpha3.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{},
 	}
-	err := appHandler.createResource(ctx, newAppCreationRequest, trace.SpanFromContext(ctx))
+	err := appHandler.createResource(ctx, newAppCreationRequest)
 	require.Error(t, err)
 
 }

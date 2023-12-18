@@ -8,7 +8,6 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -41,35 +40,7 @@ func GetOldStatus(name string, statuses []klcv1alpha3.ItemStatus) apicommon.Kept
 	return oldstatus
 }
 
-func setEventMessage(phase apicommon.KeptnPhaseType, reconcileObject client.Object, longReason string, version string) string {
-	if version == "" {
-		return fmt.Sprintf("%s: %s / Namespace: %s, Name: %s", phase.LongName, longReason, reconcileObject.GetNamespace(), reconcileObject.GetName())
-	}
-	return fmt.Sprintf("%s: %s / Namespace: %s, Name: %s, Version: %s", phase.LongName, longReason, reconcileObject.GetNamespace(), reconcileObject.GetName(), version)
-}
-
-func setAnnotations(reconcileObject client.Object, phase apicommon.KeptnPhaseType) map[string]string {
-	if reconcileObject == nil || reconcileObject.GetName() == "" || reconcileObject.GetNamespace() == "" {
-		return nil
-	}
-	annotations := map[string]string{
-		"namespace": reconcileObject.GetNamespace(),
-		"name":      reconcileObject.GetName(),
-		"phase":     phase.ShortName,
-	}
-
-	piWrapper, err := interfaces.NewEventObjectWrapperFromClientObject(reconcileObject)
-	if err == nil {
-		copyMap(annotations, piWrapper.GetEventAnnotations())
-	}
-
-	annotationsObject := reconcileObject.GetAnnotations()
-	annotations["traceparent"] = annotationsObject["traceparent"]
-
-	return annotations
-}
-
-func copyMap[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](dst M1, src M2) {
+func CopyMap[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](dst M1, src M2) {
 	for k, v := range src {
 		dst[k] = v
 	}
@@ -94,10 +65,10 @@ func GetEvaluationDefinition(k8sclient client.Client, log logr.Logger, ctx conte
 func getObject(k8sclient client.Client, log logr.Logger, ctx context.Context, definitionName string, namespace string, definition client.Object) error {
 	err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: namespace}, definition)
 	if err != nil {
-		log.Info("Failed to get resource from application namespace", "resource type", fmt.Sprintf("%T", definition), "Definition name", definitionName, "namespace", namespace)
+		log.Info("Could not find resource in application namespace", "resource type", fmt.Sprintf("%T", definition), "Definition name", definitionName, "namespace", namespace)
 		if k8serrors.IsNotFound(err) {
 			if err := k8sclient.Get(ctx, types.NamespacedName{Name: definitionName, Namespace: config.Instance().GetDefaultNamespace()}, definition); err != nil {
-				log.Info("Failed to get resource from default KLT namespace", "resource type", fmt.Sprintf("%T", definition), "definition name", definitionName)
+				log.Info("Could not find resource in default Keptn namespace", "resource type", fmt.Sprintf("%T", definition), "definition name", definitionName)
 				return err
 			}
 			return nil

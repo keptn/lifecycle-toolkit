@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	fakeprom "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus/fake"
 	promapi "github.com/prometheus/client_golang/api"

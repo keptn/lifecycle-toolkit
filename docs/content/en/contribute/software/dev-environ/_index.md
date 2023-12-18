@@ -24,10 +24,10 @@ To prepare to contribute to the Keptn project, we recommend that you:
   * [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator)
   * [metrics-operator](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator)
   * [scheduler](https://github.com/keptn/lifecycle-toolkit/tree/main/scheduler)
-  * [klt-cert-manager](https://github.com/keptn/lifecycle-toolkit/tree/main/klt-cert-manager)
+  * [keptn-cert-manager](https://github.com/keptn/lifecycle-toolkit/tree/main/keptn-cert-manager)
 
   Each of these is described in the
-  [Architecture](../../../docs/architecture/)
+  [Architecture](../../../docs/components/)
   section of the documentation
   and most include a *README* file with more information.
 * Study the material in
@@ -43,7 +43,7 @@ When you view the
 [lifecycle-toolkit](https://github.com/keptn/lifecycle-toolkit)
 repository, you see that Keptn is composed of multiple components,
 each of which is discussed in the Architecture
-[Architecture](../../../docs/architecture/)
+[Architecture](../../../docs/components/)
 documentation:
 
 * Three Kubernetes operators
@@ -57,7 +57,7 @@ you also see the `runtimes` directory.
 This defines the runners that you can use when defining
 tasks to be run either pre- or post-deployment.
 These are discussed in
-[Runners and containers](../../../docs/implementing/tasks/#runners-and-containers).
+[Runners and containers](../../../docs/guides/tasks.md#runners-and-containers).
 
 ## Install software
 
@@ -68,13 +68,13 @@ you need to install the following on your system:
   which allows software applications to run in isolated environments
   and makes it easier to deploy and manage them.
 * A Kubernetes cluster running an appropriate version of Kubernetes.
-  See [Supported Kubernetes versions](../../../docs/install/reqs.md/#supported-kubernetes-versions)
+  See [Supported Kubernetes versions](../../../docs/installation/_index.md#supported-kubernetes-versions)
   for details.
   Most contributors create a local
   Kubernetes-in-Docker(KinD) cluster.
   This is adequate for developing software for Keptn.
   See
-  [Kubernetes cluster](../../../docs/install/k8s.md/#create-local-kubernetes-cluster)
+  [Kubernetes cluster](../../../docs/installation/k8s.md/#create-local-kubernetes-cluster)
   for instructions.
 * [**kubectl**](https://kubernetes.io/docs/tasks/tools/):
   a command-line interface tool used for deploying

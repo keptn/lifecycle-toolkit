@@ -1,4 +1,4 @@
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisDefinition
 metadata:
   name: analysisdefinition-bad
@@ -6,7 +6,7 @@ spec:
   objectives:
     - analysisValueTemplateRef:
         name: response_time_p95
-        namespace: keptn-lifecycle-toolkit-system
+        namespace: keptn-system
       target:
         failure:
           # multiple operators should not be defined as part of one item, but as 2 separate list items

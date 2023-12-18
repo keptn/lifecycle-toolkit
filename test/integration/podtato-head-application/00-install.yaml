@@ -210,7 +210,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: podtato-head-left-arml
+  name: podtato-head-left-arm
   labels:
     app: podtato-head
 spec:
@@ -359,7 +359,7 @@ spec:
       keptnMetricRef:
         name: available-cpus
 ---
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: available-cpus
@@ -370,9 +370,10 @@ spec:
   query: >-
     sum(kube_node_status_capacity{resource='cpu'})
 ---
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
 metadata:
   name: prometheus
 spec:
+  type: prometheus
   targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"

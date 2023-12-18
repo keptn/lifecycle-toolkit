@@ -37,7 +37,7 @@ To enable Slack notification add `post-deployment-notification` in as a postDepl
     - post-deployment-notification
 ```
 
-## Deploy the Observability Part and Keptn-lifecycle-toolkit
+## Deploy the Observability Part and Keptn
 
 ```make install```
 
@@ -74,6 +74,3 @@ The deployment should fail because of too few cpu resources
 ```make deploy-version-3```
 
 * This should only change one service, you can see that only this changed in the trace
-
-<!-- markdownlint-disable-next-line MD033 MD013 -->
-<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

@@ -4,7 +4,7 @@ package converter
 import (
 	"testing"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/inf.v0"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -88,7 +88,7 @@ total_score:
   pass: "100%"
   warning: "65%"`
 
-const expectedOutput = `apiVersion: metrics.keptn.sh/v1alpha3
+const expectedOutput = `apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisDefinition
 metadata:
   creationTimestamp: null
@@ -1612,7 +1612,7 @@ func TestConvertSLO(t *testing.T) {
 			out: &metricsapi.AnalysisDefinition{
 				TypeMeta: v1.TypeMeta{
 					Kind:       "AnalysisDefinition",
-					APIVersion: "metrics.keptn.sh/v1alpha3",
+					APIVersion: "metrics.keptn.sh/v1beta1",
 				},
 				ObjectMeta: v1.ObjectMeta{
 					Name: "defName",
@@ -1666,7 +1666,7 @@ func TestConvertSLO(t *testing.T) {
 			out: &metricsapi.AnalysisDefinition{
 				TypeMeta: v1.TypeMeta{
 					Kind:       "AnalysisDefinition",
-					APIVersion: "metrics.keptn.sh/v1alpha3",
+					APIVersion: "metrics.keptn.sh/v1beta1",
 				},
 				ObjectMeta: v1.ObjectMeta{
 					Name: "defName",
@@ -1755,7 +1755,7 @@ func TestConvertSLO(t *testing.T) {
 			out: &metricsapi.AnalysisDefinition{
 				TypeMeta: v1.TypeMeta{
 					Kind:       "AnalysisDefinition",
-					APIVersion: "metrics.keptn.sh/v1alpha3",
+					APIVersion: "metrics.keptn.sh/v1beta1",
 				},
 				ObjectMeta: v1.ObjectMeta{
 					Name: "defName",

@@ -1,5 +1,5 @@
 let text = Deno.env.get("SECURE_DATA");
-let context = Deno.env.get("CONTEXT");
+let context = Deno.env.get("KEPTN_CONTEXT");
 let data;
 let body;
 let contextdata;

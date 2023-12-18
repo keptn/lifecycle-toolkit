@@ -1,7 +1,7 @@
 ---
 title: Contribution guidelines for documentation
-description: Guidelines for contributing towards Keptn Lifecycle Toolkit
-weight: 300
+description: Guidelines for contributing towards Keptn
+weight: 100
 ---
 
 The [Contribution Guidelines](../../general/contrib-guidelines-gen) page
@@ -39,7 +39,7 @@ that are relevant only to documentation
 * We are attempting to avoid duplicated information across the doc set,
   especially for information that is expected to change.
   For example, information about supported Kubernetes versions
-  and the command sequence to install KLT should usually be done
+  and the command sequence to install Keptn should usually be done
   as references to the official installation section of the docs.
 
   For usability considerations, we make the following exceptions:

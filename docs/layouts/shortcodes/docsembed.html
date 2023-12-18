@@ -1,0 +1,6 @@
+{{ $u := (.Get "path") }}
+{{ with readFile $u }}
+    {{- highlight (. | htmlUnescape | safeHTML ) "yaml" -}}
+{{ else }}
+    {{ errorf "Unable to get local resource %s" (.Get "path") }}
+{{ end }}

@@ -4,12 +4,9 @@ import (
 	"fmt"
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	otelsdk "go.opentelemetry.io/otel/sdk/trace"
-	sdktest "go.opentelemetry.io/otel/sdk/trace/tracetest"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apiserver/pkg/storage/names"
 )
@@ -41,41 +38,16 @@ var _ = Describe("App", Ordered, func() {
 			It("should update the spans", func() {
 				By("creating a new app version")
 				common.AssertResourceUpdated(ctx, k8sClient, instance)
-				assertAppSpan(instance, spanRecorder)
-				fmt.Println("spanned ", instance.Name)
 			})
 
 		})
 		AfterEach(func() {
 			// Remember to clean up the cluster after each test
 			common.DeleteAppInCluster(ctx, k8sClient, instance)
-			// Reset span recorder after each spec
-			common.ResetSpanRecords(tracer, spanRecorder)
 		})
 
 	})
 })
-
-func assertAppSpan(instance *klcv1alpha3.KeptnApp, spanRecorder *sdktest.SpanRecorder) {
-	By("Comparing spans")
-	var spans []otelsdk.ReadOnlySpan
-	Eventually(func() bool {
-		spans = spanRecorder.Ended()
-		return len(spans) >= 3
-	}, "10s").Should(BeTrue())
-
-	Expect(spans[0].Name()).To(Equal(instance.GetAppVersionName()))
-	Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppName.String(instance.Name)))
-	Expect(spans[0].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
-
-	Expect(spans[1].Name()).To(Equal("create_app_version"))
-	Expect(spans[1].Attributes()).To(ContainElement(apicommon.AppName.String(instance.Name)))
-	Expect(spans[1].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
-
-	Expect(spans[2].Name()).To(Equal("reconcile_app"))
-	Expect(spans[2].Attributes()).To(ContainElement(apicommon.AppName.String(instance.Name)))
-	Expect(spans[2].Attributes()).To(ContainElement(apicommon.AppVersion.String(instance.Spec.Version)))
-}
 
 func createInstanceInCluster(name string, namespace string, version string) *klcv1alpha3.KeptnApp {
 	instance := &klcv1alpha3.KeptnApp{

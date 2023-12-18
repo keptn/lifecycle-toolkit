@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup cluster
-        uses: ./.github/actions/deploy-klt-on-cluster
+        uses: ./.github/actions/deploy-keptn-on-cluster
         with:
           runtime_tag: ${{ inputs.runtime_tag }}
 
@@ -31,12 +31,12 @@ jobs:
           make performance-test
 
       - name: Create reports
-        if: always()
+        if: failure()
         working-directory: ./.github/scripts
         run: ./create-reports-toolkit.sh
 
       - name: Upload cluster logs
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: logs-performance-tests

@@ -10,9 +10,17 @@ import (
 	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	lfcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
+	evalfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
+	phasefake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
+	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -20,7 +28,7 @@ import (
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
+	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
@@ -41,16 +49,19 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 		PostDeploymentEvaluationStatus: apicommon.StatePending,
 	}
 
-	app := controllercommon.ReturnAppVersion("default", "myappversion", "1.0.0", nil, pendingStatus)
+	app := testcommon.ReturnAppVersion("default", "myappversion", "1.0.0", nil, pendingStatus)
 
-	r, eventChannel, tracer, _ := setupReconciler(app)
+	r, eventChannel, _ := setupReconciler(app)
+
+	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		return phase.PhaseResult{Continue: true, Result: ctrl.Result{Requeue: false}}, nil
+	}}
 
 	tests := []struct {
-		name       string
-		req        ctrl.Request
-		wantErr    error
-		events     []string // check correct events are generated
-		startTrace bool
+		name    string
+		req     ctrl.Request
+		wantErr error
+		events  []string // check correct events are generated
 	}{
 		{
 			name: "new appVersion with no workload nor evaluation should finish",
@@ -62,18 +73,8 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 			},
 			wantErr: nil,
 			events: []string{
-				`AppPreDeployTasksStarted`,
-				`AppPreDeployTasksFinished`,
-				`AppPreDeployEvaluationsStarted`,
-				`AppPreDeployEvaluationsFinished`,
-				`AppDeployStarted`,
-				`AppDeployFinished`,
-				`AppPostDeployTasksStarted`,
-				`AppPostDeployTasksFinished`,
-				`AppPostDeployEvaluationsStarted`,
-				`AppPostDeployEvaluationsFinished`,
+				`AppCompletedFinished`,
 			},
-			startTrace: true,
 		},
 		{
 			name: "notfound should not return error nor event",
@@ -87,7 +88,6 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 		},
 	}
 
-	traces := 0
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
@@ -104,12 +104,6 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 					require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
 				}
 
-			}
-			if tt.startTrace {
-				// A different trace for each app-version
-				require.Equal(t, tracer.StartCalls()[traces].SpanName, "reconcile_app_version")
-				require.Equal(t, tracer.StartCalls()[traces].Ctx.Value(CONTEXTID), tt.req.Name)
-				traces++
 			}
 		})
 
@@ -158,7 +152,10 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 		},
 		Status: status,
 	}
-	r, eventChannel, tracer, _ := setupReconciler(app)
+	r, _, _ := setupReconciler(app)
+	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		return phase.PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
+	}}
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -170,30 +167,14 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 	result, err := r.Reconcile(context.WithValue(context.TODO(), CONTEXTID, req.Name), req)
 	require.Nil(t, err)
 
-	expectedEvents := []string{
-		"AppPreDeployTasksFailed",
-	}
-
-	for _, e := range expectedEvents {
-		event := <-eventChannel
-		require.Equal(t, strings.Contains(event, req.Name), true, "wrong appversion")
-		require.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
-		require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
-	}
-
-	require.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app_version")
-	require.Equal(t, tracer.StartCalls()[0].Ctx.Value(CONTEXTID), req.Name)
-
-	require.Nil(t, err)
-
 	// do not requeue since we reached completion
 	require.False(t, result.Requeue)
 }
 
 func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 
-	app := controllercommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
-	r, eventChannel, tracer, _ := setupReconciler(app)
+	app := testcommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
+	r, eventChannel, _ := setupReconciler(app)
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
 			Namespace: "default",
@@ -214,9 +195,6 @@ func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 		require.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
 		require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
 	}
-
-	require.Equal(t, tracer.StartCalls()[0].SpanName, "reconcile_app_version")
-	require.Equal(t, tracer.StartCalls()[0].Ctx.Value(CONTEXTID), req.Name)
 
 	require.Nil(t, err)
 
@@ -249,23 +227,25 @@ func setupReconcilerWithMeters() *KeptnAppVersionReconciler {
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	// fake a tracer
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &telemetryfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	tf := &fake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) telemetry.ITracer {
 		return tr
 	}}
+
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 
 	r := &KeptnAppVersionReconciler{
 		Log:           ctrl.Log.WithName("test-appVersionController"),
 		TracerFactory: tf,
-		Meters:        controllercommon.InitAppMeters(),
+		Meters:        testcommon.InitAppMeters(),
 	}
 	return r
 }
 
-func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan string, *fake.ITracerMock, *fake.ISpanHandlerMock) {
+func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan string, *telemetryfake.ISpanHandlerMock) {
 	// setup logger
 	opts := zap.Options{
 		Development: true,
@@ -273,18 +253,18 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	// fake a tracer
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
+	tr := &telemetryfake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
 		return ctx, trace.SpanFromContext(ctx)
 	}}
 
-	tf := &fake.TracerFactoryMock{GetTracerFunc: func(name string) trace.Tracer {
+	tf := &telemetryfake.TracerFactoryMock{GetTracerFunc: func(name string) telemetry.ITracer {
 		return tr
 	}}
 
 	// fake span handler
 
-	spanRecorder := &fake.ISpanHandlerMock{
-		GetSpanFunc: func(ctx context.Context, tracer trace.Tracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+	spanRecorder := &telemetryfake.ISpanHandlerMock{
+		GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
 			return ctx, trace.SpanFromContext(ctx), nil
 		},
 		UnbindSpanFunc: func(reconcileObject client.Object, phase string) error { return nil },
@@ -295,20 +275,25 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 		return []string{workloadVersion.Spec.AppName}
 	}
 
-	fake.SetupSchemes()
-	fakeClient := k8sfake.NewClientBuilder().WithObjects(objs...).WithStatusSubresource(objs...).WithScheme(scheme.Scheme).WithObjects().WithIndex(&lfcv1alpha4.KeptnWorkloadVersion{}, "spec.app", workloadVersionIndexer).Build()
+	testcommon.SetupSchemes()
+	fakeClient := fake.NewClientBuilder().WithObjects(objs...).WithStatusSubresource(objs...).WithScheme(scheme.Scheme).WithObjects().WithIndex(&lfcv1alpha4.KeptnWorkloadVersion{}, "spec.app", workloadVersionIndexer).Build()
 
 	recorder := record.NewFakeRecorder(100)
 	r := &KeptnAppVersionReconciler{
 		Client:        fakeClient,
 		Scheme:        scheme.Scheme,
-		EventSender:   controllercommon.NewK8sSender(recorder),
+		EventSender:   eventsender.NewK8sSender(recorder),
 		Log:           ctrl.Log.WithName("test-appVersionController"),
 		TracerFactory: tf,
 		SpanHandler:   spanRecorder,
-		Meters:        controllercommon.InitAppMeters(),
+		Meters:        testcommon.InitAppMeters(),
+		EvaluationHandler: &evalfake.MockEvaluationHandler{
+			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]lfcv1alpha3.ItemStatus, apicommon.StatusSummary, error) {
+				return []lfcv1alpha3.ItemStatus{}, apicommon.StatusSummary{}, nil
+			},
+		},
 	}
-	return r, recorder.Events, tr, spanRecorder
+	return r, recorder.Events, spanRecorder
 }
 
 func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
@@ -322,27 +307,26 @@ func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 		name    string
 		args    args
 		baseCtx context.Context
-		appCtx  context.Context
 	}{
-		{name: "Current trace ctx should be != than app trace context",
+		{
+			name: "Current trace ctx should be != than app trace context",
 			args: args{
-				ctx:        context.WithValue(context.TODO(), CONTEXTID, 1),
-				appVersion: &lfcv1alpha3.KeptnAppVersion{},
+				ctx: context.WithValue(context.TODO(), CONTEXTID, 1),
+				appVersion: &lfcv1alpha3.KeptnAppVersion{
+					Spec: lfcv1alpha3.KeptnAppVersionSpec{TraceId: map[string]string{
+						"traceparent": "00-52527d549a7b33653017ce960be09dfc-a38a5a8d179a88b5-01",
+					}},
+				},
 			},
-			baseCtx: context.WithValue(context.TODO(), CONTEXTID, 1),
-			appCtx:  context.TODO(),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx, ctxAppTrace, _, _ := r.setupSpansContexts(tt.args.ctx, tt.args.appVersion)
-			if !reflect.DeepEqual(ctx, tt.baseCtx) {
-				t.Errorf("setupSpansContexts() got: %v as baseCtx, wanted: %v", ctx, tt.baseCtx)
-			}
-			if !reflect.DeepEqual(ctxAppTrace, tt.appCtx) {
-				t.Errorf("setupSpansContexts() got: %v as appCtx, wanted: %v", ctxAppTrace, tt.appCtx)
-			}
+			ctx, endFunc := r.setupSpansContexts(tt.args.ctx, tt.args.appVersion)
+			require.NotNil(t, ctx)
+			require.NotNil(t, endFunc)
+
 		})
 	}
 }

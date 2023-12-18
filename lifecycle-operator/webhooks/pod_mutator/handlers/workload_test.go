@@ -7,11 +7,10 @@ import (
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
-	"go.opentelemetry.io/otel/trace"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -29,11 +28,9 @@ var errFetch = errors.New("bad")
 
 func TestHandle(t *testing.T) {
 
-	mockEventSender := controllercommon.NewK8sSender(record.NewFakeRecorder(100))
+	mockEventSender := eventsender.NewK8sSender(record.NewFakeRecorder(100))
 	log := testr.New(t)
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
+
 	workload := &klcv1alpha3.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-workload-my-workload",
@@ -77,13 +74,13 @@ func TestHandle(t *testing.T) {
 		{
 			name:         "Create Workload",
 			pod:          pod,
-			client:       fake.NewClient(),
+			client:       testcommon.NewTestClient(),
 			wantWorkload: wantWorkload,
 		},
 		{
 			name:         "Update Workload",
 			pod:          pod,
-			client:       fake.NewClient(wantWorkload),
+			client:       testcommon.NewTestClient(wantWorkload),
 			wantWorkload: wantWorkload,
 		},
 		{
@@ -124,7 +121,6 @@ func TestHandle(t *testing.T) {
 				Client:      tt.client,
 				Log:         log,
 				EventSender: mockEventSender,
-				Tracer:      tr,
 			}
 			err := workloadHandler.Handle(context.TODO(), tt.pod, "test-namespace")
 
@@ -147,11 +143,8 @@ func TestHandle(t *testing.T) {
 }
 
 func TestUpdateWorkloadNoSpecChanges(t *testing.T) {
-	mockEventSender := controllercommon.NewK8sSender(record.NewFakeRecorder(100))
+	mockEventSender := eventsender.NewK8sSender(record.NewFakeRecorder(100))
 	log := testr.New(t)
-	tr := &fake.ITracerMock{StartFunc: func(ctx context.Context, spanName string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-		return ctx, trace.SpanFromContext(ctx)
-	}}
 
 	workload := &klcv1alpha3.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
@@ -162,10 +155,9 @@ func TestUpdateWorkloadNoSpecChanges(t *testing.T) {
 	a := &WorkloadHandler{
 		Client:      nil,
 		Log:         log,
-		Tracer:      tr,
 		EventSender: mockEventSender,
 	}
-	err := a.updateWorkload(context.TODO(), workload, workload, nil)
+	err := a.updateWorkload(context.TODO(), workload, workload)
 	require.Nil(t, err)
 
 }

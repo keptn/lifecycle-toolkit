@@ -11,21 +11,29 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 
 ## Parameters
 
+### Global parameters
+
+| Name                       | Description                                                               | Value |
+| -------------------------- | ------------------------------------------------------------------------- | ----- |
+| `global.imageRegistry`     | Global container image registry                                           | `""`  |
+| `global.imagePullSecrets`  | Global Docker registry secret names as an array                           | `[]`  |
+| `global.commonLabels`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |
+| `global.commonAnnotations` | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |
+
 ### Keptn Metrics Operator common
 
 | Name                                   | Description                                                                                                                                                   | Value               |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
-| `replicas`                             | customize number of installed metrics operator replicas                                                                                                       | `1`                 |
 | `operatorService.ports[0]`             | webhook port (must correspond to Mutating Webhook Configurations)                                                                                             |                     |
+| `operatorService.ports[1]`             | port to integrate with the K8s custom metrics API                                                                                                             |                     |
+| `operatorService.ports[2]`             | port to integrate with metrics API (e.g. Keda)                                                                                                                |                     |
 | `operatorService.ports[0].name`        |                                                                                                                                                               | `https`             |
 | `operatorService.ports[0].port`        |                                                                                                                                                               | `8443`              |
 | `operatorService.ports[0].protocol`    |                                                                                                                                                               | `TCP`               |
 | `operatorService.ports[0].targetPort`  |                                                                                                                                                               | `https`             |
-| `operatorService.ports[1]`             | port to integrate with the K8s custom metrics API                                                                                                             |                     |
 | `operatorService.ports[1].name`        |                                                                                                                                                               | `custom-metrics`    |
 | `operatorService.ports[1].port`        |                                                                                                                                                               | `443`               |
 | `operatorService.ports[1].targetPort`  |                                                                                                                                                               | `custom-metrics`    |
-| `operatorService.ports[2]`             | port to integrate with metrics API (e.g. Keda)                                                                                                                |                     |
 | `operatorService.ports[2].name`        |                                                                                                                                                               | `metrics`           |
 | `operatorService.ports[2].port`        |                                                                                                                                                               | `9999`              |
 | `operatorService.ports[2].protocol`    |                                                                                                                                                               | `TCP`               |
@@ -42,34 +50,33 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 | `webhookService.ports[0].targetPort`   |                                                                                                                                                               | `9443`              |
 | `webhookService.type`                  |                                                                                                                                                               | `ClusterIP`         |
 | `nodeSelector`                         | add custom nodes selector to metrics operator                                                                                                                 | `{}`                |
+| `replicas`                             | customize number of installed metrics operator replicas                                                                                                       | `1`                 |
 | `tolerations`                          | add custom tolerations to metrics operator                                                                                                                    | `[]`                |
 | `topologySpreadConstraints`            | add custom topology constraints to metrics operator                                                                                                           | `[]`                |
+| `annotations`                          | add deployment level annotations                                                                                                                              | `{}`                |
+| `podAnnotations`                       | adds pod level annotations                                                                                                                                    | `{}`                |
+| `kubernetesClusterDomain`              | overrides cluster.local                                                                                                                                       | `cluster.local`     |
+| `customMetricsAPIService.enabled`      | enable/disable the K8s APIService installation                                                                                                                | `true`              |
 
 ### Keptn Metrics Operator controller
 
-| Name                                                | Description                                       | Value                            |
-| --------------------------------------------------- | ------------------------------------------------- | -------------------------------- |
-| `containerSecurityContext`                          | Sets security context privileges                  |                                  |
-| `containerSecurityContext.allowPrivilegeEscalation` |                                                   | `false`                          |
-| `containerSecurityContext.capabilities.drop`        |                                                   | `["ALL"]`                        |
-| `containerSecurityContext.privileged`               |                                                   | `false`                          |
-| `containerSecurityContext.runAsGroup`               |                                                   | `65532`                          |
-| `containerSecurityContext.runAsNonRoot`             |                                                   | `true`                           |
-| `containerSecurityContext.runAsUser`                |                                                   | `65532`                          |
-| `containerSecurityContext.seccompProfile.type`      |                                                   | `RuntimeDefault`                 |
-| `image.repository`                                  | specify registry for manager image                | `ghcr.io/keptn/metrics-operator` |
-| `image.tag`                                         | select tag for manager image                      | `v0.8.2`                         |
-| `env.exposeKeptnMetrics`                            | enable metrics exporter                           | `true`                           |
-| `env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller          | `0`                              |
-| `env.analysisControllerLogLevel`                    | sets the log level of Analysis Controller         | `0`                              |
-| `env.enableKeptnAnalysis`                           | enables/disables the analysis feature             | `false`                          |
-| `livenessProbe`                                     | custom livenessprobe for manager container        |                                  |
-| `readinessProbe`                                    | custom readinessprobe for manager container       |                                  |
-| `resources`                                         | specify limits and requests for manager container |                                  |
-
-### Global
-
-| Name                      | Description                            | Value           |
-| ------------------------- | -------------------------------------- | --------------- |
-| `kubernetesClusterDomain` | overrides domain.local                 | `cluster.local` |
-| `imagePullSecrets`        | global value for image registry secret | `[]`            |
+| Name                                                | Description                                                   | Value                    |
+| --------------------------------------------------- | ------------------------------------------------------------- | ------------------------ |
+| `containerSecurityContext`                          | Sets security context privileges                              |                          |
+| `containerSecurityContext.allowPrivilegeEscalation` |                                                               | `false`                  |
+| `containerSecurityContext.capabilities.drop`        |                                                               | `["ALL"]`                |
+| `containerSecurityContext.privileged`               |                                                               | `false`                  |
+| `containerSecurityContext.runAsGroup`               |                                                               | `65532`                  |
+| `containerSecurityContext.runAsNonRoot`             |                                                               | `true`                   |
+| `containerSecurityContext.runAsUser`                |                                                               | `65532`                  |
+| `containerSecurityContext.seccompProfile.type`      |                                                               | `RuntimeDefault`         |
+| `env.exposeKeptnMetrics`                            | enable metrics exporter                                       | `true`                   |
+| `env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller                      | `0`                      |
+| `env.analysisControllerLogLevel`                    | sets the log level of Analysis Controller                     | `0`                      |
+| `image.registry`                                    | specify the container registry for the metrics-operator image | `ghcr.io`                |
+| `image.repository`                                  | specify registry for manager image                            | `keptn/metrics-operator` |
+| `image.tag`                                         | select tag for manager image                                  | `v0.8.3`                 |
+| `imagePullPolicy`                                   | specify pull policy for manager image                         | `Always`                 |
+| `livenessProbe`                                     | custom livenessprobe for manager container                    |                          |
+| `readinessProbe`                                    | custom readinessprobe for manager container                   |                          |
+| `resources`                                         | specify limits and requests for manager container             |                          |

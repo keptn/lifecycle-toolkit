@@ -1,6 +1,6 @@
 apiVersion: v2
 name: keptn
-description: A Helm chart for Keptn Lifecycle Toolkit, a set of tools to enable cloud-native application lifecycle management
+description: A Helm chart for Keptn, a set of tools to enable cloud-native application lifecycle management
 icon: "https://raw.githubusercontent.com/cncf/artwork/master/projects/keptn/icon/color/keptn-icon-color.svg"
 home: https://keptn.sh
 sources:
@@ -29,7 +29,6 @@ annotations:
   artifacthub.io/license: "Apache-2.0"
   artifacthub.io/operator: "true"
   artifacthub.io/operatorCapabilities: "Full Lifecycle"
-
 kubeVersion: ">= 1.24.0-0"
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -40,32 +39,28 @@ kubeVersion: ">= 1.24.0-0"
 # a dependency of application charts to inject those utilities and functions into the rendering
 # pipeline. Library charts do not define any templates and therefore cannot be deployed.
 type: application
-
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.2.7
-
+version: 0.3.0
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "v0.8.2" # x-release-please-version
-
+appVersion: "v0.9.0" # x-release-please-version
 dependencies:
   - name: keptn-cert-manager
-    version: 0.1.0
+    version: 0.2.0
     alias: certManager
     condition: certManager.enabled
-    repository: "file://../klt-cert-manager/chart"
+    repository: file://../keptn-cert-manager/chart
   - name: keptn-lifecycle-operator
     version: 0.1.0
     alias: lifecycleOperator
     condition: lifecycleOperator.enabled
-    repository: "file://../lifecycle-operator/chart"
+    repository: file://../lifecycle-operator/chart
   - name: keptn-metrics-operator
     version: 0.1.0
     alias: metricsOperator
     condition: metricsOperator.enabled
-    repository: "file://../metrics-operator/chart"
-# TODO: change repository links to released ones once the charts get their first release
+    repository: file://../metrics-operator/chart

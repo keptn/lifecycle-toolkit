@@ -13,8 +13,8 @@ import (
 
 	"github.com/benbjohnson/clock"
 	"github.com/gorilla/mux"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha2"
-	"github.com/open-feature/go-sdk/pkg/openfeature"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+	"github.com/open-feature/go-sdk/openfeature"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -127,7 +127,7 @@ func (m *serverManager) setup() error {
 		go func() {
 			err := m.server.ListenAndServe()
 			if err != nil {
-				klog.Errorf("could not start keptn-metrics server: %w", err)
+				klog.Errorf("could not start keptn-metrics server: %v", err)
 			}
 		}()
 

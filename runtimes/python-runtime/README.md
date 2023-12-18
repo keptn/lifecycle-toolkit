@@ -67,5 +67,10 @@ We can call the hellopy.py script downloading it directly from github
 docker run -e "SCRIPT=https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/python-runtime/samples/hellopy.py" -it lifecycle-toolkit/runtimes/python-runtime:${VERSION}
 ```
 
-<!-- markdownlint-disable-next-line MD033 MD013 -->
-<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />
+### Environment Variables
+
+Keptn passes the following environment variables to the runtime:
+
+* `DATA`: JSON encoded object containing the parameters specified in `spec.parameters` of a `KeptnTask`.
+* `SECURE_DATA`: Contains the value of the secret referenced in the `spec.secureParameters` field of a `KeptnTask`.
+* `KEPTN_CONTEXT`: JSON encoded object containing context information for the task.

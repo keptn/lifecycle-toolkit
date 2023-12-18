@@ -3,7 +3,6 @@ global:
   indexerConfig:
     type: "local"
     metricsDirectory: collected-metrics
-  prometheusURL: http://localhost:9090
 
 jobs:
   - name: keptn-metrics
@@ -12,7 +11,7 @@ jobs:
     qps: 4
     burst: 4
     namespacedIterations: false
-    namespace: keptn-lifecycle-toolkit-system
+    namespace: keptn-system
     podWait: false
     cleanup: true
     waitWhenFinished: true

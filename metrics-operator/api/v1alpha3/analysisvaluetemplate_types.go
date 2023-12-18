@@ -31,16 +31,19 @@ type AnalysisValueTemplateSpec struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
+//+kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
 
 // AnalysisValueTemplate is the Schema for the analysisvaluetemplates API
 type AnalysisValueTemplate struct {
-	metav1.TypeMeta   `json:",inline" yaml:",inline"`
+	metav1.TypeMeta `json:",inline" yaml:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 
 	// Spec contains the specification for the AnalysisValueTemplate
+	// +optional
 	Spec AnalysisValueTemplateSpec `json:"spec,omitempty" yaml:"spec,omitempty"`
 	// unused field
+	// +optional
 	Status string `json:"status,omitempty" yaml:"status,omitempty"`
 }
 
@@ -49,6 +52,7 @@ type AnalysisValueTemplate struct {
 // AnalysisValueTemplateList contains a list of AnalysisValueTemplate
 type AnalysisValueTemplateList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []AnalysisValueTemplate `json:"items"`
 }

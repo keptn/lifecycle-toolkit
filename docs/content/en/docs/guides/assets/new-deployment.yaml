@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-left-leg
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: podtato-head-left-leg
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/version: 0.1.0
+    spec:
+      containers:
+        - name: podtato-head-frontend
+          image: podtato-head-left-leg:a

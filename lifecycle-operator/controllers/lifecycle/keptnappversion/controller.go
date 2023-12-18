@@ -25,6 +25,9 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
@@ -47,11 +50,13 @@ const traceComponentName = "keptn/lifecycle-operator/appversion"
 type KeptnAppVersionReconciler struct {
 	Scheme *runtime.Scheme
 	client.Client
-	Log           logr.Logger
-	EventSender   controllercommon.IEvent
-	TracerFactory telemetry.TracerFactory
-	Meters        apicommon.KeptnMeters
-	SpanHandler   telemetry.ISpanHandler
+	Log               logr.Logger
+	EventSender       eventsender.IEvent
+	TracerFactory     telemetry.TracerFactory
+	Meters            apicommon.KeptnMeters
+	SpanHandler       telemetry.ISpanHandler
+	EvaluationHandler evaluation.IEvaluationHandler
+	PhaseHandler      phase.IHandler
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversions,verbs=get;list;watch;create;update;patch;delete
@@ -84,16 +89,10 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return reconcile.Result{}, fmt.Errorf(controllererrors.ErrCannotFetchAppVersionMsg, err)
 	}
 
-	ctx, ctxAppTrace, span, endSpan := r.setupSpansContexts(ctx, appVersion)
-	defer endSpan()
+	ctxAppTrace, completionFunc := r.setupSpansContexts(ctx, appVersion)
+	defer completionFunc()
 
-	phase := apicommon.PhaseAppPreDeployment
-	phaseHandler := controllercommon.PhaseHandler{
-		Client:      r.Client,
-		EventSender: r.EventSender,
-		Log:         r.Log,
-		SpanHandler: r.SpanHandler,
-	}
+	currentPhase := apicommon.PhaseAppPreDeployment
 
 	ctxAppTrace, spanAppTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), appVersion, "")
 	if err != nil {
@@ -109,61 +108,61 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		reconcilePreDep := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, phaseCtx, appVersion, apicommon.PreDeploymentCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, phase, span, reconcilePreDep)
+		result, err := r.PhaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, currentPhase, reconcilePreDep)
 		if !result.Continue {
 			return result.Result, err
 		}
 	}
 
-	phase = apicommon.PhaseAppPreEvaluation
+	currentPhase = apicommon.PhaseAppPreEvaluation
 	if !appVersion.IsPreDeploymentEvaluationSucceeded() {
 		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, appVersion, apicommon.PreDeploymentEvaluationCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, phase, span, reconcilePreEval)
+		result, err := r.PhaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, currentPhase, reconcilePreEval)
 		if !result.Continue {
 			return result.Result, err
 		}
 	}
 
-	phase = apicommon.PhaseAppDeployment
+	currentPhase = apicommon.PhaseAppDeployment
 	if !appVersion.AreWorkloadsSucceeded() {
 		reconcileAppDep := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcileWorkloads(ctx, appVersion)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, phase, span, reconcileAppDep)
+		result, err := r.PhaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, currentPhase, reconcileAppDep)
 		if !result.Continue {
 			return result.Result, err
 		}
 	}
 
-	phase = apicommon.PhaseAppPostDeployment
+	currentPhase = apicommon.PhaseAppPostDeployment
 	if !appVersion.IsPostDeploymentSucceeded() {
 		reconcilePostDep := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, phaseCtx, appVersion, apicommon.PostDeploymentCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, phase, span, reconcilePostDep)
+		result, err := r.PhaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, currentPhase, reconcilePostDep)
 		if !result.Continue {
 			return result.Result, err
 		}
 	}
 
-	phase = apicommon.PhaseAppPostEvaluation
+	currentPhase = apicommon.PhaseAppPostEvaluation
 	if !appVersion.IsPostDeploymentEvaluationCompleted() {
 		reconcilePostEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, appVersion, apicommon.PostDeploymentEvaluationCheckType)
 		}
-		result, err := phaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, phase, span, reconcilePostEval)
+		result, err := r.PhaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, currentPhase, reconcilePostEval)
 		if !result.Continue {
 			return result.Result, err
 		}
 	}
 
 	// AppVersion is completed at this place
-	return r.finishKeptnAppVersionReconcile(ctx, appVersion, spanAppTrace, span)
+	return r.finishKeptnAppVersionReconcile(ctx, appVersion, spanAppTrace)
 }
 
-func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.Context, appVersion *klcv1alpha3.KeptnAppVersion, spanAppTrace, span trace.Span) (ctrl.Result, error) {
+func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.Context, appVersion *klcv1alpha3.KeptnAppVersion, spanAppTrace trace.Span) (ctrl.Result, error) {
 
 	if !appVersion.IsEndTimeSet() {
 		appVersion.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
@@ -173,7 +172,6 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 
 	err := r.Client.Status().Update(ctx, appVersion)
 	if err != nil {
-		span.SetStatus(codes.Error, err.Error())
 		return ctrl.Result{Requeue: true}, err
 	}
 
@@ -195,16 +193,11 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 	return ctrl.Result{}, nil
 }
 
-func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appVersion *klcv1alpha3.KeptnAppVersion) (context.Context, context.Context, trace.Span, func()) {
+func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appVersion *klcv1alpha3.KeptnAppVersion) (context.Context, func()) {
 	appVersion.SetStartTime()
-
-	traceContextCarrier := propagation.MapCarrier(appVersion.Annotations)
-	ctx = otel.GetTextMapPropagator().Extract(ctx, traceContextCarrier)
 
 	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
-
-	ctx, span := r.getTracer().Start(ctx, "reconcile_app_version", trace.WithSpanKind(trace.SpanKindConsumer))
 
 	endFunc := func() {
 		if appVersion.IsEndTimeSet() {
@@ -212,11 +205,9 @@ func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appV
 			attrs := appVersion.GetMetricsAttributes()
 			r.Meters.AppCount.Add(ctx, 1, metric.WithAttributes(attrs...))
 		}
-		span.End()
 	}
 
-	appVersion.SetSpanAttributes(span)
-	return ctx, ctxAppTrace, span, endFunc
+	return ctxAppTrace, endFunc
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -226,6 +217,6 @@ func (r *KeptnAppVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *KeptnAppVersionReconciler) getTracer() trace.Tracer {
+func (r *KeptnAppVersionReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
 }

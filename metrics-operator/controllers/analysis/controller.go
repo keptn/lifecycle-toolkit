@@ -23,8 +23,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	ctrlcommon "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	evalType "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
@@ -91,7 +90,7 @@ func (a *AnalysisReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	if analysis.Status.State.IsPending() {
-		analysis.Status.State = v1alpha3.StateProgressing
+		analysis.Status.State = metricsapi.StateProgressing
 	}
 
 	var done map[string]metricsapi.ProviderResult

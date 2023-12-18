@@ -9,12 +9,12 @@ categories:
 
 # This is a test post
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-aliqua.
+This is a test post that will rock your world. I came up with this text on my own.
+Below you will find a wonderful graphic that originated from the old Keptn landing page.
 
 ![some graphic]
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-aliqua.
+This is a test post that will rock your world. I came up with this text on my own.
+Below you will find a wonderful graphic that originated from the old Keptn landing page.
 
 [some graphic]: a-test-post/test-graphic.png

@@ -62,6 +62,8 @@ plugins:
       trailing_newlines: false
   - git-revision-date-localized:
       fallback_to_build_date: true
+  - blog:
+      blog_dir: blog
 
 nav:
   - Home:
@@ -173,3 +175,5 @@ nav:
           - Source File Structure: docs/contribute/docs/source-file-structure.md
           - Published Doc Structure: docs/contribute/docs/publish.md
           - Word list: docs/contribute/docs/word-list.md
+  - Blog:
+      - blog/index.md

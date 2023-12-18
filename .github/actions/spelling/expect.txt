@@ -656,7 +656,7 @@ vcluster
 Vec
 versioned
 versioning
-VIRTUALENV
+virtualenv
 visualise
 visualised
 vkeptnmetric

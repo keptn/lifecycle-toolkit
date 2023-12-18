@@ -611,5 +611,6 @@ This modifies the synopsis in the following ways:
 * [Working with tasks](../../guides/tasks.md)
 * [Pre- and post-deployment tasks](../../guides/integrate.md#pre--and-post-deployment-checks)
 * [KeptnApp and KeptnWorkload resources](../../components/lifecycle-operator/keptn-apps.md).
-* [Orchestrate deployment checks](../../core-concepts/usecase-orchestrate.md)
+* Getting started with
+  [Release Lifecycle Management](../../getting-started/lifecycle-management.md)
 * [Executing sequential tasks](../../guides/tasks.md#executing-sequential-tasks)

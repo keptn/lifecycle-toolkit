@@ -10,7 +10,7 @@ import (
 
 	"github.com/benbjohnson/clock"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
-	"github.com/open-feature/go-sdk/pkg/openfeature"
+	"github.com/open-feature/go-sdk/openfeature"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/scheme"

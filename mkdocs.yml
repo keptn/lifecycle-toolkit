@@ -1,0 +1,179 @@
+site_name: Keptn - Supercharge Your Deployments
+theme:
+  name: material
+  custom_dir: docs-new/overrides
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      media: "(prefers-color-scheme: light)"
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      media: "(prefers-color-scheme: dark)"
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  logo: assets/images/keptn-icon-white.svg
+  favicon: assets/images/logo-mobile.svg
+  features:
+    - navigation.tabs
+    - navigation.tracking
+    - navigation.indexes
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.action.edit
+    - content.action.view
+    - search.suggest
+    - search.highlight
+site_url: !ENV READTHEDOCS_CANONICAL_URL
+repo_name: keptn/lifecycle-toolkit
+repo_url: https://github.com/keptn/lifecycle-toolkit
+edit_uri: edit/main/docs-new/
+docs_dir: docs-new
+site_description: >-
+  Achieve cloud-native application lifecycle orchestration with Keptn.
+  Enhance Kubernetes monitoring, streamline metrics ingestion, and
+  automate deployment validation. Join the Keptn community for insights.
+extra:
+  social:
+    - icon: fontawesome/solid/house
+      link: https://keptn.sh
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/keptnProject
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/keptnproject
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/keptn
+    - icon: fontawesome/brands/slack
+      link: https://cloud-native.slack.com/archives/C017GAX90GM
+extra_javascript:
+  - assets/javascripts/versions.js
+extra_css:
+  - assets/stylesheets/versions.css
+  - assets/stylesheets/color-schemes.css
+plugins:
+  - search
+  - social
+  - include-markdown:
+      trailing_newlines: false
+  - git-revision-date-localized:
+      fallback_to_build_date: true
+  - blog:
+      blog_dir: blog
+
+nav:
+  - Home:
+      - index.md
+  - Documentation:
+      - docs/index.md
+      - Core Concepts:
+          - docs/core-concepts/index.md
+      - Get Started:
+          - docs/getting-started/index.md
+          - Keptn Metrics: docs/getting-started/metrics.md
+          - Keptn Observability: docs/getting-started/observability.md
+          - Release Lifecycle Management: docs/getting-started/lifecycle-management.md
+      - Installation:
+          - docs/installation/index.md
+          - Uninstall: docs/installation/uninstall.md
+          - Upgrade: docs/installation/upgrade.md
+          - Configuration:
+              - docs/installation/configuration/index.md
+              - How to structure your namespaces: docs/installation/configuration/namespace.md
+              - vCluster installation: docs/installation/configuration/vcluster.md
+              - Keptn + cert-manager.io: docs/installation/configuration/cert-manager.md
+          - Installation Tips and Tricks: docs/installation/tips-tricks.md
+          - Troubleshooting Guide: docs/installation/troubleshooting.md
+          - Kubernetes cluster: docs/installation/k8s.md
+      - Guides:
+          - docs/guides/index.md
+          - Auto app discovery: docs/guides/auto-app-discovery.md
+          - Integrate Keptn with your Applications: docs/guides/integrate.md
+          - Keptn Metrics: docs/guides/evaluatemetrics.md
+          - Analysis: docs/guides/slo.md
+          - Deployment tasks: docs/guides/tasks.md
+          - Redeploy/Restart an Application: docs/guides/restart-application-deployment.md
+          - Evaluations: docs/guides/evaluations.md
+          - DORA metrics: docs/guides/dora.md
+          - OpenTelemetry observability: docs/guides/otel.md
+      - Use Cases:
+          - docs/use-cases/index.md
+          - Day 2 Operations: docs/use-cases/day-2-operations.md
+          - Keptn + HorizontalPodAutoscaler: docs/use-cases/hpa.md
+          - Keptn - Kubernetes: docs/use-cases/non-k8s.md
+      - Components:
+          - docs/components/index.md
+          - Lifecycle Operator:
+              - docs/components/lifecycle-operator/index.md
+              - Flow of deployment: docs/components/lifecycle-operator/deployment-flow.md
+              - Keptn Applications and Keptn Workloads: docs/components/lifecycle-operator/keptn-apps.md
+          - Metrics Operator: docs/components/metrics-operator.md
+          - Scheduler and Scheduling Gates: docs/components/scheduling.md
+          - Keptn Certificate Manager: docs/components/certificate-operator.md
+      - Reference:
+          - docs/reference/index.md
+          - API Reference:
+              - docs/reference/api-reference/index.md
+              - Lifecycle API:
+                  - docs/reference/api-reference/lifecycle/index.md
+                  - v1alpha1: docs/reference/api-reference/lifecycle/v1alpha1/index.md
+                  - v1alpha2: docs/reference/api-reference/lifecycle/v1alpha2/index.md
+                  - v1alpha3: docs/reference/api-reference/lifecycle/v1alpha3/index.md
+                  - v1alpha4: docs/reference/api-reference/lifecycle/v1alpha4/index.md
+              - Metrics API:
+                  - docs/reference/api-reference/metrics/index.md
+                  - v1alpha1: docs/reference/api-reference/metrics/v1alpha1/index.md
+                  - v1alpha2: docs/reference/api-reference/metrics/v1alpha2/index.md
+                  - v1alpha3: docs/reference/api-reference/metrics/v1alpha3/index.md
+                  - v1beta1: docs/reference/api-reference/metrics/v1beta1/index.md
+              - Options API:
+                  - docs/reference/api-reference/options/index.md
+                  - v1alpha1: docs/reference/api-reference/options/v1alpha1/index.md
+          - CRD Reference:
+              - docs/reference/crd-reference/index.md
+              - Analysis: docs/reference/crd-reference/analysis.md
+              - AnalysisDefinition: docs/reference/crd-reference/analysisdefinition.md
+              - AnalysisValueTemplate: docs/reference/crd-reference/analysisvaluetemplate.md
+              - KeptnApp: docs/reference/crd-reference/app.md
+              - KeptnConfig: docs/reference/crd-reference/config.md
+              - KeptnEvaluationDefinition: docs/reference/crd-reference/evaluationdefinition.md
+              - KeptnMetric: docs/reference/crd-reference/metric.md
+              - KeptnMetricsProvider: docs/reference/crd-reference/metricsprovider.md
+              - KeptnTask: docs/reference/crd-reference/task.md
+              - KeptnTaskDefinition: docs/reference/crd-reference/taskdefinition.md
+      - Migrating to Keptn:
+          - docs/migrate/index.md
+          - Migration strategy: docs/migrate/strategy.md
+          - Migrate Quality Gates: docs/migrate/metrics-observe.md
+  - Contributing:
+      - docs/contribute/index.md
+      - General information about contributing:
+          - docs/contribute/general/index.md
+          - Technologies and concepts you should know: docs/contribute/general/technologies.md
+          - Codespaces: docs/contribute/general/codespace.md
+          - DCO: docs/contribute/general/dco.md
+          - Working with Git:
+              - docs/contribute/general/git/index.md
+              - Fork and clone the repository: docs/contribute/general/git/fork-clone.md
+              - Create local branch: docs/contribute/general/git/branch-create.md
+              - Create PR: docs/contribute/general/git/pr-create.md
+              - PR review process: docs/contribute/general/git/review.md
+          - Contribution Guidelines: docs/contribute/general/contrib-guidelines-gen.md
+      - Software contributions:
+          - docs/contribute/software/index.md
+          - Software development environment: docs/contribute/software/dev-environ.md
+      - Documentation contributions:
+          - docs/contribute/docs/index.md
+          - CRD name: docs/contribute/docs/yaml-crd-ref-template.md
+          - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs.md
+          - Build Documentation Locally: docs/contribute/docs/local-building.md
+          - Linter Requirements: docs/contribute/docs/linter-requirements.md
+          - Source File Structure: docs/contribute/docs/source-file-structure.md
+          - Published Doc Structure: docs/contribute/docs/publish.md
+          - Word list: docs/contribute/docs/word-list.md
+  - Blog:
+      - blog/index.md

@@ -11,5 +11,6 @@ metricsOperator:
   imagePullPolicy: Never
 
 global:
+  certManagerEnabled: true
   commonLabels:
     app.kubernetes.io/version: vmyversion

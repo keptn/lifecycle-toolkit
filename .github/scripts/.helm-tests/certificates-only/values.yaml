@@ -8,6 +8,7 @@ metricsOperator:
   enabled: false
 
 global:
+  certManagerEnabled: true
   imageRegistry: "testreg"
   imagePullSecrets: []
   commonAnnotations:

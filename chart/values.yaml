@@ -13,7 +13,7 @@ metricsOperator:
 
 global:
   ## @param global.certManagerEnabled Enable this value to install Keptn Certificate Manager
-  certManagerEnabled: true
+  certManagerEnabled: false
   ## @param global.imageRegistry Global Docker image registry
   imageRegistry: ""
 

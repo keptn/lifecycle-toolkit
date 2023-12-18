@@ -16,5 +16,6 @@ metricsOperator:
   enabled: false
 
 global:
+  certManagerEnabled: true
   commonLabels:
     app.kubernetes.io/version: vmyversion

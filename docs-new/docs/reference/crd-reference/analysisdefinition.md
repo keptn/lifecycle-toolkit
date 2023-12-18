@@ -140,7 +140,7 @@ guide page.
 ## Files
 
 API reference:
-[AnalysisDefinition](../api-reference/metrics/v1beta1/_index.md#analysisdefinition)
+[AnalysisDefinition](../api-reference/metrics/v1beta1/_ndex.md#analysisdefinition)
 
 ## Differences between versions
 

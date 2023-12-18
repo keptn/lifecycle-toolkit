@@ -40,7 +40,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/converter"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	analysismetrics "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics/analysis"
-	"github.com/open-feature/go-sdk/pkg/openfeature"
+	"github.com/open-feature/go-sdk/openfeature"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"

@@ -4,6 +4,7 @@ metadata:
   name: "some-keptn-app2"
 spec:
   version: "1.2.3"
+  revision: 123
 ---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnAppVersion
@@ -23,19 +24,16 @@ spec:
       version: 0.2.7
 ---
 apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnWorkloadVersion
+kind: KeptnWorkload
 metadata:
-  name: podtato-head-podtato-head-entry-0.1.0
+  name: some-keptn-app2
 spec:
-  app: "some-keptn-app2"
-  version: 0.2.7
+  app: podtato-head
+  version: 0.1.0
   preDeploymentTasks:
     - pre-deployment-task
   postDeploymentTasks:
     - post-deployment-task
-  workloadName: some-keptn-app2
-  traceId:
-    traceparent: my-trace-parent
   resourceReference:
     kind: ReplicaSet
     name: my-replica-set
@@ -50,18 +48,6 @@ spec:
     inline:
       code: |
         console.log("Okay")
----
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnWorkload
-metadata:
-  name: some-keptn-app2
-spec:
-  app: podtato-head
-  version: 0.1.0
-  preDeploymentTasks:
-    - pre-deployment-task
-  postDeploymentTasks:
-    - post-deployment-task
 ---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTask

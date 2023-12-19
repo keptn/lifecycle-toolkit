@@ -12,7 +12,6 @@ metadata:
   name: "some-keptn-app-version-2"
 spec:
   appName: podtato-head
-  revision: 1
   preDeploymentTasks:
     - pre-deployment-task
   postDeploymentTasks:
@@ -21,7 +20,7 @@ spec:
     traceparent: my-trace-parent
   version: 0.1.0
   workloads:
-    - name: podtato-head-left-arm
+    - name: some-keptn-app2
       version: 0.2.7
 ---
 apiVersion: lifecycle.keptn.sh/v1beta1
@@ -35,25 +34,6 @@ spec:
     - pre-deployment-task
   postDeploymentTasks:
     - post-deployment-task
-  resourceReference:
-    kind: ReplicaSet
-    name: my-replica-set
-    uid: 957f825e-4025-4ea8-ad22-9292877ff7eb
----
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnWorkloadVersion
-metadata:
-  name: some-keptn-app2-0.1.0
-spec:
-  app: "some-keptn-app2"
-  version: 0.2.7
-  preDeploymentTasks:
-    - pre-deployment-task
-  postDeploymentTasks:
-    - post-deployment-task
-  workloadName: some-keptn-app2
-  traceId:
-    traceparent: my-trace-parent
   resourceReference:
     kind: ReplicaSet
     name: my-replica-set
@@ -91,7 +71,7 @@ spec:
   objectives:
     - evaluationTarget: ">1000"
       keptnMetricRef:
-        name: cpu-s
+        name: available-cpus
 ---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnEvaluation

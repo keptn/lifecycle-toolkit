@@ -49,6 +49,7 @@ autoprefixer
 autoprovision
 autoscaler
 azurecr
+Bacher
 bacherfl
 badanalysis
 badmetric
@@ -570,6 +571,7 @@ spanitem
 spdx
 spf
 squidfunk
+sre
 stakeholders
 standalone
 statefulset

@@ -41,7 +41,7 @@ pre- and post-deployment
 - Annotate the appropriate
   [KeptnApp](../reference/crd-reference/app.md)
   resource to associate your `KeptnTaskDefinition`
-  with the pre- and post-deployment tasks that should be run.
+  with the pre/post-deployment tasks that should be run.
 
 This page provides information to help you create your tasks:
 

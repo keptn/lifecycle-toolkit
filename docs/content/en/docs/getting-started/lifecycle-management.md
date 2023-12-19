@@ -37,7 +37,7 @@ and
 During this exercise, you will configure Keptn to trigger a webhook
 before and after a deployment has completed successfully.
 
-For demo purposes, a place is required to which those request are sent.
+For demo purposes, a place is required to which those requests are sent.
 To implement this:
 
 1. Install the

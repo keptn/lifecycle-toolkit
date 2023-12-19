@@ -125,8 +125,7 @@ resource.
 These resources contain re-usable "functions"
 that can execute before and after the deployment.
 
-If everything is fine, the deployment continues and afterward,
-a Slack notification is sent with the result of the deployment
+If everything is fine, the deployment continues.
 
 ## Example of pre- and post-deployment actions
 

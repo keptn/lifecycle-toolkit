@@ -1,6 +1,6 @@
 # Spell Checker
 
-All PRs that are pushed to a Keptn reprository
+All PRs that are pushed to a Keptn repository
 are run through a spell checker that is based on the
 [check-spelling](https://github.com/check-spelling/check-spelling)
 GitHub action.
@@ -13,9 +13,9 @@ if you misuse "setup" versus "set up", and so forth.
 
 If you get a Spell Checker error:
 
-1. Right-click the `details` link for Spell Checker.
-1. If you do not want to read through the whole (and rather verbose) log,
-   type `unrecognized words` in the search box at the top.
+1. Right-click the `details` link for Spell Checker
+   in the CI results section of your PR.
+1. Search for "job summary" and click the link to that report.
 1. This shows the word(s) that caused Spell Checker to fail.
 
    - If these are genuine misspellings,

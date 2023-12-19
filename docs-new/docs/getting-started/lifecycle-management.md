@@ -1,4 +1,8 @@
-# Release Lifecycle Management
+---
+title: Release Lifecycle Management
+description: Add KeptnTasks to deployments
+weight: 50
+---
 
 The Release Lifecycle Management tools run
 pre- and post-deployment tasks and checks
@@ -7,7 +11,7 @@ to make them more robust.
 This tutorial introduces these tools.
 
 > This tutorial assumes you have already completed the
-[Getting started with Keptn Observability](../getting-started/index.md)
+[Getting started with Keptn Observability](../getting-started/)
 exercise.
 > Please ensure you've finished that before attempting this exercise.
 
@@ -22,7 +26,7 @@ as specified in the pod template specs of your
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
 [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
 and
-[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/).
+[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)).
 
 > Pre and post deployments can also run on a `KeptnApp` level.
 > A `KeptnApp` groups multiple workloads into a single application.
@@ -33,7 +37,7 @@ and
 During this exercise, you will configure Keptn to trigger a webhook
 before and after a deployment has completed successfully.
 
-For demo purposes, a place is required to which those request are sent.
+For demo purposes, a place is required to which those requests are sent.
 To implement this:
 
 1. Install the

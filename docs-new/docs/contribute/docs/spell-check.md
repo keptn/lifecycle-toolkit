@@ -1,6 +1,6 @@
 # Spell Checker
 
-All PRs that are pushed to a Keptn repository
+All PRs that are pushed to a Kept repository
 are run through a spell checker that is based on the
 [check-spelling](https://github.com/check-spelling/check-spelling)
 GitHub action.

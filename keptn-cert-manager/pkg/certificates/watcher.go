@@ -52,6 +52,19 @@ func NewCertificateWatcher(reader client.Reader, certDir string, namespace strin
 	}
 }
 
+func NewCertificateWatcherB(reader client.Reader, certDir string, namespace string, secretName string, log logr.Logger) *CertificateWatcher {
+	return &CertificateWatcher{
+		apiReader:             reader,
+		fs:                    afero.NewOsFs(),
+		certificateDirectory:  certDir,
+		namespace:             namespace,
+		certificateSecretName: secretName,
+		ICertificateHandler:   defaultCertificateHandler{},
+		certificateThreshold:  CertThreshold,
+		Log:                   log,
+	}
+}
+
 func (watcher *CertificateWatcher) watchForCertificatesSecret() {
 	for {
 		<-time.After(certificateRenewalInterval)
@@ -134,4 +147,15 @@ func (watcher *CertificateWatcher) ValidateCertificateExpiration(certData []byte
 		return false, nil
 	}
 	return true, nil
+}
+
+// NoOpCertificateWatcher is a no-op implementation of ICertificateWatcher.
+type NoOpCertificateWatcher struct{}
+
+// WaitForCertificates is a no-op function for the NoOpCertificateWatcher.
+func (nw *NoOpCertificateWatcher) WaitForCertificates() {}
+
+// NewNoOpCertificateWatcher creates a new instance of NoOpCertificateWatcher.
+func NewNoOpCertificateWatcher() *NoOpCertificateWatcher {
+	return &NoOpCertificateWatcher{}
 }

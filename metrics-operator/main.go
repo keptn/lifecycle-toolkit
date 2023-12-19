@@ -228,18 +228,28 @@ func main() {
 	setupValidationWebhooks(mgr)
 	setupProbes(mgr)
 
-	if !disableWebhook && env.CertManagerEnabled {
-		webhookBuilder = webhookBuilder.SetCertificateWatcher(
-			certificates.NewCertificateWatcher(
+	if !disableWebhook {
+		var certificateWatcher certificates.ICertificateWatcher
+
+		// Check if cert manager is enabled
+		if env.CertManagerEnabled {
+			certificateWatcher = certificates.NewCertificateWatcher(
 				mgr.GetAPIReader(),
 				webhookBuilder.GetOptions().CertDir,
 				env.PodNamespace,
 				certCommon.SecretName,
 				setupLog,
-			))
+			)
+		} else {
+			// Use the NoOpCertificateWatcher when cert manager is disabled
+			certificateWatcher = certificates.NewNoOpCertificateWatcher()
+		}
+
+		webhookBuilder = webhookBuilder.SetCertificateWatcher(certificateWatcher)
 		webhookBuilder.Register(mgr, nil)
 		setupLog.Info("starting webhook")
 	}
+
 	setupLog.Info("starting manager")
 	setupLog.Info("Keptn metrics-operator is alive")
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {

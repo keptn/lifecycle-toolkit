@@ -145,7 +145,7 @@ to  monitor the status of the deployment:
 kubectl get keptnworkloadversion -n podtato-kubectl -w
 ```
 
-The deployment for a Workload stays in a `Pending`
+The deployment for a workload stays in a `Pending`
 state until all pre-deployment tasks and evaluations compete successfully.
 Afterwards, the deployment starts and when the workload is deployed,
 the post-deployment checks start.

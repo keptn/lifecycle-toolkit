@@ -64,7 +64,7 @@ for the `KeptnApp` resource itself:
   that contain the identifications required
   to run the Keptn observability features.
 * You must manually add the annotations described in
-  [Annotations to KeptnApp](../../guides/tasks.md/#annotations-to-keptnapp)
+  [Annotations to KeptnApp](../../guides/tasks.md#annotations-to-keptnapp)
   to the basic `KeptnApp` manifest to define
   the evaluations and tasks you want to run pre/post-deployment.
 

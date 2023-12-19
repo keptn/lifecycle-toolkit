@@ -52,19 +52,6 @@ func NewCertificateWatcher(reader client.Reader, certDir string, namespace strin
 	}
 }
 
-func NewCertificateWatcherB(reader client.Reader, certDir string, namespace string, secretName string, log logr.Logger) *CertificateWatcher {
-	return &CertificateWatcher{
-		apiReader:             reader,
-		fs:                    afero.NewOsFs(),
-		certificateDirectory:  certDir,
-		namespace:             namespace,
-		certificateSecretName: secretName,
-		ICertificateHandler:   defaultCertificateHandler{},
-		certificateThreshold:  CertThreshold,
-		Log:                   log,
-	}
-}
-
 func (watcher *CertificateWatcher) watchForCertificatesSecret() {
 	for {
 		<-time.After(certificateRenewalInterval)

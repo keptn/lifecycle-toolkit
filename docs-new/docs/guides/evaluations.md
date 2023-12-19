@@ -106,7 +106,7 @@ you must manually edit the
 [KeptnApp](../reference/crd-reference/app.md)
 YAML file to provide an annotation
 for each `KeptnEvaluationDefinition` resource to be run
-pre- and post-deployment.
+pre/post-deployment.
 The annotations for evaluations are:
 
 ```yaml

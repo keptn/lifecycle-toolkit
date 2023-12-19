@@ -380,7 +380,6 @@ loadtests
 LOCALBIN
 logf
 logr
-lowbound
 makefiles
 markdownfiles
 markdownlint

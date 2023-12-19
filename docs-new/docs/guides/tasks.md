@@ -103,7 +103,7 @@ reference page for the synopsis and examples for each runner.
 
 ## Annotations to KeptnApp
 
-To define pre- and post-deployment tasks,
+To define pre/post-deployment tasks,
 you must manually edit the YAML files
 to add annotations for your tasks to the appropriate
 [KeptnApp](../reference/crd-reference/app.md)

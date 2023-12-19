@@ -126,4 +126,4 @@ replace (
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc => go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.21.0
 )
 
-replace github.com/keptn/lifecycle-toolkit/keptn-cert-manager => github.com/geoffrey1330/lifecycle-toolkit/keptn-cert-manager 676150e7124afed1d4f8eb6f96a988ce5c009d48
+replace github.com/keptn/lifecycle-toolkit/keptn-cert-manager => github.com/geoffrey1330/lifecycle-toolkit/keptn-cert-manager v0.0.0-20231219162836-676150e7124a

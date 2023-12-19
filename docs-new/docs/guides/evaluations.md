@@ -61,7 +61,7 @@ meets a defined target value.
 The example
 [app-pre-deploy-eval.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app-pre-deploy-eval.yaml)
 file specifies the `app-pre-deploy-eval-2` evaluation as follows:
-{{< embed path="/examples/sample-app/version-3/app-pre-deploy-eval.yaml" >}}
+{% include "../assets/crd/eval.yaml" %}
 
 The `evaluationTarget` is set to be `>1`,
 so this evaluation ensures that more than 1 CPU is available

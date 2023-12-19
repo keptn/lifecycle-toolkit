@@ -64,8 +64,8 @@ deployment durations and failures across multiple deployment strategies.
   [DORA metrics](../guides/dora.md)
   and exposes them as OpenTelemetry metrics out of the box.
 
-* Reports traces and custom Keptn metrics from configured data providers
-   using OpenTelemetry.
+* Uses OpenTelemetry to report traces and custom Keptn metrics
+  from all data providers that are configured in your cluster.
 
 * Enables monitoring of new logs from log monitoring solutions.
 
@@ -83,7 +83,6 @@ to ensure that your deployments are observable.
 To learn more, see:
 
 * [Getting started with Keptn Observability](../getting-started/observability.md)
-* [Standardize observability](usecase-observability.md/)
 * [DORA metrics](../guides/dora.md) User Guide
 * [OpenTelemetry observability](../guides/otel.md) User Guide
 
@@ -133,5 +132,4 @@ For more information, see:
 * [Getting started with release lifecycle management](../getting-started/lifecycle-management.md)
 * [Deployment tasks](../guides/tasks.md) User Guide
 * [Evaluations](../guides/evaluations.md) User Guide
-* [Manage release lifecycle](usecase-orchestrate.md)
 * [KeptnApp and KeptnWorkload resources](../components/lifecycle-operator/keptn-apps.md)

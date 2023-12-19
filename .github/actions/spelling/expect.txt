@@ -380,7 +380,6 @@ loadtests
 LOCALBIN
 logf
 logr
-lowbound
 makefiles
 markdownfiles
 markdownlint
@@ -550,6 +549,7 @@ serrors
 serviceaccount
 serviceaccountspec
 serviceport
+setuptools
 shellcheck
 SHELLFLAGS
 shortcode
@@ -575,7 +575,6 @@ statefultest
 stdouttrace
 storageclasses
 storageversion
-striptags
 sts
 subchart
 subdir
@@ -630,8 +629,8 @@ undeploy
 unmarshal
 unmarshalling
 urlset
-usecase
 usecasebox
+usecases
 usr
 utilruntime
 validatingwebhookconfigurations
@@ -641,6 +640,7 @@ vcluster
 Vec
 versioned
 versioning
+virtualenv
 visualise
 visualised
 vkeptnmetric
@@ -655,6 +655,7 @@ webhooknamespaces
 website
 whitespaces
 whykeptn
+Wiesinger
 wjdp
 wli
 Wls

@@ -1,4 +1,8 @@
-# KeptnApp
+---
+title: KeptnApp
+description: Define all workloads and checks associated with an application
+weight: 29
+---
 
 A `KeptnApp` resource lists all the [workloads](https://kubernetes.io/docs/concepts/workloads/)
 that constitute a logical application.
@@ -20,7 +24,7 @@ apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
   name: <app-name>
-  namespace: <application-namespace>
+  namespace: <app-namespace>
 spec:
   version: "x.y"
   revision: x
@@ -53,7 +57,6 @@ when the app discovery feature generates the `KeptnApp` resource:
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
     specification.
-  - **namespace** -- Namespace of this application.
 
 - **spec**
   - **version** (required) -- version of the Keptn application.
@@ -169,7 +172,7 @@ spec:
 - [KeptnEvaluationDefinition](evaluationdefinition.md)
 - [Working with tasks](../../guides/tasks.md)
 - [Architecture of KeptnWorkloads and KeptnTasks](../../components/lifecycle-operator/keptn-apps.md)
-- [Pre/post-deployment tasks](../../guides/integrate.md#prepost-deployment-checks)
+- [Pre- and post-deployment tasks](../../guides/integrate.md#pre--and-post-deployment-checks)
 - Getting started with
   [Release Lifecycle Management](../../getting-started/lifecycle-management.md)
 - [Use Keptn automatic app discovery](../../guides/auto-app-discovery.md)

@@ -14,7 +14,7 @@ import (
 	"github.com/benbjohnson/clock"
 	"github.com/gorilla/mux"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
-	"github.com/open-feature/go-sdk/pkg/openfeature"
+	"github.com/open-feature/go-sdk/openfeature"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"

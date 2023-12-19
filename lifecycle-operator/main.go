@@ -401,16 +401,23 @@ func main() {
 	// Set the metric value as soon as the operator starts
 	setupLog.Info("Keptn lifecycle-operator is alive")
 	keptnLifecycleActive.Add(context.Background(), 1)
-	if !disableWebhook && env.CertManagerEnabled {
-		webhookBuilder = webhookBuilder.SetCertificateWatcher(
-			certificates.NewCertificateWatcher(
+	if !disableWebhook {
+		var certificateWatcher certificates.ICertificateWatcher
+
+		// Check if cert manager is enabled
+		if env.CertManagerEnabled {
+			certificateWatcher = certificates.NewCertificateWatcher(
 				mgr.GetAPIReader(),
 				webhookBuilder.GetOptions().CertDir,
 				env.PodNamespace,
 				certCommon.SecretName,
 				setupLog,
-			))
-
+			)
+		} else {
+			// Use the NoOpCertificateWatcher when cert manager is disabled
+			certificateWatcher = certificates.NewNoOpCertificateWatcher()
+		}
+		webhookBuilder = webhookBuilder.SetCertificateWatcher(certificateWatcher)
 		setupLog.Info(fmt.Sprintf("%v", webhookBuilder))
 		webhookLogger := ctrl.Log.WithName("Mutating Webhook")
 		webhookRecorder := mgr.GetEventRecorderFor("keptn/webhook")

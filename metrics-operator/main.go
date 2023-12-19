@@ -249,7 +249,6 @@ func main() {
 		webhookBuilder.Register(mgr, nil)
 		setupLog.Info("starting webhook")
 	}
-
 	setupLog.Info("starting manager")
 	setupLog.Info("Keptn metrics-operator is alive")
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {

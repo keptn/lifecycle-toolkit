@@ -99,3 +99,5 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
+
+replace github.com/keptn/lifecycle-toolkit/keptn-cert-manager => github.com/geoffrey13/lifecycle-toolkit/keptn-cert-manager 676150e7124afed1d4f8eb6f96a988ce5c009d48

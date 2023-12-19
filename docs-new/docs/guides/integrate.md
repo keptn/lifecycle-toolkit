@@ -4,7 +4,7 @@ Keptn works
 on top of the default scheduler for the cluster.
 This allows it to:
 
-- Trace all activities of all deployment workloads on the cluster,
+- Track all activities of all workloads on the cluster,
   no matter what tool is used for the deployment
 - Inject pre- and post-deployment checks into all deployment workloads.
 

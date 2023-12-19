@@ -111,7 +111,7 @@ provide introductory material about how to use various features.
 
 A template to use to create a new CRD Reference page
 is available
-[here](./yaml-crd-ref-template.md).
+[here](assets/yaml-crd-ref-template.md).
 
 ## Contributing guide
 

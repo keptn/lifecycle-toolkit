@@ -25,7 +25,7 @@ If you get a Spell Checker error:
 
    - If a word that is flagged is a legitimate word,
      follow the instructions in the report
-     to propose adding it to our dictionary.
+     to propose adding it to our [dictionary](https://github.com/keptn/lifecycle-toolkit/blob/main/.github/actions/spelling/expect.txt).
      This request will be added to your PR for review
      and, if approved, will be merged when the PR is merged.
 

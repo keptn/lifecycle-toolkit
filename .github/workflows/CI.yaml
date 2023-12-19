@@ -15,6 +15,7 @@ on:
       - "**.md"
       - "netlify.toml"
       - "mkdocs.yml"
+      - ".github/actions/spelling/*"
 
 env:
   GO_VERSION: "~1.20"

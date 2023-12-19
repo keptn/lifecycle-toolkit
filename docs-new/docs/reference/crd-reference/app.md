@@ -167,9 +167,8 @@ spec:
 
 - [KeptnTaskDefinition](taskdefinition.md)
 - [KeptnEvaluationDefinition](evaluationdefinition.md)
-- [Working with tasks](../../guides/tasks.md)
+- [Deployment tasks](../../guides/tasks.md)
 - [Architecture of KeptnWorkloads and KeptnTasks](../../components/lifecycle-operator/keptn-apps.md)
-- [Pre/post-deployment tasks](../../guides/integrate.md#prepost-deployment-checks)
 - Getting started with
   [Release Lifecycle Management](../../getting-started/lifecycle-management.md)
 - [Use Keptn automatic app discovery](../../guides/auto-app-discovery.md)

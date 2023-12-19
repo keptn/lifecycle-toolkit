@@ -16,7 +16,7 @@ exercise.
 When Keptn is successfully monitoring your deployments, it can also run arbitrary tasks and SLO evaluations:
 
 - pre-deployment (before the Pod is scheduled)
-- post-deployment (after the post is scheduled)
+- post-deployment (after the Pod is scheduled)
 
 > Tasks and Evaluations can also run on a KeptnApp level.
   See

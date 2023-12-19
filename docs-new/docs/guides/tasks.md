@@ -67,7 +67,7 @@ to define the task.
 The `spec` section of the `KeptnTaskDefinition`
 defines the runner to use for the container:
 
-Keptn provides a general Kubernetes container
+Keptn provides a general Kubernetes container runtime
 that you can configure to do almost anything you want:
 
 - The `container-runtime` runner provides

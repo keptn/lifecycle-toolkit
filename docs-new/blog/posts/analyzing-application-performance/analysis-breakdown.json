@@ -1,0 +1,77 @@
+{
+  "objectiveResults": [
+    {
+      "result": {
+        "failResult": {
+          "operator": {
+            "greaterThan": {
+              "fixedValue": "50M"
+            }
+          },
+          "fulfilled": false
+        },
+        "warnResult": {
+          "operator": {},
+          "fulfilled": false
+        },
+        "warning": false,
+        "pass": true
+      },
+      "objective": {
+        "analysisValueTemplateRef": {
+          "name": "memory-usage"
+        },
+        "target": {
+          "failure": {
+            "greaterThan": {
+              "fixedValue": "50M"
+            }
+          }
+        },
+        "weight": 1
+      },
+      "value": 25978197.333333,
+      "query": "builtin:kubernetes.workload.memory_working_set:filter(eq(\"dt.entity.cloud_application\",CLOUD_APPLICATION-3B2BD00402B933C2)):splitBy(\"dt.entity.cloud_application\"):sum",
+      "score": 1
+    },
+    {
+      "result": {
+        "failResult": {
+          "operator": {
+            "greaterThan": {
+              "fixedValue": "0"
+            }
+          },
+          "fulfilled": false
+        },
+        "warnResult": {
+          "operator": {},
+          "fulfilled": false
+        },
+        "warning": false,
+        "pass": true
+      },
+      "objective": {
+        "analysisValueTemplateRef": {
+          "name": "error-rate"
+        },
+        "target": {
+          "failure": {
+            "greaterThan": {
+              "fixedValue": "0"
+            }
+          }
+        },
+        "weight": 3,
+        "keyObjective": true
+      },
+      "value": 0,
+      "query": "rate(http_requests_total{status_code='500', job='simple-go-service'}[1m]) or on() vector(0)",
+      "score": 3
+    }
+  ],
+  "totalScore": 4,
+  "maximumScore": 4,
+  "pass": true,
+  "warning": false
+}

@@ -46,28 +46,7 @@ Everything in Keptn is configured via Kubernetes Custom Resources.
 We notify Keptn about our monitoring data sources by adding two KeptnMetricsProvider
 resources to our Kubernetes cluster - one for our Prometheus instance, the other one for our Dynatrace tenant.
 
-```yaml
-apiVersion: metrics.keptn.sh/v1alpha3 
-kind: KeptnMetricsProvider 
-metadata: 
-  name: my-prometheus-provider 
-  namespace: simple-go 
-spec: 
-  targetServer: <prometheus-url> 
-  type: prometheus 
---- 
-apiVersion: metrics.keptn.sh/v1alpha3 
-kind: KeptnMetricsProvider 
-metadata: 
-  name: my-dynatrace-provider 
-  namespace: simple-go 
-spec: 
-  targetServer: "https://<tenant-id>.live.dynatrace.com" 
-  type: dynatrace 
-  secretKeyRef: 
-    name: dt-api-token 
-    key: DT_TOKEN
-```
+{% include "./analyzing-application-performance/metric-providers.yaml" %}
 
 ## Defining SLIs
 
@@ -92,31 +71,11 @@ that has been executed after the deployment of a new version.
 In our case, we will create two `AnalysisValueTemplates` resources.
 The first one measures the error rate of our workload, using data from Prometheus:
 
-```yaml
-apiVersion: metrics.keptn.sh/v1alpha3 
-kind: AnalysisValueTemplate 
-metadata: 
-  name: error-rate 
-  namespace: simple-go 
-spec: 
-  provider: 
-    name: my-prometheus-provider 
-  query: "rate(http_requests_total{status_code='500', job='{{.workload}}'}[1m]) or on() vector(0)"
-```
+{% include "./analyzing-application-performance/error-rate.yaml" %}
 
 As a second metric, we measure the memory usage of our application using the following `AnalysisValueTemplate`:
 
-```yaml
-apiVersion: metrics.keptn.sh/v1alpha3 
-kind: AnalysisValueTemplate 
-metadata: 
-  name: memory-usage 
-  namespace: simple-go 
-spec: 
-  provider: 
-    name: my-dynatrace-provider 
-  query: 'metricSelector=builtin:kubernetes.workload.memory_working_set:filter(eq("dt.entity.cloud_application",CLOUD_APPLICATION-3B2BD00402B933C2)):splitBy("dt.entity.cloud_application"):sum'
-```
+{% include "./analyzing-application-performance/memory-usage.yaml" %}
 
 As can be seen in the `spec.query` field of the resource above,
 `AnalysisValueTemplate` resources support the [Go templating syntax](https://pkg.go.dev/text/template).
@@ -134,34 +93,7 @@ The next step is to set up our expectations towards our SLOs, i.e. the
 goals we would like them to meet.
 This is done via an `AnalysisDefinition` resource like the following:
 
-```yaml
-apiVersion: metrics.keptn.sh/v1alpha3 
-kind: AnalysisDefinition 
-metadata: 
-  name: my-analysis-definition 
-  namespace: simple-go 
-spec: 
-  objectives: 
-  - analysisValueTemplateRef: 
-      name: memory-usage 
-    keyObjective: false 
-    target: 
-      failure: 
-        greaterThan: 
-          fixedValue: 30M 
-    weight: 1 
-  - analysisValueTemplateRef: 
-      name: error-rate 
-    keyObjective: true 
-    target: 
-      failure: 
-        greaterThan: 
-          fixedValue: 0 
-    weight: 3 
-  totalScore: 
-    passPercentage: 100 
-    warningPercentage: 75
-```
+{% include "./analyzing-application-performance/analysis-definition.yaml" %}
 
 This `AnalysisDefinition` resource has two objectives, which both refer
 to the `AnalysisValueTemplate` resources we created previously.
@@ -183,20 +115,7 @@ and the metrics-operator determines where to retrieve the data based on the info
 Now, it is time to trigger an Analysis.
 This is done by applying an Analysis resource which looks as follows:
 
-```yaml
-apiVersion: metrics.keptn.sh/v1alpha3 
-kind: Analysis 
-metadata: 
-  name: service-analysis 
-  namespace: simple-go 
-spec: 
-  timeframe: 
-    recent: 10m 
-  args: 
-    "workload": "simple-go-service" 
-  analysisDefinition: 
-    name: my-analysis-definition
-```
+{% include "./analyzing-application-performance/analysis.yaml" %}
 
 Applying this resource causes Keptn to:
 
@@ -255,27 +174,7 @@ kubectl get analysis service-analysis -n simple-go –oyaml
 
 This command gives us the complete YAML representation of the `Analysis`:
 
-```yaml
-apiVersion: metrics.keptn.sh/v1alpha3 
-kind: Analysis 
-metadata: 
-  name: service-analysis 
-  namespace: simple-go 
-spec: 
-  analysisDefinition: 
-    name: my-analysis-definition-2 
-  args: 
-    workload: simple-go-service 
-  timeframe: 
-    recent: 10m 
-status: 
-  pass: true 
-  raw: '…' 
-  state: Completed 
-  timeframe: 
-    from: "2023-11-15T08:15:15Z" 
-    to: "2023-11-15T08:25:15Z"
-```
+{% include "./analyzing-application-performance/analysis-status.yaml" %}
 
 As you can see, this already gives us a lot more information,
 with the meatiest piece being the status.raw field.
@@ -288,85 +187,7 @@ kubectl get analyses service-analysis -n simple-go -o=jsonpath='{.status.raw}' |
 
 Giving us the following as a result:
 
-```json
-{ 
-  "objectiveResults": [ 
-    { 
-      "result": { 
-        "failResult": { 
-          "operator": { 
-            "greaterThan": { 
-              "fixedValue": "50M" 
-            } 
-          }, 
-          "fulfilled": false 
-        }, 
-        "warnResult": { 
-          "operator": {}, 
-          "fulfilled": false 
-        }, 
-        "warning": false, 
-        "pass": true 
-      }, 
-      "objective": { 
-        "analysisValueTemplateRef": { 
-          "name": "memory-usage" 
-        }, 
-        "target": { 
-          "failure": { 
-            "greaterThan": { 
-              "fixedValue": "50M" 
-            } 
-          } 
-        }, 
-        "weight": 1 
-      }, 
-      "value": 25978197.333333, 
-      "query": "builtin:kubernetes.workload.memory_working_set:filter(eq(\"dt.entity.cloud_application\",CLOUD_APPLICATION-3B2BD00402B933C2)):splitBy(\"dt.entity.cloud_application\"):sum", 
-      "score": 1 
-    }, 
-    { 
-      "result": { 
-        "failResult": { 
-          "operator": { 
-            "greaterThan": { 
-              "fixedValue": "0" 
-            } 
-          }, 
-          "fulfilled": false 
-        }, 
-        "warnResult": { 
-          "operator": {}, 
-          "fulfilled": false 
-        }, 
-        "warning": false, 
-        "pass": true 
-      }, 
-      "objective": { 
-        "analysisValueTemplateRef": { 
-          "name": "error-rate" 
-        }, 
-        "target": { 
-          "failure": { 
-            "greaterThan": { 
-              "fixedValue": "0" 
-            } 
-          } 
-        }, 
-        "weight": 3, 
-        "keyObjective": true 
-      }, 
-      "value": 0, 
-      "query": "rate(http_requests_total{status_code='500', job='simple-go-service'}[1m]) or on() vector(0)", 
-      "score": 3 
-    } 
-  ], 
-  "totalScore": 4, 
-  "maximumScore": 4, 
-  "pass": true, 
-  "warning": false 
-}
-```
+{% include "./analyzing-application-performance/analysis-breakdown.json" %}
 
 In the JSON object, we see:
 

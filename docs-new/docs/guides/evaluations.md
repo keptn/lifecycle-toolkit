@@ -101,7 +101,7 @@ Note the following:
 
 ## Annotate the KeptnApp resource
 
-To define the pre- and post-deployment evaluations to run,
+To define the pre/post-deployment evaluations to run,
 you must manually edit the
 [KeptnApp](../reference/crd-reference/app.md)
 YAML file to provide an annotation

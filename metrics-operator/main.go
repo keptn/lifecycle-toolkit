@@ -168,7 +168,7 @@ func main() {
 	}
 
 	var webhookBuilder certwebhook.Builder
-	if !disableWebhook && env.CertManagerEnabled {
+	if !disableWebhook {
 		webhookBuilder = certwebhook.NewWebhookServerBuilder().
 			LoadCertOptionsFromFlag().
 			SetPort(9443).
@@ -228,7 +228,7 @@ func main() {
 	setupValidationWebhooks(mgr)
 	setupProbes(mgr)
 
-	if !disableWebhook {
+	if !disableWebhook && env.CertManagerEnabled {
 		webhookBuilder = webhookBuilder.SetCertificateWatcher(
 			certificates.NewCertificateWatcher(
 				mgr.GetAPIReader(),

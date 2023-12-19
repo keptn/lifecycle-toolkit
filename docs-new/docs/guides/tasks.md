@@ -122,7 +122,7 @@ to the value of the `name` field of the
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 resource.
 
-## Example of pre- and post-deployment actions
+## Example of pre/post-deployment actions
 
 A comprehensive example of pre- and post-deployment
 evaluations and tasks can be found in our

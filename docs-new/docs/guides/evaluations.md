@@ -127,7 +127,7 @@ that can execute before and after the deployment.
 
 If everything is fine, the deployment continues.
 
-## Example of pre- and post-deployment actions
+## Example of pre/post-deployment actions
 
 A comprehensive example of pre/post-deployment
 evaluations and tasks can be found in our

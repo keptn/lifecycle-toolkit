@@ -18,7 +18,7 @@ When Keptn is successfully monitoring your deployments, it can also run arbitrar
 - pre-deployment (before the Pod is scheduled)
 - post-deployment (after the post is scheduled)
 
-> Pre/post deployments can also run on a KeptnApp level.
+> Tasks and Evaluations can also run on a KeptnApp level.
   See
   [Annotations to KeptnApp](../guides/tasks.md#annotations-to-keptnapp).
 

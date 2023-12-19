@@ -129,7 +129,7 @@ If everything is fine, the deployment continues.
 
 ## Example of pre- and post-deployment actions
 
-A comprehensive example of pre- and post-deployment
+A comprehensive example of pre/post-deployment
 evaluations and tasks can be found in our
 [examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
 where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)

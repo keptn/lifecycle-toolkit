@@ -73,7 +73,7 @@ that is named  `available-cpus`.
 This is defined in the example
 [metric.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/metric.yaml)
 file:
-{{< embed path="/examples/sample-app/base/metric.yaml" >}}
+{% include "../assets/crd/metric.yaml" %}
 
 Note the following:
 

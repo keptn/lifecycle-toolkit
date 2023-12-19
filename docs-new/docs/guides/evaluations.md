@@ -8,8 +8,7 @@ It can be defined to run before or after your software is deployed.
 
 When an evaluation is run pre-deployment,
 the deployment is kept in a pending state
-until the result of the evaluations show
-that the infrastructure is capable of accepting deployments again.
+until the evaluation passes with a successful result.
 
 Use the
 [Analysis](slo.md)

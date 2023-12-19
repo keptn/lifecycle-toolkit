@@ -26,7 +26,7 @@ as specified in the pod template specs of your
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
 [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
 and
-[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/).
+[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)).
 
 > Pre and post deployments can also run on a `KeptnApp` level.
 > A `KeptnApp` groups multiple workloads into a single application.

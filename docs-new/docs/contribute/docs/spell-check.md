@@ -56,8 +56,8 @@ based on a set of dictionaries:
   directory.
   [expect.txt](https://github.com/keptn/lifecycle-toolkit/tree/main/.github/actions/spelling)
   lists Keptn terms for both documentation and code.
-- We also use the specialized technical dictionaries provided by check-spelling
-  for Kubernetes and Go.
+- We also use the specialized technical dictionaries provided by check-spelling specific domains
+  or programming languages such as Kubernetes, Go or HTML.
   The dictionaries we use are specified in the
   [.github/workflows/spell-checker.yml](https://github.com/keptn/lifecycle-toolkit/blob/main/.github/workflows/spell-checker.yml)
   file.

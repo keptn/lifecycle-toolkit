@@ -115,7 +115,7 @@ keptn.sh/post-deployment-evaluations: <evaluation-name>
 ```
 
    > **Caveat:** Be very careful when implementing pre-deployment evaluations
-     since, if one fails, Keptn prevents the deployment from running.
+     since, if one fails, Keptn prevents the Deployment from running.
    >
 
 The value of these annotations corresponds

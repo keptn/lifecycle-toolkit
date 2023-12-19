@@ -130,7 +130,7 @@ evaluations and tasks can be found in our
 where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
 to run some simple pre-deployment checks.
 
-To run the example, download then example
+To run the example, download the example and
 then issue the following commands:
 
 ```shell

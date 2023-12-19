@@ -1,6 +1,6 @@
 # Evaluations
 
-A Keptn evaluation does a simple evaluation of the metrics data you capture,
+A `KeptnEvaluation` does a simple evaluation of the metrics data you capture,
 to answer a question such as "Do I have more than four CPUs available?"
 or "Is my remote database accessible?"
 or check for other problems in your infrastructure.

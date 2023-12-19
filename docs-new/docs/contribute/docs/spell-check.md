@@ -20,7 +20,7 @@ If you get a Spell Checker error:
 
    - If these are genuine misspellings,
      correct the spelling in your local branch
-     or using the github editor
+     or using the GitHub editor
      and push the new commit to resolve the errors.
 
    - If a word that is flagged is a legitimate word,

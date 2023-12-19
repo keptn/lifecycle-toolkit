@@ -165,6 +165,7 @@ nav:
           - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs.md
           - Build Documentation Locally: docs/contribute/docs/local-building.md
           - Linter Requirements: docs/contribute/docs/linter-requirements.md
+          - Spell Checker: docs/contribute/docs/spell-check.md
           - Source File Structure: docs/contribute/docs/source-file-structure.md
           - Published Doc Structure: docs/contribute/docs/publish.md
           - Word list: docs/contribute/docs/word-list.md

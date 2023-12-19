@@ -87,17 +87,6 @@ spec:
       keptnMetricRef:
         name: available-cpus
 ---
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetric
-metadata:
-  name: available-cpus
-spec:
-  fetchIntervalSeconds: 10
-  provider:
-    name: prometheus
-  query: >-
-    sum(kube_node_status_capacity{resource='cpu'})
----
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnEvaluation
 metadata:
@@ -108,11 +97,3 @@ spec:
   appName: "some-keptn-app2"
   appVersion: "1.2.3"
   evaluationDefinition: "some-keptn-app-version-2"
----
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetricsProvider
-metadata:
-  name: prometheus
-spec:
-  type: prometheus
-  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"

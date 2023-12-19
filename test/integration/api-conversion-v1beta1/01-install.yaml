@@ -68,19 +68,6 @@ spec:
     inline:
       code: |
         console.log("Okay")
-# apiVersion: lifecycle.keptn.sh/v1beta1
-# kind: KeptnTaskDefinition
-# metadata:
-#   name: some-keptn-app-version-2
-# spec:
-#   retries: 0
-#   timeout: 30s
-#   container:
-#     command:
-#     name: rancher
-#     image: rancher/cowsay:latest
-#     args:
-#       - 'hello world'
 ---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTask

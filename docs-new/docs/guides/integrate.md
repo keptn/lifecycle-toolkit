@@ -6,7 +6,7 @@ This allows it to:
 
 - Track all activities of all workloads on the cluster,
   no matter what tool is used for the deployment
-- Inject pre- and post-deployment checks into all deployment workloads.
+- Inject pre/post-deployment checks into all workloads.
 
 Keptn monitors resources
 that have been applied into the Kubernetes cluster

@@ -136,13 +136,10 @@ func (watcher *CertificateWatcher) ValidateCertificateExpiration(certData []byte
 	return true, nil
 }
 
-// NoOpCertificateWatcher is a no-op implementation of ICertificateWatcher.
 type NoOpCertificateWatcher struct{}
 
-// WaitForCertificates is a no-op function for the NoOpCertificateWatcher.
 func (nw *NoOpCertificateWatcher) WaitForCertificates() {}
 
-// NewNoOpCertificateWatcher creates a new instance of NoOpCertificateWatcher.
 func NewNoOpCertificateWatcher() *NoOpCertificateWatcher {
 	return &NoOpCertificateWatcher{}
 }

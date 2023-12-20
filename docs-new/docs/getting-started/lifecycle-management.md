@@ -20,8 +20,8 @@ exercise.
 When Keptn is successfully monitoring your deployments,
 it can also run arbitrary tasks and SLO evaluations for you
 either pre-deployment or post-deployment
-as specified in the pod template specs of your
-[Workloads](https://kubernetes.io/docs/concepts/workloads/)
+as specified in the Pod template specs of your
+[workloads](https://kubernetes.io/docs/concepts/workloads/)
 ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
 [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
@@ -58,7 +58,7 @@ To implement this:
    kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/service.yml
    ```
 
-1. Wait until all pods are running in the `webhook` namespace
+1. Wait until all Pods are running in the `webhook` namespace
    then port-forward and view the webhook sink page:
 
    ```shell
@@ -120,7 +120,7 @@ spec:
 Verify that the `KeptnTaskDefinition` resource shown above actually works.
 
 Trigger an on-demand task execution
-to verify that the job and pod are working correctly.
+to verify that the job and Pod are working correctly.
 
 In the following steps we will have Keptn orchestrate this for us automatically.
 
@@ -151,7 +151,7 @@ NAME                  COMPLETIONS   DURATION   AGE
 runsendevent1-*****   1/1           6s         2m
 ```
 
-`kubectl -n keptndemo get pods` will show the successfully executed pod.
+`kubectl -n keptndemo get pods` shows the successfully executed Pod.
 
 The webhook sync should show this:
 
@@ -226,7 +226,7 @@ spec:
 ### What Happens Next?
 
 1. The deployment is applied.
-1. When the pods are running,
+1. When the Pods are running,
    Keptn automatically creates a `KeptnTask` resource
    for version `0.0.2` of this `KeptnApp`.
 1. The `KeptnTask` creates a Kubernetes `Job`.
@@ -235,7 +235,7 @@ spec:
 
 ### Pre-deployment Tasks
 
-Keptn Tasks can also be executed pre-deployment (before the pods are scheduled).
+Keptn Tasks can also be executed pre-deployment (before the Pods are scheduled).
 Do this by using the `keptn.sh/pre-deployment-tasks` label or annotation.
 
 > Note: If a pre-deployment task fails, the `Pod` remains in a Pending state.

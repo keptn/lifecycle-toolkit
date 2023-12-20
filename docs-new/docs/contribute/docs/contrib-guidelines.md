@@ -38,7 +38,7 @@ that are relevant only to documentation.
   For example, information about supported Kubernetes versions
   and the command sequence to install Keptn should usually be done
   as references to the official installation section of the docs.
-  
+
   For usability considerations, we make the following exceptions:
 
   * The main `README.md` file for the lifecycle-toolkit repository

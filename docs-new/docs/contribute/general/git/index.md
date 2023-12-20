@@ -14,5 +14,5 @@ although be sure so include the DCO signoff.
 If you are doing significant work,
 you should fork and clone your own copy of the repository,
 make your changes in a local branch,
-then push those changes to github where they can be reviewed
+then push those changes to GitHub where they can be reviewed
 and ultimately merged into the product.

@@ -39,4 +39,4 @@ To develop or modify software or documentation, the steps are:
    and select "Push" to push your changes to your fork
 1. Go to the UI for your fork and create a PR in the normal way.
 1. After your PR has been merged,
-   go to your github page, select "Codespaces", and delete this codespace.
+   go to your GitHub page, select "Codespaces", and delete this codespace.

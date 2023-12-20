@@ -11,7 +11,7 @@ to make them more robust.
 This tutorial introduces these tools.
 
 > This tutorial assumes you have already completed the
-[Getting started with Keptn Observability](../getting-started/)
+[Getting started with Keptn Observability](observability.md)
 exercise.
 > Please ensure you've finished that before attempting this exercise.
 
@@ -244,8 +244,6 @@ Do this by using the `keptn.sh/pre-deployment-tasks` label or annotation.
 
 You can do much more with `KeptnTask` resources.
 See the
-[pre and post deployment checks](../guides/integrate.md#pre--and-post-deployment-checks)
-page and the
 [Deployment tasks](../guides/tasks.md)
 page to find out more.
 

@@ -19,7 +19,8 @@ It contains information about:
 - A list of tasks and evaluations to be can be executed
   pre or post deployment of the workloads.
 - `KeptnApp` refers to tasks defined in a [KeptnTaskDefinition](taskdefinition.md) resource.
-  The task is identified by the `metadata.name` field value, and KeptnApp doesn't need to know the specific runner used for task definition.
+  The task is identified by the `metadata.name` field value, 
+  and KeptnApp doesn't need to know the specific runner used for task definition.
 
 ## Synopsis
 

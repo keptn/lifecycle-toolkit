@@ -70,7 +70,7 @@ jobs:
 
       - name: Upload cluster logs
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: logs-integration-tests-${{ inputs.scheduling-gates }}-${{ inputs.allowed-namespaces }}
           path: .github/scripts/logs

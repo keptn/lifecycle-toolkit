@@ -49,6 +49,7 @@ autoprefixer
 autoprovision
 autoscaler
 azurecr
+Bacher
 bacherfl
 badanalysis
 badmetric
@@ -119,9 +120,9 @@ cyclomatic
 cytopia
 daemonset
 dario
+databranch
 datadog
 datasource
-datetime
 davidanson
 dawidd
 dco
@@ -144,7 +145,6 @@ docsembed
 docsy
 donath
 dql
-draggable
 DTAPI
 dtclient
 dupl
@@ -175,7 +175,6 @@ Eventqueue
 eventsender
 exampleuser
 fakeclient
-favicons
 fetchintervalseconds
 fieldpath
 fieldref
@@ -198,6 +197,8 @@ getjson
 getopt
 gexec
 gha
+ghrs
+ghtoken
 ginkgotypes
 Gitlab
 gke
@@ -217,9 +218,9 @@ govulncheck
 grafana
 graphql
 groupversion
+gstatic
 gtag
 GVK
-haspopup
 healthz
 hellopy
 helloworldtask
@@ -231,7 +232,6 @@ homeobservability
 homeorchestrate
 horizontalpodautoscalers
 hpa
-hreflang
 hsla
 htmltest
 httpref
@@ -268,8 +268,9 @@ ITarget
 itemstatus
 ITracer
 jaegertracing
-javascript
+javascripts
 jetstack
+jgehrcke
 Jhb
 jsonschema
 jwt
@@ -366,25 +367,20 @@ kustomizeconfig
 kuttl
 kwi
 kwv
-labelledby
 lastmod
 lastword
 Lato
 lfc
 Lifcycle
 lifecyclekeptnsh
-linecap
-linejoin
 linkedin
 linktitle
 linting
-listitem
 livenessprobe
 loadtests
 LOCALBIN
 logf
 logr
-lowbound
 makefiles
 markdownfiles
 markdownlint
@@ -427,7 +423,6 @@ myservice
 myuser
 myversion
 namespacedelete
-nbsp
 netlify
 Neue
 nifi
@@ -438,7 +433,6 @@ nodename
 nolint
 nonroot
 noreply
-nowrap
 nsa
 oac
 oauth
@@ -479,7 +473,6 @@ persistentvolumes
 phaseitem
 pid
 pipefail
-placeholders
 poc
 poddisruptionbudgets
 podgroups
@@ -557,6 +550,7 @@ serrors
 serviceaccount
 serviceaccountspec
 serviceport
+setuptools
 shellcheck
 SHELLFLAGS
 shortcode
@@ -575,6 +569,7 @@ spanitem
 spdx
 spf
 squidfunk
+sre
 stakeholders
 standalone
 statefulset
@@ -582,9 +577,7 @@ statefultest
 stdouttrace
 storageclasses
 storageversion
-striptags
 sts
-stylesheet
 subchart
 subdir
 subjectaccessreviews
@@ -620,13 +613,10 @@ timeseries
 timespan
 timezone
 tmp
-tmpl
-toc
 tocstop
 tokenreviews
 toml
 totalscore
-tpl
 tplvalues
 traceparent
 tracerfactory
@@ -641,8 +631,8 @@ undeploy
 unmarshal
 unmarshalling
 urlset
-usecase
 usecasebox
+usecases
 usr
 utilruntime
 validatingwebhookconfigurations
@@ -652,6 +642,7 @@ vcluster
 Vec
 versioned
 versioning
+virtualenv
 visualise
 visualised
 vkeptnmetric
@@ -666,6 +657,7 @@ webhooknamespaces
 website
 whitespaces
 whykeptn
+Wiesinger
 wjdp
 wli
 Wls
@@ -677,7 +669,6 @@ WORKLOADOVERALLSTATUS
 workloadsstate
 workloadstatus
 workloadversion
-xhtml
 xxxx
 XXXXXXXXXXXXXXXXXXXXXXXX
 yannh
@@ -685,4 +676,3 @@ yml
 YOURNAME
 yourregistry
 youtube
-squidfunk

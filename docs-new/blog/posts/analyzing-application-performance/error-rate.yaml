@@ -1,0 +1,9 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  name: error-rate
+  namespace: simple-go
+spec:
+  provider:
+    name: my-prometheus-provider
+  query: "rate(http_requests_total{status_code='500', job='{{.workload}}'}[1m]) or on() vector(0)"

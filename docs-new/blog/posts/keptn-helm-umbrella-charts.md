@@ -1,5 +1,5 @@
 ---
-date: 2023-12-20
+date: 2024-02-01
 authors: [odubajDT]
 description: >
   In this blog post you will learn how to configure Keptn via the new Helm umbrella chart.

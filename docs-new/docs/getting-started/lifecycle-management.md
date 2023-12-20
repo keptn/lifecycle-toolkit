@@ -28,9 +28,14 @@ as specified in the Pod template specs of your
 and
 [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)).
 
-> Pre and post deployments can also run on a `KeptnApp` level.
-> A `KeptnApp` groups multiple workloads into a single application.
-> See [annotations to KeptnApp](../guides/integrate.md#annotations-to-keptnapp)
+> Pre and post deployments can be run either on individual workloads
+> or on a group of associated workloads that are grouped into
+> a`KeptnApp` resource.
+> For instructions about how to identify the workloads to combine into  `KeptnApp` resource,
+> see
+> [annotations to KeptnApp](../guides/integrate.md#annotations-to-keptnapp).
+> [Auto app discovery](http://0.0.0.0:8000/docs/guides/auto-app-discovery/)
+> explains how a `KeptnApp` resource is created.
 
 ## Prerequisites: Deploy webhook sink
 

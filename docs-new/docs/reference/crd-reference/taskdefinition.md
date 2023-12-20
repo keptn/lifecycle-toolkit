@@ -157,9 +157,9 @@ spec:
       [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
       spec documentation.
 
-## Synopsis for pre-defined containers
+## Synopsis for predefined containers
 
-The pre-defined containers allow you to easily define a task
+The predefined containers allow you to easily define a task
 using either Deno or Python syntax.
 You do not need to specify the image, volumes, and so forth.
 Instead, just provide either a Deno or Python script
@@ -212,7 +212,7 @@ spec:
         secret: <secret-name>
 ```
 
-### Fields for pre-defined containers
+### Fields for predefined containers
 
 * **spec** -- choose either `deno` or `python`
   * **deno** -- Specify that the task uses the `deno-runtime`
@@ -354,7 +354,7 @@ and
 and in the
 [KeptnApp](app.md) resource.
 See
-[Pre- and post-deployment tasks](../../guides/integrate.md#prepost-deployment-checks)
+[Annotations to KeptnApp](../../guides/tasks.md/#annotations-to-keptnapp)
 for details.
 Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
@@ -363,7 +363,7 @@ and the revised code is picked up without additional changes.
 All `KeptnTaskDefinition` resources specified to the `KeptnApp` resource
 at the same stage (either pre- or post-deployment) run in parallel.
 You can run multiple executables sequentially
-either by using the `inline` syntax for a pre-defined container image
+either by using the `inline` syntax for a predefined container image
 or by creating your own image
 and running it in the Keptn `container-runtime` runner.
 See
@@ -622,7 +622,6 @@ This modifies the synopsis in the following ways:
 
 * [KeptnApp](app.md)
 * [Working with tasks](../../guides/tasks.md)
-* [Pre- and post-deployment tasks](../../guides/integrate.md#prepost-deployment-checks)
 * [KeptnApp and KeptnWorkload resources](../../components/lifecycle-operator/keptn-apps.md).
 * Getting started with
   [Release Lifecycle Management](../../getting-started/lifecycle-management.md)

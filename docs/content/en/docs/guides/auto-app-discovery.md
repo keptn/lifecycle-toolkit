@@ -1,7 +1,7 @@
 ---
 title: Auto app discovery
 description: Use Keptn automatic app discovery
-weight: 100
+weight: 200
 ---
 
 The automatically generated `KeptnApp` file

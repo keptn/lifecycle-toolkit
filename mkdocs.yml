@@ -161,7 +161,7 @@ nav:
           - Migrate Quality Gates: docs/migrate/metrics-observe.md
   - Contributing:
       - docs/contribute/index.md
-      - General information about contributing:
+      - General information:
           - docs/contribute/general/index.md
           - Technologies and concepts you should know: docs/contribute/general/technologies.md
           - Codespaces: docs/contribute/general/codespace.md
@@ -178,7 +178,7 @@ nav:
           - Software development environment: docs/contribute/software/dev-environ.md
       - Documentation contributions:
           - docs/contribute/docs/index.md
-          - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines.md
+          - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs.md
           - Build Documentation Locally: docs/contribute/docs/local-building.md
           - Linter Requirements: docs/contribute/docs/linter-requirements.md
           - Source File Structure: docs/contribute/docs/source-file-structure.md

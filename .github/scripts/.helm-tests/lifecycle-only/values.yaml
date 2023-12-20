@@ -4,8 +4,6 @@ global:
   commonLabels:
     app.kubernetes.io/version: vmyversion
 
-certManager:
-  enabled: false
 lifecycleOperator:
   enabled: true
   lifecycleOperator:

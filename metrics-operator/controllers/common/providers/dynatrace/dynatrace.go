@@ -112,11 +112,18 @@ func (d *KeptnDynatraceProvider) performRequest(ctx context.Context, provider me
 	}
 
 	token, err := getDTSecret(ctx, provider, d.K8sClient)
+
 	if err != nil {
 		return nil, nil, err
 	}
+	var sV SecretValues
 
-	req.Header.Set("Authorization", "Api-Token "+token)
+	err = json.Unmarshal(token, &sV)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+
+	req.Header.Set("Authorization", "Api-Token "+fmt.Sprint(sV.Token))
 	res, err := d.HttpClient.Do(req)
 
 	if err != nil {

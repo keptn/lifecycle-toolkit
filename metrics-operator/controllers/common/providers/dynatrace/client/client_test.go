@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -14,14 +15,23 @@ import (
 const mockSecret = "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 func TestNewConfigInvalidSecretFormat(t *testing.T) {
-
-	config, err := NewAPIConfig("", "my-secret")
+	secretValue := secretValues{
+		"my-secret",
+		"authurl",
+	}
+	new, _ := json.Marshal(secretValue)
+	config, err := NewAPIConfig("", new)
 
 	require.ErrorIs(t, err, ErrClientSecretInvalid)
 	require.Nil(t, config)
 }
 
 func TestAPIClient(t *testing.T) {
+	secretValue := secretValues{
+		mockSecret,
+		"authurl",
+	}
+	new, _ := json.Marshal(secretValue)
 
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
@@ -35,7 +45,7 @@ func TestAPIClient(t *testing.T) {
 
 	config, err := NewAPIConfig(
 		server.URL,
-		mockSecret,
+		new,
 		WithScopes([]OAuthScope{OAuthScopeStorageMetricsRead, OAuthScopeEnvironmentRoleViewer}),
 		WithAuthURL(server.URL+"/auth"),
 	)
@@ -61,6 +71,11 @@ func TestAPIClient(t *testing.T) {
 }
 
 func TestAPIClientAuthError(t *testing.T) {
+	secretValue := secretValues{
+		mockSecret,
+		"authurl",
+	}
+	new, _ := json.Marshal(secretValue)
 
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		writer.WriteHeader(http.StatusInternalServerError)
@@ -68,11 +83,9 @@ func TestAPIClientAuthError(t *testing.T) {
 
 	defer server.Close()
 
-	mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-
 	config, err := NewAPIConfig(
 		server.URL,
-		mockSecret,
+		new,
 		WithAuthURL(server.URL+"/auth"),
 	)
 
@@ -95,6 +108,11 @@ func TestAPIClientAuthError(t *testing.T) {
 }
 
 func TestAPIClientAuthNoToken(t *testing.T) {
+	secretValue := secretValues{
+		mockSecret,
+		"authurl",
+	}
+	new, _ := json.Marshal(secretValue)
 
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
@@ -106,11 +124,11 @@ func TestAPIClientAuthNoToken(t *testing.T) {
 
 	defer server.Close()
 
-	mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+	// mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 	config, err := NewAPIConfig(
 		server.URL,
-		mockSecret,
+		new,
 		WithAuthURL(server.URL+"/auth"),
 	)
 
@@ -133,6 +151,11 @@ func TestAPIClientAuthNoToken(t *testing.T) {
 }
 
 func TestAPIClientRequestError(t *testing.T) {
+	secretValue := secretValues{
+		mockSecret,
+		"authurl",
+	}
+	new, _ := json.Marshal(secretValue)
 
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
@@ -144,11 +167,11 @@ func TestAPIClientRequestError(t *testing.T) {
 
 	defer server.Close()
 
-	mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+	// mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 	config, err := NewAPIConfig(
 		server.URL,
-		mockSecret,
+		new,
 		WithAuthURL(server.URL+"/auth"),
 	)
 

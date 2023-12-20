@@ -1,17 +1,20 @@
 package client
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
 func TestNewAPIConfig(t *testing.T) {
+	myData := secretValues{"dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "my-authurl"}
+	jsonData, _ := json.Marshal(myData)
 	config, err := NewAPIConfig(
 		"my-url",
-		mockSecret,
+		jsonData,
 		WithScopes([]OAuthScope{OAuthScopeStorageMetricsRead, OAuthScopeEnvironmentRoleViewer}),
-		WithAuthURL("my-url/auth"),
+		WithAuthURL("my-authurl"),
 	)
 
 	require.Nil(t, err)
@@ -19,7 +22,7 @@ func TestNewAPIConfig(t *testing.T) {
 
 	expectedApiConfig := apiConfig{
 		serverURL: "my-url",
-		authURL:   "my-url/auth",
+		authURL:   "my-authurl",
 		oAuthCredentials: oAuthCredentials{
 			clientID:     "dt0s08.XX",
 			clientSecret: mockSecret,

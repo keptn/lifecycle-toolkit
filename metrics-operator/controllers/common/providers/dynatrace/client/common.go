@@ -12,7 +12,6 @@ var ErrRequestFailed = errors.New("the API returned a response with a status out
 var ErrAuthenticationFailed = errors.New("could not retrieve an OAuth token from the API")
 
 const (
-	defaultAuthURL                  = "https://dev.token.internal.dynatracelabs.com/sso/oauth2/token"
 	oAuthGrantType                  = "grant_type"
 	oAuthGrantTypeClientCredentials = "client_credentials"
 	oAuthScope                      = "scope"

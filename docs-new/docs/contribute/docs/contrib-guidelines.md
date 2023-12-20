@@ -39,13 +39,8 @@ that are relevant only to documentation.
   and the command sequence to install Keptn should usually be done
   as references to the official installation section of the docs.
 
-    For usability considerations, we make the following exceptions:
-
-    * The main `README.md` file for the lifecycle-toolkit repository
-      includes this basic information as well as a link
-      to the full installation documentation which has more details.
-    * The [Getting Started Guide](../../getting-started/index.md) also includes this information
-      for the same reason.
+    For usability considerations, we have a few exceptions to this rule
+    for the main `README.md` file and the [Getting Started Guide](../../getting-started/index.md).
 
 * When you want to display a sample file that exists in the repository,
   use the `include <file-path>` shortcode syntax

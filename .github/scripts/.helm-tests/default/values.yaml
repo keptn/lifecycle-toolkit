@@ -15,6 +15,5 @@ metricsOperator:
     tag: v0.0.0
 
 global:
-  certManagerEnabled: true
   commonLabels:
     app.kubernetes.io/version: vmyversion

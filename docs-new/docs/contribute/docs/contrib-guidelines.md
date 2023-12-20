@@ -44,7 +44,7 @@ that are relevant only to documentation.
     * The main `README.md` file for the lifecycle-toolkit repository
       includes this basic information as well as a link
       to the full installation documentation which has more details.
-    * The Getting Started Guide also includes this information
+    * The [Getting Started Guide](../../getting-started/index.md) also includes this information
       for the same reason.
 
   * When you want to display a sample file that exists in the repository,

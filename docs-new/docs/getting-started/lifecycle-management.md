@@ -1,13 +1,12 @@
----
-title: Release Lifecycle Management
-description: Add KeptnTasks to deployments
-weight: 50
----
+# Release Lifecycle Management
 
 The Release Lifecycle Management tools run
 pre- and post-deployment tasks and checks
 for your existing cloud-native deployments
 to make them more robust.
+For more information, see
+[Release lifecycle management](core-concepts/index.md#release-lifecycle-management).
+
 This tutorial introduces these tools.
 
 > This tutorial assumes you have already completed the
@@ -19,8 +18,8 @@ exercise.
 
 When Keptn is successfully monitoring your deployments,
 it can also run arbitrary tasks and SLO evaluations for you
-either pre-deployment or post-deployment
-as specified in the Pod template specs of your
+either before or after your deployment runs.
+This is specified with labels or annotations in the Pod template specs of your
 [workloads](https://kubernetes.io/docs/concepts/workloads/)
 ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
@@ -50,10 +49,9 @@ To implement this:
 
    This provides a place on your cluster to which web requests are sent
    and from which they can be viewed.
+   If you have your own endpoint, you can skip this step.
 
 1. Execute the following commands to apply the web hook:
-
-   > Note: If you have your own endpoint, you can skip this step.
 
    ```shell
    kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/namespace.yml

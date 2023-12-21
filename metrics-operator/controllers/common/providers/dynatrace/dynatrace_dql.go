@@ -253,12 +253,6 @@ func (d *keptnDynatraceDQLProvider) ensureDTClientIsSetUp(ctx context.Context, p
 	// try to initialize the DT API Client if it has not been set in the options
 	if d.dtClient == nil {
 		secret, err := getDTSecret(ctx, provider, d.k8sClient)
-		var sV SecretValues
-
-		Jsonerr := json.Unmarshal(secret, &sV)
-		if Jsonerr != nil {
-			fmt.Println("Error:", err)
-		}
 
 		if err != nil {
 			return err

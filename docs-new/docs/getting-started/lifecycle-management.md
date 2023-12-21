@@ -47,36 +47,36 @@ To implement this:
 1. Install the
    [open source webhook.site tool](https://github.com/webhooksite/webhook.site/tree/master/kubernetes).
 
-   This provides a place on your cluster to which web requests are sent
-   and from which they can be viewed.
-   If you have your own endpoint, you can skip this step.
+     This provides a place on your cluster to which web requests are sent
+     and from which they can be viewed.
+     If you have your own endpoint, you can skip this step.
 
 1. Execute the following commands to apply the web hook:
 
-   ```shell
-   kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/namespace.yml
-   kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/redis.deployment.yml
-   kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/laravel-echo-server.deployment.yml
-   kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/webhook.deployment.yml
-   kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/service.yml
-   ```
+     ```shell
+     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/namespace.yml
+     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/redis.deployment.yml
+     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/laravel-echo-server.deployment.yml
+     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/webhook.deployment.yml
+     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/service.yml
+     ```
 
 1. Wait until all Pods are running in the `webhook` namespace
    then port-forward and view the webhook sink page:
 
-   ```shell
-   kubectl -n webhook wait --for=condition=Ready pods --all
-   kubectl -n webhook port-forward svc/webhook 8084
-   ```
+     ```shell
+     kubectl -n webhook wait --for=condition=Ready pods --all
+     kubectl -n webhook port-forward svc/webhook 8084
+     ```
 
 1. Open a browser and go to `http://localhost:8084`
 
 1. You should see a page like this with a unique URL
    (your ID will be different than the example).
 
-   ![webhook.site page](../assets/webhook.site.1.png)
+     ![webhook.site page](../assets/webhook.site.1.png)
 
-Make a note of that unique URL.
+1. Make a note of that unique URL.
 
 ### Verify Webhook Sink
 
@@ -191,7 +191,6 @@ labels:
     app.kubernetes.io/version: 0.0.2
     keptn.sh/post-deployment-tasks: "send-event"
 ...
-```
 
 Increase the version number to `0.0.2` and re-apply the manifest.
 

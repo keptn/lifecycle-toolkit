@@ -639,4 +639,4 @@ metadata:
   name: grafana-dashboard-keptn-workloads-dora
   namespace: monitoring
   labels:
-    grafana_dashboard: "1"
+    grafana_dashboard: "0"

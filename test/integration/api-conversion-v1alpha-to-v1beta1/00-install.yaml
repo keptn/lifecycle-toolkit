@@ -61,7 +61,7 @@ spec:
 ---
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnAppCreationRequest
-metadata: 
+metadata:
   name: some-keptn-app2
 spec:
   appName: podtato-head

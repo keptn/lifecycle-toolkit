@@ -5,7 +5,7 @@ pre/post-deployment tasks and checks
 for your existing cloud-native deployments
 to make them more robust.
 For more information, see
-[Release lifecycle management](core-concepts/index.md#release-lifecycle-management).
+[Release lifecycle management](../core-concepts/index.md#release-lifecycle-management).
 
 This tutorial introduces these tools.
 
@@ -32,7 +32,7 @@ and
 > a`KeptnApp` resource.
 > For instructions about how to identify the workloads to combine into  `KeptnApp` resource,
 > see
-> [annotations to KeptnApp](../guides/integrate.md#annotations-to-keptnapp).
+> [annotations to KeptnApp](../guides/integrate.md#basic-annoations).
 > [Auto app discovery](../guides/auto-app-discovery/)
 > explains how a `KeptnApp` resource is created.
 

@@ -33,7 +33,7 @@ and
 > For instructions about how to identify the workloads to combine into  `KeptnApp` resource,
 > see
 > [annotations to KeptnApp](../guides/integrate.md#annotations-to-keptnapp).
-> [Auto app discovery](http://0.0.0.0:8000/docs/guides/auto-app-discovery/)
+> [Auto app discovery](../guides/auto-app-discovery/)
 > explains how a `KeptnApp` resource is created.
 
 ## Prerequisites: Deploy webhook sink

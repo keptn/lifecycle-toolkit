@@ -40,7 +40,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/converter"
 	keptnserver "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics"
 	analysismetrics "github.com/keptn/lifecycle-toolkit/metrics-operator/pkg/metrics/analysis"
-	"github.com/open-feature/go-sdk/pkg/openfeature"
+	"github.com/open-feature/go-sdk/openfeature"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -72,6 +72,7 @@ type envConfig struct {
 	KeptnMetricControllerLogLevel int    `envconfig:"METRICS_CONTROLLER_LOG_LEVEL" default:"0"`
 	AnalysisControllerLogLevel    int    `envconfig:"ANALYSIS_CONTROLLER_LOG_LEVEL" default:"0"`
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
+	EnableCustomMetricsAPIService bool   `envconfig:"ENABLE_CUSTOM_METRICS_API_SERVICE" default:"true"`
 }
 
 //nolint:gocyclo,funlen
@@ -133,9 +134,10 @@ func main() {
 		return
 	}
 
-	// Start the custom metrics adapter
-	go startCustomMetricsAdapter(env.PodNamespace)
-
+	if env.EnableCustomMetricsAPIService {
+		// Start the custom metrics adapter
+		go startCustomMetricsAdapter(env.PodNamespace)
+	}
 	disableCacheFor := []ctrlclient.Object{&corev1.Secret{}}
 
 	opt := ctrl.Options{
@@ -182,6 +184,7 @@ func main() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
 	keptnserver.StartServerManager(ctx, mgr.GetClient(), openfeature.NewClient("keptn"), env.ExposeKeptnMetrics, metricServerTickerInterval)
 
 	metricsLogger := ctrl.Log.WithName("KeptnMetric Controller")

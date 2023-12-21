@@ -1,12 +1,8 @@
 # Image URL to use all building/pushing image targets
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v5.2.1
+KUSTOMIZE_VERSION?=v5.3.0
 CHART_APPVERSION ?= v0.9.0 # x-release-please-version
-
-# renovate: datasource=docker depName=squidfunk/mkdocs-material
-MKDOCS_DOCKER_IMAGE_VERSION=9.4.14
-MKDOCS_DOCKER_IMAGE=squidfunk/mkdocs-material
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine
@@ -138,28 +134,7 @@ build-deploy-certmanager:
 .PHONY: build-deploy-dev-environment
 build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-metrics-operator build-deploy-scheduler
 
-include docs/Makefile
-
-PWD=$(shell pwd)
-
-.PHONY: docs-build
-docs-build:
-	docker run --rm -it -v ${PWD}/docs-new:/docs-new \
-		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
-		-v ${PWD}/requirements.txt:/requirements.txt \
-		--entrypoint "" \
-		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
-		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs build -q'
-
-.PHONY: docs-serve
-docs-serve:
-	docker run --rm -it -p 8000:8000 \
-		-v ${PWD}/docs-new:/docs-new \
-		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
-		-v ${PWD}/requirements.txt:/requirements.txt \
-		--entrypoint "" \
-		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
-		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs serve -a 0.0.0.0:8000'
+include docs-new/Makefile
 
 yamllint:
 	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .

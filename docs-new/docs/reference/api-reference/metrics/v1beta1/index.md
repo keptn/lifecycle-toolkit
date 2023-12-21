@@ -1,4 +1,7 @@
 # v1beta1
+
+Reference information for metrics.keptn.sh/v1beta1
+
 <!-- markdownlint-disable -->
 
 ## Packages

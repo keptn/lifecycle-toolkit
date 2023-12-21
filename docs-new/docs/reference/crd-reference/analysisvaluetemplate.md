@@ -80,7 +80,9 @@ The template refers to that provider and queries it.
 
 ## Example
 
+```yaml
 {% include "../../assets/crd/analysis-template.yaml" %}
+```
 
 For a full example of how the `AnalysisValueTemplate` is used
 to implement the Keptn Analysis feature, see the

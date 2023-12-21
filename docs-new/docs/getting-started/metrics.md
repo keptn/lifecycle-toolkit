@@ -38,22 +38,6 @@ or just look at it for examples
 as you implement the functionality "from scratch"
 on your local Kubernetes deployment cluster.
 
-This is the first of three exercises in the
-[Introducing Keptn](index.md)
-series.
-After completing this exercise,
-you may want to do the other exercises:
-
-- In [Standardize observability](../core-concepts/usecase-observability.md),
-  you learn how to standardize access
-  to the observability data for your cluster.
-- In
-  [Manage release lifecycle](../core-concepts/usecase-orchestrate.md),
-  you learn how to implement
-  pre- and post-deployment tasks and evaluations
-  to orchestrate the flow of all the [workloads](https://kubernetes.io/docs/concepts/workloads/)
-  that are part of your `application`.
-
 The steps to implement metrics in an existing cluster are:
 
 1. [Install Keptn](../installation/index.md)
@@ -90,47 +74,12 @@ including multiple instances of each observability platform.
 Each one must be assigned a unique name,
 identified by the type of platform it is
 and the URL of the target server.
-If the target server is protected by a `secret`,
+If the target server is protected by a Secret,
 provide information about the token and key.
 
-> Note: The video and example application use an older syntax
-  of the `KeptnMetricsProvider` and `KeptnMetric` resources.
-  The syntax shown in this document and the reference page
-  is correct for v0.7.1 and later.
-
-Definition of
-[dev-prometheus](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-prometheus-provider.yaml)
-data source:
-
-```yaml
-kind: KeptnMetricsProvider
-metadata:
-  name: dev-prometheus
-  namespace: simplenode-dev
-spec:
-  type: prometheus
-  targetserver: "http://prometheus-k8s-monitoring-svc.cluster.local:9090"
-```
-
-Definition of the
-[dev-dynatrace](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/dynatrace-provider.yaml.tmp)
-data source.
-Note that the `dev-dynatrace` server is protected by a secret key
-so that information is included in the provider definition:
-
-```yaml
-kind: KeptnMetricsProvider
-metadata:
-  name: dev-dynatrace
-  namespace: simplenode-dev
-spec:
-  type: dynatrace
-  targetServer: "https://hci34192.live.dynatrace.com"
-  secretKeyRef:
-    name: dynatrace
-    key: DT_TOKEN
-...
-```
+For an example of how to specify a KeptnMetricsProvider with a Secret,
+refer to the [example section](../reference/crd-reference/metricsprovider.md#examples)
+of the KeptnMetricsProvider CRD reference page.
 
 ### Define KeptnMetric information
 

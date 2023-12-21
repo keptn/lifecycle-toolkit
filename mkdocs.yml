@@ -16,8 +16,8 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-  logo: assets/keptn-icon-white.svg
-  favicon: https://lifecycle.keptn.sh/images/logo-mobile.svg
+  logo: assets/images/keptn-icon-white.svg
+  favicon: assets/images/logo-mobile.svg
   features:
     - navigation.tabs
     - navigation.tracking
@@ -27,9 +27,11 @@ theme:
     - search.highlight
     - content.action.edit
     - content.action.view
+    - search.suggest
+    - search.highlight
+site_url: !ENV READTHEDOCS_CANONICAL_URL
 repo_name: keptn/lifecycle-toolkit
 repo_url: https://github.com/keptn/lifecycle-toolkit
-site_url: https://lifecycle.keptn.sh
 edit_uri: edit/main/docs-new/
 docs_dir: docs-new
 site_description: >-
@@ -52,12 +54,17 @@ extra_javascript:
   - assets/javascripts/versions.js
 extra_css:
   - assets/stylesheets/versions.css
+  - assets/stylesheets/color-schemes.css
 plugins:
+  - search
   - social
   - include-markdown:
       trailing_newlines: false
   - git-revision-date-localized:
       fallback_to_build_date: true
+  - blog:
+      blog_dir: blog
+      draft_if_future_date: true
 
 nav:
   - Home:
@@ -66,8 +73,6 @@ nav:
       - docs/index.md
       - Core Concepts:
           - docs/core-concepts/index.md
-          - Standardize Observability: docs/core-concepts/usecase-observability.md
-          - Manage Release Lifecycle Observability: docs/core-concepts/usecase-orchestrate.md
       - Get Started:
           - docs/getting-started/index.md
           - Keptn Metrics: docs/getting-started/metrics.md
@@ -171,3 +176,5 @@ nav:
           - Source File Structure: docs/contribute/docs/source-file-structure.md
           - Published Doc Structure: docs/contribute/docs/publish.md
           - Word list: docs/contribute/docs/word-list.md
+  - Blog:
+      - blog/index.md

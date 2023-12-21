@@ -1,0 +1,26 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisDefinition
+metadata:
+  name: my-analysis-definition
+  namespace: simple-go
+spec:
+  objectives:
+    - analysisValueTemplateRef:
+        name: memory-usage
+      keyObjective: false
+      target:
+        failure:
+          greaterThan:
+            fixedValue: 30M
+      weight: 1
+    - analysisValueTemplateRef:
+        name: error-rate
+      keyObjective: true
+      target:
+        failure:
+          greaterThan:
+            fixedValue: 0
+      weight: 3
+  totalScore:
+    passPercentage: 100
+    warningPercentage: 75

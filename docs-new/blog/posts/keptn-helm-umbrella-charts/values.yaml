@@ -1,0 +1,19 @@
+certManager:
+  enabled: true
+  image: # using custom image registry and tag to the cert-manager
+  registry: "myCustomRegistry"
+  tag: v0.0.0
+
+lifecycleOperator:
+  enabled: false # installation of lifecycle-operator is disabled
+  metricsOperator:
+  replicas: 3 # installing 3 replicas of metrics-operator
+  annotations: # setting custom annotations for metrics-operator
+  myMetricsKey: metricsValue1
+  image: # using the latest image of the metrics-operator
+  tag: latest
+
+global:
+  commonAnnotations: # setting common annotations for all installed component
+  myGlobalKey: globalValue1
+  myMetricsKey: globalValue2

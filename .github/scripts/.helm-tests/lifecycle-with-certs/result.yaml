@@ -9643,11 +9643,6 @@ spec:
           runAsUser: 65532
           seccompProfile:
             type: RuntimeDefault
-        volumeMounts:
-        - mountPath: /tmp/k8s-webhook-server/serving-certs/
-          name: certs-dir
-        - mountPath: /tmp/metrics-adapter/serving-certs
-          name: adapter-certs-dir
         livenessProbe:
           httpGet:
             path: /healthz
@@ -9665,11 +9660,6 @@ spec:
         runAsNonRoot: true
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10
-      volumes:
-      - emptyDir: {}
-        name: certs-dir
-      - emptyDir: {}
-        name: adapter-certs-dir
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: apps/v1

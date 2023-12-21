@@ -31,11 +31,6 @@ spec:
         # versions < 1.19 or on vendors versions which do NOT support this field by default (i.e. Openshift < 4.11 ).
         # seccompProfile:
         #   type: RuntimeDefault
-      volumes:
-        - emptyDir: {}
-          name: certs-dir
-        - emptyDir: {}
-          name: adapter-certs-dir
       containers:
         - command:
             - /manager
@@ -118,10 +113,5 @@ spec:
             requests:
               cpu: 5m
               memory: 64Mi
-          volumeMounts:
-            - name: certs-dir
-              mountPath: /tmp/k8s-webhook-server/serving-certs/
-            - name: adapter-certs-dir
-              mountPath: /tmp/metrics-adapter/serving-certs
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10

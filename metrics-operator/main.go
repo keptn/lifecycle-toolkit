@@ -73,6 +73,7 @@ type envConfig struct {
 	AnalysisControllerLogLevel    int    `envconfig:"ANALYSIS_CONTROLLER_LOG_LEVEL" default:"0"`
 	ExposeKeptnMetrics            bool   `envconfig:"EXPOSE_KEPTN_METRICS" default:"true"`
 	EnableCustomMetricsAPIService bool   `envconfig:"ENABLE_CUSTOM_METRICS_API_SERVICE" default:"true"`
+	CertManagerEnabled            bool   `envconfig:"CERT_MANAGER_ENABLED" default:"true"`
 }
 
 //nolint:gocyclo,funlen
@@ -228,14 +229,23 @@ func main() {
 	setupProbes(mgr)
 
 	if !disableWebhook {
-		webhookBuilder = webhookBuilder.SetCertificateWatcher(
-			certificates.NewCertificateWatcher(
+		var certificateWatcher certificates.ICertificateWatcher
+
+		// Check if cert manager is enabled
+		if env.CertManagerEnabled {
+			certificateWatcher = certificates.NewCertificateWatcher(
 				mgr.GetAPIReader(),
 				webhookBuilder.GetOptions().CertDir,
 				env.PodNamespace,
 				certCommon.SecretName,
 				setupLog,
-			))
+			)
+		} else {
+			// Use the NoOpCertificateWatcher when cert manager is disabled
+			certificateWatcher = certificates.NewNoOpCertificateWatcher()
+		}
+
+		webhookBuilder = webhookBuilder.SetCertificateWatcher(certificateWatcher)
 		webhookBuilder.Register(mgr, nil)
 		setupLog.Info("starting webhook")
 	}

@@ -11941,6 +11941,8 @@ spec:
           value: "false"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
+        - name: CERT_MANAGER_ENABLED
+          value: "true"
         image: ghcr.io/keptn/lifecycle-operator:v0.0.0
         imagePullPolicy: Always
         name: lifecycle-operator
@@ -12126,6 +12128,8 @@ spec:
           value: "0"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
+        - name: CERT_MANAGER_ENABLED
+          value: "true"
         image: ghcr.io/keptn/metrics-operator:v0.0.0
         imagePullPolicy: Always
         name: metrics-operator

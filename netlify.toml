@@ -1,8 +1,9 @@
 # https://docs.netlify.com/routing/redirects/redirect-options/#custom-404-page-handling
 [[redirects]]
   from = "/*"
-  to = "/404/"
-  status = 404
+  to = "https://keptn.sh"
+  status = 301
+  force = true
 
 [build]
 base = "docs/"

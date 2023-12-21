@@ -14,8 +14,8 @@ if you misuse "setup" versus "set up", and so forth.
 If you get a Spell Checker error:
 
 1. Right-click the `details` link for Spell Checker
-   in the CI results section of your PR.
-1. Search for "job summary" and click the link to that report.
+   in the checks for your PR.
+1. Click on the Summary to get to the job summary.
 1. This shows the word(s) that caused Spell Checker to fail.
 
    - If these are genuine misspellings,

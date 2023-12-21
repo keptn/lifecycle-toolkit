@@ -1,0 +1,19 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: Analysis
+metadata:
+  name: service-analysis
+  namespace: simple-go
+spec:
+  analysisDefinition:
+    name: my-analysis-definition-2
+  args:
+    workload: simple-go-service
+  timeframe:
+    recent: 10m
+status:
+  pass: true
+  raw: '…'
+  state: Completed
+  timeframe:
+    from: "2023-11-15T08:15:15Z"
+    to: "2023-11-15T08:25:15Z"

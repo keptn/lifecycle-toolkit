@@ -69,13 +69,13 @@ A Keptn Analysis is implemented with three resources:
   An `AnalysisDefinition` resource contains a list of objectives to satisfy.
   Each of these objectives must specify:
 
+  * The `AnalysisValueTemplate` resource that contains the SLIs,
+    defining the data provider from which to gather the data
+    and how to compute the Analysis
   * Failure or warning target criteria
   * Whether the objective is a key objective
     meaning that its failure fails the Analysis
   * Weight of the objective on the overall Analysis
-  * The `AnalysisValueTemplate` resource that contains the SLIs,
-    defining the data provider from which to gather the data
-    and how to compute the Analysis
 
 * [Analysis](../reference/crd-reference/analysis.md)
   define the specific configurations and the Analysis to report.
@@ -114,6 +114,13 @@ For this objective, both failure and warning criteria are defined:
 
 * The objective fails if the percentile 95 is less than 600
 * A warning is issued when the value is between 300 and 500
+
+Use a Kubernetes
+[quantity](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/)
+value for the value fields rather than a `float`.
+For example, use the `3m` quantity
+rather than the equivalent `0.003` float;
+the `float` value causes `Invalid value` errors.
 
 The total score shows that this `Analysis`
 should have an overall score of 90% to pass or 75% to get a warning.

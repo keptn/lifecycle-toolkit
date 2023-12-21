@@ -49,7 +49,10 @@ autoprefixer
 autoprovision
 autoscaler
 azurecr
+Bacher
 bacherfl
+Dubaj
+odubaj
 badanalysis
 badmetric
 badtaskdefinition
@@ -380,7 +383,6 @@ loadtests
 LOCALBIN
 logf
 logr
-lowbound
 makefiles
 markdownfiles
 markdownlint
@@ -489,7 +491,6 @@ prebuilt
 Predeployment
 PREDEPLOYMENTEVALUATIONSTATUS
 PREDEPLOYMENTSTATUS
-prepost
 prepostdeployment
 prepostevaluation
 previewer
@@ -570,6 +571,7 @@ spanitem
 spdx
 spf
 squidfunk
+sre
 stakeholders
 standalone
 statefulset

@@ -5,7 +5,7 @@ weight: 50
 ---
 
 The Release Lifecycle Management tools run
-pre- and post-deployment tasks and checks
+pre/post-deployment tasks and checks
 for your existing cloud-native deployments
 to make them more robust.
 This tutorial introduces these tools.

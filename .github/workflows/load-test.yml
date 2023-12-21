@@ -53,7 +53,7 @@ jobs:
 
       - name: Upload results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: load-tests-results
           path: ./collected-metrics
@@ -65,7 +65,7 @@ jobs:
 
       - name: Upload cluster logs
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: logs-load-tests
           path: .github/scripts/logs

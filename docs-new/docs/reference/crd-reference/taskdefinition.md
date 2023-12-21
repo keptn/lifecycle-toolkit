@@ -157,9 +157,9 @@ spec:
       [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
       spec documentation.
 
-## Synopsis for pre-defined containers
+## Synopsis for predefined containers
 
-The pre-defined containers allow you to easily define a task
+The predefined containers allow you to easily define a task
 using either Deno or Python syntax.
 You do not need to specify the image, volumes, and so forth.
 Instead, just provide either a Deno or Python script
@@ -212,7 +212,7 @@ spec:
         secret: <secret-name>
 ```
 
-### Fields for pre-defined containers
+### Fields for predefined containers
 
 * **spec** -- choose either `deno` or `python`
   * **deno** -- Specify that the task uses the `deno-runtime`
@@ -354,7 +354,7 @@ and
 and in the
 [KeptnApp](app.md) resource.
 See
-[Pre- and post-deployment tasks](../../guides/integrate.md#prepost-deployment-checks)
+[Annotations to KeptnApp](../../guides/tasks.md/#annotations-to-keptnapp)
 for details.
 Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
@@ -363,7 +363,7 @@ and the revised code is picked up without additional changes.
 All `KeptnTaskDefinition` resources specified to the `KeptnApp` resource
 at the same stage (either pre- or post-deployment) run in parallel.
 You can run multiple executables sequentially
-either by using the `inline` syntax for a pre-defined container image
+either by using the `inline` syntax for a predefined container image
 or by creating your own image
 and running it in the Keptn `container-runtime` runner.
 See
@@ -378,7 +378,9 @@ For an example of a `KeptnTaskDefinition` that defines a custom container.
 This is a trivial example that just runs `busybox`,
 then spawns a shell and runs the `sleep 30` command:
 
+```yaml
 {% include "../../assets/crd/task-definition.yaml" %}
+```
 
 This task is then referenced in the
 [app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml)
@@ -514,7 +516,10 @@ data:
 
 You can embed python code directly in the task definition.
 This example prints data stored in the parameters map:
+
+```yaml
 {% include "../../assets/crd/python-inline.yaml" %}
+```
 
 ### Example 2: httpRef for a python-runtime runner
 
@@ -524,25 +529,35 @@ For example, we have a few examples available in the
 tree.
 
 Consider the following:
+
+```yaml
 {% include "../../assets/crd/python-configmap.yaml" %}
+```
 
 ### Example 3: functionRef for a python-runtime runner
 
 You can refer to an existing `KeptnTaskDefinition`.
 This example calls the inline example
 but overrides the data printed with what is specified in the task:
+
+```yaml
 {% include "../../assets/crd/python-recursive.yaml" %}
+```
 
 ### Example 4: ConfigMapRef for a python-runtime runner
 
+```yaml
 {% include "../../assets/crd/python-configmap.yaml" %}
+```
 
 ### Allowed libraries for the python-runtime runner
 
 The following example shows how to use some of the allowed packages, namely:
 requests, json, git, and yaml:
 
+```yaml
 {% include "../../assets/crd/python-libs.yaml" %}
+```
 
 ### Passing secrets, environment variables and modifying the python command
 
@@ -552,7 +567,9 @@ and how to modify the python command.
 In this case the container runs with the `-h` option,
 which prints the help message for the python3 interpreter:
 
+```yaml
 {% include "../../assets/crd/python-context.yaml" %}
+```
 
 ## More examples
 
@@ -605,7 +622,6 @@ This modifies the synopsis in the following ways:
 
 * [KeptnApp](app.md)
 * [Working with tasks](../../guides/tasks.md)
-* [Pre- and post-deployment tasks](../../guides/integrate.md#prepost-deployment-checks)
 * [KeptnApp and KeptnWorkload resources](../../components/lifecycle-operator/keptn-apps.md).
 * Getting started with
   [Release Lifecycle Management](../../getting-started/lifecycle-management.md)

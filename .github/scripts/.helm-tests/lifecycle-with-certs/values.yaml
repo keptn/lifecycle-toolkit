@@ -1,5 +1,4 @@
 certManager:
-  enabled: true
   image:
     tag: v0.0.0
 lifecycleOperator:
@@ -16,6 +15,7 @@ metricsOperator:
   enabled: false
 
 global:
+  certManagerEnabled: true
   commonLabels:
     app.kubernetes.io/version: vmyversion
   commonAnnotations:

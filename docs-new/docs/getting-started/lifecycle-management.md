@@ -91,7 +91,7 @@ Each request sent to that unique URL will be logged here.
 
 ## Add a Post Deployment Task
 
-Add a task which will trigger after a deployment.
+Add a task that triggers after a successful deployment.
 
 Change `UUID` to whatever value you have.
 Apply this manifest:
@@ -127,7 +127,7 @@ Verify that the `KeptnTaskDefinition` resource shown above actually works.
 Trigger an on-demand task execution
 to verify that the job and Pod are working correctly.
 
-In the following steps we will have Keptn orchestrate this for us automatically.
+In the following steps we have Keptn orchestrate this for us automatically.
 
 Apply this manifest:
 
@@ -166,10 +166,13 @@ Incidentally, this is exactly how you can use Keptn with
 [applications deployed outside of Kubernetes](../use-cases/non-k8s.md).
 
 > Note: If you want to trigger this task multiple times,
-you must change the value of the `name` field
-in the `KeptnTask` resource each time.
->
+> you must change the value of the `name` field
+> in the `KeptnTask` resource each time.
 > For example, change `runsendevent1` to `runsendevent2`.
+> See
+> [Redeploy/Restart an Application](../guides/restart-application-deployment.md/)
+> for details.
+>
 
 ## Ask Keptn to trigger task after Deployment
 

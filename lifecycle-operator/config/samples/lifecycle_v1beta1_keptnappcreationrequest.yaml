@@ -1,0 +1,6 @@
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnAppCreationRequest
+metadata:
+  name: keptnappcreationrequest-sample
+spec:
+  appName: my-app

@@ -1,0 +1,11 @@
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnEvaluation
+metadata:
+  name: keptnevaluation-sample
+spec:
+  appName: my-app
+  workload: new-workload
+  workloadVersion: "1.0.0"
+  evaluationDefinition: my-app-evaluation
+status:
+  retryCount: 2

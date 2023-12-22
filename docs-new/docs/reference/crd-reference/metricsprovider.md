@@ -14,20 +14,7 @@ for each metric definition by its name.
 
 ## Yaml Synopsis
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetricsProvider
-metadata:
-  name: <data-source-instance-name>
-  namespace: <namespace>
-spec:
-  type: prometheus | dynatrace | dql | datadog
-  targetServer: "<data-source-url>"
-  secretKeyRef:
-    name: <secret-name>
-    key: <secret-key-that-holds-token>
-    optional: true | false
-```
+{% include "./assets/metricsprovider.md_1.yaml" %}
 
 ## Fields
 
@@ -96,9 +83,7 @@ For detailed information please look at the [Examples section](#examples).
 An example of Prometheus as a metrics provider with a Secret holding
 the authentication data looks like the following:
 
-```yaml
-{% include "./assets/keptnmetricsprovider-prometheus.yaml" %}
-```
+{% include "./assets/metricsprovider.md_2.yaml" %}
 
 > **Note**
 Setting the `.spec.secretKeyRef.key` field in KeptnMetricsProvider is not necessary,
@@ -110,9 +95,7 @@ Setting this field won't have any effect.
 An example of Datadog as a metrics provider with a Secret holding
 the authentication data looks like the following:
 
-```yaml
-{% include "./assets/keptnmetricsprovider-datadog.yaml" %}
-```
+{% include "./assets/metricsprovider.md_3.yaml" %}
 
 > **Note**
 Setting the `.spec.secretKeyRef.key` field in KeptnMetricsProvider is not necessary,
@@ -125,9 +108,7 @@ Setting this field has no effect.
 An example of Dynatrace as a metrics provider with a Secret holding
 the authentication data looks like the following:
 
-```yaml
-{% include "./assets/keptnmetricsprovider-dynatrace.yaml" %}
-```
+{% include "./assets/metricsprovider.md_4.yaml" %}
 
 > **Note**
 When using Dynatrace as metrics provider you can
@@ -155,18 +136,7 @@ The synopsis in those older API versions
 only specified the `metadata.name` field
 that identified the data provider (`prometheus`, `dynatrace`, or `dql`):
 
-```yaml
-apiVersion: metrics.keptn.sh/v1alpha2
-kind: KeptnMetricsProvider
-metadata:
-  name: prometheus | dynatrace |dql
-  namespace: <namespace>
-spec:
-  targetServer: "<data-provider-url>"
-  secretKeyRef:
-    name: dt-api-token
-    key: DT_TOKEN
-```
+{% include "./assets/metricsprovider.md_5.yaml" %}
 
 Also note that, for the v1alpha1 and v1alpha2 API versions,
 KeptnMetricsProvider only specifies the provider

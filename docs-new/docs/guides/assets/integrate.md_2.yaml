@@ -1,0 +1,3 @@
+app.kubernetes.io/name: myAwesomeWorkload
+app.kubernetes.io/version: myAwesomeWorkloadVersion
+app.kubernetes.io/part-of: myAwesomeAppName

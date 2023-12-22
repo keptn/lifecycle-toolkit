@@ -56,17 +56,7 @@ The `KeptnTaskDefinition` Yaml files for all runners
 include the same lines at the top.
 These are described here.
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
-kind: KeptnTaskDefinition
-metadata:
-  name: <task-name>
-spec:
-  deno | python | container
-  ...
-  retries: <integer>
-  timeout: <duration>
-```
+{% include "./assets/taskdefinition.md_1.yaml" %}
 
 ### Fields used for all containers
 
@@ -127,17 +117,7 @@ If you are migrating from Keptn v1,
 you can use a `container-runtime` to execute
 almost anything that you implemented with JES for Keptn v1.
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
-kind: KeptnTaskDefinition
-metadata:
-  name: <task-name>
-spec:
-  container:
-    name: <container-name>
-    image: <image-name>
-    <other fields>
-```
+{% include "./assets/taskdefinition.md_2.yaml" %}
 
 ### Spec used only for container-runtime
 
@@ -180,37 +160,11 @@ for permissions and importing data
 so a script that works properly elsewhere
 may not function out of the box when run in the `deno-runtime` runner.
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
-kind: KeptnTaskDefinition
-metadata:
-  name: <task-name>
-spec:
-  deno:
-    inline | httpRef | functionRef | ConfigMapRef
-    parameters:
-      map:
-        textMessage: "This is my configuration"
-    secureParameters:
-      secret: <secret-name>
-```
+{% include "./assets/taskdefinition.md_3.yaml" %}
 
 ### python-runtime
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
-kind: KeptnTaskDefinition
-metadata:
-  name: <task-name>
-spec:
-    python:
-      inline | httpRef | functionRef | ConfigMapRef
-      parameters:
-        map:
-          textMessage: "This is my configuration"
-      secureParameters:
-        secret: <secret-name>
-```
+{% include "./assets/taskdefinition.md_4.yaml" %}
 
 ### Fields for predefined containers
 
@@ -378,9 +332,7 @@ For an example of a `KeptnTaskDefinition` that defines a custom container.
 This is a trivial example that just runs `busybox`,
 then spawns a shell and runs the `sleep 30` command:
 
-```yaml
-{% include "../../assets/crd/task-definition.yaml" %}
-```
+{% include "./assets/taskdefinition.md_5.yaml" %}
 
 This task is then referenced in the
 [app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml)
@@ -393,38 +345,13 @@ file.
 This example defines a full-fledged Deno script
 within the `KeptnTaskDefinition` YAML file:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: hello-keptn-inline
-spec:
-  deno:
-    inline:
-      code: |
-        let text = Deno.env.get("DATA");
-        let data;
-        let name;
-        data = JSON.parse(text);
-
-        name = data.name
-        console.log("Hello, " + name + " new");
-```
+{% include "./assets/taskdefinition.md_6.yaml" %}
 
 ### Example 2: httpRef script for a Deno script
 
 This example fetches the Deno script from a remote webserver at runtime:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: hello-keptn-http
-spec:
-  deno:
-    httpRef:
-      url: "https://www.example.com/yourscript.js"
-```
+{% include "./assets/taskdefinition.md_7.yaml" %}
 
 For another example, see the
 [sample-app](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
@@ -441,74 +368,20 @@ on top of other `KeptnTaskDefinition`s.
 In this case, it calls `slack-notification-dev`,
 passing `parameters` and `secureParameters` to that other task:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: slack-notification-dev
-spec:
-  deno:
-    functionRef:
-      name: slack-notification
-    parameters:
-      map:
-        textMessage: "This is my configuration"
-    secureParameters:
-      secret: slack-token
-```
+{% include "./assets/taskdefinition.md_8.yaml" %}
 
 ### Example 4: ConfigMapRef for a Deno script
 
 This example references a `ConfigMap` by the name of `dev-configmap`
 that contains the code for the function to be executed.
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: keptntaskdefinition-sample
-spec:
-  deno:
-    configMapRef:
-      name: dev-configmap
-```
+{% include "./assets/taskdefinition.md_9.yaml" %}
 
 ### Example 5: ConfigMap for a Deno script
 
 This example illustrates the use of both a `ConfigMapRef` and a `ConfigMap`:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnTaskDefinition
-metadata:
-  name: scheduled-deployment
-spec:
-  function:
-    configMapRef:
-      name: scheduled-deployment-cm-1
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: scheduled-deployment-1
-data:
-  code: |
-    let text = Deno.env.get("DATA");
-    let data;
-    if (text != "") {
-        data = JSON.parse(text);
-    }
-    let targetDate = new Date(data.targetDate)
-    let dateTime = new Date();
-    if(targetDate < dateTime) {
-        console.log("Date has passed - ok");
-        Deno.exit(0);
-    } else {
-        console.log("It's too early - failing");
-        Deno.exit(1);
-    }
-    console.log(targetDate);
-```
+{% include "./assets/taskdefinition.md_10.yaml" %}
 
 ## Examples for a python-runtime runner
 
@@ -517,9 +390,7 @@ data:
 You can embed python code directly in the task definition.
 This example prints data stored in the parameters map:
 
-```yaml
-{% include "../../assets/crd/python-inline.yaml" %}
-```
+{% include "./assets/taskdefinition.md_11.yaml" %}
 
 ### Example 2: httpRef for a python-runtime runner
 
@@ -530,9 +401,7 @@ tree.
 
 Consider the following:
 
-```yaml
-{% include "../../assets/crd/python-configmap.yaml" %}
-```
+{% include "./assets/taskdefinition.md_12.yaml" %}
 
 ### Example 3: functionRef for a python-runtime runner
 
@@ -540,24 +409,18 @@ You can refer to an existing `KeptnTaskDefinition`.
 This example calls the inline example
 but overrides the data printed with what is specified in the task:
 
-```yaml
-{% include "../../assets/crd/python-recursive.yaml" %}
-```
+{% include "./assets/taskdefinition.md_13.yaml" %}
 
 ### Example 4: ConfigMapRef for a python-runtime runner
 
-```yaml
-{% include "../../assets/crd/python-configmap.yaml" %}
-```
+{% include "./assets/taskdefinition.md_14.yaml" %}
 
 ### Allowed libraries for the python-runtime runner
 
 The following example shows how to use some of the allowed packages, namely:
 requests, json, git, and yaml:
 
-```yaml
-{% include "../../assets/crd/python-libs.yaml" %}
-```
+{% include "./assets/taskdefinition.md_15.yaml" %}
 
 ### Passing secrets, environment variables and modifying the python command
 
@@ -567,9 +430,7 @@ and how to modify the python command.
 In this case the container runs with the `-h` option,
 which prints the help message for the python3 interpreter:
 
-```yaml
-{% include "../../assets/crd/python-context.yaml" %}
-```
+{% include "./assets/taskdefinition.md_16.yaml" %}
 
 ## More examples
 

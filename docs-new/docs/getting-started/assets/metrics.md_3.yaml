@@ -1,0 +1,23 @@
+$ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/simplenode-dev/keptnmetrics.metrics.sh/available-cpus/available-cpus"
+
+{
+  "kind": "MetricValueList",
+  "apiVersion": "custom.metrics.k8s.io/v1beta2",
+  "metadata": {},
+  "items": [
+    {
+      "describedObject": {
+        "kind": "KeptnMetric",
+        "namespace": "simplenode-dev",
+        "name": "available-cpus",
+        "apiVersion": "metrics.keptn.sh/v1beta1"
+      },
+      "metric": {
+        "name": "available-cpus",
+        "selector": {}
+      },
+      "timestamp": "2023-05-11T08:05:36Z",
+      "value": "6"
+    }
+  ]
+}

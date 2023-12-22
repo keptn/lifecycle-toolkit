@@ -1,0 +1,13 @@
+apiVersion: lifecycle.keptn.sh/v1alpha2
+kind: KeptnEvaluationDefinition
+metadata:
+  name: <evaluation-name>
+spec:
+  source: prometheus | dynatrace | datadog
+  objectives:
+    - name: query-1
+      query: "xxxx"
+      evaluationTarget: <20
+    - name: query-2
+      query: "yyyy"
+      evaluationTarget: >4

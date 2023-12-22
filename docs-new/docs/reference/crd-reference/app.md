@@ -15,29 +15,7 @@ It contains information about:
 
 ## Synopsis
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnApp
-metadata:
-  name: <app-name>
-  namespace: <application-namespace>
-spec:
-  version: "x.y"
-  revision: x
-  workloads:
-  - name: <workload1-name>
-    version: <version-string>
-  - name: <workload2-name>
-    version: <version-string>
-  preDeploymentTasks:
-  - <list of tasks>
-  postDeploymentTasks:
-  - <list of tasks>
-  preDeploymentEvaluations:
-  - <list of evaluations>
-  postDeploymentEvaluations:
-  - <list of evaluations>
-```
+{% include "./assets/app.md_1.yaml" %}
 
 ## Fields
 
@@ -138,24 +116,7 @@ you can code them all into a single `KeptnTaskDefinition`.
 
 ## Example
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnApp
-metadata:
-  name: podtato-head
-  namespace: podtato-kubectl
-spec:
-  version: "latest"
-  workloads:
-  - name: podtato-head-left-arm
-    version: "my_vers12.5"
-  - name: podtato-head-left-leg
-    version: "my_v24"
-  postDeploymentTasks:
-  - post-deployment-hello
-  preDeploymentEvaluations:
-  - my-prometheus-definition
-```
+{% include "./assets/app.md_2.yaml" %}
 
 ## Files
 

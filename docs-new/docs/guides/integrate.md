@@ -71,22 +71,13 @@ resources for the version it detects.
 
 The basic keptn.sh keys that can be used for annotations or labels are:
 
-```yaml
-keptn.sh/workload: myAwesomeWorkload
-keptn.sh/version: myAwesomeWorkloadVersion
-keptn.sh/app: myAwesomeAppName
-keptn.sh/container: myAwesomeContainer
-```
+{% include "./assets/integrate.md_1.yaml" %}
 
 Alternatively, you can use Kubernetes keys for annotations or labels.
 These are part of the Kubernetes
 [Recommended Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/):
 
-```yaml
-app.kubernetes.io/name: myAwesomeWorkload
-app.kubernetes.io/version: myAwesomeWorkloadVersion
-app.kubernetes.io/part-of: myAwesomeAppName
-```
+{% include "./assets/integrate.md_2.yaml" %}
 
 These keys are defined as:
 

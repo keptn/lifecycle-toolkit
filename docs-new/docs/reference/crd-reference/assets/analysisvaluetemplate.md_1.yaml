@@ -1,0 +1,9 @@
+apiVersion: metrics.keptn.sh/v1beta1
+kind: AnalysisValueTemplate
+metadata:
+  name: response-time-p95
+  namespace: <namespace-where-this-resource-resides>
+spec:
+  provider:
+    name: prometheus | dynatrace | dql | datadog
+  query: <query>

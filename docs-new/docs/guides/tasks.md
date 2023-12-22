@@ -112,10 +112,7 @@ resource.
 Specify one of the following annotations/labels
 for each task you want to execute:
 
-```yaml
-keptn.sh/pre-deployment-tasks: <task-name>
-keptn.sh/post-deployment-tasks: <task-name>
-```
+{% include "./assets/tasks.md_1.yaml" %}
 
 The value of each annotation corresponds
 to the value of the `name` field of the
@@ -235,21 +232,7 @@ while the `secret` parameters refer to a single Kubernetes `secret`.
 
 Consider the following example:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnTaskDefinition
-metadata:
-  name: slack-notification-dev
-spec:
-  function:
-    functionRef:
-      name: slack-notification
-    parameters:
-      map:
-        textMessage: "This is my configuration"
-    secureParameters:
-      secret: slack-token
-```
+{% include "./assets/tasks.md_2.yaml" %}
 
 Note the following about using parameters with functions:
 
@@ -277,21 +260,7 @@ execute this command:
 kubectl create secret generic my-secret --from-literal=SECURE_DATA=foo
 ```
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: dummy-task
-  namespace: "default"
-spec: 
-  function: 
-    secureParameters:
-      secret: my-secret
-    inline:
-      code: |
-        let secret_text = Deno.env.get("SECURE_DATA");
-        // secret_text = "foo"
-```
+{% include "./assets/tasks.md_3.yaml" %}
 
 To pass multiple variables
 you can create a Kubernetes secret using a JSON string:
@@ -301,23 +270,7 @@ kubectl create secret generic my-secret \
 --from-literal=SECURE_DATA="{\"foo\": \"bar\", \"foo2\": \"bar2\"}"
 ```
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: dummy-task
-  namespace: "default"
-spec:
-  function:
-    secureParameters:
-      secret: my-secret
-    inline:
-      code: |
-        let secret_text = Deno.env.get("SECURE_DATA");
-        let secret_text_obj = JSON.parse(secret_text);
-        // secret_text_obj["foo"] = "bar"
-        // secret_text_obj["foo2"] = "bar2"
-```
+{% include "./assets/tasks.md_4.yaml" %}
 
 ### Pass secrets to a function
 
@@ -334,34 +287,8 @@ For example, if you have a task function that should make use of secret data,
 you must first ensure that the secret containing the `SECURE_DATA` key exists
 For example:
 
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: deno-demo-secret
-  namespace: default
-type: Opaque
-data:
-  SECURE_DATA: YmFyCg== # base64 encoded string, e.g. 'bar'
-```
+{% include "./assets/tasks.md_5.yaml" %}
 
 Then, you can make use of that secret as follows:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: deployment-hello
-  namespace: "default"
-spec:
-  function:
-    secureParameters:
-      secret: deno-demo-secret
-    inline:
-      code: |
-        console.log("Deployment Hello Task has been executed");
-
-        let foo = Deno.env.get('SECURE_DATA');
-        console.log(foo);
-        Deno.exit(0);
-```
+{% include "./assets/tasks.md_6.yaml" %}

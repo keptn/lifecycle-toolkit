@@ -1,0 +1,10 @@
+apiVersion: metrics.keptn.sh/v1beta1
+kind: AnalysisValueTemplate
+metadata:
+  creationTimestamp: null
+  name: response-time
+spec:
+  provider:
+    name: my-prometheus-provider
+    namespace: keptn-lifecycle-poc
+  query: response_time{label="{{.service}}"}

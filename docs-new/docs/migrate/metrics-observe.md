@@ -241,35 +241,7 @@ The process is:
    kubectl get analysis -n keptn-lifecycle-poc -oyaml
    ```
 
-   ```yaml
-   apiVersion: v1
-   items:
-   - apiVersion: metrics.keptn.sh/v1beta1
-     kind: Analysis
-     metadata:
-       creationTimestamp: "2023-09-14T11:00:01Z"
-       generation: 4
-       name: analysis-sample-1
-       namespace: keptn-lifecycle-poc
-       resourceVersion: "71327"
-       uid: 1c5e043d-ed5e-42f8-ba32-b7af54b55c35
-     spec:
-       analysisDefinition:
-         name: my-project-ad
-         namespace: keptn-lifecycle-poc
-       args:
-         ns: keptn-system
-         project: my-project
-       timeframe:
-         from: "2023-09-14T11:20:19Z"
-         to: "2023-09-14T11:22:19Z"
-     status:
-       pass: true
-       raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"greaterThan":{"fixedValue":"50"}}},"warnResult":{"operator":{"greaterThan":{"fixedValue":"50"}}},"pass":true},"value":7,"score":1}],"totalScore":1,"maximumScore":1,"pass":true}'
-   kind: List
-   metadata:
-     resourceVersion: ""
-   ```
+   {% include "./assets/metrics-observe.md_1.yaml" %}
 
    As can be seen in the yaml above,
    the `status.raw` property contains the detailed breakdown
@@ -299,39 +271,13 @@ to insert a variable as a placeholder
 (for example, in this case, `{{.service}}`)
 for the service identifier in the prometheus query:
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: AnalysisValueTemplate
-metadata:
-  creationTimestamp: null
-  name: response-time
-spec:
-  provider:
-    name: my-prometheus-provider
-    namespace: keptn-lifecycle-poc
-  query: response_time{label="{{.service}}"}
-```
+{% include "./assets/metrics-observe.md_2.yaml" %}
 
 Then, if an analysis for that particular service should be performed,
 the name of the service can be passed to the analysis
 using the `spec.args` property from the `Analysis` resource:
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: Analysis
-metadata:
-  name: analysis-sample-1
-  namespace: keptn-lifecycle-poc
-spec:
-  timeframe:
-    from: 2023-09-14T11:20:19Z
-    to: 2023-09-14T11:22:19Z
-  args:
-    "service": "my-service"
-  analysisDefinition:
-    name: my-project-ad
-    namespace: keptn-lifecycle-poc
-```
+{% include "./assets/metrics-observe.md_3.yaml" %}
 
 This way, you can use the same `AnalysisDefinition`
 and `AnalysisValueTemplates` for multiple services within the same project.

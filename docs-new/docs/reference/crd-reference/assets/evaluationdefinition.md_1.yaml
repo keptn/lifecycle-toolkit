@@ -1,0 +1,10 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnEvaluationDefinition
+metadata:
+  name: <evaluation-name>
+spec:
+  objectives:
+    - evaluationTarget: "<value>"
+      keptnMetricRef:
+        name: available-cpus
+        namespace: some-namespace

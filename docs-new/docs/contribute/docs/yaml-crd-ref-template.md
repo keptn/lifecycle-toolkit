@@ -8,14 +8,7 @@ Copy this template to create a new CRD reference page.
 
 ## Synopsis
 
-```yaml
-apiVersion: <library>
-kind: <kind>
-metadata:
-  name: <name>
-spec:
-  ...
-```
+{% include "./assets/yaml-crd-ref-template.md_1.yaml" %}
 
 ## Fields
 

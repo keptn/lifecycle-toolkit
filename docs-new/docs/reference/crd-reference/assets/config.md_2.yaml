@@ -1,0 +1,8 @@
+apiVersion: options.keptn.sh/v1alpha2
+kind: KeptnConfig
+metadata:
+  name: keptn-config
+spec:
+  OTelCollectorUrl: 'otel-collector:4317'
+  keptnAppCreationRequestTimeoutSeconds: 40
+  cloudEventsEndpoint: 'http://endpoint.com'

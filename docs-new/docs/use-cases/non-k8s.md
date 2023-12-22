@@ -37,20 +37,7 @@ reference page for more information.
 For example, you might create a `test-task-definition.yaml` file
 with the following content:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: helloworldtask
-spec:
-  retries: 0
-  timeout: 30s
-  container:
-    name: cowsay
-    image: rancher/cowsay:latest
-    args:
-      - 'hello world'
-```
+{% include "./assets/non-k8s.md_1.yaml" %}
 
 This example uses the `container-runtime` runner,
 but you can instead use the `deno-runtime` or `python-runtime` runner.
@@ -74,21 +61,7 @@ in the `spec.taskDefinition` field.
 For example, you might create a `test-task.yaml` file
 with the following content:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTask
-metadata:
-  name: runhelloworld1
-spec:
-  taskDefinition: helloworldtask
-  context:
-    appName: "my-app"
-    appVersion: "1.0.0"
-    objectType: ""
-    taskType: ""
-    workloadName: "my-workload"
-    workloadVersion: "1.0.0"
-```
+{% include "./assets/non-k8s.md_2.yaml" %}
 
 You can then apply this YAML file with the following command:
 
@@ -118,21 +91,7 @@ A standard practice is to just increment the value of the suffix field.
 For example, you could create a `test-task-2.yaml` file
 with the `metadata.name` field set to `runhelloworld2`:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTask
-metadata:
-  name: runhelloworld2
-spec:
-  taskDefinition: helloworldtask
-  context:
-    appName: "my-app"
-    appVersion: "1.0.1"
-    objectType: ""
-    taskType: ""
-    workloadName: "my-workload"
-    workloadVersion: "1.0.1"
-```
+{% include "./assets/non-k8s.md_3.yaml" %}
 
 You can then apply this file with the following command:
 

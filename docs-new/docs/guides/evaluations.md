@@ -65,7 +65,6 @@ file specifies the `app-pre-deploy-eval-2` evaluation as follows:
 ```yaml
 {% include "../assets/crd/eval.yaml" %}
 ```
-
 The `evaluationTarget` is set to be `>1`,
 so this evaluation ensures that more than 1 CPU is available
 before the [workload](https://kubernetes.io/docs/concepts/workloads/) or application is deployed.
@@ -80,7 +79,6 @@ file:
 ```yaml
 {% include "../assets/crd/metric.yaml" %}
 ```
-
 Note the following:
 
 * One `KeptnEvaluationDefinition` resource can include
@@ -115,10 +113,7 @@ for each `KeptnEvaluationDefinition` resource to be run
 pre/post-deployment.
 The annotations for evaluations are:
 
-```yaml
-keptn.sh/pre-deployment-evaluations: <evaluation-name>
-keptn.sh/post-deployment-evaluations: <evaluation-name>
-```
+{% include "./assets/evaluations.md_3.yaml" %}
 
    > **Caveat:** Be very careful when implementing pre-deployment evaluations
      since, if one fails, Keptn prevents the Deployment from running.

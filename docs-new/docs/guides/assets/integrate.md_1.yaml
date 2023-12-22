@@ -1,0 +1,4 @@
+keptn.sh/workload: myAwesomeWorkload
+keptn.sh/version: myAwesomeWorkloadVersion
+keptn.sh/app: myAwesomeAppName
+keptn.sh/container: myAwesomeContainer

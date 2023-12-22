@@ -1,0 +1,7 @@
+...
+spec:
+  provider:
+    name: "prometheus | dynatrace | dql"
+  fetchIntervalSeconds: <seconds>
+  query: >-
+    "<query-from-provider>"

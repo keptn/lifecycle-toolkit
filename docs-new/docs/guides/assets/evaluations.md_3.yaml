@@ -1,0 +1,2 @@
+keptn.sh/pre-deployment-evaluations: <evaluation-name>
+keptn.sh/post-deployment-evaluations: <evaluation-name>

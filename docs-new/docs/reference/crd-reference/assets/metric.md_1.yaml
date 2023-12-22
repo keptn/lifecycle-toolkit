@@ -1,0 +1,18 @@
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetric
+metadata:
+  name: <metric-name>
+  namespace: <application-namespace>
+spec:
+  provider:
+    name: "<named-provider>"
+  query: "<query>"
+  fetchIntervalSeconds: <#-seconds>
+  range:
+    interval: "<timeframe>"
+  status:
+    properties:
+      value: <resulting value in human-readable language>
+      rawValue: <resulting value, in raw format>
+      errMsg: <error details if the query could not be evaluated>
+      lastUpdated: <time when the status data was last updated>

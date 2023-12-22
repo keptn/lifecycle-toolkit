@@ -22,70 +22,7 @@ to enter their respective deployment phases.
 
 To illustrate this, consider the following example:
 
-```yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: restartable-apps
-  annotations:
-    keptn.sh/lifecycle-toolkit: "enabled"
----
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnApp
-metadata:
-  name: podtato-head
-  namespace: restartable-apps
-spec:
-  version: "0.1.1"
-  revision: 1
-  workloads:
-    - name: podtato-head-entry
-      version: "0.1.2"
-  preDeploymentTasks:
-    - pre-deployment-check
----
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnTaskDefinition
-metadata:
-  name: pre-deployment-check
-  namespace: restartable-apps
-spec:
-  function:
-    inline:
-      code: |
-        console.error("I failed")
-        process.exit(1)
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: podtato-head-entry
-  namespace: restartable-apps
-  labels:
-    app: podtato-head
-spec:
-  selector:
-    matchLabels:
-      component: podtato-head-entry
-  template:
-    metadata:
-      labels:
-        component: podtato-head-entry
-        keptn.sh/workload: podtato-head-entry
-        keptn.sh/app: podtato-head
-        keptn.sh/version: "0.1.2"
-    spec:
-      terminationGracePeriodSeconds: 5
-      containers:
-        - name: server
-          image: ghcr.io/podtato-head/entry:0.2.7
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 9000
-          env:
-            - name: PODTATO_PORT
-              value: "9000"
-```
+{% include "./assets/restart-application-deployment.md_1.yaml" %}
 
 In this example, the `KeptnApp` executes a pre-deployment check
 which clearly fails because of the `pre-deployment-check` task,
@@ -125,18 +62,7 @@ kubectl -n restartable-apps edit keptntaskdefinitions.lifecycle.keptn.sh pre-dep
 
 Modify the manifest to look like this:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnTaskDefinition
-metadata:
-  name: pre-deployment-check
-  namespace: restartable-apps
-spec:
-  function:
-    inline:
-      code: |
-        console.error("Success")
-```
+{% include "./assets/restart-application-deployment.md_2.yaml" %}
 
 To restart the deployment of our `KeptnApplication`,
 edit the manifest:
@@ -147,21 +73,7 @@ kubectl -n restartable-apps edit keptnapps.lifecycle.keptn.sh podtato-head
 
 Increment the value of the `spec.revision` field by one:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnApp
-metadata:
-  name: podtato-head
-  namespace: restartable-apps
-spec:
-  version: "0.1.1"
-  revision: 2 # Increased this value from 1 to 2
-  workloads:
-    - name: podtato-head-entry
-      version: "0.1.2"
-  preDeploymentTasks:
-    - pre-deployment-check
-```
+{% include "./assets/restart-application-deployment.md_3.yaml" %}
 
 After those changes have been made,
 you will notice a new revision of the `podtato-head` `KeptnAppVersion`:

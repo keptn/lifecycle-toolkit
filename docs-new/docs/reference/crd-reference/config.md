@@ -4,16 +4,7 @@
 
 ## Yaml Synopsis
 
-```yaml
-apiVersion: options.keptn.sh/v?alpha?
-kind: KeptnConfig
-metadata:
-  name: <configuration-name>
-spec:
-  OTelCollectorUrl: '<otelurl:port>'
-  keptnAppCreationRequestTimeoutSeconds: <#-seconds>
-  cloudEventsEndpoint: <endpoint>
-```
+{% include "./assets/config.md_1.yaml" %}
 
 ## Fields
 
@@ -50,16 +41,7 @@ that describes all configurations for that cluster.
 This example specifies the URL of the OpenTelemetry collector
 and that the automatic app discovery should be run every 40 seconds:
 
-```yaml
-apiVersion: options.keptn.sh/v1alpha2
-kind: KeptnConfig
-metadata:
-  name: keptn-config
-spec:
-  OTelCollectorUrl: 'otel-collector:4317'
-  keptnAppCreationRequestTimeoutSeconds: 40
-  cloudEventsEndpoint: 'http://endpoint.com'
-```
+{% include "./assets/config.md_2.yaml" %}
 
 ## Files
 

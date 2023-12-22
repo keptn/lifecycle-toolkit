@@ -78,14 +78,7 @@ To enable Keptn, annotate the appropriate `Namespace` resource(s).
 For example, for the `simplenode-dev` namespace,
 the annotation looks like this:
 
-```yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: simplenode-dev
-  annotations:
-    keptn.sh/lifecycle-toolkit: "enabled"
-```
+{% include "./assets/tips-tricks.md_2.yaml" %}
 
 You see the annotation line `keptn.sh/lifecycle-toolkit: "enabled"`.
 

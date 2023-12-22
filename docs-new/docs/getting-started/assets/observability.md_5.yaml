@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  labels:
+    grafana_datasource: "1"
+  name: grafana-datasources
+  namespace: monitoring
+stringData:
+  datasources.yaml: |-
+    {
+        "apiVersion": 1,
+        "datasources": [
+            {
+                "access": "proxy",
+                "editable": false,
+                "name": "prometheus",
+                "orgId": 1,
+                "type": "prometheus",
+                "url": "http://observability-stack-kube-p-prometheus.monitoring.svc:9090",
+                "version": 1
+            },
+            {
+                "orgId":1,
+                "name":"Jaeger",
+                "type":"jaeger",
+                "typeName":"Jaeger",
+                "typeLogoUrl":"public/app/plugins/datasource/jaeger/img/jaeger_logo.svg",
+                "access":"proxy",
+                "url":"http://jaeger-query.keptn-system.svc.cluster.local:16686",
+                "user":"",
+                "database":"",
+                "basicAuth":false,
+                "isDefault":false,
+                "jsonData":{"spanBar":{"type":"None"}},
+                "readOnly":false
+            }
+        ]
+    }

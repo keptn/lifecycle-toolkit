@@ -9,26 +9,7 @@ like using Keptn to manage workloads that are outside of the k8s cluster.
 
 ## Synopsis
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTask
-metadata:
-  name: <name-of-this-run>
-spec:
-  taskDefinition: <name-of-KeptnTaskDefinition resource>
-  context:
-    appName: "<name-of-KeptnApp-resource>"
-    appVersion: "1.0.0"
-    objectType: ""
-    taskType: ""
-    workloadName: "my-workload"
-    workloadVersion: "1.0.0"
-  parameters: <parameters to pass to job>
-  secureParameters: <secure parameters to pass to job>
-  checkType: ""
-  retries: <integer>
-  timeout: <duration-in-seconds>
-```
+{% include "./assets/task.md_1.yaml" %}
 
 ## Fields
 

@@ -9,26 +9,7 @@ that are used in the `AnalysisDefinition` query.
 
 ## Synopsis
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: Analysis
-metadata:
-  name: analysis-sample
-spec:
-  timeframe: from: <start-time> to: <end-time> | `recent <timespan>`
-  args:
-    <variable1>: <value1>
-    <variable2>: <value2>
-    ...
-  analysisDefinition:
-    name: <name of associated `analysisDefinition` resource
-    namespace: <namespace of associated `analysisDefinition` resource
-status:
-  pass: true | false
-  warning: true | false
-  raw: <JSON object>
-  state: Completed | Progressing
-```
+{% include "./assets/analysis.md_1.yaml" %}
 
 ## Fields
 

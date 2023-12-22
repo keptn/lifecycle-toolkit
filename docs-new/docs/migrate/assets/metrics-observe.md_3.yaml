@@ -1,0 +1,14 @@
+apiVersion: metrics.keptn.sh/v1beta1
+kind: Analysis
+metadata:
+  name: analysis-sample-1
+  namespace: keptn-lifecycle-poc
+spec:
+  timeframe:
+    from: 2023-09-14T11:20:19Z
+    to: 2023-09-14T11:22:19Z
+  args:
+    "service": "my-service"
+  analysisDefinition:
+    name: my-project-ad
+    namespace: keptn-lifecycle-poc

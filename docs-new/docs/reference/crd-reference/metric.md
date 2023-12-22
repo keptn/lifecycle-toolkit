@@ -11,26 +11,7 @@ for different metrics at the same time.
 
 ## Yaml Synopsis
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetric
-metadata:
-  name: <metric-name>
-  namespace: <application-namespace>
-spec:
-  provider:
-    name: "<named-provider>"
-  query: "<query>"
-  fetchIntervalSeconds: <#-seconds>
-  range:
-    interval: "<timeframe>"
-  status:
-    properties:
-      value: <resulting value in human-readable language>
-      rawValue: <resulting value, in raw format>
-      errMsg: <error details if the query could not be evaluated>
-      lastUpdated: <time when the status data was last updated>
-```
+{% include "./assets/metric.md_1.yaml" %}
 
 ## Fields
 
@@ -107,20 +88,7 @@ This example pulls metrics from the data provider
 defined as `my-provider` in the `spec.provider.name` field
 of the corresponding `KeptnMetricsProvider` CR.
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetric
-metadata:
-  name: keptnmetric-sample
-  namespace: podtato-kubectl
-spec:
-  provider:
-    name: "my-provider"
-  query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
-  fetchIntervalSeconds: 5
-  range:
-    interval: "5m"
-```
+{% include "./assets/metric.md_2.yaml" %}
 
 ## Files
 
@@ -143,15 +111,7 @@ that is assigned in the
 So the `v1alpha1` and `v1alpha2` synopsis
 of the `spec` field is:
 
-```yaml
-...
-spec:
-  provider:
-    name: "prometheus | dynatrace | dql"
-  fetchIntervalSeconds: <seconds>
-  query: >-
-    "<query-from-provider>"
-```
+{% include "./assets/metric.md_3.yaml" %}
 
 ## See also
 

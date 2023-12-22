@@ -8,18 +8,7 @@ as part of pre- and post-analysis phases of a [workload](https://kubernetes.io/d
 
 ## Yaml Synopsis
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnEvaluationDefinition
-metadata:
-  name: <evaluation-name>
-spec:
-  objectives:
-    - evaluationTarget: "<value>"
-      keptnMetricRef:
-        name: available-cpus
-        namespace: some-namespace
-```
+{% include "./assets/evaluationdefinition.md_1.yaml" %}
 
 ## Fields
 
@@ -78,24 +67,7 @@ on all namespaces in the cluster.
 
 ## Example
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnEvaluationDefinition
-metadata:
-  name: my-prometheus-evaluation
-  namespace: example
-spec:
-  source: prometheus
-  objectives:
-    - keptnMetricRef:
-        name: available-cpus
-        namespace: example
-      evaluationTarget: ">1"
-    - keptnMetricRef:
-        name: cpus-throttling
-        namespace: example
-      evaluationTarget: "<0.01"
-```
+{% include "./assets/evaluationdefinition.md_2.yaml" %}
 
 ## Files
 
@@ -110,21 +82,7 @@ and itself contained the queries
 that are now taken from the specified [KeptnMetric](metric.md) CRD.
 The synopsis was:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnEvaluationDefinition
-metadata:
-  name: <evaluation-name>
-spec:
-  source: prometheus | dynatrace | datadog
-  objectives:
-    - name: query-1
-      query: "xxxx"
-      evaluationTarget: <20
-    - name: query-2
-      query: "yyyy"
-      evaluationTarget: >4
-```
+{% include "./assets/evaluationdefinition.md_3.yaml" %}
 
 Beginning with `v1alpha3` API version,
 `KeptnEvaluationDefinition` references a `keptnMetricRef`

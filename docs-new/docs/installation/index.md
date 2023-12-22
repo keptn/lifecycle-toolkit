@@ -73,14 +73,7 @@ you must enable Keptn in your
 via annotations.
 For example, for the `testy-test` namespace:
 
-```yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: testy-test
-  annotations:
-    keptn.sh/lifecycle-toolkit: "enabled" # this tells Keptn to watch the namespace
-```
+{% include "./assets/index.md_1.yaml" %}
 
 Some helpful hints:
 

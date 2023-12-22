@@ -1,0 +1,12 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: helloworldtask
+spec:
+  retries: 0
+  timeout: 30s
+  container:
+    name: cowsay
+    image: rancher/cowsay:latest
+    args:
+      - 'hello world'

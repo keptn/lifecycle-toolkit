@@ -28,31 +28,7 @@ The steps are:
 
 These are the CRs for `cert-manager.io` to be applied to your cluster:
 
-```yaml
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: keptn-certs
-  namespace: <your-namespace>
-spec:
-  dnsNames:
-  - lifecycle-webhook-service.<your-namespace>.svc
-  - lifecycle-webhook-service.<your-namespace>.svc.cluster.local
-  - metrics-webhook-service.<your-namespace>.svc
-  - metrics-webhook-service.<your-namespace>.svc.cluster.local
-  issuerRef:
-    kind: Issuer
-    name: keptn-selfsigned-issuer
-  secretName: keptn-certs
----
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: keptn-selfsigned-issuer
-  namespace: <your-namespace>
-spec:
-  selfSigned: {}
-```
+{% include "./assets/cert-manager.md_1.yaml" %}
 
 Note the following about these fields:
 

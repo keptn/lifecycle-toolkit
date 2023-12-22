@@ -1,0 +1,6 @@
+apiVersion: <library>
+kind: <kind>
+metadata:
+  name: <name>
+spec:
+  ...

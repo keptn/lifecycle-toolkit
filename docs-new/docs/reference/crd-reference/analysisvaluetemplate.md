@@ -9,17 +9,7 @@ of multiple types of data provider.
 
 ## Synopsis
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: AnalysisValueTemplate
-metadata:
-  name: response-time-p95
-  namespace: <namespace-where-this-resource-resides>
-spec:
-  provider:
-    name: prometheus | dynatrace | dql | datadog
-  query: <query>
-```
+{% include "./assets/analysisvaluetemplate.md_1.yaml" %}
 
 ## Fields
 
@@ -80,9 +70,7 @@ The template refers to that provider and queries it.
 
 ## Example
 
-```yaml
-{% include "../../assets/crd/analysis-template.yaml" %}
-```
+{% include "./assets/analysisvaluetemplate.md_2.yaml" %}
 
 For a full example of how the `AnalysisValueTemplate` is used
 to implement the Keptn Analysis feature, see the

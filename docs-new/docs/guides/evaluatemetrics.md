@@ -73,29 +73,7 @@ The
 [keptn-metric.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-metric.yaml)
 file for our example looks like:
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: Keptnmetric
-metadata:
-  name: available-cpus
-  namespace: simplenode-dev
-spec:
-  provider:
-    name: dev-prometheus
-  query: "sum(kube_node_status_capacity{resources`cpu`})"
-  fetchIntervalSeconds: 10
----
-apiVersion: metrics.keptn.sh/v1beta1
-kind: Keptnmetric
-metadata:
-  name: availability-slo
-  namespace: simplenode-dev
-spec:
-  provider:
-    name: dev-dynatrace
-  query: "func:slo.availability_simplenodeservice"
-  fetchIntervalSeconds: 10
-```
+{% include "./assets/evaluatemetrics.md_1.yaml" %}
 
 Note the following:
 
@@ -206,16 +184,4 @@ In other words, the span is
 
 The default value is set to be `5m` if the `range.interval` is not set.
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetric
-metadata:
-  name: good-metric
-spec:
-  provider:
-    name: my-provider
-  query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
-  fetchIntervalSeconds: 10
-  range:
-    interval: "3m"
-```
+{% include "./assets/evaluatemetrics.md_2.yaml" %}

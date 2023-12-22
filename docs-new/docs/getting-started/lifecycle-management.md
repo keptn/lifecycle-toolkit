@@ -72,29 +72,7 @@ Add a task which will trigger after a deployment.
 Change `UUID` to whatever value you have.
 Apply this manifest:
 
-```yaml
----
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: send-event
-  namespace: keptndemo
-spec:
-  retries: 0
-  timeout: 5s
-  container:
-    name: curlcontainer
-    image: curlimages/curl:latest
-    args: [
-        '-X',
-        'POST',
-        'http://webhook.webhook.svc.cluster.local:8084/YOUR-UUID-HERE',
-        '-H',
-        'Content-Type: application/json',
-        '-d',
-        '{ "from": "keptn send-event" }'
-    ] 
-```
+{% include "./assets/lifecycle-management.md_1.yaml" %}
 
 ### Verify it works
 
@@ -106,23 +84,7 @@ In the following steps we will have Keptn orchestrate this for us automatically.
 
 Apply this manifest:
 
-```yaml
----
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTask
-metadata:
-  name: runsendevent1
-  namespace: keptndemo
-spec:
-  taskDefinition: send-event
-  context:
-    appName: "my-test-app"
-    appVersion: "1.0.0"
-    objectType: ""
-    taskType: ""
-    workloadName: "my-test-workload"
-    workloadVersion: "1.0.0"
-```
+{% include "./assets/lifecycle-management.md_2.yaml" %}
 
 If it works, `kubectl -n keptndemo get jobs` should show:
 
@@ -152,48 +114,13 @@ Getting started guide.
 
 Add a new label so the `labels` section looks like this:
 
-```yaml
-...
-labels:
-    app.kubernetes.io/part-of: keptndemoapp
-    app.kubernetes.io/name: nginx
-    app.kubernetes.io/version: 0.0.2
-    keptn.sh/post-deployment-tasks: "send-event"
-...
-```
+{% include "./assets/lifecycle-management.md_3.yaml" %}
 
 Increase the version number to `0.0.2` and re-apply the manifest.
 
 Here is a full version of the new YAML:
 
-```yaml
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  namespace: keptndemo
-  labels:
-    app.kubernetes.io/name: nginx
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: nginx
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/part-of: keptndemoapp
-        app.kubernetes.io/name: nginx
-        app.kubernetes.io/version: 0.0.2
-        keptn.sh/post-deployment-tasks: "send-event"
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.14.2
-        ports:
-        - containerPort: 80
-```
+{% include "./assets/lifecycle-management.md_4.yaml" %}
 
 > Best Practice: Start with post deployment tasks.
 > Pre-deployment tasks can potentially block deployments (see below).

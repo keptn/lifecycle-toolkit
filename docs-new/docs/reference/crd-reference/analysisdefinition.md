@@ -5,36 +5,7 @@ list of Service Level Objectives (SLOs) for an `Analysis`.
 
 ## Synopsis
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: AnalysisDefinition
-metadata:
-  name: <name-of-this-resource>
-  namespace: <namespace-where-this-resource-resides>
-spec:
-  objectives:
-    - analysisValueTemplateRef:
-        name: <name-of-referenced-analysisValueTemplate-resource>
-        namespace: <namespace-of-referenced-analysisValueTemplate-resource>
-      target:
-        failure:
-          <operator>:
-            fixedValue: <integer> | <quantity>
-          inRange: | notInRange:
-            lowBound: <integer> | <quantity>
-            highBound: <integer> | <quantity>
-        warning:
-          <operator>:
-            fixedValue: <integer> | <quantity>
-          inRange: | notInRange:
-            lowBound: <integer> | <quantity>
-            highBound: <integer> | <quantity>
-      weight: <integer>
-      keyObjective: <boolean>
-  totalScore:
-    passPercentage: <min-percentage-to-pass>
-    warningPercentage: <min-percentage-for-warning>
-```
+{% include "./assets/analysisdefinition.md_1.yaml" %}
 
 ## Fields
 

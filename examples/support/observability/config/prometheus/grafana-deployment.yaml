@@ -143,8 +143,8 @@ spec:
             - mountPath: /grafana-dashboard-definitions/0/keptn-applications
               name: grafana-dashboard-keptn-applications
               readOnly: false
-            - mountPath: /grafana-dashboard-definitions/0/keptn-workloads
-              name: grafana-dashboard-keptn-workloads
+            - mountPath: /grafana-dashboard-definitions/0/keptn-workloads-dora
+              name: grafana-dashboard-keptn-workloads-dora
               readOnly: false
             - mountPath: /grafana-dashboard-definitions/0/keptn-overview
               name: grafana-dashboard-keptn-overview
@@ -247,8 +247,8 @@ spec:
             name: grafana-dashboard-workload-total
           name: grafana-dashboard-workload-total
         - configMap:
-            name: grafana-dashboard-keptn-workloads
-          name: grafana-dashboard-keptn-workloads
+            name: grafana-dashboard-keptn-workloads-dora
+          name: grafana-dashboard-keptn-workloads-dora
         - configMap:
             name: grafana-dashboard-keptn-applications
           name: grafana-dashboard-keptn-applications

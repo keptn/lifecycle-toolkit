@@ -15,7 +15,7 @@ for each metric definition by its name.
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1alpha3
 kind: KeptnMetricsProvider
 metadata:
   name: <data-source-instance-name>

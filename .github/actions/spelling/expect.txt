@@ -51,8 +51,6 @@ autoscaler
 azurecr
 Bacher
 bacherfl
-Dubaj
-odubaj
 badanalysis
 badmetric
 badtaskdefinition
@@ -149,6 +147,7 @@ donath
 dql
 DTAPI
 dtclient
+Dubaj
 dupl
 dynamicinformer
 dynatrace
@@ -224,6 +223,7 @@ groupversion
 gstatic
 gtag
 GVK
+HCNAH
 healthz
 hellopy
 helloworldtask
@@ -253,6 +253,7 @@ ifeq
 ifile
 ifndef
 IHandler
+ikbr
 imagepullsecret
 IManager
 IMeter
@@ -275,8 +276,10 @@ javascripts
 jetstack
 jgehrcke
 Jhb
+Jmn
 jsonschema
 jwt
+Jymo
 kacr
 kauz
 kav
@@ -426,6 +429,7 @@ myservice
 myuser
 myversion
 namespacedelete
+Nde
 netlify
 Neue
 nifi
@@ -444,6 +448,7 @@ objectreference
 objref
 objs
 ocimage
+odubaj
 odubajdt
 oidc
 ojsonpath
@@ -672,6 +677,7 @@ WORKLOADOVERALLSTATUS
 workloadsstate
 workloadstatus
 workloadversion
+WZC
 xxxx
 XXXXXXXXXXXXXXXXXXXXXXXX
 yannh

@@ -40,9 +40,7 @@ The basic steps are:
    and that it is running a supported version of Kubernetes
    with the following command:
 
-```shell
-kubectl version --short
-```
+        kubectl version --short
 
 ## Prepare your cluster for Keptn
 

@@ -76,6 +76,6 @@ to check your formatting, you have the following options:
 grip <file>.md
 ```
 
-     Point your browser at `localhost:6419` to view the formatted file.
-     The document updates automatically
-     each time you write your changes to disk.
+Point your browser at `localhost:6419` to view the formatted file.
+The document updates automatically
+each time you write your changes to disk.

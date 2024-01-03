@@ -29,9 +29,9 @@ The basic steps are:
 2. Download [KinD](https://kind.sigs.k8s.io/)
 3. Create the local KinD cluster with the following command:
 
-```shell
-kind create cluster
-```
+    ```shell
+    kind create cluster
+    ```
 
    See the
    [KinD Quick Start Guide](https://kind.sigs.k8s.io/docs/user/quick-start/)

@@ -23,7 +23,7 @@ Use `kubectl` to inspect the current contents of any Keptn resource:
    For example, to list all the `KeptnApp` resources
    in the `namespace1` namespace, the command is:
 
-   ```shell
+   ```
    kubectl get keptnapps -n namespace1
    ```
 

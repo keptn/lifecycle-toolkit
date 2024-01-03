@@ -20,7 +20,9 @@ to check the rendered documentation
 and then push your changes to the repository as a pull request.
 
 If you need help getting started,
-feel free to ask for help on the `#help-contributing` or `#keptn-docs` channels on the [Keptn Slack](https://cloud-native.slack.com/archives/C017GAX90GM).
+feel free to ask for help on the
+[Keptn Slack](https://cloud-native.slack.com/archives/C017GAX90GM)
+channel.
 We were all new to this once and are happy to help you!
 
 ## Guidelines for Contributing

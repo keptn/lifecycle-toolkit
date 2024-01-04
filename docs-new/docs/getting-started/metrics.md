@@ -89,42 +89,9 @@ specified as a query for the particular observability platform
 you are using.
 You can define any type of metric from any data source.
 
-In our example, we define two bits of information to retrieve:
-
-- Number of CPUs, derived from the `dev-prometheus` data platform
-- `availability` SLO, derived from the `dev-dynatrace` data platform
-
-Each of these are configured to fetch data every 10 seconds
-but you could configure a different `fetchIntervalSeconds` value
-for each metric.
-
-The
-[keptn-metric.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-metric.yaml)
-file for our example looks like:
-
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: Keptnmetric
-metadata:
-  name: available-cpus
-  namespace: simplenode-dev
-spec:
-  provider:
-    name: dev-prometheus
-  query: "sum(kube_node_status_capacity{resources`cpu`})"
-  fetchIntervalSeconds: 10
----
-apiVersion: metrics.keptn.sh/v1beta1
-kind: Keptnmetric
-metadata:
-  name: availability-slo
-  namespace: simplenode-dev
-spec:
-  provider:
-    name: dev-dynatrace
-  query: "func:slo.availability_simplenodeservice"
-  fetchIntervalSeconds: 10
-```
+For an example of how to specify a KeptnMetric,
+refer to the [example section](../reference/crd-reference/metric/#example)
+of the KeptnMetric CRD reference page.
 
 Note the following:
 

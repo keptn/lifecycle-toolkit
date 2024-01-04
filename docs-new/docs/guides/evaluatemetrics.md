@@ -29,11 +29,24 @@ your `KeptnMetricsProvider` and `KeptnMetric` resources,
 Keptn begins collecting the metrics you defined.
 You do not need to do anything else.
 
-### Define metrics providers
+### Define KeptnMetricsProvider resources
 
-Populate a
-[KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
-resource for each external observability platform you want to use.
+You must define a
+[KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md) resource
+for each instance of each data provider you are using.
+
+Note the following:
+
+* Each `KeptnMetricsProvider` resource is bound to a specific namespace.
+* Each `KeptnMetric` resource must be located in the same namespace
+  as the associated `KeptnMetricsProvider` resource.
+* `KeptnEvaluationDefinition` resources can reference metrics
+  from any namespace in the cluster.
+* To define metrics that can be used in evaluations
+  on all namespaces in the cluster,
+  create `KeptnMetricsProvider` and `KeptnMetric` resources
+  in a centralized namespace
+  such as `keptn-system`.
 
 For our example, we define two observability platforms:
 
@@ -119,7 +132,7 @@ apiVersion: metrics.keptn.sh/v1beta1
 kind: Keptnmetric
 metadata:
   name: available-cpus
-  namespace: simplenode-dev
+  namespace: podtato-kubectl
 spec:
   provider:
     name: dev-prometheus
@@ -130,7 +143,7 @@ apiVersion: metrics.keptn.sh/v1beta1
 kind: Keptnmetric
 metadata:
   name: availability-slo
-  namespace: simplenode-dev
+  namespace: podtato-kubectl
 spec:
   provider:
     name: dev-dynatrace

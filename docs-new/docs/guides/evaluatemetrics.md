@@ -29,28 +29,69 @@ your `KeptnMetricsProvider` and `KeptnMetric` resources,
 Keptn begins collecting the metrics you defined.
 You do not need to do anything else.
 
-### Define KeptnMetricsProvider resources
+### Define metrics providers
 
-You must define a
-[KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md) resource
-for each instance of each data provider you are using.
+Populate a
+[KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
+resource for each external observability platform you want to use.
 
-Note the following:
+For our example, we define two observability platforms:
 
-* Each `KeptnMetricsProvider` resource is bound to a specific namespace.
-* Each `KeptnMetric` resource must be located in the same namespace
-  as the associated `KeptnMetricsProvider` resource.
-* `KeptnEvaluationDefinition` resources can reference metrics
-  from any namespace in the cluster.
-* To define metrics that can be used in evaluations
-  on all namespaces in the cluster,
-  create `KeptnMetricsProvider` and `KeptnMetric` resources
-  in a centralized namespace
-  such as `keptn-system`.
+- `dev-prometheus`
+- `dev-dynatrace`
 
-For an example of how to specify a KeptnMetricsProvider with a Secret,
-refer to the [example section](../reference/crd-reference/metricsprovider.md#examples)
-of the KeptnMetricsProvider CRD reference page.
+You can specify a virtually unlimited number of providers,
+including multiple instances of each observability platform.
+Each one must be assigned a unique name,
+identified by the type of platform it is
+and the URL of the target server.
+If the target server is protected by a Secret,
+provide information about the token and key.
+
+The [keptn-metrics-provider.yaml](../reference/crd-reference/metricsprovider.md#examples)
+file for our example looks like:
+
+```yaml
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetricsProvider
+metadata:
+  name: dev-prometheus
+  namespace: podtato-kubectl
+spec:
+  type: prometheus
+  targetServer: "<prometheus-url>"
+  secretKeyRef:
+    name: prometheus-secret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: prometheus-secret
+data:
+  password: password
+  user: user
+type: Opaque
+---
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetricsProvider
+metadata:
+  name: dev-dynatrace
+  namespace: podtato-kubectl
+spec:
+  type: dynatrace | dql
+  targetServer: "<dynatrace-tenant-url>"
+  secretKeyRef:
+    name: dt-api-token
+    key: myCustomTokenKey
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dt-api-token
+data:
+  myCustomTokenKey: my-token
+type: Opaque
+```
 
 ### Define KeptnMetric information
 
@@ -60,19 +101,50 @@ specified as a query for the particular observability platform
 you are using.
 You can define any type of metric from any data source.
 
-For an example of how to specify a KeptnMetric,
-refer to the [example section](../reference/crd-reference/metric/#example)
-of the KeptnMetric CRD reference page.
+In our example, we define two bits of information to retrieve:
+
+* Number of CPUs, fetched from the `dev-prometheus` data platform
+* `availability` SLO, fetched from the `dev-dynatrace` data platform
+
+Each of these are configured to fetch data every 10 seconds
+but you could configure a different `fetchIntervalSeconds` value
+for each metric.
+
+The
+[keptn-metric.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-metric.yaml)
+file for our example looks like:
+
+```yaml
+apiVersion: metrics.keptn.sh/v1beta1
+kind: Keptnmetric
+metadata:
+  name: available-cpus
+  namespace: simplenode-dev
+spec:
+  provider:
+    name: dev-prometheus
+  query: "sum(kube_node_status_capacity{resources`cpu`})"
+  fetchIntervalSeconds: 10
+---
+apiVersion: metrics.keptn.sh/v1beta1
+kind: Keptnmetric
+metadata:
+  name: availability-slo
+  namespace: simplenode-dev
+spec:
+  provider:
+    name: dev-dynatrace
+  query: "func:slo.availability_simplenodeservice"
+  fetchIntervalSeconds: 10
+```
 
 Note the following:
 
-- Populate one YAML file per metric
-  then apply all of them.
-- Each metric is assigned a unique `name`.
-- The value of the `spec.provider.name` field
+* Each metric should have a unique `name`.
+* The value of the `spec.provider.name` field
   must correspond to the name assigned in
   the `metadata.name` field of a `KeptnMetricsProvider` resource.
-- Information is fetched in on a continuous basis
+* Information is fetched in on a continuous basis
   at a rate specified
   by the value of the `spec.fetchIntervalSeconds` field.
 

@@ -19,9 +19,9 @@ To set up a local Docsy build:
 
 1. Execute the following command from the `docs` folder of your clone:
 
-   ```shell
-   make server
-   ```
+```shell
+make server
+```
 
    It will continue running in its own shell.
 
@@ -72,10 +72,10 @@ to check your formatting, you have the following options:
      you can format the specified file locally
      by running the following in its own shell:
 
-     ```shell
-     grip <file>.md
-     ```
+```shell
+grip <file>.md
+```
 
-     Point your browser at `localhost:6419` to view the formatted file.
-     The document updates automatically
-     each time you write your changes to disk.
+Point your browser at `localhost:6419` to view the formatted file.
+The document updates automatically
+each time you write your changes to disk.

@@ -70,7 +70,7 @@ To view these events on your cluster, execute:
 kubectl get events -n <namespace> . 
 ```
 
-**Note:**
+> **Note**
 This will display only Kubernetes events, not Cloud Events.
 
 ### Pre-deployment phase

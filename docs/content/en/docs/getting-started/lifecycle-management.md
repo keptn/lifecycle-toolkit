@@ -5,7 +5,7 @@ weight: 50
 ---
 
 The Release Lifecycle Management tools run
-pre- and post-deployment tasks and checks
+pre/post-deployment tasks and checks
 for your existing cloud-native deployments
 to make them more robust.
 This tutorial introduces these tools.
@@ -19,11 +19,12 @@ exercise.
 
 When Keptn is successfully monitoring your deployments, it can also run arbitrary tasks and SLO evaluations:
 
-- pre-deployment (before the pod is scheduled) and
+- pre-deployment (before the pod is scheduled)
 - post-deployment (after the post is scheduled)
 
-> Pre and post deployments can also run on a KeptnApp level.
-> See [annotations to KeptnApp](../guides/integrate.md#annotations-to-keptnapp)
+> Pre/post deployments can also run on a KeptnApp level.
+  See
+  [Annotations to KeptnApp](../guides/tasks.md/#annotations-to-keptnapp).
 
 ## Prerequisites: Deploy webhook sink
 
@@ -218,8 +219,10 @@ Do this by using the `keptn.sh/pre-deployment-tasks` label.
 
 ## Further Information
 
-There is a lot more you can do with KeptnTasks.
-See [pre and post deployment checks page](../guides/integrate.md#pre--and-post-deployment-checks) to find out more.
+You can do a lot more with KeptnTasks.
+See the
+[Deployment tasks](../guides/tasks.md)
+guide for more information.
 
 ## What's next?
 

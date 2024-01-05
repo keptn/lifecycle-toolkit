@@ -49,6 +49,7 @@ autoprefixer
 autoprovision
 autoscaler
 azurecr
+Bacher
 bacherfl
 badanalysis
 badmetric
@@ -146,6 +147,7 @@ donath
 dql
 DTAPI
 dtclient
+Dubaj
 dupl
 dynamicinformer
 dynatrace
@@ -173,6 +175,7 @@ eventobject
 Eventqueue
 eventsender
 exampleuser
+extrahead
 fakeclient
 fetchintervalseconds
 fieldpath
@@ -220,6 +223,7 @@ groupversion
 gstatic
 gtag
 GVK
+HCNAH
 healthz
 hellopy
 helloworldtask
@@ -249,6 +253,7 @@ ifeq
 ifile
 ifndef
 IHandler
+ikbr
 imagepullsecret
 IManager
 IMeter
@@ -271,8 +276,10 @@ javascripts
 jetstack
 jgehrcke
 Jhb
+Jmn
 jsonschema
 jwt
+Jymo
 kacr
 kauz
 kav
@@ -422,6 +429,7 @@ myservice
 myuser
 myversion
 namespacedelete
+Nde
 netlify
 Neue
 nifi
@@ -440,6 +448,7 @@ objectreference
 objref
 objs
 ocimage
+odubaj
 odubajdt
 oidc
 ojsonpath
@@ -488,7 +497,6 @@ prebuilt
 Predeployment
 PREDEPLOYMENTEVALUATIONSTATUS
 PREDEPLOYMENTSTATUS
-prepost
 prepostdeployment
 prepostevaluation
 previewer
@@ -569,6 +577,7 @@ spanitem
 spdx
 spf
 squidfunk
+sre
 stakeholders
 standalone
 statefulset
@@ -668,6 +677,7 @@ WORKLOADOVERALLSTATUS
 workloadsstate
 workloadstatus
 workloadversion
+WZC
 xxxx
 XXXXXXXXXXXXXXXXXXXXXXXX
 yannh

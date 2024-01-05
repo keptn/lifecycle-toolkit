@@ -22,14 +22,14 @@ validation of application changes.
 It runs automated tests, assesses performance, and ensures the application meets predefined quality gates
 before moving to the next stage.
 
-1. **Evaluation and Feedback:** It collects metrics and evaluates the performance of deployed applications
+3. **Evaluation and Feedback:** It collects metrics and evaluates the performance of deployed applications
 against predefined Service Level Objectives (SLOs) and Service Level Indicators (SLIs).
 It analyzes this data to provide feedback and insights into the application's health and performance.
 
-1. **Observability:** It provides observability of the running application out-of-the-box by exposing metrics,
+4. **Observability:** It provides observability of the running application out-of-the-box by exposing metrics,
 traces and logs.
 
-2. **State Management and Versioning:** It manages the state and versioning of applications, keeping track of
+5. **State Management and Versioning:** It manages the state and versioning of applications, keeping track of
 different versions deployed across various environments and ensuring consistency in the deployment process.
 
 Overall, the lifecycle operator in Keptn acts as an intelligent control system, orchestrating the flow of

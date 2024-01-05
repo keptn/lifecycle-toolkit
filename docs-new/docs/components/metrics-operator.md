@@ -7,20 +7,21 @@ to generate a variety of reports and dashboards
 that provide insights into the health and performance
 of the application and infrastructure.
 
-While Kubernetes has ways to extend its metrics APIs, they have limitations,
-especially that they only allow you to use a single observability platform
+While Kubernetes has ways to extend its metrics APIs, there are limitations,
+especially that they allow you to use only a single observability platform
 such as Prometheus, Dynatrace or Datadog.
 The Keptn Metrics Operator solves this problem
 by providing a single entry point for
-all your metrics data, regardless of its source,
-so you can use multiple instances of multiple observability platforms.
+all your metrics data, regardless of its source.
+This mean that data from multiple observability platforms are available via
+a single access point.
 
 Keptn metrics are integrated with the Kubernetes
 [Custom Metrics API](https://github.com/kubernetes/metrics#custom-metrics-api),
 so they are compatible with the Kubernetes
 [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
 (HPA), which enables the horizontal scaling of workloads
-based on metrics collected from multiple observability platforms.
+based on metrics collected from observability platforms.
 See
 [Using the HorizontalPodAutoscaler](../use-cases/hpa.md)
 for instructions.
@@ -28,6 +29,7 @@ for instructions.
 The Metrics Operator consists of the following components:
 
 * Metrics Controller
+* Analysis Controller
 * Metrics Adapter
 
 ```mermaid
@@ -67,12 +69,12 @@ The steps in which the controller fetches metrics are given below:
    * If not, it skips the reconciliation process
      and queues the request for later.
 
-1. The controller attempts to fetch the provider defined in the
+2. The controller attempts to fetch the provider defined in the
    `spec.provider.name` field.
    * If this is not possible, the controller reconciles
      and queues the request for later.
 
-1. If the provider is found,
+3. If the provider is found,
    the controller loads the provider and evaluates the query
    defined in the `spec.query` field.
    * If the evaluation is successful,

@@ -54,7 +54,7 @@ based on a set of dictionaries:
   The configuration is specified in files in the
   [.github/actions/spelling](https://github.com/keptn/lifecycle-toolkit/tree/main/.github/actions/spelling)
   directory.
-  [expect.txt](https://github.com/keptn/lifecycle-toolkit/tree/main/.github/actions/spelling)
+  [expect.txt](https://github.com/keptn/lifecycle-toolkit/tree/main/.github/actions/spelling/expect.txt)
   lists Keptn terms for both documentation and code.
 - We also use the specialized technical dictionaries provided by check-spelling specific domains
   or programming languages such as Kubernetes, Go or HTML.

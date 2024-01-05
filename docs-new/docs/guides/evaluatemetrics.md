@@ -74,7 +74,7 @@ The
 file for our example looks like:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: available-cpus
@@ -85,7 +85,7 @@ spec:
   query: "sum(kube_node_status_capacity{resources`cpu`})"
   fetchIntervalSeconds: 10
 ---
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: availability-slo
@@ -140,7 +140,7 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kube
         "kind": "KeptnMetric",
         "namespace": "podtato-kubectl",
         "name": "keptnmetric-sample",
-        "apiVersion": "metrics.keptn.sh/v1alpha3"
+        "apiVersion": "metrics.keptn.sh/v1beta1"
       },
       "metric": {
         "name": "keptnmetric-sample",
@@ -177,7 +177,7 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/podtato-kube
         "kind": "KeptnMetric",
         "namespace": "keptn-system",
         "name": "keptnmetric-sample",
-        "apiVersion": "metrics.keptn.sh/v1alpha3"
+        "apiVersion": "metrics.keptn.sh/v1beta1"
       },
       "metric": {
         "name": "keptnmetric-sample",
@@ -207,7 +207,7 @@ In other words, the span is
 The default value is set to be `5m` if the `range.interval` is not set.
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: good-metric

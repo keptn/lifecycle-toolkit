@@ -12,7 +12,7 @@ for different metrics at the same time.
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: <metric-name>
@@ -108,7 +108,7 @@ defined as `my-provider` in the `spec.provider.name` field
 of the corresponding `KeptnMetricsProvider` CR.
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: keptnmetric-sample

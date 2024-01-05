@@ -2,7 +2,8 @@
 
 This is the root of the source code for
 the [Keptn documentation](https://lifecycle.keptn.sh/docs/),
-which is part of the [Keptn](https://keptn.sh) website.
+which is part of the
+[Keptn](https://keptn.sh) website.
 
 The Keptn documentation is authored with
 [markdown](https://www.markdownguide.org/basic-syntax/)

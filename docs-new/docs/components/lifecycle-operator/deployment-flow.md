@@ -57,7 +57,7 @@ Only then are the pods bound to a node and deployed.
 If any pre-deployment evaluation or task fails,
 the `KeptnApp` issues an appropriate `*Errored` event
 and the deployment remains pending indefinitely,
-until further changes or external intervention
+until further changes or external intervention.
 If all evaluations and tasks in a phase are successful,
 the `KeptnApp` issues the appropriate `*Succeeded` event
 and initiates the next phase.
@@ -69,6 +69,9 @@ To view these events on your cluster, execute:
 ```shell
 kubectl get events -n <namespace> . 
 ```
+
+**Note:**
+This will display only Kubernetes events, not Cloud Events.
 
 ### Pre-deployment phase
 
@@ -165,22 +168,27 @@ Additional phases/states exist,
 such as those that describe what happens when something fails.
 
 Whenever something in the system happens (we create a new resource, etc.)
-a Kubernetes event is generated.
+an event is generated.
 The following events are defined as part of Keptn
 but they are not part of the deployment flow.
 These include:
 
 ```shell
-CreateEvaluation
 ReconcileEvaluation
 ReconcileTask
+ReconcileWorkload
+CreateEvaluation
 CreateTask
 CreateApp
 CreateAppVersion
 CreateWorkload
 CreateWorkloadVersion
-Completed
+CreateAppCreationRequest
+UpdateWorkload
+DeprecateAppVersion
+AppCompleted
+WorkloadCompleted
 Deprecated
-WorkloadDeployReconcile
-WorkloadDeployReconcileErrored
+Completed
+Cancelled
 ```

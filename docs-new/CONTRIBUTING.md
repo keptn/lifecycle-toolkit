@@ -18,18 +18,18 @@ You can make modifications in various ways:
   this works well for small modifications.
 - Use GitHub Codespaces.
    See
-  [Codespaces](./docs/contribute/general/codespace.md).
+  [Codespaces](https://keptn.sh/latest/docs/contribute/general/codespace/)
 - If you are making significant changes,
   you may find it better to fork and clone the repository
   and make changes using the text editor or IDE of your choice.
-  See [Working with git](docs/contribute/general/git/index.md).
+  See [Working with Git](https://keptn.sh/latest/docs/contribute/general/git/)
 
   You can run the website locally
   to check the rendered documentation.
   and then push your changes to the repository as a pull request.
 
 See the
-[Contributing guide](./docs/contribute/index.md)
+[Contributing guide](https://keptn.sh/latest/docs/contribute/)
 for more information about tools and practices to use
 when contributing to the Keptn project.
 
@@ -53,4 +53,10 @@ is displayed in the logs.
 By default this should be `http://0.0.0.0:8000/`
 
 For more details, see
-[Build documentation locally](docs/contribute/docs/local-building.md).
+[Build documentation locally](https://keptn.sh/latest/docs/contribute/docs/local-building/)
+
+For information about previewing `.md` files
+that are outside the documentation NAV path
+(such as `README.md` and `CONTRIBUTING.md` files), see
+[Building markdown files without Hugo](https://keptn.sh/latest/docs/contribute/docs/local-building/#building-markdown-files-without-hugo).
+

@@ -59,4 +59,3 @@ For information about previewing `.md` files
 that are outside the documentation NAV path
 (such as `README.md` and `CONTRIBUTING.md` files), see
 [Building markdown files without Hugo](https://keptn.sh/latest/docs/contribute/docs/local-building/#building-markdown-files-without-hugo).
-

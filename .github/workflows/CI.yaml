@@ -11,8 +11,11 @@ on:
       - 'epic/*'
     paths-ignore:
       - "docs/**"
+      - "docs-new/**"
       - "**.md"
       - "netlify.toml"
+      - "mkdocs.yml"
+      - ".github/actions/spelling/*"
 
 env:
   GO_VERSION: "~1.20"
@@ -83,13 +86,13 @@ jobs:
           - name: "scheduler"
             folder: "scheduler/"
           - name: "certificate-operator"
-            folder: "klt-cert-manager/"
+            folder: "keptn-cert-manager/"
     steps:
       - name: Check out code
         uses: actions/checkout@v4
 
       - name: Set up Go 1.x
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
@@ -129,7 +132,7 @@ jobs:
           - name: "python-runtime"
             folder: "runtimes/python-runtime/"
           - name: "certificate-operator"
-            folder: "klt-cert-manager/"
+            folder: "keptn-cert-manager/"
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -166,29 +169,26 @@ jobs:
           outputs: type=docker,dest=/tmp/${{ matrix.config.name }}-image.tar
 
       - name: Upload image as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.config.name }}-image.tar
           path: /tmp/${{ matrix.config.name }}-image.tar
 
-      - name: Install controller-gen
-        if: matrix.config.name == 'lifecycle-operator' || matrix.config.name == 'metrics-operator'
-        working-directory: ./${{ matrix.config.folder }}
-        run: make controller-gen
+  image_tag:
+    name: Store tag of the built images
+    needs: prepare_ci_run
+    runs-on: ubuntu-22.04
+    env:
+      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
+    steps:
+      - name: Create empty file to store image tag
+        run: echo "" > tag
 
-      - name: Generate test release manifest
-        if: matrix.config.name != 'deno-runtime' && matrix.config.name != 'python-runtime'
-        working-directory: ./${{ matrix.config.folder }}
-        env:
-          CHART_APPVERSION: dev-${{ env.DATETIME }}
-        run: make release-manifests
-
-      - name: Upload release.yaml for tests
-        if: matrix.config.name != 'deno-runtime' && matrix.config.name != 'python-runtime'
-        uses: actions/upload-artifact@v3
+      - name: Upload tag for tests
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.config.name }}-manifest-test
-          path: ${{ matrix.config.folder }}/config/rendered/release.yaml
+          name: dev-${{ env.DATETIME }}
+          path: tag
 
   component_tests:
     name: Component Tests
@@ -245,10 +245,10 @@ jobs:
           - name: keptn-metrics-operator
             path: metrics-operator/chart
           - name: keptn-cert-manager
-            path: klt-cert-manager/chart
+            path: keptn-cert-manager/chart
     runs-on: ubuntu-22.04
     steps:
-      - name: Check out klt repo
+      - name: Check out keptn repo
         uses: actions/checkout@v4
 
       - name: Check out helm-charts repo
@@ -258,7 +258,19 @@ jobs:
           path: ./helm-charts-repository
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
 
-      - name: Copy chart from klt to helm repo
+      - name: Substitue local paths with official chart URL
+        if: matrix.config.name == 'keptn'
+        working-directory: ./${{ matrix.config.path }}
+        run: |
+          # substitute local charts path with official ones
+          yq -i '.dependencies.[].repository = "https://charts.lifecycle.keptn.sh"' ./Chart.yaml
+          # update Chart.lock files
+          helm repo add keptn https://charts.lifecycle.keptn.sh
+          helm repo update
+          helm dependency update
+          helm dependency build
+
+      - name: Copy chart from keptn to helm repo
         run: rsync -av --delete --exclude='charts/*.tgz' ./${{ matrix.config.path }}/ ./helm-charts-repository/charts/${{ matrix.config.name }}/
 
       - name: Create Pull Request

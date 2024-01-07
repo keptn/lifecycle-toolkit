@@ -1,5 +1,5 @@
 ---
-title: Home
+title: Keptn Kubernetes Orchestration - Supercharge Your Deployments
 cascade:
   - _target:
       path: "/docs/**"
@@ -46,9 +46,9 @@ cascade:
 </div>
 <div class="usecasebox">
 
-## Use Cases
+## Use cases
 
-We extend the K8s APIs with the following Use Cases:
+We extend the K8s APIs with the following use cases:
 
 <div class="row usecases">
 {{% blocks/feature icon="home homeobservability" title="Deployment Observability" %}}
@@ -100,7 +100,7 @@ Gain confidence in your work with pre-/post-deployment checks
 {{% readfile "partials/_index-observability-right.md" %}}
 </div>
 </div>
-<a class="btn -bg-green" href="./docs/intro/#observability">
+<a class="btn -bg-green" href="./docs/core-concepts/#observability">
     Get Started!
 </a>
 </div>
@@ -119,7 +119,7 @@ Gain confidence in your work with pre-/post-deployment checks
 {{% readfile "partials/_index-gather-metrics-right.md" %}}
 </div>
 </div>
-<a class="btn -bg-green" href="./docs/intro/#metrics">
+<a class="btn -bg-green" href="./docs/core-concepts/#metrics">
     Get Started!
 </a>
 </div>
@@ -137,7 +137,7 @@ Gain confidence in your work with pre-/post-deployment checks
 {{% readfile "partials/_index-deployment-checks-right.md" %}}
 </div>
 </div>
-<a class="btn -bg-green" href="./docs/intro/#release-lifecycle-management">
+<a class="btn -bg-green" href="./docs/core-concepts/#release-lifecycle-management">
     Get Started!
 </a>
 </div>

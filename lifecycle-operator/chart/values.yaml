@@ -91,10 +91,10 @@ lifecycleOperator:
     keptnWorkloadVersionControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel Deprecated: Use keptnWorkloadVersionControllerLogLevel instead. Sets the log level of Keptn WorkloadVersion Controller
     keptnWorkloadInstanceControllerLogLevel: "0"
+## @param   lifecycleOperator.env.keptnDoraMetricsPort sets the port for accessing lifecycle metrics in prometheus format
+    keptnDoraMetricsPort: "2222"
 ## @param   lifecycleOperator.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
     optionsControllerLogLevel: "0"
-## @param   lifecycleOperator.env.otelCollectorUrl Sets the URL for the open telemetry collector
-    otelCollectorUrl: otel-collector:4317
 ## @param   lifecycleOperator.env.pythonRunnerImage specify image for python task runtime
     pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.1
   image:
@@ -163,7 +163,7 @@ lifecycleOperatorMetricsService:
   type: ClusterIP
 
 ## @section Global
-## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled
+## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled, allowedNamespaces, deniedNamespaces
 ## @param     kubernetesClusterDomain overrides cluster.local
 kubernetesClusterDomain: cluster.local
 ## @param     annotations add deployment level annotations
@@ -174,6 +174,12 @@ podAnnotations: {}
 schedulingGatesEnabled: false
 ## @param  allowedNamespaces specifies the allowed namespaces for the lifecycle orchestration functionality
 allowedNamespaces: []
+## @param  deniedNamespaces specifies a list of namespaces where the lifecycle orchestration functionality is disabled, ignored if `allowedNamespaces` is set
+deniedNamespaces:
+  - cert-manager
+  - keptn-system
+  - observability
+  - monitoring
 
 # yamllint disable rule:line-length
 ## @section Keptn Scheduler
@@ -233,7 +239,7 @@ scheduler:
       path: /healthz
       port: 10259
       scheme: HTTPS
-## @extra scheduler.resources sets cpu and memory resurces/limits for scheduler
+## @extra scheduler.resources sets cpu and memory resources/limits for scheduler
 ## @skip scheduler.resources.limits.cpu
 ## @skip scheduler.resources.limits.memory
 ## @skip scheduler.resources.requests.cpu

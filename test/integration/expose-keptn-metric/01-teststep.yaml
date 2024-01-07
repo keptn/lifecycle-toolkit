@@ -3,7 +3,7 @@ kind: TestStep
 commands:
   - script: | # generating job and metric based on namespace to avoid interference between runs
       export NAME=$( echo $NAMESPACE | tr -d -)
-      export SVCNAME=$( kubectl get svc -n keptn-lifecycle-toolkit-system -l control-plane=metrics-operator -ojsonpath="{ .items[0].metadata.name }" )
+      export SVCNAME=$( kubectl get svc -n keptn-system -l control-plane=metrics-operator -ojsonpath="{ .items[0].metadata.name }" )
       echo "installing second job pointing to ${SVCNAME}"
       envsubst < job-existing-metric.yaml  | kubectl apply -f -
 

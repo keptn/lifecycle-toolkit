@@ -2,16 +2,16 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: dynatrace
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
 type: Opaque
 data:
   DT_TOKEN: dG9rZW46IG15dG9rZW4=
 ---
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: podtatometric
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
 spec:
   provider:
     name: "dynatrace"
@@ -19,13 +19,14 @@ spec:
   fetchIntervalSeconds: 5
 
 ---
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
 metadata:
   name: dynatrace
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
 spec:
   secretKeyRef:
     key: DT_TOKEN
     name: dynatrace
+  type: dynatrace
   targetServer: "http://localhost:8080"  # string

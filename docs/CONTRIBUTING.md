@@ -1,10 +1,10 @@
 # Contribute to the Keptn documentation
 
 This document provides information about contributing to
-the [Keptn Lifecycle Toolkit documentation](https://lifecycle.keptn.sh/docs/),
+the [Keptn documentation](https://lifecycle.keptn.sh/docs/),
 which is part of the [Keptn](https://keptn.sh) website.
 
-The Keptn Lifecycle Toolkit documentation is authored with
+The Keptn documentation is authored with
 [markdown](https://www.markdownguide.org/basic-syntax/)
 and rendered using the Hugo
 [Docsy](https://www.docsy.dev/) theme.
@@ -20,7 +20,9 @@ to check the rendered documentation
 and then push your changes to the repository as a pull request.
 
 If you need help getting started,
-feel free to ask for help on the `#help-contributing` or `#keptn-docs` channels on the [Keptn Slack](https://keptn.sh/community/#slack).
+feel free to ask for help on the
+[Keptn Slack](https://cloud-native.slack.com/archives/C017GAX90GM)
+channel.
 We were all new to this once and are happy to help you!
 
 ## Guidelines for Contributing

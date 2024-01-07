@@ -4,10 +4,15 @@ on:
     branches:
       - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
+    paths:
+      - "**/chart/**"
   pull_request:
     branches:
       - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
+    paths:
+      - "**/chart/**"
+
 defaults:
   run:
     shell: bash
@@ -25,13 +30,13 @@ jobs:
           - name: keptn-metrics-operator
             path: metrics-operator/chart
           - name: keptn-cert-manager
-            path: klt-cert-manager/chart
+            path: keptn-cert-manager/chart
     steps:
       - name: Check out code
         uses: actions/checkout@v4
 
       - name: Set up Node
-        uses: actions/setup-node@v4.0.0
+        uses: actions/setup-node@v4.0.1
         with:
           node-version: 16
 

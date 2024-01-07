@@ -58,7 +58,6 @@ var _ = Describe("Load", Ordered, func() {
 		for _, app := range apps {
 			// Remember to clean up the cluster after each test
 			common.DeleteAppInCluster(ctx, k8sClient, app)
-			common.ResetSpanRecords(tracer, spanRecorder)
 		}
 	})
 	JustAfterEach(func() { // this is an example of how to add logs to report

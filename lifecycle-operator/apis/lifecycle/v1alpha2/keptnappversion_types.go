@@ -33,42 +33,61 @@ import (
 
 // KeptnAppVersionSpec defines the desired state of KeptnAppVersion
 type KeptnAppVersionSpec struct {
-	KeptnAppSpec    `json:",inline"`
-	AppName         string `json:"appName"`
+	KeptnAppSpec `json:",inline"`
+	AppName      string `json:"appName"`
+	// +optional
 	PreviousVersion string `json:"previousVersion,omitempty"`
 
+	// +optional
 	TraceId map[string]string `json:"traceId,omitempty"`
 }
 
 // KeptnAppVersionStatus defines the observed state of KeptnAppVersion
 type KeptnAppVersionStatus struct {
 	// +kubebuilder:default:=Pending
+	// +optional
 	PreDeploymentStatus common.KeptnState `json:"preDeploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
+	// +optional
 	PostDeploymentStatus common.KeptnState `json:"postDeploymentStatus,omitempty"`
 	// +kubebuilder:default:=Pending
+	// +optional
 	PreDeploymentEvaluationStatus common.KeptnState `json:"preDeploymentEvaluationStatus,omitempty"`
 	// +kubebuilder:default:=Pending
+	// +optional
 	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`
 	// +kubebuilder:default:=Pending
-	WorkloadOverallStatus              common.KeptnState   `json:"workloadOverallStatus,omitempty"`
-	WorkloadStatus                     []WorkloadStatus    `json:"workloadStatus,omitempty"`
-	CurrentPhase                       string              `json:"currentPhase,omitempty"`
-	PreDeploymentTaskStatus            []ItemStatus        `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus           []ItemStatus        `json:"postDeploymentTaskStatus,omitempty"`
-	PreDeploymentEvaluationTaskStatus  []ItemStatus        `json:"preDeploymentEvaluationTaskStatus,omitempty"`
-	PostDeploymentEvaluationTaskStatus []ItemStatus        `json:"postDeploymentEvaluationTaskStatus,omitempty"`
-	PhaseTraceIDs                      common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
+	// +optional
+	WorkloadOverallStatus common.KeptnState `json:"workloadOverallStatus,omitempty"`
+	// +optional
+	WorkloadStatus []WorkloadStatus `json:"workloadStatus,omitempty"`
+	// +optional
+	CurrentPhase string `json:"currentPhase,omitempty"`
+	// +optional
+	PreDeploymentTaskStatus []ItemStatus `json:"preDeploymentTaskStatus,omitempty"`
+	// +optional
+	PostDeploymentTaskStatus []ItemStatus `json:"postDeploymentTaskStatus,omitempty"`
+	// +optional
+	PreDeploymentEvaluationTaskStatus []ItemStatus `json:"preDeploymentEvaluationTaskStatus,omitempty"`
+	// +optional
+	PostDeploymentEvaluationTaskStatus []ItemStatus `json:"postDeploymentEvaluationTaskStatus,omitempty"`
+	// +optional
+	PhaseTraceIDs common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
 	// +kubebuilder:default:=Pending
+	// +optional
 	Status common.KeptnState `json:"status,omitempty"`
 
+	// +optional
 	StartTime metav1.Time `json:"startTime,omitempty"`
-	EndTime   metav1.Time `json:"endTime,omitempty"`
+	// +optional
+	EndTime metav1.Time `json:"endTime,omitempty"`
 }
 
 type WorkloadStatus struct {
+	// +optional
 	Workload KeptnWorkloadRef `json:"workload,omitempty"`
 	// +kubebuilder:default:=Pending
+	// +optional
 	Status common.KeptnState `json:"status,omitempty"`
 }
 
@@ -86,10 +105,13 @@ type WorkloadStatus struct {
 
 // KeptnAppVersion is the Schema for the keptnappversions API
 type KeptnAppVersion struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnAppVersionSpec   `json:"spec,omitempty"`
+	// +optional
+	Spec KeptnAppVersionSpec `json:"spec,omitempty"`
+	// +optional
 	Status KeptnAppVersionStatus `json:"status,omitempty"`
 }
 
@@ -98,6 +120,7 @@ type KeptnAppVersion struct {
 // KeptnAppVersionList contains a list of KeptnAppVersion
 type KeptnAppVersionList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnAppVersion `json:"items"`
 }

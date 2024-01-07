@@ -93,6 +93,9 @@ annotations: {}
 podAnnotations: {}
 ## @param     kubernetesClusterDomain overrides cluster.local
 kubernetesClusterDomain: cluster.local
+customMetricsAPIService:
+## @param   customMetricsAPIService.enabled enable/disable the K8s APIService installation
+  enabled: "true"
 
 ## @section Keptn Metrics Operator controller
 ## @extra   containerSecurityContext Sets security context privileges
@@ -117,8 +120,6 @@ containerSecurityContext:
 env:
 ## @param   env.exposeKeptnMetrics enable metrics exporter
   exposeKeptnMetrics: "true"
-## @param   env.enableKeptnAnalysis  enables/disables the analysis feature
-  enableKeptnAnalysis: "false"
 ## @param   env.metricsControllerLogLevel sets the log level of Metrics Controller
   metricsControllerLogLevel: "0"
 ## @param   env.analysisControllerLogLevel  sets the log level of Analysis Controller

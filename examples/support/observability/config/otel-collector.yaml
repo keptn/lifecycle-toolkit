@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: otel-collector-conf
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
   labels:
     app: opentelemetry
     component: otel-collector-conf
@@ -21,12 +21,12 @@ data:
             - job_name: 'otel-collector'
               scrape_interval: 5s
               static_configs:
-                - targets: ['keptn-klt-lifecycle-operator-metrics-service:2222']
+                - targets: ['keptn-lifecycle-operator-metrics-service:2222']
     processors:
     extensions:
       health_check: {}
     exporters:
-      jaeger:
+      otlp:
         endpoint: "jaeger-collector:14250"
         tls:
           insecure: true
@@ -40,7 +40,7 @@ data:
         traces:
           receivers: [otlp]
           processors: []
-          exporters: [jaeger]
+          exporters: [otlp]
 
         metrics:
           receivers: [otlp,prometheus]
@@ -51,7 +51,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: otel-collector
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
   labels:
     app: opentelemetry
     component: otel-collector
@@ -74,7 +74,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: otel-collector
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
   labels:
     app: opentelemetry
     component: otel-collector
@@ -103,7 +103,7 @@ spec:
           env:
             - name: GOGC
               value: "80"
-          image: otel/opentelemetry-collector:0.88.0
+          image: otel/opentelemetry-collector:0.91.0
           name: otel-collector
           resources:
             limits:
@@ -140,7 +140,7 @@ metadata:
   labels:
     serviceapp: otel-collector
   name: otel-collector
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
 spec:
   endpoints:
     - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -148,7 +148,7 @@ spec:
       port: metrics
   namespaceSelector:
     matchNames:
-      - keptn-lifecycle-toolkit-system
+      - keptn-system
   selector:
     matchLabels:
       app: opentelemetry

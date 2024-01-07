@@ -35,8 +35,10 @@ type KeptnWorkloadVersionSpec struct {
 	// WorkloadName is the name of the KeptnWorkload.
 	WorkloadName string `json:"workloadName"`
 	// PreviousVersion is the version of the KeptnWorkload that has been deployed prior to this version.
+	// +optional
 	PreviousVersion string `json:"previousVersion,omitempty"`
 	// TraceId contains the OpenTelemetry trace ID.
+	// +optional
 	TraceId map[string]string `json:"traceId,omitempty"`
 }
 
@@ -44,30 +46,41 @@ type KeptnWorkloadVersionSpec struct {
 type KeptnWorkloadVersionStatus struct {
 	// PreDeploymentStatus indicates the current status of the KeptnWorkloadVersion's PreDeployment phase.
 	// +kubebuilder:default:=Pending
+	// +optional
 	PreDeploymentStatus common.KeptnState `json:"preDeploymentStatus,omitempty"`
 	// DeploymentStatus indicates the current status of the KeptnWorkloadVersion's Deployment phase.
 	// +kubebuilder:default:=Pending
+	// +optional
 	DeploymentStatus common.KeptnState `json:"deploymentStatus,omitempty"`
 	// PreDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadVersion's PreDeploymentEvaluation phase.
 	// +kubebuilder:default:=Pending
+	// +optional
 	PreDeploymentEvaluationStatus common.KeptnState `json:"preDeploymentEvaluationStatus,omitempty"`
 	// PostDeploymentEvaluationStatus indicates the current status of the KeptnWorkloadVersion's PostDeploymentEvaluation phase.
 	// +kubebuilder:default:=Pending
+	// +optional
 	PostDeploymentEvaluationStatus common.KeptnState `json:"postDeploymentEvaluationStatus,omitempty"`
 	// PostDeploymentStatus indicates the current status of the KeptnWorkloadVersion's PostDeployment phase.
 	// +kubebuilder:default:=Pending
+	// +optional
 	PostDeploymentStatus common.KeptnState `json:"postDeploymentStatus,omitempty"`
 	// PreDeploymentTaskStatus indicates the current state of each preDeploymentTask of the KeptnWorkloadVersion.
+	// +optional
 	PreDeploymentTaskStatus []v1alpha3.ItemStatus `json:"preDeploymentTaskStatus,omitempty"`
 	// PostDeploymentTaskStatus indicates the current state of each postDeploymentTask of the KeptnWorkloadVersion.
+	// +optional
 	PostDeploymentTaskStatus []v1alpha3.ItemStatus `json:"postDeploymentTaskStatus,omitempty"`
 	// PreDeploymentEvaluationTaskStatus indicates the current state of each preDeploymentEvaluation of the KeptnWorkloadVersion.
+	// +optional
 	PreDeploymentEvaluationTaskStatus []v1alpha3.ItemStatus `json:"preDeploymentEvaluationTaskStatus,omitempty"`
 	// PostDeploymentEvaluationTaskStatus indicates the current state of each postDeploymentEvaluation of the KeptnWorkloadVersion.
+	// +optional
 	PostDeploymentEvaluationTaskStatus []v1alpha3.ItemStatus `json:"postDeploymentEvaluationTaskStatus,omitempty"`
 	// StartTime represents the time at which the deployment of the KeptnWorkloadVersion started.
+	// +optional
 	StartTime metav1.Time `json:"startTime,omitempty"`
 	// EndTime represents the time at which the deployment of the KeptnWorkloadVersion finished.
+	// +optional
 	EndTime metav1.Time `json:"endTime,omitempty"`
 	// CurrentPhase indicates the current phase of the KeptnWorkloadVersion. This can be:
 	// - PreDeploymentTasks
@@ -75,11 +88,14 @@ type KeptnWorkloadVersionStatus struct {
 	// - Deployment
 	// - PostDeploymentTasks
 	// - PostDeploymentEvaluations
+	// +optional
 	CurrentPhase string `json:"currentPhase,omitempty"`
 	// PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadVersion
+	// +optional
 	PhaseTraceIDs common.PhaseTraceID `json:"phaseTraceIDs,omitempty"`
 	// Status represents the overall status of the KeptnWorkloadVersion.
 	// +kubebuilder:default:=Pending
+	// +optional
 	Status common.KeptnState `json:"status,omitempty"`
 }
 
@@ -99,12 +115,15 @@ type KeptnWorkloadVersionStatus struct {
 
 // KeptnWorkloadVersion is the Schema for the keptnworkloadversions API
 type KeptnWorkloadVersion struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// Spec describes the desired state of the KeptnWorkloadVersion.
+	// +optional
 	Spec KeptnWorkloadVersionSpec `json:"spec,omitempty"`
 	// Status describes the current state of the KeptnWorkloadVersion.
+	// +optional
 	Status KeptnWorkloadVersionStatus `json:"status,omitempty"`
 }
 
@@ -113,6 +132,7 @@ type KeptnWorkloadVersion struct {
 // KeptnWorkloadVersionList contains a list of KeptnWorkloadVersion
 type KeptnWorkloadVersionList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnWorkloadVersion `json:"items"`
 }

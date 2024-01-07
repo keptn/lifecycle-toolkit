@@ -5,7 +5,7 @@ weight: 50
 ---
 
 The Release Lifecycle Management tools run
-pre- and post-deployment tasks and checks
+pre/post-deployment tasks and checks
 for your existing cloud-native deployments
 to make them more robust.
 This tutorial introduces these tools.
@@ -19,11 +19,12 @@ exercise.
 
 When Keptn is successfully monitoring your deployments, it can also run arbitrary tasks and SLO evaluations:
 
-- pre-deployment (before the pod is scheduled) and
+- pre-deployment (before the pod is scheduled)
 - post-deployment (after the post is scheduled)
 
-> Pre and post deployments can also run on a KeptnApp level.
-> See [annotations to KeptnApp](../implementing/integrate/_index.md#annotations-to-keptnapp)
+> Pre/post deployments can also run on a KeptnApp level.
+  See
+  [Annotations to KeptnApp](../guides/tasks.md/#annotations-to-keptnapp).
 
 ## Prerequisites: Deploy webhook sink
 
@@ -140,7 +141,7 @@ The webhook sync should show this:
 
 ![webhook sync](../assets/webhook.site.3.png)
 
-Incidentally, this is exactly how you can use Keptn with [applications deployed outside of Kubernetes](../implementing/tasks-non-k8s-apps.md).
+Incidentally, this is exactly how you can use Keptn with [applications deployed outside of Kubernetes](../use-cases/non-k8s.md).
 
 > Note: If you want to trigger this multiple times, you must change the KeptnTask name.
 >
@@ -211,15 +212,17 @@ spec:
 
 ### Pre-deployment Tasks
 
-Keptn Tasks can also be executed pre-deployment (before hte pods are scheduled).
+Keptn Tasks can also be executed pre-deployment (before the pods are scheduled).
 Do this by using the `keptn.sh/pre-deployment-tasks` label.
 
 > Note: If a pre-deployment task fails, the pod will remain in a Pending state.
 
 ## Further Information
 
-There is a lot more you can do with KeptnTasks.
-See [pre and post deployment checks page](../implementing/integrate#pre--and-post-deployment-checks) to find out more.
+You can do a lot more with KeptnTasks.
+See the
+[Deployment tasks](../guides/tasks.md)
+guide for more information.
 
 ## What's next?
 

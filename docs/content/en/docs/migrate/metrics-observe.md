@@ -7,23 +7,23 @@ weight: 40
 The SLIs and SLOs used for Keptn v1 quality gates can be ported to
 appropriate Keptn facilities:
 
-* [Keptn Metrics](../implementing/evaluatemetrics.md/)
+* [Keptn Metrics](../guides/evaluatemetrics.md/)
   allow you to define and view metrics
   from multiple data sources in your Kubernetes cluster.
 * Use
-  [Keptn Evaluations](../implementing/evaluations.md)
+  [Keptn Evaluations](../guides/evaluations.md)
   to do a simple evaluation of the metrics data you capture.
   To implement this, transfer the information from the Keptn v1
-  [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+  [sli.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
   and
-  [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+  [slo.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
   files into
-  [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
+  [KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)
   resources.
 
 * Keptn v1 calculations that use weighting and scoring
   can be converted to use the
-  [Keptn Analysis](../implementing/slo)
+  [Keptn Analysis](../guides/slo.md)
   feature.
   Tools are provided to help with this conversion;
   see below.
@@ -31,8 +31,8 @@ appropriate Keptn facilities:
 By default, Keptn includes additional observability features
 that are not included in Keptn v1:
 
-* [DORA metrics](../implementing/dora)
-* [OpenTelemetry observability](../implementing/otel.md)
+* [DORA metrics](../guides/dora.md)
+* [OpenTelemetry observability](../guides/otel.md)
 
 ## Paradigm changes
 
@@ -43,38 +43,38 @@ differs from that of Keptn v1 quality gates:
   using Helm charts and standard practices.
 * Keptn supports multiple instances of multiple data providers.
 * You must populate a
-  [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md) resource
+  [KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md) resource
   for each instance of each data provider.
   This resource specifies the URL and namespace for the data provider
   and gives it a unique `name` that can be referenced
   for Keptn Metrics (which are also used for Evaluations) and Analysis.
 * Queries and objectives that are specified in your Keptn v1
-  [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+  [sli.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
   and
-  [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+  [slo.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
   files are transferred/converted into Keptn resources.
 
 ## Transfer Keptn v1 SLIs/SLOs to evaluation resources
 
 Simple comparisons of data can be implemented as
-[Keptn Evaluations](../implementing/evaluations.md).
+[Keptn Evaluations](../guides/evaluations.md).
 To implement this:
 
 * Transfer the information from the Keptn v1
-  [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+  [sli.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
   files into
-  [KeptnMetric](../yaml-crd-ref/metric.md) resources
+  [KeptnMetric](../reference/crd-reference/metric.md) resources
 * Transfer the information from the Keptn v1
-  [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+  [slo.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
   files into
-  [KeptnEvaluationDefinition](../yaml-crd-ref/evaluationdefinition.md)
+  [KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)
   resources.
 
 ## Convert Keptn v1 SLIs/SLOs to Analysis resources
 
 The Keptn Analysis feature provides capabilities
 similar to those of the Keptn v1
-[Quality Gates](https://keptn.sh/docs/1.0.x/define/quality-gates/)
+[Quality Gates](https://v1.keptn.sh/docs/1.0.x/define/quality-gates/)
 feature
 but it uses Kubernetes resources to define the analysis to be done
 rather than the configuration files used for Keptn v1.
@@ -94,13 +94,15 @@ The process is:
 1. Convert the SLIs to `AnalysisValueTemplates` resources
 
    The following command sequence converts a Keptn v1
-   [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+   [sli.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
    file to a Keptn
-   [AnalysisValueTemplate](../yaml-crd-ref/analysisvaluetemplate.md)
+   [AnalysisValueTemplate](../reference/crd-reference/analysisvaluetemplate.md)
    resource:
 
+   <!---x-release-please-start-version-->
+
    ```shell
-   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.2
+   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
    PATH_TO_SLI=sli.yaml
    KEPTN_PROVIDER_NAME=my-prometheus-provider
    KEPTN_PROVIDER_NAMESPACE=keptn-lifecycle-poc
@@ -110,6 +112,8 @@ The process is:
      --keptn-provider-name=$KEPTN_PROVIDER_NAME \
      --keptn-provider-namespace=$KEPTN_PROVIDER_NAMESPACE > analysis-value-template.yaml
    ```
+
+   <!---x-release-please-end-->
 
    This command creates an `AnalysisValueTemplate` resource
    for each SLI that is defined in the `sli.yaml` file.
@@ -137,14 +141,16 @@ The process is:
 1. Convert the SLO to an `AnalysisDefinition` resource:
 
    The process of converting the Keptn v1
-   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+   [slo.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
    files to
-   [AnalysisDefinition](../yaml-crd-ref/analysisdefinition.md)
+   [AnalysisDefinition](../reference/crd-reference/analysisdefinition.md)
    resources is similar to the process of converting the SLIs.
    Use the following command sequence:
 
+   <!---x-release-please-start-version-->
+
    ```shell
-   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.2
+   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
    PATH_TO_SLO=slo.yaml
    ANALYSIS_VALUE_TEMPLATE_NAMESPACE=keptn-lifecycle-poc
    ANALYSIS_DEFINITION_NAME=my-project-ad
@@ -154,6 +160,8 @@ The process is:
      --analysis-value-template-namespace=$ANALYSIS_VALUE_TEMPLATE_NAMESPACE \
      --analysis-definition-name=$ANALYSIS_DEFINITION_NAME > analysis-definition.yaml
    ```
+
+   <!---x-release-please-end-->
 
    The result of this command yields an `AnalysisDefinition` resource
    that is defined in a file called `analysis-definition.yaml`.
@@ -167,7 +175,7 @@ The process is:
 
 1. Create a `KeptnMetricsProvider` resource
 
-   A [KeptnMetricsProvider](../yaml-crd-ref/metricsprovider.md)
+   A [KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
    resource configures the data provider from which the values
    for the `AnalysisValueTemplate` resource are fetched.
    This same resource is used for any metrics and evaluations you are using.
@@ -187,7 +195,7 @@ The process is:
 
    Create a yaml file (such as `analysis-instance.yaml`)
    to populate the
-   [Analysis](../yaml-crd-ref/analysis.md)
+   [Analysis](../reference/crd-reference/analysis.md)
    resource that defines the specific analysis you want to run.
    Specify the following:
 
@@ -240,7 +248,7 @@ The process is:
    ```yaml
    apiVersion: v1
    items:
-   - apiVersion: metrics.keptn.sh/v1alpha3
+   - apiVersion: metrics.keptn.sh/v1beta1
      kind: Analysis
      metadata:
        creationTimestamp: "2023-09-14T11:00:01Z"
@@ -254,7 +262,7 @@ The process is:
          name: my-project-ad
          namespace: keptn-lifecycle-poc
        args:
-         ns: keptn-lifecycle-toolkit-system
+         ns: keptn-system
          project: my-project
        timeframe:
          from: "2023-09-14T11:20:19Z"
@@ -296,7 +304,7 @@ to insert a variable as a placeholder
 for the service identifier in the prometheus query:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisValueTemplate
 metadata:
   creationTimestamp: null
@@ -313,7 +321,7 @@ the name of the service can be passed to the analysis
 using the `spec.args` property from the `Analysis` resource:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: Analysis
 metadata:
   name: analysis-sample-1
@@ -331,4 +339,3 @@ spec:
 
 This way, you can use the same `AnalysisDefinition`
 and `AnalysisValueTemplates` for multiple services within the same project.
-~

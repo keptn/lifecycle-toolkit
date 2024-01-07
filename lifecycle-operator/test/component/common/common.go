@@ -88,7 +88,7 @@ func ResetSpanRecords(tp *otelsdk.TracerProvider, spanRecorder *sdktest.SpanReco
 	tp.RegisterSpanProcessor(spanRecorder)
 }
 
-func MakeKLTDefaultNamespace(k8sClient client.Client, name string) *v1.Namespace {
+func MakeKeptnDefaultNamespace(k8sClient client.Client, name string) *v1.Namespace {
 	ns := &v1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: name,

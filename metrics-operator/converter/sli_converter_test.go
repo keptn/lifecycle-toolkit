@@ -3,7 +3,7 @@ package converter
 import (
 	"testing"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -15,7 +15,7 @@ indicators:
   response_time_p95: "builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:$PROJECT),tag(keptn_stage:$STAGE),tag(keptn_service:$SERVICE),tag(keptn_deployment:$DEPLOYMENT)"`
 
 const expectedOutput1 = `---
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisValueTemplate
 metadata:
   creationTimestamp: null
@@ -28,7 +28,7 @@ spec:
 `
 
 const expectedOutput2 = `---
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisValueTemplate
 metadata:
   creationTimestamp: null
@@ -59,7 +59,7 @@ func TestConvertMapToAnalysisValueTemplate(t *testing.T) {
 	out1 := &metricsapi.AnalysisValueTemplate{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AnalysisValueTemplate",
-			APIVersion: "metrics.keptn.sh/v1alpha3",
+			APIVersion: "metrics.keptn.sh/v1beta1",
 		},
 		ObjectMeta: v1.ObjectMeta{
 			Name: "key1",
@@ -75,7 +75,7 @@ func TestConvertMapToAnalysisValueTemplate(t *testing.T) {
 	out2 := &metricsapi.AnalysisValueTemplate{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AnalysisValueTemplate",
-			APIVersion: "metrics.keptn.sh/v1alpha3",
+			APIVersion: "metrics.keptn.sh/v1beta1",
 		},
 		ObjectMeta: v1.ObjectMeta{
 			Name: "key2",

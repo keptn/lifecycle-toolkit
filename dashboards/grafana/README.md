@@ -1,6 +1,6 @@
 # Grafana Dashboards for the Lifecycle Toolkit
 
-This folder contains the Grafana dashboards for the Keptn Lifecycle Toolkit.
+This folder contains the Grafana dashboards for the Keptn.
 
 ## Installing the dashboards
 
@@ -29,11 +29,28 @@ You can import the default dashboards by running:
 make apply-configmaps
 ```
 
-If you prefere to prepare the dashboards for the examples and importing them as json you can use:
+If you prefer to prepare the dashboards for the examples and importing them as json you can use:
 
 ```shell
 make import-json
 ```
 
-<!-- markdownlint-disable-next-line MD033 MD013 -->
-<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />
+---
+
+## Guide to Custom Dashboards with Grafana
+
+This section provides links to the official Grafana documentation for creating and modifying custom dashboards using Grafana.
+
+## How to Create Custom Dashboards
+
+Craft personalized Grafana dashboards tailored to your specific needs by exploring the [official Grafana documentation](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/create-dashboard/).
+Discover detailed steps, best practices, and tips for creating visualizations, adding panels,
+utilizing various data sources, and more.
+
+## Modifying the Dashboards
+
+Refine and adapt visualizations in existing Grafana dashboards to meet evolving requirements.
+Visit the
+[relevant sections](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/modify-dashboard-settings/)
+of the Grafana documentation to gain insights on adjusting, enhancing, or reconfiguring dashboards efficiently.
+Learn about editing panels, incorporating new data sources, applying filters, and optimizing dashboard layouts.

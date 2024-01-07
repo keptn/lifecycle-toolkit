@@ -4,7 +4,7 @@
 package fake
 
 import (
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"sync"
 )
@@ -15,7 +15,7 @@ import (
 //
 //		// make and configure a mocked analysis.IOperatorEvaluator
 //		mockedIOperatorEvaluator := &IOperatorEvaluatorMock{
-//			EvaluateFunc: func(val float64, criteria *v1alpha3.Operator) types.OperatorResult {
+//			EvaluateFunc: func(val float64, criteria *metricsapi.Operator) types.OperatorResult {
 //				panic("mock out the Evaluate method")
 //			},
 //		}
@@ -26,7 +26,7 @@ import (
 //	}
 type IOperatorEvaluatorMock struct {
 	// EvaluateFunc mocks the Evaluate method.
-	EvaluateFunc func(val float64, criteria *v1alpha3.Operator) types.OperatorResult
+	EvaluateFunc func(val float64, criteria *metricsapi.Operator) types.OperatorResult
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -35,20 +35,20 @@ type IOperatorEvaluatorMock struct {
 			// Val is the val argument value.
 			Val float64
 			// Criteria is the criteria argument value.
-			Criteria *v1alpha3.Operator
+			Criteria *metricsapi.Operator
 		}
 	}
 	lockEvaluate sync.RWMutex
 }
 
 // Evaluate calls EvaluateFunc.
-func (mock *IOperatorEvaluatorMock) Evaluate(val float64, criteria *v1alpha3.Operator) types.OperatorResult {
+func (mock *IOperatorEvaluatorMock) Evaluate(val float64, criteria *metricsapi.Operator) types.OperatorResult {
 	if mock.EvaluateFunc == nil {
 		panic("IOperatorEvaluatorMock.EvaluateFunc: method is nil but IOperatorEvaluator.Evaluate was just called")
 	}
 	callInfo := struct {
 		Val      float64
-		Criteria *v1alpha3.Operator
+		Criteria *metricsapi.Operator
 	}{
 		Val:      val,
 		Criteria: criteria,
@@ -65,11 +65,11 @@ func (mock *IOperatorEvaluatorMock) Evaluate(val float64, criteria *v1alpha3.Ope
 //	len(mockedIOperatorEvaluator.EvaluateCalls())
 func (mock *IOperatorEvaluatorMock) EvaluateCalls() []struct {
 	Val      float64
-	Criteria *v1alpha3.Operator
+	Criteria *metricsapi.Operator
 } {
 	var calls []struct {
 		Val      float64
-		Criteria *v1alpha3.Operator
+		Criteria *metricsapi.Operator
 	}
 	mock.lockEvaluate.RLock()
 	calls = mock.calls.Evaluate

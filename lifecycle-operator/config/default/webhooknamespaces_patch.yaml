@@ -4,7 +4,7 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: lifecycle-mutating-webhook-configuration
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
 # Add an exclusion rule for the Mutating Webhook since the lifecycle-operator pod will not be able to start since it's waiting for
 # itself otherwise control-plane: controller-manager
 webhooks:
@@ -22,6 +22,6 @@ webhooks:
             - "kube-public"
             - "kube-node-lease"
             - "cert-manager"
-            - "keptn-lifecycle-toolkit-system"
+            - "keptn-system"
             - "observability"
             - "monitoring"

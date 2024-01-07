@@ -12,7 +12,7 @@ import (
 
 	"github.com/benbjohnson/clock"
 	"github.com/go-logr/logr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace/client/fake"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
@@ -679,7 +679,7 @@ func TestGetDQLCannotPostQuery_EvaluateQuery(t *testing.T) {
 
 func TestDQLInitClientWithSecret_EvaluateQuery(t *testing.T) {
 
-	namespace := "keptn-lifecycle-toolkit-system"
+	namespace := "keptn-system"
 
 	mySecret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
@@ -1047,7 +1047,7 @@ func TestGetDQLCannotPostQuery_EvaluateQueryForStep(t *testing.T) {
 
 func TestDQLInitClientWithSecret_EvaluateQueryForStep(t *testing.T) {
 
-	namespace := "keptn-lifecycle-toolkit-system"
+	namespace := "keptn-system"
 
 	mySecret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{

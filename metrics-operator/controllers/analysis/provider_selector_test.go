@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/analysis/fake"
 	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	fake2 "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
@@ -87,6 +87,17 @@ func TestProvidersPool(t *testing.T) {
 		},
 	}
 
+	unsupportedProvider := metricsapi.KeptnMetricsProvider{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-provider",
+			Namespace: "default",
+		},
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			Type:         "foo",
+			TargetServer: "localhost:2000",
+		},
+	}
+
 	template2 := metricsapi.AnalysisValueTemplate{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-template",
@@ -158,6 +169,12 @@ func TestProvidersPool(t *testing.T) {
 			expectedErr: "keptnmetricsproviders.metrics.keptn.sh \"my-provider\" not found",
 			analysisDef: analysisDef,
 			mockClient:  fake2.NewClient(&analysis, &analysisDef, &template),
+		},
+		{
+			name:        "Unsupported Provider",
+			expectedErr: "unsupported provider: foo",
+			analysisDef: analysisDef,
+			mockClient:  fake2.NewClient(&unsupportedProvider, &analysis, &analysisDef, &template),
 		},
 		{
 			name:        "Success",
@@ -261,4 +278,54 @@ func TestProvidersPool_StartProviders(t *testing.T) {
 	// Stop the providers after testing
 	pool.StopProviders()
 
+}
+
+func TestProvidersPool_isProviderTypeRegistered(t *testing.T) {
+	type fields struct {
+		providers map[string]chan metricstypes.ProviderRequest
+	}
+	type args struct {
+		providerType string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		{
+			name: "supported provider",
+			fields: fields{
+				providers: map[string]chan metricstypes.ProviderRequest{
+					"mock-provider": make(chan metricstypes.ProviderRequest),
+				},
+			},
+			args: args{
+				providerType: "mock-provider",
+			},
+			want: true,
+		},
+		{
+			name: "unsupported provider",
+			fields: fields{
+				providers: map[string]chan metricstypes.ProviderRequest{
+					"mock-provider": make(chan metricstypes.ProviderRequest),
+				},
+			},
+			args: args{
+				providerType: "sock-provider",
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ps := ProvidersPool{
+				providers: tt.fields.providers,
+			}
+			if got := ps.isProviderTypeRegistered(tt.args.providerType); got != tt.want {
+				t.Errorf("isProviderTypeRegistered() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }

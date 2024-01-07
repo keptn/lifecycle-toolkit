@@ -15,4 +15,7 @@ stringData:
     
     [feature_toggles]
     traceToMetrics = true
+    
+    [dashboards]
+    default_home_dashboard_path = /grafana-dashboard-definitions/0/keptn-workloads-dora/grafana_dashboard_workloads.json
 type: Opaque

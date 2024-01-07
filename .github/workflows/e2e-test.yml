@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup cluster
-        uses: ./.github/actions/deploy-klt-on-cluster
+        uses: ./.github/actions/deploy-keptn-on-cluster
         with:
           runtime_tag: ${{ inputs.runtime_tag }}
 
@@ -43,7 +43,7 @@ jobs:
 
       - name: Upload ${{ matrix.config.name }} cluster logs
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: logs-e2e-tests-${{ matrix.config.name }}
           path: .github/scripts/logs

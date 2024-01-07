@@ -6,9 +6,9 @@ import (
 
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
-	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
 	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
@@ -29,7 +29,7 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 	cm := makeConfigMap(cmName, namespace)
 
 	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, namespace, cmName)
-	fakeClient := fakeclient.NewClient(cm, taskDefinition)
+	fakeClient := testcommon.NewTestClient(cm, taskDefinition)
 
 	taskDefinition.Status.Function.ConfigMap = cmName
 	err := fakeClient.Status().Update(context.TODO(), taskDefinition)
@@ -37,7 +37,7 @@ func TestKeptnTaskReconciler_createJob(t *testing.T) {
 
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
 	}
@@ -94,7 +94,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	cm := makeConfigMap(cmName, namespace)
 	taskDefinition := makeTaskDefinitionWithConfigmapRef(taskDefinitionName, KeptnNamespace, cmName)
 
-	fakeClient := fakeclient.NewClient(cm, taskDefinition)
+	fakeClient := testcommon.NewTestClient(cm, taskDefinition)
 
 	taskDefinition.Status.Function.ConfigMap = cmName
 	err := fakeClient.Status().Update(context.TODO(), taskDefinition)
@@ -103,7 +103,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	config.Instance().SetDefaultNamespace(KeptnNamespace)
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
 	}
@@ -173,7 +173,7 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 
 	r := &KeptnTaskReconciler{
 		Client:      fakeClient,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         ctrl.Log.WithName("task-controller"),
 		Scheme:      fakeClient.Scheme(),
 	}
@@ -199,6 +199,72 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 	r.updateTaskStatus(job, task)
 
 	require.Equal(t, apicommon.StateSucceeded, task.Status.Status)
+}
+
+func TestKeptnTaskReconciler_generateJob(t *testing.T) {
+	namespace := "default"
+	taskName := "my-task"
+	svcAccname := "svcAccname"
+	taskDefinitionName := "my-task-definition"
+	token := true
+	var ttlSecondsAfterFinished int32 = 100
+	imagePullSecret := []v1.LocalObjectReference{{
+		Name: "my-docker-secret",
+	}}
+
+	taskDefinition := makeTaskDefinitionWithServiceAccount(taskDefinitionName, namespace, svcAccname, &token, &ttlSecondsAfterFinished, imagePullSecret)
+	taskDefinition.Spec.ServiceAccount.Name = svcAccname
+	fakeClient := testcommon.NewTestClient(taskDefinition)
+	task := makeTask(taskName, namespace, taskDefinitionName)
+
+	r := &KeptnTaskReconciler{
+		Client:      fakeClient,
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
+		Log:         ctrl.Log.WithName("task-controller"),
+		Scheme:      fakeClient.Scheme(),
+	}
+
+	err := fakeClient.Create(context.TODO(), task)
+	require.Nil(t, err)
+
+	ctx := context.TODO()
+	request := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: namespace,
+		},
+	}
+
+	errTask := fakeClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: namespace,
+		Name:      task.Name,
+	}, task)
+	require.Nil(t, errTask)
+
+	errTaskDefinition := fakeClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: namespace,
+		Name:      taskDefinition.Name,
+	}, taskDefinition)
+	require.Nil(t, errTaskDefinition)
+
+	resultingJob, err := r.generateJob(ctx, task, taskDefinition, request)
+	require.Nil(t, err)
+	require.NotNil(t, resultingJob, "generateJob function return a valid Job")
+
+	require.NotNil(t, resultingJob.Spec.Template.Spec.Containers)
+	require.Equal(t, resultingJob.Spec.Template.Spec.ImagePullSecrets[0].Name, imagePullSecret[0].Name, "ImagePullSecret is not assigned correctly")
+	require.Equal(t, resultingJob.Spec.Template.Spec.ServiceAccountName, svcAccname)
+	require.Equal(t, resultingJob.Spec.Template.Spec.AutomountServiceAccountToken, &token)
+	require.Equal(t, resultingJob.Spec.TTLSecondsAfterFinished, &ttlSecondsAfterFinished)
+	require.Equal(t, map[string]string{
+		"label1": "label2",
+	}, resultingJob.Labels)
+	require.Equal(t, map[string]string{
+		"annotation1":        "annotation2",
+		"keptn.sh/app":       "my-app",
+		"keptn.sh/task-name": "my-task",
+		"keptn.sh/version":   "",
+		"keptn.sh/workload":  "my-workload",
+	}, resultingJob.Annotations)
 }
 
 func makeJob(name, namespace string, status batchv1.JobStatus) *batchv1.Job {
@@ -270,6 +336,34 @@ func makeConfigMap(name, namespace string) *v1.ConfigMap {
 		},
 		Data: map[string]string{
 			"code": "console.log('hello');",
+		},
+	}
+}
+
+func makeTaskDefinitionWithServiceAccount(name, namespace, serviceAccountName string, token *bool, ttlSeconds *int32, imagePullSecrets []v1.LocalObjectReference) *klcv1alpha3.KeptnTaskDefinition {
+	return &klcv1alpha3.KeptnTaskDefinition{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: namespace,
+			Labels: map[string]string{
+				"label1": "label2",
+			},
+			Annotations: map[string]string{
+				"annotation1": "annotation2",
+			},
+		},
+		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
+			Container: &klcv1alpha3.ContainerSpec{
+				Container: &v1.Container{},
+			},
+			ImagePullSecrets: imagePullSecrets,
+			ServiceAccount: &klcv1alpha3.ServiceAccountSpec{
+				Name: serviceAccountName,
+			},
+			AutomountServiceAccountToken: &klcv1alpha3.AutomountServiceAccountTokenSpec{
+				Type: token,
+			},
+			TTLSecondsAfterFinished: ttlSeconds,
 		},
 	}
 }

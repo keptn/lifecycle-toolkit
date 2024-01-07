@@ -1,0 +1,34 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: python-inline
+spec:
+  python:
+    inlineRef:
+      code: |
+        import sys
+        import json
+        import yaml
+        print("Hello, World!")
+        dct = yaml.safe_load('''
+        name: John
+        age: 30
+        automobiles:
+          - brand: Honda
+            type: Odyssey
+            year: 2018
+          - brand: Toyota
+            type: Sienna
+            year: 2015
+        ''')
+        assert dct['name'] == 'John'
+        assert dct['age'] == 30
+        assert len(dct["automobiles"]) == 2
+        assert dct["automobiles"][0]["brand"] == "Honda"
+        assert dct["automobiles"][1]["year"] == 2015
+        # some JSON:
+        x =  '{ "name":"John", "age":30, "city":"New York"}'
+        # parse x:
+        y = json.loads(x)
+        # the result is a Python dictionary:
+        print(y["age"])

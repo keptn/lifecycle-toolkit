@@ -10,8 +10,8 @@ import (
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator/handlers"
 	fakehandler "github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator/handlers/fake"
 	"github.com/stretchr/testify/require"
@@ -36,7 +36,7 @@ const testKeptnWorkload = "my-workload-my-workload"
 const testDeployment = "my-deployment"
 
 func TestPodMutatingWebhookHandleDisabledNamespace(t *testing.T) {
-	fakeClient := fakeclient.NewClient(&corev1.Namespace{
+	fakeClient := testcommon.NewTestClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: testNamespace,
 		},
@@ -47,7 +47,7 @@ func TestPodMutatingWebhookHandleDisabledNamespace(t *testing.T) {
 	wh := &PodMutatingWebhook{
 		Client:      fakeClient,
 		Decoder:     decoder,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         testr.New(t),
 	}
 
@@ -77,7 +77,7 @@ func TestPodMutatingWebhookHandleDisabledNamespace(t *testing.T) {
 }
 
 func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
-	fakeClient := fakeclient.NewClient(&corev1.Namespace{
+	fakeClient := testcommon.NewTestClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: testNamespace,
 			Annotations: map[string]string{
@@ -91,7 +91,7 @@ func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
 	wh := &PodMutatingWebhook{
 		Client:      fakeClient,
 		Decoder:     decoder,
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:         testr.New(t),
 	}
 
@@ -131,7 +131,7 @@ func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
 	require.NotNil(t, resp)
 	require.True(t, resp.Allowed)
 
-	// if we get an unsupported owner for the pod, we expect not to have any KLT resources to have been created
+	// if we get an unsupported owner for the pod, we expect not to have any Keptn resources to have been created
 	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
 
 	err := fakeClient.Get(context.Background(), types.NamespacedName{
@@ -154,7 +154,7 @@ func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
 }
 
 func TestPodMutatingWebhookHandleSingleService(t *testing.T) {
-	fakeClient := fakeclient.NewClient(&corev1.Namespace{
+	fakeClient := testcommon.NewTestClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: testNamespace,
 			Annotations: map[string]string{
@@ -166,7 +166,7 @@ func TestPodMutatingWebhookHandleSingleService(t *testing.T) {
 	decoder := admission.NewDecoder(runtime.NewScheme())
 	log := testr.New(t)
 
-	wh := NewPodMutator(fakeClient, decoder, controllercommon.NewK8sSender(record.NewFakeRecorder(100)), log, false)
+	wh := NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), log, false)
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
@@ -272,7 +272,7 @@ func TestPodMutatingWebhookHandleSchedulingGatesGateRemoved(t *testing.T) {
 			},
 		},
 	}
-	fakeClient := fakeclient.NewClient(ns, pod)
+	fakeClient := testcommon.NewTestClient(ns, pod)
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
@@ -280,7 +280,7 @@ func TestPodMutatingWebhookHandleSchedulingGatesGateRemoved(t *testing.T) {
 		SchedulingGatesEnabled: true,
 		Client:                 fakeClient,
 		Decoder:                decoder,
-		EventSender:            controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender:            eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Log:                    testr.New(t),
 	}
 
@@ -332,12 +332,12 @@ func TestPodMutatingWebhookHandleSchedulingGates(t *testing.T) {
 			},
 		},
 	}
-	fakeClient := fakeclient.NewClient(ns, pod)
+	fakeClient := testcommon.NewTestClient(ns, pod)
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh :=
-		NewPodMutator(fakeClient, decoder, controllercommon.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), true)
+		NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), true)
 
 	request := generateRequest(pod, t)
 
@@ -389,7 +389,7 @@ func TestPodMutatingWebhookHandleSchedulingGates(t *testing.T) {
 }
 
 func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t *testing.T) {
-	fakeClient := fakeclient.NewClient(&corev1.Namespace{
+	fakeClient := testcommon.NewTestClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: testNamespace,
 			Annotations: map[string]string{
@@ -415,7 +415,7 @@ func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
-	wh := NewPodMutator(fakeClient, decoder, controllercommon.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), false)
+	wh := NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), false)
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
@@ -488,7 +488,7 @@ func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t
 }
 
 func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
-	fakeClient := fakeclient.NewClient(&corev1.Namespace{
+	fakeClient := testcommon.NewTestClient(&corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: testNamespace,
 			Annotations: map[string]string{
@@ -499,7 +499,7 @@ func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
 
 	pod, _, _, decoder := setupTestData()
 
-	wh := NewPodMutator(fakeClient, decoder, controllercommon.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), false)
+	wh := NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), false)
 
 	request := generateRequest(pod, t)
 
@@ -586,7 +586,7 @@ func TestPodMutatingWebhookHandleErrorPaths(t *testing.T) {
 				},
 			},
 			message:   "bad workload",
-			client:    fakeclient.NewClient(pod, dp, ns),
+			client:    testcommon.NewTestClient(pod, dp, ns),
 			decoder:   decoder,
 			errorCode: http.StatusBadRequest,
 		},
@@ -604,7 +604,7 @@ func TestPodMutatingWebhookHandleErrorPaths(t *testing.T) {
 			},
 			message:   "bad app",
 			decoder:   decoder,
-			client:    fakeclient.NewClient(pod, dp, ns),
+			client:    testcommon.NewTestClient(pod, dp, ns),
 			errorCode: http.StatusBadRequest,
 		},
 	}

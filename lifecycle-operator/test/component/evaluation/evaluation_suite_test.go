@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnevaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
@@ -42,13 +42,13 @@ var _ = BeforeSuite(func() {
 	controller := &keptnevaluation.KeptnEvaluationReconciler{
 		Client:      k8sManager.GetClient(),
 		Scheme:      k8sManager.GetScheme(),
-		EventSender: controllercommon.NewK8sSender(k8sManager.GetEventRecorderFor("test-evaluation-controller")),
+		EventSender: eventsender.NewK8sSender(k8sManager.GetEventRecorderFor("test-evaluation-controller")),
 		Log:         GinkgoLogr,
 		Meters:      common.InitKeptnMeters(),
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 
-	ns = common.MakeKLTDefaultNamespace(k8sClient, KeptnNamespace)
+	ns = common.MakeKeptnDefaultNamespace(k8sClient, KeptnNamespace)
 	close(readyToStart)
 })
 

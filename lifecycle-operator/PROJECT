@@ -2,7 +2,7 @@ domain: keptn.sh
 layout:
 - go.kubebuilder.io/v3
 multigroup: true
-projectName: keptn-lifecycle-toolkit
+projectName: lifecycle-operator
 repo: github.com/keptn/lifecycle-toolkit/lifecycle-operator
 resources:
 - api:
@@ -278,4 +278,81 @@ resources:
   kind: KeptnWorkloadVersion
   path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4
   version: v1alpha4
+version: "3"
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnApp
+  path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1
+  version: v1beta1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnAppVersion
+  path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1
+  version: v1beta1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnEvaluation
+  path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1
+  version: v1beta1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnEvaluationDefinition
+  path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1
+  version: v1beta1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnTask
+  path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1
+  version: v1beta1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnTaskDefinition
+  path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1
+  version: v1beta1
+  webhooks:
+    validation: true
+    webhookVersion: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnWorkload
+  path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1
+  version: v1beta1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnAppCreationRequest
+  path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1
+  version: v1beta1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: keptn.sh
+  group: lifecycle
+  kind: KeptnWorkloadVersion
+  path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1
+  version: v1beta1
 version: "3"

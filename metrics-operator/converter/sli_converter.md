@@ -2,7 +2,7 @@
 
 SLI converter is a tool to convert the old `sli.yaml`
 [file format](https://github.com/keptn/spec/blob/master/service_level_indicator.md) into the new
-`AnalysisValueTemplate` [custom resource definition](../../docs/content/en/docs/crd-ref/metrics/v1alpha3/_index.md).
+`AnalysisValueTemplate` [custom resource definition](../../docs/content/en/docs/reference/api-reference/metrics/v1beta1/).
 The converter is part of `metrics-operator` image.
 
 ## Usage
@@ -54,7 +54,7 @@ will be converted to:
 
 ```yaml
 ---
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisValueTemplate
 metadata:
   creationTimestamp: null
@@ -65,7 +65,7 @@ spec:
     namespace: keptn
   query: builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:{{.project}}),tag(keptn_stage:{{.stage}}),tag(keptn_service:{{.service}}),tag(keptn_deployment:{{.deployment}})
 ---
-apiVersion: metrics.keptn.sh/v1alpha3
+apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisValueTemplate
 metadata:
   creationTimestamp: null

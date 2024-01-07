@@ -27,7 +27,9 @@ but should adhere to recommendations in:
     includes good information about words and phrases
     that are commonly used in technical documentation
 
-## Keptn project
+## Keptn terminology
+
+### Keptn project
 
 This is the proper name of the project that was developed
 under the code name of "Keptn Lifecycle Toolkit (KLT)".
@@ -40,7 +42,7 @@ The earlier project is called "Keptn v1".
 
 * As a project name that is trademarked,
   you should not use an apostrophe-s to make it a possessive ("Keptn's")
-  or hyphentate it (as in "Keptn-specific").
+  or hyphenate it (as in "Keptn-specific").
 
 The Keptn project is a "toolkit" with three use cases, named:
 
@@ -50,7 +52,35 @@ The Keptn project is a "toolkit" with three use cases, named:
 
 * Release lifecycle management (or Orchestrate deployment checks)
 
-## CRD, resource, etc
+## Kubernetes terminology
+
+The Keptn documentation frequently uses Kubernetes terminology.
+Here are some guidelines for using these terms in Keptn documentation.
+
+* Do not duplicate information from the Kubernetes documentation
+  into the Keptn documentation.
+  We should not be maintaining documentation
+  for software in other projects and products.
+
+* Kubernetes concepts and objects (such as workload or resource)
+  should be lowercase unless they are the proper name of an object.
+
+* The first instance of one of these terms in a section
+  should be a link to the relevant Kubernetes documentation.
+
+* Avoid using generic references to Kubernetes documentation.
+  Instead, link to the particular section
+  that contains the relevant information.
+
+* The dictionary of Kubernetes terms that is used by the
+  Spell checker
+  is in the `cspell`
+  [k8s.txt](https://github.com/streetsidesoftware/cspell-dicts/blob/main/dictionaries/k8s/dict/k8s.txt)
+  file.
+  Note that all words are listed in all lowercase
+  so the list can not be used to check capitalization.
+
+### CRD, resource, etc
 
 Keptn makes extensive use of Kubernetes
 [Custom resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/).
@@ -68,10 +98,10 @@ It is important to use the related terminology correctly:
   Most of the time, we recommend just using the term "resource".
 
 * The first occurence of a CRD name in a section should be a link to the
-  [CRD YAML Reference](../../../docs/yaml-crd-ref)
+  CRD YAML Reference under the right [component](../../../docs/components)
   page if there is one.
   Otherwise, it should be a link to the appropriate spot in the
-  [API Reference](../../../docs/crd-ref)
+  [API Reference](../../../docs/reference/api-reference/)
   section.
 
 * Occurrences of a resource name that are not links to a reference page

@@ -7,7 +7,7 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	fakeclient "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
 	admissionv1 "k8s.io/api/admission/v1"
 	appsv1 "k8s.io/api/apps/v1"
@@ -99,7 +99,7 @@ func TestCopyAnnotationsIfParentAnnotated(t *testing.T) {
 		},
 	}
 
-	fakeClient := fakeclient.NewClient(rsWithDpOwner, rsWithNoOwner, testDp, testSts, testDs)
+	fakeClient := testcommon.NewTestClient(rsWithDpOwner, rsWithNoOwner, testDp, testSts, testDs)
 
 	type fields struct {
 		Client client.Client
@@ -310,7 +310,7 @@ func TestIsAnnotated(t *testing.T) {
 		},
 	}
 
-	fakeClient := fakeclient.NewClient(rsWithDpOwner, rsWithNoOwner, testDp)
+	fakeClient := testcommon.NewTestClient(rsWithDpOwner, rsWithNoOwner, testDp)
 
 	type fields struct {
 		Client client.Client
@@ -630,6 +630,49 @@ func TestIsPodAnnotated(t *testing.T) {
 					ObjectMeta: metav1.ObjectMeta{
 						Labels: map[string]string{
 							"some-other-label": "some-value",
+						},
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "Test return false when container annotation does not match container name",
+			args: args{
+				pod: &corev1.Pod{
+					Spec: corev1.PodSpec{
+						Containers: []corev1.Container{
+							{
+								Name: "container-name",
+							},
+						},
+					},
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							apicommon.ContainerNameAnnotation: "not-container-name",
+						},
+					},
+				},
+			},
+			want: false,
+		},
+		{
+			name: "Test return false when container annotation does not match any container name",
+			args: args{
+				pod: &corev1.Pod{
+					Spec: corev1.PodSpec{
+						Containers: []corev1.Container{
+							{
+								Name: "container-name",
+							},
+							{
+								Name: "container-name2",
+							},
+						},
+					},
+					ObjectMeta: metav1.ObjectMeta{
+						Annotations: map[string]string{
+							apicommon.ContainerNameAnnotation: "not-container-name",
 						},
 					},
 				},

@@ -6,9 +6,9 @@ import (
 	"github.com/go-logr/logr/testr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/net/context"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -59,13 +59,13 @@ func TestJSBuilder_handleParent(t *testing.T) {
 		{
 			name: "no definition",
 			options: BuilderOptions{
-				Client:      fake.NewClient(),
-				eventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+				Client:      testcommon.NewTestClient(),
+				eventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
 				Log:      testr.New(t),
-				funcSpec: common.GetRuntimeSpec(def),
+				funcSpec: taskdefinition.GetRuntimeSpec(def),
 				task:     makeTask("myt", "default", def.Name),
 			},
 			params:  RuntimeExecutionParams{},
@@ -75,13 +75,13 @@ func TestJSBuilder_handleParent(t *testing.T) {
 		{
 			name: "definition exists, recursive",
 			options: BuilderOptions{
-				Client:      fake.NewClient(def),
-				eventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+				Client:      testcommon.NewTestClient(def),
+				eventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
 				Log:      testr.New(t),
-				funcSpec: common.GetRuntimeSpec(def),
+				funcSpec: taskdefinition.GetRuntimeSpec(def),
 				task:     makeTask("myt2", "default", def.Name),
 			},
 			params:  RuntimeExecutionParams{},
@@ -90,13 +90,13 @@ func TestJSBuilder_handleParent(t *testing.T) {
 		{
 			name: "definition exists, with parameters and secrets",
 			options: BuilderOptions{
-				Client:      fake.NewClient(paramDef, def),
-				eventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+				Client:      testcommon.NewTestClient(paramDef, def),
+				eventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
 				Log:      testr.New(t),
-				funcSpec: common.GetRuntimeSpec(paramDef),
+				funcSpec: taskdefinition.GetRuntimeSpec(paramDef),
 				task:     makeTask("myt3", "default", paramDef.Name),
 			},
 			params:  RuntimeExecutionParams{},
@@ -120,8 +120,8 @@ func TestJSBuilder_handleParent(t *testing.T) {
 	}
 }
 func TestJSBuilder_getParams(t *testing.T) {
-	t.Setenv(common.FunctionRuntimeImageKey, "js")
-	t.Setenv(common.PythonRuntimeImageKey, "python")
+	t.Setenv(taskdefinition.FunctionRuntimeImageKey, taskdefinition.FunctionScriptKey)
+	t.Setenv(taskdefinition.PythonRuntimeImageKey, taskdefinition.PythonScriptKey)
 
 	def := &klcv1alpha3.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
@@ -206,16 +206,16 @@ func TestJSBuilder_getParams(t *testing.T) {
 		{
 			name: "definition exists, no parent",
 			options: BuilderOptions{
-				Client:      fake.NewClient(def),
-				eventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+				Client:      testcommon.NewTestClient(def),
+				eventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
 				Log:       testr.New(t),
-				funcSpec:  common.GetRuntimeSpec(def),
+				funcSpec:  taskdefinition.GetRuntimeSpec(def),
 				task:      makeTask("myt2", "default", def.Name),
-				Image:     "js",
-				MountPath: common.FunctionScriptMountPath,
+				Image:     taskdefinition.FunctionScriptKey,
+				MountPath: taskdefinition.FunctionScriptMountPath,
 				ConfigMap: def.Status.Function.ConfigMap,
 			},
 			params: &RuntimeExecutionParams{
@@ -230,21 +230,21 @@ func TestJSBuilder_getParams(t *testing.T) {
 					ObjectType:   "Workload",
 					TaskType:     string(apicommon.PostDeploymentCheckType),
 				},
-				Image:     "js",
-				MountPath: common.FunctionScriptMountPath,
+				Image:     taskdefinition.FunctionScriptKey,
+				MountPath: taskdefinition.FunctionScriptMountPath,
 			},
 			wantErr: false,
 		},
 		{
 			name: "definition exists, parent with parameters and secrets",
 			options: BuilderOptions{
-				Client:      fake.NewClient(paramDef, def),
-				eventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+				Client:      testcommon.NewTestClient(paramDef, def),
+				eventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
 				Log:       testr.New(t),
-				funcSpec:  common.GetRuntimeSpec(paramDef),
+				funcSpec:  taskdefinition.GetRuntimeSpec(paramDef),
 				task:      makeTask("myt3", "default", paramDef.Name),
 				ConfigMap: def.Status.Function.ConfigMap,
 			},
@@ -263,21 +263,21 @@ func TestJSBuilder_getParams(t *testing.T) {
 					ObjectType:   "Workload",
 					TaskType:     string(apicommon.PostDeploymentCheckType),
 				},
-				Image:     "js",
-				MountPath: common.FunctionScriptMountPath,
+				Image:     taskdefinition.FunctionScriptKey,
+				MountPath: taskdefinition.FunctionScriptMountPath,
 			},
 			wantErr: false,
 		},
 		{
 			name: "definition exists, parent is of a different runtime",
 			options: BuilderOptions{
-				Client:      fake.NewClient(parentPy, defJS),
-				eventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+				Client:      testcommon.NewTestClient(parentPy, defJS),
+				eventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				req: ctrl.Request{
 					NamespacedName: types.NamespacedName{Namespace: "default"},
 				},
 				Log:       testr.New(t),
-				funcSpec:  common.GetRuntimeSpec(defJS),
+				funcSpec:  taskdefinition.GetRuntimeSpec(defJS),
 				task:      makeTask("myt4", "default", defJS.Name),
 				ConfigMap: defJS.Status.Function.ConfigMap,
 			},
@@ -291,8 +291,8 @@ func TestJSBuilder_getParams(t *testing.T) {
 					ObjectType:   "Workload",
 					TaskType:     string(apicommon.PostDeploymentCheckType),
 				},
-				Image:     "python",
-				MountPath: common.PythonScriptMountPath,
+				Image:     taskdefinition.PythonScriptKey,
+				MountPath: taskdefinition.PythonScriptMountPath,
 			},
 			wantErr: false,
 		},

@@ -27,6 +27,7 @@ import (
 	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
 	operatorcommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
@@ -47,7 +48,7 @@ import (
 type KeptnWorkloadReconciler struct {
 	client.Client
 	Scheme        *runtime.Scheme
-	EventSender   controllercommon.IEvent
+	EventSender   eventsender.IEvent
 	Log           logr.Logger
 	TracerFactory telemetry.TracerFactory
 }

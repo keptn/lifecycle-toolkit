@@ -8,8 +8,8 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1alpha3"
 	"github.com/stretchr/testify/require"
@@ -250,7 +250,7 @@ func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEva
 		Client:      fakeClient,
 		Scheme:      fakeClient.Scheme(),
 		Log:         logr.Logger{},
-		EventSender: controllercommon.NewK8sSender(record.NewFakeRecorder(100)),
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 		Meters:      telemetry.SetUpKeptnTaskMeters(meter),
 	}
 	return r, fakeClient

@@ -36,6 +36,7 @@ var ErrCannotCastKeptnApp = errors.New("cannot cast KeptnApp to v1alpha3")
 var ErrCannotCastKeptnWorkloadInstance = errors.New("cannot cast KeptnWorkloadInstance to v1alpha3")
 var ErrCannotCastKeptnEvaluationProvider = errors.New("cannot cast KeptnEvaluationDefinition to v1alpha3")
 
+// KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
 type KeptnState string
 
 const (

@@ -7,7 +7,7 @@ import (
 	"github.com/go-logr/logr"
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	corev1 "k8s.io/api/core/v1"
@@ -20,7 +20,7 @@ import (
 type AppCreationRequestHandler struct {
 	Client      client.Client
 	Log         logr.Logger
-	EventSender controllercommon.IEvent
+	EventSender eventsender.IEvent
 }
 
 func (a *AppCreationRequestHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace string) error {
@@ -72,7 +72,8 @@ func generateResource(ctx context.Context, pod *corev1.Pod, namespace string) *k
 		initEmptyAnnotations(&pod.ObjectMeta, 2)
 		// at this point if the pod does not have an app annotation it means we create the app
 		// and it will have a single workload
-		pod.ObjectMeta.Annotations[apicommon.AppAnnotation] = pod.ObjectMeta.Annotations[apicommon.WorkloadAnnotation]
+		appName, _ := GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.WorkloadAnnotation, apicommon.K8sRecommendedWorkloadAnnotations)
+		pod.Annotations[apicommon.AppAnnotation] = appName
 		// so we can mark the app request as single service type
 		kacr.Annotations[apicommon.AppTypeAnnotation] = string(apicommon.AppTypeSingleService)
 	}

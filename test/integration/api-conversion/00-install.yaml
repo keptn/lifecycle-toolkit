@@ -1,7 +1,7 @@
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
-  name: "some-klt-app2"
+  name: "some-keptn-app2"
 spec:
   version: "1.2.3"
   revision: 123
@@ -9,7 +9,7 @@ spec:
 apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnAppVersion
 metadata:
-  name: "some-klt-app-version-2"
+  name: "some-keptn-app-version-2"
 spec:
   appName: podtato-head
   revision: 1
@@ -63,7 +63,7 @@ spec:
     name: "my-secret-name"
     key: "apiToken"
 ---
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: my-metric-1

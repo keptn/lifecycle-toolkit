@@ -30,16 +30,22 @@ import (
 
 // KeptnAppSpec defines the desired state of KeptnApp
 type KeptnAppSpec struct {
-	Version                   string             `json:"version"`
-	Workloads                 []KeptnWorkloadRef `json:"workloads,omitempty"`
-	PreDeploymentTasks        []string           `json:"preDeploymentTasks,omitempty"`
-	PostDeploymentTasks       []string           `json:"postDeploymentTasks,omitempty"`
-	PreDeploymentEvaluations  []string           `json:"preDeploymentEvaluations,omitempty"`
-	PostDeploymentEvaluations []string           `json:"postDeploymentEvaluations,omitempty"`
+	Version string `json:"version"`
+	// +optional
+	Workloads []KeptnWorkloadRef `json:"workloads,omitempty"`
+	// +optional
+	PreDeploymentTasks []string `json:"preDeploymentTasks,omitempty"`
+	// +optional
+	PostDeploymentTasks []string `json:"postDeploymentTasks,omitempty"`
+	// +optional
+	PreDeploymentEvaluations []string `json:"preDeploymentEvaluations,omitempty"`
+	// +optional
+	PostDeploymentEvaluations []string `json:"postDeploymentEvaluations,omitempty"`
 }
 
 // KeptnAppStatus defines the observed state of KeptnApp
 type KeptnAppStatus struct {
+	// +optional
 	CurrentVersion string `json:"currentVersion,omitempty"`
 }
 
@@ -53,10 +59,13 @@ type KeptnWorkloadRef struct {
 
 // KeptnApp is the Schema for the keptnapps API
 type KeptnApp struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnAppSpec   `json:"spec,omitempty"`
+	// +optional
+	Spec KeptnAppSpec `json:"spec,omitempty"`
+	// +optional
 	Status KeptnAppStatus `json:"status,omitempty"`
 }
 
@@ -65,6 +74,7 @@ type KeptnApp struct {
 // KeptnAppList contains a list of KeptnApp
 type KeptnAppList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnApp `json:"items"`
 }

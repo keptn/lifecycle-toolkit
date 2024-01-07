@@ -50,8 +50,8 @@ and application health checks
 | `lifecycleOperator.env.keptnWorkloadControllerLogLevel`               | sets the log level of Keptn Workload Controller                                                                        | `0`                                   |
 | `lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel`        | sets the log level of Keptn WorkloadVersion Controller                                                                 | `0`                                   |
 | `lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel`       | Deprecated: Use keptnWorkloadVersionControllerLogLevel instead. Sets the log level of Keptn WorkloadVersion Controller | `0`                                   |
+| `lifecycleOperator.env.keptnDoraMetricsPort`                          | sets the port for accessing lifecycle metrics in prometheus format                                                     | `2222`                                |
 | `lifecycleOperator.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller                                                                         | `0`                                   |
-| `lifecycleOperator.env.otelCollectorUrl`                              | Sets the URL for the open telemetry collector                                                                          | `otel-collector:4317`                 |
 | `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                                                                  | `ghcr.io/keptn/python-runtime:v1.0.1` |
 | `lifecycleOperator.image.registry`                                    | specify the container registry for the lifecycle-operator image                                                        | `ghcr.io`                             |
 | `lifecycleOperator.image.repository`                                  | specify registry for manager image                                                                                     | `keptn/lifecycle-operator`            |
@@ -68,13 +68,14 @@ and application health checks
 
 ### Global
 
-| Name                      | Description                                                                                                                                     | Value           |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| `kubernetesClusterDomain` | overrides cluster.local                                                                                                                         | `cluster.local` |
-| `annotations`             | add deployment level annotations                                                                                                                | `{}`            |
-| `podAnnotations`          | adds pod level annotations                                                                                                                      | `{}`            |
-| `schedulingGatesEnabled`  | enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version | `false`         |
-| `allowedNamespaces`       | specifies the allowed namespaces for the lifecycle orchestration functionality                                                                  | `[]`            |
+| Name                      | Description                                                                                                                                     | Value                                                          |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `kubernetesClusterDomain` | overrides cluster.local                                                                                                                         | `cluster.local`                                                |
+| `annotations`             | add deployment level annotations                                                                                                                | `{}`                                                           |
+| `podAnnotations`          | adds pod level annotations                                                                                                                      | `{}`                                                           |
+| `schedulingGatesEnabled`  | enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version | `false`                                                        |
+| `allowedNamespaces`       | specifies the allowed namespaces for the lifecycle orchestration functionality                                                                  | `[]`                                                           |
+| `deniedNamespaces`        | specifies a list of namespaces where the lifecycle orchestration functionality is disabled, ignored if `allowedNamespaces` is set               | `["cert-manager","keptn-system","observability","monitoring"]` |
 
 ### Keptn Scheduler
 
@@ -90,7 +91,7 @@ and application health checks
 | `scheduler.imagePullPolicy`                                  | set image pull policy for scheduler                            | `Always`              |
 | `scheduler.livenessProbe`                                    | customizable liveness probe for the scheduler                  |                       |
 | `scheduler.readinessProbe`                                   | customizable readiness probe for the scheduler                 |                       |
-| `scheduler.resources`                                        | sets cpu and memory resurces/limits for scheduler              |                       |
+| `scheduler.resources`                                        | sets cpu and memory resources/limits for scheduler             |                       |
 | `scheduler.topologySpreadConstraints`                        | add topology constraints for scheduler                         | `[]`                  |
 | `schedulerConfig.profiles[0].schedulerName`                  | changes scheduler name                                         | `keptn-scheduler`     |
 | `schedulerConfig.leaderElection.leaderElect`                 | enables leader election for multiple replicas of the scheduler | `false`               |

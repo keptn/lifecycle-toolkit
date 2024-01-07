@@ -3,7 +3,7 @@ package analysis
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/fake"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/stretchr/testify/require"
@@ -12,17 +12,17 @@ import (
 func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 	tests := []struct {
 		name            string
-		values          map[string]v1alpha3.ProviderResult
-		a               v1alpha3.AnalysisDefinition
+		values          map[string]metricsapi.ProviderResult
+		a               metricsapi.AnalysisDefinition
 		want            types.AnalysisResult
 		mockedEvaluator IObjectiveEvaluator
 	}{
 		{
 			name:   "no objectives",
-			values: map[string]v1alpha3.ProviderResult{},
-			a: v1alpha3.AnalysisDefinition{
-				Spec: v1alpha3.AnalysisDefinitionSpec{
-					Objectives: []v1alpha3.Objective{},
+			values: map[string]metricsapi.ProviderResult{},
+			a: metricsapi.AnalysisDefinition{
+				Spec: metricsapi.AnalysisDefinitionSpec{
+					Objectives: []metricsapi.Objective{},
 				},
 			},
 			want: types.AnalysisResult{
@@ -36,15 +36,15 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name:   "pass scenario",
-			values: map[string]v1alpha3.ProviderResult{},
-			a: v1alpha3.AnalysisDefinition{
-				Spec: v1alpha3.AnalysisDefinitionSpec{
-					Objectives: []v1alpha3.Objective{
+			values: map[string]metricsapi.ProviderResult{},
+			a: metricsapi.AnalysisDefinition{
+				Spec: metricsapi.AnalysisDefinitionSpec{
+					Objectives: []metricsapi.Objective{
 						{
 							Weight: 10,
 						},
 					},
-					TotalScore: v1alpha3.TotalScore{
+					TotalScore: metricsapi.TotalScore{
 						PassPercentage:    80,
 						WarningPercentage: 50,
 					},
@@ -66,7 +66,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]v1alpha3.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]metricsapi.ProviderResult, objective *metricsapi.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Query:  "query",
@@ -79,10 +79,10 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name:   "pass scenario - multiple objectives",
-			values: map[string]v1alpha3.ProviderResult{},
-			a: v1alpha3.AnalysisDefinition{
-				Spec: v1alpha3.AnalysisDefinitionSpec{
-					Objectives: []v1alpha3.Objective{
+			values: map[string]metricsapi.ProviderResult{},
+			a: metricsapi.AnalysisDefinition{
+				Spec: metricsapi.AnalysisDefinitionSpec{
+					Objectives: []metricsapi.Objective{
 						{
 							Weight: 10,
 						},
@@ -90,7 +90,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 							Weight: 10,
 						},
 					},
-					TotalScore: v1alpha3.TotalScore{
+					TotalScore: metricsapi.TotalScore{
 						PassPercentage:    80,
 						WarningPercentage: 50,
 					},
@@ -119,7 +119,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]v1alpha3.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]metricsapi.ProviderResult, objective *metricsapi.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
@@ -132,15 +132,15 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name:   "warning scenario",
-			values: map[string]v1alpha3.ProviderResult{},
-			a: v1alpha3.AnalysisDefinition{
-				Spec: v1alpha3.AnalysisDefinitionSpec{
-					Objectives: []v1alpha3.Objective{
+			values: map[string]metricsapi.ProviderResult{},
+			a: metricsapi.AnalysisDefinition{
+				Spec: metricsapi.AnalysisDefinitionSpec{
+					Objectives: []metricsapi.Objective{
 						{
 							Weight: 10,
 						},
 					},
-					TotalScore: v1alpha3.TotalScore{
+					TotalScore: metricsapi.TotalScore{
 						PassPercentage:    80,
 						WarningPercentage: 50,
 					},
@@ -162,7 +162,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]v1alpha3.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]metricsapi.ProviderResult, objective *metricsapi.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Query:  "query",
@@ -175,15 +175,15 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name:   "fail scenario",
-			values: map[string]v1alpha3.ProviderResult{},
-			a: v1alpha3.AnalysisDefinition{
-				Spec: v1alpha3.AnalysisDefinitionSpec{
-					Objectives: []v1alpha3.Objective{
+			values: map[string]metricsapi.ProviderResult{},
+			a: metricsapi.AnalysisDefinition{
+				Spec: metricsapi.AnalysisDefinitionSpec{
+					Objectives: []metricsapi.Objective{
 						{
 							Weight: 10,
 						},
 					},
-					TotalScore: v1alpha3.TotalScore{
+					TotalScore: metricsapi.TotalScore{
 						PassPercentage:    80,
 						WarningPercentage: 50,
 					},
@@ -205,7 +205,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]v1alpha3.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]metricsapi.ProviderResult, objective *metricsapi.Objective) types.ObjectiveResult {
 					return types.ObjectiveResult{
 						Result: types.TargetResult{},
 						Value:  5.0,
@@ -218,10 +218,10 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 		},
 		{
 			name:   "fail scenario - key objective failed",
-			values: map[string]v1alpha3.ProviderResult{},
-			a: v1alpha3.AnalysisDefinition{
-				Spec: v1alpha3.AnalysisDefinitionSpec{
-					Objectives: []v1alpha3.Objective{
+			values: map[string]metricsapi.ProviderResult{},
+			a: metricsapi.AnalysisDefinition{
+				Spec: metricsapi.AnalysisDefinitionSpec{
+					Objectives: []metricsapi.Objective{
 						{
 							Weight:       10,
 							KeyObjective: false,
@@ -231,7 +231,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 							KeyObjective: true,
 						},
 					},
-					TotalScore: v1alpha3.TotalScore{
+					TotalScore: metricsapi.TotalScore{
 						PassPercentage:    80,
 						WarningPercentage: 50,
 					},
@@ -260,7 +260,7 @@ func TestAnalysisEvaluator_Evaluate(t *testing.T) {
 				},
 			},
 			mockedEvaluator: &fake.IObjectiveEvaluatorMock{
-				EvaluateFunc: func(values map[string]v1alpha3.ProviderResult, objective *v1alpha3.Objective) types.ObjectiveResult {
+				EvaluateFunc: func(values map[string]metricsapi.ProviderResult, objective *metricsapi.Objective) types.ObjectiveResult {
 					if objective.KeyObjective {
 						return types.ObjectiveResult{
 							Result: types.TargetResult{},

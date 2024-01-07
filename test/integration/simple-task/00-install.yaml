@@ -13,17 +13,13 @@ kind: KeptnTask
 metadata:
   name: pre-deployment-hello-1234
 spec:
-  app: podtato-head
-  appVersion: 0.1.2
   checkType: pre
   taskDefinition: pre-deployment-hello
   timeout: 5m0s
-  workload: ""
-  workloadVersion: ""
   context:
-    appName: ""
-    appVersion: ""
+    appName: "podtato-head"
+    appVersion: "1.0.0"
     objectType: ""
     taskType: ""
-    workloadName: ""
-    workloadVersion: ""
+    workloadName: "workload"
+    workloadVersion: "0.1.0"

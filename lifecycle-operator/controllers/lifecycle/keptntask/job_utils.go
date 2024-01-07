@@ -7,6 +7,7 @@ import (
 	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	taskdefinition "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -40,7 +41,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 		return err
 	}
 
-	if controllercommon.SpecExists(definition) {
+	if taskdefinition.SpecExists(definition) {
 		jobName, err = r.createFunctionJob(ctx, req, task, definition)
 		if err != nil {
 			return err
@@ -105,11 +106,15 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 					Annotations: task.Annotations,
 				},
 				Spec: corev1.PodSpec{
-					RestartPolicy: "OnFailure",
+					RestartPolicy:                "OnFailure",
+					ServiceAccountName:           definition.GetServiceAccount(),
+					AutomountServiceAccountToken: definition.GetAutomountServiceAccountToken(),
+					ImagePullSecrets:             definition.Spec.ImagePullSecrets,
 				},
 			},
-			BackoffLimit:          task.Spec.Retries,
-			ActiveDeadlineSeconds: task.GetActiveDeadlineSeconds(),
+			BackoffLimit:            task.Spec.Retries,
+			ActiveDeadlineSeconds:   task.GetActiveDeadlineSeconds(),
+			TTLSecondsAfterFinished: definition.Spec.TTLSecondsAfterFinished,
 		},
 	}
 	err := controllerutil.SetControllerReference(task, job, r.Scheme)
@@ -123,10 +128,10 @@ func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3
 		Log:           r.Log,
 		task:          task,
 		containerSpec: definition.Spec.Container,
-		funcSpec:      controllercommon.GetRuntimeSpec(definition),
+		funcSpec:      taskdefinition.GetRuntimeSpec(definition),
 		eventSender:   r.EventSender,
-		Image:         controllercommon.GetRuntimeImage(definition),
-		MountPath:     controllercommon.GetRuntimeMountPath(definition),
+		Image:         taskdefinition.GetRuntimeImage(definition),
+		MountPath:     taskdefinition.GetRuntimeMountPath(definition),
 		ConfigMap:     definition.Status.Function.ConfigMap,
 	}
 

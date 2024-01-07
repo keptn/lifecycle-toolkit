@@ -1,7 +1,8 @@
-apiVersion: metrics.keptn.sh/v1alpha2
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
 metadata:
   name: prometheus
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
 spec:
+  type: prometheus
   targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"

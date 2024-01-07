@@ -28,7 +28,8 @@ import (
 
 // KeptnEvaluationProviderSpec defines the desired state of KeptnEvaluationProvider
 type KeptnEvaluationProviderSpec struct {
-	TargetServer string                   `json:"targetServer"`
+	TargetServer string `json:"targetServer"`
+	// +optional
 	SecretKeyRef corev1.SecretKeySelector `json:"secretKeyRef,omitempty"`
 }
 
@@ -38,11 +39,14 @@ type KeptnEvaluationProviderSpec struct {
 
 // KeptnEvaluationProvider is the Schema for the keptnevaluationproviders API
 type KeptnEvaluationProvider struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
+	// +optional
 	Spec KeptnEvaluationProviderSpec `json:"spec,omitempty"`
 	// unused field
+	// +optional
 	Status string `json:"status,omitempty"`
 }
 
@@ -51,6 +55,7 @@ type KeptnEvaluationProvider struct {
 // KeptnEvaluationProviderList contains a list of KeptnEvaluationProvider
 type KeptnEvaluationProviderList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnEvaluationProvider `json:"items"`
 }

@@ -13,3 +13,10 @@ spec:
     metadata:
       labels:
         component: podtato-head-entry
+---
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+collectors:
+  - type: pod
+    selector: app=podtato-head
+  - command: kubectl logs -l app=podtato-head -n $NAMESPACE

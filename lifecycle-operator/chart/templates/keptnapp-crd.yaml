@@ -4,7 +4,7 @@ metadata:
   name: keptnapps.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
+    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
   {{- include "common.annotations" (dict "context" .) }}
   labels:
     app.kubernetes.io/part-of: keptn

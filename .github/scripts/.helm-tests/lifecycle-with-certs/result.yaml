@@ -107,6 +107,7 @@ metadata:
   name: keptnapps.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
     test/jj: testann
   labels:
     app.kubernetes.io/part-of: keptn

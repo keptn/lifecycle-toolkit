@@ -10,19 +10,19 @@ metadata:
   name: keptnappcontext-sample
 spec:
   preDeploymentTasks:
-      - task1
-      - task2
+    - task1
+    - task2
   postDeploymentTasks:
-      - task1
-      - task2
+    - task1
+    - task2
   preDeploymentEvaluations:
-      - eval1
-      - eval2
+    - eval1
+    - eval2
   postDeploymentEvaluations:
-      - eval1
-      - eval2
+    - eval1
+    - eval2
   metadata:
-      - key: abc123
+    - key: abc123
   traceLinks:
     - "w3c trace id1"
     - "w3c trace id2"

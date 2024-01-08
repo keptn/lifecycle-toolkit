@@ -19,4 +19,4 @@ global:
   commonLabels:
     app.kubernetes.io/version: vmyversion
   commonAnnotations:
-    test/jj: testann
+    test/jj: test

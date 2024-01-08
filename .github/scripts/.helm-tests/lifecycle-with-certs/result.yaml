@@ -6,7 +6,7 @@ metadata:
   name: certificate-operator
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/part-of: keptn
@@ -23,7 +23,7 @@ metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -43,7 +43,7 @@ metadata:
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.1.0
-    test/jj: testann
+    test/jj: test
 ---
 # Source: keptn/charts/lifecycleOperator/templates/lifecycle-manager-config.yaml
 apiVersion: v1
@@ -52,7 +52,7 @@ metadata:
   name: lifecycle-manager-config
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -80,7 +80,7 @@ metadata:
   name: scheduler-config
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -108,7 +108,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -557,7 +557,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -657,7 +657,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -1794,7 +1794,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -1865,7 +1865,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -2395,7 +2395,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -2651,7 +2651,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -2834,7 +2834,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -3402,7 +3402,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -6742,7 +6742,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -7140,7 +7140,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -7931,7 +7931,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -8558,7 +8558,7 @@ metadata:
   name: certificate-operator-role
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -8612,7 +8612,7 @@ metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -8805,7 +8805,7 @@ metadata:
   name: lifecycle-operator-role
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -9208,7 +9208,7 @@ metadata:
   name: keptn-test-lifecycleOperator-server-resources
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -9230,7 +9230,7 @@ metadata:
   name: certificate-operator-rolebinding
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -9256,7 +9256,7 @@ metadata:
   name: keptn-scheduler
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -9279,7 +9279,7 @@ metadata:
   name: lifecycle-operator-rolebinding
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -9302,7 +9302,7 @@ metadata:
   name: certificate-operator-role
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -9336,7 +9336,7 @@ metadata:
   name: leader-election-role
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -9386,7 +9386,7 @@ metadata:
   name: lifecycle-operator-leader-election-role
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -9433,7 +9433,7 @@ metadata:
   name: certificate-operator-leader-election-rolebinding
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -9443,7 +9443,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: cert-manager-0.2.0
-    test/jj: testann
+    test/jj: test
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -9460,7 +9460,7 @@ metadata:
   name: certificate-operator-role-binding
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -9486,7 +9486,7 @@ metadata:
   name: extension-apiserver-authentication-reader
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -9509,7 +9509,7 @@ metadata:
   name: lifecycle-operator-leader-election-rolebinding
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -9532,7 +9532,7 @@ metadata:
   name: lifecycle-operator-rolebinding
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -9555,7 +9555,7 @@ metadata:
   name: lifecycle-operator-metrics-service
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     control-plane: lifecycle-operator
     app.kubernetes.io/instance: keptn-test
@@ -9582,7 +9582,7 @@ metadata:
   name: lifecycle-webhook-service
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -9607,7 +9607,7 @@ metadata:
   name: certificate-operator
   namespace: "helmtests"
   annotations:
-    test/jj: testann
+    test/jj: test
   labels:
     app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/part-of: keptn
@@ -9702,7 +9702,7 @@ metadata:
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.1.0
-    test/jj: testann
+    test/jj: test
 spec:
   replicas: 1
   selector:
@@ -9824,7 +9824,7 @@ metadata:
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.1.0
-    test/jj: testann
+    test/jj: test
 spec:
   replicas: 1
   selector:
@@ -9898,7 +9898,7 @@ metadata:
   name: lifecycle-mutating-webhook-configuration
   annotations:
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn"
@@ -9952,7 +9952,7 @@ metadata:
   name: lifecycle-validating-webhook-configuration
   annotations:
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-    test/jj: testann
+    test/jj: test
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test

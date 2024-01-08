@@ -528,6 +528,10 @@ spec:
             type: object
           status:
             description: KeptnAppContextStatus defines the observed state of KeptnAppContext
+            properties:
+              status:
+                description: unused field
+                type: string
             type: object
         type: object
     served: true

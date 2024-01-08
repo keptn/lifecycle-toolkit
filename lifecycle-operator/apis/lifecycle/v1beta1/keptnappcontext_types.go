@@ -57,6 +57,9 @@ type KeptnAppContextSpec struct {
 
 // KeptnAppContextStatus defines the observed state of KeptnAppContext
 type KeptnAppContextStatus struct {
+	// unused field
+	// +optional
+	Status string `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

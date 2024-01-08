@@ -4,7 +4,7 @@ metadata:
   name: podtato-head
 spec:
   metadata:
-    contextino: "context-hello"
+    context: "context-hello"
   preDeploymentTasks:
     - pre-deployment-hello
   postDeploymentTasks:

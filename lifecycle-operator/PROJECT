@@ -278,7 +278,6 @@ resources:
   kind: KeptnWorkloadVersion
   path: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4
   version: v1alpha4
-version: "3"
 - api:
     crdVersion: v1
     namespaced: true

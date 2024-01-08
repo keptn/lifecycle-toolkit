@@ -61,5 +61,34 @@ Note the following about these fields:
   must be `keptn-certs`.
 * Substitute the namespace placeholders with your namespace, where Keptn is installed.
 
-See the [CA Injector](https://cert-manager.io/docs/concepts/ca-injector/)
-documentation for more details.
+## Injecting CA Annotations
+
+`cert-manager.io` supports specific annotations for injectable resources, namely
+`cert-manager.io/inject-ca-from`, `cert-manager.io/inject-ca-from-secret`,
+or `cert-manager.io/inject-apiserver-ca`,
+depending on the injection source.
+To configure these annotations, modify the `global.caInjectionAnnotation` Helm value.
+See the [CA Injector](https://cert-manager.io/docs/concepts/ca-injector/) documentation for more details.
+
+Here is an example `values.yaml` file demonstrating the configuration of CA injection:
+
+```yaml
+certManager:
+  enabled: true
+lifecycleOperator:
+  enabled: false   # lifecycle operator won't be installed
+metricsOperator:
+  enabled: true
+  image:
+    tag: v0.0.0 # metrics operator will use this image tag
+  imagePullPolicy: Never
+
+global:
+  commonLabels:
+    app.kubernetes.io/version: vmyversion
+  caInjectionAnnotations:
+    cert-manager.io/inject-ca-from: example1/sample-certificate
+```
+
+Refer to the [Customizing the configuration of components
+](https://keptn.sh/latest/docs/installation/#customizing-the-configuration-of-components) for more details.

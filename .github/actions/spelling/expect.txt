@@ -288,6 +288,7 @@ keda
 kelseyhightower
 keptn
 keptnapp
+keptnappcontext
 keptnappcreationrequest
 keptnappcreationrequestlist
 keptnappcreationrequestspec

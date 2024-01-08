@@ -141,19 +141,19 @@ func (r *KeptnMetricReconciler) updateMetric(metric *metricsapi.KeptnMetric, val
 					metric.Status.IntervalResults = append(metric.Status.IntervalResults, intervalResult)
 				}
 			}
+		}
+	} else {
+		if err != nil {
+			r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
+			metric.Status.ErrMsg = err.Error()
+			metric.Status.Value = ""
+			metric.Status.RawValue = cupSize(rawValue)
+			metric.Status.LastUpdated = metav1.Time{Time: time.Now()}
+			reconcile = ctrl.Result{Requeue: false}
 		} else {
-			if err != nil {
-				r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
-				metric.Status.ErrMsg = err.Error()
-				metric.Status.Value = ""
-				metric.Status.RawValue = cupSize(rawValue)
-				metric.Status.LastUpdated = metav1.Time{Time: time.Now()}
-				reconcile = ctrl.Result{Requeue: false}
-			} else {
-				metric.Status.Value = value
-				metric.Status.RawValue = cupSize(rawValue)
-				metric.Status.LastUpdated = metav1.Time{Time: time.Now()}
-			}
+			metric.Status.Value = value
+			metric.Status.RawValue = cupSize(rawValue)
+			metric.Status.LastUpdated = metav1.Time{Time: time.Now()}
 		}
 	}
 	return metric

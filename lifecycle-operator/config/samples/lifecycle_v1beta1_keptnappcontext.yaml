@@ -1,0 +1,12 @@
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnAppContext
+metadata:
+  labels:
+    app.kubernetes.io/name: keptnappcontext
+    app.kubernetes.io/instance: keptnappcontext-sample
+    app.kubernetes.io/part-of: lifecycle-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: lifecycle-operator
+  name: keptnappcontext-sample
+spec:
+  # TODO(user): Add fields here

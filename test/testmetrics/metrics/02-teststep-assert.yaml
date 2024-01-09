@@ -14,4 +14,3 @@ collectors:
   - type: pod
     selector: app=test
   - command: kubectl logs -l app=test -n $NAMESPACE
-    

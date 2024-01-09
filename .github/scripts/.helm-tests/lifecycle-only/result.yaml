@@ -9357,6 +9357,11 @@ metadata:
   name: lifecycle-webhook-service
   namespace: "helmtests"
   labels:
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/version: vmyversion
+    helm.sh/chart: lifecycle-operator-0.1.0
 spec:
   type: ClusterIP
   selector:

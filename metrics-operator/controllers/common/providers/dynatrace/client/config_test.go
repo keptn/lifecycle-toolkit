@@ -1,20 +1,18 @@
 package client
 
 import (
-	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
 func TestNewAPIConfig(t *testing.T) {
-	myData := secretValues{"dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "my-authurl"}
-	jsonData, _ := json.Marshal(myData)
+	myData := SecretValues{"dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "https://dev.token.internal.my-auth-url.com/sso/oauth2/token"}
 	config, err := NewAPIConfig(
 		"my-url",
-		jsonData,
+		myData,
 		WithScopes([]OAuthScope{OAuthScopeStorageMetricsRead, OAuthScopeEnvironmentRoleViewer}),
-		WithAuthURL("my-authurl"),
+		WithAuthURL("https://dev.token.internal.my-auth-url.com/sso/oauth2/token"),
 	)
 
 	require.Nil(t, err)
@@ -22,7 +20,7 @@ func TestNewAPIConfig(t *testing.T) {
 
 	expectedApiConfig := apiConfig{
 		serverURL: "my-url",
-		authURL:   "my-authurl",
+		authURL:   "https://dev.token.internal.my-auth-url.com/sso/oauth2/token",
 		oAuthCredentials: oAuthCredentials{
 			clientID:     "dt0s08.XX",
 			clientSecret: mockSecret,

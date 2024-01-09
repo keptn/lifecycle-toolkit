@@ -1,7 +1,6 @@
 package client
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -11,7 +10,8 @@ type apiConfig struct {
 	authURL          string
 	oAuthCredentials oAuthCredentials
 }
-type secretValues struct {
+
+type SecretValues struct {
 	Token   string `json:"token"`
 	AuthUrl string `json:"authurl"`
 }
@@ -32,23 +32,23 @@ func WithScopes(scopes []OAuthScope) APIConfigOption {
 }
 
 // NewAPIConfig returns a new apiConfig that can be used for initializing a DTAPIClient with the NewAPIClient function
-func NewAPIConfig(serverURL string, secret []byte, opts ...APIConfigOption) (*apiConfig, error) {
-	var secValue secretValues
-	if err := json.Unmarshal(secret, &secValue); err != nil {
+func NewAPIConfig(serverURL string, secret SecretValues, opts ...APIConfigOption) (*apiConfig, error) {
+	// var secValue dynatrace.SecretValues
+	// if err := json.Unmarshal(secret, &secValue); err != nil {
+	// 	return nil, err
+	// }
+
+	if err := validateOAuthSecret(secret.Token, secret.AuthUrl); err != nil {
 		return nil, err
 	}
 
-	if err := validateOAuthSecret(secValue.Token); err != nil {
-		return nil, err
-	}
-
-	secretParts := strings.Split(secValue.Token, ".")
+	secretParts := strings.Split(secret.Token, ".")
 	clientId := fmt.Sprintf("%s.%s", secretParts[0], secretParts[1])
 	clientSecret := fmt.Sprintf("%s.%s", clientId, secretParts[2])
 
 	cfg := &apiConfig{
 		serverURL: serverURL,
-		authURL:   secValue.AuthUrl,
+		authURL:   secret.AuthUrl,
 		oAuthCredentials: oAuthCredentials{
 			clientID:     clientId,
 			clientSecret: clientSecret,

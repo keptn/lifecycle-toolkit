@@ -14,6 +14,7 @@ resources:
   - bases/options.keptn.sh_keptnconfigs.yaml
   - bases/lifecycle.keptn.sh_keptnappcreationrequests.yaml
   - bases/lifecycle.keptn.sh_keptnworkloadversions.yaml
+  - bases/lifecycle.keptn.sh_keptnappcontexts.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 # the following config is for teaching kustomize how to do kustomization for CRDs.
 configurations:
@@ -41,4 +42,5 @@ patches:
 # - path: patches/webhook_in_lifecycle_keptnevaluations.yaml
 # - path: patches/webhook_in_options_keptnconfigs.yaml
 # - path: patches/webhook_in_keptnappcreationrequests.yaml
+# -  path:  patches/webhook_in_lifecycle_keptnappcontexts.yaml
 # +kubebuilder:scaffold:crdkustomizewebhookpatch

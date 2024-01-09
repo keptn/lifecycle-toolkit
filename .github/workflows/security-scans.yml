@@ -61,14 +61,14 @@ jobs:
           path: ./dist
 
       - name: Upload tag
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: tag
           path: |
             ./dist/dev-*/
 
       - name: Upload images
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: images
           path: |
@@ -109,7 +109,7 @@ jobs:
 
       - name: Download tag
         id: download_manifests
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: tag
           path: tag
@@ -153,7 +153,7 @@ jobs:
 
       - name: Upload KICS results
         if: always() && matrix.tool == 'kics'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: kics-results
           path: results.json
@@ -227,7 +227,7 @@ jobs:
 
       - name: Download images
         id: download_images
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: images
           path: images

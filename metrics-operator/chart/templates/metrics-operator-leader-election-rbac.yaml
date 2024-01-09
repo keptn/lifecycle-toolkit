@@ -3,9 +3,12 @@ kind: Role
 metadata:
   name: metrics-operator-leader-election-role
   namespace: {{ .Release.Namespace | quote }}
+  {{- $annotations := include "common.annotations" (dict "context" .) }}
+  {{- with $annotations }}
+  annotations: {{- . -}}
+  {{- end }}
   labels:
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include "common.annotations" ( dict "context" . ) }}
 rules:
 - apiGroups:
   - ""
@@ -44,9 +47,11 @@ kind: RoleBinding
 metadata:
   name: metrics-operator-leader-election-rolebinding
   namespace: {{ .Release.Namespace | quote }}
+  {{- with $annotations }}
+  annotations: {{- . -}}
+  {{- end }}
   labels:
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include "common.annotations" ( dict "context" . ) }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

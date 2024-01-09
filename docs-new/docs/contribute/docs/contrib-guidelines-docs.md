@@ -68,21 +68,21 @@ that are relevant only to documentation
   A good practice is to just code all links on their own page.
   So, instead of coding:
 
-  ```shell
-  The [Other section](long-link-to-section) page
-  ...
-  ```
+```shell
+The [Other section](long-link-to-section) page
+...
+```
 
   you should code the following,
   unless the link is so short
   that you are sure it will not violate the line-length rules::
 
-  ```shell
-  The
-  [Other section](long-link-to-section)
-  page
-  ...
-  ```
+```shell
+The
+[Other section](long-link-to-section)
+page
+...
+```
 
 * Always build the documentation locally to check the formatting
   and verify that all links are working properly.
@@ -92,9 +92,9 @@ that are relevant only to documentation
 * Always run the following to fix most markdown issues in your PR
   and identify issues that can not be fixed automatically:
 
-  ```shell
-  make markdownlint-fix
-  ```
+```shell
+make markdownlint-fix
+```
 
   See [Markdownlint](./linter-requirements.md#markdownlint)
   for details.

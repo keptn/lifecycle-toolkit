@@ -8,7 +8,7 @@ import (
 
 	"github.com/benbjohnson/clock"
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config/fake"
 	"github.com/stretchr/testify/require"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -27,13 +27,13 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout_SingleWorkload(
 
 	const namespace = "my-namespace"
 	const appName = "my-app"
-	kacr := &klcv1alpha3.KeptnAppCreationRequest{
+	kacr := &klcv1beta1.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:              "my-kacr",
 			Namespace:         namespace,
 			CreationTimestamp: metav1.Time{Time: theClock.Now()},
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+		Spec: klcv1beta1.KeptnAppCreationRequestSpec{
 			AppName: appName,
 		},
 	}
@@ -41,12 +41,12 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout_SingleWorkload(
 	err := fakeClient.Create(context.TODO(), kacr)
 	require.Nil(t, err)
 
-	workload1 := &klcv1alpha3.KeptnWorkload{
+	workload1 := &klcv1beta1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "w1",
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadSpec{
+		Spec: klcv1beta1.KeptnWorkloadSpec{
 			AppName: appName,
 			Version: "1.0+rc0",
 		},
@@ -77,7 +77,7 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout_SingleWorkload(
 	require.False(t, res.Requeue)
 	require.Zero(t, res.RequeueAfter)
 
-	kApp := &klcv1alpha3.KeptnApp{}
+	kApp := &klcv1beta1.KeptnApp{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
 
@@ -88,13 +88,13 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout_SingleWorkload(
 	// the App version is the same of the single workload
 	require.Equal(t, workload1.Spec.Version, kApp.Spec.Version)
 	require.Len(t, kApp.Spec.Workloads, 1)
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+	require.Contains(t, kApp.Spec.Workloads, klcv1beta1.KeptnWorkloadRef{
 		Name:    workload1.Name,
 		Version: workload1.Spec.Version,
 	})
 
 	// verify that the creationRequest has been deleted
-	cr := &klcv1alpha3.KeptnAppCreationRequest{}
+	cr := &klcv1beta1.KeptnAppCreationRequest{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Name, Namespace: kacr.Namespace}, cr)
 
@@ -106,13 +106,13 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout(t *testing.T) {
 
 	const namespace = "my-namespace"
 	const appName = "my-app"
-	kacr := &klcv1alpha3.KeptnAppCreationRequest{
+	kacr := &klcv1beta1.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:              "my-kacr",
 			Namespace:         namespace,
 			CreationTimestamp: metav1.Time{Time: theClock.Now()},
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+		Spec: klcv1beta1.KeptnAppCreationRequestSpec{
 			AppName: appName,
 		},
 	}
@@ -120,23 +120,23 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout(t *testing.T) {
 	err := fakeClient.Create(context.TODO(), kacr)
 	require.Nil(t, err)
 
-	workload1 := &klcv1alpha3.KeptnWorkload{
+	workload1 := &klcv1beta1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "w1",
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadSpec{
+		Spec: klcv1beta1.KeptnWorkloadSpec{
 			AppName: appName,
 			Version: "1.0",
 		},
 	}
 
-	workload2 := &klcv1alpha3.KeptnWorkload{
+	workload2 := &klcv1beta1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "w2",
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadSpec{
+		Spec: klcv1beta1.KeptnWorkloadSpec{
 			AppName: appName,
 			Version: "2.0",
 		},
@@ -169,7 +169,7 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout(t *testing.T) {
 	require.False(t, res.Requeue)
 	require.Zero(t, res.RequeueAfter)
 
-	kApp := &klcv1alpha3.KeptnApp{}
+	kApp := &klcv1beta1.KeptnApp{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
 
@@ -178,17 +178,17 @@ func TestKeptnAppCreationRequestReconciler_CreateAppAfterTimeout(t *testing.T) {
 
 	require.NotEmpty(t, kApp.Spec.Version)
 	require.Len(t, kApp.Spec.Workloads, 2)
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+	require.Contains(t, kApp.Spec.Workloads, klcv1beta1.KeptnWorkloadRef{
 		Name:    workload1.Name,
 		Version: workload1.Spec.Version,
 	})
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+	require.Contains(t, kApp.Spec.Workloads, klcv1beta1.KeptnWorkloadRef{
 		Name:    workload2.Name,
 		Version: workload2.Spec.Version,
 	})
 
 	// verify that the creationRequest has been deleted
-	cr := &klcv1alpha3.KeptnAppCreationRequest{}
+	cr := &klcv1beta1.KeptnAppCreationRequest{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Name, Namespace: kacr.Namespace}, cr)
 
@@ -199,13 +199,13 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewWorkload(t *tes
 	r, fakeClient, theClock := setupReconcilerAndClient(t)
 	const namespace = "my-namespace"
 	const appName = "my-app"
-	kacr := &klcv1alpha3.KeptnAppCreationRequest{
+	kacr := &klcv1beta1.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:              "my-kacr",
 			Namespace:         namespace,
 			CreationTimestamp: metav1.Time{Time: theClock.Now()},
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+		Spec: klcv1beta1.KeptnAppCreationRequestSpec{
 			AppName: appName,
 		},
 	}
@@ -213,12 +213,12 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewWorkload(t *tes
 	err := fakeClient.Create(context.TODO(), kacr)
 	require.Nil(t, err)
 
-	workload1 := &klcv1alpha3.KeptnWorkload{
+	workload1 := &klcv1beta1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "w1",
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadSpec{
+		Spec: klcv1beta1.KeptnWorkloadSpec{
 			AppName: appName,
 			Version: "1.0",
 		},
@@ -244,7 +244,7 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewWorkload(t *tes
 	require.False(t, res.Requeue)
 	require.Zero(t, res.RequeueAfter)
 
-	kApp := &klcv1alpha3.KeptnApp{}
+	kApp := &klcv1beta1.KeptnApp{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
 
@@ -253,7 +253,7 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewWorkload(t *tes
 
 	require.NotEmpty(t, kApp.Spec.Version)
 	require.Len(t, kApp.Spec.Workloads, 1)
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+	require.Contains(t, kApp.Spec.Workloads, klcv1beta1.KeptnWorkloadRef{
 		Name:    workload1.Name,
 		Version: workload1.Spec.Version,
 	})
@@ -261,7 +261,7 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewWorkload(t *tes
 	firstVersion := kApp.Spec.Version
 
 	// verify that the creationRequest has been deleted
-	cr := &klcv1alpha3.KeptnAppCreationRequest{}
+	cr := &klcv1beta1.KeptnAppCreationRequest{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Name, Namespace: kacr.Namespace}, cr)
 
@@ -269,12 +269,12 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewWorkload(t *tes
 
 	// create a new workload
 
-	workload2 := &klcv1alpha3.KeptnWorkload{
+	workload2 := &klcv1beta1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "w2",
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadSpec{
+		Spec: klcv1beta1.KeptnWorkloadSpec{
 			AppName: appName,
 			Version: "2.0",
 		},
@@ -284,13 +284,13 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewWorkload(t *tes
 	require.Nil(t, err)
 
 	// create a new instance of a CreationRequest
-	newKACR := &klcv1alpha3.KeptnAppCreationRequest{
+	newKACR := &klcv1beta1.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:              "my-kacr",
 			Namespace:         namespace,
 			CreationTimestamp: metav1.Time{Time: theClock.Now()},
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+		Spec: klcv1beta1.KeptnAppCreationRequestSpec{
 			AppName: appName,
 		},
 	}
@@ -307,7 +307,7 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewWorkload(t *tes
 	require.False(t, res.Requeue)
 	require.Zero(t, res.RequeueAfter)
 
-	kApp = &klcv1alpha3.KeptnApp{}
+	kApp = &klcv1beta1.KeptnApp{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
 
@@ -316,13 +316,13 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewWorkload(t *tes
 
 	require.NotEmpty(t, kApp.Spec.Version)
 	require.NotEqual(t, firstVersion, kApp.Spec.Version)
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+	require.Contains(t, kApp.Spec.Workloads, klcv1beta1.KeptnWorkloadRef{
 		Name:    workload1.Name,
 		Version: workload1.Spec.Version,
 	})
 	// now we should see the new workload as well
 	require.Len(t, kApp.Spec.Workloads, 2)
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+	require.Contains(t, kApp.Spec.Workloads, klcv1beta1.KeptnWorkloadRef{
 		Name:    workload2.Name,
 		Version: workload2.Spec.Version,
 	})
@@ -332,13 +332,13 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewVersion(t *test
 	r, fakeClient, theClock := setupReconcilerAndClient(t)
 	const namespace = "my-namespace"
 	const appName = "my-app"
-	kacr := &klcv1alpha3.KeptnAppCreationRequest{
+	kacr := &klcv1beta1.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:              "my-kacr",
 			Namespace:         namespace,
 			CreationTimestamp: metav1.Time{Time: theClock.Now()},
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+		Spec: klcv1beta1.KeptnAppCreationRequestSpec{
 			AppName: appName,
 		},
 	}
@@ -346,12 +346,12 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewVersion(t *test
 	err := fakeClient.Create(context.TODO(), kacr)
 	require.Nil(t, err)
 
-	workload1 := &klcv1alpha3.KeptnWorkload{
+	workload1 := &klcv1beta1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "w1",
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadSpec{
+		Spec: klcv1beta1.KeptnWorkloadSpec{
 			AppName: appName,
 			Version: "1.0",
 		},
@@ -377,7 +377,7 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewVersion(t *test
 	require.False(t, res.Requeue)
 	require.Zero(t, res.RequeueAfter)
 
-	kApp := &klcv1alpha3.KeptnApp{}
+	kApp := &klcv1beta1.KeptnApp{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
 
@@ -386,7 +386,7 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewVersion(t *test
 
 	require.NotEmpty(t, kApp.Spec.Version)
 	require.Len(t, kApp.Spec.Workloads, 1)
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+	require.Contains(t, kApp.Spec.Workloads, klcv1beta1.KeptnWorkloadRef{
 		Name:    workload1.Name,
 		Version: workload1.Spec.Version,
 	})
@@ -394,7 +394,7 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewVersion(t *test
 	firstVersion := kApp.Spec.Version
 
 	// verify that the creationRequest has been deleted
-	cr := &klcv1alpha3.KeptnAppCreationRequest{}
+	cr := &klcv1beta1.KeptnAppCreationRequest{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Name, Namespace: kacr.Namespace}, cr)
 
@@ -407,13 +407,13 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewVersion(t *test
 	require.Nil(t, err)
 
 	// create a new instance of a CreationRequest
-	newKACR := &klcv1alpha3.KeptnAppCreationRequest{
+	newKACR := &klcv1beta1.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:              "my-kacr",
 			Namespace:         namespace,
 			CreationTimestamp: metav1.Time{Time: theClock.Now()},
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+		Spec: klcv1beta1.KeptnAppCreationRequestSpec{
 			AppName: appName,
 		},
 	}
@@ -429,7 +429,7 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewVersion(t *test
 	require.False(t, res.Requeue)
 	require.Zero(t, res.RequeueAfter)
 
-	kApp = &klcv1alpha3.KeptnApp{}
+	kApp = &klcv1beta1.KeptnApp{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
 
@@ -440,7 +440,7 @@ func TestKeptnAppCreationRequestReconciler_UpdateWorkloadsWithNewVersion(t *test
 	// the version number of the app should have been changed
 	require.NotEqual(t, firstVersion, kApp.Spec.Version)
 	require.Len(t, kApp.Spec.Workloads, 1)
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+	require.Contains(t, kApp.Spec.Workloads, klcv1beta1.KeptnWorkloadRef{
 		Name:    workload1.Name,
 		Version: workload1.Spec.Version,
 	})
@@ -450,13 +450,13 @@ func TestKeptnAppCreationRequestReconciler_RemoveWorkload(t *testing.T) {
 	r, fakeClient, theClock := setupReconcilerAndClient(t)
 	const namespace = "my-namespace"
 	const appName = "my-app"
-	kacr := &klcv1alpha3.KeptnAppCreationRequest{
+	kacr := &klcv1beta1.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:              "my-kacr",
 			Namespace:         namespace,
 			CreationTimestamp: metav1.Time{Time: theClock.Now()},
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+		Spec: klcv1beta1.KeptnAppCreationRequestSpec{
 			AppName: appName,
 		},
 	}
@@ -464,12 +464,12 @@ func TestKeptnAppCreationRequestReconciler_RemoveWorkload(t *testing.T) {
 	err := fakeClient.Create(context.TODO(), kacr)
 	require.Nil(t, err)
 
-	workload1 := &klcv1alpha3.KeptnWorkload{
+	workload1 := &klcv1beta1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "w1",
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadSpec{
+		Spec: klcv1beta1.KeptnWorkloadSpec{
 			AppName: appName,
 			Version: "1.0",
 		},
@@ -478,12 +478,12 @@ func TestKeptnAppCreationRequestReconciler_RemoveWorkload(t *testing.T) {
 	err = fakeClient.Create(context.TODO(), workload1)
 	require.Nil(t, err)
 
-	workload2 := &klcv1alpha3.KeptnWorkload{
+	workload2 := &klcv1beta1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "w2",
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadSpec{
+		Spec: klcv1beta1.KeptnWorkloadSpec{
 			AppName: appName,
 			Version: "1.0",
 		},
@@ -507,7 +507,7 @@ func TestKeptnAppCreationRequestReconciler_RemoveWorkload(t *testing.T) {
 	require.False(t, res.Requeue)
 	require.Zero(t, res.RequeueAfter)
 
-	kApp := &klcv1alpha3.KeptnApp{}
+	kApp := &klcv1beta1.KeptnApp{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
 
@@ -516,11 +516,11 @@ func TestKeptnAppCreationRequestReconciler_RemoveWorkload(t *testing.T) {
 
 	require.NotEmpty(t, kApp.Spec.Version)
 	require.Len(t, kApp.Spec.Workloads, 2)
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+	require.Contains(t, kApp.Spec.Workloads, klcv1beta1.KeptnWorkloadRef{
 		Name:    workload1.Name,
 		Version: workload1.Spec.Version,
 	})
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+	require.Contains(t, kApp.Spec.Workloads, klcv1beta1.KeptnWorkloadRef{
 		Name:    workload2.Name,
 		Version: workload2.Spec.Version,
 	})
@@ -528,7 +528,7 @@ func TestKeptnAppCreationRequestReconciler_RemoveWorkload(t *testing.T) {
 	firstVersion := kApp.Spec.Version
 
 	// verify that the creationRequest has been deleted
-	cr := &klcv1alpha3.KeptnAppCreationRequest{}
+	cr := &klcv1beta1.KeptnAppCreationRequest{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Name, Namespace: kacr.Namespace}, cr)
 
@@ -539,13 +539,13 @@ func TestKeptnAppCreationRequestReconciler_RemoveWorkload(t *testing.T) {
 	require.Nil(t, err)
 
 	// create a new instance of a CreationRequest
-	newKACR := &klcv1alpha3.KeptnAppCreationRequest{
+	newKACR := &klcv1beta1.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:              "my-kacr",
 			Namespace:         namespace,
 			CreationTimestamp: metav1.Time{Time: theClock.Now()},
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+		Spec: klcv1beta1.KeptnAppCreationRequestSpec{
 			AppName: appName,
 		},
 	}
@@ -562,7 +562,7 @@ func TestKeptnAppCreationRequestReconciler_RemoveWorkload(t *testing.T) {
 	require.False(t, res.Requeue)
 	require.Zero(t, res.RequeueAfter)
 
-	kApp = &klcv1alpha3.KeptnApp{}
+	kApp = &klcv1beta1.KeptnApp{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
 
@@ -573,7 +573,7 @@ func TestKeptnAppCreationRequestReconciler_RemoveWorkload(t *testing.T) {
 	require.NotEqual(t, firstVersion, kApp.Spec.Version)
 	// now we should see only one workload
 	require.Len(t, kApp.Spec.Workloads, 1)
-	require.Contains(t, kApp.Spec.Workloads, klcv1alpha3.KeptnWorkloadRef{
+	require.Contains(t, kApp.Spec.Workloads, klcv1beta1.KeptnWorkloadRef{
 		Name:    workload2.Name,
 		Version: workload2.Spec.Version,
 	})
@@ -583,13 +583,13 @@ func TestKeptnAppCreationRequestReconciler_DoNotOverwriteUserDefinedApp(t *testi
 	r, fakeClient, theClock := setupReconcilerAndClient(t)
 	const namespace = "my-namespace"
 	const appName = "my-app"
-	kacr := &klcv1alpha3.KeptnAppCreationRequest{
+	kacr := &klcv1beta1.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:              "my-kacr",
 			Namespace:         namespace,
 			CreationTimestamp: metav1.Time{Time: theClock.Now()},
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+		Spec: klcv1beta1.KeptnAppCreationRequestSpec{
 			AppName: appName,
 		},
 	}
@@ -597,12 +597,12 @@ func TestKeptnAppCreationRequestReconciler_DoNotOverwriteUserDefinedApp(t *testi
 	err := fakeClient.Create(context.TODO(), kacr)
 	require.Nil(t, err)
 
-	existingApp := &klcv1alpha3.KeptnApp{
+	existingApp := &klcv1beta1.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      appName,
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnAppSpec{
+		Spec: klcv1beta1.KeptnAppSpec{
 			Version: "1.0",
 		},
 	}
@@ -628,7 +628,7 @@ func TestKeptnAppCreationRequestReconciler_DoNotOverwriteUserDefinedApp(t *testi
 	require.False(t, res.Requeue)
 	require.Zero(t, res.RequeueAfter)
 
-	kApp := &klcv1alpha3.KeptnApp{}
+	kApp := &klcv1beta1.KeptnApp{}
 
 	err = fakeClient.Get(context.Background(), types.NamespacedName{Name: kacr.Spec.AppName, Namespace: kacr.Namespace}, kApp)
 
@@ -638,7 +638,7 @@ func TestKeptnAppCreationRequestReconciler_DoNotOverwriteUserDefinedApp(t *testi
 	require.Equal(t, existingApp.Spec.Version, kApp.Spec.Version)
 
 	// verify that the creationRequest has been deleted
-	cr := &klcv1alpha3.KeptnAppCreationRequest{}
+	cr := &klcv1beta1.KeptnAppCreationRequest{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{Name: kacr.Name, Namespace: kacr.Namespace}, cr)
 
@@ -648,15 +648,15 @@ func TestKeptnAppCreationRequestReconciler_DoNotOverwriteUserDefinedApp(t *testi
 func setupReconcilerAndClient(t *testing.T) (*KeptnAppCreationRequestReconciler, client.Client, *clock.Mock) {
 	scheme := runtime.NewScheme()
 
-	err := klcv1alpha3.AddToScheme(scheme)
+	err := klcv1beta1.AddToScheme(scheme)
 	require.Nil(t, err)
 
 	workloadAppIndexer := func(obj client.Object) []string {
-		workload, _ := obj.(*klcv1alpha3.KeptnWorkload)
+		workload, _ := obj.(*klcv1beta1.KeptnWorkload)
 		return []string{workload.Spec.AppName}
 	}
 
-	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme).WithObjects().WithIndex(&klcv1alpha3.KeptnWorkload{}, "spec.app", workloadAppIndexer).Build()
+	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme).WithObjects().WithIndex(&klcv1beta1.KeptnWorkload{}, "spec.app", workloadAppIndexer).Build()
 
 	theClock := clock.NewMock()
 	r := &KeptnAppCreationRequestReconciler{
@@ -690,23 +690,23 @@ func TestKeptnAppCreationRequestReconciler_getWorkloads(t *testing.T) {
 
 	appName := "my-app"
 
-	workload1 := &klcv1alpha3.KeptnWorkload{
+	workload1 := &klcv1beta1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "workloadA",
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadSpec{
+		Spec: klcv1beta1.KeptnWorkloadSpec{
 			AppName: appName,
 			Version: "1.0",
 		},
 	}
 
-	workload2 := &klcv1alpha3.KeptnWorkload{
+	workload2 := &klcv1beta1.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "workloadB",
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnWorkloadSpec{
+		Spec: klcv1beta1.KeptnWorkloadSpec{
 			AppName: appName,
 			Version: "1.0",
 		},
@@ -714,41 +714,41 @@ func TestKeptnAppCreationRequestReconciler_getWorkloads(t *testing.T) {
 
 	type args struct {
 		ctx             context.Context
-		creationRequest *klcv1alpha3.KeptnAppCreationRequest
+		creationRequest *klcv1beta1.KeptnAppCreationRequest
 	}
 	tests := []struct {
 		name               string
 		args               args
-		workloadsInCluster []klcv1alpha3.KeptnWorkload
-		want               []klcv1alpha3.KeptnWorkload
+		workloadsInCluster []klcv1beta1.KeptnWorkload
+		want               []klcv1beta1.KeptnWorkload
 		wantErr            bool
 	}{
 		{
 			name: "get workloads in alphabetical order - already sorted",
 			args: args{
 				ctx: context.Background(),
-				creationRequest: &klcv1alpha3.KeptnAppCreationRequest{
-					Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+				creationRequest: &klcv1beta1.KeptnAppCreationRequest{
+					Spec: klcv1beta1.KeptnAppCreationRequestSpec{
 						AppName: appName,
 					},
 				},
 			},
-			workloadsInCluster: []klcv1alpha3.KeptnWorkload{*workload1, *workload2},
-			want:               []klcv1alpha3.KeptnWorkload{*workload1, *workload2},
+			workloadsInCluster: []klcv1beta1.KeptnWorkload{*workload1, *workload2},
+			want:               []klcv1beta1.KeptnWorkload{*workload1, *workload2},
 			wantErr:            false,
 		},
 		{
 			name: "get workloads in alphabetical order - not sorted",
 			args: args{
 				ctx: context.Background(),
-				creationRequest: &klcv1alpha3.KeptnAppCreationRequest{
-					Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+				creationRequest: &klcv1beta1.KeptnAppCreationRequest{
+					Spec: klcv1beta1.KeptnAppCreationRequestSpec{
 						AppName: appName,
 					},
 				},
 			},
-			workloadsInCluster: []klcv1alpha3.KeptnWorkload{*workload2, *workload1},
-			want:               []klcv1alpha3.KeptnWorkload{*workload1, *workload2},
+			workloadsInCluster: []klcv1beta1.KeptnWorkload{*workload2, *workload1},
+			want:               []klcv1beta1.KeptnWorkload{*workload1, *workload2},
 			wantErr:            false,
 		},
 	}

@@ -42,7 +42,7 @@ webhooks:
       service:
         name: lifecycle-webhook-service
         namespace: system
-        path: /validate-lifecycle-keptn-sh-v1alpha3-keptntaskdefinition
+        path: /validate-lifecycle-keptn-sh-v1beta1-keptntaskdefinition
     failurePolicy: Fail
     name: vkeptntaskdefinition.kb.io
     rules:

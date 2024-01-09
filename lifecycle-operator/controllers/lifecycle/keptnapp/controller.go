@@ -21,8 +21,8 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	operatorcommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
@@ -68,7 +68,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	requestInfo := controllercommon.GetRequestInfo(req)
 	r.Log.Info("Searching for App", "requestInfo", requestInfo)
 
-	app := &klcv1alpha3.KeptnApp{}
+	app := &klcv1beta1.KeptnApp{}
 	err := r.Get(ctx, req.NamespacedName, app)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
@@ -82,7 +82,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 
 	r.Log.Info("Reconciling Keptn App", "app", app.Name)
 
-	appVersion := &klcv1alpha3.KeptnAppVersion{}
+	appVersion := &klcv1beta1.KeptnAppVersion{}
 
 	// Try to find the AppVersion
 	err = r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.GetAppVersionName()}, appVersion)
@@ -120,11 +120,11 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnAppReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1alpha3.KeptnApp{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		For(&klcv1beta1.KeptnApp{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }
 
-func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alpha3.KeptnApp) (*klcv1alpha3.KeptnAppVersion, error) {
+func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1beta1.KeptnApp) (*klcv1beta1.KeptnAppVersion, error) {
 
 	previousVersion := ""
 	if app.Spec.Version != app.Status.CurrentVersion {
@@ -141,7 +141,7 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1alp
 	return &appVersion, err
 }
 
-func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv1alpha3.KeptnApp) error {
+func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv1beta1.KeptnApp) error {
 	if app.Generation != 1 {
 		if err := r.deprecateAppVersions(ctx, app); err != nil {
 			r.Log.Error(err, "could not deprecate appVersions for appVersion %s", app.GetAppVersionName())
@@ -152,11 +152,11 @@ func (r *KeptnAppReconciler) handleGenerationBump(ctx context.Context, app *klcv
 	return nil
 }
 
-func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv1alpha3.KeptnApp) error {
+func (r *KeptnAppReconciler) deprecateAppVersions(ctx context.Context, app *klcv1beta1.KeptnApp) error {
 	var lastResultErr error
 	lastResultErr = nil
 	for i := app.Generation - 1; i > 0; i-- {
-		deprecatedAppVersion := &klcv1alpha3.KeptnAppVersion{}
+		deprecatedAppVersion := &klcv1beta1.KeptnAppVersion{}
 		appVersionName := operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKeptnNameLen, app.Name, app.Spec.Version, common.Hash(i))
 		if err := r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: appVersionName}, deprecatedAppVersion); err != nil {
 			if !errors.IsNotFound(err) {

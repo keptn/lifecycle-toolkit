@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr/testr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator/handlers"
@@ -132,7 +132,7 @@ func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
 	require.True(t, resp.Allowed)
 
 	// if we get an unsupported owner for the pod, we expect not to have any Keptn resources to have been created
-	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
+	kacr := &klcv1beta1.KeptnAppCreationRequest{}
 
 	err := fakeClient.Get(context.Background(), types.NamespacedName{
 		Namespace: testNamespace,
@@ -142,7 +142,7 @@ func TestPodMutatingWebhookHandleUnsupportedOwner(t *testing.T) {
 	require.NotNil(t, err)
 	require.True(t, k8serrors.IsNotFound(err))
 
-	workload := &klcv1alpha3.KeptnWorkload{}
+	workload := &klcv1beta1.KeptnWorkload{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
 		Namespace: testNamespace,
@@ -204,7 +204,7 @@ func TestPodMutatingWebhookHandleSingleService(t *testing.T) {
 	require.NotNil(t, resp)
 	require.True(t, resp.Allowed)
 
-	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
+	kacr := &klcv1beta1.KeptnAppCreationRequest{}
 
 	err := fakeClient.Get(context.Background(), types.NamespacedName{
 		Namespace: testNamespace,
@@ -216,7 +216,7 @@ func TestPodMutatingWebhookHandleSingleService(t *testing.T) {
 	require.Equal(t, testWorkload, kacr.Spec.AppName)
 	require.Equal(t, string(apicommon.AppTypeSingleService), kacr.Annotations[apicommon.AppTypeAnnotation])
 
-	workload := &klcv1alpha3.KeptnWorkload{}
+	workload := &klcv1beta1.KeptnWorkload{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
 		Namespace: testNamespace,
@@ -225,10 +225,10 @@ func TestPodMutatingWebhookHandleSingleService(t *testing.T) {
 
 	require.Nil(t, err)
 
-	require.Equal(t, klcv1alpha3.KeptnWorkloadSpec{
+	require.Equal(t, klcv1beta1.KeptnWorkloadSpec{
 		AppName: kacr.Spec.AppName,
 		Version: "0.1",
-		ResourceReference: klcv1alpha3.ResourceReference{
+		ResourceReference: klcv1beta1.ResourceReference{
 			UID:  "1234",
 			Kind: "Deployment",
 			Name: testDeployment,
@@ -356,7 +356,7 @@ func TestPodMutatingWebhookHandleSchedulingGates(t *testing.T) {
 		require.Equal(t, expectedValue, resp.Patches[1].Value)
 	}
 
-	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
+	kacr := &klcv1beta1.KeptnAppCreationRequest{}
 
 	err := fakeClient.Get(context.Background(), types.NamespacedName{
 		Namespace: testNamespace,
@@ -368,7 +368,7 @@ func TestPodMutatingWebhookHandleSchedulingGates(t *testing.T) {
 	require.Equal(t, testWorkload, kacr.Spec.AppName)
 	require.Equal(t, string(apicommon.AppTypeSingleService), kacr.Annotations[apicommon.AppTypeAnnotation])
 
-	workload := &klcv1alpha3.KeptnWorkload{}
+	workload := &klcv1beta1.KeptnWorkload{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
 		Namespace: testNamespace,
@@ -377,10 +377,10 @@ func TestPodMutatingWebhookHandleSchedulingGates(t *testing.T) {
 
 	require.Nil(t, err)
 
-	require.Equal(t, klcv1alpha3.KeptnWorkloadSpec{
+	require.Equal(t, klcv1beta1.KeptnWorkloadSpec{
 		AppName: kacr.Spec.AppName,
 		Version: "0.1",
-		ResourceReference: klcv1alpha3.ResourceReference{
+		ResourceReference: klcv1beta1.ResourceReference{
 			UID:  "1234",
 			Kind: "Deployment",
 			Name: testDeployment,
@@ -396,7 +396,7 @@ func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t
 				apicommon.NamespaceEnabledAnnotation: "enabled",
 			},
 		},
-	}, &klcv1alpha3.KeptnAppCreationRequest{
+	}, &klcv1beta1.KeptnAppCreationRequest{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testWorkload,
@@ -408,7 +408,7 @@ func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t
 				"donotchange": "true",
 			},
 		},
-		Spec: klcv1alpha3.KeptnAppCreationRequestSpec{
+		Spec: klcv1beta1.KeptnAppCreationRequestSpec{
 			AppName: testWorkload,
 		},
 	})
@@ -453,7 +453,7 @@ func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t
 	require.NotNil(t, resp)
 	require.True(t, resp.Allowed)
 
-	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
+	kacr := &klcv1beta1.KeptnAppCreationRequest{}
 
 	err := fakeClient.Get(context.Background(), types.NamespacedName{
 		Namespace: testNamespace,
@@ -467,7 +467,7 @@ func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t
 	// verify that the previously created KACR has not been changed
 	require.Equal(t, "true", kacr.Labels["donotchange"])
 
-	workload := &klcv1alpha3.KeptnWorkload{}
+	workload := &klcv1beta1.KeptnWorkload{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
 		Namespace: testNamespace,
@@ -476,10 +476,10 @@ func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t
 
 	require.Nil(t, err)
 
-	require.Equal(t, klcv1alpha3.KeptnWorkloadSpec{
+	require.Equal(t, klcv1beta1.KeptnWorkloadSpec{
 		AppName: kacr.Spec.AppName,
 		Version: "0.1",
-		ResourceReference: klcv1alpha3.ResourceReference{
+		ResourceReference: klcv1beta1.ResourceReference{
 			UID:  "1234",
 			Kind: "Deployment",
 			Name: testDeployment,
@@ -510,7 +510,7 @@ func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
 	require.NotNil(t, resp)
 	require.True(t, resp.Allowed)
 
-	kacr := &klcv1alpha3.KeptnAppCreationRequest{}
+	kacr := &klcv1beta1.KeptnAppCreationRequest{}
 
 	err := fakeClient.Get(context.Background(), types.NamespacedName{
 		Namespace: testNamespace,
@@ -523,7 +523,7 @@ func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
 	// here we do not want a single-service annotation
 	require.Empty(t, kacr.Annotations[apicommon.AppTypeAnnotation])
 
-	workload := &klcv1alpha3.KeptnWorkload{}
+	workload := &klcv1beta1.KeptnWorkload{}
 
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
 		Namespace: testNamespace,
@@ -532,10 +532,10 @@ func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
 
 	require.Nil(t, err)
 
-	require.Equal(t, klcv1alpha3.KeptnWorkloadSpec{
+	require.Equal(t, klcv1beta1.KeptnWorkloadSpec{
 		AppName: kacr.Spec.AppName,
 		Version: "v0.1",
-		ResourceReference: klcv1alpha3.ResourceReference{
+		ResourceReference: klcv1beta1.ResourceReference{
 			UID:  "1234",
 			Kind: "Deployment",
 			Name: testDeployment,

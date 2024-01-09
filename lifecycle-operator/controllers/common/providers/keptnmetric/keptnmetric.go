@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/types"
@@ -18,7 +18,7 @@ type KeptnMetricProvider struct {
 }
 
 // FetchData fetches the SLI values from KeptnMetric resource
-func (p *KeptnMetricProvider) FetchData(ctx context.Context, objective klcv1alpha3.Objective, namespace string) (string, []byte, error) {
+func (p *KeptnMetricProvider) FetchData(ctx context.Context, objective klcv1beta1.Objective, namespace string) (string, []byte, error) {
 	metric, err := p.GetKeptnMetric(ctx, objective, namespace)
 	if err != nil {
 		return "", nil, err
@@ -41,11 +41,11 @@ func (p *KeptnMetricProvider) FetchData(ctx context.Context, objective klcv1alph
 	return value, []byte(rawValue), nil
 }
 
-func (p *KeptnMetricProvider) GetKeptnMetric(ctx context.Context, objective klcv1alpha3.Objective, namespace string) (*unstructured.Unstructured, error) {
+func (p *KeptnMetricProvider) GetKeptnMetric(ctx context.Context, objective klcv1beta1.Objective, namespace string) (*unstructured.Unstructured, error) {
 	metric := &unstructured.Unstructured{
 		Object: map[string]interface{}{
 			"kind":       "KeptnMetric",
-			"apiVersion": "metrics.keptn.sh/v1alpha3",
+			"apiVersion": "metrics.keptn.sh/v1beta1",
 		},
 	}
 

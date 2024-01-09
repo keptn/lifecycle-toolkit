@@ -238,6 +238,18 @@ func (w *KeptnWorkloadVersion) SetEndTime() {
 	}
 }
 
+func (e *ItemStatus) SetStartTime() {
+	if e.StartTime.IsZero() {
+		e.StartTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (e *ItemStatus) SetEndTime() {
+	if e.EndTime.IsZero() {
+		e.EndTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
 func (w *KeptnWorkloadVersion) IsStartTimeSet() bool {
 	return !w.Status.StartTime.IsZero()
 }

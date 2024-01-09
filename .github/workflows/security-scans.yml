@@ -109,7 +109,7 @@ jobs:
 
       - name: Download tag
         id: download_manifests
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: tag
           path: tag
@@ -227,7 +227,7 @@ jobs:
 
       - name: Download images
         id: download_images
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: images
           path: images

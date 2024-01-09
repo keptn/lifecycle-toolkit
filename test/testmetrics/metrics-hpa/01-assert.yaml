@@ -20,4 +20,3 @@ collectors:
   - type: pod
     selector: app=podtato-head
   - command: kubectl logs -l app=podtato-head -n $NAMESPACE
-    

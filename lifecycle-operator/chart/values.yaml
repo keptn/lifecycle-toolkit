@@ -20,8 +20,6 @@ global:
   ##
   commonAnnotations: { }
 
-
-
 lifecycleOperatorConfig:
   health:
 ## @param    lifecycleOperatorConfig.health.healthProbeBindAddress setup on what address to start the default health handler

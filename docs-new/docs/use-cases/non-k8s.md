@@ -188,7 +188,7 @@ as long Keptn can access a monitoring provider endpoint
 that serves metrics for the application.
 You can point to multiple instances of the supported monitoring providers
 (Prometheus, Dynatrace, Datadog, and dql)
-so the application itself can run anywhere,
+so the application itself can run anywhere.
 
 To implement a Keptn analysis for your deployment:
 

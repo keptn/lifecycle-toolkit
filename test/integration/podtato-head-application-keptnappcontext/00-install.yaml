@@ -1,0 +1,11 @@
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnAppContext
+metadata:
+  name: podtato-head
+spec:
+  metadata:
+    context: "context-hello"
+  preDeploymentTasks:
+    - pre-deployment-hello
+  postDeploymentTasks:
+    - post-deployment-hello

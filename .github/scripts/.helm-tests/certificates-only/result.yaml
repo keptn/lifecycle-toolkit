@@ -5,6 +5,8 @@ kind: ServiceAccount
 metadata:
   name: certificate-operator
   namespace: "helmtests"
+  annotations:
+    ciao: commonannotation
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/part-of: keptn
@@ -14,8 +16,6 @@ metadata:
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: cert-manager-0.2.0
     mamma: test
-  annotations:
-    ciao: commonannotation
 ---
 # Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -23,6 +23,8 @@ kind: ClusterRole
 metadata:
   name: certificate-operator-role
   namespace: "helmtests"
+  annotations:
+    ciao: commonannotation
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -76,6 +78,8 @@ kind: ClusterRoleBinding
 metadata:
   name: certificate-operator-rolebinding
   namespace: "helmtests"
+  annotations:
+    ciao: commonannotation
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -101,6 +105,8 @@ kind: Role
 metadata:
   name: certificate-operator-role
   namespace: "helmtests"
+  annotations:
+    ciao: commonannotation
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -108,8 +114,6 @@ metadata:
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: cert-manager-0.2.0
     mamma: test
-  annotations:
-    ciao: commonannotation
 rules:
 - apiGroups:
   - ""
@@ -136,6 +140,8 @@ kind: RoleBinding
 metadata:
   name: certificate-operator-leader-election-rolebinding
   namespace: "helmtests"
+  annotations:
+    ciao: commonannotation
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -146,7 +152,6 @@ metadata:
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: cert-manager-0.2.0
     mamma: test
-  annotations:
     ciao: commonannotation
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -163,6 +168,8 @@ kind: RoleBinding
 metadata:
   name: certificate-operator-role-binding
   namespace: "helmtests"
+  annotations:
+    ciao: commonannotation
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -173,8 +180,6 @@ metadata:
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: cert-manager-0.2.0
     mamma: test
-  annotations:
-    ciao: commonannotation
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -190,6 +195,8 @@ kind: Deployment
 metadata:
   name: certificate-operator
   namespace: "helmtests"
+  annotations:
+    ciao: commonannotation
   labels:
     app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/part-of: keptn
@@ -200,8 +207,6 @@ metadata:
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: cert-manager-0.2.0
     mamma: test
-  annotations:
-    ciao: commonannotation
 spec:
   replicas: 1
   selector:

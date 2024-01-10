@@ -123,7 +123,7 @@ file for our example looks like:
 
 ```yaml
 apiVersion: metrics.keptn.sh/v1beta1
-kind: Keptnmetric
+kind: KeptnMetric
 metadata:
   name: available-cpus
   namespace: simplenode-dev
@@ -134,7 +134,7 @@ spec:
   fetchIntervalSeconds: 10
 ---
 apiVersion: metrics.keptn.sh/v1beta1
-kind: Keptnmetric
+kind: KeptnMetric
 metadata:
   name: availability-slo
   namespace: simplenode-dev

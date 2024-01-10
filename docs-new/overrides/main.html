@@ -1,6 +1,11 @@
 <!-- Elements added to main will be displayed on all pages -->
 {% extends "base.html" %}
 
+{% block extrahead %}
+  <meta name="google-site-verification" content="wJmnNde1ikbrByHCNAHV6uuD1kCeX6fLE0MwWZCJymo" />
+  {{ super() }}
+{% endblock %}
+
 <!-- More minimal footer -->
 {% block footer %}
 <footer class="md-footer">

@@ -38,7 +38,7 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 	}
 	r, _ := setupReconciler()
 
-	appVersion, err := r.createAppVersion(context.TODO(), app)
+	appVersion, err := r.createAppVersion(context.TODO(), app, nil)
 	if err != nil {
 		t.Errorf("Error Creating appVersion: %s", err.Error())
 	}

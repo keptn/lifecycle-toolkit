@@ -12306,7 +12306,7 @@ webhooks:
   - apiGroups:
     - lifecycle.keptn.sh
     apiVersions:
-    - v1alpha3
+    - v1beta1
     operations:
     - CREATE
     - UPDATE

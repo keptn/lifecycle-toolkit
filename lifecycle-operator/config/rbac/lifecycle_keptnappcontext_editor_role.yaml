@@ -1,0 +1,31 @@
+# permissions for end users to edit keptnappcontexts.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: keptnappcontext-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: lifecycle-operator
+    app.kubernetes.io/part-of: lifecycle-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: keptnappcontext-editor-role
+rules:
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappcontexts
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnappcontexts/status
+    verbs:
+      - get

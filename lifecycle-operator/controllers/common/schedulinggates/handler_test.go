@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
@@ -102,7 +101,7 @@ func Test_RemovePodGates(t *testing.T) {
 		},
 	}
 
-	err := klcv1alpha3.AddToScheme(scheme.Scheme)
+	err := klcv1beta1.AddToScheme(scheme.Scheme)
 	require.Nil(t, err)
 
 	for _, tt := range tests {
@@ -195,7 +194,7 @@ func Test_GetPodsOfOwner(t *testing.T) {
 		},
 	}
 
-	err := klcv1alpha3.AddToScheme(scheme.Scheme)
+	err := klcv1beta1.AddToScheme(scheme.Scheme)
 	require.Nil(t, err)
 
 	for _, tt := range tests {
@@ -224,16 +223,16 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 	tests := []struct {
 		name    string
 		handler Handler
-		wi      *klcv1alpha4.KeptnWorkloadVersion
+		wi      *klcv1beta1.KeptnWorkloadVersion
 		wantErr error
 	}{
 		{
 			name:    "unsuported resource ref",
 			handler: Handler{},
-			wi: &klcv1alpha4.KeptnWorkloadVersion{
-				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
-						ResourceReference: klcv1alpha3.ResourceReference{
+			wi: &klcv1beta1.KeptnWorkloadVersion{
+				Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+						ResourceReference: klcv1beta1.ResourceReference{
 							Kind: "unsupported",
 						},
 					},
@@ -248,10 +247,10 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					return nil
 				},
 			},
-			wi: &klcv1alpha4.KeptnWorkloadVersion{
-				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
-						ResourceReference: klcv1alpha3.ResourceReference{
+			wi: &klcv1beta1.KeptnWorkloadVersion{
+				Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+						ResourceReference: klcv1beta1.ResourceReference{
 							Kind: "Pod",
 						},
 					},
@@ -266,10 +265,10 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					return fmt.Errorf("pod")
 				},
 			},
-			wi: &klcv1alpha4.KeptnWorkloadVersion{
-				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
-						ResourceReference: klcv1alpha3.ResourceReference{
+			wi: &klcv1beta1.KeptnWorkloadVersion{
+				Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+						ResourceReference: klcv1beta1.ResourceReference{
 							Kind: "Pod",
 						},
 					},
@@ -287,10 +286,10 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					return []string{"podName"}, nil
 				},
 			},
-			wi: &klcv1alpha4.KeptnWorkloadVersion{
-				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
-						ResourceReference: klcv1alpha3.ResourceReference{
+			wi: &klcv1beta1.KeptnWorkloadVersion{
+				Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+						ResourceReference: klcv1beta1.ResourceReference{
 							Kind: "ReplicaSet",
 						},
 					},
@@ -305,10 +304,10 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					return []string{}, nil
 				},
 			},
-			wi: &klcv1alpha4.KeptnWorkloadVersion{
-				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
-						ResourceReference: klcv1alpha3.ResourceReference{
+			wi: &klcv1beta1.KeptnWorkloadVersion{
+				Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+						ResourceReference: klcv1beta1.ResourceReference{
 							Kind: "ReplicaSet",
 						},
 					},
@@ -323,10 +322,10 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					return []string{}, fmt.Errorf("err")
 				},
 			},
-			wi: &klcv1alpha4.KeptnWorkloadVersion{
-				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
-						ResourceReference: klcv1alpha3.ResourceReference{
+			wi: &klcv1beta1.KeptnWorkloadVersion{
+				Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+						ResourceReference: klcv1beta1.ResourceReference{
 							Kind: "ReplicaSet",
 						},
 					},
@@ -344,10 +343,10 @@ func Test_SchedulingGatesHandler_IsSchedulingGatesEnabledRemoveGates(t *testing.
 					return []string{"podName"}, nil
 				},
 			},
-			wi: &klcv1alpha4.KeptnWorkloadVersion{
-				Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: klcv1alpha3.KeptnWorkloadSpec{
-						ResourceReference: klcv1alpha3.ResourceReference{
+			wi: &klcv1beta1.KeptnWorkloadVersion{
+				Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+						ResourceReference: klcv1beta1.ResourceReference{
 							Kind: "ReplicaSet",
 						},
 					},

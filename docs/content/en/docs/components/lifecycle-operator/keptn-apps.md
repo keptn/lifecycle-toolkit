@@ -12,8 +12,8 @@ A
 resource augments a Kubernetes
 [Workload](https://kubernetes.io/docs/concepts/workloads/)
 with the ability to handle extra phases.
-It can execute the pre- and post-deployment evaluations of a Workload
-and run pre- and post-deployment tasks.
+It can execute the pre/ post-deployment evaluations of a Workload
+and run pre/ post-deployment tasks.
 
 In its state, it tracks the currently active `Workload Instances`,
 (`Pod`, `DaemonSet`, `StatefulSet`, and `ReplicaSet` resources),
@@ -69,9 +69,9 @@ for the `KeptnApp` resource itself:
   that contain the identifications required
   to run the Keptn observability features.
 * You must manually add the annotations described in
-  [Pre- and post-deployment checks](../../guides/integrate.md#pre--and-post-deployment-checks)
+  [Annotations to KeptnApp](../../guides/tasks.md/#annotations-to-keptnapp)
   to the basic `KeptnApp` manifest to define
-  the evaluations and tasks you want to run pre- and post-deployment.
+  the evaluations and tasks you want to run pre/post-deployment.
 
 The `KeptnApp` resources that are generated automatically
 contain the identifications required to run the Keptn observability features.

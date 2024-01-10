@@ -42,22 +42,6 @@ or just look at it for examples
 as you implement the functionality "from scratch"
 on your local Kubernetes deployment cluster.
 
-This is the first of three exercises in the
-[Introducing Keptn](_index.md)
-series.
-After completing this exercise,
-you may want to do the other exercises:
-
-- In [Standardize observability](../core-concepts/usecase-observability.md),
-  you learn how to standardize access
-  to the observability data for your cluster.
-- In
-  [Manage release lifecycle](../core-concepts/usecase-orchestrate.md),
-  you learn how to implement
-  pre- and post-deployment tasks and evaluations
-  to orchestrate the flow of all the [workloads](https://kubernetes.io/docs/concepts/workloads/)
-  that are part of your `application`.
-
 The steps to implement metrics in an existing cluster are:
 
 1. [Install Keptn](../installation/_index.md)
@@ -160,7 +144,7 @@ file for our example looks like:
 
 ```yaml
 apiVersion: metrics.keptn.sh/v1beta1
-kind: Keptnmetric
+kind: KeptnMetric
 metadata:
   name: available-cpus
   namespace: simplenode-dev
@@ -171,7 +155,7 @@ spec:
   fetchIntervalSeconds: 10
 ---
 apiVersion: metrics.keptn.sh/v1beta1
-kind: Keptnmetric
+kind: KeptnMetric
 metadata:
   name: availability-slo
   namespace: simplenode-dev

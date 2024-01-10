@@ -3,13 +3,16 @@ kind: Deployment
 metadata:
   name: metrics-operator
   namespace: {{ .Release.Namespace | quote }}
+  {{- $annotations := include "common.annotations" (dict "context" .) }}
+  {{- with $annotations }}
+  annotations: {{- . -}}
+  {{- end }}
   labels:
     app.kubernetes.io/part-of: keptn
     app.kubernetes.io/component: metrics-operator
     control-plane: metrics-operator
     keptn.sh/inject-cert: "true"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include "common.annotations" ( dict "context" . ) }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
@@ -57,6 +60,8 @@ spec:
             }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
+        - name: CERT_MANAGER_ENABLED
+          value: {{ .Values.global.certManagerEnabled | quote }}
         image: {{- include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) | indent 1}}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         name: metrics-operator

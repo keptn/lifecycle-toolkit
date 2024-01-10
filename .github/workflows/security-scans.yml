@@ -50,7 +50,7 @@ jobs:
           echo "RUN_ID=$RUN_ID" >> $GITHUB_OUTPUT
 
       - name: Download all artifacts from last successful build of target branch
-        uses: dawidd6/action-download-artifact@v2.28.0
+        uses: dawidd6/action-download-artifact@v3.0.0
         id: download_artifacts_push
         with:
           # Download last successful artifact from a CI build
@@ -234,7 +234,7 @@ jobs:
 
       - name: Trivy image scan scheduler
         if: matrix.image == 'scheduler'
-        uses: aquasecurity/trivy-action@2b6a709cf9c4025c5438138008beaddbb02086f0 # 0.14.0
+        uses: aquasecurity/trivy-action@22d2755f774d925b191a185b74e782a4b0638a41 # 0.15.0
         with:
           input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
@@ -243,7 +243,7 @@ jobs:
 
       - name: Trivy image scan
         if: matrix.image != 'scheduler'
-        uses: aquasecurity/trivy-action@2b6a709cf9c4025c5438138008beaddbb02086f0 # 0.14.0
+        uses: aquasecurity/trivy-action@22d2755f774d925b191a185b74e782a4b0638a41 # 0.15.0
         with:
           input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'

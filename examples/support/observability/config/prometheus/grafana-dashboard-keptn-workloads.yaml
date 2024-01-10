@@ -628,7 +628,7 @@ data:
       },
       "timepicker": {},
       "timezone": "",
-      "title": "Keptn Workloads",
+      "title": "Keptn Workloads DORA",
       "uid": "hIXRvXS4k",
       "version": 1,
       "weekStart": ""
@@ -636,7 +636,7 @@ data:
 kind: ConfigMap
 metadata:
   creationTimestamp: null
-  name: grafana-dashboard-keptn-workloads
+  name: grafana-dashboard-keptn-workloads-dora
   namespace: monitoring
   labels:
-    grafana_dashboard: "1"
+    grafana_dashboard: "0"

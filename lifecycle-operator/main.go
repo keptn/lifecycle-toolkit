@@ -34,6 +34,7 @@ import (
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha2"
 	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	lifecyclev1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	lifecyclev1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
@@ -82,6 +83,7 @@ func init() {
 	utilruntime.Must(lifecyclev1alpha3.AddToScheme(scheme))
 	utilruntime.Must(argov1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha4.AddToScheme(scheme))
+	utilruntime.Must(lifecyclev1beta1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 
@@ -97,11 +99,12 @@ type envConfig struct {
 	KeptnTaskDefinitionControllerLogLevel     int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadControllerLogLevel           int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadVersionControllerLogLevel    int `envconfig:"KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadInstanceControllerLogLevel   int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnDoraMetricsPort                      int `envconfig:"KEPTN_DORA_METRICS_PORT" default:"2222"`
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
 	SchedulingGatesEnabled bool `envconfig:"SCHEDULING_GATES_ENABLED" default:"false"`
+
+	CertManagerEnabled bool `envconfig:"CERT_MANAGER_ENABLED" default:"true"`
 }
 
 const KeptnLifecycleActiveMetric = "keptn_lifecycle_active"
@@ -271,7 +274,7 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
 		os.Exit(1)
 	}
-	workloadVersionLogger := ctrl.Log.WithName("KeptnWorkloadVersion Controller").V(determineWorkloadVersionControllerLogLevel(env.KeptnWorkloadVersionControllerLogLevel, env.KeptnWorkloadInstanceControllerLogLevel))
+	workloadVersionLogger := ctrl.Log.WithName("KeptnWorkloadVersion Controller").V(env.KeptnWorkloadVersionControllerLogLevel)
 	workloadVersionRecorder := mgr.GetEventRecorderFor("keptnworkloadversion-controller")
 	workloadVersionEventSender := eventsender.NewEventMultiplexer(workloadVersionLogger, workloadVersionRecorder, ceClient)
 	workloadVersionEvaluationHandler := evaluation.NewHandler(
@@ -363,23 +366,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&lifecyclev1alpha3.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1beta1.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnApp")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1alpha3.KeptnEvaluationProvider{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnEvaluationProvider")
-		os.Exit(1)
-	}
-	if err = (&lifecyclev1alpha3.KeptnAppVersion{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1beta1.KeptnAppVersion{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnAppVersion")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1alpha3.KeptnWorkloadInstance{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
-		os.Exit(1)
-	}
-	if err = (&lifecyclev1alpha3.KeptnTaskDefinition{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1beta1.KeptnTaskDefinition{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnTaskDefinition")
 		os.Exit(1)
 	}
@@ -400,15 +395,22 @@ func main() {
 	setupLog.Info("Keptn lifecycle-operator is alive")
 	keptnLifecycleActive.Add(context.Background(), 1)
 	if !disableWebhook {
-		webhookBuilder = webhookBuilder.SetCertificateWatcher(
-			certificates.NewCertificateWatcher(
+		var certificateWatcher certificates.ICertificateWatcher
+
+		// Check if cert manager is enabled
+		if env.CertManagerEnabled {
+			certificateWatcher = certificates.NewCertificateWatcher(
 				mgr.GetAPIReader(),
 				webhookBuilder.GetOptions().CertDir,
 				env.PodNamespace,
 				certCommon.SecretName,
 				setupLog,
-			))
-
+			)
+		} else {
+			// Use the NoOpCertificateWatcher when cert manager is disabled
+			certificateWatcher = certificates.NewNoOpCertificateWatcher()
+		}
+		webhookBuilder = webhookBuilder.SetCertificateWatcher(certificateWatcher)
 		setupLog.Info(fmt.Sprintf("%v", webhookBuilder))
 		webhookLogger := ctrl.Log.WithName("Mutating Webhook")
 		webhookRecorder := mgr.GetEventRecorderFor("keptn/webhook")
@@ -445,14 +447,4 @@ func serveMetrics(metricsPort int) {
 		fmt.Printf("error serving http: %v", err)
 		return
 	}
-}
-
-func determineWorkloadVersionControllerLogLevel(version int, instance int) int {
-	// if deprecated env.KeptnWorkloadInstanceControllerLogLevel is set and
-	// env.KeptnWorkloadVersionControllerLogLevel has default value (not set)
-	if instance != 0 && version == 0 {
-		return instance
-	}
-
-	return version
 }

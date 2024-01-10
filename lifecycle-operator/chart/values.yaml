@@ -4,6 +4,8 @@
 ## Current available global Docker image parameters: imageRegistry, imagePullSecrets and storageClass
 
 global:
+  ## @param global.certManagerEnabled Enable this value to install Keptn Certificate Manager
+  certManagerEnabled: true
   ## @param global.imageRegistry Global container image registry
   imageRegistry: ""
 
@@ -21,8 +23,6 @@ global:
   commonAnnotations: { }
   ## @param global.caInjectionAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
   caInjectionAnnotations: { }
-
-
 
 lifecycleOperatorConfig:
   health:
@@ -91,8 +91,6 @@ lifecycleOperator:
     keptnWorkloadControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel sets the log level of Keptn WorkloadVersion Controller
     keptnWorkloadVersionControllerLogLevel: "0"
-## @param   lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel Deprecated: Use keptnWorkloadVersionControllerLogLevel instead. Sets the log level of Keptn WorkloadVersion Controller
-    keptnWorkloadInstanceControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnDoraMetricsPort sets the port for accessing lifecycle metrics in prometheus format
     keptnDoraMetricsPort: "2222"
 ## @param   lifecycleOperator.env.optionsControllerLogLevel sets the log level of Keptn Options Controller

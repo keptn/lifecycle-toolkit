@@ -96,9 +96,9 @@ you need to install the following on your system:
    For example, the following command builds the environment
    and pushes the image to the `docker.io/exampleuser` github repository:
 
-   ```shell
-   make build-deploy-dev-environment RELEASE_REGISTRY=docker.io/exampleuser TAG=main
-   ```
+```shell
+make build-deploy-dev-environment RELEASE_REGISTRY=docker.io/exampleuser TAG=main
+```
 
    The build commands are defined in the
    [Makefile](https://github.com/keptn/lifecycle-toolkit/blob/main/Makefile)
@@ -124,9 +124,9 @@ You are now ready to make your changes to the source code.
    only the one you modified.
    For example, if your modifications are to the `metrics-operator`, run:
 
-   ```shell
-   make build-deploy-metrics-operator RELEASE_REGISTRY=docker.io/exampleuser TAG=my-feature
-   ```
+```shell
+make build-deploy-metrics-operator RELEASE_REGISTRY=docker.io/exampleuser TAG=my-feature
+```
 
 ## Testing
 
@@ -148,23 +148,23 @@ Study these errors, modify your code, and rerun the test until it passes.
 
 1. Run the integration tests from the root directory of your clone:
 
-   ```shell
-   make integration-test-local
-   ```
+```shell
+make integration-test-local
+```
 
    `integration-test-local` cleans up after the test.
 
 1. From the `lifecycle-operator` directory, run the component test:
 
-   ```shell
-   make component-test
-   ```
+```shell
+make component-test
+```
 
 1. From the `lifecycle-operator` directory, run the end-to-end tests:
 
-   ```shell
-   make e2e-test
-   ```
+```shell
+make e2e-test
+```
 
 ## Create and manage the PR
 

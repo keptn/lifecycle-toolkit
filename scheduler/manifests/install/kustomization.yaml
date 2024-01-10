@@ -1,4 +1,4 @@
-namespace: keptn-lifecycle-toolkit-system
+namespace: keptn-system
 resources:
   - base/deployment.yaml
   - base/rbac.yaml
@@ -19,4 +19,4 @@ patches:
     target:
       kind: Deployment
       name: scheduler
-      namespace: keptn-lifecycle-toolkit-system
+      namespace: keptn-system

@@ -1,0 +1,9 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: AnalysisValueTemplate
+metadata:
+  name: memory-usage
+  namespace: simple-go
+spec:
+  provider:
+    name: my-dynatrace-provider
+  query: 'builtin:kubernetes.workload.memory_working_set:filter(eq("dt.entity.cloud_application",CLOUD_APPLICATION-3B2BD00402B933C2)):splitBy("dt.entity.cloud_application"):sum' # yamllint disable-line rule:line-length

@@ -3,7 +3,7 @@ package app_test
 import (
 	"fmt"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -25,7 +25,7 @@ var _ = Describe("App", Ordered, func() {
 	})
 	Describe("Creation of AppVersion from a new App", func() {
 		var (
-			instance *klcv1alpha3.KeptnApp
+			instance *klcv1beta1.KeptnApp
 		)
 
 		BeforeEach(func() {
@@ -49,16 +49,16 @@ var _ = Describe("App", Ordered, func() {
 	})
 })
 
-func createInstanceInCluster(name string, namespace string, version string) *klcv1alpha3.KeptnApp {
-	instance := &klcv1alpha3.KeptnApp{
+func createInstanceInCluster(name string, namespace string, version string) *klcv1beta1.KeptnApp {
+	instance := &klcv1beta1.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       name,
 			Namespace:  namespace,
 			Generation: 1,
 		},
-		Spec: klcv1alpha3.KeptnAppSpec{
+		Spec: klcv1beta1.KeptnAppSpec{
 			Version: version,
-			Workloads: []klcv1alpha3.KeptnWorkloadRef{
+			Workloads: []klcv1beta1.KeptnWorkloadRef{
 				{
 					Name:    "app-wname",
 					Version: "2.0",

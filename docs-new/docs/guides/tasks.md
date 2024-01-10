@@ -33,16 +33,15 @@ To implement a `KeptnTask`:
   and the executables to be run
 pre- and post-deployment
 - Apply [basic-annotations](./integrate.md#basic-annotations)
-  to your workloads to integrate your task with Kubernetes and,
-  if desired, creates a `KeptnApp` resource
-  that consolidates multiple workloads into a single application
+  to your workloads to integrate your tasks with Kubernetes.
+- Generate the required
+  [KeptnApp](../reference/crd-reference/app.md)
+  resources following the instructions in
+  [Auto app discovery](auto-app-discovery.md).
 - Annotate the appropriate
   [KeptnApp](../reference/crd-reference/app.md)
   resource to associate your `KeptnTaskDefinition`
-  with the pre- and post-deployment tasks that should be run;
-  see
-  [Pre- and post-deployment tasks and checks](./integrate.md#pre--and-post-deployment-checks)
-  for more information
+  with the pre/post-deployment tasks that should be run.
 
 This page provides information to help you create your tasks:
 
@@ -68,8 +67,8 @@ to define the task.
 The `spec` section of the `KeptnTaskDefinition`
 defines the runner to use for the container:
 
-Keptn provides a general Kubernetes that you can configure
-to do almost anything you want:
+Keptn provides a general Kubernetes container runtime
+that you can configure to do almost anything you want:
 
 - The `container-runtime` runner provides
   a pure custom Kubernetes application container
@@ -102,6 +101,55 @@ See the
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 reference page for the synopsis and examples for each runner.
 
+## Annotations to KeptnApp
+
+To define pre/post-deployment tasks,
+you must manually edit the YAML files
+to add annotations for your tasks to the appropriate
+[KeptnApp](../reference/crd-reference/app.md)
+resource.
+
+Specify one of the following annotations/labels
+for each task you want to execute:
+
+```yaml
+keptn.sh/pre-deployment-tasks: <task-name>
+keptn.sh/post-deployment-tasks: <task-name>
+```
+
+The value of each annotation corresponds
+to the value of the `name` field of the
+[KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
+resource.
+
+## Example of pre/post-deployment actions
+
+A comprehensive example of pre/post-deployment
+evaluations and tasks can be found in our
+[examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
+where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
+to run some simple pre-deployment checks.
+
+To run the example, download the example and
+then issue the following commands:
+
+```shell
+cd ./examples/podtatohead-deployment/
+kubectl apply -f .
+```
+
+Afterward, use the following command
+to  monitor the status of the deployment:
+
+```shell
+kubectl get keptnworkloadversion -n podtato-kubectl -w
+```
+
+The deployment for a workload stays in a `Pending`
+state until all pre-deployment tasks and evaluations complete successfully.
+Afterwards, the deployment starts and when the workload is deployed,
+the post-deployment checks start.
+
 ## Executing sequential tasks
 
 All `KeptnTask` resources that are defined by
@@ -131,7 +179,7 @@ You have the following options:
   (either `deno-runtime` or `python-runtime`)
   to code the actual calls inline in the `KeptnTaskDefinition` resource.
   See
-  [Fields for pre-defined containers](../reference/crd-reference/taskdefinition.md/#fields-for-pre-defined-containers)
+  [Fields for pre-defined containers](../reference/crd-reference/taskdefinition.md#fields-for-predefined-containers)
   for more information.
 
 - Create a script that calls the functions, programs, and scripts

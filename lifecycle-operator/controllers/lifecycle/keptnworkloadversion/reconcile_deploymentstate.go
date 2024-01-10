@@ -4,9 +4,8 @@ import (
 	"context"
 
 	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -14,7 +13,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func (r *KeptnWorkloadVersionReconciler) reconcileDeployment(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) (apicommon.KeptnState, error) {
+func (r *KeptnWorkloadVersionReconciler) reconcileDeployment(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion) (apicommon.KeptnState, error) {
 	var isRunning bool
 	var err error
 
@@ -47,7 +46,7 @@ func (r *KeptnWorkloadVersionReconciler) reconcileDeployment(ctx context.Context
 	return workloadVersion.Status.DeploymentStatus, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1alpha3.ResourceReference, namespace string) (bool, error) {
+func (r *KeptnWorkloadVersionReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1beta1.ResourceReference, namespace string) (bool, error) {
 	rep := appsv1.ReplicaSet{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &rep)
 	if err != nil {
@@ -56,14 +55,14 @@ func (r *KeptnWorkloadVersionReconciler) isReplicaSetRunning(ctx context.Context
 
 	for _, ownerRef := range rep.OwnerReferences {
 		if ownerRef.Kind == "Rollout" {
-			return r.isRolloutRunning(ctx, klcv1alpha3.ResourceReference{Name: ownerRef.Name, UID: ownerRef.UID}, namespace)
+			return r.isRolloutRunning(ctx, klcv1beta1.ResourceReference{Name: ownerRef.Name, UID: ownerRef.UID}, namespace)
 		}
 	}
 
 	return *rep.Spec.Replicas == rep.Status.AvailableReplicas, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) isDaemonSetRunning(ctx context.Context, resource klcv1alpha3.ResourceReference, namespace string) (bool, error) {
+func (r *KeptnWorkloadVersionReconciler) isDaemonSetRunning(ctx context.Context, resource klcv1beta1.ResourceReference, namespace string) (bool, error) {
 	daemonSet := &appsv1.DaemonSet{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, daemonSet)
 	if err != nil {
@@ -72,7 +71,7 @@ func (r *KeptnWorkloadVersionReconciler) isDaemonSetRunning(ctx context.Context,
 	return daemonSet.Status.DesiredNumberScheduled == daemonSet.Status.NumberReady, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) isPodRunning(ctx context.Context, resource klcv1alpha3.ResourceReference, namespace string) (bool, error) {
+func (r *KeptnWorkloadVersionReconciler) isPodRunning(ctx context.Context, resource klcv1beta1.ResourceReference, namespace string) (bool, error) {
 	podList := &corev1.PodList{}
 	if err := r.Client.List(ctx, podList, client.InNamespace(namespace)); err != nil {
 		return false, err
@@ -88,7 +87,7 @@ func (r *KeptnWorkloadVersionReconciler) isPodRunning(ctx context.Context, resou
 	return false, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) isStatefulSetRunning(ctx context.Context, resource klcv1alpha3.ResourceReference, namespace string) (bool, error) {
+func (r *KeptnWorkloadVersionReconciler) isStatefulSetRunning(ctx context.Context, resource klcv1beta1.ResourceReference, namespace string) (bool, error) {
 	sts := appsv1.StatefulSet{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &sts)
 	if err != nil {
@@ -97,7 +96,7 @@ func (r *KeptnWorkloadVersionReconciler) isStatefulSetRunning(ctx context.Contex
 	return *sts.Spec.Replicas == sts.Status.AvailableReplicas, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) isRolloutRunning(ctx context.Context, resource klcv1alpha3.ResourceReference, namespace string) (bool, error) {
+func (r *KeptnWorkloadVersionReconciler) isRolloutRunning(ctx context.Context, resource klcv1beta1.ResourceReference, namespace string) (bool, error) {
 	rollout := argov1alpha1.Rollout{}
 	err := r.Client.Get(ctx, types.NamespacedName{Name: resource.Name, Namespace: namespace}, &rollout)
 	if err != nil {

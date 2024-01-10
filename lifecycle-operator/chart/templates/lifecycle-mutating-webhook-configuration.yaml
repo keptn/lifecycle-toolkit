@@ -6,11 +6,11 @@ metadata:
 {{- if and .Values.global.caInjectionAnnotations (not (empty .Values.global.caInjectionAnnotations)) }}
 {{ .Values.global.caInjectionAnnotations | toYaml | nindent 4| trimPrefix "\n"}}
 {{- end }}
+    {{- include "common.annotations" (dict "context" .) }}
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include "common.annotations" ( dict "context" . ) }}
 webhooks:
 - admissionReviewVersions:
   - v1

@@ -1,5 +1,4 @@
 certManager:
-  enabled: false
 lifecycleOperator:
   enabled: false
 metricsOperator:
@@ -8,6 +7,7 @@ metricsOperator:
     tag: v0.0.0
 
 global:
+  certManagerEnabled: false
   commonLabels:
     app.kubernetes.io/version: vmyversion
   caInjectionAnnotations:

@@ -320,3 +320,7 @@ func TestNewCertificateWatcher(t *testing.T) {
 	require.EqualValues(t, got, want)
 
 }
+
+func TestNewNoOpCertificateWatcher(t *testing.T) {
+	require.EqualValues(t, NewNoOpCertificateWatcher(), &NoOpCertificateWatcher{})
+}

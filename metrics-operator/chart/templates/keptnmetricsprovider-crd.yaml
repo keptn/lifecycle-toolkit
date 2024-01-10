@@ -7,12 +7,12 @@ metadata:
 {{- if and .Values.global.caInjectionAnnotations (not (empty .Values.global.caInjectionAnnotations)) }}
 {{ .Values.global.caInjectionAnnotations | toYaml | nindent 4| trimPrefix "\n"}}
 {{- end }}
+  {{- include "common.annotations" ( dict "context" . ) }}
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
     keptn.sh/inject-cert: "true"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include "common.annotations" ( dict "context" . ) }}
 spec:
   group: metrics.keptn.sh
   names:

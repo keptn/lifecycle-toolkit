@@ -2,14 +2,15 @@ package dynatrace
 
 import (
 	"context"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"net/http"
-	"net/http/httptest"
-	"testing"
 )
 
 const dqlSecretString = `{"token": "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "authUrl":"https://my-auth-url.test"}`

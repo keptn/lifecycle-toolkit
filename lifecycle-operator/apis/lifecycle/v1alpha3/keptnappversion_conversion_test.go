@@ -51,18 +51,6 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 								Version: "4.5.6",
 							},
 						},
-						PreDeploymentTasks: []string{
-							"some-pre-deployment-task1",
-						},
-						PostDeploymentTasks: []string{
-							"some-post-deployment-task2",
-						},
-						PreDeploymentEvaluations: []string{
-							"some-pre-evaluation-task1",
-						},
-						PostDeploymentEvaluations: []string{
-							"some-pre-evaluation-task2",
-						},
 					},
 					AppName:         "app",
 					PreviousVersion: "1.0",
@@ -180,18 +168,6 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 								Name:    "workload-2",
 								Version: "4.5.6",
 							},
-						},
-						PreDeploymentTasks: []string{
-							"some-pre-deployment-task1",
-						},
-						PostDeploymentTasks: []string{
-							"some-post-deployment-task2",
-						},
-						PreDeploymentEvaluations: []string{
-							"some-pre-evaluation-task1",
-						},
-						PostDeploymentEvaluations: []string{
-							"some-pre-evaluation-task2",
 						},
 					},
 					AppName:         "app",
@@ -343,18 +319,6 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 								Version: "4.5.6",
 							},
 						},
-						PreDeploymentTasks: []string{
-							"some-pre-deployment-task1",
-						},
-						PostDeploymentTasks: []string{
-							"some-post-deployment-task2",
-						},
-						PreDeploymentEvaluations: []string{
-							"some-pre-evaluation-task1",
-						},
-						PostDeploymentEvaluations: []string{
-							"some-pre-evaluation-task2",
-						},
 					},
 					AppName:         "app",
 					PreviousVersion: "1.0",
@@ -472,18 +436,6 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 								Name:    "workload-2",
 								Version: "4.5.6",
 							},
-						},
-						PreDeploymentTasks: []string{
-							"some-pre-deployment-task1",
-						},
-						PostDeploymentTasks: []string{
-							"some-post-deployment-task2",
-						},
-						PreDeploymentEvaluations: []string{
-							"some-pre-evaluation-task1",
-						},
-						PostDeploymentEvaluations: []string{
-							"some-pre-evaluation-task2",
 						},
 					},
 					AppName:         "app",

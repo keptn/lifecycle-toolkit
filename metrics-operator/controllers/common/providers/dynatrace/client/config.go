@@ -33,10 +33,6 @@ func WithScopes(scopes []OAuthScope) APIConfigOption {
 
 // NewAPIConfig returns a new apiConfig that can be used for initializing a DTAPIClient with the NewAPIClient function
 func NewAPIConfig(serverURL string, secret SecretValues, opts ...APIConfigOption) (*apiConfig, error) {
-	// var secValue dynatrace.SecretValues
-	// if err := json.Unmarshal(secret, &secValue); err != nil {
-	// 	return nil, err
-	// }
 
 	if err := validateOAuthSecret(secret.Token, secret.AuthUrl); err != nil {
 		return nil, err

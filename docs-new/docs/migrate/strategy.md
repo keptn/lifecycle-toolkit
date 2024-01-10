@@ -25,7 +25,8 @@ but must be rewritten to utilize Keptn components.
 
 Keptn targets deployments that run on Kubernetes
 but some Keptn functionality can be used with deployments
-that do not run on Kubernetes.  See
+that do not run on Kubernetes.
+See
 [Keptn for non-Kubernetes deployments](../use-cases/non-k8s.md)
 for details.
 

@@ -9,11 +9,11 @@ The following functionality is available for deployments not on Kubernetes:
 
 To use either of these features,
 you must set up a Kubernetes cluster and
-[install](../installation/_index.md#basic-installation)
+[install](../installation/index.md#basic-installation)
 Keptn on it,
 but this can be a very lightweight, single-node KinD cluster; see
 [Create local Kubernetes cluster](../installation/k8s.md#create-local-kubernetes-cluster).
-Keptn only runs  on-demand `KeptnTask` and `KeptnAnaylsis` resources
+Keptn only runs  on-demand `KeptnTask` and `KeptnAnalysis` resources
 so resource utilization is minimal.
 
 ## Run KeptnTask for a deployment not on Kubernetes
@@ -24,7 +24,7 @@ and applications that are deployed outside of Kubernetes.
 For example, Keptn can run (or "trigger")
 load and performance tests
 for an application that is deployed on a virtual machine.
-It does this by specifing a container image that should be executed.
+It does this by specifying a container image that should be executed.
 You specify the container in a `KeptnTaskDefinition` resource; see
 [Deployment tasks](../guides/tasks.md) for more information.
 The `KeptnTask` runs as a Kubernetes
@@ -80,7 +80,7 @@ You must manually create the
 In the standard operating mode,
 when Keptn is managing
 [workloads](https://kubernetes.io/docs/concepts/workloads/)
-for deploymens running on Kubernetes,
+for deployments running on Kubernetes,
 the creation of the `KeptnTask` resource is automatic.
 
 Moreover, each time you want to execute a `KeptnTask`,

@@ -3,52 +3,7 @@ package client
 import (
 	"net/http"
 	"testing"
-
-	"github.com/stretchr/testify/require"
 )
-
-func Test_validateOAuthSecret(t *testing.T) {
-	tests := []struct {
-		name    string
-		input   string
-		result  error
-		authurl string
-	}{
-		{
-			name:    "good token",
-			input:   "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-			result:  nil,
-			authurl: "https://dev.token.internal.dynatracelabs.com/sso/oauth2/token",
-		},
-		{
-			name:    "wrong prefix",
-			input:   "",
-			result:  ErrClientSecretInvalid,
-			authurl: "",
-		},
-		{
-			name:    "wrong format",
-			input:   "",
-			result:  ErrClientSecretInvalid,
-			authurl: "",
-		},
-		{
-			name:    "wrong secret part",
-			input:   "",
-			result:  ErrClientSecretInvalid,
-			authurl: "",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := validateOAuthSecret(tt.input, tt.authurl)
-
-			require.ErrorIs(t, err, tt.result)
-		})
-
-	}
-}
 
 func Test_isErrorStatus(t *testing.T) {
 	type args struct {

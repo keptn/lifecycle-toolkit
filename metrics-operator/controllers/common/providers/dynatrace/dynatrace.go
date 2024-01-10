@@ -117,7 +117,7 @@ func (d *KeptnDynatraceProvider) performRequest(ctx context.Context, provider me
 		return nil, nil, err
 	}
 
-	req.Header.Set("Authorization", "Api-Token "+token.Token)
+	req.Header.Set("Authorization", "Api-Token "+token)
 	res, err := d.HttpClient.Do(req)
 
 	if err != nil {

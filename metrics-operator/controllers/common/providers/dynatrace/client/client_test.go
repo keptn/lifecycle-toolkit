@@ -13,24 +13,7 @@ import (
 
 const mockSecret = "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
-func TestNewConfigInvalidSecretFormat(t *testing.T) {
-	secretValue := SecretValues{
-		"my-secret",
-		"authurl",
-	}
-
-	config, err := NewAPIConfig("", secretValue)
-
-	require.ErrorIs(t, err, ErrClientSecretInvalid)
-	require.Nil(t, config)
-}
-
 func TestAPIClient(t *testing.T) {
-	secretValue := SecretValues{
-		mockSecret,
-		"https://dev.token.internal.dynatracelabs.com/sso/oauth2/token",
-	}
-
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
 			_, _ = writer.Write([]byte(`{"access_token": "my-token"}`))
@@ -43,7 +26,7 @@ func TestAPIClient(t *testing.T) {
 
 	config, err := NewAPIConfig(
 		server.URL,
-		secretValue,
+		mockSecret,
 		WithScopes([]OAuthScope{OAuthScopeStorageMetricsRead, OAuthScopeEnvironmentRoleViewer}),
 		WithAuthURL(server.URL+"/auth"),
 	)
@@ -69,11 +52,6 @@ func TestAPIClient(t *testing.T) {
 }
 
 func TestAPIClientAuthError(t *testing.T) {
-	secretValue := SecretValues{
-		mockSecret,
-		"https://dev.token.internal.dynatracelabs.com/sso/oauth2/token",
-	}
-
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		writer.WriteHeader(http.StatusInternalServerError)
 	}))
@@ -82,7 +60,7 @@ func TestAPIClientAuthError(t *testing.T) {
 
 	config, err := NewAPIConfig(
 		server.URL,
-		secretValue,
+		mockSecret,
 		WithAuthURL(server.URL+"/auth"),
 	)
 
@@ -105,11 +83,6 @@ func TestAPIClientAuthError(t *testing.T) {
 }
 
 func TestAPIClientAuthNoToken(t *testing.T) {
-	secretValue := SecretValues{
-		mockSecret,
-		"https://dev.token.internal.dynatracelabs.com/sso/oauth2/token",
-	}
-
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
 			_, _ = writer.Write([]byte(`{"something": "else"}`))
@@ -122,7 +95,7 @@ func TestAPIClientAuthNoToken(t *testing.T) {
 
 	config, err := NewAPIConfig(
 		server.URL,
-		secretValue,
+		mockSecret,
 		WithAuthURL(server.URL+"/auth"),
 	)
 
@@ -145,11 +118,6 @@ func TestAPIClientAuthNoToken(t *testing.T) {
 }
 
 func TestAPIClientRequestError(t *testing.T) {
-	secretValue := SecretValues{
-		mockSecret,
-		"https://dev.token.internal.dynatracelabs.com/sso/oauth2/token",
-	}
-
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
 			_, _ = writer.Write([]byte(`{"access_token": "my-token"}`))
@@ -162,7 +130,7 @@ func TestAPIClientRequestError(t *testing.T) {
 
 	config, err := NewAPIConfig(
 		server.URL,
-		secretValue,
+		mockSecret,
 		WithAuthURL(server.URL+"/auth"),
 	)
 

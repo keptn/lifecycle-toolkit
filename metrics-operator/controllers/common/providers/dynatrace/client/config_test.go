@@ -7,10 +7,9 @@ import (
 )
 
 func TestNewAPIConfig(t *testing.T) {
-	myData := SecretValues{"dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "https://dev.token.internal.my-auth-url.com/sso/oauth2/token"}
 	config, err := NewAPIConfig(
 		"my-url",
-		myData,
+		mockSecret,
 		WithScopes([]OAuthScope{OAuthScopeStorageMetricsRead, OAuthScopeEnvironmentRoleViewer}),
 		WithAuthURL("https://dev.token.internal.my-auth-url.com/sso/oauth2/token"),
 	)

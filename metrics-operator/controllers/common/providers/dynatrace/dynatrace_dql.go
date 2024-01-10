@@ -252,14 +252,15 @@ func (d *keptnDynatraceDQLProvider) parseDQLResults(b []byte, status int) (*DQLR
 func (d *keptnDynatraceDQLProvider) ensureDTClientIsSetUp(ctx context.Context, provider metricsapi.KeptnMetricsProvider) error {
 	// try to initialize the DT API Client if it has not been set in the options
 	if d.dtClient == nil {
-		secret, err := getDTSecret(ctx, provider, d.k8sClient)
+		secret, err := getDQLSecret(ctx, provider, d.k8sClient)
 
 		if err != nil {
 			return err
 		}
 		config, err := dtclient.NewAPIConfig(
 			provider.Spec.TargetServer,
-			secret,
+			secret.Token,
+			dtclient.WithAuthURL(secret.AuthUrl),
 		)
 		if err != nil {
 			return err

@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr/testr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
@@ -19,30 +19,30 @@ import (
 
 func TestJSBuilder_handleParent(t *testing.T) {
 
-	def := &klcv1alpha3.KeptnTaskDefinition{
+	def := &klcv1beta1.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "mytaskdef",
 			Namespace: "default",
 		},
-		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: &klcv1alpha3.RuntimeSpec{
-				FunctionReference: klcv1alpha3.FunctionReference{
+		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
+			Function: &klcv1beta1.RuntimeSpec{
+				FunctionReference: klcv1beta1.FunctionReference{
 					Name: "mytaskdef",
 				}}},
 	}
-	paramDef := &klcv1alpha3.KeptnTaskDefinition{
+	paramDef := &klcv1beta1.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "mytd",
 			Namespace: "default",
 		},
-		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: &klcv1alpha3.RuntimeSpec{
-				FunctionReference: klcv1alpha3.FunctionReference{
+		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
+			Function: &klcv1beta1.RuntimeSpec{
+				FunctionReference: klcv1beta1.FunctionReference{
 					Name: "mytd"},
-				Parameters: klcv1alpha3.TaskParameters{
+				Parameters: klcv1beta1.TaskParameters{
 					Inline: map[string]string{Data: "mydata"},
 				},
-				SecureParameters: klcv1alpha3.SecureParameters{
+				SecureParameters: klcv1beta1.SecureParameters{
 					Secret: "mysecret",
 				},
 			},
@@ -123,74 +123,74 @@ func TestJSBuilder_getParams(t *testing.T) {
 	t.Setenv(taskdefinition.FunctionRuntimeImageKey, taskdefinition.FunctionScriptKey)
 	t.Setenv(taskdefinition.PythonRuntimeImageKey, taskdefinition.PythonScriptKey)
 
-	def := &klcv1alpha3.KeptnTaskDefinition{
+	def := &klcv1beta1.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "mytaskdef",
 			Namespace: "default",
 		},
-		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: &klcv1alpha3.RuntimeSpec{
-				Parameters: klcv1alpha3.TaskParameters{
+		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
+			Function: &klcv1beta1.RuntimeSpec{
+				Parameters: klcv1beta1.TaskParameters{
 					Inline: map[string]string{"DATA2": "parent_data"},
 				},
-				SecureParameters: klcv1alpha3.SecureParameters{
+				SecureParameters: klcv1beta1.SecureParameters{
 					Secret: "parent_secret",
 				},
 			},
 		},
-		Status: klcv1alpha3.KeptnTaskDefinitionStatus{
-			Function: klcv1alpha3.FunctionStatus{
+		Status: klcv1beta1.KeptnTaskDefinitionStatus{
+			Function: klcv1beta1.FunctionStatus{
 				ConfigMap: "mymap",
 			},
 		},
 	}
-	paramDef := &klcv1alpha3.KeptnTaskDefinition{
+	paramDef := &klcv1beta1.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "mytd",
 			Namespace: "default",
 		},
-		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Deno: &klcv1alpha3.RuntimeSpec{
-				FunctionReference: klcv1alpha3.FunctionReference{
+		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
+			Deno: &klcv1beta1.RuntimeSpec{
+				FunctionReference: klcv1beta1.FunctionReference{
 					Name: def.Name},
-				Parameters: klcv1alpha3.TaskParameters{
+				Parameters: klcv1beta1.TaskParameters{
 					Inline: map[string]string{"DATA1": "child_data"},
 				},
-				SecureParameters: klcv1alpha3.SecureParameters{
+				SecureParameters: klcv1beta1.SecureParameters{
 					Secret: "child_pw",
 				},
 			},
 		},
-		Status: klcv1alpha3.KeptnTaskDefinitionStatus{
-			Function: klcv1alpha3.FunctionStatus{
+		Status: klcv1beta1.KeptnTaskDefinitionStatus{
+			Function: klcv1beta1.FunctionStatus{
 				ConfigMap: "mychildmap",
 			},
 		},
 	}
 
-	parentPy := &klcv1alpha3.KeptnTaskDefinition{
+	parentPy := &klcv1beta1.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "parentPy",
 			Namespace: "default",
 		},
-		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Python: &klcv1alpha3.RuntimeSpec{
-				HttpReference: klcv1alpha3.HttpReference{Url: "donothing"},
+		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
+			Python: &klcv1beta1.RuntimeSpec{
+				HttpReference: klcv1beta1.HttpReference{Url: "donothing"},
 			}},
 	}
-	defJS := &klcv1alpha3.KeptnTaskDefinition{
+	defJS := &klcv1beta1.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "myJS",
 			Namespace: "default",
 		},
-		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Deno: &klcv1alpha3.RuntimeSpec{
-				FunctionReference: klcv1alpha3.FunctionReference{
+		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
+			Deno: &klcv1beta1.RuntimeSpec{
+				FunctionReference: klcv1beta1.FunctionReference{
 					Name: parentPy.Name},
 			},
 		},
-		Status: klcv1alpha3.KeptnTaskDefinitionStatus{
-			Function: klcv1alpha3.FunctionStatus{
+		Status: klcv1beta1.KeptnTaskDefinitionStatus{
+			Function: klcv1beta1.FunctionStatus{
 				ConfigMap: "myJSChildmap",
 			},
 		},
@@ -223,7 +223,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 				Parameters:       def.Spec.Function.Parameters.Inline,
 				SecureParameters: def.Spec.Function.SecureParameters.Secret,
 				URL:              def.Spec.Function.HttpReference.Url,
-				Context: klcv1alpha3.TaskContext{
+				Context: klcv1beta1.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
 					AppVersion:   "0.1.0",
@@ -256,7 +256,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 				},
 				SecureParameters: paramDef.Spec.Deno.SecureParameters.Secret, // uses child
 				URL:              def.Spec.Function.HttpReference.Url,        // uses parent
-				Context: klcv1alpha3.TaskContext{
+				Context: klcv1beta1.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
 					AppVersion:   "0.1.0",
@@ -284,7 +284,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 			params: &RuntimeExecutionParams{
 				ConfigMap: parentPy.Status.Function.ConfigMap,
 				URL:       parentPy.Spec.Python.HttpReference.Url, // we support a single URL so the original should be taken not the parent one
-				Context: klcv1alpha3.TaskContext{
+				Context: klcv1beta1.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
 					AppVersion:   "0.1.0",

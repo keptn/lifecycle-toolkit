@@ -31,7 +31,7 @@ import (
 // KeptnAppVersionSpec defines the desired state of KeptnAppVersion
 type KeptnAppVersionSpec struct {
 	DeploymentTaskSpec `json:",inline"`
-	KeptnAppSpec `json:",inline"`
+	KeptnAppSpec       `json:",inline"`
 	// AppName is the name of the KeptnApp.
 	AppName string `json:"appName"`
 	// PreviousVersion is the version of the KeptnApp that has been deployed prior to this version.
@@ -40,6 +40,10 @@ type KeptnAppVersionSpec struct {
 	// TraceId contains the OpenTelemetry trace ID.
 	// +optional
 	TraceId map[string]string `json:"traceId,omitempty"`
+	// +optional
+	// TraceLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
+	// For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links
+	TraceLinks []string `json:"traceLinks,omitempty"`
 }
 
 // KeptnAppVersionStatus defines the observed state of KeptnAppVersion

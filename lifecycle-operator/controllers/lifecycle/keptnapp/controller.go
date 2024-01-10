@@ -88,7 +88,16 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	err = r.Get(ctx, types.NamespacedName{Namespace: app.Namespace, Name: app.GetAppVersionName()}, appVersion)
 	// If the app instance does not exist, create it
 	if errors.IsNotFound(err) {
-		appVersion, err := r.createAppVersion(ctx, app)
+		appContext := &klcv1beta1.KeptnAppContext{}
+		err := r.Get(ctx, types.NamespacedName{
+			Namespace: app.Namespace,
+			Name:      app.Name,
+		}, appContext)
+		if client.IgnoreNotFound(err) != nil {
+			r.Log.Error(err, "Could not look up related KeptnContext", "requestInfo", requestInfo)
+		}
+
+		appVersion, err := r.createAppVersion(ctx, app, appContext)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
@@ -124,7 +133,7 @@ func (r *KeptnAppReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1beta1.KeptnApp) (*klcv1beta1.KeptnAppVersion, error) {
+func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1beta1.KeptnApp, appContext *klcv1beta1.KeptnAppContext) (*klcv1beta1.KeptnAppVersion, error) {
 
 	previousVersion := ""
 	if app.Spec.Version != app.Status.CurrentVersion {
@@ -132,6 +141,15 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1bet
 	}
 
 	appVersion := app.GenerateAppVersion(previousVersion)
+
+	appVersion.Spec.DeploymentTaskSpec = appContext.Spec.DeploymentTaskSpec
+
+	appVersion.Spec.TraceId = map[string]string{
+		"traceparent": appContext.Spec.TraceParent,
+	}
+
+	appVersion.Spec.TraceLinks = appContext.Spec.TraceLinks
+	appVersion.Spec.Metadata = appContext.Spec.Metadata
 
 	err := controllerutil.SetControllerReference(app, &appVersion, r.Scheme)
 	if err != nil {

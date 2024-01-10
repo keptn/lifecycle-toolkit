@@ -312,6 +312,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			},
 			hasStoredResults: false,
 		},
+
 		{
 			name: "happy path - EvaluateQueryForStep",
 			ctx:  context.TODO(),
@@ -343,7 +344,45 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			hasStoredResults: false,
 		},
 		{
-			name: "happy path with stored results- EvaluateQueryForStep",
+			name: "metric exists, needs to fetch, prometheus supported, bad query, with stored results - EvaluateQueryForStep",
+			ctx:  context.TODO(),
+			req: controllerruntime.Request{
+				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric5"},
+			},
+			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+				mymock := &providersfake.KeptnSLIProviderMock{
+					EvaluateQueryForStepFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+						return []string{}, nil, fmt.Errorf("client_error: client error: 404")
+					},
+				}
+				return mymock, nil
+			},
+			client:  fake.NewClient(metric5, supportedProvider),
+			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			wantErr: fmt.Errorf("client_error: client error: 404"),
+			wantMetric: &metricsapi.KeptnMetric{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "mymetric5",
+					Namespace: "default",
+				},
+				Status: metricsapi.KeptnMetricStatus{
+					IntervalResults: []metricsapi.IntervalResult{
+						{
+							Value: "",
+							Range: &metricsapi.RangeSpec{
+								Aggregation:   "max",
+								Step:          "step",
+								StoredResults: 2,
+							},
+							ErrMsg: "client_error: client error: 404",
+						},
+					},
+				},
+			},
+			hasStoredResults: false,
+		},
+		{
+			name: "happy path, with stored results- EvaluateQueryForStep",
 			ctx:  context.TODO(),
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric5"},
@@ -367,13 +406,13 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 				Status: metricsapi.KeptnMetricStatus{
 					IntervalResults: []metricsapi.IntervalResult{
 						{
-						Value: "11",
-						Range: &metricsapi.RangeSpec{
-							Aggregation: "max",
-							Step: "step",
-							StoredResults: 2,
-						},
-						ErrMsg: "",
+							Value: "11",
+							Range: &metricsapi.RangeSpec{
+								Aggregation:   "max",
+								Step:          "step",
+								StoredResults: 2,
+							},
+							ErrMsg: "",
 						},
 					},
 				},

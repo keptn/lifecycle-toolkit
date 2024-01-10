@@ -4,7 +4,7 @@ on:
     types:
       - opened
     paths:
-       - "docs-new/**"
+      - "docs-new/**"
 
 permissions:
   pull-requests: write

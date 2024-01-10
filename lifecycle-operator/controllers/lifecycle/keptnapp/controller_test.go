@@ -63,7 +63,7 @@ func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {
 	}
 	r, _ := setupReconciler()
 
-	appVersion, err := r.createAppVersion(context.Background(), app)
+	appVersion, err := r.createAppVersion(context.Background(), app, nil)
 	if err != nil {
 		t.Errorf("Error creating app version: %s", err.Error())
 	}

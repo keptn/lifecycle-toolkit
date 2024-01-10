@@ -4,10 +4,10 @@ metadata:
   name: lifecycle-validating-webhook-configuration
   annotations:
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
+    {{- include "common.annotations" ( dict "context" . ) }}
   labels:
     keptn.sh/inject-cert: "true"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include "common.annotations" ( dict "context" . ) }}
 webhooks:
 - admissionReviewVersions:
   - v1
@@ -15,14 +15,14 @@ webhooks:
     service:
       name: 'lifecycle-webhook-service'
       namespace: '{{ .Release.Namespace }}'
-      path: /validate-lifecycle-keptn-sh-v1alpha3-keptntaskdefinition
+      path: /validate-lifecycle-keptn-sh-v1beta1-keptntaskdefinition
   failurePolicy: Fail
   name: vkeptntaskdefinition.kb.io
   rules:
   - apiGroups:
     - lifecycle.keptn.sh
     apiVersions:
-    - v1alpha3
+    - v1beta1
     operations:
     - CREATE
     - UPDATE

@@ -1,11 +1,11 @@
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnAppCreationRequest
 metadata:
   name: my-kacr
 spec:
   appName: my-app
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnWorkload
 metadata:
   name: my-app-my-workload
@@ -17,7 +17,7 @@ spec:
     name: my-replica-set
     uid: 957f825e-4025-4ea8-ad22-9292877ff7eb
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnWorkload
 metadata:
   name: my-app-my-workload-2

@@ -4,12 +4,15 @@ kind: Deployment
 metadata:
   name: certificate-operator
   namespace: {{ .Release.Namespace | quote }}
+  {{- $annotations := include "common.annotations" (dict "context" .) }}
+  {{- with $annotations }}
+  annotations: {{- . -}}
+  {{- end }}
   labels:
     app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/part-of: keptn
     control-plane: certificate-operator
     {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-    {{- include "common.annotations" ( dict "context" . ) }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:

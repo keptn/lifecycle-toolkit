@@ -3,6 +3,7 @@ package common
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"math/rand"
 	"strconv"
 
@@ -38,6 +39,9 @@ const MinKeptnNameLen = 80
 const MaxK8sObjectLength = 253
 
 type AppType string
+
+var ErrCannotCastKeptnAppVersion = errors.New("cannot cast KeptnAppVersion to v1beta1")
+var ErrCannotCastKeptnApp = errors.New("cannot cast KeptnApp to v1beta1")
 
 const (
 	AppTypeSingleService AppType = "single-service"

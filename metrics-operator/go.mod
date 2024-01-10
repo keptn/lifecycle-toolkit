@@ -11,11 +11,11 @@ require (
 	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20231211075630-e386ec643fa7
 	github.com/open-feature/go-sdk v1.9.0
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.17.0
+	github.com/prometheus/client_golang v1.18.0
 	github.com/prometheus/client_model v0.5.0
 	github.com/prometheus/common v0.45.0
 	github.com/stretchr/testify v1.8.4
-	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b
+	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc
 	golang.org/x/net v0.19.0
 	gopkg.in/inf.v0 v0.9.1
 	k8s.io/api v0.28.5
@@ -76,7 +76,7 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/prometheus/procfs v0.11.1 // indirect
+	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cobra v1.7.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

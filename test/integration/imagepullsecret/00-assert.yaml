@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1alpha4
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnWorkloadVersion
 metadata:
   name: waiter-waiter-0.4
@@ -14,7 +14,7 @@ status:
       status: Succeeded
   status: Succeeded
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTask
 metadata:
   annotations:

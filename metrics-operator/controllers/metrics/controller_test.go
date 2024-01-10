@@ -368,18 +368,12 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 				Status: metricsapi.KeptnMetricStatus{
 					IntervalResults: []metricsapi.IntervalResult{
 						{
-							Value: "",
-							Range: &metricsapi.RangeSpec{
-								Aggregation:   "max",
-								Step:          "step",
-								StoredResults: 2,
-							},
 							ErrMsg: "client_error: client error: 404",
 						},
 					},
 				},
 			},
-			hasStoredResults: false,
+			hasStoredResults: true,
 		},
 		{
 			name: "happy path, with stored results- EvaluateQueryForStep",

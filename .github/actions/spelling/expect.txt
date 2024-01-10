@@ -380,7 +380,7 @@ kwv
 lastmod
 lastword
 Lato
-lfc
+LFC
 Lifcycle
 lifecyclekeptnsh
 linkedin

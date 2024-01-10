@@ -23,7 +23,9 @@ Keptn tasks running on a Kubernetes cluster can be triggered for
 and applications that are deployed outside of Kubernetes.
 For example, Keptn can run (or "trigger")
 load and performance tests
-for an application that is deployed on a virtual machine.
+for an application that is deployed on a virtual machine,
+or any other environment, as long as it can be reached
+by the container running the KeptnTask.
 It does this by specifying a container image that should be executed.
 You specify the container in a `KeptnTaskDefinition` resource; see
 [Deployment tasks](../guides/tasks.md) for more information.

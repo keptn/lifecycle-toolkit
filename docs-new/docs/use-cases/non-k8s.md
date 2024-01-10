@@ -199,7 +199,7 @@ To implement a Keptn analysis for your deployment:
   and can define a secret for the data provider if necessary.
 
 - Create `ValueTemplate` resources for each SLI
-  and `AnalysisDefinition` resources for each SLO
+  and an `AnalysisDefinition` resource that contains all SLOs
   to be used in your analysis
 
 - Create and apply an `Analysis` resource

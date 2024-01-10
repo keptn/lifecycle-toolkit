@@ -223,6 +223,7 @@ groupversion
 gstatic
 gtag
 GVK
+hawai
 HCNAH
 healthz
 hellopy

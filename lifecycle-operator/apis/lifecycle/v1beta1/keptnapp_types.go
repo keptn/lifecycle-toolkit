@@ -41,28 +41,6 @@ type KeptnAppSpec struct {
 	// Workloads is a list of all KeptnWorkloads that are part of the KeptnApp.
 	// +optional
 	Workloads []KeptnWorkloadRef `json:"workloads,omitempty"`
-	// PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp.
-	// The items of this list refer to the names of KeptnTaskDefinitions
-	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
-	// +optional
-	PreDeploymentTasks []string `json:"preDeploymentTasks,omitempty"`
-	// PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp.
-	// The items of this list refer to the names of KeptnTaskDefinitions
-	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
-	// +optional
-	PostDeploymentTasks []string `json:"postDeploymentTasks,omitempty"`
-	// PreDeploymentEvaluations is a list of all evaluations to be performed
-	// during the pre-deployment phase of the KeptnApp.
-	// The items of this list refer to the names of KeptnEvaluationDefinitions
-	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
-	// +optional
-	PreDeploymentEvaluations []string `json:"preDeploymentEvaluations,omitempty"`
-	// PostDeploymentEvaluations is a list of all evaluations to be performed
-	// during the post-deployment phase of the KeptnApp.
-	// The items of this list refer to the names of KeptnEvaluationDefinitions
-	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
-	// +optional
-	PostDeploymentEvaluations []string `json:"postDeploymentEvaluations,omitempty"`
 }
 
 // KeptnAppStatus defines the observed state of KeptnApp

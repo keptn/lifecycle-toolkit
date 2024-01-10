@@ -144,10 +144,6 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1bet
 
 	appVersion.Spec.DeploymentTaskSpec = appContext.Spec.DeploymentTaskSpec
 
-	appVersion.Spec.TraceId = map[string]string{
-		"traceparent": appContext.Spec.TraceParent,
-	}
-
 	appVersion.Spec.TraceLinks = appContext.Spec.TraceLinks
 	appVersion.Spec.Metadata = appContext.Spec.Metadata
 

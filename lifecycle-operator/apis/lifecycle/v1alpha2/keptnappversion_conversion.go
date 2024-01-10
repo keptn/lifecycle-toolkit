@@ -10,7 +10,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 
-// ConvertTo converts the src v1beta1.KeptnAppVersion to the hub version (v1beta1.KeptnAppVersion)
+// ConvertTo converts the src v1alpha2.KeptnAppVersion to the hub version (v1beta1.KeptnAppVersion)
 //
 //nolint:gocyclo
 func (src *KeptnAppVersion) ConvertTo(dstRaw conversion.Hub) error {
@@ -122,7 +122,7 @@ func (src *KeptnAppVersion) ConvertTo(dstRaw conversion.Hub) error {
 	return nil
 }
 
-// ConvertFrom converts from the hub version (v1beta1.KeptnAppVersion) to this version (v1beta1.KeptnAppVersion)
+// ConvertFrom converts from the hub version (v1beta1.KeptnAppVersion) to this version (v1alpha2.KeptnAppVersion)
 //
 //nolint:gocyclo
 func (dst *KeptnAppVersion) ConvertFrom(srcRaw conversion.Hub) error {

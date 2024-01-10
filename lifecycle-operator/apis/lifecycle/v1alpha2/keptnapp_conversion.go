@@ -8,7 +8,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 )
 
-// ConvertTo converts the src v1beta1.KeptnApp to the hub version (v1beta1.KeptnApp)
+// ConvertTo converts the src v1alpha2.KeptnApp to the hub version (v1beta1.KeptnApp)
 func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
 	dst, ok := dstRaw.(*v1beta1.KeptnApp)
 
@@ -39,7 +39,7 @@ func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
 	return nil
 }
 
-// ConvertFrom converts from the hub version (v1beta1.KeptnApp) to this version (v1beta1.KeptnApp)
+// ConvertFrom converts from the hub version (v1beta1.KeptnApp) to this version (v1alpha2.KeptnApp)
 func (dst *KeptnApp) ConvertFrom(srcRaw conversion.Hub) error {
 	src, ok := srcRaw.(*v1beta1.KeptnApp)
 

@@ -525,6 +525,7 @@ readinessprobe
 readyz
 realpath
 redis
+reathedocs
 relref
 remediations
 replicasets

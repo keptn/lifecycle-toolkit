@@ -25,7 +25,8 @@ import (
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
-	contextcommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
+
+	//contextcommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
@@ -106,11 +107,11 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	appTraceContextCarrier := propagation.MapCarrier(workloadVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
 
-	ctxAppTrace = contextcommon.ContextWithAppMetadata(
-		ctxAppTrace,
-		workloadVersion.Status.ContextMetadata,
-		workloadVersion.Spec.Metadata,
-	)
+	// ctxAppTrace = contextcommon.ContextWithAppMetadata(
+	// 	ctxAppTrace,
+	// 	workloadVersion.Status.ContextMetadata,
+	// 	workloadVersion.Spec.Metadata,
+	// )
 	// this will be the parent span for all phases of the WorkloadVersion
 	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), workloadVersion, "")
 	if err != nil {
@@ -329,11 +330,11 @@ func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx conte
 		return true, controllererrors.ErrNoMatchingAppVersionFound
 	}
 
-	workloadVersion.Status.ContextMetadata = appVersion.Spec.Metadata
+	// workloadVersion.Status.ContextMetadata = appVersion.Spec.Metadata
 
-	if err := r.Status().Update(ctx, workloadVersion); err != nil {
-		return true, err
-	}
+	// if err := r.Status().Update(ctx, workloadVersion); err != nil {
+	// 	return true, err
+	// }
 
 	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
 	if !appPreEvalStatus.IsSucceeded() {

@@ -1,6 +1,6 @@
 # Check for the KeptnApp to be created - the KeptnAppCreationRequest will not be here anymore as it is
 # deleted after reconciliation
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnApp
 metadata:
   name: my-app

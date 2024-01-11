@@ -23,17 +23,13 @@ Use `kubectl` to inspect the current contents of any Keptn resource:
    For example, to list all the `KeptnApp` resources
    in the `namespace1` namespace, the command is:
 
-   ```shell
-   kubectl get keptnapps -n namespace1
-   ```
+        kubectl get keptnapps -n namespace1
 
 2. Get the current manifest for the specified resource.
    For example, to view the manifest for the `my-keptn-app` resource
    in the `namespace1` namespace, the command is:
 
-   ```shell
-   kubectl get keptnapp -n <namespace> my-keptn-app -oyaml
-   ```
+        kubectl get keptnapp -n <namespace> my-keptn-app -oyaml
 
 For more information about the APIs and Custom Resources,
 see the Kubernetes documentation:

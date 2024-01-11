@@ -23,9 +23,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // KeptnAppCreationRequestSpec defines the desired state of KeptnAppCreationRequest
 type KeptnAppCreationRequestSpec struct {
 	// AppName is the name of the KeptnApp the KeptnAppCreationRequest should create if no user-defined object with that name is found.
@@ -33,6 +30,7 @@ type KeptnAppCreationRequestSpec struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:storageversion
 // +kubebuilder:subresource:status
 
 // KeptnAppCreationRequest is the Schema for the keptnappcreationrequests API

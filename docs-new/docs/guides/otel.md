@@ -51,21 +51,21 @@ you must have the following on your cluster:
     See
     [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/)).
 
-  - To install Prometheus into the `monitoring` namespace
-    using the example configuration included with Keptn,
-    use the following command sequence.
-    You can modify these commands to define a different configuration:
+- To install Prometheus into the `monitoring` namespace
+  using the example configuration included with Keptn,
+  use the following command sequence.
+  You can modify these commands to define a different configuration:
 
     > **Note**
-    You must clone the `lifecycle-toolkit` repository
-    and `cd` into the correct directory
-    (`examples/support/observability`) before running the following commands.
+  You must clone the `lifecycle-toolkit` repository
+  and `cd` into the correct directory
+  (`examples/support/observability`) before running the following commands.
 
-    ```shell
-    kubectl create namespace monitoring
-    kubectl apply --server-side -f config/prometheus/setup/
-    kubectl apply -f config/prometheus/
-    ```
+```shell
+kubectl create namespace monitoring
+kubectl apply --server-side -f config/prometheus/setup/
+kubectl apply -f config/prometheus/
+```
 
 - If you want a dashboard for reviewing metrics and traces:
 

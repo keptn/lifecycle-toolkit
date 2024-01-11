@@ -4,7 +4,9 @@ import (
 	"context"
 )
 
-const keptnAppContextKey = "keptnAppContextMeta"
+type KeptnAppContextKey string
+
+const keptnAppContextKey KeptnAppContextKey = "keptnAppContextMeta"
 
 func ContextWithAppMetadata(ctx context.Context, appContextMeta ...map[string]string) context.Context {
 	mergedMap := map[string]string{}

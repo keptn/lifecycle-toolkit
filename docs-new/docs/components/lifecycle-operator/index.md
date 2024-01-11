@@ -4,7 +4,8 @@
 a Kubernetes [operator](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 that automates the deployment and management
 of the Keptn components in a Kubernetes cluster.
-It plays a crucial role in managing and orchestrating the various stages of application lifecycle management within
+It plays a crucial role in managing and orchestrating
+the various stages of application lifecycle management within
 Keptn.
 
 The lifecycle operator acts as the backbone of Keptn, overseeing the entire application lifecycle from deployment

@@ -71,7 +71,7 @@ kubectl get events -n <namespace> .
 ```
 
 > **Note**
-This will display only Kubernetes events, not Cloud Events.
+This only displays Kubernetes events, not Cloud Events.
 
 ### Pre-deployment phase
 

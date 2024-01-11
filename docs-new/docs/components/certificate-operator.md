@@ -35,6 +35,6 @@ for this purpose.
 
 ## Troubleshooting
 
-When experiecing problems with setting up cert-manager.io,
+When experiencing problems with setting up cert-manager.io,
 please refer to the
 [cert-manager.io troubleshooting page](https://cert-manager.io/docs/troubleshooting/).

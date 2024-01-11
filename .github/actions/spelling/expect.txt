@@ -43,6 +43,7 @@ argoproj
 ARMO
 artifacthub
 asdfg
+authurl
 automerge
 automountserviceaccounttokenspec
 autoprefixer

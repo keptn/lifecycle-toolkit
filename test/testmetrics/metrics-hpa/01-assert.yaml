@@ -19,4 +19,8 @@ kind: TestAssert
 collectors:
   - type: pod
     selector: app=podtato-head
-  - command: kubectl logs -l app=podtato-head -n $NAMESPACE
+  - command: |
+      kubectl logs -l app=metrics-operator -n $NAMESPACE
+      kubectl describe keptnmetric podtatometric -n $NAMESPACE
+      kubectl describe keptnmetricsprovider dynatrace -n $NAMESPACE
+      kubectl logs -l app=podtato-head -n $NAMESPACE

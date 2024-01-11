@@ -50,10 +50,13 @@ func (s DQLSecret) validate() error {
 	if secretLen := len(secret); secretLen != 64 {
 		return fmt.Errorf("length of secret is %d, which is not equal to 64: %w", secretLen, ErrInvalidToken)
 	}
-	_, err := url.ParseRequestURI(s.AuthUrl)
-	if err != nil {
-		return fmt.Errorf("authurl is not a valid url: %w", ErrInvalidAuthURL)
+
+	if s.AuthUrl != "" {
+		if _, err := url.ParseRequestURI(s.AuthUrl); err != nil {
+			return fmt.Errorf("authurl is not a valid url: %w", ErrInvalidAuthURL)
+		}
 	}
+
 	return nil
 }
 

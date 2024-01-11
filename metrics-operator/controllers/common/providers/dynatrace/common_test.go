@@ -13,16 +13,16 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const dtSecretToken = "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 const dqlSecretString = `{"token": "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "authUrl":"https://my-auth-url.test"}`
+const dqlSecretStringWithEmptyAuthURL = `{"token": "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"}`
 
 func TestGetSecret_NoKeyDefined(t *testing.T) {
 
 	fakeClient := fake.NewClient()
 
 	p := metricsapi.KeptnMetricsProvider{
-		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: "svr.URL",
-		},
+		Spec: metricsapi.KeptnMetricsProviderSpec{},
 	}
 	r, e := getDTSecret(context.TODO(), p, fakeClient)
 	require.NotNil(t, e)
@@ -35,32 +35,69 @@ func TestGetSecret_NoSecret(t *testing.T) {
 
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: "svr.URL",
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: "my-dql-secret",
+				},
+				Key: "creds",
+			},
 		},
 	}
 	r, e := getDTSecret(context.TODO(), p, fakeClient)
 	require.NotNil(t, e)
-	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
 	require.Empty(t, r)
 }
 
 func TestGetSecret_NoTokenData(t *testing.T) {
-	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte(dtpayload))
-		require.Nil(t, err)
-	}))
-	defer svr.Close()
-	fakeClient := fake.NewClient()
+	dtSecret := &v1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-dql-secret",
+		},
+		Data: map[string][]byte{},
+		Type: v1.SecretTypeOpaque,
+	}
+	fakeClient := fake.NewClient(dtSecret)
 
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: svr.URL,
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: "my-dql-secret",
+				},
+				Key: "creds",
+			},
 		},
 	}
 	r, e := getDTSecret(context.TODO(), p, fakeClient)
 	require.NotNil(t, e)
-	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
 	require.Empty(t, r)
+}
+
+func TestGetSecret_ValidSecret(t *testing.T) {
+	dtSecret := &v1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-dql-secret",
+		},
+		Data: map[string][]byte{
+			"creds": []byte(dtSecretToken),
+		},
+		Type: v1.SecretTypeOpaque,
+	}
+	fakeClient := fake.NewClient(dtSecret)
+
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: "my-dql-secret",
+				},
+				Key: "creds",
+			},
+		},
+	}
+	r, e := getDTSecret(context.TODO(), p, fakeClient)
+	require.Nil(t, e)
+	require.Equal(t, dtSecretToken, r)
 }
 
 func TestGetDQLSecret_NoKeyDefined(t *testing.T) {
@@ -83,41 +120,20 @@ func TestGetDQLSecret_NoSecret(t *testing.T) {
 
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: "svr.URL",
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: "my-dql-secret",
+				},
+				Key: "creds",
+			},
 		},
 	}
 	r, e := getDQLSecret(context.TODO(), p, fakeClient)
 	require.NotNil(t, e)
-	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
-	require.Empty(t, r)
-}
-
-func TestGetDQLSecret_NoTokenData(t *testing.T) {
-	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte(dtpayload))
-		require.Nil(t, err)
-	}))
-	defer svr.Close()
-	fakeClient := fake.NewClient()
-
-	p := metricsapi.KeptnMetricsProvider{
-		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: svr.URL,
-		},
-	}
-	r, e := getDQLSecret(context.TODO(), p, fakeClient)
-	require.NotNil(t, e)
-	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
 	require.Empty(t, r)
 }
 
 func TestGetDQLSecret_ValidSecret(t *testing.T) {
-	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte(dtpayload))
-		require.Nil(t, err)
-	}))
-	defer svr.Close()
-
 	dqlSecret := &v1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "my-dql-secret",
@@ -131,7 +147,6 @@ func TestGetDQLSecret_ValidSecret(t *testing.T) {
 
 	p := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: svr.URL,
 			SecretKeyRef: v1.SecretKeySelector{
 				LocalObjectReference: v1.LocalObjectReference{
 					Name: "my-dql-secret",
@@ -145,6 +160,35 @@ func TestGetDQLSecret_ValidSecret(t *testing.T) {
 	require.NotEmpty(t, secretValue)
 	require.Equal(t, "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", secretValue.Token)
 	require.Equal(t, "https://my-auth-url.test", secretValue.AuthUrl)
+}
+
+func TestGetDQLSecret_ValidSecretEmptyAuthURL(t *testing.T) {
+	dqlSecret := &v1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-dql-secret",
+		},
+		Data: map[string][]byte{
+			"creds": []byte(dqlSecretStringWithEmptyAuthURL),
+		},
+		Type: v1.SecretTypeOpaque,
+	}
+	fakeClient := fake.NewClient(dqlSecret)
+
+	p := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			SecretKeyRef: v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: "my-dql-secret",
+				},
+				Key: "creds",
+			},
+		},
+	}
+	secretValue, e := getDQLSecret(context.TODO(), p, fakeClient)
+	require.Nil(t, e)
+	require.NotEmpty(t, secretValue)
+	require.Equal(t, "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", secretValue.Token)
+	require.Equal(t, "", secretValue.AuthUrl)
 }
 
 func TestGetDQLSecret_SecretIsNotAJsonObject(t *testing.T) {

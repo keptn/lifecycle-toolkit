@@ -9,6 +9,17 @@ that requires TLS certificates to be mounted as a volume.
 These webhooks and CRDs contain a `keptn.sh/inject-cert: "true"` label indicating that
 these resources require a TLS certificate.
 
+```mermaid
+graph TD;
+
+E((Manifests)) -- apply --> D[Kubernetes API]
+F[Webhook Controller] <-- watches Secret --> D
+    
+style D fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
+style F fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+style E fill:#fff,stroke:#123,stroke-width:px,color:#006bb8
+```
+
 How it works:
 
 * Keptn Cert Manager looks for the resources with `keptn.sh/inject-cert: "true"` label.

@@ -12,6 +12,19 @@ to testing, evaluation, and observability.
 It facilitates a streamlined and automated approach to managing the evolution of applications, ensuring smooth
 transitions between different stages such as development, testing, staging, and production.
 
+```mermaid
+graph TD;
+
+G((CRs + manifests)) -- apply --> H[Kubernetes API]
+I[Scheduler] <-- schedules Pods --> H
+J[Lifecycle controllers] <-- orchestrates --> H
+    
+style H fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
+style I fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+style J fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+style G fill:#fff,stroke:#123,stroke-width:px,color:#006bb8
+```
+
 Key responsibilities of the lifecycle operator include:
 
 1. **Automated Deployment:** It automates the deployment of applications using various deployment strategies,

@@ -16,6 +16,7 @@ else
 INTERACTIVE_FLAG := -t
 endif
 
+PIP_CACHE_DIR=$(shell pip3 cache dir)
 PWD=$(shell pwd)
 
 .PHONY: docs-build
@@ -25,7 +26,7 @@ docs-build:
 		-v ${PWD}/requirements.txt:/requirements.txt \
 		-v ${PWD}/site:/site \
 		-v ${PWD}/.git:/.git \
-		-v ${PWD}/tmp/.pip-cache:/root/.cache/pip \
+		-v ${PIP_CACHE_DIR}:/root/.cache/pip \
 		--entrypoint "" \
 		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
 		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs build'
@@ -38,7 +39,7 @@ docs-serve:
 		-v ${PWD}/requirements.txt:/requirements.txt \
 		-v ${PWD}/site:/site \
 		-v ${PWD}/.git:/.git \
-		-v ${PWD}/tmp/.pip-cache:/root/.cache/pip \
+		-v ${PIP_CACHE_DIR}:/root/.cache/pip \
 		--entrypoint "" \
 		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
 		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs serve --dirty -a 0.0.0.0:$(PORT)'

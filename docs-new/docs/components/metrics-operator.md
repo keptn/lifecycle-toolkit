@@ -34,11 +34,25 @@ The Metrics Operator consists of the following components:
 
 ```mermaid
 graph TD;
-    Metrics-Operator-->Metrics-Adapter;
-    Metrics-Operator-->Metrics-Controller
-style Metrics-Operator fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
-style Metrics-Adapter fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
-style Metrics-Controller fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+K((CRs)) -- apply --> L[Kubernetes API]
+X[Metrics Adapter] <--> L
+Y[Metrics Controller] <--> L
+Z[Analysis Controller] <--> L
+
+P3((<svg height="80" width="80"><image href="https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/docs-new/docs/components/assets/prometheus-logo.png" height="80" width="80" /></svg>))
+P1[<svg height="80" width="100"><image href="https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/docs-new/docs/components/assets/datadog-logo.png" height="100" width="100" /></svg>]  <--> Y
+P3 <--> Y
+P3 <--> Z
+P2[<svg height="70" width="100"><image href="https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/docs-new/docs/components/assets/dynatrace-logo.png" height="70" width="100" /></svg>] <--> Z
+
+style L fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
+style Y fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+style Z fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+style X fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+style K fill:#fff,stroke:#123,stroke-width:px,color:#006bb8
+style P1 fill:#fff,stroke:#fff,stroke-width:px,color:#fff
+style P2 fill:#fff,stroke:#fff,stroke-width:px,color:#fff
+style P3 fill:#fff,stroke:#fff,stroke-width:px,color:#fff
 ```
 
 The **Metrics adapter** exposes custom metrics from an application

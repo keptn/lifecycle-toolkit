@@ -55,6 +55,7 @@ extra_javascript:
 extra_css:
   - assets/stylesheets/versions.css
   - assets/stylesheets/color-schemes.css
+  - assets/stylesheets/mermaid.css
 plugins:
   - search
   - social
@@ -65,6 +66,12 @@ plugins:
   - blog:
       blog_dir: blog
       draft_if_future_date: true
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
   - Home:

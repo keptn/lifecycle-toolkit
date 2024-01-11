@@ -13,4 +13,8 @@ assert: # this checks that kubectl get resource succeeds
 collectors:
   - type: pod
     selector: app=test
-  - command: kubectl logs -l app=test -n $NAMESPACE
+  - command: |
+      kubectl logs -l app=metrics-operator -n $NAMESPACE
+      kubectl describe keptnmetric podtatometric -n $NAMESPACE
+      kubectl describe keptnmetricsprovider dynatrace -n $NAMESPACE
+      kubectl logs -l app=test -n $NAMESPACE

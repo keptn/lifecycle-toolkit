@@ -65,45 +65,7 @@ The [keptn-metrics-provider.yaml](../reference/crd-reference/metricsprovider.md#
 file for our example looks like:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetricsProvider
-metadata:
-  name: dev-prometheus
-  namespace: podtato-kubectl
-spec:
-  type: prometheus
-  targetServer: "<prometheus-url>"
-  secretKeyRef:
-    name: prometheus-secret
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: prometheus-secret
-data:
-  password: password
-  user: user
-type: Opaque
----
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetricsProvider
-metadata:
-  name: dev-dynatrace
-  namespace: podtato-kubectl
-spec:
-  type: dynatrace | dql
-  targetServer: "<dynatrace-tenant-url>"
-  secretKeyRef:
-    name: dt-api-token
-    key: myCustomTokenKey
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: dt-api-token
-data:
-  myCustomTokenKey: my-token
-type: Opaque
+{% include "./assets/metric-providers.yaml" %}
 ```
 
 ### Define KeptnMetric information
@@ -128,27 +90,7 @@ The
 file for our example looks like:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetric
-metadata:
-  name: available-cpus
-  namespace: podtato-kubectl
-spec:
-  provider:
-    name: dev-prometheus
-  query: "sum(kube_node_status_capacity{resources`cpu`})"
-  fetchIntervalSeconds: 10
----
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetric
-metadata:
-  name: availability-slo
-  namespace: podtato-kubectl
-spec:
-  provider:
-    name: dev-dynatrace
-  query: "func:slo.availability_simplenodeservice"
-  fetchIntervalSeconds: 10
+{% include "./assets/metric.yaml" %}
 ```
 
 Note the following:

@@ -331,9 +331,9 @@ func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx conte
 
 	//workloadVersion.Status.ContextMetadata = appVersion.Spec.Metadata
 
-	if err := r.Client.Status().Update(ctx, workloadVersion); err != nil {
-		return true, err
-	}
+	// if err := r.Client.Status().Update(ctx, workloadVersion); err != nil {
+	// 	return true, err
+	// }
 
 	appPreEvalStatus := appVersion.Status.PreDeploymentEvaluationStatus
 	if !appPreEvalStatus.IsSucceeded() {

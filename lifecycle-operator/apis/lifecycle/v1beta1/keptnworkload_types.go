@@ -58,7 +58,6 @@ type KeptnWorkloadSpec struct {
 	// ResourceReference is a reference to the Kubernetes resource
 	// (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing.
 	ResourceReference ResourceReference `json:"resourceReference"`
-	Metadata          map[string]string `json:"metadata,omitempty"`
 }
 
 // KeptnWorkloadStatus defines the observed state of KeptnWorkload

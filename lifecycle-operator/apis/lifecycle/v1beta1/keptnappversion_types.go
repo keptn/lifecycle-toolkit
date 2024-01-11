@@ -40,13 +40,6 @@ type KeptnAppVersionSpec struct {
 	// TraceId contains the OpenTelemetry trace ID.
 	// +optional
 	TraceId map[string]string `json:"traceId,omitempty"`
-	// +optional
-	// TraceLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
-	// For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links
-	TraceLinks []string `json:"traceLinks,omitempty"`
-	// +optional
-	// Metadata contains additional key-value pairs for contextual information.
-	Metadata map[string]string `json:"metadata,omitempty"`
 }
 
 // KeptnAppVersionStatus defines the observed state of KeptnAppVersion

@@ -144,9 +144,6 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1bet
 
 	appVersion.Spec.DeploymentTaskSpec = appContext.Spec.DeploymentTaskSpec
 
-	appVersion.Spec.TraceLinks = appContext.Spec.TraceLinks
-	appVersion.Spec.Metadata = appContext.Spec.Metadata
-
 	err := controllerutil.SetControllerReference(app, &appVersion, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference for AppVersion: "+appVersion.Name)

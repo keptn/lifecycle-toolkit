@@ -113,8 +113,7 @@ type KeptnWorkloadVersionStatus struct {
 	// Status represents the overall status of the KeptnWorkloadVersion.
 	// +kubebuilder:default:=Pending
 	// +optional
-	Status          common.KeptnState `json:"status,omitempty"`
-	ContextMetadata map[string]string `json:"contextMetadata,omitempty"`
+	Status common.KeptnState `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

@@ -244,21 +244,21 @@ func TestDQLSecret_validate(t *testing.T) {
 				Token:   "",
 				AuthUrl: "",
 			},
-			wantErr: ErrOAuthURLInvalid,
+			wantErr: ErrInvalidToken,
 		},
 		{
 			name: "wrong format",
 			fields: fields{
 				Token: "dt0s08.wrong.token.with.too.many.components",
 			},
-			wantErr: ErrOAuthURLInvalid,
+			wantErr: ErrInvalidToken,
 		},
 		{
 			name: "wrong format",
 			fields: fields{
 				Token: "dt0s08.wrong.length",
 			},
-			wantErr: ErrOAuthURLInvalid,
+			wantErr: ErrInvalidToken,
 		},
 		{
 			name: "invalid auth url",
@@ -266,7 +266,7 @@ func TestDQLSecret_validate(t *testing.T) {
 				Token:   "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 				AuthUrl: "wrong",
 			},
-			wantErr: ErrClientUrlInvalid,
+			wantErr: ErrInvalidAuthURL,
 		},
 	}
 	for _, tt := range tests {

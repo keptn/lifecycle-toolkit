@@ -17,8 +17,8 @@ import (
 var ErrSecretKeyRefNotDefined = errors.New("the SecretKeyRef property with the Dynatrace token is missing")
 var ErrInvalidResult = errors.New("the answer does not contain any data")
 var ErrDQLQueryTimeout = errors.New("timed out waiting for result of DQL query")
-var ErrClientUrlInvalid = errors.New("the Dynatrace auth URL is not a valid URL")
-var ErrOAuthURLInvalid = errors.New("the Dynatrace token has an invalid format")
+var ErrInvalidAuthURL = errors.New("the Dynatrace auth URL is not a valid URL")
+var ErrInvalidToken = errors.New("the Dynatrace token has an invalid format")
 
 const (
 	ErrAPIMsg     = "provider api response: %s"
@@ -40,19 +40,19 @@ func (s DQLSecret) validate() error {
 	// must have 2 dots
 	// third part (split by dot) must be 64 chars
 	if !strings.HasPrefix(s.Token, dtTokenPrefix) {
-		return fmt.Errorf("secret does not start with required prefix %s: %w", dtTokenPrefix, ErrOAuthURLInvalid)
+		return fmt.Errorf("secret does not start with required prefix %s: %w", dtTokenPrefix, ErrInvalidToken)
 	}
 	split := strings.Split(s.Token, ".")
 	if len(split) != 3 {
-		return fmt.Errorf("secret does not contain three components: %w", ErrOAuthURLInvalid)
+		return fmt.Errorf("secret does not contain three components: %w", ErrInvalidToken)
 	}
 	secret := split[2]
 	if secretLen := len(secret); secretLen != 64 {
-		return fmt.Errorf("length of secret is %d, which is not equal to 64: %w", secretLen, ErrOAuthURLInvalid)
+		return fmt.Errorf("length of secret is %d, which is not equal to 64: %w", secretLen, ErrInvalidToken)
 	}
 	_, err := url.ParseRequestURI(s.AuthUrl)
 	if err != nil {
-		return fmt.Errorf("authurl is not a valid url: %w", ErrClientUrlInvalid)
+		return fmt.Errorf("authurl is not a valid url: %w", ErrInvalidAuthURL)
 	}
 	return nil
 }

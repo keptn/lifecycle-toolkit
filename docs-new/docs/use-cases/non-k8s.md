@@ -38,7 +38,6 @@ as described above, then::
 
 - [Create a KeptnTaskDefinition](#create-a-keptntaskdefinition)
 - [Create and apply a KeptnTask](#create-and-apply-a-keptntask)
-- [Re-run the KeptnTask](#re-run-the-keptntask)
 
 ### Create a KeptnTaskDefinition
 
@@ -118,8 +117,6 @@ kubectl apply -f test-task.yaml -n my-keptn-annotated-namespace
 
 Applying this file causes Keptn to create a Kubernetes
 [job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
-and a Kubernetes
-[pod](https://kubernetes.io/docs/concepts/workloads/pods/)
 and run the executables defined
 in the associated `KeptnTaskDefinition` resource.
 
@@ -130,12 +127,8 @@ kubectl get keptntasks -n my-keptn-annotated-namespace
 kubectl get pods -n my-keptn-annotated-namespace
 ```
 
-See the
-
-### Re-run the KeptnTask
-
 For subsequent KeptnTask runs,
-the `KeptnTask` name and version fields must be unique,
+the values of the `KeptnTask` `name` and `version` fields must be unique,
 so copy the `KeptnTask` yaml file you have and update the
 `metadata.name` field.
 

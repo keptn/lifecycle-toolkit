@@ -329,8 +329,12 @@ func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx conte
 		return true, controllererrors.ErrNoMatchingAppVersionFound
 	}
 
-	//workloadVersion.Status.ContextMetadata = appVersion.Spec.Metadata
+	workloadVersion.Status.ContextMetadata = appVersion.Spec.Metadata
 
+	err = r.Client.Status().Update(ctx, workloadVersion)
+	if err != nil {
+		return true, err
+	}
 	// if err := r.Client.Status().Update(ctx, workloadVersion); err != nil {
 	// 	return true, err
 	// }

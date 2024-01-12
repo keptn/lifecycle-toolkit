@@ -1,29 +1,45 @@
-# Keptn - Kubernetes
+# Keptn for non-Kubernetes deployments
 
-Keptn Tasks running on a Kubernetes cluster
-can be triggered for [workloads](https://kubernetes.io/docs/concepts/workloads/) and applications
-that are deployed outside of Kubernetes.
-For example, Keptn could trigger load and performance tests
-for an application that is deployed on a virtual machine.
+Keptn can interact with deployments that are not running on Kubernetes
+even though Keptn mainly targets Kubernetes deployments.
+The following functionality is available for deployments not on Kubernetes:
 
-To do this:
+- [Run Keptn tasks](#run-keptntask-for-a-deployment-not-on-kubernetes)
+- [Run Keptn analysis](#run-keptn-analysis-for-a-deployment-not-on-kubernetes)
 
-- [Install Keptn on a Kubernetes cluster](#install-keptn-on-a-kubernetes-cluster)
-- [Create a KeptnTaskDefinition](#create-a-keptntaskdefinition)
-- [Create and apply a KeptnTask](#create-and-apply-a-keptntask)
-- [Re-run the KeptnTask](#re-run-the-keptntask)
-
-## Install Keptn on a Kubernetes cluster
-
-You must set up a Kubernetes cluster and
+To use either of these features,
+you must set up a Kubernetes cluster and
 [install](../installation/index.md#basic-installation)
 Keptn on it,
 but this can be a very lightweight, single-node KinD cluster; see
 [Create local Kubernetes cluster](../installation/k8s.md#create-local-kubernetes-cluster).
-Keptn only triggers on-demand `KeptnTask` resources
+Keptn only runs  on-demand `KeptnTask` and `KeptnAnalysis` resources
 so resource utilization is minimal.
 
-## Create a KeptnTaskDefinition
+## Run KeptnTask for a deployment not on Kubernetes
+
+Keptn tasks running on a Kubernetes cluster can be triggered for
+[workloads](https://kubernetes.io/docs/concepts/workloads/)
+and applications that are deployed outside of Kubernetes.
+For example, Keptn can run (or "trigger")
+load and performance tests
+for an application that is deployed on a virtual machine,
+or any other environment, as long as it can be reached
+by the container running the KeptnTask.
+It does this by specifying a container image that should be executed.
+You specify the container in a `KeptnTaskDefinition` resource; see
+[Deployment tasks](../guides/tasks.md) for more information.
+The `KeptnTask` runs as a Kubernetes
+[job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
+on the cluster where Keptn is installed.
+
+To implement this, install Keptn on a Kubernetes cluster
+as described above, then::
+
+- [Create a KeptnTaskDefinition](#create-a-keptntaskdefinition)
+- [Create and apply a KeptnTask](#create-and-apply-a-keptntask)
+
+### Create a KeptnTaskDefinition
 
 When you have Keptn installed, create a
 YAML file that defines what you want to execute
@@ -58,11 +74,14 @@ See
 [Runners and containers](../guides/tasks.md#runners-and-containers)
 for more information.
 
-## Create and apply a KeptnTask
+### Create and apply a KeptnTask
 
 You must manually create the
 [KeptnTask](../reference/crd-reference/task.md) resource.
-In the standard operating mode, when Keptn is managing [workloads](https://kubernetes.io/docs/concepts/workloads/),
+In the standard operating mode,
+when Keptn is managing
+[workloads](https://kubernetes.io/docs/concepts/workloads/)
+for deployments running on Kubernetes,
 the creation of the `KeptnTask` resource is automatic.
 
 Moreover, each time you want to execute a `KeptnTask`,
@@ -96,7 +115,8 @@ You can then apply this YAML file with the following command:
 kubectl apply -f test-task.yaml -n my-keptn-annotated-namespace
 ```
 
-Applying this file causes Keptn to create a Job and a Pod
+Applying this file causes Keptn to create a Kubernetes
+[job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
 and run the executables defined
 in the associated `KeptnTaskDefinition` resource.
 
@@ -107,10 +127,8 @@ kubectl get keptntasks -n my-keptn-annotated-namespace
 kubectl get pods -n my-keptn-annotated-namespace
 ```
 
-## Re-run the KeptnTask
-
 For subsequent KeptnTask runs,
-the `KeptnTask` name and version fields must be unique,
+the values of the `KeptnTask` `name` and `version` fields must be unique,
 so copy the `KeptnTask` yaml file you have and update the
 `metadata.name` field.
 
@@ -134,8 +152,56 @@ spec:
     workloadVersion: "1.0.1"
 ```
 
-You can then apply this file with the following command:
+Use the following command to apply this resource:
 
 ```shell
 kubectl apply -f test-task-2.yaml -n my-keptn-annotated-namespace
 ```
+
+See the
+[Deployment tasks](../guides/tasks.md)
+guide and associated reference pages
+for more information about running Keptn tasks
+with deployments that do not run on Kubernetes.
+
+## Run Keptn analysis for a deployment not on Kubernetes
+
+The Keptn analyses feature
+analyzes Service Level Objectives (SLOs)
+based on Service Level Indicators (SLIs).
+It can apply weights to reach a composite score
+about the health of the deployment,
+similar to what the metrics evaluations of the
+Keptn v1 quality gates feature provided.
+The data used can come from multiple instances
+of multiple data providers
+(such as Prometheus, Dynatrace, and DataDog).
+
+A Keptn analysis can be run for any application running anywhere
+as long Keptn can access a monitoring provider endpoint
+that serves metrics for the application.
+You can point to multiple instances of the supported monitoring providers
+(Prometheus, Dynatrace, Datadog, and dql)
+so the application itself can run anywhere.
+
+To implement a Keptn analysis for your deployment:
+
+- Create a `KeptnMetricProvider` resource
+  for each data source to be used for your analysis.
+  This specifies the URL for the data source,
+  assigns a `name` that Keptn uses to reference that provider,
+  and can define a secret for the data provider if necessary.
+
+- Create `AnalysisValueTemplate` resources for each SLI
+  and an `AnalysisDefinition` resource that contains all SLOs
+  to be used in your analysis
+
+- Create and apply an `Analysis` resource
+  to define each specific analysis you want to run.
+
+See the
+[Analysis](../guides/slo.md)
+guide and the
+[Analyzing Application Performance with Keptn](https://keptn.sh/latest/blog/2023/12/19/analyzing-application-performance-with-keptn/)
+blog
+for more details and examples for the Keptn analysis feature.

@@ -77,9 +77,12 @@ and the URL of the target server.
 If the target server is protected by a Secret,
 provide information about the token and key.
 
-For an example of how to specify a KeptnMetricsProvider with a Secret,
-refer to the [example section](../reference/crd-reference/metricsprovider.md#examples)
-of the KeptnMetricsProvider CRD reference page.
+The [keptn-metrics-provider.yaml](../reference/crd-reference/metricsprovider.md#examples)
+file for our example looks like:
+
+```yaml
+{% include "./assets/metric-providers.yaml" %}
+```
 
 ### Define KeptnMetric information
 
@@ -103,27 +106,7 @@ The
 file for our example looks like:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetric
-metadata:
-  name: available-cpus
-  namespace: simplenode-dev
-spec:
-  provider:
-    name: dev-prometheus
-  query: "sum(kube_node_status_capacity{resources`cpu`})"
-  fetchIntervalSeconds: 10
----
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetric
-metadata:
-  name: availability-slo
-  namespace: simplenode-dev
-spec:
-  provider:
-    name: dev-dynatrace
-  query: "func:slo.availability_simplenodeservice"
-  fetchIntervalSeconds: 10
+{% include "./assets/metric.yaml" %}
 ```
 
 Note the following:

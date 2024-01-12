@@ -50,8 +50,8 @@ Note the following:
 
 For our example, we define two observability platforms:
 
-- `dev-prometheus`
-- `dev-dynatrace`
+* `dev-prometheus`
+* `dev-dynatrace`
 
 You can specify a virtually unlimited number of providers,
 including multiple instances of each observability platform.

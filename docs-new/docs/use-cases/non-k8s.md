@@ -171,7 +171,8 @@ analyzes Service Level Objectives (SLOs)
 based on Service Level Indicators (SLIs).
 It can apply weights to reach a composite score
 about the health of the deployment,
-similar to what the Keptn v1 quality gates provided.
+similar to what the metrics evaluations of the
+Keptn v1 quality gates feature provided.
 The data used can come from multiple instances
 of multiple data providers
 (such as Prometheus, Dynatrace, and DataDog).

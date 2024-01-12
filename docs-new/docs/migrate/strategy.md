@@ -1,12 +1,5 @@
 # Migration strategy
 
-> **Note**
-This section is under development.
-Information that is published here has been reviewed for technical accuracy
-but the format and content is still evolving.
-We hope you will contribute your experiences
-and questions that you have.
-
 Before you begin the migration project,
 we suggest that you run through the exercises in
 [Getting started](../getting-started/index.md)
@@ -29,6 +22,13 @@ than Keptn v1 and so migration requires technical adjustments.
 Much of the logic and functionality of your Keptn v1 projects
 can be migrated to Keptn
 but must be rewritten to utilize Keptn components.
+
+Keptn targets deployments that run on Kubernetes
+but some Keptn functionality can be used with deployments
+that do not run on Kubernetes.
+See
+[Keptn for non-Kubernetes deployments](../use-cases/non-k8s.md)
+for details.
 
 Some key points:
 

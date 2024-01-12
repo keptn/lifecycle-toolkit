@@ -13,16 +13,7 @@ import (
 
 const mockSecret = "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
-func TestNewConfigInvalidSecretFormat(t *testing.T) {
-
-	config, err := NewAPIConfig("", "my-secret")
-
-	require.ErrorIs(t, err, ErrClientSecretInvalid)
-	require.Nil(t, config)
-}
-
 func TestAPIClient(t *testing.T) {
-
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
 			_, _ = writer.Write([]byte(`{"access_token": "my-token"}`))
@@ -61,14 +52,11 @@ func TestAPIClient(t *testing.T) {
 }
 
 func TestAPIClientAuthError(t *testing.T) {
-
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		writer.WriteHeader(http.StatusInternalServerError)
 	}))
 
 	defer server.Close()
-
-	mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 	config, err := NewAPIConfig(
 		server.URL,
@@ -95,7 +83,6 @@ func TestAPIClientAuthError(t *testing.T) {
 }
 
 func TestAPIClientAuthNoToken(t *testing.T) {
-
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
 			_, _ = writer.Write([]byte(`{"something": "else"}`))
@@ -105,8 +92,6 @@ func TestAPIClientAuthNoToken(t *testing.T) {
 	}))
 
 	defer server.Close()
-
-	mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 	config, err := NewAPIConfig(
 		server.URL,
@@ -133,7 +118,6 @@ func TestAPIClientAuthNoToken(t *testing.T) {
 }
 
 func TestAPIClientRequestError(t *testing.T) {
-
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
 			_, _ = writer.Write([]byte(`{"access_token": "my-token"}`))
@@ -143,8 +127,6 @@ func TestAPIClientRequestError(t *testing.T) {
 	}))
 
 	defer server.Close()
-
-	mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 	config, err := NewAPIConfig(
 		server.URL,

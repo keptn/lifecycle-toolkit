@@ -47,18 +47,6 @@ func TestKeptnApp_ConvertFrom(t *testing.T) {
 							Version: "4.5.6",
 						},
 					},
-					PreDeploymentTasks: []string{
-						"some-pre-deployment-task1",
-					},
-					PostDeploymentTasks: []string{
-						"some-post-deployment-task2",
-					},
-					PreDeploymentEvaluations: []string{
-						"some-pre-evaluation-task1",
-					},
-					PostDeploymentEvaluations: []string{
-						"some-pre-evaluation-task2",
-					},
 				},
 				Status: v1alpha3.KeptnAppStatus{
 					CurrentVersion: "1.2.3",
@@ -88,18 +76,6 @@ func TestKeptnApp_ConvertFrom(t *testing.T) {
 							Name:    "workload-2",
 							Version: "4.5.6",
 						},
-					},
-					PreDeploymentTasks: []string{
-						"some-pre-deployment-task1",
-					},
-					PostDeploymentTasks: []string{
-						"some-post-deployment-task2",
-					},
-					PreDeploymentEvaluations: []string{
-						"some-pre-evaluation-task1",
-					},
-					PostDeploymentEvaluations: []string{
-						"some-pre-evaluation-task2",
 					},
 				},
 				Status: KeptnAppStatus{
@@ -163,18 +139,6 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 							Version: "4.5.6",
 						},
 					},
-					PreDeploymentTasks: []string{
-						"some-pre-deployment-task1",
-					},
-					PostDeploymentTasks: []string{
-						"some-post-deployment-task2",
-					},
-					PreDeploymentEvaluations: []string{
-						"some-pre-evaluation-task1",
-					},
-					PostDeploymentEvaluations: []string{
-						"some-pre-evaluation-task2",
-					},
 				},
 				Status: KeptnAppStatus{
 					CurrentVersion: "1.2.3",
@@ -204,18 +168,6 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 							Name:    "workload-2",
 							Version: "4.5.6",
 						},
-					},
-					PreDeploymentTasks: []string{
-						"some-pre-deployment-task1",
-					},
-					PostDeploymentTasks: []string{
-						"some-post-deployment-task2",
-					},
-					PreDeploymentEvaluations: []string{
-						"some-pre-evaluation-task1",
-					},
-					PostDeploymentEvaluations: []string{
-						"some-pre-evaluation-task2",
 					},
 				},
 				Status: v1alpha3.KeptnAppStatus{

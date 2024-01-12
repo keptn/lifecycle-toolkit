@@ -162,15 +162,14 @@ AppPostDeployEvaluations
 Completed
 ```
 
-## Events that are not part of the deployment flow
+## Events that are generated asynchronously
 
 Additional phases/states exist,
-such as those that describe what happens when something fails.
-
-Whenever something in the system happens (we create a new resource, etc.)
-an event is generated.
-The following events are defined as part of Keptn
-but they are not part of the deployment flow.
+such as those that describe what is currently happening in the system.
+During the lifetime of the application, custom resources are created,
+updated, deleted or reconciled.
+Each reconciliation, or re-evaluation of the state of custom resource
+by the controller, can cause the generation of events.
 These include:
 
 ```shell

@@ -79,7 +79,6 @@ spec:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-hat
         keptn.sh/version: 0.1.0
-        keptn.sh/metadata: "pizza=hawai"
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -173,7 +172,7 @@ spec:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-left-arm
         keptn.sh/version: 0.1.0
-
+        keptn.sh/pre-deployment-tasks: check-entry-service
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -220,7 +219,7 @@ spec:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-right-leg
         keptn.sh/version: 0.1.0
-
+        keptn.sh/pre-deployment-tasks: check-entry-service
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -267,7 +266,7 @@ spec:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-right-arm
         keptn.sh/version: 0.1.0
-
+        keptn.sh/pre-deployment-tasks: check-entry-service
     spec:
       terminationGracePeriodSeconds: 5
       containers:

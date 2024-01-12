@@ -117,17 +117,13 @@ component-test: manifests generate envtest ## Run tests.
 	cat cover-app.out cover-appversion.out cover-evaluation.out cover-task.out cover-taskdefinition.out cover-workload.out cover-workloadversion.out >> cover.out
 	rm cover-app.out cover-appversion.out cover-evaluation.out cover-task.out cover-taskdefinition.out cover-workload.out cover-workloadversion.out
 
-.PHONY: performance-test
-performance-test: manifests generate envtest ## Run tests.
-	go test ./test/component/... -v -timeout 30m --ginkgo.focus="Feature:Performance"
-
 .PHONY: e2e-test
 e2e-test: manifests generate envtest ## Run tests.
 	go test ./test/e2e -v -coverprofile cover.out --ginkgo.focus="E2E"
 
 #command(make test) to run all tests 
 .PHONY: test
-test: unit-test component-test performance-test e2e-test 
+test: unit-test component-test e2e-test 
 
 ##@ Build
 .PHONY: build

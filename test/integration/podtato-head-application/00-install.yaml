@@ -4,8 +4,6 @@ metadata:
   name: podtato-head
 spec:
   version: "1.3"
-  metadata:
-    context: "context-hello"
   preDeploymentTasks:
     - pre-deployment-hello
   postDeploymentTasks:
@@ -83,6 +81,7 @@ spec:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-hat
         keptn.sh/version: 0.1.0
+        keptn.sh/pre-deployment-tasks: check-entry-service
     spec:
       terminationGracePeriodSeconds: 5
       containers:

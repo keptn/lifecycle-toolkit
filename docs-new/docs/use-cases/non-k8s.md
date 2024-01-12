@@ -168,7 +168,7 @@ with deployments that do not run on Kubernetes.
 
 The Keptn analyses feature
 analyzes Service Level Objectives (SLOs)
-based on Service Level Inputs (SLIs).
+based on Service Level Indicators (SLIs).
 It can apply weights to reach a composite score
 about the health of the deployment,
 similar to what the Keptn v1 quality gates provided.

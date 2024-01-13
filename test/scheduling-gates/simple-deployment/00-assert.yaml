@@ -5,6 +5,7 @@ collectors:
     selector: app=test
   - command: kubectl describe keptnworkloadversion -n $NAMESPACE
   - command: kubectl describe keptnappversion -n $NAMESPACE
+  - command: kubectl logs -l control-plane=lifecycle-operator -n keptn-system
 ---
 apiVersion: apps/v1
 kind: Deployment

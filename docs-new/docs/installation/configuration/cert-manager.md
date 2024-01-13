@@ -63,7 +63,8 @@ Note the following about these fields:
 
 ## Injecting CA Annotations
 
-`cert-manager.io` supports specific annotations for injectable resources depending on the injection source.
+`cert-manager.io` supports specific annotations for
+injectable resources depending on the injection source.
 To configure these annotations, modify the `global.caInjectionAnnotation` Helm value.
 See the [CA Injector](https://cert-manager.io/docs/concepts/ca-injector/) documentation for more details.
 

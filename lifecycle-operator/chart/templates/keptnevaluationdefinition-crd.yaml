@@ -4,9 +4,10 @@ metadata:
   name: keptnevaluationdefinitions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-{{- if and .Values.global.caInjectionAnnotations (not (empty .Values.global.caInjectionAnnotations)) }}
-{{ .Values.global.caInjectionAnnotations | toYaml | nindent 4| trimPrefix "\n"}}
-{{- end }}
+    {{- $caAnnotations := .Values.global.caInjectionAnnotations}}
+    {{- with $caAnnotations  }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- include "common.annotations" ( dict "context" . ) }}
   labels:
     app.kubernetes.io/part-of: keptn

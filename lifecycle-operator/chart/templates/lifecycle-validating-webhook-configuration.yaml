@@ -2,11 +2,17 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   name: lifecycle-validating-webhook-configuration
+{{- $caAnnotations := .Values.global.caInjectionAnnotations}}
+{{- $annotations := include "common.annotations" (dict "context" .) }}
+{{- if or $caAnnotations $annotations }}
   annotations:
-{{- if and .Values.global.caInjectionAnnotations (not (empty .Values.global.caInjectionAnnotations)) }}
-{{ .Values.global.caInjectionAnnotations | toYaml | nindent 4| trimPrefix "\n"}}
+    {{- with $annotations  }}
+    {{- . -}}
+    {{- end }}
+    {{- with $caAnnotations  }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 {{- end }}
-    {{- include "common.annotations" ( dict "context" . ) }}
   labels:
     keptn.sh/inject-cert: "true"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}

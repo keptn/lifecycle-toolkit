@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -32,7 +32,7 @@ var _ = Describe("Appversion", Ordered, func() {
 	})
 	Describe("Creation of AppVersion", func() {
 		var (
-			av *klcv1alpha3.KeptnAppVersion
+			av *klcv1beta1.KeptnAppVersion
 		)
 		Context("reconcile a new AppVersions CRD", func() {
 
@@ -40,12 +40,12 @@ var _ = Describe("Appversion", Ordered, func() {
 			})
 
 			It("should be deprecated when pre-eval checks failed", func() {
-				evaluation := &klcv1alpha3.KeptnEvaluation{
+				evaluation := &klcv1beta1.KeptnEvaluation{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "pre-eval-eval-def-appversion",
 						Namespace: namespace,
 					},
-					Spec: klcv1alpha3.KeptnEvaluationSpec{
+					Spec: klcv1beta1.KeptnEvaluationSpec{
 						EvaluationDefinition: "eval-def-appversion",
 						AppName:              appName,
 						AppVersion:           version,
@@ -68,10 +68,10 @@ var _ = Describe("Appversion", Ordered, func() {
 				}, evaluation)
 				Expect(err).To(BeNil())
 
-				evaluation.Status = klcv1alpha3.KeptnEvaluationStatus{
+				evaluation.Status = klcv1beta1.KeptnEvaluationStatus{
 					OverallStatus: apicommon.StateFailed,
 					RetryCount:    10,
-					EvaluationStatus: map[string]klcv1alpha3.EvaluationStatusItem{
+					EvaluationStatus: map[string]klcv1beta1.EvaluationStatusItem{
 						"something": {
 							Status: apicommon.StateFailed,
 							Value:  "10",
@@ -84,14 +84,14 @@ var _ = Describe("Appversion", Ordered, func() {
 				err = k8sClient.Status().Update(ctx, evaluation)
 				Expect(err).To(BeNil())
 
-				av = &klcv1alpha3.KeptnAppVersion{
+				av = &klcv1beta1.KeptnAppVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      appName + "-" + version,
 						Namespace: namespace,
 					},
-					Spec: klcv1alpha3.KeptnAppVersionSpec{
+					Spec: klcv1beta1.KeptnAppVersionSpec{
 						AppName: appName,
-						KeptnAppSpec: klcv1alpha3.KeptnAppSpec{
+						KeptnAppSpec: klcv1beta1.KeptnAppSpec{
 							Version:                  version,
 							PreDeploymentEvaluations: []string{"eval-def-appversion"},
 						},
@@ -103,12 +103,12 @@ var _ = Describe("Appversion", Ordered, func() {
 
 				time.Sleep(5 * time.Second)
 
-				av2 := &klcv1alpha3.KeptnAppVersion{}
+				av2 := &klcv1beta1.KeptnAppVersion{}
 				err = k8sClient.Get(ctx, types.NamespacedName{Namespace: av.Namespace, Name: av.Name}, av2)
 				Expect(err).To(BeNil())
 				Expect(av2).To(Not(BeNil()))
 
-				av2.Status = klcv1alpha3.KeptnAppVersionStatus{
+				av2.Status = klcv1beta1.KeptnAppVersionStatus{
 					PreDeploymentStatus:            apicommon.StateSucceeded,
 					PreDeploymentEvaluationStatus:  apicommon.StateProgressing,
 					WorkloadOverallStatus:          apicommon.StatePending,
@@ -116,7 +116,7 @@ var _ = Describe("Appversion", Ordered, func() {
 					PostDeploymentEvaluationStatus: apicommon.StatePending,
 					CurrentPhase:                   apicommon.PhaseWorkloadPreEvaluation.ShortName,
 					Status:                         apicommon.StateProgressing,
-					PreDeploymentEvaluationTaskStatus: []klcv1alpha3.ItemStatus{
+					PreDeploymentEvaluationTaskStatus: []klcv1beta1.ItemStatus{
 						{
 							Name:           "pre-eval-eval-def-appversion",
 							Status:         apicommon.StateProgressing,
@@ -135,7 +135,7 @@ var _ = Describe("Appversion", Ordered, func() {
 				}
 				//nolint:dupl
 				Eventually(func(g Gomega) {
-					av := &klcv1alpha3.KeptnAppVersion{}
+					av := &klcv1beta1.KeptnAppVersion{}
 					err := k8sClient.Get(ctx, avNameObj, av)
 					g.Expect(err).To(BeNil())
 					g.Expect(av).To(Not(BeNil()))

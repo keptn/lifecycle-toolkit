@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/go-logr/logr"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -14,7 +14,7 @@ import (
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/schedulinggateshandler_mock.go . ISchedulingGatesHandler
 type ISchedulingGatesHandler interface {
-	RemoveGates(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error
+	RemoveGates(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion) error
 	Enabled() bool
 }
 
@@ -39,7 +39,7 @@ func NewHandler(c client.Client, l logr.Logger, enabled bool) *Handler {
 	}
 }
 
-func (h *Handler) RemoveGates(ctx context.Context, workloadVersion *klcv1alpha4.KeptnWorkloadVersion) error {
+func (h *Handler) RemoveGates(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion) error {
 	switch workloadVersion.Spec.ResourceReference.Kind {
 	case "Pod":
 		return h.removeGates(ctx, h.Client, workloadVersion.Spec.ResourceReference.Name, workloadVersion.Namespace)

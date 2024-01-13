@@ -43,6 +43,7 @@ argoproj
 ARMO
 artifacthub
 asdfg
+authurl
 automerge
 automountserviceaccounttokenspec
 autoprefixer
@@ -380,7 +381,7 @@ kwv
 lastmod
 lastword
 Lato
-lfc
+LFC
 Lifcycle
 lifecyclekeptnsh
 linkedin

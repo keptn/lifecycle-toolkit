@@ -28,14 +28,6 @@ If annotated for keptn, a new Pod should be assigned to keptn scheduler | passed
 
 ## Contributing
 
-## Load Tests
-
-You can append ```[Feature:Performance]``` to any spec you would like to execute during performance test
-with ```make performance-test``` the file
-"load_test.go" contains examples of such tests, including a simple reporter.
-The report "MetricForLoadTestSuite" is
-generated for every run of the load test.
-
 ## Contributing Tips
 
 1. Keep in mind to clean up after each test since the environment is shared.

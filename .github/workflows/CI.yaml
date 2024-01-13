@@ -224,13 +224,6 @@ jobs:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/e2e-test.yml
 
-  performance_tests:
-    name: Performance Tests
-    needs: [prepare_ci_run, build_image]
-    with:
-      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-    uses: ./.github/workflows/performance-test.yml
-
   helm_charts_publish:
     name: Publish helm chart changes to charts repo
     if: github.event_name == 'push' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'

@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
@@ -8,7 +8,7 @@ spec:
       code: |
         console.log("Pre-Deployment Task has been executed");
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTask
 metadata:
   name: pre-deployment-hello-1234

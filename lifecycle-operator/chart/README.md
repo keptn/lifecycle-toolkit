@@ -30,41 +30,40 @@ and application health checks
 
 ### Keptn Lifecycle Operator controller
 
-| Name                                                                  | Description                                                                                                            | Value                                 |
-| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| `lifecycleOperator.containerSecurityContext`                          | Sets security context privileges                                                                                       |                                       |
-| `lifecycleOperator.containerSecurityContext.allowPrivilegeEscalation` |                                                                                                                        | `false`                               |
-| `lifecycleOperator.containerSecurityContext.capabilities.drop`        |                                                                                                                        | `["ALL"]`                             |
-| `lifecycleOperator.containerSecurityContext.privileged`               |                                                                                                                        | `false`                               |
-| `lifecycleOperator.containerSecurityContext.runAsGroup`               |                                                                                                                        | `65532`                               |
-| `lifecycleOperator.containerSecurityContext.runAsNonRoot`             |                                                                                                                        | `true`                                |
-| `lifecycleOperator.containerSecurityContext.runAsUser`                |                                                                                                                        | `65532`                               |
-| `lifecycleOperator.containerSecurityContext.seccompProfile.type`      |                                                                                                                        | `RuntimeDefault`                      |
-| `lifecycleOperator.env.functionRunnerImage`                           | specify image for deno task runtime                                                                                    | `ghcr.io/keptn/deno-runtime:v1.0.2`   |
-| `lifecycleOperator.env.keptnAppControllerLogLevel`                    | sets the log level of Keptn App Controller                                                                             | `0`                                   |
-| `lifecycleOperator.env.keptnAppCreationRequestControllerLogLevel`     | sets the log level of Keptn App Creation Request Controller                                                            | `0`                                   |
-| `lifecycleOperator.env.keptnAppVersionControllerLogLevel`             | sets the log level of Keptn AppVersion Controller                                                                      | `0`                                   |
-| `lifecycleOperator.env.keptnEvaluationControllerLogLevel`             | sets the log level of Keptn Evaluation Controller                                                                      | `0`                                   |
-| `lifecycleOperator.env.keptnTaskControllerLogLevel`                   | sets the log level of Keptn Task Controller                                                                            | `0`                                   |
-| `lifecycleOperator.env.keptnTaskDefinitionControllerLogLevel`         | sets the log level of Keptn TaskDefinition Controller                                                                  | `0`                                   |
-| `lifecycleOperator.env.keptnWorkloadControllerLogLevel`               | sets the log level of Keptn Workload Controller                                                                        | `0`                                   |
-| `lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel`        | sets the log level of Keptn WorkloadVersion Controller                                                                 | `0`                                   |
-| `lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel`       | Deprecated: Use keptnWorkloadVersionControllerLogLevel instead. Sets the log level of Keptn WorkloadVersion Controller | `0`                                   |
-| `lifecycleOperator.env.keptnDoraMetricsPort`                          | sets the port for accessing lifecycle metrics in prometheus format                                                     | `2222`                                |
-| `lifecycleOperator.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller                                                                         | `0`                                   |
-| `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                                                                  | `ghcr.io/keptn/python-runtime:v1.0.1` |
-| `lifecycleOperator.image.registry`                                    | specify the container registry for the lifecycle-operator image                                                        | `ghcr.io`                             |
-| `lifecycleOperator.image.repository`                                  | specify registry for manager image                                                                                     | `keptn/lifecycle-operator`            |
-| `lifecycleOperator.image.tag`                                         | select tag for manager image                                                                                           | `v0.8.3`                              |
-| `lifecycleOperator.imagePullPolicy`                                   | specify pull policy for manager image                                                                                  | `Always`                              |
-| `lifecycleOperator.livenessProbe`                                     | custom livenessprobe for manager container                                                                             |                                       |
-| `lifecycleOperator.readinessProbe`                                    | custom readinessprobe for manager container                                                                            |                                       |
-| `lifecycleOperator.resources`                                         | specify limits and requests for manager container                                                                      |                                       |
-| `lifecycleOperator.nodeSelector`                                      | add custom nodes selector to lifecycle operator                                                                        | `{}`                                  |
-| `lifecycleOperator.replicas`                                          | customize number of installed lifecycle operator replicas                                                              | `1`                                   |
-| `lifecycleOperator.tolerations`                                       | add custom tolerations to lifecycle operator                                                                           | `[]`                                  |
-| `lifecycleOperator.topologySpreadConstraints`                         | add custom topology constraints to lifecycle operator                                                                  | `[]`                                  |
-| `lifecycleOperatorMetricsService`                                     | Adjust settings here to change the k8s service for scraping Prometheus metrics                                         |                                       |
+| Name                                                                  | Description                                                                    | Value                                 |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------- |
+| `lifecycleOperator.containerSecurityContext`                          | Sets security context privileges                                               |                                       |
+| `lifecycleOperator.containerSecurityContext.allowPrivilegeEscalation` |                                                                                | `false`                               |
+| `lifecycleOperator.containerSecurityContext.capabilities.drop`        |                                                                                | `["ALL"]`                             |
+| `lifecycleOperator.containerSecurityContext.privileged`               |                                                                                | `false`                               |
+| `lifecycleOperator.containerSecurityContext.runAsGroup`               |                                                                                | `65532`                               |
+| `lifecycleOperator.containerSecurityContext.runAsNonRoot`             |                                                                                | `true`                                |
+| `lifecycleOperator.containerSecurityContext.runAsUser`                |                                                                                | `65532`                               |
+| `lifecycleOperator.containerSecurityContext.seccompProfile.type`      |                                                                                | `RuntimeDefault`                      |
+| `lifecycleOperator.env.functionRunnerImage`                           | specify image for deno task runtime                                            | `ghcr.io/keptn/deno-runtime:v1.0.2`   |
+| `lifecycleOperator.env.keptnAppControllerLogLevel`                    | sets the log level of Keptn App Controller                                     | `0`                                   |
+| `lifecycleOperator.env.keptnAppCreationRequestControllerLogLevel`     | sets the log level of Keptn App Creation Request Controller                    | `0`                                   |
+| `lifecycleOperator.env.keptnAppVersionControllerLogLevel`             | sets the log level of Keptn AppVersion Controller                              | `0`                                   |
+| `lifecycleOperator.env.keptnEvaluationControllerLogLevel`             | sets the log level of Keptn Evaluation Controller                              | `0`                                   |
+| `lifecycleOperator.env.keptnTaskControllerLogLevel`                   | sets the log level of Keptn Task Controller                                    | `0`                                   |
+| `lifecycleOperator.env.keptnTaskDefinitionControllerLogLevel`         | sets the log level of Keptn TaskDefinition Controller                          | `0`                                   |
+| `lifecycleOperator.env.keptnWorkloadControllerLogLevel`               | sets the log level of Keptn Workload Controller                                | `0`                                   |
+| `lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel`        | sets the log level of Keptn WorkloadVersion Controller                         | `0`                                   |
+| `lifecycleOperator.env.keptnDoraMetricsPort`                          | sets the port for accessing lifecycle metrics in prometheus format             | `2222`                                |
+| `lifecycleOperator.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller                                 | `0`                                   |
+| `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                          | `ghcr.io/keptn/python-runtime:v1.0.1` |
+| `lifecycleOperator.image.registry`                                    | specify the container registry for the lifecycle-operator image                | `ghcr.io`                             |
+| `lifecycleOperator.image.repository`                                  | specify registry for manager image                                             | `keptn/lifecycle-operator`            |
+| `lifecycleOperator.image.tag`                                         | select tag for manager image                                                   | `v0.8.3`                              |
+| `lifecycleOperator.imagePullPolicy`                                   | specify pull policy for manager image                                          | `Always`                              |
+| `lifecycleOperator.livenessProbe`                                     | custom livenessprobe for manager container                                     |                                       |
+| `lifecycleOperator.readinessProbe`                                    | custom readinessprobe for manager container                                    |                                       |
+| `lifecycleOperator.resources`                                         | specify limits and requests for manager container                              |                                       |
+| `lifecycleOperator.nodeSelector`                                      | add custom nodes selector to lifecycle operator                                | `{}`                                  |
+| `lifecycleOperator.replicas`                                          | customize number of installed lifecycle operator replicas                      | `1`                                   |
+| `lifecycleOperator.tolerations`                                       | add custom tolerations to lifecycle operator                                   | `[]`                                  |
+| `lifecycleOperator.topologySpreadConstraints`                         | add custom topology constraints to lifecycle operator                          | `[]`                                  |
+| `lifecycleOperatorMetricsService`                                     | Adjust settings here to change the k8s service for scraping Prometheus metrics |                                       |
 
 ### Global
 

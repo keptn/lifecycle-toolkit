@@ -2685,16 +2685,6 @@ metadata:
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.1.0
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: 'lifecycle-webhook-service'
-          namespace: 'helmtests'
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: lifecycle.keptn.sh
   names:
     kind: KeptnEvaluationProvider
@@ -7170,16 +7160,6 @@ metadata:
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.1.0
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: 'lifecycle-webhook-service'
-          namespace: 'helmtests'
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: lifecycle.keptn.sh
   names:
     kind: KeptnWorkloadInstance
@@ -11953,8 +11933,6 @@ spec:
           value: "0"
         - name: KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL
           value: "0"
-        - name: KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL
-          value: "0"
         - name: KEPTN_DORA_METRICS_PORT
           value: "2222"
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
@@ -12321,14 +12299,14 @@ webhooks:
     service:
       name: 'lifecycle-webhook-service'
       namespace: 'helmtests'
-      path: /validate-lifecycle-keptn-sh-v1alpha3-keptntaskdefinition
+      path: /validate-lifecycle-keptn-sh-v1beta1-keptntaskdefinition
   failurePolicy: Fail
   name: vkeptntaskdefinition.kb.io
   rules:
   - apiGroups:
     - lifecycle.keptn.sh
     apiVersions:
-    - v1alpha3
+    - v1beta1
     operations:
     - CREATE
     - UPDATE

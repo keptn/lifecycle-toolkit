@@ -251,7 +251,7 @@ _Appears in:_
 | `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed during the pre-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || x |
 | `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed during the post-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || x |
 | `metadata` _object (keys:string, values:string)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
-| `traceLinks` _string array_ | TraceLinks are links to trace IDs for tracking. || ✓ |
+| `traceLinks` _string array_ | TraceLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing. For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links || ✓ |
 
 
 #### KeptnAppContextStatus
@@ -263,6 +263,9 @@ KeptnAppContextStatus defines the observed state of KeptnAppContext
 _Appears in:_
 - [KeptnAppContext](#keptnappcontext)
 
+| Field | Description | Default | Optional |
+| --- | --- | --- | --- |
+| `status` _string_ | unused field || ✓ |
 
 
 #### KeptnAppCreationRequest

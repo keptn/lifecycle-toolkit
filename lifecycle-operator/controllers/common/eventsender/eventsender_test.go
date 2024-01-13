@@ -10,9 +10,8 @@ import (
 	"time"
 
 	ce "github.com/cloudevents/sdk-go/v2"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender/fake"
 	"github.com/stretchr/testify/require"
@@ -27,7 +26,7 @@ func TestEventSender_SendK8sEvent(t *testing.T) {
 	fakeRecorder := record.NewFakeRecorder(100)
 	eventSender := NewK8sSender(fakeRecorder)
 
-	eventSender.Emit(common.PhaseAppDeployment, "pre-event", &v1alpha3.KeptnAppVersion{
+	eventSender.Emit(common.PhaseAppDeployment, "pre-event", &v1beta1.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "app",
 			Namespace: "ns",
@@ -78,7 +77,7 @@ func TestEventSender_SendCloudEvent(t *testing.T) {
 		log.Fatalf("failed to create client, %v", err)
 	}
 	ceSender := newCloudEventSender(ctrl.Log.WithName("testytest"), c)
-	ceSender.Emit(phase, eventType, &v1alpha3.KeptnAppVersion{
+	ceSender.Emit(phase, eventType, &v1beta1.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      name,
 			Namespace: ns,
@@ -126,7 +125,7 @@ func TestEventSender_CloudEventNoFailure(t *testing.T) {
 			log.Fatalf("failed to create client, %v", err)
 		}
 		ceSender := newCloudEventSender(ctrl.Log.WithName("testytest"), c)
-		ceSender.Emit(common.PhaseAppCompleted, "type", &v1alpha3.KeptnAppVersion{
+		ceSender.Emit(common.PhaseAppCompleted, "type", &v1beta1.KeptnAppVersion{
 			ObjectMeta: v1.ObjectMeta{
 				Name:      "app",
 				Namespace: "ns",
@@ -230,7 +229,7 @@ func Test_setEventMessage(t *testing.T) {
 		},
 	}
 
-	appVersion := &v1alpha3.KeptnAppVersion{
+	appVersion := &v1beta1.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "app",
 			Namespace: "namespace",
@@ -256,12 +255,12 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name:   "empty object",
-			object: &v1alpha3.KeptnEvaluationDefinition{},
+			object: &v1beta1.KeptnEvaluationDefinition{},
 			want:   nil,
 		},
 		{
 			name: "unknown object",
-			object: &v1alpha3.KeptnEvaluationDefinition{
+			object: &v1beta1.KeptnEvaluationDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "def",
 					Namespace: "namespace",
@@ -276,7 +275,7 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "object with traceparent",
-			object: &v1alpha3.KeptnEvaluationDefinition{
+			object: &v1beta1.KeptnEvaluationDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "def",
 					Namespace: "namespace",
@@ -294,13 +293,13 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnApp",
-			object: &v1alpha3.KeptnApp{
+			object: &v1beta1.KeptnApp{
 				ObjectMeta: v1.ObjectMeta{
 					Name:       "app",
 					Namespace:  "namespace",
 					Generation: 1,
 				},
-				Spec: v1alpha3.KeptnAppSpec{
+				Spec: v1beta1.KeptnAppSpec{
 					Version: "1.0.0",
 				},
 			},
@@ -316,14 +315,14 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnAppVersion",
-			object: &v1alpha3.KeptnAppVersion{
+			object: &v1beta1.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "appVersion",
 					Namespace: "namespace",
 				},
-				Spec: v1alpha3.KeptnAppVersionSpec{
+				Spec: v1beta1.KeptnAppVersionSpec{
 					AppName: "app",
-					KeptnAppSpec: v1alpha3.KeptnAppSpec{
+					KeptnAppSpec: v1beta1.KeptnAppSpec{
 						Version: "1.0.0",
 					},
 				},
@@ -340,12 +339,12 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnWorkload",
-			object: &v1alpha3.KeptnWorkload{
+			object: &v1beta1.KeptnWorkload{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "workload",
 					Namespace: "namespace",
 				},
-				Spec: v1alpha3.KeptnWorkloadSpec{
+				Spec: v1beta1.KeptnWorkloadSpec{
 					AppName: "app",
 					Version: "1.0.0",
 				},
@@ -362,13 +361,13 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnWorkloadVersion",
-			object: &v1alpha4.KeptnWorkloadVersion{
+			object: &v1beta1.KeptnWorkloadVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "workloadVersion",
 					Namespace: "namespace",
 				},
-				Spec: v1alpha4.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: v1alpha3.KeptnWorkloadSpec{
+				Spec: v1beta1.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: v1beta1.KeptnWorkloadSpec{
 						AppName: "app",
 						Version: "1.0.0",
 					},
@@ -388,14 +387,14 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnTask",
-			object: &v1alpha3.KeptnTask{
+			object: &v1beta1.KeptnTask{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "task",
 					Namespace: "namespace",
 				},
-				Spec: v1alpha3.KeptnTaskSpec{
+				Spec: v1beta1.KeptnTaskSpec{
 					TaskDefinition: "def",
-					Context: v1alpha3.TaskContext{
+					Context: v1beta1.TaskContext{
 						WorkloadName:    "workload",
 						AppName:         "app",
 						AppVersion:      "1.0.0",
@@ -418,12 +417,12 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnEvaluation",
-			object: &v1alpha3.KeptnEvaluation{
+			object: &v1beta1.KeptnEvaluation{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "eval",
 					Namespace: "namespace",
 				},
-				Spec: v1alpha3.KeptnEvaluationSpec{
+				Spec: v1beta1.KeptnEvaluationSpec{
 					AppName:              "app",
 					AppVersion:           "1.0.0",
 					Workload:             "workload",

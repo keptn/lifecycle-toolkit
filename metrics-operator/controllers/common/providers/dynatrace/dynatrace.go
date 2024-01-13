@@ -112,6 +112,7 @@ func (d *KeptnDynatraceProvider) performRequest(ctx context.Context, provider me
 	}
 
 	token, err := getDTSecret(ctx, provider, d.K8sClient)
+
 	if err != nil {
 		return nil, nil, err
 	}

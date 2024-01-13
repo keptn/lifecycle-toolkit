@@ -208,14 +208,6 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnevaluationproviders
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
   - keptnevaluations
   verbs:
   - create

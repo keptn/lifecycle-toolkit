@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
-	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1beta1"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -88,8 +88,8 @@ func Test_keptnmetric(t *testing.T) {
 				K8sClient: client,
 			}
 
-			obj := klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+			obj := klcv1beta1.Objective{
+				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
 					Name:      "metric",
 					Namespace: "default",
 				},
@@ -110,7 +110,7 @@ func Test_keptnmetric(t *testing.T) {
 func Test_Getkeptnmetric(t *testing.T) {
 	tests := []struct {
 		name      string
-		objective klcv1alpha3.Objective
+		objective klcv1beta1.Objective
 		metric    *metricsapi.KeptnMetric
 		namespace string
 		out       *metricsapi.KeptnMetric
@@ -118,8 +118,8 @@ func Test_Getkeptnmetric(t *testing.T) {
 	}{
 		{
 			name: "objective with namespace and existing keptnmetric",
-			objective: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+			objective: klcv1beta1.Objective{
+				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
 					Name:      "metric",
 					Namespace: "my-namespace",
 				},
@@ -141,8 +141,8 @@ func Test_Getkeptnmetric(t *testing.T) {
 		},
 		{
 			name: "objective with namespace and non-existing keptnmetric",
-			objective: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+			objective: klcv1beta1.Objective{
+				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
 					Name:      "metric",
 					Namespace: "my-namespace",
 				},
@@ -159,8 +159,8 @@ func Test_Getkeptnmetric(t *testing.T) {
 		},
 		{
 			name: "objective without namespace and existing keptnmetric",
-			objective: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+			objective: klcv1beta1.Objective{
+				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
 					Name: "metric",
 				},
 			},
@@ -181,8 +181,8 @@ func Test_Getkeptnmetric(t *testing.T) {
 		},
 		{
 			name: "objective without namespace and existing keptnmetric in default Keptn namespace",
-			objective: klcv1alpha3.Objective{
-				KeptnMetricRef: klcv1alpha3.KeptnMetricReference{
+			objective: klcv1beta1.Objective{
+				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
 					Name: "metric",
 				},
 			},

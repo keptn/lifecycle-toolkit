@@ -27,9 +27,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // KeptnWorkloadSpec defines the desired state of KeptnWorkload
 type KeptnWorkloadSpec struct {
 	// AppName is the name of the KeptnApp containing the KeptnWorkload.
@@ -71,6 +68,7 @@ type KeptnWorkloadStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:storageversion
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="Version",type=string,JSONPath=`.spec.version`

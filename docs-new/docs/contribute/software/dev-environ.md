@@ -144,27 +144,50 @@ Tests are run on your local machine.
 Study the detailed log that is produced to identify why the test failed.
 Study these errors, modify your code, and rerun the test until it passes.
 
-1. Use your IDE to run unit tests on your code.
+### Unit tests
 
-1. Run the integration tests from the root directory of your clone:
+Use your IDE to run unit tests on your code.
+
+### Integration tests
+
+Run the integration tests from the root directory of your clone:
+
+  ```shell
+  make integration-test-local
+  ```
+
+`integration-test-local` cleans up after the test.
+
+### Component test
+
+From the `lifecycle-operator` directory, run the component test:
+
+  ```shell
+  make component-test
+  ```
+
+### Component test
+
+From the `lifecycle-operator` directory, run the end-to-end tests:
+
+  ```shell
+  make e2e-test
+  ```
+
+### Kuttl test
+
+Run the Kuttl [KUbernetes Test TooL](https://kuttl.dev/)
+if your PR modifies one of the operators.
+The syntax is:
 
 ```shell
-make integration-test-local
+kubectl kuttl test --start-kind=false ./test/integration/ \
+        --config=kuttl-test.yaml --test name-of-your-test-directory
 ```
 
-   `integration-test-local` cleans up after the test.
-
-1. From the `lifecycle-operator` directory, run the component test:
-
-```shell
-make component-test
-```
-
-1. From the `lifecycle-operator` directory, run the end-to-end tests:
-
-```shell
-make e2e-test
-```
+Logs are printed only when the test fails.
+To force a failure,
+modify some value that appears in an assert file of the test.
 
 ## Create and manage the PR
 

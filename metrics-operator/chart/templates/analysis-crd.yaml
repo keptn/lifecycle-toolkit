@@ -4,8 +4,7 @@ metadata:
   name: analyses.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    {{- $caAnnotations := .Values.global.caInjectionAnnotations}}
-    {{- with $caAnnotations  }}
+    {{- with .Values.global.caInjectionAnnotations  }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'

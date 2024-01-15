@@ -4,8 +4,7 @@ metadata:
   name: keptnevaluationdefinitions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    {{- $caAnnotations := .Values.global.caInjectionAnnotations}}
-    {{- with $caAnnotations  }}
+    {{- with .Values.global.caInjectionAnnotations  }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- include "common.annotations" ( dict "context" . ) }}

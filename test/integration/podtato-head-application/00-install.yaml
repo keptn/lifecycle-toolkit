@@ -4,10 +4,14 @@ metadata:
   name: podtato-head
 spec:
   version: "1.3"
+  preDeploymentEvaluations:
+    - available-cpus
   preDeploymentTasks:
     - pre-deployment-hello
   postDeploymentTasks:
     - post-deployment-hello
+  postDeploymentEvaluations:
+    - available-cpus
 ---
 apiVersion: apps/v1
 kind: Deployment

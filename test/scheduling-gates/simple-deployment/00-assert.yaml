@@ -12,8 +12,8 @@ kind: Pod
 metadata:
   labels:
     app: test
-  # annotations:
-  #   keptn.sh/scheduling-gate-removed: "true"
+  annotations:
+    keptn.sh/scheduling-gate-removed: "true"
 status:
   phase: Running
 spec:

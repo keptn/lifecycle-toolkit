@@ -20,8 +20,6 @@ global:
   ##
   commonAnnotations: { }
 
-
-
 lifecycleOperatorConfig:
   health:
 ## @param    lifecycleOperatorConfig.health.healthProbeBindAddress setup on what address to start the default health handler
@@ -89,8 +87,6 @@ lifecycleOperator:
     keptnWorkloadControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel sets the log level of Keptn WorkloadVersion Controller
     keptnWorkloadVersionControllerLogLevel: "0"
-## @param   lifecycleOperator.env.keptnWorkloadInstanceControllerLogLevel Deprecated: Use keptnWorkloadVersionControllerLogLevel instead. Sets the log level of Keptn WorkloadVersion Controller
-    keptnWorkloadInstanceControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnDoraMetricsPort sets the port for accessing lifecycle metrics in prometheus format
     keptnDoraMetricsPort: "2222"
 ## @param   lifecycleOperator.env.optionsControllerLogLevel sets the log level of Keptn Options Controller

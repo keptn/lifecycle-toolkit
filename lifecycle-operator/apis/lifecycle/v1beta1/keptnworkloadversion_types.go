@@ -117,6 +117,7 @@ type KeptnWorkloadVersionStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:storageversion
 // +kubebuilder:resource:path=keptnworkloadversions,shortName=kwv
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
@@ -234,6 +235,18 @@ func (w *KeptnWorkloadVersion) SetStartTime() {
 func (w *KeptnWorkloadVersion) SetEndTime() {
 	if w.Status.EndTime.IsZero() {
 		w.Status.EndTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (e *ItemStatus) SetStartTime() {
+	if e.StartTime.IsZero() {
+		e.StartTime = metav1.NewTime(time.Now().UTC())
+	}
+}
+
+func (e *ItemStatus) SetEndTime() {
+	if e.EndTime.IsZero() {
+		e.EndTime = metav1.NewTime(time.Now().UTC())
 	}
 }
 

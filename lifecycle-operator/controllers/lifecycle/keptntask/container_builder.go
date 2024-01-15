@@ -3,7 +3,7 @@ package keptntask
 import (
 	"encoding/json"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
 	"github.com/pkg/errors"
 	"golang.org/x/net/context"
@@ -13,8 +13,8 @@ import (
 
 // ContainerBuilder implements container builder interface for python
 type ContainerBuilder struct {
-	containerSpec klcv1alpha3.ContainerSpec
-	taskSpec      klcv1alpha3.KeptnTaskSpec
+	containerSpec klcv1beta1.ContainerSpec
+	taskSpec      klcv1beta1.KeptnTaskSpec
 }
 
 func NewContainerBuilder(options BuilderOptions) *ContainerBuilder {

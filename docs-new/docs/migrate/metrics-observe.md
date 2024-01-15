@@ -97,17 +97,17 @@ The process is:
 
    <!---x-release-please-start-version-->
 
-   ```shell
-   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
-   PATH_TO_SLI=sli.yaml
-   KEPTN_PROVIDER_NAME=my-prometheus-provider
-   KEPTN_PROVIDER_NAMESPACE=keptn-lifecycle-poc
+```shell
+METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
+PATH_TO_SLI=sli.yaml
+KEPTN_PROVIDER_NAME=my-prometheus-provider
+KEPTN_PROVIDER_NAMESPACE=keptn-lifecycle-poc
 
-   docker run -v .:/mydata $METRICS_OPERATOR_IMAGE \
-     --convert-sli=mydata/$PATH_TO_SLI \
-     --keptn-provider-name=$KEPTN_PROVIDER_NAME \
-     --keptn-provider-namespace=$KEPTN_PROVIDER_NAMESPACE > analysis-value-template.yaml
-   ```
+docker run -v .:/mydata $METRICS_OPERATOR_IMAGE \
+ --convert-sli=mydata/$PATH_TO_SLI \
+ --keptn-provider-name=$KEPTN_PROVIDER_NAME \
+ --keptn-provider-namespace=$KEPTN_PROVIDER_NAMESPACE > analysis-value-template.yaml
+```
 
    <!---x-release-please-end-->
 
@@ -130,9 +130,9 @@ The process is:
    Be sure to specify the namespace;
    if you omit it, the yaml file is applied to the default namespace.
 
-   ```shell
-   kubectl apply -f analysis-value-template.yaml -n keptn-lifecycle-poc
-   ```
+```shell
+kubectl apply -f analysis-value-template.yaml -n keptn-lifecycle-poc
+```
 
 1. Convert the SLO to an `AnalysisDefinition` resource:
 
@@ -145,17 +145,17 @@ The process is:
 
    <!---x-release-please-start-version-->
 
-   ```shell
-   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
-   PATH_TO_SLO=slo.yaml
-   ANALYSIS_VALUE_TEMPLATE_NAMESPACE=keptn-lifecycle-poc
-   ANALYSIS_DEFINITION_NAME=my-project-ad
+```shell
+METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
+PATH_TO_SLO=slo.yaml
+ANALYSIS_VALUE_TEMPLATE_NAMESPACE=keptn-lifecycle-poc
+ANALYSIS_DEFINITION_NAME=my-project-ad
 
-   docker run -v $(pwd):/mydata $METRICS_OPERATOR_IMAGE \
-     --convert-slo=/mydata/$PATH_TO_SLO \
-     --analysis-value-template-namespace=$ANALYSIS_VALUE_TEMPLATE_NAMESPACE \
-     --analysis-definition-name=$ANALYSIS_DEFINITION_NAME > analysis-definition.yaml
-   ```
+docker run -v $(pwd):/mydata $METRICS_OPERATOR_IMAGE \
+ --convert-slo=/mydata/$PATH_TO_SLO \
+ --analysis-value-template-namespace=$ANALYSIS_VALUE_TEMPLATE_NAMESPACE \
+ --analysis-definition-name=$ANALYSIS_DEFINITION_NAME > analysis-definition.yaml
+```
 
    <!---x-release-please-end-->
 
@@ -165,9 +165,9 @@ The process is:
    Be sure to add the namespace;
    if you omit it, the yaml file is applied to the default namespace.
 
-   ```shell
-   kubectl apply -f analysis-definition.yaml -n keptn-lifecycle-poc
-   ```
+```shell
+kubectl apply -f analysis-definition.yaml -n keptn-lifecycle-poc
+```
 
 1. Create a `KeptnMetricsProvider` resource
 
@@ -211,22 +211,22 @@ The process is:
    To perform an Analysis (or "trigger an evaluation" in Keptn v1 jargon),
    apply the `analysis-instance.yaml` file:
 
-   ```shell
-   kubectl apply -f analysis-instance.yaml -n keptn-lifecycle-poc
-   ```
+```shell
+kubectl apply -f analysis-instance.yaml -n keptn-lifecycle-poc
+```
 
    Retrieve the current status of the Analysis with the following command:
 
-   ```shell
-   kubectl get analysis -n keptn-lifecycle-poc
-   ```
+```shell
+kubectl get analysis -n keptn-lifecycle-poc
+```
 
    This yields an output that looks like the following:
 
-   ```shell
-   NAME                ANALYSISDEFINITION      WARNING   PASS
-   analysis-sample-1   my-project-ad             true
-   ```
+```shell
+NAME                ANALYSISDEFINITION      WARNING   PASS
+analysis-sample-1   my-project-ad             true
+```
 
    This shows that the analysis passed successfully.
 
@@ -237,39 +237,39 @@ The process is:
    with the definition of the analysis
    as well as the `status` (results) of the analysis; for example:
 
-   ```shell
-   kubectl get analysis -n keptn-lifecycle-poc -oyaml
-   ```
+```shell
+kubectl get analysis -n keptn-lifecycle-poc -oyaml
+```
 
-   ```yaml
-   apiVersion: v1
-   items:
-   - apiVersion: metrics.keptn.sh/v1beta1
-     kind: Analysis
-     metadata:
-       creationTimestamp: "2023-09-14T11:00:01Z"
-       generation: 4
-       name: analysis-sample-1
-       namespace: keptn-lifecycle-poc
-       resourceVersion: "71327"
-       uid: 1c5e043d-ed5e-42f8-ba32-b7af54b55c35
-     spec:
-       analysisDefinition:
-         name: my-project-ad
-         namespace: keptn-lifecycle-poc
-       args:
-         ns: keptn-system
-         project: my-project
-       timeframe:
-         from: "2023-09-14T11:20:19Z"
-         to: "2023-09-14T11:22:19Z"
-     status:
-       pass: true
-       raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"greaterThan":{"fixedValue":"50"}}},"warnResult":{"operator":{"greaterThan":{"fixedValue":"50"}}},"pass":true},"value":7,"score":1}],"totalScore":1,"maximumScore":1,"pass":true}'
-   kind: List
-   metadata:
-     resourceVersion: ""
-   ```
+```yaml
+apiVersion: v1
+items:
+- apiVersion: metrics.keptn.sh/v1beta1
+ kind: Analysis
+ metadata:
+   creationTimestamp: "2023-09-14T11:00:01Z"
+   generation: 4
+   name: analysis-sample-1
+   namespace: keptn-lifecycle-poc
+   resourceVersion: "71327"
+   uid: 1c5e043d-ed5e-42f8-ba32-b7af54b55c35
+ spec:
+   analysisDefinition:
+     name: my-project-ad
+     namespace: keptn-lifecycle-poc
+   args:
+     ns: keptn-system
+     project: my-project
+   timeframe:
+     from: "2023-09-14T11:20:19Z"
+     to: "2023-09-14T11:22:19Z"
+ status:
+   pass: true
+   raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"greaterThan":{"fixedValue":"50"}}},"warnResult":{"operator":{"greaterThan":{"fixedValue":"50"}}},"pass":true},"value":7,"score":1}],"totalScore":1,"maximumScore":1,"pass":true}'
+kind: List
+metadata:
+ resourceVersion: ""
+```
 
    As can be seen in the yaml above,
    the `status.raw` property contains the detailed breakdown

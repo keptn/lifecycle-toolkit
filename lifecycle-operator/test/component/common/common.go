@@ -8,11 +8,10 @@ import (
 	"strings"
 	"time"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
-	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1beta1"
 	. "github.com/onsi/ginkgo/v2"
 	ginkgotypes "github.com/onsi/ginkgo/v2/types"
 	. "github.com/onsi/gomega"
@@ -100,13 +99,13 @@ func MakeKeptnDefaultNamespace(k8sClient client.Client, name string) *v1.Namespa
 	return ns
 }
 
-func DeleteAppInCluster(ctx context.Context, k8sClient client.Client, instance *klcv1alpha3.KeptnApp) {
+func DeleteAppInCluster(ctx context.Context, k8sClient client.Client, instance *klcv1beta1.KeptnApp) {
 	By("Cleaning Up KeptnApp CRD ")
 	err := k8sClient.Delete(ctx, instance)
 	LogErrorIfPresent(err)
 }
 
-func AssertResourceUpdated(ctx context.Context, k8sClient client.Client, instance *klcv1alpha3.KeptnApp) *klcv1alpha3.KeptnAppVersion {
+func AssertResourceUpdated(ctx context.Context, k8sClient client.Client, instance *klcv1beta1.KeptnApp) *klcv1beta1.KeptnAppVersion {
 
 	appVersion := GetAppVersion(ctx, k8sClient, instance)
 
@@ -118,13 +117,13 @@ func AssertResourceUpdated(ctx context.Context, k8sClient client.Client, instanc
 	return appVersion
 }
 
-func GetAppVersion(ctx context.Context, k8sClient client.Client, instance *klcv1alpha3.KeptnApp) *klcv1alpha3.KeptnAppVersion {
+func GetAppVersion(ctx context.Context, k8sClient client.Client, instance *klcv1beta1.KeptnApp) *klcv1beta1.KeptnAppVersion {
 	appvName := types.NamespacedName{
 		Namespace: instance.Namespace,
 		Name:      instance.GetAppVersionName(),
 	}
 
-	appVersion := &klcv1alpha3.KeptnAppVersion{}
+	appVersion := &klcv1beta1.KeptnAppVersion{}
 	By("Retrieving Created app version")
 	Eventually(func() error {
 		return k8sClient.Get(ctx, appvName, appVersion)
@@ -170,9 +169,7 @@ func InitSuite() (context.Context, ctrl.Manager, *otelsdk.TracerProvider, *sdkte
 	Expect(cfg).NotTo(BeNil())
 
 	// +kubebuilder:scaffold:scheme
-	err = klcv1alpha3.AddToScheme(scheme.Scheme)
-	Expect(err).NotTo(HaveOccurred())
-	err = klcv1alpha4.AddToScheme(scheme.Scheme)
+	err = klcv1beta1.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 	err = metricsapi.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())

@@ -48,9 +48,25 @@ Note the following:
   in a centralized namespace
   such as `keptn-system`.
 
-For an example of how to specify a KeptnMetricsProvider with a Secret,
-refer to the [example section](../reference/crd-reference/metricsprovider.md#examples)
-of the KeptnMetricsProvider CRD reference page.
+For our example, we define two observability platforms:
+
+* `dev-prometheus`
+* `dev-dynatrace`
+
+You can specify a virtually unlimited number of providers,
+including multiple instances of each observability platform.
+Each one must be assigned a unique name,
+identified by the type of platform it is
+and the URL of the target server.
+If the target server is protected by a Secret,
+provide information about the token and key.
+
+The [keptn-metrics-provider.yaml](../reference/crd-reference/metricsprovider.md#examples)
+file for our example looks like:
+
+```yaml
+{% include "./assets/metric-providers.yaml" %}
+```
 
 ### Define KeptnMetric information
 
@@ -74,27 +90,7 @@ The
 file for our example looks like:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: Keptnmetric
-metadata:
-  name: available-cpus
-  namespace: simplenode-dev
-spec:
-  provider:
-    name: dev-prometheus
-  query: "sum(kube_node_status_capacity{resources`cpu`})"
-  fetchIntervalSeconds: 10
----
-apiVersion: metrics.keptn.sh/v1beta1
-kind: Keptnmetric
-metadata:
-  name: availability-slo
-  namespace: simplenode-dev
-spec:
-  provider:
-    name: dev-dynatrace
-  query: "func:slo.availability_simplenodeservice"
-  fetchIntervalSeconds: 10
+{% include "./assets/metric.yaml" %}
 ```
 
 Note the following:

@@ -3,6 +3,10 @@ kind: RoleBinding
 metadata:
   name: certificate-operator-leader-election-rolebinding
   namespace: {{ .Release.Namespace | quote }}
+  {{- $annotations := include "common.annotations" (dict "context" .) }}
+  {{- with $annotations }}
+  annotations: {{- . }}
+  {{- end }}
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator

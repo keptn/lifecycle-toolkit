@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	taskdefinition "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
@@ -18,7 +18,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
-func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask) error {
+func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, task *klcv1beta1.KeptnTask) error {
 	jobName := ""
 	definition, err := controllercommon.GetTaskDefinition(r.Client, r.Log, ctx, task.Spec.TaskDefinition, req.Namespace)
 	if err != nil {
@@ -54,7 +54,7 @@ func (r *KeptnTaskReconciler) createJob(ctx context.Context, req ctrl.Request, t
 	return nil
 }
 
-func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Request, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition) (string, error) {
+func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Request, task *klcv1beta1.KeptnTask, definition *klcv1beta1.KeptnTaskDefinition) (string, error) {
 
 	job, err := r.generateJob(ctx, task, definition, req)
 	if err != nil {
@@ -70,7 +70,7 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 	return job.Name, nil
 }
 
-func (r *KeptnTaskReconciler) updateTaskStatus(job *batchv1.Job, task *klcv1alpha3.KeptnTask) {
+func (r *KeptnTaskReconciler) updateTaskStatus(job *batchv1.Job, task *klcv1beta1.KeptnTask) {
 	if len(job.Status.Conditions) > 0 {
 		if job.Status.Conditions[0].Type == batchv1.JobComplete {
 			task.Status.Status = apicommon.StateSucceeded
@@ -91,7 +91,7 @@ func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namesp
 	return job, nil
 }
 
-func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1alpha3.KeptnTask, definition *klcv1alpha3.KeptnTaskDefinition, request ctrl.Request) (*batchv1.Job, error) {
+func (r *KeptnTaskReconciler) generateJob(ctx context.Context, task *klcv1beta1.KeptnTask, definition *klcv1beta1.KeptnTaskDefinition, request ctrl.Request) (*batchv1.Job, error) {
 	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        apicommon.GenerateJobName(task.Name),

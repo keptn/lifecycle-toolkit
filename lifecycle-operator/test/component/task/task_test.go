@@ -3,8 +3,8 @@ package task_test
 import (
 	"context"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -30,8 +30,8 @@ var _ = Describe("Task", Ordered, func() {
 
 	Describe("Creation of a Task", func() {
 		var (
-			taskDefinition *klcv1alpha3.KeptnTaskDefinition
-			task           *klcv1alpha3.KeptnTask
+			taskDefinition *klcv1beta1.KeptnTaskDefinition
+			task           *klcv1beta1.KeptnTask
 		)
 		Context("with an existing TaskDefinition", func() {
 			It("should end up in a failed state if the created job fails", func() {
@@ -243,8 +243,8 @@ var _ = Describe("Task", Ordered, func() {
 	})
 })
 
-func makeTask(name string, namespace, taskDefinitionName string) *klcv1alpha3.KeptnTask {
-	task := &klcv1alpha3.KeptnTask{
+func makeTask(name string, namespace, taskDefinitionName string) *klcv1beta1.KeptnTask {
+	task := &klcv1beta1.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
@@ -255,8 +255,8 @@ func makeTask(name string, namespace, taskDefinitionName string) *klcv1alpha3.Ke
 				"annotation1": "annotation2",
 			},
 		},
-		Spec: klcv1alpha3.KeptnTaskSpec{
-			Context: klcv1alpha3.TaskContext{
+		Spec: klcv1beta1.KeptnTaskSpec{
+			Context: klcv1beta1.TaskContext{
 				WorkloadName: "my-workload",
 				AppName:      "my-app",
 				AppVersion:   "0.1.0",
@@ -271,7 +271,7 @@ func makeTask(name string, namespace, taskDefinitionName string) *klcv1alpha3.Ke
 	return task
 }
 
-func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha3.KeptnTaskDefinition {
+func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1beta1.KeptnTaskDefinition {
 	cmName := "my-cm"
 	cm := &v1.ConfigMap{
 		ObjectMeta: metav1.ObjectMeta{
@@ -286,14 +286,14 @@ func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha3.Keptn
 	err := k8sClient.Create(context.TODO(), cm)
 	Expect(err).To(BeNil())
 
-	taskDefinition := &klcv1alpha3.KeptnTaskDefinition{
+	taskDefinition := &klcv1beta1.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      taskDefinitionName,
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: &klcv1alpha3.RuntimeSpec{
-				ConfigMapReference: klcv1alpha3.ConfigMapReference{
+		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
+			Function: &klcv1beta1.RuntimeSpec{
+				ConfigMapReference: klcv1beta1.ConfigMapReference{
 					Name: cmName,
 				},
 			},
@@ -318,15 +318,15 @@ func makeTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha3.Keptn
 	return taskDefinition
 }
 
-func makeContainerTaskDefinition(taskDefinitionName, namespace string) *klcv1alpha3.KeptnTaskDefinition {
+func makeContainerTaskDefinition(taskDefinitionName, namespace string) *klcv1beta1.KeptnTaskDefinition {
 
-	taskDefinition := &klcv1alpha3.KeptnTaskDefinition{
+	taskDefinition := &klcv1beta1.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      taskDefinitionName,
 			Namespace: namespace,
 		},
-		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Container: &klcv1alpha3.ContainerSpec{
+		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
+			Container: &klcv1beta1.ContainerSpec{
 				Container: &v1.Container{
 					Name:  "test",
 					Image: "busybox:1.36.0",

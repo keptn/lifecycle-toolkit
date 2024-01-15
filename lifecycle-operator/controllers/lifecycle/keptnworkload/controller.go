@@ -21,10 +21,8 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	klcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	operatorcommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
@@ -73,7 +71,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	requestInfo := controllercommon.GetRequestInfo(req)
 	r.Log.Info("Searching for workload", "requestInfo", requestInfo)
 
-	workload := &klcv1alpha3.KeptnWorkload{}
+	workload := &klcv1beta1.KeptnWorkload{}
 	err := r.Get(ctx, req.NamespacedName, workload)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
@@ -87,7 +85,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 	r.Log.Info("Reconciling Keptn Workload", "workload", workload.Name, "requestInfo", requestInfo)
 
-	workloadVersion := &klcv1alpha4.KeptnWorkloadVersion{}
+	workloadVersion := &klcv1beta1.KeptnWorkloadVersion{}
 	workloadVersionName := operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKeptnNameLen, workload.Name, workload.Spec.Version)
 
 	// Try to find the workload instance
@@ -101,7 +99,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		err = r.Client.Create(ctx, workloadVersion)
 		if err != nil {
 			r.Log.Error(err, "could not create WorkloadVersion")
-			r.EventSender.Emit(apicommon.PhaseCreateWorkloadVersion, "Warning", workloadVersion, apicommon.PhaseStateFailed, "could not create KeptnWorkloadVersion ", workloadVersion.Spec.Version)
+			r.EventSender.Emit(common.PhaseCreateWorkloadVersion, "Warning", workloadVersion, common.PhaseStateFailed, "could not create KeptnWorkloadVersion ", workloadVersion.Spec.Version)
 			return ctrl.Result{}, err
 		}
 		workload.Status.CurrentVersion = workload.Spec.Version
@@ -121,18 +119,18 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnWorkloadReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &klcv1alpha3.KeptnWorkload{}, "spec.app", func(rawObj client.Object) []string {
-		workload := rawObj.(*klcv1alpha3.KeptnWorkload)
+	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &klcv1beta1.KeptnWorkload{}, "spec.app", func(rawObj client.Object) []string {
+		workload := rawObj.(*klcv1beta1.KeptnWorkload)
 		return []string{workload.Spec.AppName}
 	}); err != nil {
 		return err
 	}
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1alpha3.KeptnWorkload{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		For(&klcv1beta1.KeptnWorkload{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }
 
-func (r *KeptnWorkloadReconciler) createWorkloadVersion(ctx context.Context, workload *klcv1alpha3.KeptnWorkload) (*klcv1alpha4.KeptnWorkloadVersion, error) {
+func (r *KeptnWorkloadReconciler) createWorkloadVersion(ctx context.Context, workload *klcv1beta1.KeptnWorkload) (*klcv1beta1.KeptnWorkloadVersion, error) {
 	// create TraceContext
 	// follow up with a Keptn propagator that JSON-encoded the OTel map into our own key
 	traceContextCarrier := propagation.MapCarrier{}
@@ -152,14 +150,14 @@ func (r *KeptnWorkloadReconciler) createWorkloadVersion(ctx context.Context, wor
 	return &workloadVersion, err
 }
 
-func generateWorkloadVersion(previousVersion string, traceContextCarrier map[string]string, w *klcv1alpha3.KeptnWorkload) klcv1alpha4.KeptnWorkloadVersion {
-	return klcv1alpha4.KeptnWorkloadVersion{
+func generateWorkloadVersion(previousVersion string, traceContextCarrier map[string]string, w *klcv1beta1.KeptnWorkload) klcv1beta1.KeptnWorkloadVersion {
+	return klcv1beta1.KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: traceContextCarrier,
 			Name:        operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKeptnNameLen, w.Name, w.Spec.Version),
 			Namespace:   w.Namespace,
 		},
-		Spec: klcv1alpha4.KeptnWorkloadVersionSpec{
+		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
 			KeptnWorkloadSpec: w.Spec,
 			WorkloadName:      w.Name,
 			PreviousVersion:   previousVersion,

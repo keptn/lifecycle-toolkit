@@ -5,12 +5,12 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
+  {{- include "common.annotations" ( dict "context" . ) }}
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
     keptn.sh/inject-cert: "true"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include "common.annotations" ( dict "context" . ) }}
 spec:
   group: options.keptn.sh
   names:

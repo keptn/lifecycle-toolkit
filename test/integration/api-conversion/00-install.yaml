@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnApp
 metadata:
   name: "some-keptn-app2"
@@ -6,7 +6,7 @@ spec:
   version: "1.2.3"
   revision: 123
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnAppVersion
 metadata:
   name: "some-keptn-app-version-2"
@@ -27,41 +27,6 @@ spec:
   workloads:
     - name: podtato-head-left-arm
       version: 0.2.7
----
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnWorkloadInstance
-metadata:
-  annotations:
-    traceparent: my-trace-parent
-  name: some-keptn-workload-instance-2
-spec:
-  app: podtato-head
-  resourceReference:
-    kind: ReplicaSet
-    name: my-replica-set
-    uid: 957f825e-4025-4ea8-ad22-9292877ff7eb
-  traceId:
-    traceparent: my-trace-parent
-  version: 0.2.7
-  preDeploymentTasks:
-    - pre-deployment-task
-  preDeploymentEvaluations:
-    - pre-deployment-evaluation
-  postDeploymentTasks:
-    - post-deployment-task
-  postDeploymentEvaluations:
-    - post-deployment-evaluation
-  workloadName: some-keptn-workload-instance-2
----
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnEvaluationProvider
-metadata:
-  name: some-evaluation-provider-2
-spec:
-  targetServer: http://my-server-url
-  secretKeyRef:
-    name: "my-secret-name"
-    key: "apiToken"
 ---
 apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric

@@ -50,7 +50,7 @@ version: 0.3.0
 appVersion: "v0.9.0" # x-release-please-version
 dependencies:
   - name: keptn-cert-manager
-    version: 0.3.0
+    version: 0.3.1
     alias: certManager
     condition: certManager.enabled
     repository: file://../keptn-cert-manager/chart

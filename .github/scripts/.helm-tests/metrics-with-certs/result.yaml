@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.3.0
+    helm.sh/chart: cert-manager-0.3.1
 ---
 # Source: keptn/charts/metricsOperator/templates/metrics-operator-service-account.yaml
 apiVersion: v1
@@ -1947,7 +1947,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.3.0
+    helm.sh/chart: cert-manager-0.3.1
 rules:
 - apiGroups:
   - admissionregistration.k8s.io
@@ -2132,7 +2132,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.3.0
+    helm.sh/chart: cert-manager-0.3.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -2216,7 +2216,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.3.0
+    helm.sh/chart: cert-manager-0.3.1
 rules:
 - apiGroups:
   - ""
@@ -2296,7 +2296,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.3.0
+    helm.sh/chart: cert-manager-0.3.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -2320,7 +2320,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.3.0
+    helm.sh/chart: cert-manager-0.3.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -2441,7 +2441,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.3.0
+    helm.sh/chart: cert-manager-0.3.1
 spec:
   replicas: 1
   selector:

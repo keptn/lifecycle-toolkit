@@ -166,7 +166,7 @@ From the `lifecycle-operator` directory, run the component test:
   make component-test
   ```
 
-### Component test
+### End-to-end test
 
 From the `lifecycle-operator` directory, run the end-to-end tests:
 

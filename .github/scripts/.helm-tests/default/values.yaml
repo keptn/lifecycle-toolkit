@@ -6,6 +6,7 @@ lifecycleOperator:
   lifecycleOperator:
     image:
       tag: v0.0.0
+    imagePullPolicy: Always
   scheduler:
     image:
       tag: v0.0.0
@@ -17,5 +18,6 @@ metricsOperator:
 global:
   commonLabels:
     app.kubernetes.io/version: vmyversion
+  imagePullPolicy: IfNotPresent
   caInjectionAnnotations:
     cert-manager.io/inject-ca-from: helmtests/keptn-certs

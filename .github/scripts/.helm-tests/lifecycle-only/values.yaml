@@ -8,6 +8,7 @@ global:
 
 lifecycleOperator:
   enabled: true
+  imagePullPolicy: Always
   promotionTasksEnabled: true
   lifecycleOperator:
     image:

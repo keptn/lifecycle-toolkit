@@ -2,6 +2,7 @@ lifecycleOperator:
   enabled: false
 metricsOperator:
   enabled: true
+  imagePullPolicy: Always
   image:
     tag: v0.0.0
   customMetricsAPIService:

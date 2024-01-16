@@ -19,7 +19,7 @@ the `docs-new/docs` directory in the repository.
 The subdirectories with content are:
 
 - `assets`: This folder is used to save assets such as code examples that are used throughout the documentation.
-  Many subfolders also contain an `assets` folder to keep asset files closer to the content where they are referenced.
+  Many sub folders also contain an `assets` folder to keep asset files closer to the content where they are referenced.
 - `components`: Information about the different subcomponents of Keptn
 - `contribute`: Contains information on how to contribute to the different parts of Keptn
 - `core-concepts`: A brief overview of Keptn, its features and use cases, and its history

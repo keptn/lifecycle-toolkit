@@ -38,14 +38,14 @@ For example, a pod gated by Keptn looks like the following:
 {% include "./assets/gated.yaml" %}
 ```
 
-If the `pre-deployment` checks have finished successfully,
+If the `pre-deployment` checks and evaluations have finished successfully,
 the WorkloadVersion Controller removes the gate from the Pod.
-The default k8s scheduler can then allow the Pod to be bound to a node.
+The default k8s scheduler then binds the Pod to a node.
 If the `pre-deployment` checks have not yet finished successfully,
 the gate stays and the Pod remains in the pending state.
 When removing the gate,
 the WorkloadVersion controller also adds the following annotation so that,
-if the spec is updated, the Pod is not gated again:
+if the Pod is updated, it is not gated again:
 
 ```yaml
 {% include "./assets/gate-removed.yaml" %}
@@ -56,7 +56,7 @@ if the spec is updated, the Pod is not gated again:
 The **Keptn Scheduler** works by registering itself as a Permit plugin within the Kubernetes
 scheduling cycle that ensures that Pods are scheduled to a node until and unless the
 pre-deployment checks have finished successfully.
-This helps to prevent Pods from being scheduled to nodes that are not yet ready for them,
+This helps to prevent Pods from being bound to nodes that are not yet ready for them,
 which can lead to errors and downtime.
 Furthermore, it also allows users to control the deployment of an application based on
 customized rules that can take into consideration more parameters than what the default
@@ -73,7 +73,7 @@ a [Permit plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/schedu
 Firstly the Mutating Webhook checks for annotations on Pods to see if it is annotated with
 [Keptn specific annotations](../guides/integrate.md#basic-annotations).
 If the annotations are present, the Webhook assigns the **Keptn Scheduler** to the Pod.
-This ensures that the Keptn Scheduler only gets Pods that have been annotated for it.
+This ensures that the Keptn Scheduler only manages Pods that have been annotated for Keptn.
 A Pod `test-pod` modified by the Mutating Webhook looks as follows:
 
 ```yaml
@@ -82,43 +82,26 @@ A Pod `test-pod` modified by the Mutating Webhook looks as follows:
 
 If the Pod is annotated with Keptn specific annotations, the Keptn Scheduler retrieves
 the WorkloadVersion CRD that is associated with the Pod.
-The **WorkloadVersion CRD** contains information about the `pre-deployment` checks that
+The **WorkloadVersion CR** contains information about the `pre-deployment` checks that
 need to be performed before the Pod can be scheduled.
 
-The Keptn Scheduler then checks the status of the WorkloadVersion CRD to see
+The Keptn Scheduler then checks the status of the WorkloadVersion CR to see
 if the `pre-deployment` checks have finished successfully.
 If the pre-deployment checks have finished successfully, the **Keptn Scheduler** allows
-the Pod to be scheduled to a node.
-If the `pre-deployment` checks have not yet finished, the Keptn Scheduler tells Kubernetes to check again later.
+the Pod to be bound to a node.
+If the `pre-deployment` checks have not finished successfully within 5 minutes,
+the Pod is not bound to a node and it remains in a Pending state.
 
 It is important to note that the Keptn Scheduler is a plugin to the default Kubernetes scheduler.
-This means that all of the checks that are performed by the default Kubernetes scheduler
+This means that all of the checks that are by default performed by the default Kubernetes scheduler
 will also be performed by the **Keptn Scheduler**.
 For example, if there is not enough capacity on any node to schedule the Pod,
 the Keptn Scheduler will not be able to schedule it, even if the `pre-deployment`
 checks have finished successfully.
 
-The Keptn Scheduler processes the following information from the WorkloadVersion CRD:
-
-* The name of the pre-deployment checks that need to be performed.
-* The status of the pre-deployment checks.
-* The deadline for the pre-deployment checks to be completed.
-* The Keptn Scheduler checks the status of the `pre-deployment` checks every 10 seconds.
-If the checks have not finished successfully within 5 minutes,
-the Keptn Scheduler does not allow the Pod to be scheduled.
-
-If all of the `pre-deployment` checks have finished successfully and the deadline has not been reached,
-the Keptn Scheduler allows the Pod to be scheduled.
-If any of the `pre-deployment` checks have not finished successfully or the deadline has
-been reached, the Keptn Scheduler tells Kubernetes to check again later.
-
-Also the Keptn Scheduler will not schedule Pods to nodes that have failed `pre-deployment`
-checks in the past.
-This helps to prevent Pods from being scheduled to nodes that are not ready for them.
-
 ## Integrating Keptn with your custom scheduler
 
 Keptn scheduling logics are compatible with
-the [Scheduler Framework](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/).
+the [Kubernetes Scheduler Framework](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/).
 Keptn does not work with a custom scheduler unless it is implemented as
 a [scheduler plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#plugin-configuration).

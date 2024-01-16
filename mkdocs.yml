@@ -56,6 +56,7 @@ extra_javascript:
 extra_css:
   - assets/stylesheets/versions.css
   - assets/stylesheets/color-schemes.css
+  - assets/stylesheets/mermaid.css
 plugins:
   - search
   - social
@@ -73,7 +74,11 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
   - Home:

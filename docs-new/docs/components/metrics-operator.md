@@ -7,20 +7,21 @@ to generate a variety of reports and dashboards
 that provide insights into the health and performance
 of the application and infrastructure.
 
-While Kubernetes has ways to extend its metrics APIs, they have limitations,
-especially that they only allow you to use a single observability platform
+While Kubernetes has ways to extend its metrics APIs, there are limitations,
+especially that they allow you to use only a single observability platform
 such as Prometheus, Dynatrace or Datadog.
 The Keptn Metrics Operator solves this problem
 by providing a single entry point for
-all your metrics data, regardless of its source,
-so you can use multiple instances of multiple observability platforms.
+all your metrics data, regardless of its source.
+This means that data multiple observability platforms are available via
+a single access point.
 
 Keptn metrics are integrated with the Kubernetes
 [Custom Metrics API](https://github.com/kubernetes/metrics#custom-metrics-api),
 so they are compatible with the Kubernetes
 [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
 (HPA), which enables the horizontal scaling of workloads
-based on metrics collected from multiple observability platforms.
+based on metrics collected from observability platforms.
 See
 [Using the HorizontalPodAutoscaler](../use-cases/hpa.md)
 for instructions.
@@ -28,15 +29,30 @@ for instructions.
 The Metrics Operator consists of the following components:
 
 * Metrics Controller
+* Analysis Controller
 * Metrics Adapter
 
 ```mermaid
 graph TD;
-    Metrics-Operator-->Metrics-Adapter;
-    Metrics-Operator-->Metrics-Controller
-style Metrics-Operator fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
-style Metrics-Adapter fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
-style Metrics-Controller fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+K((CRs)) -- apply --> L[Kubernetes API]
+X[Metrics Adapter] <--> L
+Y[Metrics Controller] <--> L
+Z[Analysis Controller] <--> L
+
+P3((<svg height="80" width="80"><image href="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png" height="80" width="80" /></svg>))
+P1[<svg height="80" width="100"><image href="https://imgix.datadoghq.com/img/about/presskit/usage/logousage_white.png" height="100" width="100" /></svg>]  <--> Y
+P3 <--> Y
+P3 <--> Z
+P2[<svg height="70" width="100"><image href="https://seeklogo.com/images/D/dynatrace-logo-0B89594073-seeklogo.com.png" height="70" width="100" /></svg>] <--> Z
+
+style L fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
+style Y fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+style Z fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+style X fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+style K fill:#fff,stroke:#123,stroke-width:px,color:#006bb8
+style P1 fill:#fff,stroke:#fff,stroke-width:px,color:#fff
+style P2 fill:#fff,stroke:#fff,stroke-width:px,color:#fff
+style P3 fill:#fff,stroke:#fff,stroke-width:px,color:#fff
 ```
 
 The **Metrics adapter** exposes custom metrics from an application
@@ -67,12 +83,12 @@ The steps in which the controller fetches metrics are given below:
    * If not, it skips the reconciliation process
      and queues the request for later.
 
-1. The controller attempts to fetch the provider defined in the
+2. The controller attempts to fetch the provider defined in the
    `spec.provider.name` field.
    * If this is not possible, the controller reconciles
      and queues the request for later.
 
-1. If the provider is found,
+3. If the provider is found,
    the controller loads the provider and evaluates the query
    defined in the `spec.query` field.
    * If the evaluation is successful,

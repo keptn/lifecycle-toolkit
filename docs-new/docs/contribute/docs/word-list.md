@@ -6,6 +6,7 @@ about the proper use of terminology for the Keptn project.
 The Keptn project does not maintain a formal style guide
 but should adhere to recommendations in:
 
+<!-- markdownlint-disable MD007 -->
 * [CNCF Style Guide](https://github.com/cncf/foundation/blob/main/style-guide.md).
 
 * The [Kubernetes documentation](https://kubernetes.io/docs/home/)
@@ -16,11 +17,14 @@ but should adhere to recommendations in:
     * [Reference](https://kubernetes.io/docs/reference/)
 
 * The [Google developer documentation style guide](https://developers.google.com/style)
-  is a comprehensive reference for technical writers. In particular:
+  is a comprehensive reference for technical writers.
+  In particular:
 
     * [Word list](https://developers.google.com/style/word-list)
       includes good information about words and phrases
       that are commonly used in technical documentation
+
+<!-- markdownlint-enable MD007 -->
 
 ## Keptn terminology
 

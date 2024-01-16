@@ -2,15 +2,13 @@
 
 New writing goes to the `main` branch and can be viewed on the Keptn website under the `latest` version.
 We have staging and production levels for our documentation which are as follows:
-
+<!-- markdownlint-disable MD007 -->
 * **Stable:** official documentation of the current Keptn release
-    * [link](https://keptn.sh/stable/):
-      This is the build of the latest `klt-*` Git tag.
+    * [link](https://keptn.sh/stable/): This is the build of the latest `klt-*` Git tag.
 
 * **Latest:** documentation being staged for the next Keptn release
-    * [link](https://keptn.sh/latest/):
-      This is the latest build of the `main` branch.
-
+    * [link](https://keptn.sh/latest/): This is the latest build of the `main` branch.
+<!-- markdownlint-enable MD007 -->
 Let's take a look what happens when your changes are merged in `main`.
 
 ## Stable - Official documentation (Production)

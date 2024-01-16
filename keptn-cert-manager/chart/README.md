@@ -12,6 +12,7 @@ resource.
 | ------------------------------- | ------------------------------------------------------------------------- | ----- |
 | `global.imageRegistry`          | Global container image registry                                           | `""`  |
 | `global.imagePullSecrets`       | Global Docker registry secret names as an array                           | `[]`  |
+| `global.imagePullPolicy`   | Policy for pulling Docker images. Options: Always, IfNotPresent, Never    | `""`  |
 | `global.commonLabels`           | Common labels to add to all Keptn resources. Evaluated as a template      | `{}`  |
 | `global.commonAnnotations`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |
 | `global.caInjectionAnnotations` | CA injection annotations for cert-manager.io configuration                | `{}`  |

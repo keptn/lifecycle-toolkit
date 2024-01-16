@@ -39,11 +39,11 @@ X[Metrics Adapter] <--> L
 Y[Metrics Controller] <--> L
 Z[Analysis Controller] <--> L
 
-P3((<svg height="80" width="80"><image href="https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/docs-new/docs/components/assets/prometheus-logo.png" height="80" width="80" /></svg>))
-P1[<svg height="80" width="100"><image href="https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/docs-new/docs/components/assets/datadog-logo.png" height="100" width="100" /></svg>]  <--> Y
+P3((<svg height="80" width="80"><image href="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png" height="80" width="80" /></svg>))
+P1[<svg height="80" width="100"><image href="https://imgix.datadoghq.com/img/about/presskit/usage/logousage_white.png" height="100" width="100" /></svg>]  <--> Y
 P3 <--> Y
 P3 <--> Z
-P2[<svg height="70" width="100"><image href="https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/docs-new/docs/components/assets/dynatrace-logo.png" height="70" width="100" /></svg>] <--> Z
+P2[<svg height="70" width="100"><image href="https://seeklogo.com/images/D/dynatrace-logo-0B89594073-seeklogo.com.png" height="70" width="100" /></svg>] <--> Z
 
 style L fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
 style Y fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8

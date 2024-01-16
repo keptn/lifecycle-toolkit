@@ -9,7 +9,8 @@ but should adhere to recommendations in:
 * [CNCF Style Guide](https://github.com/cncf/foundation/blob/main/style-guide.md).
 
 * The [Kubernetes documentation](https://kubernetes.io/docs/home/)
-  is a good reference for Kubernetes terms. In particular:
+  is a good reference for Kubernetes terms.
+  In particular:
 
     * [Concepts](https://kubernetes.io/docs/concepts/)
     * [Reference](https://kubernetes.io/docs/reference/)

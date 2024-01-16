@@ -22,7 +22,8 @@ The steps are:
 
 * Install `cert-manager.io` if it is not already installed.
 * Add the `Certificate` and `Issuer` CRs for `cert-manager.io`.
-* (optional) Install Keptn without the built-in `keptn-cert-manager` via Helm
+* (optional) Install Keptn without the built-in `keptn-cert-manager` 
+and with injected CA annotations via Helm
 
 ## Add the CR(s) for cert-manager.io
 
@@ -33,13 +34,13 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: keptn-certs
-  namespace: <your-namespace>
+  namespace: <keptn-namespace>
 spec:
   dnsNames:
-  - lifecycle-webhook-service.<your-namespace>.svc
-  - lifecycle-webhook-service.<your-namespace>.svc.cluster.local
-  - metrics-webhook-service.<your-namespace>.svc
-  - metrics-webhook-service.<your-namespace>.svc.cluster.local
+  - lifecycle-webhook-service.<keptn-namespace>.svc
+  - lifecycle-webhook-service.<keptn-namespace>.svc.cluster.local
+  - metrics-webhook-service.<keptn-namespace>.svc
+  - metrics-webhook-service.<keptn-namespace>.svc.cluster.local
   issuerRef:
     kind: Issuer
     name: keptn-selfsigned-issuer
@@ -49,7 +50,7 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: keptn-selfsigned-issuer
-  namespace: <your-namespace>
+  namespace: <keptn-namespace>
 spec:
   selfSigned: {}
 ```
@@ -68,24 +69,14 @@ injectable resources depending on the injection source.
 To configure these annotations, modify the `global.caInjectionAnnotation` Helm value.
 See the [CA Injector](https://cert-manager.io/docs/concepts/ca-injector/) documentation for more details.
 
-Here is an example `values.yaml` file demonstrating the configuration of CA injection:
+Here is an example `values.yaml` file demonstrating the configuration of CA injection
+by using the `cert-manager.io/inject-ca-from` annotation:
 
 ```yaml
-certManager:
-  enabled: true
-lifecycleOperator:
-  enabled: false   # lifecycle operator won't be installed
-metricsOperator:
-  enabled: true
-  image:
-    tag: v0.0.0 # metrics operator will use this image tag
-  imagePullPolicy: Never
-
 global:
-  commonLabels:
-    app.kubernetes.io/version: vmyversion
+  certManagerEnabled: false # disable Keptn Cert Manager
   caInjectionAnnotations:
-    cert-manager.io/inject-ca-from: example1/sample-certificate
+    cert-manager.io/inject-ca-from: keptn-system/keptn-certs
 ```
 
 Refer to the

@@ -45,7 +45,7 @@ metadata:
   name: analyses.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -390,7 +390,7 @@ metadata:
   name: analysisdefinitions.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -1077,7 +1077,7 @@ metadata:
   name: analysisvaluetemplates.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -1216,7 +1216,7 @@ metadata:
   name: keptnmetrics.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -1727,7 +1727,7 @@ metadata:
   name: keptnmetricsproviders.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -2423,7 +2423,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: metrics-validating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test

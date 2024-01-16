@@ -169,7 +169,7 @@ modify some value that appears in an assert file of the test.
 
 ### Component test
 
-From the `lifecycle-operator` directory, run the component test:
+From the `lifecycle-operator` directory, run the component tests:
 
   ```shell
   make component-test

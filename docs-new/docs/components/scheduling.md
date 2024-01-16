@@ -88,9 +88,9 @@ need to be performed before the Pod can be scheduled.
 The Keptn Scheduler then checks the status of the WorkloadVersion CR to see
 if the `pre-deployment` checks have finished successfully.
 If the pre-deployment checks have finished successfully, the **Keptn Scheduler** allows
-the Pod to be bind to a node.
+the Pod to be bound to a node.
 If the `pre-deployment` checks have not finished successfully within 5 minutes,
-the Pod is not bound to a note and it remains in a Pending state.
+the Pod is not bound to a node and it remains in a Pending state.
 
 It is important to note that the Keptn Scheduler is a plugin to the default Kubernetes scheduler.
 This means that all of the checks that are by default performed by the default Kubernetes scheduler

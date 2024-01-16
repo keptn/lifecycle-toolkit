@@ -57,7 +57,8 @@ Only then are the pods bound to a node and deployed.
 If any pre-deployment evaluation or task fails,
 the `KeptnApp` issues an appropriate `*Errored` event
 and the deployment remains pending indefinitely,
-until further changes or external intervention.
+until further changes or external intervention
+either resolve the problem or terminate the execution.
 If all evaluations and tasks in a phase are successful,
 the `KeptnApp` issues the appropriate `*Succeeded` event
 and initiates the next phase.
@@ -168,7 +169,7 @@ Additional phases/states exist,
 such as those that describe what is currently happening in the system.
 During the lifetime of the application, custom resources are created,
 updated, deleted or reconciled.
-Each reconciliation, or re-evaluation of the state of custom resource
+Each reconciliation, or re-evaluation of the state of custom resources
 by the controller, can cause the generation of events.
 These include:
 

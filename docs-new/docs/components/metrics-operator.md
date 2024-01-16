@@ -13,7 +13,7 @@ such as Prometheus, Dynatrace or Datadog.
 The Keptn Metrics Operator solves this problem
 by providing a single entry point for
 all your metrics data, regardless of its source.
-This mean that data from multiple observability platforms are available via
+This means that data multiple observability platforms are available via
 a single access point.
 
 Keptn metrics are integrated with the Kubernetes

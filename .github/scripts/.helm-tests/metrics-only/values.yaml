@@ -1,4 +1,3 @@
-certManager:
 lifecycleOperator:
   enabled: false
 metricsOperator:

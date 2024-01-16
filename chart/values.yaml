@@ -28,4 +28,4 @@ global:
   ## @param global.commonAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
   commonAnnotations: {}
   ## @param global.caInjectionAnnotations Common annotations to add to all Keptn resources. Evaluated as a template
-  caInjectionAnnotations: { }
+  caInjectionAnnotations: {}

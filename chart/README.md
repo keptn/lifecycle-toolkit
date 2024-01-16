@@ -17,7 +17,7 @@ metrics, observability, health checks, with pre- and post-deployment evaluations
 ### Global parameters
 
 | Name                            | Description                                                               | Value  |
-|---------------------------------| ------------------------------------------------------------------------- |--------|
+| ------------------------------- | ------------------------------------------------------------------------- | ------ |
 | `global.certManagerEnabled`     | Enable this value to install Keptn Certificate Manager                    | `true` |
 | `global.imageRegistry`          | Global Docker image registry                                              | `""`   |
 | `global.imagePullSecrets`       | Global Docker registry secret names as an array                           | `[]`   |

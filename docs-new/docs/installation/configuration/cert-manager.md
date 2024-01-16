@@ -22,7 +22,7 @@ The steps are:
 
 * Install `cert-manager.io` if it is not already installed.
 * Add the `Certificate` and `Issuer` CRs for `cert-manager.io`.
-* (optional) Install Keptn without the built-in `keptn-cert-manager` 
+* (optional) Install Keptn without the built-in `keptn-cert-manager`
 and with injected CA annotations via Helm
 
 ## Add the CR(s) for cert-manager.io

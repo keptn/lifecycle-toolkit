@@ -88,5 +88,6 @@ global:
     cert-manager.io/inject-ca-from: example1/sample-certificate
 ```
 
-Refer to the [Customizing the configuration of components
-](https://keptn.sh/latest/docs/installation/#customizing-the-configuration-of-components) for more details.
+Refer to the
+[Customizing the configuration of components](https://keptn.sh/latest/docs/installation/#customizing-the-configuration-of-components)
+for more details.

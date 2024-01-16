@@ -120,13 +120,14 @@ You are now ready to make your changes to the source code.
 1. Make your changes to the appropriate component.
 
 1. Deploy the component you modified and push the image to your private Github repository.
-   Note that you do not need to rebuild all components,
-   only the one you modified.
+   Note that you only need to rebuild the component you modified;
+   you do not need to rebuild all components.
    For example, if your modifications are to the `metrics-operator`, run:
 
-```shell
-make build-deploy-metrics-operator RELEASE_REGISTRY=docker.io/exampleuser TAG=my-feature
-```
+     ```shell
+     make build-deploy-metrics-operator \
+         RELEASE_REGISTRY=docker.io/exampleuser TAG=my-feature
+     ```
 
 ## Testing
 
@@ -156,7 +157,15 @@ Run the integration tests from the root directory of your clone:
   make integration-test-local
   ```
 
-`integration-test-local` cleans up after the test.
+This runs a series of Kuttl
+([KUbernetes Test TooL](https://kuttl.dev/))
+tests locally and then cleans up your local environment.
+You can run individual tests with the `kubectl` command;
+see the *Makefile* for the specific syntax of each test.
+
+Logs are printed only when the test fails.
+To force a failure,
+modify some value that appears in an assert file of the test.
 
 ### Component test
 
@@ -173,21 +182,6 @@ From the `lifecycle-operator` directory, run the end-to-end tests:
   ```shell
   make e2e-test
   ```
-
-### Kuttl test
-
-Run the Kuttl [KUbernetes Test TooL](https://kuttl.dev/)
-if your PR modifies one of the operators.
-The syntax is:
-
-```shell
-kubectl kuttl test --start-kind=false ./test/integration/ \
-        --config=kuttl-test.yaml --test name-of-your-test-directory
-```
-
-Logs are printed only when the test fails.
-To force a failure,
-modify some value that appears in an assert file of the test.
 
 ## Create and manage the PR
 

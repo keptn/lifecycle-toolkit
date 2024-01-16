@@ -90,26 +90,26 @@ Some helpful hints:
   To get the appropriate chart version for the Keptn version you want,
   use the following command:
 
-  ```shell
-  helm search repo keptn --versions
-  ```
+```shell
+helm search repo keptn --versions
+```
 
   You see that the "CHART VERSION" for `keptn/keptn` v0.9.0 is 0.3.0
   so use the following command to explicitly installs Keptn v0.9.0:
 
-  ```shell
-  helm upgrade --install keptn keptn/keptn \
-   --version 0.3.0 \
-   -n keptn-system --create-namespace --wait
-  ```
+```shell
+helm upgrade --install keptn keptn/keptn \
+--version 0.3.0 \
+-n keptn-system --create-namespace --wait
+```
 
 * To view which Keptn components are installed in your cluster
   and verify that they are the correct ones,
   run the following command:
 
-  ```shell
-  kubectl get pods -n keptn-system
-  ```
+```shell
+kubectl get pods -n keptn-system
+```
 
   The output shows all Keptn components that are running on your cluster.
 
@@ -174,9 +174,9 @@ To modify Helm values:
 
 1. Download a copy of the Helm values file:
 
-   ```shell
-   helm show values keptn/keptn > values.yaml
-   ```
+```shell
+helm show values keptn/keptn > values.yaml
+```
 
 1. Edit your local copy to modify some values
 
@@ -184,28 +184,28 @@ To modify Helm values:
    to your `helm upgrade` command to install Keptn
    with your configuration changes:
 
-   ```shell
-   --values=values.yaml
-   ```
+```shell
+--values=values.yaml
+```
 
    For example, if you create a `my.values.yaml`
    and modify some configuration values,
    use the following command to apply your configuration:
 
-   ```shell
-   helm upgrade --install keptn keptn/keptn \
-    --values my.values.yaml \
-    -n keptn-system --create-namespace --wait
-   ```
+```shell
+helm upgrade --install keptn keptn/keptn \
+--values my.values.yaml \
+-n keptn-system --create-namespace --wait
+```
 
    You can also use the `--set` flag
    to specify a value change for the `helm upgrade --install` command.
    Helm values are specified using the format:
 
-   ```shell
-   --set key1=value1 \
-   --set key2=value2 ...
-   ```
+```shell
+--set key1=value1 \
+--set key2=value2 ...
+```
 
 ## Control what components are installed
 

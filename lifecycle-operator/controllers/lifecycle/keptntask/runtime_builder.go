@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"dario.cat/mergo"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
@@ -33,7 +33,7 @@ type RuntimeExecutionParams struct {
 	SecureParameters string
 	CmdParameters    string
 	URL              string
-	Context          klcv1alpha3.TaskContext
+	Context          klcv1beta1.TaskContext
 	Image            string
 	MountPath        string
 }
@@ -169,12 +169,12 @@ func (fb *RuntimeBuilder) getParams(ctx context.Context) (*RuntimeExecutionParam
 	return &params, nil
 }
 
-func (fb *RuntimeBuilder) parseRuntimeTaskDefinition(spec *klcv1alpha3.RuntimeSpec, name string, namespace string, configMap string) (RuntimeExecutionParams, bool, error) {
+func (fb *RuntimeBuilder) parseRuntimeTaskDefinition(spec *klcv1beta1.RuntimeSpec, name string, namespace string, configMap string) (RuntimeExecutionParams, bool, error) {
 	params := RuntimeExecutionParams{}
 
 	// Firstly check if this task definition has a parent object
 	hasParent := false
-	if spec.FunctionReference != (klcv1alpha3.FunctionReference{}) {
+	if spec.FunctionReference != (klcv1beta1.FunctionReference{}) {
 		hasParent = true
 	}
 	params.ConfigMap = configMap

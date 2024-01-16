@@ -3,8 +3,12 @@ kind: Service
 metadata:
   name: lifecycle-webhook-service
   namespace: {{ .Release.Namespace | quote }}
+  {{- $annotations := include "common.annotations" (dict "context" .) }}
+  {{- with $annotations }}
+  annotations: {{- . -}}
+  {{- end }}
   labels:
-{{- include "common.annotations" ( dict "context" . ) }}
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 spec:
   type: {{ .Values.lifecycleWebhookService.type }}
   selector:

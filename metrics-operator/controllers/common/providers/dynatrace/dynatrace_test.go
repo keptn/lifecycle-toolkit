@@ -447,7 +447,6 @@ func TestEvaluateQuery_MissingSecret(t *testing.T) {
 	_, _, e := kdp.EvaluateQuery(context.TODO(), keptnMetric, p)
 	require.NotNil(t, e)
 	require.ErrorIs(t, e, ErrSecretKeyRefNotDefined)
-
 }
 
 func TestEvaluateQuery_SecretNotFound(t *testing.T) {

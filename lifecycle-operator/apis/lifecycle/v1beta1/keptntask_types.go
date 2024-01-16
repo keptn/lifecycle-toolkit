@@ -27,9 +27,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // KeptnTaskSpec defines the desired state of KeptnTask
 type KeptnTaskSpec struct {
 	// TaskDefinition refers to the name of the KeptnTaskDefinition
@@ -129,6 +126,7 @@ type KeptnTaskStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:storageversion
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`

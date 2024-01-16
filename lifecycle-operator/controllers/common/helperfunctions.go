@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
@@ -15,13 +15,13 @@ import (
 )
 
 // GetItemStatus retrieves the state of the task/evaluation, if it does not exists, it creates a default one
-func GetItemStatus(name string, instanceStatus []klcv1alpha3.ItemStatus) klcv1alpha3.ItemStatus {
+func GetItemStatus(name string, instanceStatus []klcv1beta1.ItemStatus) klcv1beta1.ItemStatus {
 	for _, status := range instanceStatus {
 		if status.DefinitionName == name {
 			return status
 		}
 	}
-	return klcv1alpha3.ItemStatus{
+	return klcv1beta1.ItemStatus{
 		DefinitionName: name,
 		Status:         apicommon.StatePending,
 		Name:           "",
@@ -29,7 +29,7 @@ func GetItemStatus(name string, instanceStatus []klcv1alpha3.ItemStatus) klcv1al
 }
 
 // GetOldStatus retrieves the state of the task/evaluation
-func GetOldStatus(name string, statuses []klcv1alpha3.ItemStatus) apicommon.KeptnState {
+func GetOldStatus(name string, statuses []klcv1beta1.ItemStatus) apicommon.KeptnState {
 	var oldstatus apicommon.KeptnState
 	for _, ts := range statuses {
 		if ts.DefinitionName == name {
@@ -46,16 +46,16 @@ func CopyMap[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](dst M1, src M2) {
 	}
 }
 
-func GetTaskDefinition(k8sclient client.Client, log logr.Logger, ctx context.Context, definitionName string, namespace string) (*klcv1alpha3.KeptnTaskDefinition, error) {
-	definition := &klcv1alpha3.KeptnTaskDefinition{}
+func GetTaskDefinition(k8sclient client.Client, log logr.Logger, ctx context.Context, definitionName string, namespace string) (*klcv1beta1.KeptnTaskDefinition, error) {
+	definition := &klcv1beta1.KeptnTaskDefinition{}
 	if err := getObject(k8sclient, log, ctx, definitionName, namespace, definition); err != nil {
 		return nil, err
 	}
 	return definition, nil
 }
 
-func GetEvaluationDefinition(k8sclient client.Client, log logr.Logger, ctx context.Context, definitionName string, namespace string) (*klcv1alpha3.KeptnEvaluationDefinition, error) {
-	definition := &klcv1alpha3.KeptnEvaluationDefinition{}
+func GetEvaluationDefinition(k8sclient client.Client, log logr.Logger, ctx context.Context, definitionName string, namespace string) (*klcv1beta1.KeptnEvaluationDefinition, error) {
+	definition := &klcv1beta1.KeptnEvaluationDefinition{}
 	if err := getObject(k8sclient, log, ctx, definitionName, namespace, definition); err != nil {
 		return nil, err
 	}

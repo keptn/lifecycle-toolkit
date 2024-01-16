@@ -82,13 +82,13 @@ func (r *resultsReporter) reportResult(finishedAnalysis analysistypes.AnalysisCo
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
 
-	f := finishedAnalysis.Analysis.Spec.From.String()
-	t := finishedAnalysis.Analysis.Spec.To.String()
+	fromTimestamp := finishedAnalysis.Analysis.GetFrom().String()
+	toTimestamp := finishedAnalysis.Analysis.GetTo().String()
 	labelsAnalysis := prometheus.Labels{
 		"name":      finishedAnalysis.Analysis.Name,
 		"namespace": finishedAnalysis.Analysis.Namespace,
-		"from":      f,
-		"to":        t,
+		"from":      fromTimestamp,
+		"to":        toTimestamp,
 	}
 	if m, err := r.metrics.AnalysisResult.GetMetricWith(labelsAnalysis); err == nil {
 		m.Set(finishedAnalysis.Result.GetAchievedPercentage())
@@ -106,8 +106,8 @@ func (r *resultsReporter) reportResult(finishedAnalysis analysistypes.AnalysisCo
 			"analysis_namespace": finishedAnalysis.Analysis.Namespace,
 			"key_objective":      fmt.Sprintf("%v", o.Objective.KeyObjective),
 			"weight":             fmt.Sprintf("%v", o.Objective.Weight),
-			"from":               f,
-			"to":                 t,
+			"from":               fromTimestamp,
+			"to":                 toTimestamp,
 		}
 		if m, err := r.metrics.ObjectiveResult.GetMetricWith(labelsObjective); err == nil {
 			m.Set(o.Value)

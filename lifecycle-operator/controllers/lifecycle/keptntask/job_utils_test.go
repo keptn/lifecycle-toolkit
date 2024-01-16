@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
@@ -168,7 +168,7 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 
 	fakeClient := fake.NewClientBuilder().WithObjects(job).Build()
 
-	err := klcv1alpha3.AddToScheme(fakeClient.Scheme())
+	err := klcv1beta1.AddToScheme(fakeClient.Scheme())
 	require.Nil(t, err)
 
 	r := &KeptnTaskReconciler{
@@ -278,8 +278,8 @@ func makeJob(name, namespace string, status batchv1.JobStatus) *batchv1.Job {
 	}
 }
 
-func makeTask(name, namespace string, taskDefinitionName string) *klcv1alpha3.KeptnTask {
-	return &klcv1alpha3.KeptnTask{
+func makeTask(name, namespace string, taskDefinitionName string) *klcv1beta1.KeptnTask {
+	return &klcv1beta1.KeptnTask{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
@@ -290,8 +290,8 @@ func makeTask(name, namespace string, taskDefinitionName string) *klcv1alpha3.Ke
 				"annotation1": "annotation2",
 			},
 		},
-		Spec: klcv1alpha3.KeptnTaskSpec{
-			Context: klcv1alpha3.TaskContext{
+		Spec: klcv1beta1.KeptnTaskSpec{
+			Context: klcv1beta1.TaskContext{
 				WorkloadName: "my-workload",
 				AppName:      "my-app",
 				AppVersion:   "0.1.0",
@@ -304,8 +304,8 @@ func makeTask(name, namespace string, taskDefinitionName string) *klcv1alpha3.Ke
 	}
 }
 
-func makeTaskDefinitionWithConfigmapRef(name, namespace, configMapName string) *klcv1alpha3.KeptnTaskDefinition {
-	return &klcv1alpha3.KeptnTaskDefinition{
+func makeTaskDefinitionWithConfigmapRef(name, namespace, configMapName string) *klcv1beta1.KeptnTaskDefinition {
+	return &klcv1beta1.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
@@ -316,13 +316,13 @@ func makeTaskDefinitionWithConfigmapRef(name, namespace, configMapName string) *
 				"annotation1": "annotation2",
 			},
 		},
-		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Function: &klcv1alpha3.RuntimeSpec{
-				ConfigMapReference: klcv1alpha3.ConfigMapReference{
+		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
+			Function: &klcv1beta1.RuntimeSpec{
+				ConfigMapReference: klcv1beta1.ConfigMapReference{
 					Name: configMapName,
 				},
-				Parameters:       klcv1alpha3.TaskParameters{Inline: map[string]string{"foo": "bar"}},
-				SecureParameters: klcv1alpha3.SecureParameters{Secret: "my-secret"},
+				Parameters:       klcv1beta1.TaskParameters{Inline: map[string]string{"foo": "bar"}},
+				SecureParameters: klcv1beta1.SecureParameters{Secret: "my-secret"},
 			},
 		},
 	}
@@ -340,8 +340,8 @@ func makeConfigMap(name, namespace string) *v1.ConfigMap {
 	}
 }
 
-func makeTaskDefinitionWithServiceAccount(name, namespace, serviceAccountName string, token *bool, ttlSeconds *int32, imagePullSecrets []v1.LocalObjectReference) *klcv1alpha3.KeptnTaskDefinition {
-	return &klcv1alpha3.KeptnTaskDefinition{
+func makeTaskDefinitionWithServiceAccount(name, namespace, serviceAccountName string, token *bool, ttlSeconds *int32, imagePullSecrets []v1.LocalObjectReference) *klcv1beta1.KeptnTaskDefinition {
+	return &klcv1beta1.KeptnTaskDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
@@ -352,15 +352,15 @@ func makeTaskDefinitionWithServiceAccount(name, namespace, serviceAccountName st
 				"annotation1": "annotation2",
 			},
 		},
-		Spec: klcv1alpha3.KeptnTaskDefinitionSpec{
-			Container: &klcv1alpha3.ContainerSpec{
+		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
+			Container: &klcv1beta1.ContainerSpec{
 				Container: &v1.Container{},
 			},
 			ImagePullSecrets: imagePullSecrets,
-			ServiceAccount: &klcv1alpha3.ServiceAccountSpec{
+			ServiceAccount: &klcv1beta1.ServiceAccountSpec{
 				Name: serviceAccountName,
 			},
-			AutomountServiceAccountToken: &klcv1alpha3.AutomountServiceAccountTokenSpec{
+			AutomountServiceAccountToken: &klcv1beta1.AutomountServiceAccountTokenSpec{
 				Type: token,
 			},
 			TTLSecondsAfterFinished: ttlSeconds,

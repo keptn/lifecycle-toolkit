@@ -112,6 +112,7 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		metric.Status.LastUpdated = metav1.Time{Time: time.Now()}
 		reconcile = ctrl.Result{Requeue: false}
 	} else {
+		metric.Status.ErrMsg = ""
 		metric.Status.Value = value
 		metric.Status.RawValue = cupSize(rawValue)
 		metric.Status.LastUpdated = metav1.Time{Time: time.Now()}

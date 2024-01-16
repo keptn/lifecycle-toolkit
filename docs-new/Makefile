@@ -1,7 +1,7 @@
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # renovate: datasource=docker depName=squidfunk/mkdocs-material
-MKDOCS_DOCKER_IMAGE_VERSION=9.5.2
+MKDOCS_DOCKER_IMAGE_VERSION=9.5.3
 MKDOCS_DOCKER_IMAGE=squidfunk/mkdocs-material
 
 INTERACTIVE:=$(shell [ -t 0 ] && echo 1)
@@ -63,7 +63,7 @@ lint: lint-fix
 # - .markdownlintignore holds the configuration for files to be ignored
 # - .markdownlint.yaml contains the rules for markdownfiles
 # renovate: datasource=docker depName=davidanson/markdownlint-cli2-rules
-MDL_DOCKER_VERSION := v0.11.0
+MDL_DOCKER_VERSION := v0.12.0
 MDL_CMD := docker run -v $(ROOT_DIR)../:/workdir --rm 
 
 .PHONY: markdownlint markdownlint-fix

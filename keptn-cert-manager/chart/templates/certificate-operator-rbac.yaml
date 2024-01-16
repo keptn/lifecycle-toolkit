@@ -3,9 +3,12 @@ kind: Role
 metadata:
   name: certificate-operator-role
   namespace: {{ .Release.Namespace | quote }}
+  {{- $annotations := include "common.annotations" (dict "context" .) }}
+  {{- with $annotations }}
+  annotations: {{- . -}}
+  {{- end }}
   labels:
   {{- include "common.labels.standard" (dict "context" . ) | nindent 4 }}
-  {{- include "common.annotations" ( dict "context" . ) }}
 rules:
 - apiGroups:
   - ""
@@ -31,6 +34,9 @@ kind: ClusterRole
 metadata:
   name: certificate-operator-role
   namespace: {{ .Release.Namespace | quote }}
+  {{- with $annotations }}
+  annotations: {{- . -}}
+  {{- end }}
   labels:
   {{- include "common.labels.standard" (dict "context" .) | nindent 4 }}
 rules:
@@ -78,6 +84,9 @@ kind: ClusterRoleBinding
 metadata:
   name: certificate-operator-rolebinding
   namespace: {{ .Release.Namespace | quote }}
+  {{- with $annotations }}
+  annotations: {{- . -}}
+  {{- end }}
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator

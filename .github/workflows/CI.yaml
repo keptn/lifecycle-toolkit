@@ -169,7 +169,7 @@ jobs:
           outputs: type=docker,dest=/tmp/${{ matrix.config.name }}-image.tar
 
       - name: Upload image as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.config.name }}-image.tar
           path: /tmp/${{ matrix.config.name }}-image.tar
@@ -185,7 +185,7 @@ jobs:
         run: echo "" > tag
 
       - name: Upload tag for tests
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: dev-${{ env.DATETIME }}
           path: tag
@@ -223,13 +223,6 @@ jobs:
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/e2e-test.yml
-
-  performance_tests:
-    name: Performance Tests
-    needs: [prepare_ci_run, build_image]
-    with:
-      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-    uses: ./.github/workflows/performance-test.yml
 
   helm_charts_publish:
     name: Publish helm chart changes to charts repo

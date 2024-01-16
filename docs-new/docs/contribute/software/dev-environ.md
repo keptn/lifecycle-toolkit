@@ -164,8 +164,6 @@ You can run individual tests with the `kubectl` command;
 see the *Makefile* for the specific syntax of each test.
 
 Logs are printed only when the test fails.
-To force a failure,
-modify some value that appears in an assert file of the test.
 
 ### Component test
 

@@ -163,7 +163,6 @@ tests locally and then cleans up your local environment.
 You can run individual tests with the `kubectl` command;
 see the *Makefile* for the specific syntax of each test.
 
-Logs are printed only when the test fails.
 
 ### Component test
 

@@ -10,7 +10,7 @@ with the ability to handle extra phases.
 It can execute the pre/post-deployment evaluations of a Workload
 and run pre/post-deployment tasks.
 
-In its state, it tracks the currently active `Workload Instances`,
+In its state, it tracks the currently active `Workload Instances`
 (`Pod`, `DaemonSet`, `StatefulSet`, and `ReplicaSet` resources),
 as well as the overall state of the Pre Deployment phase,
 which Keptn can use to determine
@@ -97,9 +97,9 @@ Annotations take precedence over labels,
 and the `keptn.sh` keys take precedence over `app.kubernetes.io` keys.
 In other words:
 
-* The operator first checks if the `keptn.sh/` key is present
+* The operator first checks if the `keptn.sh/*` key is present
   in the annotations, and then in the labels.
-* If neither is the case, it looks for the `app.kubernetes.io/` equivalent,
+* If neither is the case, it looks for the `app.kubernetes.io/*` equivalent,
   again first in the annotations, then in the labels.
 
 Keptn automatically generates appropriate

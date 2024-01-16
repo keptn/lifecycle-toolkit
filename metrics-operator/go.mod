@@ -3,7 +3,7 @@ module github.com/keptn/lifecycle-toolkit/metrics-operator
 go 1.20
 
 require (
-	github.com/DataDog/datadog-api-client-go/v2 v2.20.0
+	github.com/DataDog/datadog-api-client-go/v2 v2.21.0
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.4.1
 	github.com/gorilla/mux v1.8.1
@@ -15,7 +15,7 @@ require (
 	github.com/prometheus/client_model v0.5.0
 	github.com/prometheus/common v0.45.0
 	github.com/stretchr/testify v1.8.4
-	golang.org/x/exp v0.0.0-20240110193028-0dcbfd608b1e
+	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3
 	golang.org/x/net v0.20.0
 	gopkg.in/inf.v0 v0.9.1
 	k8s.io/api v0.28.5
@@ -24,7 +24,7 @@ require (
 	k8s.io/apiserver v0.28.5
 	k8s.io/client-go v0.28.5
 	k8s.io/component-base v0.28.5
-	k8s.io/klog/v2 v2.110.1
+	k8s.io/klog/v2 v2.120.0
 	k8s.io/metrics v0.28.5
 	sigs.k8s.io/controller-runtime v0.16.3
 	sigs.k8s.io/custom-metrics-apiserver v1.28.0

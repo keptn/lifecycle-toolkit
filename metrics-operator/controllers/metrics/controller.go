@@ -106,7 +106,7 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	value, rawValue, err := r.getResults(ctx, metric, provider, metricProvider)
 
 	reconcile = r.updateMetric(metric, value, rawValue, reconcile, err)
-
+  
 	if err := r.Client.Status().Update(ctx, metric); err != nil {
 		r.Log.Error(err, "Failed to update the Metric status", "requestInfo", requestInfo)
 		return ctrl.Result{}, err

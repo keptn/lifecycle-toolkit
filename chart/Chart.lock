@@ -9,4 +9,4 @@ dependencies:
   repository: file://../metrics-operator/chart
   version: 0.1.0
 digest: sha256:ab7d035d4105c783c6d8914d455ecb41eb6b305ec6c1907bf2a2bbfa60bc95f0
-generated: "2023-11-24T07:22:41.600191654+01:00"
+generated: "2024-01-15T15:02:08.867692+01:00"

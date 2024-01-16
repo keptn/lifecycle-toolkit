@@ -104,9 +104,27 @@ rules:
   resources:
   - keptnappcontexts
   verbs:
+  - create
+  - delete
   - get
   - list
+  - patch
+  - update
   - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappcontexts/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
+  - keptnappcontexts/status
+  verbs:
+  - get
+  - patch
+  - update
 - apiGroups:
   - lifecycle.keptn.sh
   resources:

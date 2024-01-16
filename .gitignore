@@ -54,4 +54,4 @@ readme-generator-for-helm/
 /test.yaml
 **helm_tests_output.yaml
 
-/docs-new/site
+/docs/site

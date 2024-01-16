@@ -21,7 +21,7 @@ PWD=$(shell pwd)
 
 .PHONY: docs-build
 docs-build:
-	$(DOCKER_CMD) -v ${PWD}/docs-new:/docs-new \
+	$(DOCKER_CMD) -v ${PWD}/docs:/docs \
 		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
 		-v ${PWD}/requirements.txt:/requirements.txt \
 		-v ${PWD}/site:/site \
@@ -34,7 +34,7 @@ docs-build:
 .PHONY: docs-serve
 docs-serve:
 	$(DOCKER_CMD) -p $(PORT):$(PORT) \
-		-v ${PWD}/docs-new:/docs-new \
+		-v ${PWD}/docs:/docs \
 		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
 		-v ${PWD}/requirements.txt:/requirements.txt \
 		-v ${PWD}/site:/site \
@@ -50,7 +50,7 @@ docs-serve:
 HTMLTEST_VERSION := v0.17.0
 htmltest: docs-build
 	$(DOCKER_CMD) \
-		-v $(PWD)/docs-new/.htmltest.yml:/.htmltest.yml \
+		-v $(PWD)/docs/.htmltest.yml:/.htmltest.yml \
 		-v ${PWD}/site:/site \
 		-v ${PWD}/tmp/.htmltest:/tmp/.htmltest \
 		wjdp/htmltest:$(HTMLTEST_VERSION) -c /.htmltest.yml /site

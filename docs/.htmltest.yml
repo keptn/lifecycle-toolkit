@@ -8,7 +8,7 @@ IgnoreURLs:
   - "localhost"
   - "twitter.com"
   - "fonts.gstatic.com"
-  - "github.com/keptn/lifecycle-toolkit/edit/main/docs-new"
-  - "github.com/keptn/lifecycle-toolkit/raw/main/docs-new"
+  - "github.com/keptn/lifecycle-toolkit/edit/main/docs"
+  - "github.com/keptn/lifecycle-toolkit/raw/main/docs"
 StripQueryString: false
 OutputDir: /tmp/.htmltest

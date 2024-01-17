@@ -1,6 +1,6 @@
-# Refinement timeblock
+# Refinement process
 
-During Refinement timeblock, maintainers engage in technical
+During the Refinement timeblock in community meetings, maintainers engage in technical
 discussions on open issues and pull requests.
 This dedicated time allows for in-depth conversations, knowledge sharing,
 and collective decision-making.
@@ -23,13 +23,13 @@ entire Keptn community.
 ## Contributor guidance
 
 Contributors proposing new features are encouraged to participate in
-[refinement meetings](https://community.cncf.io/keptn-community/) related
-to their contributions.
+refinement sessions during [community meetings](https://community.cncf.io/keptn-community/) to talk
+about their contributions.
 This provides valuable insights into ongoing technical discussions and
 aligns their efforts with the broader project vision.
 Follow these steps:
 
-1. Review the project's [contributing guide](../docs/contrib-guidelines-docs.md)
+1. Review the project's [contributing guide](../index.md)
 for information on upcoming refinement meetings.
 1. Attend relevant refinement meetings to present and discuss proposed features.
 1. Actively engage in technical discussions, seeking feedback and guidance from
@@ -45,5 +45,6 @@ community environment.
 - Shared understanding among maintainers and contributors on ongoing developments.
 - Improved contributions via collaborative discussions and refinement.
 - Documented decisions and action items for future reference in project documentation.
+
 This refined process aligns with our commitment to open-source principles, ensuring
 transparency, inclusivity, and technical excellence within the Keptn community.

@@ -92,13 +92,13 @@ is stored under the `docs-new/contribute` directory.
 
 The subdirectories of the contribution guide are:
 
-- **docs** (Documentation contributions):
-  Information that is specific to documentation contributions
 - **general** (General information):
   Information that is applicable to all contributors,
   whether contributing software or documentation
 - **software** (Software contributions):
   Information that is specific to software contributions
+- **docs** (Documentation contributions):
+  Information that is specific to documentation contributions
 
 We also have *CONTRIBUTING.md* files located in the
 home directory of the *lifecycle-toolkit* repository

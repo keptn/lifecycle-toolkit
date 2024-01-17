@@ -30,7 +30,7 @@ The subdirectories with content are:
 - `installation`: Requirements and instructions for installing and enabling Keptn
 - `migrate`: Information to help users who are migrating to Keptn from Keptn v1
 - `reference`: Reference pages for the CRDs and APIs that Keptn provides
-- `use-cases`: Examples and exercises of using Keptn in different scenarios
+- `use-cases`: Examples and exercises of using Keptn in specific scenarios
 
 ### Working with reference pages
 

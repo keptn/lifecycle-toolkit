@@ -38,6 +38,6 @@ This version represents the pre-release iteration of the documentation for the u
 
 ## Previous Versions
 
-Keptn documentation is versioned but only publishes the latest release of Keptn.
+Keptn documentation is versioned but only the documentation for the current stable release of Keptn is published.
 By default, the version for the current Keptn release
 is displayed on the documentation page.

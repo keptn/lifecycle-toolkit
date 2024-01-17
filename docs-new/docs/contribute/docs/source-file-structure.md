@@ -1,7 +1,7 @@
 # Source File Structure
 
 The source files for the Keptn documentation
-are stored in the same GitHub repository as the source code.
+are stored in the same GitHub repository as the source code for the software.
 This page explains how the documentation source files are organized.
 
 > **Note** The structure of the documentation

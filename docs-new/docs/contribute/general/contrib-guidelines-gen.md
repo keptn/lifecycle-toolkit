@@ -48,7 +48,7 @@ please create an issue on the GitHub repository.
 
 * Create and refine a ticket
   * When proposing new work, start by creating an issue or ticket in the project's
-  [issue tracker](https://github.com/keptn/lifecycle-toolkit/issue).
+  [issue tracker](https://github.com/keptn/lifecycle-toolkit/issues).
   * Actively participate in the refinement meetings sessions that are part of the weekly
   [community meetings](https://community.cncf.io/keptn-community/).
   * In these sessions, everyone discusses the proposed work, whether it is a good idea,

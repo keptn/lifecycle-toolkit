@@ -173,7 +173,7 @@ From the `lifecycle-operator` directory, run the component tests:
 
 ### End-to-end test
 
-From the `lifecycle-operator` directory, run the end-to-end tests:
+From the `lifecycle-operator` or `scheduler` directory, run the end-to-end tests:
 
   ```shell
   make e2e-test

@@ -64,7 +64,8 @@ We are using [markdownlint](https://github.com/DavidAnson/markdownlint) to ensur
 within our Markdown files.
 Specifically we are using [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli).
 
-We are using `GNU MAKE` to ensure the same functionality locally and within our CI builds.
+>
+We are using `GNU make` to ensure the same functionality locally and within our CI builds.
 This should allow easier debugging and problem resolution.
 
 ### Markdownlint execution

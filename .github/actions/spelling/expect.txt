@@ -259,6 +259,7 @@ imagepullsecret
 IManager
 IMeter
 Infof
+inlinehilite
 inlines
 Intelli
 intervalresult
@@ -384,6 +385,7 @@ Lato
 LFC
 Lifcycle
 lifecyclekeptnsh
+linenums
 linkedin
 linktitle
 linting
@@ -517,6 +519,7 @@ providerresult
 pyfunction
 pygments
 pymdown
+pymdownx
 pyyaml
 quickstart
 rangespec
@@ -593,9 +596,11 @@ storageversion
 sts
 subchart
 subdir
+subfolders
 subjectaccessreviews
 substitue
 substr
+superfences
 superinterval
 SVCNAME
 sync'ed
@@ -690,5 +695,3 @@ yml
 YOURNAME
 yourregistry
 youtube
-pymdownx
-superfences

@@ -27,7 +27,7 @@
         "Makefile",
         "chart/values.yaml",
         "chart/README.md",
-        "docs/content/en/docs/getting-started/_index.md"
+        "docs/docs/getting-started/observability.md"
       ]
     },
     "keptn-cert-manager": {

@@ -24,7 +24,7 @@
 
 SLO converter is a tool to convert the old `slo.yaml`
 [file format](https://github.com/keptn/spec/blob/master/service_level_objective.md) into the new
-`AnalysisDefinition` [custom resource definition](../../docs/content/en/docs/reference/api-reference/metrics/v1beta1/).
+`AnalysisDefinition` [custom resource definition](https://keptn.sh/stable/docs/reference/api-reference/metrics/v1beta1/).
 The converter is part of `metrics-operator` image.
 
 ## Usage

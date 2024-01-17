@@ -6,7 +6,7 @@ metadata:
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnAppVersion
 metadata:
-  name: podtato-head-0.1.0-6b86b273
+  name: podtato-head-95a0b0ddca-6b86b273
 status:
   currentPhase: Completed
   postDeploymentEvaluationStatus: Succeeded

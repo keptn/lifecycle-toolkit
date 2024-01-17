@@ -160,7 +160,7 @@ Run the integration tests from the root directory of your clone:
 This runs a series of Kuttl
 ([KUbernetes Test TooL](https://kuttl.dev/))
 tests locally and then cleans up your local environment.
-You can run individual tests with the `kubectl` command;
+You can run individual tests with the `kubectl kuttl` command;
 see the *Makefile* for the specific syntax of each test.
 
 ### Component test

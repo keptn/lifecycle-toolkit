@@ -4,9 +4,8 @@ import (
 	"context"
 	"testing"
 
-	lfcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	lfcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	lfcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -14,12 +13,12 @@ import (
 
 //nolint:dogsled
 func TestKeptnAppVersionReconciler_reconcileWorkloads_noWorkloads(t *testing.T) {
-	appVersion := &lfcv1alpha3.KeptnAppVersion{
+	appVersion := &lfcv1beta1.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "appversion",
 			Namespace: "default",
 		},
-		Spec: lfcv1alpha3.KeptnAppVersionSpec{
+		Spec: lfcv1beta1.KeptnAppVersionSpec{
 			AppName: "app",
 		},
 	}
@@ -37,14 +36,14 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads_noWorkloads(t *testing.T) 
 
 //nolint:dogsled
 func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
-	appVersion := &lfcv1alpha3.KeptnAppVersion{
+	appVersion := &lfcv1beta1.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "appversion",
 			Namespace: "default",
 		},
-		Spec: lfcv1alpha3.KeptnAppVersionSpec{
-			KeptnAppSpec: lfcv1alpha3.KeptnAppSpec{
-				Workloads: []lfcv1alpha3.KeptnWorkloadRef{
+		Spec: lfcv1beta1.KeptnAppVersionSpec{
+			KeptnAppSpec: lfcv1beta1.KeptnAppSpec{
+				Workloads: []lfcv1beta1.KeptnWorkloadRef{
 					{
 						Name:    "workload",
 						Version: "ver1",
@@ -66,9 +65,9 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StatePending, appVersion.Status.WorkloadOverallStatus)
 	require.Len(t, appVersion.Status.WorkloadStatus, 1)
-	require.Equal(t, []lfcv1alpha3.WorkloadStatus{
+	require.Equal(t, []lfcv1beta1.WorkloadStatus{
 		{
-			Workload: lfcv1alpha3.KeptnWorkloadRef{
+			Workload: lfcv1beta1.KeptnWorkloadRef{
 				Name:    "workload",
 				Version: "ver1",
 			},
@@ -78,13 +77,13 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 
 	// Creating WorkloadInstace that is not part of the App -> should stay Pending
 
-	wi1 := &lfcv1alpha4.KeptnWorkloadVersion{
+	wi1 := &lfcv1beta1.KeptnWorkloadVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "workload",
 			Namespace: "default",
 		},
-		Spec: lfcv1alpha4.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: lfcv1alpha3.KeptnWorkloadSpec{
+		Spec: lfcv1beta1.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: lfcv1beta1.KeptnWorkloadSpec{
 				AppName: "app2",
 			},
 		},
@@ -101,9 +100,9 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StatePending, appVersion.Status.WorkloadOverallStatus)
 	require.Len(t, appVersion.Status.WorkloadStatus, 1)
-	require.Equal(t, []lfcv1alpha3.WorkloadStatus{
+	require.Equal(t, []lfcv1beta1.WorkloadStatus{
 		{
-			Workload: lfcv1alpha3.KeptnWorkloadRef{
+			Workload: lfcv1beta1.KeptnWorkloadRef{
 				Name:    "workload",
 				Version: "ver1",
 			},
@@ -113,13 +112,13 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 
 	// Creating WorkloadVersion of App with progressing state -> appVersion should be Progressing
 
-	wi2 := &lfcv1alpha4.KeptnWorkloadVersion{
+	wi2 := &lfcv1beta1.KeptnWorkloadVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "app-workload-ver1",
 			Namespace: "default",
 		},
-		Spec: lfcv1alpha4.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: lfcv1alpha3.KeptnWorkloadSpec{
+		Spec: lfcv1beta1.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: lfcv1beta1.KeptnWorkloadSpec{
 				AppName: "app",
 			},
 		},
@@ -143,9 +142,9 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateProgressing, appVersion.Status.WorkloadOverallStatus)
 	require.Len(t, appVersion.Status.WorkloadStatus, 1)
-	require.Equal(t, []lfcv1alpha3.WorkloadStatus{
+	require.Equal(t, []lfcv1beta1.WorkloadStatus{
 		{
-			Workload: lfcv1alpha3.KeptnWorkloadRef{
+			Workload: lfcv1beta1.KeptnWorkloadRef{
 				Name:    "workload",
 				Version: "ver1",
 			},
@@ -170,9 +169,9 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateSucceeded, appVersion.Status.WorkloadOverallStatus)
 	require.Len(t, appVersion.Status.WorkloadStatus, 1)
-	require.Equal(t, []lfcv1alpha3.WorkloadStatus{
+	require.Equal(t, []lfcv1beta1.WorkloadStatus{
 		{
-			Workload: lfcv1alpha3.KeptnWorkloadRef{
+			Workload: lfcv1beta1.KeptnWorkloadRef{
 				Name:    "workload",
 				Version: "ver1",
 			},
@@ -183,14 +182,14 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 
 //nolint:dogsled
 func TestKeptnAppVersionReconciler_handleUnaccessibleWorkloadVersionList(t *testing.T) {
-	appVersion := &lfcv1alpha3.KeptnAppVersion{
+	appVersion := &lfcv1beta1.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "appversion",
 			Namespace: "default",
 		},
-		Spec: lfcv1alpha3.KeptnAppVersionSpec{
-			KeptnAppSpec: lfcv1alpha3.KeptnAppSpec{
-				Workloads: []lfcv1alpha3.KeptnWorkloadRef{
+		Spec: lfcv1beta1.KeptnAppVersionSpec{
+			KeptnAppSpec: lfcv1beta1.KeptnAppSpec{
+				Workloads: []lfcv1beta1.KeptnWorkloadRef{
 					{
 						Name:    "workload",
 						Version: "ver1",
@@ -209,9 +208,9 @@ func TestKeptnAppVersionReconciler_handleUnaccessibleWorkloadVersionList(t *test
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateUnknown, appVersion.Status.WorkloadOverallStatus)
 	require.Len(t, appVersion.Status.WorkloadStatus, 1)
-	require.Equal(t, []lfcv1alpha3.WorkloadStatus{
+	require.Equal(t, []lfcv1beta1.WorkloadStatus{
 		{
-			Workload: lfcv1alpha3.KeptnWorkloadRef{
+			Workload: lfcv1beta1.KeptnWorkloadRef{
 				Name:    "workload",
 				Version: "ver1",
 			},

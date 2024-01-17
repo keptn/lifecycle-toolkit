@@ -805,4 +805,4 @@ metadata:
   name: grafana-dashboard-keptn-applications
   namespace: monitoring
   labels:
-    grafana_dashboard: "1"
+    grafana_dashboard: "0"

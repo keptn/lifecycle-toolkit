@@ -1,0 +1,53 @@
+[data-md-color-scheme="default"] {
+    color-scheme: light;
+    --md-primary-fg-color:        #006bba;
+    --md-primary-fg-color--light: #198fde;
+    --md-primary-fg-color--dark:  #004f9b;
+
+    --md-primary-bg-color:               #FFFFFFFF;
+    --md-primary-bg-color--light:        #FFFFFFB3;
+
+    --md-typeset-color:                  var(--md-default-fg-color);
+
+    --md-accent-fg-color:                #D8E6F4FF;
+    --md-accent-fg-color--transparent:   #4051B51A;
+
+    --md-accent-bg-color:                var(--md-primary-bg-color);
+    --md-accent-bg-color--light:         var(--md-primary-bg-color--light);
+
+    --md-default-fg-color:               hsla(0, 0%, 0%, 0.87);
+    --md-default-fg-color--light:        hsla(0, 0%, 0%, 0.54);
+    --md-default-fg-color--lighter:      hsla(0, 0%, 0%, 0.32);
+    --md-default-fg-color--lightest:     hsla(0, 0%, 0%, 0.07);
+    --md-default-bg-color:               hsla(0, 0%, 100%, 1);
+    --md-default-bg-color--light:        hsla(0, 0%, 100%, 0.7);
+    --md-default-bg-color--lighter:      hsla(0, 0%, 100%, 0.3);
+    --md-default-bg-color--lightest:     hsla(0, 0%, 100%, 0.12);
+}
+
+[data-md-color-scheme="slate"] {
+    color-scheme: dark;
+    --md-primary-fg-color:        #004f9b;
+    --md-primary-fg-color--light: #0b7dcc;
+    --md-primary-fg-color--dark:  #004f9b;
+
+    --md-primary-bg-color:               #FFFFFFFF;
+    --md-primary-bg-color--light:        #FFFFFFB3;
+
+    --md-typeset-color:                  var(--md-default-fg-color);
+
+    --md-accent-fg-color:                #2774b6;
+    --md-accent-fg-color--transparent:   #2774b61A;
+
+    --md-accent-bg-color:                var(--md-primary-bg-color);
+    --md-accent-bg-color--light:         var(--md-primary-bg-color--light);
+
+    --md-default-fg-color:               hsla(0, 0%, 100%, 1);
+    --md-default-fg-color--light:        hsla(0, 0%, 100%, 0.7);
+    --md-default-fg-color--lighter:      hsla(0, 0%, 100%, 0.3);
+    --md-default-fg-color--lightest:     hsla(0, 0%, 100%, 0.12);
+    --md-default-bg-color:               hsla(0, 0%, 0%, 0.67);
+    --md-default-bg-color--light:        hsla(0, 0%, 0%, 0.54);
+    --md-default-bg-color--lighter:      hsla(0, 0%, 0%, 0.32);
+    --md-default-bg-color--lightest:     hsla(0, 0%, 0%, 0.07);
+}

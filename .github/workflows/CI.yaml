@@ -15,6 +15,7 @@ on:
       - "**.md"
       - "netlify.toml"
       - "mkdocs.yml"
+      - ".github/actions/spelling/*"
 
 env:
   GO_VERSION: "~1.20"
@@ -91,7 +92,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Go 1.x
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
@@ -222,13 +223,6 @@ jobs:
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/e2e-test.yml
-
-  performance_tests:
-    name: Performance Tests
-    needs: [prepare_ci_run, build_image]
-    with:
-      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-    uses: ./.github/workflows/performance-test.yml
 
   helm_charts_publish:
     name: Publish helm chart changes to charts repo

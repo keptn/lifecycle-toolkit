@@ -144,7 +144,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Cosign
-        uses: sigstore/cosign-installer@1fc5bd396d372bee37d608f955b336615edf79c8 # v3.2.0
+        uses: sigstore/cosign-installer@9614fae9e5c5eddabb09f90a270fcb487c9f7149 # v3.3.0
 
       - name: Clean up image tag
         id: clean-image-tag
@@ -191,7 +191,7 @@ jobs:
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0.15.1
+        uses: anchore/sbom-action@v0.15.3
         with:
           image: ${{ env.IMAGE_NAME }}:${{ steps.clean-image-tag.outputs.IMAGE_TAG }}
           artifact-name: sbom-${{ matrix.config.name }}
@@ -202,17 +202,6 @@ jobs:
         with:
           tag_name: ${{ matrix.config.tagName }}
           files: ./sbom-${{ matrix.config.name }}.spdx.json
-
-  update-docs:
-    name: Update Documentation
-    needs:
-      - release-please
-    if: needs.release-please.outputs.keptn-release-created == 'true'
-    with:
-      tag_name: ${{ needs.release-please.outputs.keptn-tag-name }}
-    uses: ./.github/workflows/release-docs.yml
-    secrets: inherit
-
   update-examples:
     name: Update examples
     needs:

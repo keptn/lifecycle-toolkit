@@ -38,7 +38,9 @@ First, we need to deploy our application to the cluster.
 For this we are going to
 use a single service `podtato-head` application.
 
+```yaml
 {% include "./assets/hpa/sample-app.yaml" %}
+```
 
 Please create a `podtato-kubectl` namespace and apply the above manifest
 to your cluster and continue with the next steps.
@@ -57,7 +59,9 @@ These metrics are
 exposed via the custom metrics API, which gives us the possibility to configure
 the HPA to react on the values of these metrics:
 
+```yaml
 {% include "./assets/hpa/keptnmetric.yaml" %}
+```
 
 For more information about the `KeptnMetric` and `KeptnMetricsProvider` custom resources,
 please refer to the [CRD documentation](../reference/api-reference/metrics/v1beta1/index.md).
@@ -89,7 +93,9 @@ our cluster in the status of our `KeptnMetric` custom resource, we can configure
 a `HorizontalPodAutoscaler` to make use of this information and therefore scale
 our application automatically:
 
+```yaml
 {% include "./assets/hpa/hpa.yaml" %}
+```
 
 As we can see in this example, we are now referring to the `KeptnMetric`
 we applied earlier, and tell the HPA to scale up our application, until our

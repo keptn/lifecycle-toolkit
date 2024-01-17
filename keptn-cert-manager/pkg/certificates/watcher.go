@@ -135,3 +135,11 @@ func (watcher *CertificateWatcher) ValidateCertificateExpiration(certData []byte
 	}
 	return true, nil
 }
+
+type NoOpCertificateWatcher struct{}
+
+func (nw *NoOpCertificateWatcher) WaitForCertificates() {}
+
+func NewNoOpCertificateWatcher() *NoOpCertificateWatcher {
+	return &NoOpCertificateWatcher{}
+}

@@ -4,11 +4,11 @@ metadata:
   name: lifecycle-mutating-webhook-configuration
   annotations:
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
+    {{- include "common.annotations" (dict "context" .) }}
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn"
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include "common.annotations" ( dict "context" . ) }}
 webhooks:
 - admissionReviewVersions:
   - v1

@@ -14,27 +14,33 @@ metadata:
 spec:
   objectives:
     - analysisValueTemplateRef:
-        name: <name-of-referenced-analysisValueTemplateRef-resource>
-        namespace: <namespace-of-the-template-ref>
+        name: <name-of-referenced-analysisValueTemplate-resource>
+        namespace: <namespace-of-referenced-analysisValueTemplate-resource>
       target:
-        failure | warning:
+        failure:
           <operator>:
-            <operatorValue>: <quantity> |
-            <RangeValue>:
-                lowbound: <quantity>
-                highBound: <quantity>
+            fixedValue: <integer> | <quantity>
+          inRange: | notInRange:
+            lowBound: <integer> | <quantity>
+            highBound: <integer> | <quantity>
+        warning:
+          <operator>:
+            fixedValue: <integer> | <quantity>
+          inRange: | notInRange:
+            lowBound: <integer> | <quantity>
+            highBound: <integer> | <quantity>
       weight: <integer>
       keyObjective: <boolean>
   totalScore:
-    passPercentage: 90
-    warningPercentage: 75
+    passPercentage: <min-percentage-to-pass>
+    warningPercentage: <min-percentage-for-warning>
 ```
 
 ## Fields
 
 * **apiVersion** -- API version being used
 * **kind** -- Resource type.
-   Must be set to `AnalysisDefinition`.
+  Must be set to `AnalysisDefinition`.
 * **metadata**
   * **name** -- Unique name of this analysis definition.
     Names must comply with the
@@ -46,13 +52,13 @@ spec:
     unless it resides in the same namespace as the `Analysis` resource.
 * **spec**
   * **objectives**
-    This is a list of objectives whose results are combined
+    A list of objectives whose results are combined
     to determine whether the analysis fails, passes, or passes with a warning.
     * **analysisValueTemplateRef** (required) --
       This string marks the beginning of each objective
       * **name** (required) -- The `metadata.name` value of the
-      [AnalysisDefinition](analysisdefinition.md)
-      resource used for this objective.
+      [AnalysisValueTemplateRef](analysisvaluetemplate.md)
+      resource that defines the SLI used for this objective.
       That resource defines the data provider and the query to use.
       * **namespace** --
         Namespace of the `analysisValueTemplateRef` resource.
@@ -65,9 +71,17 @@ spec:
         of the
         [Analysis](analysis.md)
         resource after the analysis runs.
+
+        To use a value that includes a fraction, use a Kubernetes
+        [quantity](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/)
+        value rather than a `float`.
+        For example, use the `3m` quantity
+        rather than the `0.003` float;
+        a `float` value here causes `Invalid value` errors.
+        A whole number (integer) is also a legal `quantity` value.
         * **failure** -- criteria for failure, specified as
           `operator: <quantity>`.
-          This can be specified either as an absolute value
+          This can be specified either as an absolute `quantity` value
           or as a range of values.
 
           Valid operators for absolute values are:
@@ -83,15 +97,18 @@ spec:
 
             Each of these operators require two arguments:
 
-            * `lowBound` -- minimum value of the range included or excluded
-            * `highBound` -- maximum value of the range included or excluded
+            * `lowBound` -- minimum `quantity` value
+              of the range included or excluded
+            * `highBound` -- maximum `quantity` value
+              of the range included or excluded
         <!-- markdownlint-disable -->
         * **warning** -- criteria for a warning,
           specified in the same way as the `failure` field.
       * **weight**  -- used to emphasize the importance
         of one `objective` over others
       * **keyObjective** -- If set to `true`,
-        the entire analysis fails if this objective fails
+        the entire analysis fails if this particular objective fails,
+        no matter what the actual `score` of the analysis is
   * **totalScore** (required) --
     * **passPercentage** -- threshold to reach for the full analysis
       (all objectives) to pass
@@ -104,48 +121,19 @@ spec:
 An `AnalysisDefinition` resource contains a list of objectives to satisfy.
 Each of these objectives must specify:
 
+* The `AnalysisValueTemplate` resource that contains the SLIs,
+  defining the data provider from which to gather the data
+  and how to compute the Analysis
 * Failure or warning target criteria
 * Whether the objective is a key objective
   meaning that its failure fails the Analysis
 * Weight of the objective on the overall Analysis
-* The `AnalysisValueTemplate` resource that contains the SLIs,
-  defining the data provider from which to gather the data
-  and how to compute the Analysis
 
 ## Example
 
-```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: AnalysisDefinition
-metadata:
-  name: ed-my-proj-dev-svc1
-  namespace: keptn-system
-spec:
-  objectives:
-    - analysisValueTemplateRef:
-        name: response-time-p95
-        namespace: keptn-system
-      target:
-        failure:
-          <operator>:
-            fixedValue: integer> |
-            inRange: | notInRange:
-              lowBound: <integer-quantity>
-              highBound: <integer-quantity>
-        warning:
-          <operator>:
-            fixedValue: integer> |
-            inRange: | notInRange:
-              lowBound: <integer-quantity>
-              highBound: <integer-quantity>
-      weight: <integer>
-      keyObjective: <boolean>
-  totalScore:
-    passPercentage: <integer-percentage>
-    warningPercentage: <integer-percentage>
-```
+{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysisdefinition.yaml" >}}
 
-For an example of how to implement the Keptn Analysis feature, see the
+For a full example of how to implement the Keptn Analysis feature, see the
 [Analysis](../../guides/slo.md)
 guide page.
 

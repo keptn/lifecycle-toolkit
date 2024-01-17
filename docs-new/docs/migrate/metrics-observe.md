@@ -10,9 +10,9 @@ appropriate Keptn facilities:
   [Keptn Evaluations](../guides/evaluations.md)
   to do a simple evaluation of the metrics data you capture.
   To implement this, transfer the information from the Keptn v1
-  [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+  [sli.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
   and
-  [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+  [slo.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
   files into
   [KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)
   resources.
@@ -45,9 +45,9 @@ differs from that of Keptn v1 quality gates:
   and gives it a unique `name` that can be referenced
   for Keptn Metrics (which are also used for Evaluations) and Analysis.
 * Queries and objectives that are specified in your Keptn v1
-  [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+  [sli.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
   and
-  [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+  [slo.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
   files are transferred/converted into Keptn resources.
 
 ## Transfer Keptn v1 SLIs/SLOs to evaluation resources
@@ -57,11 +57,11 @@ Simple comparisons of data can be implemented as
 To implement this:
 
 * Transfer the information from the Keptn v1
-  [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+  [sli.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
   files into
   [KeptnMetric](../reference/crd-reference/metric.md) resources
 * Transfer the information from the Keptn v1
-  [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+  [slo.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
   files into
   [KeptnEvaluationDefinition](../reference/crd-reference/evaluationdefinition.md)
   resources.
@@ -70,7 +70,7 @@ To implement this:
 
 The Keptn Analysis feature provides capabilities
 similar to those of the Keptn v1
-[Quality Gates](https://keptn.sh/docs/1.0.x/define/quality-gates/)
+[Quality Gates](https://v1.keptn.sh/docs/1.0.x/define/quality-gates/)
 feature
 but it uses Kubernetes resources to define the analysis to be done
 rather than the configuration files used for Keptn v1.
@@ -90,24 +90,24 @@ The process is:
 1. Convert the SLIs to `AnalysisValueTemplates` resources
 
    The following command sequence converts a Keptn v1
-   [sli.yaml](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+   [sli.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
    file to a Keptn
    [AnalysisValueTemplate](../reference/crd-reference/analysisvaluetemplate.md)
    resource:
 
    <!---x-release-please-start-version-->
 
-   ```shell
-   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
-   PATH_TO_SLI=sli.yaml
-   KEPTN_PROVIDER_NAME=my-prometheus-provider
-   KEPTN_PROVIDER_NAMESPACE=keptn-lifecycle-poc
+```shell
+METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
+PATH_TO_SLI=sli.yaml
+KEPTN_PROVIDER_NAME=my-prometheus-provider
+KEPTN_PROVIDER_NAMESPACE=keptn-lifecycle-poc
 
-   docker run -v .:/mydata $METRICS_OPERATOR_IMAGE \
-     --convert-sli=mydata/$PATH_TO_SLI \
-     --keptn-provider-name=$KEPTN_PROVIDER_NAME \
-     --keptn-provider-namespace=$KEPTN_PROVIDER_NAMESPACE > analysis-value-template.yaml
-   ```
+docker run -v .:/mydata $METRICS_OPERATOR_IMAGE \
+ --convert-sli=mydata/$PATH_TO_SLI \
+ --keptn-provider-name=$KEPTN_PROVIDER_NAME \
+ --keptn-provider-namespace=$KEPTN_PROVIDER_NAMESPACE > analysis-value-template.yaml
+```
 
    <!---x-release-please-end-->
 
@@ -130,14 +130,14 @@ The process is:
    Be sure to specify the namespace;
    if you omit it, the yaml file is applied to the default namespace.
 
-   ```shell
-   kubectl apply -f analysis-value-template.yaml -n keptn-lifecycle-poc
-   ```
+```shell
+kubectl apply -f analysis-value-template.yaml -n keptn-lifecycle-poc
+```
 
 1. Convert the SLO to an `AnalysisDefinition` resource:
 
    The process of converting the Keptn v1
-   [slo.yaml](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+   [slo.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
    files to
    [AnalysisDefinition](../reference/crd-reference/analysisdefinition.md)
    resources is similar to the process of converting the SLIs.
@@ -145,17 +145,17 @@ The process is:
 
    <!---x-release-please-start-version-->
 
-   ```shell
-   METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
-   PATH_TO_SLO=slo.yaml
-   ANALYSIS_VALUE_TEMPLATE_NAMESPACE=keptn-lifecycle-poc
-   ANALYSIS_DEFINITION_NAME=my-project-ad
+```shell
+METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.8.3
+PATH_TO_SLO=slo.yaml
+ANALYSIS_VALUE_TEMPLATE_NAMESPACE=keptn-lifecycle-poc
+ANALYSIS_DEFINITION_NAME=my-project-ad
 
-   docker run -v $(pwd):/mydata $METRICS_OPERATOR_IMAGE \
-     --convert-slo=/mydata/$PATH_TO_SLO \
-     --analysis-value-template-namespace=$ANALYSIS_VALUE_TEMPLATE_NAMESPACE \
-     --analysis-definition-name=$ANALYSIS_DEFINITION_NAME > analysis-definition.yaml
-   ```
+docker run -v $(pwd):/mydata $METRICS_OPERATOR_IMAGE \
+ --convert-slo=/mydata/$PATH_TO_SLO \
+ --analysis-value-template-namespace=$ANALYSIS_VALUE_TEMPLATE_NAMESPACE \
+ --analysis-definition-name=$ANALYSIS_DEFINITION_NAME > analysis-definition.yaml
+```
 
    <!---x-release-please-end-->
 
@@ -165,9 +165,9 @@ The process is:
    Be sure to add the namespace;
    if you omit it, the yaml file is applied to the default namespace.
 
-   ```shell
-   kubectl apply -f analysis-definition.yaml -n keptn-lifecycle-poc
-   ```
+```shell
+kubectl apply -f analysis-definition.yaml -n keptn-lifecycle-poc
+```
 
 1. Create a `KeptnMetricsProvider` resource
 
@@ -211,22 +211,22 @@ The process is:
    To perform an Analysis (or "trigger an evaluation" in Keptn v1 jargon),
    apply the `analysis-instance.yaml` file:
 
-   ```shell
-   kubectl apply -f analysis-instance.yaml -n keptn-lifecycle-poc
-   ```
+```shell
+kubectl apply -f analysis-instance.yaml -n keptn-lifecycle-poc
+```
 
    Retrieve the current status of the Analysis with the following command:
 
-   ```shell
-   kubectl get analysis -n keptn-lifecycle-poc
-   ```
+```shell
+kubectl get analysis -n keptn-lifecycle-poc
+```
 
    This yields an output that looks like the following:
 
-   ```shell
-   NAME                ANALYSISDEFINITION      WARNING   PASS
-   analysis-sample-1   my-project-ad             true
-   ```
+```shell
+NAME                ANALYSISDEFINITION      WARNING   PASS
+analysis-sample-1   my-project-ad             true
+```
 
    This shows that the analysis passed successfully.
 
@@ -237,39 +237,39 @@ The process is:
    with the definition of the analysis
    as well as the `status` (results) of the analysis; for example:
 
-   ```shell
-   kubectl get analysis -n keptn-lifecycle-poc -oyaml
-   ```
+```shell
+kubectl get analysis -n keptn-lifecycle-poc -oyaml
+```
 
-   ```yaml
-   apiVersion: v1
-   items:
-   - apiVersion: metrics.keptn.sh/v1beta1
-     kind: Analysis
-     metadata:
-       creationTimestamp: "2023-09-14T11:00:01Z"
-       generation: 4
-       name: analysis-sample-1
-       namespace: keptn-lifecycle-poc
-       resourceVersion: "71327"
-       uid: 1c5e043d-ed5e-42f8-ba32-b7af54b55c35
-     spec:
-       analysisDefinition:
-         name: my-project-ad
-         namespace: keptn-lifecycle-poc
-       args:
-         ns: keptn-system
-         project: my-project
-       timeframe:
-         from: "2023-09-14T11:20:19Z"
-         to: "2023-09-14T11:22:19Z"
-     status:
-       pass: true
-       raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"greaterThan":{"fixedValue":"50"}}},"warnResult":{"operator":{"greaterThan":{"fixedValue":"50"}}},"pass":true},"value":7,"score":1}],"totalScore":1,"maximumScore":1,"pass":true}'
-   kind: List
-   metadata:
-     resourceVersion: ""
-   ```
+```yaml
+apiVersion: v1
+items:
+- apiVersion: metrics.keptn.sh/v1beta1
+ kind: Analysis
+ metadata:
+   creationTimestamp: "2023-09-14T11:00:01Z"
+   generation: 4
+   name: analysis-sample-1
+   namespace: keptn-lifecycle-poc
+   resourceVersion: "71327"
+   uid: 1c5e043d-ed5e-42f8-ba32-b7af54b55c35
+ spec:
+   analysisDefinition:
+     name: my-project-ad
+     namespace: keptn-lifecycle-poc
+   args:
+     ns: keptn-system
+     project: my-project
+   timeframe:
+     from: "2023-09-14T11:20:19Z"
+     to: "2023-09-14T11:22:19Z"
+ status:
+   pass: true
+   raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{"greaterThan":{"fixedValue":"50"}}},"warnResult":{"operator":{"greaterThan":{"fixedValue":"50"}}},"pass":true},"value":7,"score":1}],"totalScore":1,"maximumScore":1,"pass":true}'
+kind: List
+metadata:
+ resourceVersion: ""
+```
 
    As can be seen in the yaml above,
    the `status.raw` property contains the detailed breakdown

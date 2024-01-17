@@ -35,23 +35,23 @@ To view DORA metrics, run the following two commands:
 
 - Retrieve the service name with:
 
-  ```shell
-  kubectl -n keptn-system get service \
-    -l control-plane=lifecycle-operator
-  ```
+```shell
+kubectl -n keptn-system get service \
+-l control-plane=lifecycle-operator
+```
 
 - Then port-forward to the name of your service:
 
-  ```shell
-  kubectl -n keptn-system port-forward \
-    service/<YOURNAME> 2222
-  ```
+```shell
+kubectl -n keptn-system port-forward \
+service/<YOURNAME> 2222
+```
 
 Then view the metrics at:
 
-  ```shell
-  http://localhost:2222/metrics
-  ```
+```shell
+http://localhost:2222/metrics
+```
 
 DORA metrics are also displayed on Grafana
 or whatever dashboard application you choose.

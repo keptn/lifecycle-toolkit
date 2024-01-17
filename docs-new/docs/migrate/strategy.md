@@ -1,12 +1,5 @@
 # Migration strategy
 
-> **Note**
-This section is under development.
-Information that is published here has been reviewed for technical accuracy
-but the format and content is still evolving.
-We hope you will contribute your experiences
-and questions that you have.
-
 Before you begin the migration project,
 we suggest that you run through the exercises in
 [Getting started](../getting-started/index.md)
@@ -30,13 +23,20 @@ Much of the logic and functionality of your Keptn v1 projects
 can be migrated to Keptn
 but must be rewritten to utilize Keptn components.
 
+Keptn targets deployments that run on Kubernetes
+but some Keptn functionality can be used with deployments
+that do not run on Kubernetes.
+See
+[Keptn for non-Kubernetes deployments](../use-cases/non-k8s.md)
+for details.
+
 Some key points:
 
 * Keptn uses native Kubernetes CRDs
   to configure SLIs/SLOs, tasks, and other elements
   that are part of the environment where the application deployment lives
   rather than using its own Git repo and its
-  [shipyard.yaml](https://keptn.sh/docs/1.0.x/reference/files/shipyard/)
+  [shipyard.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/shipyard/)
   file as Keptn v1 does.
   * See the
     [Lifecycle CRD Reference](../reference/crd-reference/index.md)
@@ -103,7 +103,7 @@ and identifies their possible disposition when you migrate to Keptn.
 
 A Keptn v1 project represents an arbitrary, higher-level grouping of services.
 A project is defined by a
-[shipyard.yaml](https://keptn.sh/docs/1.0.x/reference/files/shipyard/)
+[shipyard.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/shipyard/)
 file.
 
 Keptn does not recognize projects.
@@ -181,7 +181,7 @@ allowing a tool such as ArgoCD to handle promotion.
 
 A sequence is an ordered and user-defined sequence of tasks
 that are defined in a
-[shipyard.yaml](https://keptn.sh/docs/1.0.x/reference/files/shipyard/)
+[shipyard.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/shipyard/)
 file.
 The shipyard controller micro-service reads the shipyard file
 and (when the time is right),
@@ -260,7 +260,7 @@ whereas Keptn v1 sequences and tasks can not execute in parallel.
 ### SLIs
 
 Keptn v1
-[SLIs](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+[SLIs](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
 (Service Level Indicators)
 represent queries from the data provider
 such as Prometheus, Dynatrace, or Datadog,
@@ -297,7 +297,7 @@ resources
 ### SLOs
 
 Keptn v1
-[SLOs](https://keptn.sh/docs/1.0.x/reference/files/slo/).
+[SLOs](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/).
 can be implemented on Keptn as evaluations or analyses:
 
 * Simple evaluations of an SLI can be implemented as
@@ -321,7 +321,7 @@ can be implemented on Keptn as evaluations or analyses:
 ### Remediation
 
 Keptn does not currently support the same level of
-[remediations](https://keptn.sh/docs/1.0.x/reference/files/remediation/)
+[remediations](https://v1.keptn.sh/docs/1.0.x/reference/files/remediation/)
 as Keptn v1 does,
 but it does provide limited "Day 2" facilities:
 

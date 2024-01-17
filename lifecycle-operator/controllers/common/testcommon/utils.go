@@ -3,9 +3,8 @@ package testcommon
 import (
 	"fmt"
 
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	lfcv1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
 	"go.opentelemetry.io/otel/metric"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
@@ -31,38 +30,37 @@ func SetupSchemes() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme.Scheme))
 	utilruntime.Must(corev1.AddToScheme(scheme.Scheme))
 	utilruntime.Must(apiv1.AddToScheme(scheme.Scheme))
-	utilruntime.Must(klcv1alpha3.AddToScheme(scheme.Scheme))
-	utilruntime.Must(lfcv1alpha4.AddToScheme(scheme.Scheme))
+	utilruntime.Must(klcv1beta1.AddToScheme(scheme.Scheme))
 	utilruntime.Must(optionsv1alpha1.AddToScheme(scheme.Scheme))
 }
 
-func GetApp(name string) *klcv1alpha3.KeptnApp {
-	app := &klcv1alpha3.KeptnApp{
+func GetApp(name string) *klcv1beta1.KeptnApp {
+	app := &klcv1beta1.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       name,
 			Namespace:  "default",
 			Generation: 1,
 		},
-		Spec: klcv1alpha3.KeptnAppSpec{
+		Spec: klcv1beta1.KeptnAppSpec{
 			Version: "1.0.0",
 		},
-		Status: klcv1alpha3.KeptnAppStatus{},
+		Status: klcv1beta1.KeptnAppStatus{},
 	}
 	return app
 }
 
-func ReturnAppVersion(namespace string, appName string, version string, workloads []klcv1alpha3.KeptnWorkloadRef, status klcv1alpha3.KeptnAppVersionStatus) *klcv1alpha3.KeptnAppVersion {
+func ReturnAppVersion(namespace string, appName string, version string, workloads []klcv1beta1.KeptnWorkloadRef, status klcv1beta1.KeptnAppVersionStatus) *klcv1beta1.KeptnAppVersion {
 	appVersionName := fmt.Sprintf("%s-%s", appName, version)
-	app := &klcv1alpha3.KeptnAppVersion{
+	app := &klcv1beta1.KeptnAppVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       appVersionName,
 			Namespace:  namespace,
 			Generation: 1,
 		},
-		Spec: klcv1alpha3.KeptnAppVersionSpec{
-			KeptnAppSpec: klcv1alpha3.KeptnAppSpec{
+		Spec: klcv1beta1.KeptnAppVersionSpec{
+			KeptnAppSpec: klcv1beta1.KeptnAppSpec{
 				Version:   version,
 				Workloads: workloads,
 			},

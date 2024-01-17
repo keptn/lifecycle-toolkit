@@ -2,23 +2,24 @@
 
 ## Keptn Components
 
-Keptn consists of two main components:
+Keptn consists of the following main components:
 
-* Keptn Lifecycle Operator, which splits into two separate operators
-  in Release 0.7.0 and later:
-  * Lifecycle-Operator
-  * Metrics-Operator
-* Keptn Lifecycle Scheduler
+* [Keptn Lifecycle Operator](./lifecycle-operator/index.md)
+* [Keptn Metrics Operator](./metrics-operator.md)
+* [Keptn Scheduler](./scheduling.md)
+* [Keptn Certificate Manager](./certificate-operator.md)
+
+The architectural diagram:
 
 ```mermaid
 graph TD;
-    KeptnComponents-->Operators;
-    KeptnComponents-->Scheduler
-   Operators-->Lifecycle-Operator
-   Operators-->Metrics-Operator
-style KeptnComponents fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
-style Operators fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
-style Scheduler fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
-style Lifecycle-Operator fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
-style Metrics-Operator fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+
+A[Lifecycle Operator]
+B[Metrics Operator] -- provide metrics --> A
+C[Cert manager] -- watch certificate --> A
+C[Cert manager] -- watch certificate --> B
+
+style A fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+style B fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
+style C fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
 ```

@@ -98,6 +98,10 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			Query:                "",
 			FetchIntervalSeconds: 10,
 		},
+
+		Status: metricsapi.KeptnMetricStatus{
+			ErrMsg: "test error message",
+		},
 	}
 
 	metric4 := &metricsapi.KeptnMetric{
@@ -228,7 +232,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			},
 		},
 		{
-			name: "happy path - EvaluateQuery",
+			name: "happy path, remove error message - EvaluateQuery",
 			ctx:  context.TODO(),
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric3"},

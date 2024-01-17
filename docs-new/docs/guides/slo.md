@@ -18,14 +18,14 @@ At the end of the analysis,
 the status returns whether your objective failed, passed,
 or passed with a warning.
 This is similar to the functionality provided by the Keptn v1
-[Quality Gates](https://keptn.sh/docs/1.0.x/define/quality-gates/)
+[Quality Gates](https://v1.keptn.sh/docs/1.0.x/define/quality-gates/)
 feature.
 
 Converters are provided to
 to migrate most Keptn v1
-[SLIs](https://keptn.sh/docs/1.0.x/reference/files/sli/)
+[SLIs](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
 and
-[SLOs](https://keptn.sh/docs/1.0.x/reference/files/slo/)
+[SLOs](https://v1.keptn.sh/docs/1.0.x/reference/files/slo/)
 to Keptn Analysis SLIs and SLOs.
 For more information,see:
 
@@ -65,13 +65,13 @@ A Keptn Analysis is implemented with three resources:
   An `AnalysisDefinition` resource contains a list of objectives to satisfy.
   Each of these objectives must specify:
 
+  * The `AnalysisValueTemplate` resource that contains the SLIs,
+    defining the data provider from which to gather the data
+    and how to compute the Analysis
   * Failure or warning target criteria
   * Whether the objective is a key objective
     meaning that its failure fails the Analysis
   * Weight of the objective on the overall Analysis
-  * The `AnalysisValueTemplate` resource that contains the SLIs,
-    defining the data provider from which to gather the data
-    and how to compute the Analysis
 
 * [Analysis](../reference/crd-reference/analysis.md)
   define the specific configurations and the Analysis to report.
@@ -89,7 +89,7 @@ A Keptn Analysis is implemented with three resources:
 
 Consider the following `Analysis` resource:
 
-{% include "../assets/crd/analysis.yaml" %}
+{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysis.yaml" >}}
 
 This `Analysis` resource:
 
@@ -103,13 +103,20 @@ This `Analysis` resource:
 The `AnalysisDefinition` resource references this `Analysis` resource
 by its `name` and `namespace` and can be seen here:
 
-{% include "../assets/crd/analysis-definition.yaml" %}
+{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysisdefinition.yaml" >}}
 
 This simple definition contains a single objective, `response-time-p95`.
 For this objective, both failure and warning criteria are defined:
 
 * The objective fails if the percentile 95 is less than 600
 * A warning is issued when the value is between 300 and 500
+
+Use a Kubernetes
+[quantity](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/)
+value for the value fields rather than a `float`.
+For example, use the `3m` quantity
+rather than the equivalent `0.003` float;
+the `float` value causes `Invalid value` errors.
 
 The total score shows that this `Analysis`
 should have an overall score of 90% to pass or 75% to get a warning.
@@ -119,7 +126,7 @@ this means that the analysis either passes with 100%
 or fails with 0% (slower response time).
 
 The objective points to the corresponding `AnalysisValueTemplate` resource:
-{% include "../assets/crd/analysis-template.yaml" %}
+{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysisvaluetemplate.yaml" >}}
 
 This template defines a query to a provider called `prometheus`:
 

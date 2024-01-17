@@ -97,7 +97,7 @@ func (r *KeptnAppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 			Name:      app.Name,
 		}, appContext)
 		if client.IgnoreNotFound(err) != nil {
-			r.Log.Error(err, "Could not look up related KeptnContext", "requestInfo", requestInfo)
+			r.Log.Error(err, "Could not look up related KeptnAppContext", "requestInfo", requestInfo)
 		}
 
 		appVersion, err := r.createAppVersion(ctx, app, appContext)

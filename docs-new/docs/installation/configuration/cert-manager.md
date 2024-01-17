@@ -80,5 +80,5 @@ global:
 ```
 
 Refer to the
-[Customizing the configuration of components](https://keptn.sh/latest/docs/installation/#customizing-the-configuration-of-components)
+[Customizing the configuration of components](../index.md#customizing-the-configuration-of-components)
 for more details.

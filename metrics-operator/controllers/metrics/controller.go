@@ -138,16 +138,14 @@ func (r *KeptnMetricReconciler) updateMetric(metric *metricsapi.KeptnMetric, val
 	} else {
 		if err != nil {
 			r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
-			reconcile = ctrl.Result{Requeue: false}
 			metric.Status.ErrMsg = err.Error()
 		} else {
 			metric.Status.ErrMsg = ""
 			metric.Status.Value = value
 			metric.Status.RawValue = cupSize(rawValue)
 		}
-
-		metric.Status.LastUpdated = metav1.Time{Time: time.Now().UTC()}
 	}
+	metric.Status.LastUpdated = metav1.Time{Time: time.Now().UTC()}
 
 	return reconcile
 }

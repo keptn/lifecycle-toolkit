@@ -13,7 +13,7 @@ Let's take a look what happens when your changes are merged in `main`.
 
 ## Stable - Official documentation (Production)
 
-This set of documentation pertains to the latest Keptn release and resides within the
+This set of documentation pertains to the most recent stable Keptn release and resides within the
 latest `klt-*` tagged commit on GitHub.
 When a new version of Keptn is released, the contents of the `main` branch are published as
 the new `stable` release documentation.

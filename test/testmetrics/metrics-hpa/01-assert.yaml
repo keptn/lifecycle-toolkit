@@ -5,7 +5,7 @@ collectors:
   - type: pod
     selector: app=podtato-head
   - command: |
-      kubectl logs -l control-plane=lifecycle-operator -n keptn-system
+      kubectl logs -l app=metrics-operator -n keptn-system
       kubectl describe keptnmetric podtatometric -n $NAMESPACE
       kubectl describe keptnmetricsprovider dynatrace -n $NAMESPACE
       kubectl describe pods -l app=podtato-head -n $NAMESPACE

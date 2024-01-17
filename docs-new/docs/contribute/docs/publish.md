@@ -18,9 +18,9 @@ latest `keptn-*` tagged commit on GitHub.
 When a new version of Keptn is released, the contents of the `main` branch are published as
 the new `stable` release documentation.
 
-* build: on each release of Keptn (`klt-*` Git tag)
+* build: on each release of Keptn (`keptn-*` Git tag)
 
-A new version is generated when we push a new `klt-*` tag to the GitHub repository through the
+A new version is generated when we push a new `keptn-*` tag to the GitHub repository through the
 [release pipeline](https://github.com/keptn/lifecycle-toolkit/tree/main/.github/workflows/release.yml).
 This means, that the content of the old Keptn tag will be replaced by the newly released version
 that was tagged on the `main` branch.

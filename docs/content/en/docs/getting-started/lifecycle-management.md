@@ -13,50 +13,65 @@ This tutorial introduces these tools.
 > This tutorial assumes you have already completed the
 [Getting started with Keptn Observability](../getting-started/)
 exercise.
-> Please ensure you've finished that before attempting this guide.
+> Please ensure you've finished that before attempting this exercise.
 
 ## Keptn Pre and Post Deployment Tasks
 
-When Keptn is successfully monitoring your deployments, it can also run arbitrary tasks and SLO evaluations:
+When Keptn is successfully monitoring your deployments,
+it can also run arbitrary tasks and SLO evaluations for you
+either pre-deployment or post-deployment
+as specified in the pod template specs of your
+[Workloads](https://kubernetes.io/docs/concepts/workloads/)
+([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+[StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
+[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
+and
+[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)).
 
-- pre-deployment (before the pod is scheduled)
-- post-deployment (after the post is scheduled)
-
-> Pre/post deployments can also run on a KeptnApp level.
-  See
-  [Annotations to KeptnApp](../guides/tasks.md/#annotations-to-keptnapp).
+> Pre and post deployments can also run on a `KeptnApp` level.
+> A `KeptnApp` groups multiple workloads into a single application.
+> See [annotations to KeptnApp](../guides/integrate.md#annotations-to-keptnapp)
 
 ## Prerequisites: Deploy webhook sink
 
-During this exercise, you will configure Keptn to trigger a webhook before and after a deployment has successfully completed.
+During this exercise, you will configure Keptn to trigger a webhook
+before and after a deployment has completed successfully.
 
-For demo purposes, a place is required to send those request.
-Install the [open source webhook.site tool](https://github.com/webhooksite/webhook.site/tree/master/kubernetes) now.
+For demo purposes, a place is required to which those requests are sent.
+To implement this:
 
-This will provide a place, on cluster, to send (and view) web requests.
+1. Install the
+   [open source webhook.site tool](https://github.com/webhooksite/webhook.site/tree/master/kubernetes).
 
-> Note: If you have your own endpoint, you can skip this step.
+   This provides a place on your cluster to which web requests are sent
+   and from which they can be viewed.
 
-```shell
-kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/namespace.yml
-kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/redis.deployment.yml
-kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/laravel-echo-server.deployment.yml
-kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/webhook.deployment.yml
-kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/service.yml
-```
+1. Execute the following commands to apply the web hook:
 
-Wait until all pods are running in the `webhook` namespace then port-forward and view the webhook sink page:
+   > Note: If you have your own endpoint, you can skip this step.
 
-```shell
-kubectl -n webhook wait --for=condition=Ready pods --all
-kubectl -n webhook port-forward svc/webhook 8084
-```
+   ```shell
+   kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/namespace.yml
+   kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/redis.deployment.yml
+   kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/laravel-echo-server.deployment.yml
+   kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/webhook.deployment.yml
+   kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/service.yml
+   ```
 
-Open a browser and go to `http://localhost:8084`
+1. Wait until all pods are running in the `webhook` namespace
+   then port-forward and view the webhook sink page:
 
-You should see a page like this with a unique URL (your ID will be different).
+   ```shell
+   kubectl -n webhook wait --for=condition=Ready pods --all
+   kubectl -n webhook port-forward svc/webhook 8084
+   ```
 
-![webhook.site page](../assets/webhook.site.1.png)
+1. Open a browser and go to `http://localhost:8084`
+
+1. You should see a page like this with a unique URL
+   (your ID will be different than the example).
+
+   ![webhook.site page](../assets/webhook.site.1.png)
 
 Make a note of that unique URL.
 
@@ -65,7 +80,7 @@ Make a note of that unique URL.
 Open a new browser table and go to your unique URL.
 The page should remain blank, but when toggling back to `http://localhost:8084`, you should see a new entry.
 
-Every request sent to that unique URL will be logged here.
+Each request sent to that unique URL will be logged here.
 
 ![webhook.site entry](../assets/webhook.site.2.png)
 
@@ -102,9 +117,10 @@ spec:
 
 ### Verify it works
 
-Verify that the KeptnTaskDefinition above actually works.
+Verify that the `KeptnTaskDefinition` resource shown above actually works.
 
-Trigger an on-demand task execution to verify that the job and pod function correctly.
+Trigger an on-demand task execution
+to verify that the job and pod are working correctly.
 
 In the following steps we will have Keptn orchestrate this for us automatically.
 
@@ -141,17 +157,22 @@ The webhook sync should show this:
 
 ![webhook sync](../assets/webhook.site.3.png)
 
-Incidentally, this is exactly how you can use Keptn with [applications deployed outside of Kubernetes](../use-cases/non-k8s.md).
+Incidentally, this is exactly how you can use Keptn with
+[applications deployed outside of Kubernetes](../use-cases/non-k8s.md).
 
-> Note: If you want to trigger this multiple times, you must change the KeptnTask name.
+> Note: If you want to trigger this task multiple times,
+you must change the value of the `name` field
+in the `KeptnTask` resource each time.
 >
-> For example, by changing `runsendevent1` to `runsendevent2`
+> For example, change `runsendevent1` to `runsendevent2`.
 
 ## Ask Keptn to trigger task after Deployment
 
-Annotate the demo application `Deployment` manifest to have Keptn automatically trigger the task after every deployment.
+Annotate the demo application `Deployment` manifest
+to have Keptn automatically trigger the task after every deployment.
 
-Recall the `Deployment` from the [Observability](../getting-started/observability.md#step-3-deploy-demo-application)
+Recall the `Deployment` from the
+[Observability](../getting-started/observability.md#step-3-deploy-demo-application)
 Getting started guide.
 
 Add a new label so the `labels` section looks like this:
@@ -204,28 +225,35 @@ spec:
 
 ### What Happens Next?
 
-1. The deployment will be applied
-1. When the pods are running, Keptn will automatically create a `KeptnTask` resource for version `0.0.2` of this KeptnApp
-1. The `KeptnTask` will create a Kubernetes Job
-1. The Kubernetes Job will create a Pod
-1. The pod will run curl and send a new event to the event sink
+1. The deployment is applied.
+1. When the pods are running,
+   Keptn automatically creates a `KeptnTask` resource
+   for version `0.0.2` of this `KeptnApp`.
+1. The `KeptnTask` creates a Kubernetes `Job`.
+1. The Kubernetes `Job` creates a Kubernetes `Pod`.
+1. The `Pod` runs `curl` and sends a new event to the event sink.
 
 ### Pre-deployment Tasks
 
 Keptn Tasks can also be executed pre-deployment (before the pods are scheduled).
-Do this by using the `keptn.sh/pre-deployment-tasks` label.
+Do this by using the `keptn.sh/pre-deployment-tasks` label or annotation.
 
-> Note: If a pre-deployment task fails, the pod will remain in a Pending state.
+> Note: If a pre-deployment task fails, the `Pod` remains in a Pending state.
 
 ## Further Information
 
-You can do a lot more with KeptnTasks.
+You can do much more with `KeptnTask` resources.
 See the
+[pre and post deployment checks](../guides/integrate.md#pre--and-post-deployment-checks)
+page and the
 [Deployment tasks](../guides/tasks.md)
-guide for more information.
+page to find out more.
 
 ## What's next?
 
-Keptn can also run pre and post deployment SLO evaluations.
+Keptn can also run simple pre- and post-deployment SLO evaluations.
 
 Continue the Keptn learning journey by adding evaluations.
+See the
+[Evaluations](../guides/evaluations.md)
+for more information.

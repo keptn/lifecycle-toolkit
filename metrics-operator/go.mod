@@ -3,7 +3,7 @@ module github.com/keptn/lifecycle-toolkit/metrics-operator
 go 1.20
 
 require (
-	github.com/DataDog/datadog-api-client-go/v2 v2.20.0
+	github.com/DataDog/datadog-api-client-go/v2 v2.21.0
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.4.1
 	github.com/gorilla/mux v1.8.1
@@ -11,12 +11,12 @@ require (
 	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20231211075630-e386ec643fa7
 	github.com/open-feature/go-sdk v1.9.0
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.17.0
+	github.com/prometheus/client_golang v1.18.0
 	github.com/prometheus/client_model v0.5.0
 	github.com/prometheus/common v0.45.0
 	github.com/stretchr/testify v1.8.4
-	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b
-	golang.org/x/net v0.19.0
+	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3
+	golang.org/x/net v0.20.0
 	gopkg.in/inf.v0 v0.9.1
 	k8s.io/api v0.28.5
 	k8s.io/apiextensions-apiserver v0.28.5
@@ -24,7 +24,7 @@ require (
 	k8s.io/apiserver v0.28.5
 	k8s.io/client-go v0.28.5
 	k8s.io/component-base v0.28.5
-	k8s.io/klog/v2 v2.110.1
+	k8s.io/klog/v2 v2.120.0
 	k8s.io/metrics v0.28.5
 	sigs.k8s.io/controller-runtime v0.16.3
 	sigs.k8s.io/custom-metrics-apiserver v1.28.0
@@ -76,7 +76,7 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/prometheus/procfs v0.11.1 // indirect
+	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cobra v1.7.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
@@ -95,11 +95,11 @@ require (
 	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.25.0 // indirect
-	golang.org/x/crypto v0.16.0 // indirect
+	golang.org/x/crypto v0.18.0 // indirect
 	golang.org/x/oauth2 v0.15.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
-	golang.org/x/term v0.15.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/term v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect

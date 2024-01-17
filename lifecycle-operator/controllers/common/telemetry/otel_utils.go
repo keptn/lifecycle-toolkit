@@ -7,9 +7,8 @@ import (
 	"sync"
 	"time"
 
-	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	lifecyclev1alpha4 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha4"
+	lifecyclev1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -218,12 +217,12 @@ func SetUpKeptnMeters(meter interfaces.IMeter, mgr client.Client) {
 
 func observeDuration(ctx context.Context, mgr client.Client, appDeploymentDurationGauge metric.Float64ObservableGauge, workloadDeploymentDurationGauge metric.Float64ObservableGauge, observer metric.Observer) {
 
-	err := ObserveDeploymentDuration(ctx, mgr, &lifecyclev1alpha3.KeptnAppVersionList{}, appDeploymentDurationGauge, observer)
+	err := ObserveDeploymentDuration(ctx, mgr, &lifecyclev1beta1.KeptnAppVersionList{}, appDeploymentDurationGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather app deployment durations")
 	}
 
-	err = ObserveDeploymentDuration(ctx, mgr, &lifecyclev1alpha4.KeptnWorkloadVersionList{}, workloadDeploymentDurationGauge, observer)
+	err = ObserveDeploymentDuration(ctx, mgr, &lifecyclev1beta1.KeptnWorkloadVersionList{}, workloadDeploymentDurationGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather workload deployment durations")
 	}
@@ -231,12 +230,12 @@ func observeDuration(ctx context.Context, mgr client.Client, appDeploymentDurati
 }
 
 func observeDeploymentInterval(ctx context.Context, mgr client.Client, appDeploymentIntervalGauge metric.Float64ObservableGauge, workloadDeploymentIntervalGauge metric.Float64ObservableGauge, observer metric.Observer) {
-	err := ObserveDeploymentInterval(ctx, mgr, &lifecyclev1alpha3.KeptnAppVersionList{}, appDeploymentIntervalGauge, observer)
+	err := ObserveDeploymentInterval(ctx, mgr, &lifecyclev1beta1.KeptnAppVersionList{}, appDeploymentIntervalGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather app deployment intervals")
 	}
 
-	err = ObserveDeploymentInterval(ctx, mgr, &lifecyclev1alpha4.KeptnWorkloadVersionList{}, workloadDeploymentIntervalGauge, observer)
+	err = ObserveDeploymentInterval(ctx, mgr, &lifecyclev1beta1.KeptnWorkloadVersionList{}, workloadDeploymentIntervalGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather workload deployment intervals")
 	}
@@ -244,19 +243,19 @@ func observeDeploymentInterval(ctx context.Context, mgr client.Client, appDeploy
 
 func observeActiveInstances(ctx context.Context, mgr client.Client, deploymentActiveGauge metric.Int64ObservableGauge, appActiveGauge metric.Int64ObservableGauge, taskActiveGauge metric.Int64ObservableGauge, evaluationActiveGauge metric.Int64ObservableGauge, observer metric.Observer) {
 
-	err := ObserveActiveInstances(ctx, mgr, &lifecyclev1alpha4.KeptnWorkloadVersionList{}, deploymentActiveGauge, observer)
+	err := ObserveActiveInstances(ctx, mgr, &lifecyclev1beta1.KeptnWorkloadVersionList{}, deploymentActiveGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather active deployments")
 	}
-	err = ObserveActiveInstances(ctx, mgr, &lifecyclev1alpha3.KeptnAppVersionList{}, appActiveGauge, observer)
+	err = ObserveActiveInstances(ctx, mgr, &lifecyclev1beta1.KeptnAppVersionList{}, appActiveGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather active apps")
 	}
-	err = ObserveActiveInstances(ctx, mgr, &lifecyclev1alpha3.KeptnTaskList{}, taskActiveGauge, observer)
+	err = ObserveActiveInstances(ctx, mgr, &lifecyclev1beta1.KeptnTaskList{}, taskActiveGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather active tasks")
 	}
-	err = ObserveActiveInstances(ctx, mgr, &lifecyclev1alpha3.KeptnEvaluationList{}, evaluationActiveGauge, observer)
+	err = ObserveActiveInstances(ctx, mgr, &lifecyclev1beta1.KeptnEvaluationList{}, evaluationActiveGauge, observer)
 	if err != nil {
 		logger.Error(err, "unable to gather active evaluations")
 	}

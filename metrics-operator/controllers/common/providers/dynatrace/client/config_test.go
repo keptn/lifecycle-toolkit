@@ -11,7 +11,7 @@ func TestNewAPIConfig(t *testing.T) {
 		"my-url",
 		mockSecret,
 		WithScopes([]OAuthScope{OAuthScopeStorageMetricsRead, OAuthScopeEnvironmentRoleViewer}),
-		WithAuthURL("my-url/auth"),
+		WithAuthURL("https://dev.token.internal.my-auth-url.com/sso/oauth2/token"),
 	)
 
 	require.Nil(t, err)
@@ -19,7 +19,7 @@ func TestNewAPIConfig(t *testing.T) {
 
 	expectedApiConfig := apiConfig{
 		serverURL: "my-url",
-		authURL:   "my-url/auth",
+		authURL:   "https://dev.token.internal.my-auth-url.com/sso/oauth2/token",
 		oAuthCredentials: oAuthCredentials{
 			clientID:     "dt0s08.XX",
 			clientSecret: mockSecret,

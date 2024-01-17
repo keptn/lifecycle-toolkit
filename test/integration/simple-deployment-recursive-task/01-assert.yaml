@@ -37,7 +37,7 @@ metadata:
     keptn.sh/version: "0.4"
     keptn.sh/workload: waiter-waiter
   ownerReferences:
-    - apiVersion: lifecycle.keptn.sh/v1alpha3
+    - apiVersion: lifecycle.keptn.sh/v1beta1
       blockOwnerDeletion: true
       controller: true
       kind: KeptnTask

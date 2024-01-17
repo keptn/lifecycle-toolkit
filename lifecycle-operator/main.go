@@ -99,7 +99,6 @@ type envConfig struct {
 	KeptnTaskDefinitionControllerLogLevel     int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadControllerLogLevel           int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadVersionControllerLogLevel    int `envconfig:"KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
-	KeptnWorkloadInstanceControllerLogLevel   int `envconfig:"KEPTN_WORKLOAD_INSTANCE_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnDoraMetricsPort                      int `envconfig:"KEPTN_DORA_METRICS_PORT" default:"2222"`
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
@@ -273,7 +272,7 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkload")
 		os.Exit(1)
 	}
-	workloadVersionLogger := ctrl.Log.WithName("KeptnWorkloadVersion Controller").V(determineWorkloadVersionControllerLogLevel(env.KeptnWorkloadVersionControllerLogLevel, env.KeptnWorkloadInstanceControllerLogLevel))
+	workloadVersionLogger := ctrl.Log.WithName("KeptnWorkloadVersion Controller").V(env.KeptnWorkloadVersionControllerLogLevel)
 	workloadVersionRecorder := mgr.GetEventRecorderFor("keptnworkloadversion-controller")
 	workloadVersionEventSender := eventsender.NewEventMultiplexer(workloadVersionLogger, workloadVersionRecorder, ceClient)
 	workloadVersionEvaluationHandler := evaluation.NewHandler(
@@ -365,23 +364,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&lifecyclev1alpha3.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1beta1.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnApp")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1alpha3.KeptnEvaluationProvider{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnEvaluationProvider")
-		os.Exit(1)
-	}
-	if err = (&lifecyclev1alpha3.KeptnAppVersion{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1beta1.KeptnAppVersion{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnAppVersion")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1alpha3.KeptnWorkloadInstance{}).SetupWebhookWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnWorkloadInstance")
-		os.Exit(1)
-	}
-	if err = (&lifecyclev1alpha3.KeptnTaskDefinition{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1beta1.KeptnTaskDefinition{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnTaskDefinition")
 		os.Exit(1)
 	}
@@ -447,14 +438,4 @@ func serveMetrics(metricsPort int) {
 		fmt.Printf("error serving http: %v", err)
 		return
 	}
-}
-
-func determineWorkloadVersionControllerLogLevel(version int, instance int) int {
-	// if deprecated env.KeptnWorkloadInstanceControllerLogLevel is set and
-	// env.KeptnWorkloadVersionControllerLogLevel has default value (not set)
-	if instance != 0 && version == 0 {
-		return instance
-	}
-
-	return version
 }

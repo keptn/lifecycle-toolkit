@@ -687,7 +687,7 @@ func TestDQLInitClientWithSecret_EvaluateQuery(t *testing.T) {
 			Namespace: namespace,
 		},
 		Data: map[string][]byte{
-			"my-key": []byte("dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"),
+			"my-key": []byte(dqlSecretString),
 		},
 		Type: corev1.SecretTypeOpaque,
 	}
@@ -1055,7 +1055,7 @@ func TestDQLInitClientWithSecret_EvaluateQueryForStep(t *testing.T) {
 			Namespace: namespace,
 		},
 		Data: map[string][]byte{
-			"my-key": []byte("dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"),
+			"my-key": []byte(dqlSecretString),
 		},
 		Type: corev1.SecretTypeOpaque,
 	}

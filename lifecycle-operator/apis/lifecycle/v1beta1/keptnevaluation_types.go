@@ -27,9 +27,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // KeptnEvaluationSpec defines the desired state of KeptnEvaluation
 type KeptnEvaluationSpec struct {
 	// Workload defines the KeptnWorkload for which the KeptnEvaluation is done.
@@ -102,6 +99,7 @@ type EvaluationStatusItem struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:storageversion
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=keptnevaluations,shortName=ke
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.appName`

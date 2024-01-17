@@ -21,8 +21,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
+	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"go.opentelemetry.io/otel/metric"
@@ -53,7 +53,7 @@ type KeptnTaskReconciler struct {
 func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	requestInfo := controllercommon.GetRequestInfo(req)
 	r.Log.Info("Reconciling KeptnTask", "requestInfo", requestInfo)
-	task := &klcv1alpha3.KeptnTask{}
+	task := &klcv1beta1.KeptnTask{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, task); err != nil {
 		if errors.IsNotFound(err) {
@@ -118,6 +118,6 @@ func (r *KeptnTaskReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 func (r *KeptnTaskReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		// predicate disabling the auto reconciliation after updating the object status
-		For(&klcv1alpha3.KeptnTask{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		For(&klcv1beta1.KeptnTask{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }

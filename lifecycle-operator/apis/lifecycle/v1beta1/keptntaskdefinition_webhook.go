@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha3
+package v1beta1
 
 import (
 	"github.com/pkg/errors"
@@ -37,7 +37,7 @@ func (r *KeptnTaskDefinition) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/validate-lifecycle-keptn-sh-v1alpha3-keptntaskdefinition,mutating=false,failurePolicy=fail,sideEffects=None,groups=lifecycle.keptn.sh,resources=keptntaskdefinitions,verbs=create;update,versions=v1alpha3,name=vkeptntaskdefinition.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/validate-lifecycle-keptn-sh-v1beta1-keptntaskdefinition,mutating=false,failurePolicy=fail,sideEffects=None,groups=lifecycle.keptn.sh,resources=keptntaskdefinitions,verbs=create;update,versions=v1beta1,name=vkeptntaskdefinition.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &KeptnTaskDefinition{}
 

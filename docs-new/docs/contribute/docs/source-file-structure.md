@@ -105,6 +105,11 @@ home directory of the *lifecycle-toolkit* repository
 (general and software development information)
 and in the *lifecycle-toolkit/docs-new* directory
 (documentation development information only).
+These are the traditional locations for contributing information
+but the amount of content we have was making them unwieldy,
+so we are in the process of moving most content from these files
+into the *Contributing guide*,
+leaving links to the various sections in the *CONTRIBUTING.md* guides.
 
 ## Build strategy
 

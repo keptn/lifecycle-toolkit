@@ -26,7 +26,7 @@ To set up a local MkDocs build:
     > **Note**
     To utilize the `Makefile`, you must have GNU **make**
     available on your local machine.
-    Versions are available for all the usual Operating Systems.
+    Versions are available for all the usual operating systems.
 
 1. Start contributing!
 Note that MkDocs updates the rendered documentation each time you write the file.

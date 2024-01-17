@@ -21,7 +21,7 @@ The subdirectories with content are:
 - `assets`: This folder is used to save assets such as code examples that are used throughout the documentation.
   Many sub folders also contain an `assets` folder to keep asset files closer to the content where they are referenced.
 - `components`: Information about the different subcomponents of Keptn
-- `contribute`: Contains information on how to contribute to the different parts of Keptn
+- `contribute`: Contains information on how to contribute software, tests, and documentation to Keptn
 - `core-concepts`: A brief overview of Keptn, its features and use cases, and its history
 - `getting-started`: Hands-on exercises that demonstrate the capabilities of Keptn
 - `guides`: Guides and how-to material about using Keptn features

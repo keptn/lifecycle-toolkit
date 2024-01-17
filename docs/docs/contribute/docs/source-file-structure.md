@@ -14,7 +14,7 @@ This page explains how the documentation source files are organized.
 The source for the
 [Keptn](https://lifecycle.keptn.sh/docs)
 documentation is stored under
-the `docs-new/docs` directory in the repository.
+the `docs/docs` directory in the repository.
 
 The subdirectories with content are:
 
@@ -88,7 +88,7 @@ The source for the
 [Contributing to Keptn](https://lifecycle.keptn.sh/contribute/)
 guides
 (which are accessed from the **Contributing** tab on the documentation page)
-is stored under the `docs-new/contribute` directory.
+is stored under the `docs/contribute` directory.
 
 The subdirectories of the contribution guide are:
 
@@ -103,7 +103,7 @@ The subdirectories of the contribution guide are:
 We also have *CONTRIBUTING.md* files located in the
 home directory of the *lifecycle-toolkit* repository
 (general and software development information)
-and in the *lifecycle-toolkit/docs-new* directory
+and in the *lifecycle-toolkit/docs* directory
 (documentation development information only).
 These are the traditional locations for contributing information
 but the amount of content we have was making them unwieldy,

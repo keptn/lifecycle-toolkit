@@ -120,13 +120,14 @@ You are now ready to make your changes to the source code.
 1. Make your changes to the appropriate component.
 
 1. Deploy the component you modified and push the image to your private Github repository.
-   Note that you do not need to rebuild all components,
-   only the one you modified.
+   Note that you only need to rebuild the component you modified;
+   you do not need to rebuild all components.
    For example, if your modifications are to the `metrics-operator`, run:
 
-```shell
-make build-deploy-metrics-operator RELEASE_REGISTRY=docker.io/exampleuser TAG=my-feature
-```
+     ```shell
+     make build-deploy-metrics-operator \
+         RELEASE_REGISTRY=docker.io/exampleuser TAG=my-feature
+     ```
 
 ## Testing
 
@@ -144,27 +145,39 @@ Tests are run on your local machine.
 Study the detailed log that is produced to identify why the test failed.
 Study these errors, modify your code, and rerun the test until it passes.
 
-1. Use your IDE to run unit tests on your code.
+### Unit tests
 
-1. Run the integration tests from the root directory of your clone:
+Use your IDE to run unit tests on your code.
 
-```shell
-make integration-test-local
-```
+### Integration tests
 
-   `integration-test-local` cleans up after the test.
+Run the integration tests from the root directory of your clone:
 
-1. From the `lifecycle-operator` directory, run the component test:
+  ```shell
+  make integration-test-local
+  ```
 
-```shell
-make component-test
-```
+This runs a series of Kuttl
+([KUbernetes Test TooL](https://kuttl.dev/))
+tests locally and then cleans up your local environment.
+You can run individual tests with the `kubectl kuttl` command;
+see the *Makefile* for the specific syntax of each test.
 
-1. From the `lifecycle-operator` directory, run the end-to-end tests:
+### Component test
 
-```shell
-make e2e-test
-```
+From the `lifecycle-operator` directory, run the component tests:
+
+  ```shell
+  make component-test
+  ```
+
+### End-to-end test
+
+From the `lifecycle-operator` or `scheduler` directory, run the end-to-end tests:
+
+  ```shell
+  make e2e-test
+  ```
 
 ## Create and manage the PR
 

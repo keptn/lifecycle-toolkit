@@ -22,7 +22,7 @@ The subdirectories with content are:
   Many subfolders also contain an `assets` folder,
   usually containing graphics files (.png, .jpg, etc)
   to keep such files closer to the content where they are referenced.
-- `components`: Information about the different subcomponents of Keptn
+- `components`: Information about how the different subcomponents of Keptn work
 - `contribute`: Contains information on how to contribute software, tests, and documentation to Keptn
 - `core-concepts`: A brief overview of Keptn, its features and use cases, and its history
 - `getting-started`: Hands-on exercises that demonstrate the capabilities of Keptn

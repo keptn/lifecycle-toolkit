@@ -195,19 +195,15 @@ page.
 
 ## Context
 
-A Kubernetes context is a set of access parameters
-that contains a Kubernetes cluster, a user, a namespace,
-the application name, workload name, and version.
-For more information, see
+Navigating your Kubernetes landscape is guided by your chosen Kubernetes context. This set of access parameters defines the specific cluster, user, namespace, and sometimes application/workload details you're interacting with. Think of it as your personalized key to different areas within your Kubernetes infrastructure. For more information, see
 [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
 
-You may need to include context information in the `function` code
-included in the YAML file that defines a
+Meanwhile, Keptn, when orchestrating automated tasks during deployments, relies on a distinct concept called Keptn task context. This specialized information focuses solely on the task at hand, pinpointing the specific application or workload involved. It includes details like the application name, version, and object type, ensuring Keptn knows precisely where and how to execute each step within your chosen Kubernetes environment. Imagine this as a task-specific blueprint, telling Keptn exactly what to do and where to do it within your broader deployment workflow.
+
+Sometimes, to provide this crucial task context, you might need to embed it directly into the `function` code of your Keptn tasks defined in YAML files that defines a
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
-resource.
-For an example of how to do this, see the
-[keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)
-file.
+resource. The [keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)
+file offers a practical example of how this works.
 
 A context environment variable is available via `Deno.env.get("KEPTN_CONTEXT")`.
 It can be used like this:

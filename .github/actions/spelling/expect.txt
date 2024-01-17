@@ -596,6 +596,7 @@ storageversion
 sts
 subchart
 subdir
+subfolders
 subjectaccessreviews
 substitue
 substr

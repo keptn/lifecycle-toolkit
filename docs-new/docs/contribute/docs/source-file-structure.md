@@ -76,7 +76,7 @@ and should provide as much information as possible about the resource.
 These are intended to be reference pages that are used regularly
 by users after they are familiar with how to use Keptn.
 For new users, the
-[User Guides](https://lifecycle.keptn.sh/docs/implementing/)
+[Guides](https://lifecycle.keptn.sh/docs/implementing/)
 provide introductory material about how to use various features of Keptn.
 
 A template to create a new CRD Reference page

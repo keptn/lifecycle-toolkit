@@ -64,12 +64,12 @@ lint: lint-fix
 # - .markdownlintignore holds the configuration for files to be ignored
 # - .markdownlint.yaml contains the rules for markdownfiles
 # renovate: datasource=docker depName=davidanson/markdownlint-cli2-rules
-MDL_DOCKER_VERSION := v0.12.0
-MDL_CMD := docker run -v $(ROOT_DIR)../:/workdir --rm 
+MDL_DOCKER_VERSION := v0.12.1
+MDL_CMD := docker run -v $(ROOT_DIR)../:/workdir --rm
 
 .PHONY: markdownlint markdownlint-fix
 markdownlint:
-	$(MDL_CMD) davidanson/markdownlint-cli2-rules:${MDL_DOCKER_VERSION} "**/*.md" 
+	$(MDL_CMD) davidanson/markdownlint-cli2-rules:${MDL_DOCKER_VERSION} "**/*.md"
 
 markdownlint-fix:
-	$(MDL_CMD) --entrypoint="markdownlint-cli2-fix" davidanson/markdownlint-cli2-rules:${MDL_DOCKER_VERSION} "**/*.md" 
+	$(MDL_CMD) davidanson/markdownlint-cli2-rules:${MDL_DOCKER_VERSION} --fix "**/*.md"

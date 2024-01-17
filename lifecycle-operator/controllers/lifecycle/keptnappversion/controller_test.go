@@ -140,6 +140,8 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 		Spec: lfcv1beta1.KeptnAppVersionSpec{
 			KeptnAppSpec: lfcv1beta1.KeptnAppSpec{
 				Version: "1.0.0",
+			},
+			DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
 				PreDeploymentTasks: []string{
 					"task",
 				},

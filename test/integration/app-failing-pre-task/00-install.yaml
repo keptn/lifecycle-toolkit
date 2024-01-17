@@ -1,12 +1,8 @@
 apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnApp
+kind: KeptnAppContext
 metadata:
   name: podtato-head
 spec:
-  version: "1.3"
-  workloads:
-    - name: podtato-head-entry
-      version: 0.1.0
   preDeploymentTasks:
     - check-entry-service
 ---

@@ -7839,6 +7839,14 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
+  - keptnappcontexts
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - lifecycle.keptn.sh
+  resources:
   - keptnappcreationrequests
   verbs:
   - create

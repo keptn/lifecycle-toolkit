@@ -71,7 +71,7 @@ func TestTaskHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
+					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
 						PreDeploymentTasks: []string{"task-def"},
 					},
 				},
@@ -99,7 +99,7 @@ func TestTaskHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
+					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
 						PreDeploymentTasks: []string{"task-def", "other-task-def"},
 					},
 				},
@@ -139,7 +139,7 @@ func TestTaskHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
+					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
 						PreDeploymentTasks: []string{"task-def"},
 					},
 				},
@@ -179,7 +179,7 @@ func TestTaskHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
+					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
 						PreDeploymentTasks: []string{"task-def"},
 					},
 				},
@@ -216,7 +216,7 @@ func TestTaskHandler(t *testing.T) {
 			name: "already done task",
 			object: &v1beta1.KeptnAppVersion{
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
+					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
 						PreDeploymentTasks: []string{"task-def"},
 					},
 				},
@@ -260,7 +260,7 @@ func TestTaskHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
+					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
 						PreDeploymentTasks: []string{"task-def"},
 					},
 				},
@@ -312,7 +312,7 @@ func TestTaskHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
+					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
 						PreDeploymentTasks: []string{"task-def"},
 					},
 				},
@@ -424,7 +424,7 @@ func TestTaskHandler_createTask(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
+					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
 						PreDeploymentTasks: []string{"task-def"},
 					},
 				},

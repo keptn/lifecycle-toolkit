@@ -92,6 +92,7 @@ configmapref
 configmapreference
 containedctx
 containerspec
+contextcommon
 contextdata
 controllercommon
 controllererrors

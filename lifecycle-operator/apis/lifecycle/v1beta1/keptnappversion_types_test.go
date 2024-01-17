@@ -57,11 +57,13 @@ func TestKeptnAppVersion(t *testing.T) {
 		},
 		Spec: KeptnAppVersionSpec{
 			KeptnAppSpec: KeptnAppSpec{
+				Version: "version",
+			},
+			DeploymentTaskSpec: DeploymentTaskSpec{
 				PreDeploymentTasks:        []string{"task1", "task2"},
 				PostDeploymentTasks:       []string{"task3", "task4"},
 				PreDeploymentEvaluations:  []string{"task5", "task6"},
 				PostDeploymentEvaluations: []string{"task7", "task8"},
-				Version:                   "version",
 			},
 			PreviousVersion: "prev",
 			AppName:         "appname",

@@ -46,7 +46,6 @@ asdfg
 authurl
 automerge
 automountserviceaccounttokenspec
-autoprefixer
 autoprovision
 autoscaler
 azurecr
@@ -60,20 +59,16 @@ batchai
 baz
 benbjohnson
 bitnami
-breadcrumb
-btn
 Buf
 BUILDENVVAR
 BUILDKIT
 BUILDPLATFORM
 buildx
-CACHEDIR
 cainjection
 carryforward
 certificatehandler
 certmanager
 certwebhook
-changefreq
 Chans
 Checkmarx
 clientgoscheme
@@ -114,7 +109,7 @@ ctrlcommon
 ctx
 curlcontainer
 curlimages
-currentversion
+CURRENTVERSION
 customresourcedefinitions
 cwd
 cyclomatic
@@ -141,8 +136,6 @@ deploymenttrace
 dflags
 distroless
 Dockerfiles
-docsearch
-docsembed
 docsy
 donath
 dql
@@ -155,14 +148,12 @@ dynatrace
 ecr
 elasticquota
 elif
-Emoji
 ENABLEGITINFO
 endblock
 endgroup
 envconfig
 envsubst
 envtest
-errorf
 errorlint
 Etco
 evaluatemetrics
@@ -193,10 +184,8 @@ funlen
 Fxq
 gaurav
 gci
-gcs
 Generatable
 getenv
-getjson
 getopt
 gexec
 gha
@@ -222,7 +211,6 @@ grafana
 graphql
 groupversion
 gstatic
-gtag
 GVK
 HCNAH
 healthz
@@ -230,10 +218,6 @@ hellopy
 helloworldtask
 helmtests
 helperfunctions
-hidechildren
-homedata
-homeobservability
-homeorchestrate
 horizontalpodautoscalers
 hpa
 hsla
@@ -245,7 +229,6 @@ iak
 IAnalysis
 ICertificate
 IConfig
-iconx
 IEvaluation
 IEvent
 iface
@@ -379,7 +362,6 @@ kustomizeconfig
 kuttl
 kwi
 kwv
-lastmod
 lastword
 Lato
 LFC
@@ -387,8 +369,6 @@ Lifcycle
 lifecyclekeptnsh
 linenums
 linkedin
-linktitle
-linting
 livenessprobe
 loadtests
 LOCALBIN
@@ -398,7 +378,6 @@ makefiles
 markdownfiles
 markdownlint
 markdownlintignore
-markmap
 matryer
 maxdepth
 MDL
@@ -418,7 +397,6 @@ mockserver
 moq
 mowies
 mpod
-multicard
 multigroup
 multipe
 mutatingwebhookconfigurations
@@ -438,7 +416,6 @@ myversion
 namespacedelete
 Nde
 netlify
-Neue
 nifi
 nilnil
 nindent
@@ -480,7 +457,6 @@ OUTDIR
 overriden
 owide
 oyaml
-pagelinks
 PARAMSx
 perc
 persistentvolumeclaims
@@ -496,7 +472,6 @@ podtatohead
 podtatometric
 podtetohead
 Pointlist
-postcss
 POSTDEPLOYMENTEVALUATIONSTATUS
 POSTDEPLOYMENTSTATUS
 postgres
@@ -506,7 +481,6 @@ PREDEPLOYMENTEVALUATIONSTATUS
 PREDEPLOYMENTSTATUS
 prepostdeployment
 prepostevaluation
-previewer
 previousversion
 printargs
 printcolumn
@@ -521,24 +495,19 @@ pygments
 pymdown
 pymdownx
 pyyaml
-quickstart
 rangespec
 rangevalue
-readfile
 readinessprobe
 readyz
 realpath
 redis
-relref
 remediations
 replicasets
 replicationcontrollers
 resourcereference
 Rexed
 rgb
-rgba
 RLock
-Roboto
 rolebinding
 rollme
 roundtripper
@@ -558,7 +527,6 @@ sdkmetric
 sdktest
 sdktrace
 secureparameters
-Segoe
 selfsigned
 semconv
 sendserviceaccount
@@ -574,7 +542,6 @@ sigstore
 simpleapp
 simplenode
 simplenodeservice
-sitemap
 sli
 slisslos
 slo
@@ -587,7 +554,6 @@ spf
 squidfunk
 sre
 stakeholders
-standalone
 statefulset
 statefultest
 stdouttrace
@@ -595,7 +561,6 @@ storageclasses
 storageversion
 sts
 subchart
-subdir
 subfolders
 subjectaccessreviews
 substitue
@@ -606,7 +571,6 @@ SVCNAME
 sync'ed
 TARGETARCH
 TARGETOS
-targetserver
 taskcontext
 taskdef
 taskdefinition
@@ -648,9 +612,6 @@ UIDs
 undeploy
 unmarshal
 unmarshalling
-urlset
-usecasebox
-usecases
 usr
 utilruntime
 validatingwebhookconfigurations
@@ -674,7 +635,6 @@ webhookmanager
 webhooknamespaces
 website
 whitespaces
-whykeptn
 Wiesinger
 wjdp
 wli
@@ -694,4 +654,3 @@ yannh
 yml
 YOURNAME
 yourregistry
-youtube

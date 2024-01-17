@@ -61,7 +61,7 @@ Here are some guidelines for using these terms in Keptn documentation.
 * Kubernetes concepts and objects (such as workload or resource)
   should be lowercase unless they are the proper name of an object.
   
-    This means that workload would not be capitalized, but Pod or Deployment would be.
+    This means that "workload" is not capitalized, but "Pod" and "Deployment" are.
 
 * The first instance of one of these terms in a section
   should be a link to the relevant Kubernetes documentation.

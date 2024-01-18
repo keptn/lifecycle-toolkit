@@ -94,6 +94,16 @@ metadata:
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.1.0
 spec:
+  conversion:
+    strategy: Webhook
+    webhook:
+      clientConfig:
+        service:
+          name: 'lifecycle-webhook-service'
+          namespace: 'helmtests'
+          path: /convert
+      conversionReviewVersions:
+      - v1
   group: lifecycle.keptn.sh
   names:
     kind: KeptnApp
@@ -5209,9 +5219,8 @@ spec:
                 - type
                 type: object
               container:
-                description: |-
-                  Container contains the definition for the container that is to be used in Job based on
-                  the KeptnTaskDefinitions.
+                description: Container contains the definition for the container that
+                  is to be used in Job
                 properties:
                   args:
                     description: |-
@@ -6517,8 +6526,8 @@ spec:
                 - name
                 type: object
               deno:
-                description: "Deno contains the definition for the Deno function that
-                  is to be executed in KeptnTasks based on\n\tthe KeptnTaskDefinitions."
+                description: Deno contains the definition for the Deno function that
+                  is to be executed in KeptnTasks
                 properties:
                   cmdParameters:
                     description: CmdParameters contains parameters that will be passed
@@ -6592,8 +6601,7 @@ spec:
               function:
                 description: |-
                   Deprecated
-                  Function contains the definition for the function that is to be executed in KeptnTasks based on
-                  the KeptnTaskDefinitions.
+                  Function contains the definition for the function that is to be executed in KeptnTasks
                 properties:
                   cmdParameters:
                     description: CmdParameters contains parameters that will be passed
@@ -6682,8 +6690,8 @@ spec:
                   x-kubernetes-map-type: atomic
                 type: array
               python:
-                description: "Python contains the definition for the python function
-                  that is to be executed in KeptnTasks based on\n\tthe KeptnTaskDefinitions."
+                description: Python contains the definition for the python function
+                  that is to be executed in KeptnTasks
                 properties:
                   cmdParameters:
                     description: CmdParameters contains parameters that will be passed

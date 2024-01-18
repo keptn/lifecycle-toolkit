@@ -26,9 +26,6 @@ If not, go ahead and [create an issue](https://github.com/keptn/lifecycle-toolki
 [good first issues](https://github.com/keptn/lifecycle-toolkit/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
 If you want to work on it, just post a comment on the issue.
 
-* **Add yourself**: Add yourself to the [list of contributors](CONTRIBUTORS.md)
-along with your first pull request.
-
 This document lays out how to get you started in contributing to
 Keptn, so please read on.
 
@@ -43,21 +40,21 @@ on Slack and a mentor will surely guide you!
 ### Prerequisites
 
 See
-[Set up the development environment](docs/content/en/contribute/software/dev-environ/_index.md)
+[Set up the development environment](https://keptn.sh/latest/docs/contribute/software/dev-environ/)
 for information about how to set up an environment
 in which you can develop and test software for Keptn.
 
 ## Related Technologies
 
-Please check [Related Technologies](docs/content/en/contribute/general/technologies/_index.md).
+Please check [Related Technologies](https://keptn.sh/latest/docs/contribute/general/technologies/).
 
 ## Linter Requirements
 
-Please check [Linter Requirements](docs/content/en/contribute/docs/linter-requirements/_index.md).
+Please check [Linter Requirements](https://keptn.sh/latest/docs/contribute/docs/linter-requirements/).
 
 ## Working with git
 
-See [Working with Git](docs/content/en/contribute/general/git)
+See [Working with Git](https://keptn.sh/latest/docs/contribute/general/git/)
 
 Your PR will usually be reviewed by the Keptn team within a
 couple of days, but feel free to let us know about your PR
@@ -67,5 +64,5 @@ couple of days, but feel free to let us know about your PR
 
 All commits must be accompanied by a DCO sign-off.
 See
-[DCO](docs/content/en/contribute/general/dco)
+[DCO](https://keptn.sh/latest/docs/contribute/general/dco/)
 for more information.

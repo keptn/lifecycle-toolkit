@@ -17,7 +17,7 @@ RENDERER='markdown'
 RENDERER_CONFIG_FILE_TEMPLATE_PATH='.github/scripts/generate-crd-docs/crd-docs-generator-config'
 RENDERER_CONFIG_FILE=$RENDERER_CONFIG_FILE_TEMPLATE_PATH'.yaml'
 PATH=$PATH:$(go env GOPATH)/bin
-DOCS_PATH=./docs-new/docs/reference/api-reference/
+DOCS_PATH=./docs/docs/reference/api-reference/
 
 echo "Checking if code generator tool is installed..."
 if ! test -s crd-ref-docs; then

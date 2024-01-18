@@ -29,25 +29,27 @@ func TestSpanHandler_GetAndUnbindSpan_AppVersion(t *testing.T) {
 	av.Spec.TraceId["test"] = "test"
 	av.Spec.AppName = "test"
 	av.Spec.Version = "test"
+	av.Spec.Metadata = map[string]string{"testy": "test"}
 	doAssert(t, av)
 }
 
 func doAssert(t *testing.T, obj client.Object) {
+
 	r := Handler{}
 	phase := "pre"
 	tracer := otel.Tracer("keptn/test")
 	ctx, span, err := r.GetSpan(context.TODO(), tracer, obj, phase)
-
+	t.Logf("%v", ctx)
 	require.Nil(t, err)
 	require.NotNil(t, t, span)
 	require.NotNil(t, ctx)
-
+	t.Logf("%v", span)
 	require.Len(t, r.bindCRDSpan, 1)
 	err = r.UnbindSpan(obj, phase)
-
 	require.Nil(t, err)
-
+	t.Logf("%v", span.TracerProvider())
 	require.Empty(t, r.bindCRDSpan)
+
 }
 
 func TestSpanHandler_GetSpan(t *testing.T) {

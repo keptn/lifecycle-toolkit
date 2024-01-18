@@ -100,7 +100,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		r.getTracer(),
 		appVersion,
 		"",
-		r.getLinkedTraces(appVersion)...,
+		r.getLinkedSpans(appVersion)...,
 	)
 	if err != nil {
 		r.Log.Error(err, "could not get span")
@@ -228,7 +228,7 @@ func (r *KeptnAppVersionReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
 }
 
-func (r *KeptnAppVersionReconciler) getLinkedTraces(version *klcv1beta1.KeptnAppVersion) []trace.Link {
+func (r *KeptnAppVersionReconciler) getLinkedSpans(version *klcv1beta1.KeptnAppVersion) []trace.Link {
 	result := make([]trace.Link, len(version.Spec.SpanLinks))
 
 	for i, linkedTrace := range version.Spec.SpanLinks {

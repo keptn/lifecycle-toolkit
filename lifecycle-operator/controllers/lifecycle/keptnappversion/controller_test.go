@@ -20,6 +20,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -358,12 +359,27 @@ func TestKeptnAppVersionReconciler_getLinkedTraces(t *testing.T) {
 				version: &lfcv1beta1.KeptnAppVersion{
 					Spec: lfcv1beta1.KeptnAppVersionSpec{
 						KeptnAppContextSpec: lfcv1beta1.KeptnAppContextSpec{
-							SpanLinks: []string{"00-c088f5c586bab8649159ccc39a9862f7-f8622898331ffba3-01"},
+							SpanLinks: []string{"00-c088f5c586bab8649159ccc39a9862f7-f862289833f1fba3-01"},
 						},
 					},
 				},
 			},
-			want: nil,
+			want: []trace.Link{
+				{
+					SpanContext: trace.NewSpanContext(trace.SpanContextConfig{
+						SpanID:     trace.SpanID([8]byte{0xf8, 0x62, 0x28, 0x98, 0x33, 0xf1, 0xfb, 0xa3}),
+						TraceID:    trace.TraceID([16]byte{0xc0, 0x88, 0xf5, 0xc5, 0x86, 0xba, 0xb8, 0x64, 0x91, 0x59, 0xcc, 0xc3, 0x9a, 0x98, 0x62, 0xf7}),
+						TraceFlags: trace.TraceFlags(1),
+						Remote:     true,
+					}),
+					Attributes: []attribute.KeyValue{
+						{
+							Key:   "ot-span-reference-type",
+							Value: attribute.StringValue("follows-from"),
+						},
+					},
+				},
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -371,9 +387,8 @@ func TestKeptnAppVersionReconciler_getLinkedTraces(t *testing.T) {
 			r := &KeptnAppVersionReconciler{
 				Log: tt.fields.Log,
 			}
-			if got := r.getLinkedTraces(tt.args.version); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("getLinkedTraces() = %v, want %v", got, tt.want)
-			}
+			got := r.getLinkedSpans(tt.args.version)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

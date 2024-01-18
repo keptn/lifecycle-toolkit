@@ -71,8 +71,10 @@ func TestTaskHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
-						PreDeploymentTasks: []string{"task-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentTasks: []string{"task-def"},
+						},
 					},
 				},
 			},
@@ -99,8 +101,10 @@ func TestTaskHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
-						PreDeploymentTasks: []string{"task-def", "other-task-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentTasks: []string{"task-def", "other-task-def"},
+						},
 					},
 				},
 			},
@@ -139,8 +143,10 @@ func TestTaskHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
-						PreDeploymentTasks: []string{"task-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentTasks: []string{"task-def"},
+						},
 					},
 				},
 			},
@@ -179,8 +185,10 @@ func TestTaskHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
-						PreDeploymentTasks: []string{"task-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentTasks: []string{"task-def"},
+						},
 					},
 				},
 			},
@@ -216,8 +224,10 @@ func TestTaskHandler(t *testing.T) {
 			name: "already done task",
 			object: &v1beta1.KeptnAppVersion{
 				Spec: v1beta1.KeptnAppVersionSpec{
-					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
-						PreDeploymentTasks: []string{"task-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentTasks: []string{"task-def"},
+						},
 					},
 				},
 				Status: v1beta1.KeptnAppVersionStatus{
@@ -260,8 +270,10 @@ func TestTaskHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
-						PreDeploymentTasks: []string{"task-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentTasks: []string{"task-def"},
+						},
 					},
 				},
 				Status: v1beta1.KeptnAppVersionStatus{
@@ -312,8 +324,10 @@ func TestTaskHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
-						PreDeploymentTasks: []string{"task-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentTasks: []string{"task-def"},
+						},
 					},
 				},
 				Status: v1beta1.KeptnAppVersionStatus{
@@ -365,7 +379,7 @@ func TestTaskHandler(t *testing.T) {
 			err := v1beta1.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			spanHandlerMock := telemetryfake.ISpanHandlerMock{
-				GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+				GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string, links ...trace.Link) (context.Context, trace.Span, error) {
 					return context.TODO(), trace.SpanFromContext(context.TODO()), nil
 				},
 				UnbindSpanFunc: func(reconcileObject client.Object, phase string) error {
@@ -424,8 +438,10 @@ func TestTaskHandler_createTask(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
-						PreDeploymentTasks: []string{"task-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentTasks: []string{"task-def"},
+						},
 					},
 				},
 			},

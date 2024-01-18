@@ -143,7 +143,7 @@ func (r *KeptnAppReconciler) createAppVersion(ctx context.Context, app *klcv1bet
 
 	appVersion := app.GenerateAppVersion(previousVersion)
 
-	appVersion.Spec.DeploymentTaskSpec = appContext.Spec.DeploymentTaskSpec
+	appVersion.Spec.KeptnAppContextSpec = appContext.Spec
 
 	err := controllerutil.SetControllerReference(app, &appVersion, r.Scheme)
 	if err != nil {

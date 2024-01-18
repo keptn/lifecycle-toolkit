@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/go-logr/logr"
 	lfcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
@@ -141,9 +142,11 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 			KeptnAppSpec: lfcv1beta1.KeptnAppSpec{
 				Version: "1.0.0",
 			},
-			DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
-				PreDeploymentTasks: []string{
-					"task",
+			KeptnAppContextSpec: lfcv1beta1.KeptnAppContextSpec{
+				DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
+					PreDeploymentTasks: []string{
+						"task",
+					},
 				},
 			},
 			AppName: "myapp",
@@ -265,7 +268,7 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 	// fake span handler
 
 	spanRecorder := &telemetryfake.ISpanHandlerMock{
-		GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+		GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string, links ...trace.Link) (context.Context, trace.Span, error) {
 			return ctx, trace.SpanFromContext(ctx), nil
 		},
 		UnbindSpanFunc: func(reconcileObject client.Object, phase string) error { return nil },
@@ -328,6 +331,49 @@ func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 			require.NotNil(t, ctx)
 			require.NotNil(t, endFunc)
 
+		})
+	}
+}
+
+func TestKeptnAppVersionReconciler_getLinkedTraces(t *testing.T) {
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+	type fields struct {
+		Log logr.Logger
+	}
+	type args struct {
+		version *lfcv1beta1.KeptnAppVersion
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   []trace.Link
+	}{
+		{
+			name: "get linked trace",
+			fields: fields{
+				Log: ctrl.Log.WithName("test-appVersionController"),
+			},
+			args: args{
+				version: &lfcv1beta1.KeptnAppVersion{
+					Spec: lfcv1beta1.KeptnAppVersionSpec{
+						KeptnAppContextSpec: lfcv1beta1.KeptnAppContextSpec{
+							SpanLinks: []string{"00-c088f5c586bab8649159ccc39a9862f7-f8622898331ffba3-01"},
+						},
+					},
+				},
+			},
+			want: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := &KeptnAppVersionReconciler{
+				Log: tt.fields.Log,
+			}
+			if got := r.getLinkedTraces(tt.args.version); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("getLinkedTraces() = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

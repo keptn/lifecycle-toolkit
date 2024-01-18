@@ -85,9 +85,9 @@ spec:
                 items:
                   type: string
                 type: array
-              traceLinks:
+              spanLinks:
                 description: |-
-                  TraceLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
+                  SpanLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
                   For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links
                 items:
                   type: string

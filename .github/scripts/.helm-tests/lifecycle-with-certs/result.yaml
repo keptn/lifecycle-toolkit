@@ -7187,6 +7187,12 @@ spec:
               app:
                 description: AppName is the name of the KeptnApp containing the KeptnWorkload.
                 type: string
+              metadata:
+                additionalProperties:
+                  type: string
+                description: Metadata contains additional key-value pairs for contextual
+                  information.
+                type: object
               postDeploymentEvaluations:
                 description: |-
                   PostDeploymentEvaluations is a list of all evaluations to be performed
@@ -7671,6 +7677,12 @@ spec:
               app:
                 description: AppName is the name of the KeptnApp containing the KeptnWorkload.
                 type: string
+              metadata:
+                additionalProperties:
+                  type: string
+                description: Metadata contains additional key-value pairs for contextual
+                  information.
+                type: object
               postDeploymentEvaluations:
                 description: |-
                   PostDeploymentEvaluations is a list of all evaluations to be performed

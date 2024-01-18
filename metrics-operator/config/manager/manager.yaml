@@ -71,6 +71,8 @@ spec:
               value: "0"
             - name: ANALYSIS_CONTROLLER_LOG_LEVEL
               value: "0"
+            - name: CERT_MANAGER_ENABLED
+              value: "true"
           ports:
             - containerPort: 9443
               name: webhook-server

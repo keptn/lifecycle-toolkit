@@ -2,9 +2,17 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: lifecycle-mutating-webhook-configuration
+{{- $caAnnotations := .Values.global.caInjectionAnnotations}}
+{{- $annotations := include "common.annotations" (dict "context" .) }}
+{{- if or $caAnnotations $annotations }}
   annotations:
-    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
-    {{- include "common.annotations" (dict "context" .) }}
+    {{- with $annotations  }}
+    {{- . -}}
+    {{- end }}
+    {{- with $caAnnotations  }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end }}
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn"

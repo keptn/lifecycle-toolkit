@@ -27,10 +27,6 @@ func (src *KeptnApp) ConvertTo(dstRaw conversion.Hub) error {
 			Version: srcWl.Version,
 		})
 	}
-	dst.Spec.PreDeploymentTasks = src.Spec.PreDeploymentTasks
-	dst.Spec.PostDeploymentTasks = src.Spec.PostDeploymentTasks
-	dst.Spec.PreDeploymentEvaluations = src.Spec.PreDeploymentEvaluations
-	dst.Spec.PostDeploymentEvaluations = src.Spec.PostDeploymentEvaluations
 
 	dst.Status.CurrentVersion = src.Status.CurrentVersion
 
@@ -59,10 +55,6 @@ func (dst *KeptnApp) ConvertFrom(srcRaw conversion.Hub) error {
 			Version: srcWl.Version,
 		})
 	}
-	dst.Spec.PreDeploymentTasks = src.Spec.PreDeploymentTasks
-	dst.Spec.PostDeploymentTasks = src.Spec.PostDeploymentTasks
-	dst.Spec.PreDeploymentEvaluations = src.Spec.PreDeploymentEvaluations
-	dst.Spec.PostDeploymentEvaluations = src.Spec.PostDeploymentEvaluations
 
 	dst.Status.CurrentVersion = src.Status.CurrentVersion
 

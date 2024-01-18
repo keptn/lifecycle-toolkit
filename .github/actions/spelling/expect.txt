@@ -87,6 +87,7 @@ configmapref
 configmapreference
 containedctx
 containerspec
+contextcommon
 contextdata
 controllercommon
 controllererrors
@@ -241,6 +242,7 @@ ikbr
 imagepullsecret
 IManager
 IMeter
+inclusivity
 Infof
 inlinehilite
 inlines
@@ -485,6 +487,7 @@ previousversion
 printargs
 printcolumn
 privs
+Process
 proj
 promapi
 promhttp
@@ -589,6 +592,7 @@ teststep
 tgz
 thisthatdc
 thschue
+timeblock
 timeframe
 Timerange
 timeseries

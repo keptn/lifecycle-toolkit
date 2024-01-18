@@ -51,6 +51,8 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 								Version: "4.5.6",
 							},
 						},
+					},
+					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
 						PreDeploymentTasks: []string{
 							"some-pre-deployment-task1",
 						},
@@ -471,6 +473,8 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 								Version: "4.5.6",
 							},
 						},
+					},
+					DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
 						PreDeploymentTasks: []string{
 							"some-pre-deployment-task1",
 						},

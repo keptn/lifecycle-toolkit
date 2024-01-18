@@ -248,12 +248,8 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 			Annotations: creationRequest.Annotations,
 		},
 		Spec: lifecycle.KeptnAppSpec{
-			Version:                   computeVersionFromWorkloads(workloads),
-			PreDeploymentTasks:        []string{},
-			PostDeploymentTasks:       []string{},
-			PreDeploymentEvaluations:  []string{},
-			PostDeploymentEvaluations: []string{},
-			Workloads:                 []lifecycle.KeptnWorkloadRef{},
+			Version:   computeVersionFromWorkloads(workloads),
+			Workloads: []lifecycle.KeptnWorkloadRef{},
 		},
 	}
 

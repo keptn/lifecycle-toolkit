@@ -30,7 +30,8 @@ import (
 
 // KeptnAppVersionSpec defines the desired state of KeptnAppVersion
 type KeptnAppVersionSpec struct {
-	KeptnAppSpec `json:",inline"`
+	DeploymentTaskSpec `json:",inline"`
+	KeptnAppSpec       `json:",inline"`
 	// AppName is the name of the KeptnApp.
 	AppName string `json:"appName"`
 	// PreviousVersion is the version of the KeptnApp that has been deployed prior to this version.

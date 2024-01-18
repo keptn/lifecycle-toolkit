@@ -1,15 +1,11 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: podtato-head-entry
-  labels:
-    app: podtato-head
-spec:
-  selector:
-    matchLabels:
-      component: podtato-head-entry
-  replicas: 3
-  template:
-    metadata:
-      labels:
-        component: podtato-head-entry
+assert: deployment.yaml
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+collectors:
+  - type: pod
+    selector: app=podtato-head
+  - command: |
+      kubectl logs -l app=metrics-operator -n keptn-system
+      kubectl describe keptnmetric podtatometric -n $NAMESPACE
+      kubectl describe keptnmetricsprovider dynatrace -n $NAMESPACE
+      kubectl describe pods -l app=podtato-head -n $NAMESPACE

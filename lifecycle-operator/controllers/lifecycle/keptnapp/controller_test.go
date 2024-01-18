@@ -36,9 +36,34 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 		},
 		Status: lfcv1beta1.KeptnAppStatus{},
 	}
+	appContext := &lfcv1beta1.KeptnAppContext{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:       "my-app-context",
+			Namespace:  "default",
+			Generation: 1,
+		},
+		Spec: lfcv1beta1.KeptnAppContextSpec{
+			DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
+				PreDeploymentTasks: []string{
+					"some-pre-deployment-task1",
+				},
+				PostDeploymentTasks: []string{
+					"some-post-deployment-task2",
+				},
+				PreDeploymentEvaluations: []string{
+					"some-pre-evaluation-task1",
+				},
+				PostDeploymentEvaluations: []string{
+					"some-pre-evaluation-task2",
+				},
+			},
+		},
+		Status: lfcv1beta1.KeptnAppContextStatus{},
+	}
 	r, _ := setupReconciler()
 
-	appVersion, err := r.createAppVersion(context.TODO(), app)
+	appVersion, err := r.createAppVersion(context.TODO(), app, appContext)
 	if err != nil {
 		t.Errorf("Error Creating appVersion: %s", err.Error())
 	}
@@ -61,9 +86,34 @@ func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {
 			Version: "version",
 		},
 	}
+	appContext := &lfcv1beta1.KeptnAppContext{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:       "my-app-context",
+			Namespace:  "default",
+			Generation: 1,
+		},
+		Spec: lfcv1beta1.KeptnAppContextSpec{
+			DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
+				PreDeploymentTasks: []string{
+					"some-pre-deployment-task1",
+				},
+				PostDeploymentTasks: []string{
+					"some-post-deployment-task2",
+				},
+				PreDeploymentEvaluations: []string{
+					"some-pre-evaluation-task1",
+				},
+				PostDeploymentEvaluations: []string{
+					"some-pre-evaluation-task2",
+				},
+			},
+		},
+		Status: lfcv1beta1.KeptnAppContextStatus{},
+	}
 	r, _ := setupReconciler()
 
-	appVersion, err := r.createAppVersion(context.Background(), app)
+	appVersion, err := r.createAppVersion(context.Background(), app, appContext)
 	if err != nil {
 		t.Errorf("Error creating app version: %s", err.Error())
 	}

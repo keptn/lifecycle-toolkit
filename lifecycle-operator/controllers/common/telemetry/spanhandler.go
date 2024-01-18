@@ -2,12 +2,12 @@ package telemetry
 
 import (
 	"context"
-	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
-	"go.opentelemetry.io/otel/attribute"
 	"sync"
 
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/client"

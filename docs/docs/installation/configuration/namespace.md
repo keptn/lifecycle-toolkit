@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # How to structure your namespaces
 
 You have significant flexibility to decide how many namespaces to use

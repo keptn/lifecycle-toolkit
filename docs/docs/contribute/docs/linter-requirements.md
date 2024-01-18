@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Linter Requirements
 
 This project uses a set of linters to ensure good code quality.

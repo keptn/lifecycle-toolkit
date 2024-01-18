@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Day 2 Operations
 
 After you have successfully rolled out your application by following

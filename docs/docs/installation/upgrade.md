@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Upgrade
 
 If you installed the previous version of Keptn using `helm`,

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Kubernetes cluster
 
 Keptn is meant to be installed

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Software contributions
 
 This section is under development.

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # AnalysisDefinition
 
 An `AnalysisDefinition` resource defines the

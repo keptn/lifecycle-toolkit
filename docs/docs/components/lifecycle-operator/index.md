@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn Lifecycle Operator
 
 **Keptn's Lifecycle Operator** is

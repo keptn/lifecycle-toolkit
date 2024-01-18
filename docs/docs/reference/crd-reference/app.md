@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # KeptnApp
 
 A `KeptnApp` resource lists all the [workloads](https://kubernetes.io/docs/concepts/workloads/)

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # KeptnMetric
 
 A `KeptnMetric` represents a metric that is collected from a provider.

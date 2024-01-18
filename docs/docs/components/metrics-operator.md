@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn Metrics Operator
 
 The Keptn Metrics Operator collects, processes,

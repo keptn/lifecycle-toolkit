@@ -96,6 +96,7 @@ func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *c
 	preEvaluationChecks, _ = GetLabelOrAnnotation(sourceResource, apicommon.PreDeploymentEvaluationAnnotation, "")
 	postEvaluationChecks, _ = GetLabelOrAnnotation(sourceResource, apicommon.PostDeploymentEvaluationAnnotation, "")
 	containerName, _ := GetLabelOrAnnotation(sourceResource, apicommon.ContainerNameAnnotation, "")
+	metadata, _ := GetLabelOrAnnotation(sourceResource, apicommon.MetadataAnnotation, "")
 
 	if gotWorkloadName {
 		setMapKey(targetPod.Annotations, apicommon.WorkloadAnnotation, workloadName)
@@ -116,6 +117,7 @@ func copyResourceLabelsIfPresent(sourceResource *metav1.ObjectMeta, targetPod *c
 		setMapKey(targetPod.Annotations, apicommon.PostDeploymentTaskAnnotation, postDeploymentChecks)
 		setMapKey(targetPod.Annotations, apicommon.PreDeploymentEvaluationAnnotation, preEvaluationChecks)
 		setMapKey(targetPod.Annotations, apicommon.PostDeploymentEvaluationAnnotation, postEvaluationChecks)
+		setMapKey(targetPod.Annotations, apicommon.MetadataAnnotation, metadata)
 
 		return true
 	}

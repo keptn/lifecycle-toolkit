@@ -4,7 +4,7 @@ metadata:
   name: work-work
 spec:
   metadata:
-    commit-id: 1234
+    commit-id: "1234"
     stage: dev
 ---
 
@@ -14,7 +14,7 @@ metadata:
   name: work-work-0.4
 spec:
   metadata:
-    commit-id: 1234
+    commit-id: "1234"
     stage: dev
 status:
   currentPhase: Completed

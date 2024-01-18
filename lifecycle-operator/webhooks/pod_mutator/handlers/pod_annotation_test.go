@@ -440,6 +440,7 @@ func TestCopyResourceLabelsIfPresent(t *testing.T) {
 						apicommon.PostDeploymentTaskAnnotation:       postDep,
 						apicommon.PreDeploymentEvaluationAnnotation:  preEval,
 						apicommon.PostDeploymentEvaluationAnnotation: postEval,
+						apicommon.MetadataAnnotation:                 "foo=bar",
 					},
 				},
 				targetPod: &corev1.Pod{
@@ -461,6 +462,7 @@ func TestCopyResourceLabelsIfPresent(t *testing.T) {
 						apicommon.PostDeploymentTaskAnnotation:       postDep,
 						apicommon.PreDeploymentEvaluationAnnotation:  preEval,
 						apicommon.PostDeploymentEvaluationAnnotation: postEval,
+						apicommon.MetadataAnnotation:                 "foo=bar",
 					},
 				},
 			},

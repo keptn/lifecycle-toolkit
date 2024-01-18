@@ -21,7 +21,7 @@ kind: KeptnWorkloadVersion
 metadata:
   name: podtato-head-podtato-head-entry-0.1.0
   metadata:
-    commit-id: 1234
+    commit-id: "1234"
     stage: dev
 status:
   currentPhase: Completed

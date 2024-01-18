@@ -2,7 +2,7 @@
 
 SLI converter is a tool to convert the old `sli.yaml`
 [file format](https://github.com/keptn/spec/blob/master/service_level_indicator.md) into the new
-`AnalysisValueTemplate` [custom resource definition](../../docs/content/en/docs/reference/api-reference/metrics/v1beta1/).
+`AnalysisValueTemplate` [custom resource definition](https://keptn.sh/latest/docs/reference/api-reference/metrics/v1beta1/).
 The converter is part of `metrics-operator` image.
 
 ## Usage

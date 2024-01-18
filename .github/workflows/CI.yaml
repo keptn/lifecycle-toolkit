@@ -11,7 +11,6 @@ on:
       - 'epic/*'
     paths-ignore:
       - "docs/**"
-      - "docs-new/**"
       - "**.md"
       - "netlify.toml"
       - "mkdocs.yml"

@@ -87,7 +87,6 @@ configmapref
 configmapreference
 containedctx
 containerspec
-contextcommon
 contextdata
 controllercommon
 controllererrors
@@ -193,6 +192,7 @@ gha
 ghrs
 ghtoken
 ginkgotypes
+giscus
 Gitlab
 gke
 gms
@@ -213,7 +213,6 @@ graphql
 groupversion
 gstatic
 GVK
-HCNAH
 healthz
 hellopy
 helloworldtask
@@ -238,7 +237,6 @@ ifeq
 ifile
 ifndef
 IHandler
-ikbr
 imagepullsecret
 IManager
 IMeter
@@ -263,10 +261,8 @@ javascripts
 jetstack
 jgehrcke
 Jhb
-Jmn
 jsonschema
 jwt
-Jymo
 kacr
 kauz
 kav
@@ -416,7 +412,6 @@ myservice
 myuser
 myversion
 namespacedelete
-Nde
 netlify
 nifi
 nilnil
@@ -487,7 +482,6 @@ previousversion
 printargs
 printcolumn
 privs
-Process
 proj
 promapi
 promhttp
@@ -612,6 +606,7 @@ trivyignore
 trunc
 ttlsecondsafterfinished
 ttlsecondstask
+typeof
 UIDs
 undeploy
 unmarshal
@@ -651,7 +646,6 @@ WORKLOADOVERALLSTATUS
 workloadsstate
 workloadstatus
 workloadversion
-WZC
 xxxx
 XXXXXXXXXXXXXXXXXXXXXXXX
 yannh

@@ -17,8 +17,10 @@
         "lifecycle-operator",
         "metrics-operator",
         "scheduler",
-        "runtimes/deno-runtime",
-        "runtimes/python-runtime"
+        "runtimes",
+        ".github/actions/spelling",
+        "test",
+        "examples"
       ],
       "extra-files": [
         "README.md",

@@ -17,5 +17,4 @@ customRules:
 ignores:
   - "**/CHANGELOG.md"
   - "node_modules"
-  - "docs"
   - "readme-generator-for-helm"

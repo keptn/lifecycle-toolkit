@@ -6,8 +6,10 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/sdk/trace"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -102,4 +104,36 @@ func TestSpanHandler_GetSpan(t *testing.T) {
 	require.Equal(t, ctx, ctx5)
 	require.Equal(t, span, span5)
 
+}
+
+func TestSpanHandler_GetSpanWithAttributes(t *testing.T) {
+	wi := &v1beta1.KeptnWorkloadVersion{}
+	wi.Spec.TraceId = make(map[string]string, 1)
+	wi.Spec.TraceId["traceparent"] = "test-parent"
+	wi.Spec.AppName = "test"
+	wi.Spec.WorkloadName = "test"
+	wi.Spec.Version = "test"
+
+	r := Handler{}
+	phase := apicommon.PhaseAppDeployment.ShortName
+
+	tp := trace.NewTracerProvider()
+
+	tracer := tp.Tracer("keptn")
+
+	ctx := context.TODO()
+
+	ctx = keptncontext.WithAppMetadata(ctx, map[string]string{"foo": "bar"})
+	ctx, span, err := r.GetSpan(ctx, tracer, wi, phase)
+
+	require.Nil(t, err)
+	require.NotNil(t, span)
+	require.NotNil(t, ctx)
+
+	attributes := span.(trace.ReadOnlySpan).Attributes()
+	require.NotNil(t, attributes)
+
+	// the total number of attributes should be 5 (i.e. the workload specific ones + the additional one)
+	require.Len(t, attributes, 5)
+	require.Equal(t, "bar", attributes[4].Value.AsString())
 }

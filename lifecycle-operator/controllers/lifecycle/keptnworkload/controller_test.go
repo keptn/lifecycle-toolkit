@@ -34,12 +34,12 @@ func TestKeptnWorkload(t *testing.T) {
 			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
 				Version: "version",
 				AppName: "app",
+				Metadata: map[string]string{
+					"foo": "bar",
+				},
 			},
 			WorkloadName:    "workload",
 			PreviousVersion: "prev",
-			Metadata: map[string]string{
-				"foo": "bar",
-			},
 		},
 	}, workloadVersion)
 }

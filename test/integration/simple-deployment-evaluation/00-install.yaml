@@ -48,7 +48,7 @@ spec:
         keptn.sh/version: "0.4"
         keptn.sh/pre-deployment-evaluations: pre-deployment-hello
         keptn.sh/post-deployment-evaluations: pre-deployment-hello
-
+        keptn.sh/metadata: "commit-id=1234,stage=dev"
     spec:
       containers:
         - image: busybox

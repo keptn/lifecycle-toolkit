@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"strings"
 	"testing"
 	"time"
@@ -758,6 +759,9 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 			WorkloadName:    "some-app-some-workload",
 			PreviousVersion: "",
 			TraceId:         nil,
+			Metadata: map[string]string{
+				"foo": "bar",
+			},
 		},
 		Status: klcv1beta1.KeptnWorkloadVersionStatus{
 			DeploymentStatus:               apicommon.StateSucceeded,
@@ -819,6 +823,17 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 		assert.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
 		assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
 	}
+
+	spanHandlerMock := r.SpanHandler.(*telemetryfake.ISpanHandlerMock)
+
+	require.Len(t, spanHandlerMock.GetSpanCalls(), 1)
+	require.Len(t, spanHandlerMock.UnbindSpanCalls(), 1)
+
+	// verify the propagation of the context attributes to the span handler
+	metadata, b := keptncontext.GetAppMetadataFromContext(spanHandlerMock.GetSpanCalls()[0].Ctx)
+
+	require.True(t, b)
+	require.Equal(t, "bar", metadata["foo"])
 }
 
 func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion_SchedulingGates(t *testing.T) {
@@ -1178,13 +1193,23 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, ch
 
 	recorder := record.NewFakeRecorder(100)
 
+	spanHandlerMock := &telemetryfake.ISpanHandlerMock{
+		GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+			ctx, span := tracer.Start(ctx, phase, trace.WithSpanKind(trace.SpanKindConsumer))
+			return ctx, span, nil
+		},
+		UnbindSpanFunc: func(_ client.Object, _ string) error {
+			return nil
+		},
+	}
+
 	r := &KeptnWorkloadVersionReconciler{
 		Client:        fakeClient,
 		Scheme:        scheme.Scheme,
 		EventSender:   eventsender.NewK8sSender(recorder),
 		Log:           ctrl.Log.WithName("test-appController"),
 		Meters:        testcommon.InitAppMeters(),
-		SpanHandler:   &telemetry.Handler{},
+		SpanHandler:   spanHandlerMock,
 		TracerFactory: tf,
 		EvaluationHandler: &evaluationfake.MockEvaluationHandler{
 			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {

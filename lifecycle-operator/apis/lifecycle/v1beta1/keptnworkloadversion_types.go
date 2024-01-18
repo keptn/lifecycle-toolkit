@@ -57,6 +57,9 @@ type KeptnWorkloadVersionSpec struct {
 	// TraceId contains the OpenTelemetry trace ID.
 	// +optional
 	TraceId map[string]string `json:"traceId,omitempty"`
+	// +optional
+	// Metadata contains additional key-value pairs for contextual information.
+	Metadata map[string]string `json:"metadata,omitempty"`
 }
 
 // KeptnWorkloadVersionStatus defines the observed state of KeptnWorkloadVersion

@@ -20,6 +20,9 @@ apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnWorkloadVersion
 metadata:
   name: podtato-head-podtato-head-entry-0.1.0
+  metadata:
+    commit-id: 1234
+    stage: dev
 status:
   currentPhase: Completed
   deploymentStatus: Succeeded

@@ -178,6 +178,7 @@ nav:
               - Create PR: docs/contribute/general/git/pr-create.md
               - PR review process: docs/contribute/general/git/review.md
           - Contribution Guidelines: docs/contribute/general/contrib-guidelines-gen.md
+          - Refinement Process: docs/contribute/general/refinement-guide.md
       - Software contributions:
           - docs/contribute/software/index.md
           - Software development environment: docs/contribute/software/dev-environ.md

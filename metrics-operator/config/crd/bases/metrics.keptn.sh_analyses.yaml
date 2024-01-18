@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
+    controller-gen.kubebuilder.io/version: v0.14.0
   name: analyses.metrics.keptn.sh
 spec:
   group: metrics.keptn.sh
@@ -33,14 +33,19 @@ spec:
         description: Analysis is the Schema for the analyses API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -69,10 +74,10 @@ spec:
                   query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})".
                 type: object
               timeframe:
-                description: Timeframe specifies the range for the corresponding query
-                  in the AnalysisValueTemplate. Please note that either a combination
-                  of 'from' and 'to' or the 'recent' property may be set. If neither
-                  is set, the Analysis can not be added to the cluster.
+                description: |-
+                  Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate. Please note that either
+                  a combination of 'from' and 'to' or the 'recent' property may be set. If neither is set, the Analysis can
+                  not be added to the cluster.
                 properties:
                   from:
                     description: From is the time of start for the query. This field
@@ -80,9 +85,9 @@ spec:
                     format: date-time
                     type: string
                   recent:
-                    description: Recent describes a recent timeframe using a duration
-                      string. E.g. Setting this to '5m' provides an Analysis for the
-                      last five minutes
+                    description: |-
+                      Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' provides an Analysis
+                      for the last five minutes
                     pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                     type: string
                   to:
@@ -150,9 +155,9 @@ spec:
                     format: date-time
                     type: string
                   recent:
-                    description: Recent describes a recent timeframe using a duration
-                      string. E.g. Setting this to '5m' provides an Analysis for the
-                      last five minutes
+                    description: |-
+                      Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' provides an Analysis
+                      for the last five minutes
                     pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                     type: string
                   to:
@@ -192,14 +197,19 @@ spec:
         description: Analysis is the Schema for the analyses API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -228,10 +238,10 @@ spec:
                   query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})".
                 type: object
               timeframe:
-                description: Timeframe specifies the range for the corresponding query
-                  in the AnalysisValueTemplate. Please note that either a combination
-                  of 'from' and 'to' or the 'recent' property may be set. If neither
-                  is set, the Analysis can not be added to the cluster.
+                description: |-
+                  Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate. Please note that either
+                  a combination of 'from' and 'to' or the 'recent' property may be set. If neither is set, the Analysis can
+                  not be added to the cluster.
                 properties:
                   from:
                     description: From is the time of start for the query. This field
@@ -239,9 +249,9 @@ spec:
                     format: date-time
                     type: string
                   recent:
-                    description: Recent describes a recent timeframe using a duration
-                      string. E.g. Setting this to '5m' provides an Analysis for the
-                      last five minutes
+                    description: |-
+                      Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' provides an Analysis
+                      for the last five minutes
                     pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                     type: string
                   to:
@@ -309,9 +319,9 @@ spec:
                     format: date-time
                     type: string
                   recent:
-                    description: Recent describes a recent timeframe using a duration
-                      string. E.g. Setting this to '5m' provides an Analysis for the
-                      last five minutes
+                    description: |-
+                      Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' provides an Analysis
+                      for the last five minutes
                     pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                     type: string
                   to:

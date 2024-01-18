@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnworkloadversions.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
+    controller-gen.kubebuilder.io/version: v0.14.0
     {{- with .Values.global.caInjectionAnnotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -64,14 +64,19 @@ spec:
           API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -82,36 +87,36 @@ spec:
                 description: AppName is the name of the KeptnApp containing the KeptnWorkload.
                 type: string
               postDeploymentEvaluations:
-                description: PostDeploymentEvaluations is a list of all evaluations
-                  to be performed during the post-deployment phase of the KeptnWorkload.
+                description: |-
+                  PostDeploymentEvaluations is a list of all evaluations to be performed
+                  during the post-deployment phase of the KeptnWorkload.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnWorkload, or in the Keptn
-                  namespace.
+                  located in the same namespace as the KeptnWorkload, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               postDeploymentTasks:
-                description: PostDeploymentTasks is a list of all tasks to be performed
-                  during the post-deployment phase of the KeptnWorkload. The items
-                  of this list refer to the names of KeptnTaskDefinitions located
-                  in the same namespace as the KeptnWorkload, or in the Keptn namespace.
+                description: |-
+                  PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnWorkload.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnWorkload, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               preDeploymentEvaluations:
-                description: PreDeploymentEvaluations is a list of all evaluations
-                  to be performed during the pre-deployment phase of the KeptnWorkload.
+                description: |-
+                  PreDeploymentEvaluations is a list of all evaluations to be performed
+                  during the pre-deployment phase of the KeptnWorkload.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnWorkload, or in the Keptn
-                  namespace.
+                  located in the same namespace as the KeptnWorkload, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               preDeploymentTasks:
-                description: PreDeploymentTasks is a list of all tasks to be performed
-                  during the pre-deployment phase of the KeptnWorkload. The items
-                  of this list refer to the names of KeptnTaskDefinitions located
-                  in the same namespace as the KeptnApp, or in the Keptn namespace.
+                description: |-
+                  PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnWorkload.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -120,19 +125,19 @@ spec:
                   has been deployed prior to this version.
                 type: string
               resourceReference:
-                description: ResourceReference is a reference to the Kubernetes resource
-                  (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload
-                  is representing.
+                description: |-
+                  ResourceReference is a reference to the Kubernetes resource
+                  (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing.
                 properties:
                   kind:
                     type: string
                   name:
                     type: string
                   uid:
-                    description: UID is a type that holds unique ID values, including
-                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to
-                      string.  Being a type captures intent and helps make sure that
-                      UIDs and names do not get conflated.
+                    description: |-
+                      UID is a type that holds unique ID values, including UUIDs.  Because we
+                      don't ONLY use UUIDs, this is an alias to string.  Being a type captures
+                      intent and helps make sure that UIDs and names do not get conflated.
                     type: string
                 required:
                 - kind
@@ -160,9 +165,13 @@ spec:
             description: Status describes the current state of the KeptnWorkloadVersion.
             properties:
               currentPhase:
-                description: 'CurrentPhase indicates the current phase of the KeptnWorkloadVersion.
-                  This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment
-                  - PostDeploymentTasks - PostDeploymentEvaluations'
+                description: |-
+                  CurrentPhase indicates the current phase of the KeptnWorkloadVersion. This can be:
+                  - PreDeploymentTasks
+                  - PreDeploymentEvaluations
+                  - Deployment
+                  - PostDeploymentTasks
+                  - PostDeploymentEvaluations
                 type: string
               deploymentStatus:
                 default: Pending
@@ -178,8 +187,9 @@ spec:
                 additionalProperties:
                   additionalProperties:
                     type: string
-                  description: MapCarrier is a TextMapCarrier that uses a map held
-                    in memory as a storage medium for propagated key-value pairs.
+                  description: |-
+                    MapCarrier is a TextMapCarrier that uses a map held in memory as a storage
+                    medium for propagated key-value pairs.
                   type: object
                 description: PhaseTraceIDs contains the trace IDs of the OpenTelemetry
                   spans of each phase of the KeptnWorkloadVersion
@@ -212,6 +222,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -243,6 +255,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -274,6 +288,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -305,6 +321,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -320,7 +338,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -363,14 +381,19 @@ spec:
           API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -387,36 +410,36 @@ spec:
                   information.
                 type: object
               postDeploymentEvaluations:
-                description: PostDeploymentEvaluations is a list of all evaluations
-                  to be performed during the post-deployment phase of the KeptnWorkload.
+                description: |-
+                  PostDeploymentEvaluations is a list of all evaluations to be performed
+                  during the post-deployment phase of the KeptnWorkload.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnWorkload, or in the Keptn
-                  namespace.
+                  located in the same namespace as the KeptnWorkload, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               postDeploymentTasks:
-                description: PostDeploymentTasks is a list of all tasks to be performed
-                  during the post-deployment phase of the KeptnWorkload. The items
-                  of this list refer to the names of KeptnTaskDefinitions located
-                  in the same namespace as the KeptnWorkload, or in the Keptn namespace.
+                description: |-
+                  PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnWorkload.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnWorkload, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               preDeploymentEvaluations:
-                description: PreDeploymentEvaluations is a list of all evaluations
-                  to be performed during the pre-deployment phase of the KeptnWorkload.
+                description: |-
+                  PreDeploymentEvaluations is a list of all evaluations to be performed
+                  during the pre-deployment phase of the KeptnWorkload.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnWorkload, or in the Keptn
-                  namespace.
+                  located in the same namespace as the KeptnWorkload, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               preDeploymentTasks:
-                description: PreDeploymentTasks is a list of all tasks to be performed
-                  during the pre-deployment phase of the KeptnWorkload. The items
-                  of this list refer to the names of KeptnTaskDefinitions located
-                  in the same namespace as the KeptnApp, or in the Keptn namespace.
+                description: |-
+                  PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnWorkload.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
@@ -425,19 +448,19 @@ spec:
                   has been deployed prior to this version.
                 type: string
               resourceReference:
-                description: ResourceReference is a reference to the Kubernetes resource
-                  (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload
-                  is representing.
+                description: |-
+                  ResourceReference is a reference to the Kubernetes resource
+                  (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing.
                 properties:
                   kind:
                     type: string
                   name:
                     type: string
                   uid:
-                    description: UID is a type that holds unique ID values, including
-                      UUIDs.  Because we don't ONLY use UUIDs, this is an alias to
-                      string.  Being a type captures intent and helps make sure that
-                      UIDs and names do not get conflated.
+                    description: |-
+                      UID is a type that holds unique ID values, including UUIDs.  Because we
+                      don't ONLY use UUIDs, this is an alias to string.  Being a type captures
+                      intent and helps make sure that UIDs and names do not get conflated.
                     type: string
                 required:
                 - kind
@@ -465,9 +488,13 @@ spec:
             description: Status describes the current state of the KeptnWorkloadVersion.
             properties:
               currentPhase:
-                description: 'CurrentPhase indicates the current phase of the KeptnWorkloadVersion.
-                  This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment
-                  - PostDeploymentTasks - PostDeploymentEvaluations'
+                description: |-
+                  CurrentPhase indicates the current phase of the KeptnWorkloadVersion. This can be:
+                  - PreDeploymentTasks
+                  - PreDeploymentEvaluations
+                  - Deployment
+                  - PostDeploymentTasks
+                  - PostDeploymentEvaluations
                 type: string
               deploymentStatus:
                 default: Pending
@@ -483,8 +510,9 @@ spec:
                 additionalProperties:
                   additionalProperties:
                     type: string
-                  description: MapCarrier is a TextMapCarrier that uses a map held
-                    in memory as a storage medium for propagated key-value pairs.
+                  description: |-
+                    MapCarrier is a TextMapCarrier that uses a map held in memory as a storage
+                    medium for propagated key-value pairs.
                   type: object
                 description: PhaseTraceIDs contains the trace IDs of the OpenTelemetry
                   spans of each phase of the KeptnWorkloadVersion
@@ -517,6 +545,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -548,6 +578,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -579,6 +611,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -610,6 +644,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                   type: object
                 type: array
@@ -625,6 +661,6 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}

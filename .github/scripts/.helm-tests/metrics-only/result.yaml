@@ -45,6 +45,7 @@ metadata:
   name: analyses.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn
@@ -390,7 +391,7 @@ metadata:
   name: analysisdefinitions.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -1077,7 +1078,7 @@ metadata:
   name: analysisvaluetemplates.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -1216,7 +1217,7 @@ metadata:
   name: keptnmetrics.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -1733,7 +1734,7 @@ metadata:
   name: keptnmetricsproviders.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -2322,6 +2323,8 @@ spec:
           value: "0"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
+        - name: CERT_MANAGER_ENABLED
+          value: "false"
         image: ghcr.io/keptn/metrics-operator:v0.0.0
         imagePullPolicy: Always
         name: metrics-operator
@@ -2427,7 +2430,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: metrics-validating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test

@@ -193,8 +193,6 @@ For more details about implementing these options, see the
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 page.
 
-
-
 ## Context
 
 Navigating your Kubernetes landscape is guided by your chosen Kubernetes context. This set of access parameters defines the specific cluster, user, namespace, and sometimes application/workload details you're interacting with. Think of it as your personalized key to different areas within your Kubernetes infrastructure. For more information, see
@@ -210,9 +208,6 @@ file offers a practical example of how this works.
 A context environment variable is available via `Deno.env.get("KEPTN_CONTEXT")`.
 It can be used like this:
 
-
-
-  
 ```javascript
 let context = Deno.env.get("KEPTN_CONTEXT");
     

@@ -1,11 +1,13 @@
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
-VOLUMES := -v $(ROOT_DIR):/src 
-# renovate: datasource=docker depName=klakegg/hugo
-HUGO_VERSION := 0.111.3
-IMAGE := klakegg/hugo:$(HUGO_VERSION)-ext
-PORT := 1314
+
+# renovate: datasource=docker depName=squidfunk/mkdocs-material
+MKDOCS_DOCKER_IMAGE_VERSION=9.5.3
+MKDOCS_DOCKER_IMAGE=squidfunk/mkdocs-material
 
 INTERACTIVE:=$(shell [ -t 0 ] && echo 1)
+PORT := 8000
+
+DOCKER_CMD := docker run --rm $(INTERACTIVE_FLAG)
 
 ifdef INTERACTIVE
 # is a terminal
@@ -13,28 +15,45 @@ INTERACTIVE_FLAG := -it
 else
 INTERACTIVE_FLAG := -t
 endif
-DOCKER_CMD := docker run --rm $(INTERACTIVE_FLAG) -e HUGO_CACHEDIR=/src/tmp/.hugo -e HUGOxPARAMSxGITHUB_REPO=""
 
-.PHONY: build server clean shell
+PIP_CACHE_DIR=$(shell pip3 cache dir)
+PWD=$(shell pwd)
 
-build:
-	$(DOCKER_CMD) $(VOLUMES) $(IMAGE) -D -v
+.PHONY: docs-build
+docs-build:
+	$(DOCKER_CMD) -v ${PWD}/docs:/docs \
+		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
+		-v ${PWD}/requirements.txt:/requirements.txt \
+		-v ${PWD}/site:/site \
+		-v ${PWD}/.git:/.git \
+		-v ${PIP_CACHE_DIR}:/root/.cache/pip \
+		--entrypoint "" \
+		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
+		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs build'
 
-shell:
-	$(DOCKER_CMD) -i $(VOLUMES) $(IMAGE) shell
-
-server:
-	$(DOCKER_CMD) $(VOLUMES) -p  $(PORT):$(PORT) $(IMAGE) server -D -p $(PORT)
-
-clean:
-	$(DOCKER_CMD) $(VOLUMES) $(IMAGE) --cleanDestinationDir
+.PHONY: docs-serve
+docs-serve:
+	$(DOCKER_CMD) -p $(PORT):$(PORT) \
+		-v ${PWD}/docs:/docs \
+		-v ${PWD}/mkdocs.yml:/mkdocs.yml \
+		-v ${PWD}/requirements.txt:/requirements.txt \
+		-v ${PWD}/site:/site \
+		-v ${PWD}/.git:/.git \
+		-v ${PIP_CACHE_DIR}:/root/.cache/pip \
+		--entrypoint "" \
+		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
+		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs serve --dirty -a 0.0.0.0:$(PORT)'
 
 .PHONY: htmltest
 
 # renovate: datasource=docker depName=wjdp/htmltest
 HTMLTEST_VERSION := v0.17.0
-htmltest: build
-	$(DOCKER_CMD) -v $(ROOT_DIR):/test wjdp/htmltest:$(HTMLTEST_VERSION) -c .htmltest.yml public
+htmltest: docs-build
+	$(DOCKER_CMD) \
+		-v $(PWD)/docs/.htmltest.yml:/.htmltest.yml \
+		-v ${PWD}/site:/site \
+		-v ${PWD}/tmp/.htmltest:/tmp/.htmltest \
+		wjdp/htmltest:$(HTMLTEST_VERSION) -c /.htmltest.yml /site
 
 .PHONY: lint lint-fix
 lint: markdownlint

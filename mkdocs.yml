@@ -1,7 +1,7 @@
 site_name: Keptn - Supercharge Your Deployments
 theme:
   name: material
-  custom_dir: docs-new/overrides
+  custom_dir: docs/overrides
   palette:
     # Palette toggle for light mode
     - scheme: default
@@ -33,8 +33,8 @@ theme:
 site_url: !ENV READTHEDOCS_CANONICAL_URL
 repo_name: keptn/lifecycle-toolkit
 repo_url: https://github.com/keptn/lifecycle-toolkit
-edit_uri: edit/main/docs-new/
-docs_dir: docs-new
+edit_uri: edit/main/docs/
+docs_dir: docs
 site_description: >-
   Achieve cloud-native application lifecycle orchestration with Keptn.
   Enhance Kubernetes monitoring, streamline metrics ingestion, and
@@ -178,6 +178,7 @@ nav:
               - Create PR: docs/contribute/general/git/pr-create.md
               - PR review process: docs/contribute/general/git/review.md
           - Contribution Guidelines: docs/contribute/general/contrib-guidelines-gen.md
+          - Refinement Process: docs/contribute/general/refinement-guide.md
       - Software contributions:
           - docs/contribute/software/index.md
           - Software development environment: docs/contribute/software/dev-environ.md

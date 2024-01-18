@@ -16,6 +16,7 @@ else
 INTERACTIVE_FLAG := -t
 endif
 
+PIP_CACHE_DIR=$(shell pip3 cache dir)
 PWD=$(shell pwd)
 
 .PHONY: docs-build
@@ -25,7 +26,7 @@ docs-build:
 		-v ${PWD}/requirements.txt:/requirements.txt \
 		-v ${PWD}/site:/site \
 		-v ${PWD}/.git:/.git \
-		-v ${PWD}/tmp/.pip-cache:/root/.cache/pip \
+		-v ${PIP_CACHE_DIR}:/root/.cache/pip \
 		--entrypoint "" \
 		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
 		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs build'
@@ -38,7 +39,7 @@ docs-serve:
 		-v ${PWD}/requirements.txt:/requirements.txt \
 		-v ${PWD}/site:/site \
 		-v ${PWD}/.git:/.git \
-		-v ${PWD}/tmp/.pip-cache:/root/.cache/pip \
+		-v ${PIP_CACHE_DIR}:/root/.cache/pip \
 		--entrypoint "" \
 		${MKDOCS_DOCKER_IMAGE}:${MKDOCS_DOCKER_IMAGE_VERSION} \
 		sh -c 'cd /; pip install -r requirements.txt -q; mkdocs serve --dirty -a 0.0.0.0:$(PORT)'
@@ -63,12 +64,12 @@ lint: lint-fix
 # - .markdownlintignore holds the configuration for files to be ignored
 # - .markdownlint.yaml contains the rules for markdownfiles
 # renovate: datasource=docker depName=davidanson/markdownlint-cli2-rules
-MDL_DOCKER_VERSION := v0.12.0
-MDL_CMD := docker run -v $(ROOT_DIR)../:/workdir --rm 
+MDL_DOCKER_VERSION := v0.12.1
+MDL_CMD := docker run -v $(ROOT_DIR)../:/workdir --rm
 
 .PHONY: markdownlint markdownlint-fix
 markdownlint:
-	$(MDL_CMD) davidanson/markdownlint-cli2-rules:${MDL_DOCKER_VERSION} "**/*.md" 
+	$(MDL_CMD) davidanson/markdownlint-cli2-rules:${MDL_DOCKER_VERSION} "**/*.md"
 
 markdownlint-fix:
-	$(MDL_CMD) --entrypoint="markdownlint-cli2-fix" davidanson/markdownlint-cli2-rules:${MDL_DOCKER_VERSION} "**/*.md" 
+	$(MDL_CMD) davidanson/markdownlint-cli2-rules:${MDL_DOCKER_VERSION} --fix "**/*.md"

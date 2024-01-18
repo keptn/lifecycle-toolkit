@@ -58,6 +58,7 @@ If any pre-deployment evaluation or task fails,
 the `KeptnApp` issues an appropriate `*Errored` event
 and the deployment remains pending indefinitely,
 until further changes or external intervention
+either resolve the problem or terminate the execution.
 If all evaluations and tasks in a phase are successful,
 the `KeptnApp` issues the appropriate `*Succeeded` event
 and initiates the next phase.
@@ -69,6 +70,9 @@ To view these events on your cluster, execute:
 ```shell
 kubectl get events -n <namespace> . 
 ```
+
+> **Note**
+This only displays Kubernetes events, not Cloud Events.
 
 ### Pre-deployment phase
 
@@ -126,7 +130,7 @@ AppDeploy
     WorkloadPostDeployEvaluationsStarted
     WorkloadPostDeployEvaluationsSucceeded OR WorkloadPostDeployEvaluationsErrored
   AppDeploySucceeded OR AppDeployErrored
-  ```
+```
 
 ### Post-deployment phase
 
@@ -159,28 +163,32 @@ AppPostDeployEvaluations
 Completed
 ```
 
-## Events that are not part of the deployment flow
+## Events that are generated asynchronously
 
 Additional phases/states exist,
-such as those that describe what happens when something fails.
-
-Whenever something in the system happens (we create a new resource, etc.)
-a Kubernetes event is generated.
-The following events are defined as part of Keptn
-but they are not part of the deployment flow.
+such as those that describe what is currently happening in the system.
+During the lifetime of the application, custom resources are created,
+updated, deleted or reconciled.
+Each reconciliation, or re-evaluation of the state of custom resources
+by the controller, can cause the generation of events.
 These include:
 
 ```shell
-CreateEvaluation
 ReconcileEvaluation
 ReconcileTask
+ReconcileWorkload
+CreateEvaluation
 CreateTask
 CreateApp
 CreateAppVersion
 CreateWorkload
 CreateWorkloadVersion
-Completed
+CreateAppCreationRequest
+UpdateWorkload
+DeprecateAppVersion
+AppCompleted
+WorkloadCompleted
 Deprecated
-WorkloadDeployReconcile
-WorkloadDeployReconcileErrored
+Completed
+Cancelled
 ```

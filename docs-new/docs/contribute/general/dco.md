@@ -106,7 +106,7 @@ git rebase HEAD~2 --signoff
 ## Manually add text to commit description
 
 To sign off on a commit not made with the command line
-(such as those made directly with the github editor
+(such as those made directly with the GitHub editor
 or as suggestions made to a PR during review),
 you can add text like the following to the commit description block.
 You must specify your real name and the email address to use:

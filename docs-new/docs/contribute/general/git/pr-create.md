@@ -7,7 +7,7 @@ it is time to push your changes and create a PR that can be reviewed.
 This is a two-step process:
 
 1. [Push new content from your local branch](#push-new-content-from-your-local-branch)
-1. [Create the PR on the github web site](#create-pr-on-the-github-web-site)
+1. [Create the PR on the GitHub web site](#create-pr-on-the-github-web-site)
 
 ## Push new content from your local branch
 
@@ -75,7 +75,7 @@ to the repository are:
       that gives you the full command line to use;
       you can copy this command and paste it into your shell to push the content.
 
-## Create PR on the github web site
+## Create PR on the GitHub web site
 
 To create the actual PR that can be reviewed
 and eventually merged, go to the

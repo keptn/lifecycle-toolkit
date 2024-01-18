@@ -4,7 +4,9 @@ metadata:
   name: keptnmetrics.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
+    {{- with .Values.global.caInjectionAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
  {{- include "common.annotations" ( dict "context" . ) }}
   labels:
     app.kubernetes.io/part-of: keptn
@@ -181,6 +183,12 @@ spec:
       type: string
     - jsonPath: .spec.range.interval
       name: Interval
+      type: string
+    - jsonPath: .spec.range.step
+      name: Step
+      type: string
+    - jsonPath: .spec.range.aggregation
+      name: Aggregation
       type: string
     - jsonPath: .status.value
       name: Value

@@ -83,6 +83,14 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 		AppName:             app.Name,
 		PreviousVersion:     "",
 	}, appVersion.Spec)
+	assert.Equal(t, appVersion.Namespace, app.Namespace)
+	assert.Equal(t, appVersion.Name, fmt.Sprintf("%s-%s-%s", app.Name, app.Spec.Version, apicommon.Hash(app.Generation)))
+	assert.Equal(t, appVersion.Spec.Metadata, appContext.Spec.Metadata)
+	assert.Equal(t, appVersion.Spec.PreDeploymentEvaluations, appContext.Spec.PreDeploymentEvaluations)
+	assert.Equal(t, appVersion.Spec.PostDeploymentEvaluations, appContext.Spec.PostDeploymentEvaluations)
+	assert.Equal(t, appVersion.Spec.PreDeploymentTasks, appContext.Spec.PreDeploymentTasks)
+	assert.Equal(t, appVersion.Spec.PostDeploymentTasks, appContext.Spec.PostDeploymentTasks)
+
 }
 
 func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {

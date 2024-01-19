@@ -241,7 +241,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 				return mymock, nil
 			},
 			client:  fake.NewClient(metric3, supportedProvider),
-			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
+			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
 			wantErr: fmt.Errorf("client_error: client error: 404"),
 			wantMetric: &metricsapi.KeptnMetric{
 				ObjectMeta: metav1.ObjectMeta{
@@ -301,7 +301,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 				return mymock, nil
 			},
 			client:  fake.NewClient(metric4, supportedProvider),
-			want:    controllerruntime.Result{Requeue: false, RequeueAfter: 0},
+			want:    controllerruntime.Result{Requeue: true, RequeueAfter: 10 * time.Second},
 			wantErr: fmt.Errorf("client_error: client error: 404"),
 			wantMetric: &metricsapi.KeptnMetric{
 				ObjectMeta: metav1.ObjectMeta{

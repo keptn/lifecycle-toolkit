@@ -755,13 +755,13 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
 				AppName: "some-app",
 				Version: "1.0.0",
+				Metadata: map[string]string{
+					"foo": "bar",
+				},
 			},
 			WorkloadName:    "some-app-some-workload",
 			PreviousVersion: "",
 			TraceId:         nil,
-			Metadata: map[string]string{
-				"foo": "bar",
-			},
 		},
 		Status: klcv1beta1.KeptnWorkloadVersionStatus{
 			DeploymentStatus:               apicommon.StateSucceeded,

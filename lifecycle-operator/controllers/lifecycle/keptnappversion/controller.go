@@ -231,11 +231,11 @@ func (r *KeptnAppVersionReconciler) getTracer() telemetry.ITracer {
 func (r *KeptnAppVersionReconciler) getLinkedSpans(appVersion *klcv1beta1.KeptnAppVersion) []trace.Link {
 	result := make([]trace.Link, len(appVersion.Spec.SpanLinks))
 
-	for i, linkedTrace := range appVersion.Spec.SpanLinks {
-		r.Log.Info("Adding Link to trace", "linkedTrace", linkedTrace)
+	for i, linkedSpan := range appVersion.Spec.SpanLinks {
+		r.Log.Info("Adding Link to span", "linkedSpan", linkedSpan)
 
 		traceContextCarrier := propagation.MapCarrier(map[string]string{
-			"traceparent": linkedTrace,
+			"traceparent": linkedSpan,
 		})
 
 		linkedCtx := context.Background()

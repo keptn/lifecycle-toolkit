@@ -9090,7 +9090,7 @@ spec:
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
           image: ghcr.io/keptn/certificate-operator:v0.0.0
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: certificate-operator
           resources:
             limits:
@@ -9208,7 +9208,7 @@ spec:
         - name: CERT_MANAGER_ENABLED
           value: "true"
         image: ghcr.io/keptn/lifecycle-operator:v0.0.0
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Never
         name: lifecycle-operator
         ports:
         - containerPort: 9443
@@ -9291,7 +9291,7 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
         image: ghcr.io/keptn/scheduler:v0.0.0
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Never
         name: scheduler
         resources:
           limits:

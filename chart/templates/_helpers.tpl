@@ -74,3 +74,13 @@ Usage:
     {{- end }}
 {{- end -}}
 
+{{/*
+Checks for the imagePullPolicy
+*/}}
+{{- define "common.imagePullPolicy" -}}
+  {{- if .Values.global.imagePullPolicy -}}
+    {{- .Values.global.imagePullPolicy -}}
+  {{- else -}}
+    {{- default .Values.imagePullPolicy -}}
+  {{- end -}}
+{{- end -}}

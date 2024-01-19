@@ -7,7 +7,6 @@ metricsOperator:
   enabled: true
   image:
     tag: v0.0.0
-  imagePullPolicy: Never
 
 global:
   certManagerEnabled: true
@@ -16,3 +15,4 @@ global:
   imagePullPolicy: Never
   caInjectionAnnotations:
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
+  imagePullPolicy: Never

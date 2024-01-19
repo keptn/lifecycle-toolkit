@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnevaluations.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
+    controller-gen.kubebuilder.io/version: v0.14.0
     {{- with .Values.global.caInjectionAnnotations  }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -52,14 +52,19 @@ spec:
         description: KeptnEvaluation is the Schema for the keptnevaluations API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -103,6 +108,8 @@ spec:
                     message:
                       type: string
                     status:
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                     value:
                       type: string
@@ -113,6 +120,7 @@ spec:
                 type: object
               overallStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               retryCount:
                 default: 0
@@ -158,14 +166,19 @@ spec:
         description: KeptnEvaluation is the Schema for the keptnevaluations API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -209,6 +222,8 @@ spec:
                     message:
                       type: string
                     status:
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                       type: string
                     value:
                       type: string
@@ -219,6 +234,7 @@ spec:
                 type: object
               overallStatus:
                 default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
                 type: string
               retryCount:
                 default: 0
@@ -264,14 +280,19 @@ spec:
         description: KeptnEvaluation is the Schema for the keptnevaluations API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -291,23 +312,25 @@ spec:
                   the pre- or postDeployment phase.
                 type: string
               evaluationDefinition:
-                description: EvaluationDefinition refers to the name of the KeptnEvaluationDefinition
-                  which includes the objectives for the KeptnEvaluation. The KeptnEvaluationDefinition
-                  can be located in the same namespace as the KeptnEvaluation, or
-                  in the Keptn namespace.
+                description: |-
+                  EvaluationDefinition refers to the name of the KeptnEvaluationDefinition
+                  which includes the objectives for the KeptnEvaluation.
+                  The KeptnEvaluationDefinition can be
+                  located in the same namespace as the KeptnEvaluation, or in the Keptn namespace.
                 type: string
               failAction:
                 type: string
               retries:
                 default: 10
-                description: Retries indicates how many times the KeptnEvaluation
-                  can be attempted in the case of an error or missed evaluation objective,
-                  before considering the KeptnEvaluation to be failed.
+                description: |-
+                  Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
+                  missed evaluation objective, before considering the KeptnEvaluation to be failed.
                 type: integer
               retryInterval:
                 default: 5s
-                description: RetryInterval specifies the interval at which the KeptnEvaluation
-                  is retried in the case of an error or a missed objective.
+                description: |-
+                  RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error
+                  or a missed objective.
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
               workload:
@@ -334,9 +357,9 @@ spec:
                 additionalProperties:
                   properties:
                     message:
-                      description: Message contains additional information about the
-                        evaluation of an objective. This can include explanations
-                        about why an evaluation has failed (e.g. due to a missed objective),
+                      description: |-
+                        Message contains additional information about the evaluation of an objective.
+                        This can include explanations about why an evaluation has failed (e.g. due to a missed objective),
                         or if there was any error during the evaluation of the objective.
                       type: string
                     status:
@@ -351,14 +374,16 @@ spec:
                   - status
                   - value
                   type: object
-                description: EvaluationStatus describes the status of each objective
-                  of the KeptnEvaluationDefinition referenced by the KeptnEvaluation.
+                description: |-
+                  EvaluationStatus describes the status of each objective of the KeptnEvaluationDefinition
+                  referenced by the KeptnEvaluation.
                 type: object
               overallStatus:
                 default: Pending
-                description: OverallStatus describes the overall status of the KeptnEvaluation.
-                  The Overall status is derived from the status of the individual
-                  objectives of the KeptnEvaluationDefinition referenced by the KeptnEvaluation.
+                description: |-
+                  OverallStatus describes the overall status of the KeptnEvaluation. The Overall status is derived
+                  from the status of the individual objectives of the KeptnEvaluationDefinition
+                  referenced by the KeptnEvaluation.
                 type: string
               retryCount:
                 default: 0
@@ -377,7 +402,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -408,14 +433,19 @@ spec:
         description: KeptnEvaluation is the Schema for the keptnevaluations API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -435,23 +465,25 @@ spec:
                   the pre- or postDeployment phase.
                 type: string
               evaluationDefinition:
-                description: EvaluationDefinition refers to the name of the KeptnEvaluationDefinition
-                  which includes the objectives for the KeptnEvaluation. The KeptnEvaluationDefinition
-                  can be located in the same namespace as the KeptnEvaluation, or
-                  in the Keptn namespace.
+                description: |-
+                  EvaluationDefinition refers to the name of the KeptnEvaluationDefinition
+                  which includes the objectives for the KeptnEvaluation.
+                  The KeptnEvaluationDefinition can be
+                  located in the same namespace as the KeptnEvaluation, or in the Keptn namespace.
                 type: string
               failAction:
                 type: string
               retries:
                 default: 10
-                description: Retries indicates how many times the KeptnEvaluation
-                  can be attempted in the case of an error or missed evaluation objective,
-                  before considering the KeptnEvaluation to be failed.
+                description: |-
+                  Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
+                  missed evaluation objective, before considering the KeptnEvaluation to be failed.
                 type: integer
               retryInterval:
                 default: 5s
-                description: RetryInterval specifies the interval at which the KeptnEvaluation
-                  is retried in the case of an error or a missed objective.
+                description: |-
+                  RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error
+                  or a missed objective.
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
               workload:
@@ -478,9 +510,9 @@ spec:
                 additionalProperties:
                   properties:
                     message:
-                      description: Message contains additional information about the
-                        evaluation of an objective. This can include explanations
-                        about why an evaluation has failed (e.g. due to a missed objective),
+                      description: |-
+                        Message contains additional information about the evaluation of an objective.
+                        This can include explanations about why an evaluation has failed (e.g. due to a missed objective),
                         or if there was any error during the evaluation of the objective.
                       type: string
                     status:
@@ -495,14 +527,16 @@ spec:
                   - status
                   - value
                   type: object
-                description: EvaluationStatus describes the status of each objective
-                  of the KeptnEvaluationDefinition referenced by the KeptnEvaluation.
+                description: |-
+                  EvaluationStatus describes the status of each objective of the KeptnEvaluationDefinition
+                  referenced by the KeptnEvaluation.
                 type: object
               overallStatus:
                 default: Pending
-                description: OverallStatus describes the overall status of the KeptnEvaluation.
-                  The Overall status is derived from the status of the individual
-                  objectives of the KeptnEvaluationDefinition referenced by the KeptnEvaluation.
+                description: |-
+                  OverallStatus describes the overall status of the KeptnEvaluation. The Overall status is derived
+                  from the status of the individual objectives of the KeptnEvaluationDefinition
+                  referenced by the KeptnEvaluation.
                 type: string
               retryCount:
                 default: 0
@@ -521,6 +555,6 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}

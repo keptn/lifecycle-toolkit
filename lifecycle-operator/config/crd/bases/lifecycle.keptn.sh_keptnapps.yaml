@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
+    controller-gen.kubebuilder.io/version: v0.14.0
   name: keptnapps.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh
@@ -20,14 +20,19 @@ spec:
         description: KeptnApp is the Schema for the keptnapps API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -84,14 +89,19 @@ spec:
         description: KeptnApp is the Schema for the keptnapps API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -151,14 +161,19 @@ spec:
         description: KeptnApp is the Schema for the keptnapps API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -166,47 +181,50 @@ spec:
             description: Spec describes the desired state of the KeptnApp.
             properties:
               postDeploymentEvaluations:
-                description: PostDeploymentEvaluations is a list of all evaluations
-                  to be performed during the post-deployment phase of the KeptnApp.
+                description: |-
+                  PostDeploymentEvaluations is a list of all evaluations to be performed
+                  during the post-deployment phase of the KeptnApp.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
                   located in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               postDeploymentTasks:
-                description: PostDeploymentTasks is a list of all tasks to be performed
-                  during the post-deployment phase of the KeptnApp. The items of this
-                  list refer to the names of KeptnTaskDefinitions located in the same
-                  namespace as the KeptnApp, or in the Keptn namespace.
+                description: |-
+                  PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               preDeploymentEvaluations:
-                description: PreDeploymentEvaluations is a list of all evaluations
-                  to be performed during the pre-deployment phase of the KeptnApp.
+                description: |-
+                  PreDeploymentEvaluations is a list of all evaluations to be performed
+                  during the pre-deployment phase of the KeptnApp.
                   The items of this list refer to the names of KeptnEvaluationDefinitions
                   located in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               preDeploymentTasks:
-                description: PreDeploymentTasks is a list of all tasks to be performed
-                  during the pre-deployment phase of the KeptnApp. The items of this
-                  list refer to the names of KeptnTaskDefinitions located in the same
-                  namespace as the KeptnApp, or in the Keptn namespace.
+                description: |-
+                  PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
                 items:
                   type: string
                 type: array
               revision:
                 default: 1
-                description: Revision can be modified to trigger another deployment
-                  of a KeptnApp of the same version. This can be used for restarting
-                  a KeptnApp which failed to deploy, e.g. due to a failed preDeploymentEvaluation/preDeploymentTask.
+                description: |-
+                  Revision can be modified to trigger another deployment of a KeptnApp of the same version.
+                  This can be used for restarting a KeptnApp which failed to deploy,
+                  e.g. due to a failed preDeploymentEvaluation/preDeploymentTask.
                 type: integer
               version:
-                description: Version defines the version of the application. For automatically
-                  created KeptnApps, the version is a function of all KeptnWorkloads
-                  that are part of the KeptnApp.
+                description: |-
+                  Version defines the version of the application. For automatically created KeptnApps,
+                  the version is a function of all KeptnWorkloads that are part of the KeptnApp.
                 type: string
               workloads:
                 description: Workloads is a list of all KeptnWorkloads that are part
@@ -248,14 +266,19 @@ spec:
         description: KeptnApp is the Schema for the keptnapps API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -264,14 +287,15 @@ spec:
             properties:
               revision:
                 default: 1
-                description: Revision can be modified to trigger another deployment
-                  of a KeptnApp of the same version. This can be used for restarting
-                  a KeptnApp which failed to deploy, e.g. due to a failed preDeploymentEvaluation/preDeploymentTask.
+                description: |-
+                  Revision can be modified to trigger another deployment of a KeptnApp of the same version.
+                  This can be used for restarting a KeptnApp which failed to deploy,
+                  e.g. due to a failed preDeploymentEvaluation/preDeploymentTask.
                 type: integer
               version:
-                description: Version defines the version of the application. For automatically
-                  created KeptnApps, the version is a function of all KeptnWorkloads
-                  that are part of the KeptnApp.
+                description: |-
+                  Version defines the version of the application. For automatically created KeptnApps,
+                  the version is a function of all KeptnWorkloads that are part of the KeptnApp.
                 type: string
               workloads:
                 description: Workloads is a list of all KeptnWorkloads that are part

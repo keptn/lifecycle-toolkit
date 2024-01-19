@@ -228,10 +228,10 @@ func (r *KeptnAppVersionReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
 }
 
-func (r *KeptnAppVersionReconciler) getLinkedSpans(version *klcv1beta1.KeptnAppVersion) []trace.Link {
-	result := make([]trace.Link, len(version.Spec.SpanLinks))
+func (r *KeptnAppVersionReconciler) getLinkedSpans(appVersion *klcv1beta1.KeptnAppVersion) []trace.Link {
+	result := make([]trace.Link, len(appVersion.Spec.SpanLinks))
 
-	for i, linkedTrace := range version.Spec.SpanLinks {
+	for i, linkedTrace := range appVersion.Spec.SpanLinks {
 		r.Log.Info("Adding Link to trace", "linkedTrace", linkedTrace)
 
 		traceContextCarrier := propagation.MapCarrier(map[string]string{

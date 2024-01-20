@@ -18,14 +18,14 @@ require (
 	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3
 	golang.org/x/net v0.20.0
 	gopkg.in/inf.v0 v0.9.1
-	k8s.io/api v0.28.5
-	k8s.io/apiextensions-apiserver v0.28.5
-	k8s.io/apimachinery v0.28.5
-	k8s.io/apiserver v0.28.5
-	k8s.io/client-go v0.28.5
-	k8s.io/component-base v0.28.5
+	k8s.io/api v0.28.6
+	k8s.io/apiextensions-apiserver v0.28.6
+	k8s.io/apimachinery v0.28.6
+	k8s.io/apiserver v0.28.6
+	k8s.io/client-go v0.28.6
+	k8s.io/component-base v0.28.6
 	k8s.io/klog/v2 v2.120.0
-	k8s.io/metrics v0.28.5
+	k8s.io/metrics v0.28.6
 	sigs.k8s.io/controller-runtime v0.16.3
 	sigs.k8s.io/custom-metrics-apiserver v1.28.0
 	sigs.k8s.io/yaml v1.4.0

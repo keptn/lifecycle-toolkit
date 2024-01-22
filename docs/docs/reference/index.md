@@ -35,7 +35,7 @@ Keptn APIs follow API versioning conventions recommended by Kubernetes.
 
 Keptn generates most of the resources it needs
 without requiring manual input.
-[Lifecycle CRD Reference and Metrics CRD Reference](../crd-reference/index.md)
+[Lifecycle CRD Reference and Metrics CRD Reference](./crd-reference/index.md)
 contains reference pages for the manifests
 that must be populated manually.
 

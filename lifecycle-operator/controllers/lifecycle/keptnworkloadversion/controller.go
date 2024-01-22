@@ -25,6 +25,7 @@ import (
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
@@ -54,7 +55,7 @@ type KeptnWorkloadVersionReconciler struct {
 	EventSender            eventsender.IEvent
 	Log                    logr.Logger
 	Meters                 apicommon.KeptnMeters
-	SpanHandler            *telemetry.Handler
+	SpanHandler            telemetry.ISpanHandler
 	TracerFactory          telemetry.TracerFactory
 	SchedulingGatesHandler schedulinggates.ISchedulingGatesHandler
 	EvaluationHandler      evaluation.IEvaluationHandler
@@ -104,6 +105,11 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 
 	appTraceContextCarrier := propagation.MapCarrier(workloadVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
+
+	ctxAppTrace = keptncontext.WithAppMetadata(
+		ctxAppTrace,
+		workloadVersion.Spec.Metadata,
+	)
 
 	// this will be the parent span for all phases of the WorkloadVersion
 	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), workloadVersion, "")

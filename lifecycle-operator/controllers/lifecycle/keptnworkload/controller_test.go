@@ -17,6 +17,9 @@ func TestKeptnWorkload(t *testing.T) {
 		Spec: klcv1beta1.KeptnWorkloadSpec{
 			Version: "version",
 			AppName: "app",
+			Metadata: map[string]string{
+				"foo": "bar",
+			},
 		},
 	}
 
@@ -31,6 +34,9 @@ func TestKeptnWorkload(t *testing.T) {
 			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
 				Version: "version",
 				AppName: "app",
+				Metadata: map[string]string{
+					"foo": "bar",
+				},
 			},
 			WorkloadName:    "workload",
 			PreviousVersion: "prev",

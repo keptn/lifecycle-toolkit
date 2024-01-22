@@ -4,8 +4,10 @@ import (
 	"context"
 	"sync"
 
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -44,6 +46,16 @@ func (r *Handler) GetSpan(ctx context.Context, tracer ITracer, reconcileObject c
 	spanName := piWrapper.GetSpanName(phase)
 	childCtx, span := tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindConsumer))
 	piWrapper.SetSpanAttributes(span)
+
+	// also get attributes from context
+	if meta, ok := keptncontext.GetAppMetadataFromContext(ctx); ok {
+		for key, value := range meta {
+			span.SetAttributes(attribute.KeyValue{
+				Key:   attribute.Key(key),
+				Value: attribute.StringValue(value),
+			})
+		}
+	}
 
 	if phase != "" {
 		traceContextCarrier := propagation.MapCarrier{}

@@ -28,6 +28,7 @@ const preEval = "some-pre-deployment-evaluation"
 const postEval = "some-post-deployment-evaluation"
 const version = "v1.0.0"
 const uid = "this-is-the-pod-uid"
+const metadata = "foo=bar"
 
 func TestCopyAnnotationsIfParentAnnotated(t *testing.T) {
 	testNamespace := "test-namespace"
@@ -440,6 +441,7 @@ func TestCopyResourceLabelsIfPresent(t *testing.T) {
 						apicommon.PostDeploymentTaskAnnotation:       postDep,
 						apicommon.PreDeploymentEvaluationAnnotation:  preEval,
 						apicommon.PostDeploymentEvaluationAnnotation: postEval,
+						apicommon.MetadataAnnotation:                 metadata,
 					},
 				},
 				targetPod: &corev1.Pod{
@@ -461,6 +463,7 @@ func TestCopyResourceLabelsIfPresent(t *testing.T) {
 						apicommon.PostDeploymentTaskAnnotation:       postDep,
 						apicommon.PreDeploymentEvaluationAnnotation:  preEval,
 						apicommon.PostDeploymentEvaluationAnnotation: postEval,
+						apicommon.MetadataAnnotation:                 metadata,
 					},
 				},
 			},

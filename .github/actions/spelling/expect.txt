@@ -87,7 +87,6 @@ configmapref
 configmapreference
 containedctx
 containerspec
-contextcommon
 contextdata
 controllercommon
 controllererrors
@@ -294,6 +293,7 @@ keptnappversionstatus
 keptnconfig
 keptnconfiglist
 keptnconfigspec
+keptncontext
 keptncontroller
 keptndemo
 keptndemoapp
@@ -487,7 +487,6 @@ previousversion
 printargs
 printcolumn
 privs
-Process
 proj
 promapi
 promhttp

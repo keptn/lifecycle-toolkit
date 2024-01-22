@@ -422,6 +422,7 @@ _Appears in:_
 | `appName` _string_ | AppName is the name of the KeptnApp. || x |
 | `previousVersion` _string_ | PreviousVersion is the version of the KeptnApp that has been deployed prior to this version. || ✓ |
 | `traceId` _object (keys:string, values:string)_ | TraceId contains the OpenTelemetry trace ID. || ✓ |
+| `metadata` _object (keys:string, values:string)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
 
 
 #### KeptnAppVersionStatus

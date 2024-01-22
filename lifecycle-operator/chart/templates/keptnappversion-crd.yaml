@@ -948,6 +948,12 @@ spec:
                 items:
                   type: string
                 type: array
+              metadata:
+                additionalProperties:
+                  type: string
+                description: Metadata contains additional key-value pairs for contextual
+                  information.
+                type: object
               postDeploymentTasks:
                 description: |-
                   PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp.

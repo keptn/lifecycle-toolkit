@@ -23,3 +23,37 @@ func TestContextWithAppMetadata(t *testing.T) {
 	require.True(t, ok)
 	require.Equal(t, "bar", metadata["foo"])
 }
+
+func TestGetAppMetadataFromContext(t *testing.T) {
+
+	tests := []struct {
+		name   string
+		ctx    context.Context
+		want   map[string]string
+		exists bool
+	}{
+		{
+			name:   "empty context",
+			ctx:    context.Background(),
+			want:   make(map[string]string),
+			exists: false,
+		},
+		{
+			name:   "context with metadata",
+			ctx:    context.WithValue(context.TODO(), "testy", "test"),
+			want:   make(map[string]string),
+			exists: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			metadata, exist := GetAppMetadataFromContext(tt.ctx)
+			if !reflect.DeepEqual(metadata, tt.want) {
+				t.Errorf("GetAppMetadataFromContext() got = %v, want %v", metadata, tt.want)
+			}
+			if exist != tt.exists {
+				t.Errorf("GetAppMetadataFromContext() got1 = %v, want %v", exist, tt.exists)
+			}
+		})
+	}
+}

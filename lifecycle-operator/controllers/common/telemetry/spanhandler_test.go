@@ -2,6 +2,7 @@ package telemetry
 
 import (
 	"context"
+	appcontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
@@ -20,7 +21,7 @@ func TestSpanHandler_GetAndUnbindSpan_WorkloadVersion(t *testing.T) {
 	wi.Spec.AppName = "test"
 	wi.Spec.WorkloadName = "test"
 	wi.Spec.Version = "test"
-	doAssert(t, wi)
+	doAssert(context.TODO(), t, wi)
 }
 
 func TestSpanHandler_GetAndUnbindSpan_AppVersion(t *testing.T) {
@@ -30,24 +31,25 @@ func TestSpanHandler_GetAndUnbindSpan_AppVersion(t *testing.T) {
 	av.Spec.AppName = "test"
 	av.Spec.Version = "test"
 	av.Spec.Metadata = map[string]string{"testy": "test"}
-	doAssert(t, av)
+
+	appctx := appcontext.ContextWithAppMetadata(context.TODO(), av.Spec.Metadata)
+	doAssert(appctx, t, av)
 }
 
-func doAssert(t *testing.T, obj client.Object) {
+func doAssert(ctx context.Context, t *testing.T, obj client.Object) {
 
 	r := Handler{}
 	phase := "pre"
 	tracer := otel.Tracer("keptn/test")
-	ctx, span, err := r.GetSpan(context.TODO(), tracer, obj, phase)
-	t.Logf("%v", ctx)
+
+	ctx2, span, err := r.GetSpan(ctx, tracer, obj, phase)
+	t.Logf("%v", r.bindCRDSpan)
 	require.Nil(t, err)
 	require.NotNil(t, t, span)
-	require.NotNil(t, ctx)
-	t.Logf("%v", span)
+	require.NotNil(t, ctx2)
 	require.Len(t, r.bindCRDSpan, 1)
 	err = r.UnbindSpan(obj, phase)
 	require.Nil(t, err)
-	t.Logf("%v", span.TracerProvider())
 	require.Empty(t, r.bindCRDSpan)
 
 }

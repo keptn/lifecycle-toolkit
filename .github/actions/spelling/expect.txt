@@ -31,6 +31,7 @@ apierrors
 apiservice
 APIURL
 apk
+appcontext
 appcreationrequest
 APPNAME
 appv

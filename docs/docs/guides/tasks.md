@@ -209,7 +209,8 @@ to execute each step within your chosen Kubernetes environment.
 Imagine this as a task-specific blueprint, telling Keptn exactly what to do and where to do it within your broader
 deployment workflow.
 
-Sometimes, to provide this crucial task context, you might need to embed it directly into the `function` code of your
+Sometimes, to provide this crucial task context,
+you may need to embed it directly into the `function` code of your
 Keptn tasks defined in YAML files that defines a
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 resource.

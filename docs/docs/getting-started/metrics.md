@@ -40,13 +40,13 @@ on your local Kubernetes deployment cluster.
 
 The steps to implement metrics in an existing cluster are:
 
-1. [Install Keptn](../../installation/index.md)
+1. [Install Keptn](../installation/index.md)
 1. Configure the metrics you want to use:
    - [Define metrics providers](#define-metrics-providers)
    - [Define KeptnMetric information](#define-keptnmetric-information)
 
 If you want to create your own cluster to run this exercise,
-follow the instructions in [Installation](../../installation/index.md).
+follow the instructions in [Installation](../installation/index.md).
 
 ## Define metrics to use
 
@@ -61,7 +61,7 @@ as well as the Kubernetes CLI.
 ### Define metrics providers
 
 Populate a
-[KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)
+[KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
 resource for each external observability platform you want to use.
 
 For our example, we define two observability platforms:
@@ -77,7 +77,7 @@ and the URL of the target server.
 If the target server is protected by a Secret,
 provide information about the token and key.
 
-The [keptn-metrics-provider.yaml](../../reference/crd-reference/metricsprovider.md#examples)
+The [keptn-metrics-provider.yaml](../reference/crd-reference/metricsprovider.md#examples)
 file for our example looks like:
 
 ```yaml
@@ -86,7 +86,7 @@ file for our example looks like:
 
 ### Define KeptnMetric information
 
-The [KeptnMetric](../../reference/crd-reference/metric.md) resource
+The [KeptnMetric](../reference/crd-reference/metric.md) resource
 defines the information you want to gather,
 specified as a query for the particular observability platform
 you are using.
@@ -205,7 +205,7 @@ The Kubernetes HorizontalPodAutoscaler (HPA)
 uses metrics to provide autoscaling for the cluster.
 HPA can retrieve KeptnMetrics and use those metrics to implement HPA.
 See
-Using the [HorizontalPodAutoscaler](../../use-cases/hpa.md)
+Using the [HorizontalPodAutoscaler](../use-cases/hpa.md)
 for detailed information.
 
 ## Learn more
@@ -213,6 +213,6 @@ for detailed information.
 To learn more about the Keptn Metrics Server, see:
 
 - Architecture:
-  [Keptn Metrics Operator](../../components/metrics-operator.md)
+  [Keptn Metrics Operator](../components/metrics-operator.md)
 - More information about implementing Keptn Metrics:
-  [Keptn Metrics](../../guides/evaluatemetrics.md)
+  [Keptn Metrics](../guides/evaluatemetrics.md)

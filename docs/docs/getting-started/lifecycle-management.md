@@ -178,7 +178,7 @@ Annotate the demo application `Deployment` manifest
 to have Keptn automatically trigger the task after every deployment.
 
 Recall the `Deployment` from the
-[Observability](../getting-started/observability.md#step-3-deploy-demo-application)
+[Observability](observability.md#step-3-deploy-demo-application)
 Getting started guide.
 
 Add a new label so the `labels` section looks like this:
@@ -191,6 +191,7 @@ labels:
     app.kubernetes.io/version: 0.0.2
     keptn.sh/post-deployment-tasks: "send-event"
 ...
+```
 
 Increase the version number to `0.0.2` and re-apply the manifest.
 

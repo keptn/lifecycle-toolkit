@@ -36,8 +36,8 @@ func doAssert(t *testing.T, obj client.Object) {
 	r := Handler{}
 	phase := "pre"
 	tracer := otel.Tracer("keptn/test")
-
 	ctx, span, err := r.GetSpan(context.TODO(), tracer, obj, phase)
+
 	require.Nil(t, err)
 	require.NotNil(t, t, span)
 	require.NotNil(t, ctx)
@@ -48,7 +48,6 @@ func doAssert(t *testing.T, obj client.Object) {
 	require.Nil(t, err)
 
 	require.Empty(t, r.bindCRDSpan)
-
 }
 
 func TestSpanHandler_GetSpan(t *testing.T) {

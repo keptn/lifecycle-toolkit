@@ -213,7 +213,7 @@ func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 	metadata, b := keptncontext.GetAppMetadataFromContext(spanHandlerMock.GetSpanCalls()[0].Ctx)
 
 	require.True(t, b)
-	require.Equal(t, "testy", metadata["test"])
+	require.Equal(t, "test", metadata["testy"])
 
 	// do not requeue since we reached completion
 	require.False(t, result.Requeue)

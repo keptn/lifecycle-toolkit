@@ -374,7 +374,7 @@ func TestKeptnAppVersionReconciler_getLinkedSpans(t *testing.T) {
 					}),
 					Attributes: []attribute.KeyValue{
 						{
-							Key:   "ot-span-reference-type",
+							Key:   "opentracing.ref_type",
 							Value: attribute.StringValue("follows-from"),
 						},
 					},

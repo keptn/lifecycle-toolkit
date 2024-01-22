@@ -242,7 +242,7 @@ func (r *KeptnAppVersionReconciler) getLinkedSpans(appVersion *klcv1beta1.KeptnA
 		linkedCtx = otel.GetTextMapPropagator().Extract(linkedCtx, traceContextCarrier)
 
 		link := trace.LinkFromContext(linkedCtx, attribute.KeyValue{
-			Key:   "ot-span-reference-type",
+			Key:   "opentracing.ref_type",
 			Value: attribute.StringValue("follows-from"),
 		})
 		result[i] = link

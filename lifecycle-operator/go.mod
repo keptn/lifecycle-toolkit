@@ -11,7 +11,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20231220125738-6b5f424f8cf1
 	github.com/magiconair/properties v1.8.7
-	github.com/onsi/ginkgo/v2 v2.14.0
+	github.com/onsi/ginkgo/v2 v2.15.0
 	github.com/onsi/gomega v1.30.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.18.0

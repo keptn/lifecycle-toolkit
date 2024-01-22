@@ -6,6 +6,12 @@ the newly introduced KeptnAppContext custom resource.
 
 ## Migration steps
 
+> **Warning**
+Please note that the migration is needed to be executed only for
+**manually created KeptnApp** resources.
+KeptnApp resources created by
+the automatic app-discovery feature do not need any actions.
+
 To migrate an existing **manually created KeptnApp** to KeptnAppContext
 you need to execute the following steps:
 
@@ -17,12 +23,7 @@ to KeptnAppContext
 to KeptnApp
 4. Change the API version of KeptnApp to `lifecycle.keptn.sh/v1beta1`
 
-**Warning:**
-Please note that the migration is needed to be executed only for
-**manually created KeptnApp** resources. KeptnApp resources created by
-the automatic app-discovery feature do not need any actions.
-
-**Note:**
+> **Note**
 Please make sure all of your application resources
 (such as Pods, Deployments, StatefulSets or DaemonSets)
 have the proper annotations/labels set.
@@ -51,7 +52,7 @@ following result:
 
 These modified resources can be now applied to your cluster.
 
-**Note:**
+> **Note**
 Please make sure all of your application resources
 (such as Pods, Deployments, StatefulSets or DaemonSets)
 have the proper annotations/labels set.

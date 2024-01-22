@@ -166,6 +166,8 @@ nav:
               - docs/migrate/keptn/index.md
               - Migration strategy: docs/migrate/keptn/strategy.md
               - Migrate Quality Gates: docs/migrate/keptn/metrics-observe.md
+          - KeptnApp Migration:
+              - docs/migrate/keptnapp/index.md
   - Contributing:
       - docs/contribute/index.md
       - General information:

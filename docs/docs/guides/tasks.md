@@ -195,7 +195,8 @@ page.
 
 ## Context
 
-The Kubernetes context is a set of access parametersthat defines the specific cluster, user, namespace,
+The Kubernetes context is a set of access parameters
+that defines the specific cluster, user, namespace,
 and sometimes application/workload details
 with which you interact.
 It serves as your personalized key to different areas within your Kubernetes infrastructure.

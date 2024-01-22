@@ -206,7 +206,7 @@ func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appV
 
 	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
-	ctxAppTrace = appcontext.ContextWithAppMetadata(ctxAppTrace, appVersion.Spec.Metadata, map[string]string{
+	ctxAppTrace = appcontext.WithAppMetadata(ctxAppTrace, appVersion.Spec.Metadata, map[string]string{
 		"traceParent": appVersion.Spec.TraceId["traceparent"],
 	})
 	endFunc := func() {

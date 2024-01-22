@@ -2,6 +2,7 @@ package context
 
 import (
 	"context"
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -40,9 +41,9 @@ func TestGetAppMetadataFromContext(t *testing.T) {
 		},
 		{
 			name:   "context with metadata",
-			ctx:    context.WithValue(context.TODO(), "testy", "test"),
-			want:   make(map[string]string),
-			exists: false,
+			ctx:    context.WithValue(context.TODO(), keptnAppContextKey, map[string]string{"testy": "test"}),
+			want:   map[string]string{"testy": "test"},
+			exists: true,
 		},
 	}
 	for _, tt := range tests {

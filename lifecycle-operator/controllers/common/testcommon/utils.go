@@ -64,6 +64,9 @@ func ReturnAppVersion(namespace string, appName string, version string, workload
 				Version:   version,
 				Workloads: workloads,
 			},
+			Metadata: map[string]string{
+				"testy": "test",
+			},
 			AppName: appName,
 			TraceId: map[string]string{
 				"traceparent": "parent-trace",

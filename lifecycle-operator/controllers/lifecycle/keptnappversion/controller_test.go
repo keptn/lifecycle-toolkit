@@ -3,6 +3,7 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"reflect"
 	"strings"
 	"testing"
@@ -202,6 +203,17 @@ func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 	}
 
 	require.Nil(t, err)
+
+	spanHandlerMock := r.SpanHandler.(*telemetryfake.ISpanHandlerMock)
+
+	require.Len(t, spanHandlerMock.GetSpanCalls(), 1)
+	require.Len(t, spanHandlerMock.UnbindSpanCalls(), 1)
+
+	// verify the propagation of the metadata
+	metadata, b := keptncontext.GetAppMetadataFromContext(spanHandlerMock.GetSpanCalls()[0].Ctx)
+
+	require.True(t, b)
+	require.Equal(t, "testy", metadata["test"])
 
 	// do not requeue since we reached completion
 	require.False(t, result.Requeue)

@@ -64,8 +64,10 @@ func ReturnAppVersion(namespace string, appName string, version string, workload
 				Version:   version,
 				Workloads: workloads,
 			},
-			Metadata: map[string]string{
-				"testy": "test",
+			KeptnAppContextSpec: klcv1beta1.KeptnAppContextSpec{
+				Metadata: map[string]string{
+					"testy": "test",
+				},
 			},
 			AppName: appName,
 			TraceId: map[string]string{

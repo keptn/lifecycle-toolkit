@@ -19,6 +19,7 @@ package keptnworkloadversion
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -108,7 +109,7 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 
 	ctxAppTrace = keptncontext.WithAppMetadata(
 		ctxAppTrace,
-		workloadVersion.Spec.Metadata,
+		controllercommon.MergeMaps(workloadVersion.Spec.Metadata, workloadVersion.Status.AppContextMetadata),
 	)
 
 	// this will be the parent span for all phases of the WorkloadVersion
@@ -344,6 +345,14 @@ func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx conte
 			workloadVersion.Spec.TraceId = appVersion.Spec.TraceId
 		}
 		if err := r.Update(ctx, workloadVersion); err != nil {
+			return true, err
+		}
+	}
+
+	// set the App context metadata
+	if !reflect.DeepEqual(appVersion.Spec.Metadata, workloadVersion.Status.AppContextMetadata) {
+		workloadVersion.Status.AppContextMetadata = appVersion.Spec.Metadata
+		if err := r.Status().Update(ctx, workloadVersion); err != nil {
 			return true, err
 		}
 	}

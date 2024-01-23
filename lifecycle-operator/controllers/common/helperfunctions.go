@@ -3,6 +3,7 @@ package common
 import (
 	"context"
 	"fmt"
+	"maps"
 
 	"github.com/go-logr/logr"
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
@@ -40,10 +41,13 @@ func GetOldStatus(name string, statuses []klcv1beta1.ItemStatus) apicommon.Keptn
 	return oldstatus
 }
 
-func CopyMap[M1 ~map[K]V, M2 ~map[K]V, K comparable, V any](dst M1, src M2) {
-	for k, v := range src {
-		dst[k] = v
-	}
+func MergeMaps[M1 ~map[K]V, K comparable, V any](map1 M1, map2 M1) M1 {
+	merged := make(M1, len(map1)+len(map2))
+	// we copy the map2 first, so the values in the overlapping
+	// properties are set from map1 in the resulting map
+	maps.Copy[M1](merged, map2)
+	maps.Copy[M1](merged, map1)
+	return merged
 }
 
 func GetTaskDefinition(k8sclient client.Client, log logr.Logger, ctx context.Context, definitionName string, namespace string) (*klcv1beta1.KeptnTaskDefinition, error) {

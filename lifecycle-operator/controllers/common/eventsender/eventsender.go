@@ -8,9 +8,9 @@ import (
 	ce "github.com/cloudevents/sdk-go/v2"
 	"github.com/go-logr/logr"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
+	"golang.org/x/exp/maps"
 	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -139,7 +139,7 @@ func setAnnotations(reconcileObject client.Object, phase apicommon.KeptnPhaseTyp
 
 	piWrapper, err := interfaces.NewEventObjectWrapperFromClientObject(reconcileObject)
 	if err == nil {
-		common.CopyMap(annotations, piWrapper.GetEventAnnotations())
+		maps.Copy(annotations, piWrapper.GetEventAnnotations())
 	}
 
 	annotationsObject := reconcileObject.GetAnnotations()

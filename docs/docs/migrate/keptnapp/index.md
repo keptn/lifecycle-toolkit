@@ -21,8 +21,8 @@ unless you edited them manually to add pre/post tasks and evaluations.
 To migrate an existing **manually created KeptnApp** to KeptnAppContext
 you need to execute the following steps:
 
-1. Create a KeptnAppContext custom resource that has the same name
-as your KeptnApp.
+1. Create a `KeptnAppContext` custom resource that has the same name
+as your `KeptnApp`.
 2. Move the lists of pre/post-deployment tasks and evaluation from `KeptnApp`
 to `KeptnAppContext`.
 In other words, delete them from `KeptnApp` and add them to `KeptnAppContext`.

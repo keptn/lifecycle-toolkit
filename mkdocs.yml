@@ -139,6 +139,7 @@ nav:
                   - v1alpha2: docs/reference/api-reference/lifecycle/v1alpha2/index.md
                   - v1alpha3: docs/reference/api-reference/lifecycle/v1alpha3/index.md
                   - v1alpha4: docs/reference/api-reference/lifecycle/v1alpha4/index.md
+                  - v1beta1: docs/reference/api-reference/lifecycle/v1beta1/index.md
               - Metrics API:
                   - docs/reference/api-reference/metrics/index.md
                   - v1alpha1: docs/reference/api-reference/metrics/v1alpha1/index.md

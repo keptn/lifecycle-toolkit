@@ -10,6 +10,7 @@ import (
 	"github.com/go-logr/logr"
 	lfcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	evalfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
@@ -202,6 +203,17 @@ func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 	}
 
 	require.Nil(t, err)
+
+	spanHandlerMock := r.SpanHandler.(*telemetryfake.ISpanHandlerMock)
+
+	require.Len(t, spanHandlerMock.GetSpanCalls(), 1)
+	require.Len(t, spanHandlerMock.UnbindSpanCalls(), 1)
+
+	// verify the propagation of the metadata
+	metadata, b := keptncontext.GetAppMetadataFromContext(spanHandlerMock.GetSpanCalls()[0].Ctx)
+
+	require.True(t, b)
+	require.Equal(t, "test", metadata["testy"])
 
 	// do not requeue since we reached completion
 	require.False(t, result.Requeue)

@@ -25,6 +25,7 @@ import (
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	appcontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
@@ -205,7 +206,9 @@ func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appV
 
 	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
-
+	ctxAppTrace = appcontext.WithAppMetadata(ctxAppTrace, appVersion.Spec.Metadata, map[string]string{
+		"traceParent": appVersion.Spec.TraceId["traceparent"],
+	})
 	endFunc := func() {
 		if appVersion.IsEndTimeSet() {
 			r.Log.Info("Increasing app count")

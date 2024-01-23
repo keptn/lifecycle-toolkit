@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1alpha3  # changed API version of the resource
+apiVersion: lifecycle.keptn.sh/v1alpha3
 kind: KeptnApp
 metadata:
   name: "some-keptn-app"

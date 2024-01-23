@@ -12,8 +12,8 @@ This page gives instructions for doing that.
 > **Warning**
 Migration is only required for
 **manually created KeptnApp** resources.
-KeptnApp resources created by
-the
+`KeptnApp` resources created by
+Keptn via the
 [automatic app-discovery](../../guides/auto-app-discovery.md)
 feature do not require modification
 unless you edited them manually to add pre/post tasks and evaluations.
@@ -25,7 +25,7 @@ you need to execute the following steps:
 as your `KeptnApp`.
 2. Move the lists of pre/post-deployment tasks and evaluation from `KeptnApp`
 to `KeptnAppContext`.
-In other words, delete them from `KeptnApp` and add them to `KeptnAppContext`.
+In other words, delete them from `KeptnApp.spec` and add them under the `KeptnAppContext.spec` field.
 3. Add the `app.kubernetes.io/managed-by: keptn` annotation
 to `KeptnApp`.
 4. Change the value of the `apiVersion` field for the `KeptnApp` resource
@@ -37,22 +37,22 @@ Please make sure all of your application resources
 have the proper annotations/labels set.
 These annotations/labels (especially the
 `app.kubernetes.io/part-of` or `keptn.sh/app`)
-are needed for the full migration to the
-usage of automatic app-discovery feature.
+are necessary for the migration to the
+automatic app-discovery feature.
 More information about how to set up these annotations/labels
 can be found [here](../../guides/integrate.md#basic-annotations).
 
 ## Example of migration
 
-In the next subsection we are going to look at an example of how to
-modify the `KeptnApp` definition.
-Let's say we have the following KeptnApp in our cluster:
+Here, we provide an example of how to
+migrate the `KeptnApp` definition to the `KeptnAppContext`.
+Let's say we have the following `KeptnApp` in our cluster:
 
 ```yaml
 {% include "./assets/keptnapp.yaml" %}
 ```
 
-If we apply the migration steps from the previous subsection, we get the
+Applying the migration steps from the previous subsection, we get the
 following result:
 
 ```yaml

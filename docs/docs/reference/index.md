@@ -1,6 +1,7 @@
 # Reference
 
-Welcome to the Keptn documentation reference section, your comprehensive guide to the various Custom Resource Definitions (CRDs) and APIs used in Keptn.
+Welcome to the Keptn documentation reference section,
+which provides comprehensive information about the Keptn Custom Resource Definitions (CRDs) and APIs used in Keptn.
 
 ## [CRD Reference](./crd-reference/index.md)
 

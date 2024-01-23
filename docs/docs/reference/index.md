@@ -47,7 +47,7 @@ to inspect the current state of Keptn resources:
     kubectl get keptnapp -n <namespace> my-keptn-app -oyaml
     ```
 
-For further details on Kubernetes APIs, custom resources, versioning, and 
+For further details about Kubernetes APIs, custom resources, versioning, and 
 understanding Kubernetes objects, refer to the Kubernetes documentation:
 
 * [API Overview](https://kubernetes.io/docs/reference/using-api/)

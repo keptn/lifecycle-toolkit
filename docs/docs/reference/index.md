@@ -5,7 +5,6 @@ which provides comprehensive information about the Keptn Custom Resource Definit
 
 ## [CRD Reference](./crd-reference/index.md)
 
-Dive into the manifest files crucial for Keptn—Custom Resource Definitions (CRDs).
 This section provides comprehensive reference information about the CRDs
 that must be populated to tailor Keptn to your needs.
 
@@ -27,8 +26,6 @@ To learn more about CRDs, APIs, and Kubernetes objects, consult the Kubernetes d
 
 ## [API Reference](./api-reference/index.md)
 
-Explore the rich set of APIs that Keptn offers, providing detailed
-information about all defined APIs.
 This auto-generated content from source code offers insights into the structure,
 versioning, and functionality of Keptn APIs.
 
@@ -52,11 +49,3 @@ to inspect the current state of Keptn resources:
     ```bash
     kubectl get keptnapp -n <namespace> my-keptn-app -oyaml
     ```
-
-For further details about Kubernetes APIs, custom resources, versioning, and
-understanding Kubernetes objects, refer to the Kubernetes documentation:
-
-* [API Overview](https://kubernetes.io/docs/reference/using-api/)
-* [Custom Resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-* [API versioning](https://kubernetes.io/docs/reference/using-api/#api-versioning)
-* [Understanding Kubernetes Objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)

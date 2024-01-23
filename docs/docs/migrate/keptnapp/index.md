@@ -16,7 +16,8 @@ Migration is only required for
 Keptn via the
 [automatic app-discovery](../../guides/auto-app-discovery.md)
 feature do not require modification
-unless you edited them manually to add pre/post tasks and evaluations.
+unless you edited them manually to add pre/post-deployment tasks
+or evaluations.
 
 To migrate an existing **manually created KeptnApp** to KeptnAppContext
 you need to execute the following steps:
@@ -28,8 +29,6 @@ to `KeptnAppContext`.
 In other words, delete them from `KeptnApp.spec` and add them under the `KeptnAppContext.spec` field.
 3. Add the `app.kubernetes.io/managed-by: keptn` annotation
 to `KeptnApp`.
-4. Change the value of the `apiVersion` field for the `KeptnApp` resource
-to `lifecycle.keptn.sh/v1beta1`.
 
 > **Note**
 Please make sure all of your application resources

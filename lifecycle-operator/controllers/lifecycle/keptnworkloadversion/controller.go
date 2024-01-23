@@ -109,7 +109,7 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 
 	ctxAppTrace = keptncontext.WithAppMetadata(
 		ctxAppTrace,
-		controllercommon.MergeMaps(workloadVersion.Spec.Metadata, workloadVersion.Status.AppContextMetadata),
+		controllercommon.MergeMaps(workloadVersion.Status.AppContextMetadata, workloadVersion.Spec.Metadata),
 	)
 
 	// this will be the parent span for all phases of the WorkloadVersion

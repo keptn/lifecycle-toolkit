@@ -346,7 +346,7 @@ func Test_MergeMaps(t *testing.T) {
 			},
 		},
 		{
-			name: "maps overlay - map1 wins",
+			name: "maps overlay - map2 wins",
 			map1: map[string]string{
 				"test2": "testy2",
 				"test3": "testy4",
@@ -358,7 +358,7 @@ func Test_MergeMaps(t *testing.T) {
 			want: map[string]string{
 				"test1": "testy1",
 				"test2": "testy2",
-				"test3": "testy4",
+				"test3": "testy3",
 			},
 		},
 	}

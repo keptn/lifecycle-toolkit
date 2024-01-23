@@ -43,10 +43,10 @@ func GetOldStatus(name string, statuses []klcv1beta1.ItemStatus) apicommon.Keptn
 
 func MergeMaps[M1 ~map[K]V, K comparable, V any](map1 M1, map2 M1) M1 {
 	merged := make(M1, len(map1)+len(map2))
-	// we copy the map2 first, so the values in the overlapping
-	// properties are set from map1 in the resulting map
-	maps.Copy[M1](merged, map2)
+	// we copy the map1 first, so the values in the overlapping
+	// properties are set from map2 in the resulting map
 	maps.Copy[M1](merged, map1)
+	maps.Copy[M1](merged, map2)
 	return merged
 }
 

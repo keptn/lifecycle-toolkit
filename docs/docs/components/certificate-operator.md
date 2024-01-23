@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn Cert Manager
 
 The Keptn Cert Manager is a Kubernetes operator that

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Evaluations
 
 A `KeptnEvaluation` does a simple evaluation of the metrics data you capture,

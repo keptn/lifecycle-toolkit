@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Migrate Quality Gates
 
 The SLIs and SLOs used for Keptn v1 quality gates can be ported to

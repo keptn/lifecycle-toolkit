@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Spell Checker
 
 All PRs that are pushed to a Keptn repository

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Troubleshooting Guide
 
 Welcome to the Keptn troubleshooting guide.

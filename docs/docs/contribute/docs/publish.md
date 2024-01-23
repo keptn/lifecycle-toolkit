@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Published Doc Structure
 
 New writing goes to the `main` branch and can be viewed on the Keptn website under the `latest` version.

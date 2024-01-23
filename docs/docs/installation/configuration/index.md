@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Configuration
 
 This section contains guides for specific configuration use cases for Keptn.

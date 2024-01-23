@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Contribution Guidelines
 
 Before using Keptn
@@ -56,4 +60,3 @@ please create an issue on the GitHub repository.
   * After the discussions, maintainers engage in a process known as **Scrum Poker**.
   This involves a voting mechanism where maintainers collectively assess the size
   and complexity of the proposed work, helping to decide whether it should proceed.
-  

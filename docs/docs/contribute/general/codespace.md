@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Codespaces
 
 Use GitHub codespaces as a pre-built and pre-configured development environment.

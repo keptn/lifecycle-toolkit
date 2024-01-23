@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # KeptnApp and KeptnWorkload resources
 
 ## Keptn Workloads

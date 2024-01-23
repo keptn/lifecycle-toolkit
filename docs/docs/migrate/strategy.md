@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Migration strategy
 
 Before you begin the migration project,

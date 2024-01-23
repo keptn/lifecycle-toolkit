@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn Observability
 
 Keptn provides sophisticated observability features

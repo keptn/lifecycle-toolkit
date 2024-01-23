@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Get started
 
 This section provides tutorials to familiarize you

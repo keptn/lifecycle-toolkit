@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Documentation contributions
 
 This section is under development.

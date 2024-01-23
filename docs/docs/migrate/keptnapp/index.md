@@ -19,8 +19,10 @@ feature do not require modification
 unless you edited them manually to add pre/post-deployment tasks
 or evaluations.
 
-To migrate an existing **manually created KeptnApp** to KeptnAppContext
-you need to execute the following steps:
+To migrate an existing **manually created KeptnApp** or
+automatically created `KeptnApp` with
+**manually edited pre/post-deployment tasks or evaluations**
+to `KeptnAppContext` you need to execute the following steps:
 
 1. Create a `KeptnAppContext` custom resource that has the same name
 as your `KeptnApp`.

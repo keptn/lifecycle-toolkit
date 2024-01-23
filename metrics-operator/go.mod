@@ -24,7 +24,7 @@ require (
 	k8s.io/apiserver v0.28.6
 	k8s.io/client-go v0.28.6
 	k8s.io/component-base v0.28.6
-	k8s.io/klog/v2 v2.120.0
+	k8s.io/klog/v2 v2.120.1
 	k8s.io/metrics v0.28.6
 	sigs.k8s.io/controller-runtime v0.16.3
 	sigs.k8s.io/custom-metrics-apiserver v1.28.0

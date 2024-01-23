@@ -1003,6 +1003,7 @@ _Appears in:_
 | `workloadVersion` _string_ | WorkloadVersion the version of the KeptnWorkload the KeptnTask is being executed for. || ✓ |
 | `taskType` _string_ | TaskType indicates whether the KeptnTask is part of the pre- or postDeployment phase. || ✓ |
 | `objectType` _string_ | ObjectType indicates whether the KeptnTask is being executed for a KeptnApp or KeptnWorkload. || ✓ |
+| `metadata` _object (keys:string, values:string)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
 
 
 #### TaskParameters

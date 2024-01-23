@@ -9,8 +9,10 @@ Dive into the manifest files crucial for Keptn—Custom Resource Definitions (CR
 This section provides comprehensive reference information about the CRDs
 that must be populated to tailor Keptn to your needs.
 
-Each CRD, an integral part of our API library, plays a crucial role in defining
-the behavior of Keptn resources.
+While the [API Reference](./api-reference/index.md) caters to advanced users with detailed technical specifications,
+the CRD Reference serves as a more user-friendly alternative.
+It presents the same information found in the API Reference but in a format
+that is particularly useful for individuals who are not extremely advanced users.
 While many resources are automatically populated,
 the CRD Reference guides you through the manual steps for specific manifests.
 

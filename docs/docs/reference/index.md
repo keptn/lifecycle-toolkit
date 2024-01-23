@@ -6,11 +6,12 @@ which provides comprehensive information about the Keptn Custom Resource Definit
 ## [CRD Reference](./crd-reference/index.md)
 
 Dive into the manifest files crucial for Keptn—Custom Resource Definitions (CRDs).
-This section provides comprehensive reference information about the CRDs 
+This section provides comprehensive reference information about the CRDs
 that must be populated to tailor Keptn to your needs.
 
-Each CRD, an integral part of our API library, plays a crucial role in defining 
-the behavior of Keptn resources. While many resources are automatically populated,
+Each CRD, an integral part of our API library, plays a crucial role in defining
+the behavior of Keptn resources.
+While many resources are automatically populated,
 the CRD Reference guides you through the manual steps for specific manifests.
 
 For a comprehensive list of all Keptn resources, see the [API Reference](./api-reference/index.md).
@@ -25,30 +26,32 @@ To learn more about CRDs, APIs, and Kubernetes objects, consult the Kubernetes d
 ## [API Reference](./api-reference/index.md)
 
 Explore the rich set of APIs that Keptn offers, providing detailed
-information about all defined APIs. 
+information about all defined APIs.
 This auto-generated content from source code offers insights into the structure,
 versioning, and functionality of Keptn APIs.
 
 Each API corresponds to an object in our API library, following Kubernetes API versioning.
-Keptn APIs extend the base Kubernetes API with additional objects and functionality. 
+Keptn APIs extend the base Kubernetes API with additional objects and functionality.
 Notably, Keptn generates many of its resources automatically, minimizing the need for manual input.
 
 For quick reference and practical usage, you can employ `kubectl` commands
 to inspect the current state of Keptn resources:
 
-1. **List all resources** of a specific type within a namespace. For example:
+1. **List all resources** of a specific type within a namespace.
+  For example:
 
     ```bash
     kubectl get keptnapps -n namespace1
     ```
 
-2. **Retrieve the current manifest** for a specified resource. For example:
+2. **Retrieve the current manifest** for a specified resource.
+  For example:
 
     ```bash
     kubectl get keptnapp -n <namespace> my-keptn-app -oyaml
     ```
 
-For further details about Kubernetes APIs, custom resources, versioning, and 
+For further details about Kubernetes APIs, custom resources, versioning, and
 understanding Kubernetes objects, refer to the Kubernetes documentation:
 
 * [API Overview](https://kubernetes.io/docs/reference/using-api/)

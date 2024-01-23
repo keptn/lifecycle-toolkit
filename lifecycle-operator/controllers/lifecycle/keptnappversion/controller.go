@@ -31,6 +31,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/propagation"
@@ -94,7 +95,13 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	currentPhase := apicommon.PhaseAppPreDeployment
 
-	ctxAppTrace, spanAppTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), appVersion, "")
+	ctxAppTrace, spanAppTrace, err := r.SpanHandler.GetSpan(
+		ctxAppTrace,
+		r.getTracer(),
+		appVersion,
+		"",
+		r.getLinkedSpans(appVersion)...,
+	)
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}
@@ -219,4 +226,27 @@ func (r *KeptnAppVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 func (r *KeptnAppVersionReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
+}
+
+func (r *KeptnAppVersionReconciler) getLinkedSpans(appVersion *klcv1beta1.KeptnAppVersion) []trace.Link {
+	result := make([]trace.Link, len(appVersion.Spec.SpanLinks))
+
+	for i, linkedSpan := range appVersion.Spec.SpanLinks {
+		r.Log.Info("Adding Link to span", "linkedSpan", linkedSpan)
+
+		traceContextCarrier := propagation.MapCarrier(map[string]string{
+			"traceparent": linkedSpan,
+		})
+
+		linkedCtx := context.Background()
+		linkedCtx = otel.GetTextMapPropagator().Extract(linkedCtx, traceContextCarrier)
+
+		link := trace.LinkFromContext(linkedCtx, attribute.KeyValue{
+			Key:   "opentracing.ref_type",
+			Value: attribute.StringValue("follows-from"),
+		})
+		result[i] = link
+
+	}
+	return result
 }

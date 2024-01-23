@@ -23,3 +23,5 @@ spec:
     taskType: ""
     workloadName: "workload"
     workloadVersion: "0.1.0"
+    metadata:
+      commit-id: "1234"

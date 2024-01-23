@@ -9,7 +9,7 @@ spec:
       containers:
         - env:
             - name: KEPTN_CONTEXT
-              value: '{"workloadName":"workload","appName":"podtato-head","appVersion":"1.0.0","workloadVersion":"0.1.0","taskType":"","objectType":""}'
+              value: '{"workloadName":"workload","appName":"podtato-head","appVersion":"1.0.0","workloadVersion":"0.1.0","taskType":"","objectType":"","metadata":{"commit-id":"1234"}'
             - name: CMD_ARGS
             - name: SCRIPT
               value: /var/data/function.ts

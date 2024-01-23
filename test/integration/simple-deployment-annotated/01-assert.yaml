@@ -51,3 +51,25 @@ spec:
   timeout: 5m0s
 status:
   status: Succeeded
+---
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnTask
+spec:
+  checkType: post
+  context:
+    appName: waiter
+    appVersion: ""
+    metadata:
+      commit-id: "1234"
+      stage: dev
+    objectType: Workload
+    taskType: post
+    workloadName: waiter-waiter
+    workloadVersion: "0.4"
+  parameters: {}
+  retries: 10
+  secureParameters: {}
+  taskDefinition: pre-deployment-hello
+  timeout: 5m0s
+status:
+  status: Succeeded

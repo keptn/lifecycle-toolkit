@@ -1,6 +1,5 @@
 resources:
   - https://github.com/podtato-head/podtato-head-app/releases/download/v0.3.1/manifest.yaml
-  - app.yaml
   - app-post-deploy.yaml
   - provider.yaml
   - metric.yaml

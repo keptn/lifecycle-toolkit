@@ -60,17 +60,10 @@ You could also open up a browser and watch the progress in Jaeger.
 You can find the Context ID in the "TraceId" Field of
 the KeptnAppVersion
 
-The deployment should fail because of too few cpu resources
+After some time, you should see that everything is successful
 
-## Deploy Version 2 of the PodTatoHead
+## Deploy Version 2
 
 ```make deploy-version-2```
-
-* Watch the progress of the deployments
-* After some time, you should see that everything is successful
-
-## Deploy Version 3
-
-```make deploy-version-3```
 
 * This should only change one service, you can see that only this changed in the trace

@@ -130,3 +130,13 @@ status:
     - status: Succeeded
       definitionName: check-entry-service
   status: Succeeded
+---
+apiVersion: v1
+kind: Pod
+metadata:
+spec:
+  containers:
+    - env:
+        - name: KEPTN_CONTEXT
+          # yamllint disable rule:line-length
+          value: '{"workloadName":"","appName":"podtato-head","appVersion":"95a0b0ddca","workloadVersion":"","taskType":"pre","objectType":"App","metadata":{"test-metadata":"testy-metadata"}}'

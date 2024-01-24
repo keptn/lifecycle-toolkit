@@ -5,6 +5,7 @@ metadata:
   annotations:
     container: test
 spec:
+  ttlSecondsAfterFinished: 500
   container:
     name: testy-test
     image: busybox:1.36.1

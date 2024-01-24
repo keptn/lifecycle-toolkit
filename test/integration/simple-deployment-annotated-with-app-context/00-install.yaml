@@ -11,6 +11,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
 spec:
+  ttlSecondsAfterFinished: 1000
   function:
     inline:
       code: |

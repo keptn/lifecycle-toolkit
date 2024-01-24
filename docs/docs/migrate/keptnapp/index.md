@@ -11,13 +11,13 @@ This page gives instructions for doing that.
 
 > **Warning**
 Migration is only required for
-**manually created KeptnApp** resources.
-`KeptnApp` resources created by
-Keptn via the
+**manually created KeptnApp** or
+automatically created `KeptnApp` resources with
+**manually edited pre/post-deployment tasks or evaluations**.
+`KeptnApp` resources created by Keptn via the
 [automatic app-discovery](../../guides/auto-app-discovery.md)
-feature do not require modification
-unless you edited them manually to add pre/post-deployment tasks
-or evaluations.
+without any manual changes in the pre/post-deployment
+tasks/evaluations section do not require any action.
 
 To migrate an existing **manually created KeptnApp** or
 automatically created `KeptnApp` with

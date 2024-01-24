@@ -3,7 +3,6 @@ package task
 import (
 	"context"
 	"fmt"
-	"golang.org/x/exp/maps"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -19,6 +18,7 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
+	"golang.org/x/exp/maps"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"

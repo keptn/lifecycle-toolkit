@@ -144,6 +144,7 @@ spec:
             - name: DATA
               value: '{"url":"http://podtato-head-entry:9000"}'
             - name: KEPTN_CONTEXT
+              # yamllint disable-line rule:line-length
               value: '{"workloadName":"podtato-head-podtato-head-left-leg","appName":"podtato-head","appVersion":"","workloadVersion":"0.1.0","taskType":"pre","objectType":"Workload","metadata":{"commit-id":"1234","stage":"dev","test-metadata":"testy-metadata"}}'
             - name: CMD_ARGS
             - name: SCRIPT

@@ -30,7 +30,7 @@ kubectl create secret generic slack-secret --from-literal=SECURE_DATA='{"slack_h
 ### Enable post deployment task
 
 To enable Slack notification add `post-deployment-notification` in as a postDeploymentTasks in the
-[app.yaml](base/app.yaml) file as shown below.
+[appcontext.yaml](base/appcontext.yaml) file as shown below.
 
 ```yaml
   postDeploymentTasks:

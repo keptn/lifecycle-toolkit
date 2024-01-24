@@ -3,6 +3,7 @@ package task
 import (
 	"context"
 	"fmt"
+	"golang.org/x/exp/maps"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -155,7 +156,8 @@ func injectKeptnContext(phaseCtx context.Context, newTask *klcv1beta1.KeptnTask)
 	if metadata, ok := keptncontext.GetAppMetadataFromContext(phaseCtx); ok {
 		traceContextCarrier := &propagation.MapCarrier{}
 		otel.GetTextMapPropagator().Inject(phaseCtx, traceContextCarrier)
-		newTask.Spec.Context.Metadata = metadata
+		newTask.Spec.Context.Metadata = map[string]string{}
+		maps.Copy(newTask.Spec.Context.Metadata, metadata)
 		for _, key := range traceContextCarrier.Keys() {
 			newTask.Spec.Context.Metadata[key] = traceContextCarrier.Get(key)
 		}

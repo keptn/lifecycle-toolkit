@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # PR review process
 
 After you

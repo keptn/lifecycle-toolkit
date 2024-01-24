@@ -3,6 +3,8 @@ kind: KeptnAppContext
 metadata:
   name: podtato-head
 spec:
+  metadata:
+    test-metadata: testy-metadata
   preDeploymentEvaluations:
     - available-cpus
   preDeploymentTasks:

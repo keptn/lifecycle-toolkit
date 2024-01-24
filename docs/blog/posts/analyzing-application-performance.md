@@ -7,6 +7,7 @@ categories:
   - SRE
   - Application Performance
   - Analysis
+comments: true
 ---
 
 # Analyzing Application Performance with Keptn

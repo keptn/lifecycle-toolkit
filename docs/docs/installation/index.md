@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Installation
 
 Keptn must be installed onto each Kubernetes cluster you want to monitor.

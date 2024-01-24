@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Auto app discovery
 
 The automatically generated `KeptnApp` file

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # AnalysisValueTemplate
 
 An `AnalysisValueTemplate` resource

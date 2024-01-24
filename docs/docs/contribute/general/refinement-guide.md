@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Refinement process
 
 During the Refinement timeblock in community meetings, maintainers engage in technical

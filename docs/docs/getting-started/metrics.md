@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn Metrics
 
 The Keptn metrics component

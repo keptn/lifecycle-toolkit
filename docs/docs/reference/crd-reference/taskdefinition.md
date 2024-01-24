@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # KeptnTaskDefinition
 
 A `KeptnTaskDefinition` defines tasks

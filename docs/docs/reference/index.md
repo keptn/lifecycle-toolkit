@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Reference
 
 This section of the Keptn documentation contains reference documentation for the various APIs and CRDs that are used in Keptn.

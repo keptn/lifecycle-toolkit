@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Software development environment
 
 This page gives instructions and hints for setting up a development environment

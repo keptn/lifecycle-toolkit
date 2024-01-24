@@ -479,6 +479,12 @@ spec:
           status:
             description: Status describes the current state of the KeptnWorkloadVersion.
             properties:
+              appContextMetadata:
+                additionalProperties:
+                  type: string
+                description: AppContextMetadata contains metadata from the related
+                  KeptnAppVersion.
+                type: object
               currentPhase:
                 description: |-
                   CurrentPhase indicates the current phase of the KeptnWorkloadVersion. This can be:

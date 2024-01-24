@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Working with Git
 
 Keptn source for software and documentation is stored in the

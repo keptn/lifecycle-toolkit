@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn Metrics
 
 The Keptn Metrics Operator provides a single entry point

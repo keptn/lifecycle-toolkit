@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Components
 
 ## Keptn Components

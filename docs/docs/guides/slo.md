@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Analysis
 
 The Keptn Metrics Operator Analysis feature
@@ -31,7 +35,7 @@ For more information,see:
 
 * [SLO converter](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/converter/slo_converter.md#slo-converter)
 * [SLI converter](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/converter/sli_converter.md#sli-converter)
-* [Migrate Quality Gates](../migrate/metrics-observe.md)
+* [Migrate Quality Gates](../migrate/keptn/metrics-observe.md)
 
 The Analysis result is exposed as an OpenTelemetry metric
 and can be displayed on dashboard tools, such as Grafana.

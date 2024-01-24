@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # KeptnEvaluationDefinition
 
 A `KeptnEvaluationDefinition` assigns target values

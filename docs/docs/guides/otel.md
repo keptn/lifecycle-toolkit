@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # OpenTelemetry observability
 
 Keptn makes any Kubernetes deployment observable.

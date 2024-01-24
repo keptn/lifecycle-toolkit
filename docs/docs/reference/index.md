@@ -32,20 +32,3 @@ versioning, and functionality of Keptn APIs.
 Each API corresponds to an object in our API library, following Kubernetes API versioning.
 Keptn APIs extend the base Kubernetes API with additional objects and functionality.
 Notably, Keptn generates many of its resources automatically, minimizing the need for manual input.
-
-For quick reference and practical usage, you can employ `kubectl` commands
-to inspect the current state of Keptn resources:
-
-1. **List all resources** of a specific type within a namespace.
-  For example:
-
-    ```bash
-    kubectl get keptnapps -n namespace1
-    ```
-
-2. **Retrieve the current manifest** for a specified resource.
-  For example:
-
-    ```bash
-    kubectl get keptnapp -n <namespace> my-keptn-app -oyaml
-    ```

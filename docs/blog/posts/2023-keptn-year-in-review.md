@@ -82,7 +82,7 @@ Let us know if we missed yours, for now here's a collection from 2023:
 - Apr 2023: KubeCon CloudNativeCon Europe (Amsterdam): [Navigating the Delivery Lifecycle with Keptn by Giovanni Liva, Ana Medina, Brad McCoy, Meha Bhalodiya](https://youtu.be/Ezd6hGnRL84?feature=shared)
 - Mar 2023: [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes by Adam Gardner](https://youtu.be/Hh01bBwZ_qM?feature=shared)
 - Feb 2023: [Is it Observable: What is Keptn Lifecycle Toolkit with Giovanni Liva](https://youtu.be/Uvg4uG8AbFg?feature=shared)
-- <!-- markdownlint-enable max-one-sentence-per-line -->
+<!-- markdownlint-enable max-one-sentence-per-line -->
 <!-- markdownlint-enable MD039 -->
 <!-- markdownlint-enable MD013 -->
 

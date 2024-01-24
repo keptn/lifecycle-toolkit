@@ -40,6 +40,9 @@ site_description: >-
   Enhance Kubernetes monitoring, streamline metrics ingestion, and
   automate deployment validation. Join the Keptn community for insights.
 extra:
+  analytics:
+    provider: google
+    property: G-SJLS2F2J2B
   social:
     - icon: fontawesome/solid/house
       link: https://keptn.sh

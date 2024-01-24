@@ -903,6 +903,7 @@ _Appears in:_
 | `currentPhase` _string_ | CurrentPhase indicates the current phase of the KeptnWorkloadVersion. This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment - PostDeploymentTasks - PostDeploymentEvaluations || ✓ |
 | `phaseTraceIDs` _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadVersion || ✓ |
 | `status` _string_ | Status represents the overall status of the KeptnWorkloadVersion. |Pending| ✓ |
+| `appContextMetadata` _object (keys:string, values:string)_ | AppContextMetadata contains metadata from the related KeptnAppVersion. || ✓ |
 
 
 #### Objective

@@ -298,3 +298,74 @@ func TestGetRequestInfo(t *testing.T) {
 	}
 	require.Equal(t, expected, info)
 }
+
+func Test_MergeMaps(t *testing.T) {
+	tests := []struct {
+		name string
+		map1 map[string]string
+		map2 map[string]string
+		want map[string]string
+	}{
+		{
+			name: "two empty maps",
+			map1: map[string]string{},
+			map2: map[string]string{},
+			want: map[string]string{},
+		},
+		{
+			name: "second map empty",
+			map1: map[string]string{
+				"test1": "testy1",
+			},
+			map2: map[string]string{},
+			want: map[string]string{
+				"test1": "testy1",
+			},
+		},
+		{
+			name: "first map empty",
+			map1: map[string]string{},
+			map2: map[string]string{
+				"test1": "testy1",
+			},
+			want: map[string]string{
+				"test1": "testy1",
+			},
+		},
+		{
+			name: "maps do not overlay",
+			map1: map[string]string{
+				"test2": "testy2",
+			},
+			map2: map[string]string{
+				"test1": "testy1",
+			},
+			want: map[string]string{
+				"test1": "testy1",
+				"test2": "testy2",
+			},
+		},
+		{
+			name: "maps overlay - map2 wins",
+			map1: map[string]string{
+				"test2": "testy2",
+				"test3": "testy4",
+			},
+			map2: map[string]string{
+				"test1": "testy1",
+				"test3": "testy3",
+			},
+			want: map[string]string{
+				"test1": "testy1",
+				"test2": "testy2",
+				"test3": "testy3",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			require.Equal(t, MergeMaps(tt.map1, tt.map2), tt.want)
+		})
+	}
+}

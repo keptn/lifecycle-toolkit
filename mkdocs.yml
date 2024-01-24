@@ -161,10 +161,11 @@ nav:
               - KeptnMetricsProvider: docs/reference/crd-reference/metricsprovider.md
               - KeptnTask: docs/reference/crd-reference/task.md
               - KeptnTaskDefinition: docs/reference/crd-reference/taskdefinition.md
-      - Migrating to Keptn:
-          - docs/migrate/index.md
-          - Migration strategy: docs/migrate/strategy.md
-          - Migrate Quality Gates: docs/migrate/metrics-observe.md
+      - Migration:
+          - Migrating to Keptn:
+              - docs/migrate/keptn/index.md
+              - Migration strategy: docs/migrate/keptn/strategy.md
+              - Migrate Quality Gates: docs/migrate/keptn/metrics-observe.md
   - Contributing:
       - docs/contribute/index.md
       - General information:

@@ -35,8 +35,7 @@ spec:
         - env:
             - name: KEPTN_CONTEXT
               # yamllint disable-line rule:line-length
-              value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"pre","objectType":"Workload","metadata":{"commit-id":"1234","st │
-│ age":"dev","test-metadata":"test-metadata"}}'
+              value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"pre","objectType":"Workload","metadata":{"commit-id":"1234","stage":"dev","test-metadata":"test-metadata"}}'
             - name: CMD_ARGS
             - name: SCRIPT
               value: /var/data/function.ts

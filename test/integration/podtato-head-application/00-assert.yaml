@@ -133,7 +133,6 @@ status:
 ---
 apiVersion: v1
 kind: Pod
-metadata:
 spec:
   containers:
     - env:

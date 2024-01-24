@@ -27,7 +27,6 @@ status:
     - status: Succeeded
       definitionName: pre-deployment-hello
 ---
----
 apiVersion: batch/v1
 kind: Job
 spec:

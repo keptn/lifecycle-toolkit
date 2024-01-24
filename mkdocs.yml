@@ -42,7 +42,7 @@ site_description: >-
 extra:
   analytics:
     provider: google
-    property: G-SJLS2F2J2B
+    property: !ENV GLOBAL_ANALYTICS_CODE
   social:
     - icon: fontawesome/solid/house
       link: https://keptn.sh

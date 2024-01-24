@@ -114,6 +114,9 @@ type KeptnWorkloadVersionStatus struct {
 	// +kubebuilder:default:=Pending
 	// +optional
 	Status common.KeptnState `json:"status,omitempty"`
+	// AppContextMetadata contains metadata from the related KeptnAppVersion.
+	// +optional
+	AppContextMetadata map[string]string `json:"appContextMetadata,omitempty"`
 }
 
 // +kubebuilder:object:root=true

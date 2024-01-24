@@ -316,6 +316,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: post-deployment-hello
 spec:
+  ttlSecondsAfterFinished: 1000
   function:
     inline:
       code: |
@@ -326,6 +327,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
 spec:
+  ttlSecondsAfterFinished: 1000
   function:
     inline:
       code: |
@@ -336,6 +338,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: check-entry-service
 spec:
+  ttlSecondsAfterFinished: 1000
   function:
     httpRef:
       url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/http.ts

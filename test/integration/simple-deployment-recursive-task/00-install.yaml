@@ -11,6 +11,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
 spec:
+  ttlSecondsAfterFinished: 1000
   function:
     functionRef:
       name: pre-deployment-parent
@@ -26,6 +27,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-parent
 spec:
+  ttlSecondsAfterFinished: 1000
   function:
     parameters:
       map:

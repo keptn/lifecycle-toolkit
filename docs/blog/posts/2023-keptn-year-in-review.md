@@ -12,7 +12,7 @@ Hello and Happy New Year from the entire Keptn Team. We hope you had a wonderful
 
 The biggest news for the project in 2023 was probably the maturing of the cloud native Keptn, with the former subproject named Keptn Lifecycle Toolkit officially becoming Keptn in August 2023, and the end-of-life (EOL) for Keptn v1. We focused on having Keptn be a 100% cloud native, opinionated way of delivering Kubernetes apps and it was important for us to implement the “big pillars” of Keptn v1: supporting the metrics component of the Keptn v1 quality gates feature, observability (new), and deployments by defining KeptnTasks & Evaluations to execute any container the user provides and extending deployments (job executor service in Keptn v1).  
 
-We’re happy to report that Keptn has now reached a general level of maturity and stabilization that we now have beta APIs. If you’d like to learn more about the transition from v1 to Keptn, the history of Ketpn, or migrating, we recommend the following articles:  
+We’re happy to report that Keptn has now reached a general level of maturity and stabilization that we now have beta APIs. If you’d like to learn more about the transition from v1 to Keptn, the history of Keptn, or migrating, we recommend the following articles:
 
 - [September 2023: Keptn Lifecycle Toolkit is now Keptn!](https://medium.com/keptn/keptn-lifecycle-toolkit-is-now-keptn-e0812217bf46) 
 - [July 2022: Keptn reaches incubating status in CNCF!](https://medium.com/keptn/keptn-reaches-the-incubating-status-in-the-cncf-67291e2dda7) 

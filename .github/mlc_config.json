@@ -8,6 +8,9 @@
     },
     {
       "pattern": "^../assets/"
+    },
+    {
+      "pattern": "^twitter.com"
     }
   ],
   "timeout": "20s",

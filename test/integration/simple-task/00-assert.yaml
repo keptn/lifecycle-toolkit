@@ -16,4 +16,4 @@ spec:
               value: /var/data/function.ts
           imagePullPolicy: IfNotPresent
           name: keptn-function-runner
-  ttlSecondsAfterFinished: 300
+  ttlSecondsAfterFinished: 1000

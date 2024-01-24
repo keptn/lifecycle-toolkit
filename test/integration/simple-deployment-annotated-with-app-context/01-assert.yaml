@@ -21,9 +21,6 @@ status:
   deploymentStatus: Succeeded
   postDeploymentEvaluationStatus: Succeeded
   postDeploymentStatus: Succeeded
-  postDeploymentTaskStatus:
-    - status: Succeeded
-      definitionName: pre-deployment-hello
   preDeploymentEvaluationStatus: Succeeded
   preDeploymentStatus: Succeeded
   preDeploymentTaskStatus:

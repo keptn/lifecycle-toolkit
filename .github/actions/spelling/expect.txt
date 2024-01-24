@@ -441,6 +441,7 @@ opencontainers
 openfeature
 Openshift
 opentelemetry
+opentracing
 operatorcommon
 operatorvalue
 optionskeptnsh
@@ -552,6 +553,7 @@ spdx
 spf
 squidfunk
 sre
+staceypotter
 stakeholders
 statefulset
 statefultest
@@ -654,4 +656,3 @@ yannh
 yml
 YOURNAME
 yourregistry
-opentracing

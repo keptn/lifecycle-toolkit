@@ -27,7 +27,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-parent
 spec:
-  ttlSecondsAfterFinished: 1000
+  ttlSecondsAfterFinished: 300
   function:
     parameters:
       map:

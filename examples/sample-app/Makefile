@@ -24,10 +24,6 @@ deploy-version-1:
 deploy-version-2:
 	kubectl apply -k version-2
 
-.PHONY: deploy-version-3
-deploy-version-3:
-	kubectl apply -k version-3
-
 .PHONY: undeploy-podtatohead
 undeploy-podtatohead:
 	kubectl delete ns "$(PODTATO_NAMESPACE)" --ignore-not-found=true

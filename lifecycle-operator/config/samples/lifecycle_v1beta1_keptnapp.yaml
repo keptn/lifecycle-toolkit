@@ -7,5 +7,3 @@ spec:
   workloads:
     - name: podtato-head-entry
       version: 0.1.0
-  postDeploymentEvaluations:
-    - available-cpus

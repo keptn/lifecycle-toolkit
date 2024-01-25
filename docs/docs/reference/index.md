@@ -23,7 +23,7 @@ For a comprehensive list of all Keptn resources, see the [API Reference](./api-r
 
 ## API Reference
 
-This auto-generated content from source code offers insights into the structure,
+The [API Reference](./api-reference/index.md) is content that is auto-generated from source code and offers insights into the structure,
 versioning, and functionality of Keptn APIs.
 
 Each API corresponds to an object in our API library, following Kubernetes API versioning.

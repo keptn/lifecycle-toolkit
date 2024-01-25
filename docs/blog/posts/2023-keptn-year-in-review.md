@@ -155,7 +155,7 @@ their Kubernetes deployments efficient.
 Keptn helps compute DORA metrics by tracking the application from the moment it hits a development cluster
 until it hits production with [KEP87](https://github.com/keptn/enhancement-proposals/blob/main/text/0087-klt-traceid-propagation.md).
 However, this is only a portion of the full picture, and we would like to support the community with an
-Open Standard that allows different tool to work together tracking code from the moment it is merged into main.
+Open Standard that allows different tools to work together tracking code from the moment it is merged into main.
 For this reason, we support the new
 [OTel CI/CD working group](https://github.com/open-telemetry/community/pull/1822/files).
 

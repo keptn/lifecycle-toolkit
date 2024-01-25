@@ -109,5 +109,10 @@ LS0[a-zA-Z0-9]+
 # k8s CRD validation patterns
 pattern\: .*$
 
+# data-category-id from Giscus integration
+data-category-id=\".*\"$
+data-repo-id=\".*\"$
+
 # GA tag
 G-[A-Z0-9]+
+\<meta name=\"google-site-verification\" content=".*" \/\>$

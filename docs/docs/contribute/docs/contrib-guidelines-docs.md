@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Contribution guidelines for documentation
 
 The [Contribution Guidelines](../general/contrib-guidelines-gen.md) page

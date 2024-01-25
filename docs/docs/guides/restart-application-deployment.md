@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Redeploy/Restart an Application
 
 A [KeptnApp](../reference/crd-reference/app.md) can fail

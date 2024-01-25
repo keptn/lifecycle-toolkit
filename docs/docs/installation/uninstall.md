@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Uninstall
 
 > **Warning**

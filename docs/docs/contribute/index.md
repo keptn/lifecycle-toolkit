@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Contributing to Keptn
 
 This section is under development.

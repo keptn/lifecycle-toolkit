@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn integration with Scheduling
 
 Keptn integrates with Kubernetes scheduling to block

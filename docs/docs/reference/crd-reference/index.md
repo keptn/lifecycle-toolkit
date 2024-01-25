@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # CRD Reference
 
 This section provides comprehensive reference information about the

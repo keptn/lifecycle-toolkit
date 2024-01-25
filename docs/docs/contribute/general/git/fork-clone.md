@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Fork and clone the repository
 
 Perform the following steps to create a copy

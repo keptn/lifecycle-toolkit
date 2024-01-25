@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # General information about contributing
 
 This section is under development.

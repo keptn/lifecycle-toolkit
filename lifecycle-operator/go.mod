@@ -6,31 +6,32 @@ require (
 	dario.cat/mergo v1.0.0
 	github.com/argoproj/argo-rollouts v1.6.4
 	github.com/benbjohnson/clock v1.3.5
-	github.com/cloudevents/sdk-go/v2 v2.14.0
+	github.com/cloudevents/sdk-go/v2 v2.15.0
 	github.com/go-logr/logr v1.4.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20231220125738-6b5f424f8cf1
 	github.com/magiconair/properties v1.8.7
-	github.com/onsi/ginkgo/v2 v2.14.0
-	github.com/onsi/gomega v1.30.0
+	github.com/onsi/ginkgo/v2 v2.15.0
+	github.com/onsi/gomega v1.31.1
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.18.0
 	github.com/stretchr/testify v1.8.4
-	go.opentelemetry.io/otel v1.21.0
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.21.0
-	go.opentelemetry.io/otel/exporters/prometheus v0.44.0
-	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.21.0
-	go.opentelemetry.io/otel/metric v1.21.0
-	go.opentelemetry.io/otel/sdk v1.21.0
-	go.opentelemetry.io/otel/sdk/metric v1.21.0
-	go.opentelemetry.io/otel/trace v1.21.0
+	go.opentelemetry.io/otel v1.22.0
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.22.0
+	go.opentelemetry.io/otel/exporters/prometheus v0.45.0
+	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.22.0
+	go.opentelemetry.io/otel/metric v1.22.0
+	go.opentelemetry.io/otel/sdk v1.22.0
+	go.opentelemetry.io/otel/sdk/metric v1.22.0
+	go.opentelemetry.io/otel/trace v1.22.0
+	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a
 	golang.org/x/net v0.20.0
 	google.golang.org/grpc v1.60.1
-	k8s.io/api v0.28.5
-	k8s.io/apiextensions-apiserver v0.28.5
-	k8s.io/apimachinery v0.28.5
-	k8s.io/apiserver v0.28.5
-	k8s.io/client-go v0.28.5
+	k8s.io/api v0.28.6
+	k8s.io/apiextensions-apiserver v0.28.6
+	k8s.io/apimachinery v0.28.6
+	k8s.io/apiserver v0.28.6
+	k8s.io/client-go v0.28.6
 	sigs.k8s.io/controller-runtime v0.16.3
 )
 
@@ -72,26 +73,25 @@ require (
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.21.0 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.22.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.25.0 // indirect
-	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e // indirect
 	golang.org/x/oauth2 v0.15.0 // indirect
 	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/term v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
-	golang.org/x/tools v0.16.1 // indirect
+	golang.org/x/tools v0.17.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
+	google.golang.org/protobuf v1.32.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/component-base v0.28.5 // indirect
+	k8s.io/component-base v0.28.6 // indirect
 	k8s.io/klog/v2 v2.100.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20230717233707-2695361300d9 // indirect
 	k8s.io/utils v0.0.0-20230406110748-d93618cff8a2 // indirect

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # CRD name
 
 Copy this template to create a new CRD reference page.

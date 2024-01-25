@@ -4,8 +4,8 @@ go 1.20
 
 require (
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/onsi/ginkgo/v2 v2.14.0
-	github.com/onsi/gomega v1.30.0
+	github.com/onsi/ginkgo/v2 v2.15.0
+	github.com/onsi/gomega v1.31.1
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.4
 	go.opentelemetry.io/otel v0.20.0
@@ -19,7 +19,7 @@ require (
 	k8s.io/apiserver v0.25.16
 	k8s.io/client-go v0.25.16
 	k8s.io/component-base v0.25.16
-	k8s.io/klog/v2 v2.120.0
+	k8s.io/klog/v2 v2.120.1
 	k8s.io/kubernetes v1.25.16
 	sigs.k8s.io/controller-runtime v0.13.2
 )

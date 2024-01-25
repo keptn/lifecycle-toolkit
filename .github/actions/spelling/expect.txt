@@ -31,6 +31,7 @@ apierrors
 apiservice
 APIURL
 apk
+appcontext
 appcreationrequest
 APPNAME
 appv
@@ -87,7 +88,6 @@ configmapref
 configmapreference
 containedctx
 containerspec
-contextcommon
 contextdata
 controllercommon
 controllererrors
@@ -193,6 +193,7 @@ gha
 ghrs
 ghtoken
 ginkgotypes
+giscus
 Gitlab
 gke
 gms
@@ -213,7 +214,6 @@ graphql
 groupversion
 gstatic
 GVK
-HCNAH
 healthz
 hellopy
 helloworldtask
@@ -238,7 +238,6 @@ ifeq
 ifile
 ifndef
 IHandler
-ikbr
 imagepullsecret
 IManager
 IMeter
@@ -263,10 +262,8 @@ javascripts
 jetstack
 jgehrcke
 Jhb
-Jmn
 jsonschema
 jwt
-Jymo
 kacr
 kauz
 kav
@@ -294,6 +291,7 @@ keptnappversionstatus
 keptnconfig
 keptnconfiglist
 keptnconfigspec
+keptncontext
 keptncontroller
 keptndemo
 keptndemoapp
@@ -416,7 +414,6 @@ myservice
 myuser
 myversion
 namespacedelete
-Nde
 netlify
 nifi
 nilnil
@@ -444,6 +441,7 @@ opencontainers
 openfeature
 Openshift
 opentelemetry
+opentracing
 operatorcommon
 operatorvalue
 optionskeptnsh
@@ -487,7 +485,6 @@ previousversion
 printargs
 printcolumn
 privs
-Process
 proj
 promapi
 promhttp
@@ -556,6 +553,7 @@ spdx
 spf
 squidfunk
 sre
+staceypotter
 stakeholders
 statefulset
 statefultest
@@ -612,6 +610,7 @@ trivyignore
 trunc
 ttlsecondsafterfinished
 ttlsecondstask
+typeof
 UIDs
 undeploy
 unmarshal
@@ -651,7 +650,6 @@ WORKLOADOVERALLSTATUS
 workloadsstate
 workloadstatus
 workloadversion
-WZC
 xxxx
 XXXXXXXXXXXXXXXXXXXXXXXX
 yannh

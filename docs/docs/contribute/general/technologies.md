@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Technologies and concepts you should know
 
 You should understand some related technologies

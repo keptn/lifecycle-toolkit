@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # API Reference
 
 This section provides comprehensive reference information about all APIs

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # KeptnTaskDefinition
 
 A `KeptnTaskDefinition` defines tasks
@@ -360,7 +364,7 @@ Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
 and the revised code is picked up without additional changes.
 
-All `KeptnTaskDefinition` resources specified to the `KeptnApp` resource
+All `KeptnTaskDefinition` resources specified to the `KeptnAppContext` resource
 at the same stage (either pre- or post-deployment) run in parallel.
 You can run multiple executables sequentially
 either by using the `inline` syntax for a predefined container image
@@ -383,7 +387,7 @@ then spawns a shell and runs the `sleep 30` command:
 ```
 
 This task is then referenced in the
-[app.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-3/app.yaml)
+[appcontext.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-2/appcontext.yaml)
 file.
 
 ## Examples for deno-runtime runner

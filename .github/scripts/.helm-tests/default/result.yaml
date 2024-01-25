@@ -575,9 +575,9 @@ spec:
                 items:
                   type: string
                 type: array
-              traceLinks:
+              spanLinks:
                 description: |-
-                  TraceLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
+                  SpanLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
                   For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links
                 items:
                   type: string
@@ -1642,6 +1642,12 @@ spec:
               appName:
                 description: AppName is the name of the KeptnApp.
                 type: string
+              metadata:
+                additionalProperties:
+                  type: string
+                description: Metadata contains additional key-value pairs for contextual
+                  information.
+                type: object
               postDeploymentEvaluations:
                 description: |-
                   PostDeploymentEvaluations is a list of all evaluations to be performed
@@ -1687,6 +1693,13 @@ spec:
                   This can be used for restarting a KeptnApp which failed to deploy,
                   e.g. due to a failed preDeploymentEvaluation/preDeploymentTask.
                 type: integer
+              spanLinks:
+                description: |-
+                  SpanLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
+                  For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links
+                items:
+                  type: string
+                type: array
               traceId:
                 additionalProperties:
                   type: string
@@ -7207,6 +7220,12 @@ spec:
               app:
                 description: AppName is the name of the KeptnApp containing the KeptnWorkload.
                 type: string
+              metadata:
+                additionalProperties:
+                  type: string
+                description: Metadata contains additional key-value pairs for contextual
+                  information.
+                type: object
               postDeploymentEvaluations:
                 description: |-
                   PostDeploymentEvaluations is a list of all evaluations to be performed
@@ -7690,6 +7709,12 @@ spec:
               app:
                 description: AppName is the name of the KeptnApp containing the KeptnWorkload.
                 type: string
+              metadata:
+                additionalProperties:
+                  type: string
+                description: Metadata contains additional key-value pairs for contextual
+                  information.
+                type: object
               postDeploymentEvaluations:
                 description: |-
                   PostDeploymentEvaluations is a list of all evaluations to be performed
@@ -7768,6 +7793,12 @@ spec:
           status:
             description: Status describes the current state of the KeptnWorkloadVersion.
             properties:
+              appContextMetadata:
+                additionalProperties:
+                  type: string
+                description: AppContextMetadata contains metadata from the related
+                  KeptnAppVersion.
+                type: object
               currentPhase:
                 description: |-
                   CurrentPhase indicates the current phase of the KeptnWorkloadVersion. This can be:

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Migrating to Keptn
 
 Keptn uses a different paradigm than that used for Keptn v1

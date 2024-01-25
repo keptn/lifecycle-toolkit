@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Source File Structure
 
 The source files for the Keptn documentation

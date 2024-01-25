@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # KeptnConfig
 
 `KeptnConfig` defines Keptn configuration values.

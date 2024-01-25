@@ -8,6 +8,7 @@ categories:
   - Helm
   - Installation
   - Upgrade
+comments: true
 ---
 
 # Configure Keptn via the new Helm umbrella chart

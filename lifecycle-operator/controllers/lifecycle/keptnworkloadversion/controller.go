@@ -364,8 +364,7 @@ func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx conte
 		if appDeploymentTraceID != nil {
 			workloadVersion.Spec.TraceId = appDeploymentTraceID
 		} else {
-			// if we do not have a trace ID for the KeptnAppVersion's deployment phase yet, do not proceed
-			return true, nil
+			workloadVersion.Spec.TraceId = appVersion.Spec.TraceId
 		}
 		if err := r.Update(ctx, workloadVersion); err != nil {
 			return true, err

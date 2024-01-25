@@ -424,7 +424,7 @@ func (w KeptnWorkloadVersion) GetSpanAttributes() []attribute.KeyValue {
 }
 
 func (w KeptnWorkloadVersion) GetSpanKey(phase string) string {
-	return fmt.Sprintf("%s.%s.%s.%s", w.Spec.TraceId["traceparent"], w.Spec.WorkloadName, w.Spec.Version, phase)
+	return fmt.Sprintf("%s.%s.%s.%s.%s", w.Spec.TraceId["traceparent"], w.Spec.WorkloadName, w.ObjectMeta.Namespace, w.Spec.Version, phase)
 }
 
 func (w KeptnWorkloadVersion) GetSpanName(phase string) string {

@@ -180,7 +180,7 @@ func TestKeptnAppVersion(t *testing.T) {
 
 	require.Equal(t, "version", app.GetVersion())
 
-	require.Equal(t, "trace1.appname.version.phase", app.GetSpanKey("phase"))
+	require.Equal(t, "trace1.appname.namespace.version.phase", app.GetSpanKey("phase"))
 
 	retries := int32(5)
 	task := app.GenerateTask(KeptnTaskDefinition{

@@ -415,7 +415,7 @@ func (a KeptnAppVersion) SetSpanAttributes(span trace.Span) {
 }
 
 func (a KeptnAppVersion) GetSpanKey(phase string) string {
-	return fmt.Sprintf("%s.%s.%s.%s", a.Spec.TraceId["traceparent"], a.Spec.AppName, a.Spec.Version, phase)
+	return fmt.Sprintf("%s.%s.%s.%s.%s", a.Spec.TraceId["traceparent"], a.Spec.AppName, a.ObjectMeta.Namespace, a.Spec.Version, phase)
 }
 
 func (v KeptnAppVersion) GetWorkloadNameOfApp(workloadName string) string {

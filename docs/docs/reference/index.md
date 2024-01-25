@@ -21,7 +21,7 @@ the CRD Reference guides you through the manual steps for specific manifests.
 
 For a comprehensive list of all Keptn resources, see the [API Reference](./api-reference/index.md).
 
-## [API Reference](./api-reference/index.md)
+## API Reference
 
 This auto-generated content from source code offers insights into the structure,
 versioning, and functionality of Keptn APIs.

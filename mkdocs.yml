@@ -39,6 +39,8 @@ site_description: >-
   Achieve cloud-native application lifecycle orchestration with Keptn.
   Enhance Kubernetes monitoring, streamline metrics ingestion, and
   automate deployment validation. Join the Keptn community for insights.
+copyright: The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation,
+  please see our <a href="https://www.linuxfoundation.org/legal/trademark-usage">Trademark Usage page</a>.
 extra:
   analytics:
     provider: google

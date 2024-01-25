@@ -33,7 +33,7 @@ and
 
 > Pre and post deployments can be run either on individual workloads
 > or on a group of associated workloads that are grouped into
-> a`KeptnApp` resource.
+> a `KeptnApp` resource.
 > For instructions about how to identify the workloads to combine into  `KeptnApp` resource,
 > see
 > [annotations to KeptnApp](../guides/integrate.md#basic-annotations).
@@ -100,7 +100,7 @@ Apply this manifest:
 
 ```yaml
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: send-event
@@ -135,7 +135,7 @@ Apply this manifest:
 
 ```yaml
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTask
 metadata:
   name: runsendevent1
@@ -248,6 +248,32 @@ Keptn Tasks can also be executed pre-deployment (before the Pods are scheduled).
 Do this by using the `keptn.sh/pre-deployment-tasks` label or annotation.
 
 > Note: If a pre-deployment task fails, the `Pod` remains in a Pending state.
+
+## More control over the application
+
+To customize checks associated with the application, we can create a `KeptnAppContext` resource and define
+a set of pre/post deployment tasks or evaluations for the whole application.
+Note that the name of the `KeptnAppContext` resource needs to match the name of the automatically
+created `KeptnApp` and the value present in the `keptn.sh/app` or `app.kubernetes.io/part-of`
+annotations.
+An example of `KeptnAppContext`:
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnAppContext
+metadata:
+  name: keptndemoapp
+  namespace: keptndemo
+spec:
+  postDeploymentTasks:
+  - send-event
+```
+
+This way the `send-event` task will be executed after the deployment of the whole application
+(all of the workloads present in the `KeptnApp` are un a `Running` state).
+
+A detailed descriprion of all the available fields of `KeptnAppContext` resource can be find in the
+[KeptnAppContext API reference page](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappcontext).
 
 ## Further Information
 

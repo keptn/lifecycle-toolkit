@@ -1429,8 +1429,14 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTrace
 
 	requeue, err := r.checkPreEvaluationStatusOfApp(context.TODO(), wv)
 
-	require.True(t, requeue)
+	require.False(t, requeue)
 	require.Nil(t, err)
+
+	err = r.Client.Get(context.TODO(), types.NamespacedName{Name: wv.Name}, wv)
+
+	require.Nil(t, err)
+
+	require.Equal(t, map[string]string{"traceparent": "parent-id"}, wv.Spec.TraceId)
 }
 
 func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppErrorWhenUpdatingWorkloadVersion(t *testing.T) {

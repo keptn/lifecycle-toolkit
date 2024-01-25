@@ -26,7 +26,7 @@ Each API corresponds to an object in our API library, following Kubernetes API v
 Keptn APIs extend the base Kubernetes API with additional objects and functionality.
 Notably, Keptn generates many of its resources automatically, minimizing the need for manual input.
 
-## Learn More 
+## Learn More
 
 To learn more about CRDs, APIs, and Kubernetes objects, consult the Kubernetes documentation:
 

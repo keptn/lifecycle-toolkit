@@ -136,6 +136,10 @@ func (r Handler) CreateKeptnTask(ctx, phaseCtx context.Context, namespace string
 
 	phase := apicommon.PhaseCreateTask
 
+	// TODO remove
+	m, _ := keptncontext.GetAppMetadataFromContext(phaseCtx)
+	r.Log.Info("app context 5", "metadata", m)
+
 	newTask := piWrapper.GenerateTask(taskCreateAttributes.Definition, taskCreateAttributes.CheckType)
 	injectKeptnContext(phaseCtx, &newTask)
 	err = controllerutil.SetControllerReference(reconcileObject, &newTask, r.Scheme)

@@ -112,11 +112,19 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 		controllercommon.MergeMaps(workloadVersion.Status.AppContextMetadata, workloadVersion.Spec.Metadata),
 	)
 
+	// TODO remove
+	m, _ := keptncontext.GetAppMetadataFromContext(ctxAppTrace)
+	r.Log.Info("app context 1", "metadata", m)
+
 	// this will be the parent span for all phases of the WorkloadVersion
 	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), workloadVersion, "")
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}
+
+	// TODO remove
+	m, _ = keptncontext.GetAppMetadataFromContext(ctxWorkloadTrace)
+	r.Log.Info("app context 2", "metadata", m)
 
 	if workloadVersion.Status.CurrentPhase == "" {
 		spanWorkloadTrace.AddEvent("WorkloadVersion Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
@@ -161,7 +169,13 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 
 func (r *KeptnWorkloadVersionReconciler) doPreDeploymentTaskPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
 	if !workloadVersion.IsPreDeploymentSucceeded() {
+		// TODO remove
+		m, _ := keptncontext.GetAppMetadataFromContext(ctxWorkloadTrace)
+		r.Log.Info("app context 3", "metadata", m)
 		reconcilePre := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+			// TODO remove
+			m, _ := keptncontext.GetAppMetadataFromContext(phaseCtx)
+			r.Log.Info("app context 4", "metadata", m)
 			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadVersion, apicommon.PreDeploymentCheckType)
 		}
 		return r.PhaseHandler.HandlePhase(ctx,

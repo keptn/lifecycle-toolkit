@@ -1,6 +1,9 @@
 package context
 
-import "context"
+import (
+	"context"
+	"fmt"
+)
 
 type keptnAppContextKeyType string
 
@@ -13,6 +16,8 @@ func WithAppMetadata(ctx context.Context, appContextMeta ...map[string]string) c
 			mergedMap[key] = value
 		}
 	}
+	// TODO remove
+	fmt.Println(fmt.Sprintf("%v", mergedMap))
 	return context.WithValue(ctx, keptnAppContextKey, mergedMap)
 }
 

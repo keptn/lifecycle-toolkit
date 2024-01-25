@@ -45,7 +45,7 @@ More details:
 🚀 Helm chart revamp: We restructured the helm charts so that each operator has its own helm chart,
 with an umbrella chart implemented.
 This supports users who want to install or upgrade just specific
-components rather than the entire product while still allow users to install all of Keptn.
+components rather than the entire product while still allowing users to install all of Keptn.
 The keptn helm chart was renamed from klt to keptn.
 Also, labels for some components were changed to better describe them.
 This will unfortunately need a re-install of the chart, since upgrades are not possible with changed labels.

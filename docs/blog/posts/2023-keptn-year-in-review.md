@@ -98,7 +98,7 @@ has been updated as well) and look forward to major improvements to both in 2024
 
 During the 2023 year, we had 221 PRs Opened, 203 PRs Merged, and 176 Active GitHub Members of those 110 were new members,
 and 66 were returning members.
-We consider “active members” to be persons who have actively engaged in with the Keptn
+We consider “active members” to be persons who have actively engaged with the Keptn
 project through actions such as opened or commented on an Issue, opened a PR, had a PR merged,
 commented – replied – or created a discussion, forked a repo.
 

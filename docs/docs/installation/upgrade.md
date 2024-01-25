@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Upgrade
 
 If you installed the previous version of Keptn using `helm`,
@@ -19,6 +23,14 @@ to modify the configuration as discussed on the
 If you installed your Keptn instance from the Manifest,
 additional steps are required to use the Helm Chart to upgrade.
 Contact us on Slack for assistance.
+
+## Upgrade to v1beta1 version
+
+If you have previously used Keptn Lifecycle Operator with API
+resources of version `v1alpha3` and `v1alpha4`, you need to
+edit manually created or edited `KeptnApp` resources.
+For further information please refer to the
+[migration section](../migrate/keptnapp/index.md).
 
 ## Upgrade to Helm from a manifest installation
 

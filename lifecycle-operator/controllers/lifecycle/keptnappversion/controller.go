@@ -25,12 +25,14 @@ import (
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	appcontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/propagation"
@@ -94,7 +96,13 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	currentPhase := apicommon.PhaseAppPreDeployment
 
-	ctxAppTrace, spanAppTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), appVersion, "")
+	ctxAppTrace, spanAppTrace, err := r.SpanHandler.GetSpan(
+		ctxAppTrace,
+		r.getTracer(),
+		appVersion,
+		"",
+		r.getLinkedSpans(appVersion)...,
+	)
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}
@@ -198,7 +206,9 @@ func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appV
 
 	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
-
+	ctxAppTrace = appcontext.WithAppMetadata(ctxAppTrace, appVersion.Spec.Metadata, map[string]string{
+		"traceParent": appVersion.Spec.TraceId["traceparent"],
+	})
 	endFunc := func() {
 		if appVersion.IsEndTimeSet() {
 			r.Log.Info("Increasing app count")
@@ -219,4 +229,27 @@ func (r *KeptnAppVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 func (r *KeptnAppVersionReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
+}
+
+func (r *KeptnAppVersionReconciler) getLinkedSpans(appVersion *klcv1beta1.KeptnAppVersion) []trace.Link {
+	result := make([]trace.Link, len(appVersion.Spec.SpanLinks))
+
+	for i, linkedSpan := range appVersion.Spec.SpanLinks {
+		r.Log.Info("Adding Link to span", "linkedSpan", linkedSpan)
+
+		traceContextCarrier := propagation.MapCarrier(map[string]string{
+			"traceparent": linkedSpan,
+		})
+
+		linkedCtx := context.Background()
+		linkedCtx = otel.GetTextMapPropagator().Extract(linkedCtx, traceContextCarrier)
+
+		link := trace.LinkFromContext(linkedCtx, attribute.KeyValue{
+			Key:   "opentracing.ref_type",
+			Value: attribute.StringValue("follows-from"),
+		})
+		result[i] = link
+
+	}
+	return result
 }

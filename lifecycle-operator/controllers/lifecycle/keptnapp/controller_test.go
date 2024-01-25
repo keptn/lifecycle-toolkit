@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	lfcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
@@ -58,6 +59,12 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 					"some-pre-evaluation-task2",
 				},
 			},
+			Metadata: map[string]string{
+				"test1": "test2",
+			},
+			SpanLinks: []string{
+				"spanlink1",
+			},
 		},
 		Status: lfcv1beta1.KeptnAppContextStatus{},
 	}
@@ -68,8 +75,20 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 		t.Errorf("Error Creating appVersion: %s", err.Error())
 	}
 	t.Log("Verifying created app")
-	assert.Equal(t, appVersion.Namespace, app.Namespace)
-	assert.Equal(t, appVersion.Name, fmt.Sprintf("%s-%s-%s", app.Name, app.Spec.Version, apicommon.Hash(app.Generation)))
+	require.Equal(t, appVersion.Namespace, app.Namespace)
+	require.Equal(t, appVersion.Name, fmt.Sprintf("%s-%s-%s", app.Name, app.Spec.Version, apicommon.Hash(app.Generation)))
+	require.Equal(t, v1beta1.KeptnAppVersionSpec{
+		KeptnAppContextSpec: appContext.Spec,
+		KeptnAppSpec:        app.Spec,
+		AppName:             app.Name,
+		PreviousVersion:     "",
+	}, appVersion.Spec)
+	assert.Equal(t, appVersion.Spec.Metadata, appContext.Spec.Metadata)
+	assert.Equal(t, appVersion.Spec.PreDeploymentEvaluations, appContext.Spec.PreDeploymentEvaluations)
+	assert.Equal(t, appVersion.Spec.PostDeploymentEvaluations, appContext.Spec.PostDeploymentEvaluations)
+	assert.Equal(t, appVersion.Spec.PreDeploymentTasks, appContext.Spec.PreDeploymentTasks)
+	assert.Equal(t, appVersion.Spec.PostDeploymentTasks, appContext.Spec.PostDeploymentTasks)
+
 }
 
 func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {

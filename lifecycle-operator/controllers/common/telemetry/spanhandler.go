@@ -15,7 +15,7 @@ import (
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/spanhandler_mock.go . ISpanHandler
 type ISpanHandler interface {
-	GetSpan(ctx context.Context, tracer ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error)
+	GetSpan(ctx context.Context, tracer ITracer, reconcileObject client.Object, phase string, links ...trace.Link) (context.Context, trace.Span, error)
 	UnbindSpan(reconcileObject client.Object, phase string) error
 }
 
@@ -29,7 +29,7 @@ type Handler struct {
 	mtx         sync.Mutex
 }
 
-func (r *Handler) GetSpan(ctx context.Context, tracer ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+func (r *Handler) GetSpan(ctx context.Context, tracer ITracer, reconcileObject client.Object, phase string, links ...trace.Link) (context.Context, trace.Span, error) {
 	piWrapper, err := interfaces.NewSpanItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, nil, err
@@ -44,7 +44,12 @@ func (r *Handler) GetSpan(ctx context.Context, tracer ITracer, reconcileObject c
 		return span.Ctx, span.Span, nil
 	}
 	spanName := piWrapper.GetSpanName(phase)
-	childCtx, span := tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindConsumer))
+	childCtx, span := tracer.Start(
+		ctx,
+		spanName,
+		trace.WithSpanKind(trace.SpanKindConsumer),
+		trace.WithLinks(links...),
+	)
 	piWrapper.SetSpanAttributes(span)
 
 	// also get attributes from context

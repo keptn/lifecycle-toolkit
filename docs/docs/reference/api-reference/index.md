@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # API Reference
 
 Delve into comprehensive reference information about all APIs defined in Keptn.

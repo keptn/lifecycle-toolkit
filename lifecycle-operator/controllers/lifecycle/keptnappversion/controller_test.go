@@ -7,8 +7,10 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/go-logr/logr"
 	lfcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	evalfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
@@ -19,6 +21,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -141,9 +144,11 @@ func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 			KeptnAppSpec: lfcv1beta1.KeptnAppSpec{
 				Version: "1.0.0",
 			},
-			DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
-				PreDeploymentTasks: []string{
-					"task",
+			KeptnAppContextSpec: lfcv1beta1.KeptnAppContextSpec{
+				DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
+					PreDeploymentTasks: []string{
+						"task",
+					},
 				},
 			},
 			AppName: "myapp",
@@ -198,6 +203,17 @@ func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 	}
 
 	require.Nil(t, err)
+
+	spanHandlerMock := r.SpanHandler.(*telemetryfake.ISpanHandlerMock)
+
+	require.Len(t, spanHandlerMock.GetSpanCalls(), 1)
+	require.Len(t, spanHandlerMock.UnbindSpanCalls(), 1)
+
+	// verify the propagation of the metadata
+	metadata, b := keptncontext.GetAppMetadataFromContext(spanHandlerMock.GetSpanCalls()[0].Ctx)
+
+	require.True(t, b)
+	require.Equal(t, "test", metadata["testy"])
 
 	// do not requeue since we reached completion
 	require.False(t, result.Requeue)
@@ -265,7 +281,7 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 	// fake span handler
 
 	spanRecorder := &telemetryfake.ISpanHandlerMock{
-		GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+		GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string, links ...trace.Link) (context.Context, trace.Span, error) {
 			return ctx, trace.SpanFromContext(ctx), nil
 		},
 		UnbindSpanFunc: func(reconcileObject client.Object, phase string) error { return nil },
@@ -328,6 +344,63 @@ func TestKeptnApVersionReconciler_setupSpansContexts(t *testing.T) {
 			require.NotNil(t, ctx)
 			require.NotNil(t, endFunc)
 
+		})
+	}
+}
+
+func TestKeptnAppVersionReconciler_getLinkedSpans(t *testing.T) {
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+	type fields struct {
+		Log logr.Logger
+	}
+	type args struct {
+		version *lfcv1beta1.KeptnAppVersion
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   []trace.Link
+	}{
+		{
+			name: "get linked trace",
+			fields: fields{
+				Log: ctrl.Log.WithName("test-appVersionController"),
+			},
+			args: args{
+				version: &lfcv1beta1.KeptnAppVersion{
+					Spec: lfcv1beta1.KeptnAppVersionSpec{
+						KeptnAppContextSpec: lfcv1beta1.KeptnAppContextSpec{
+							SpanLinks: []string{"00-c088f5c586bab8649159ccc39a9862f7-f862289833f1fba3-01"},
+						},
+					},
+				},
+			},
+			want: []trace.Link{
+				{
+					SpanContext: trace.NewSpanContext(trace.SpanContextConfig{
+						SpanID:     trace.SpanID([8]byte{0xf8, 0x62, 0x28, 0x98, 0x33, 0xf1, 0xfb, 0xa3}),
+						TraceID:    trace.TraceID([16]byte{0xc0, 0x88, 0xf5, 0xc5, 0x86, 0xba, 0xb8, 0x64, 0x91, 0x59, 0xcc, 0xc3, 0x9a, 0x98, 0x62, 0xf7}),
+						TraceFlags: trace.TraceFlags(1),
+						Remote:     true,
+					}),
+					Attributes: []attribute.KeyValue{
+						{
+							Key:   "opentracing.ref_type",
+							Value: attribute.StringValue("follows-from"),
+						},
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := &KeptnAppVersionReconciler{
+				Log: tt.fields.Log,
+			}
+			got := r.getLinkedSpans(tt.args.version)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

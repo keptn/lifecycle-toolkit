@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn Documentation
 
 This is the documentation homepage.

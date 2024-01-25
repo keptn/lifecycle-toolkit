@@ -6,5 +6,5 @@ resources:
   - app-pre-deploy-eval.yaml
 
 patchesStrategicMerge:
-  - app.yaml
+  - appcontext.yaml
   - manifest.yaml

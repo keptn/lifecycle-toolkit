@@ -23,6 +23,6 @@ spec:
     - eval2
   metadata:
     - key: abc123
-  traceLinks:
+  spanLinks:
     - "w3c trace id1"
     - "w3c trace id2"

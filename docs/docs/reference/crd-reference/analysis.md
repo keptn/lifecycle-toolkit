@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Analysis
 
 An `Analysis` resource customizes the templates

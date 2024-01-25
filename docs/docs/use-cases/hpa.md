@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn + HorizontalPodAutoscaler
 
 ## Scaling Workloads based on Keptn metrics

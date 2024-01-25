@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # DORA metrics
 
 DORA metrics are an industry-standard set of measurements

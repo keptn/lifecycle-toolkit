@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Word list
 
 This document summarizes information

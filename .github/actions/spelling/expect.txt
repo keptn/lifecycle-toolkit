@@ -31,6 +31,7 @@ apierrors
 apiservice
 APIURL
 apk
+appcontext
 appcreationrequest
 APPNAME
 appv
@@ -192,6 +193,7 @@ gha
 ghrs
 ghtoken
 ginkgotypes
+giscus
 Gitlab
 gke
 gms
@@ -212,7 +214,6 @@ graphql
 groupversion
 gstatic
 GVK
-HCNAH
 healthz
 hellopy
 helloworldtask
@@ -237,7 +238,6 @@ ifeq
 ifile
 ifndef
 IHandler
-ikbr
 imagepullsecret
 IManager
 IMeter
@@ -262,10 +262,8 @@ javascripts
 jetstack
 jgehrcke
 Jhb
-Jmn
 jsonschema
 jwt
-Jymo
 kacr
 kauz
 kav
@@ -416,7 +414,6 @@ myservice
 myuser
 myversion
 namespacedelete
-Nde
 netlify
 nifi
 nilnil
@@ -444,6 +441,7 @@ opencontainers
 openfeature
 Openshift
 opentelemetry
+opentracing
 operatorcommon
 operatorvalue
 optionskeptnsh
@@ -555,6 +553,7 @@ spdx
 spf
 squidfunk
 sre
+staceypotter
 stakeholders
 statefulset
 statefultest
@@ -611,6 +610,7 @@ trivyignore
 trunc
 ttlsecondsafterfinished
 ttlsecondstask
+typeof
 UIDs
 undeploy
 unmarshal
@@ -650,7 +650,6 @@ WORKLOADOVERALLSTATUS
 workloadsstate
 workloadstatus
 workloadversion
-WZC
 xxxx
 XXXXXXXXXXXXXXXXXXXXXXXX
 yannh

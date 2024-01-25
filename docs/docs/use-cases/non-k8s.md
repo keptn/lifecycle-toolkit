@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn for non-Kubernetes deployments
 
 Keptn can interact with deployments that are not running on Kubernetes

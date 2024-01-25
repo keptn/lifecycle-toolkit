@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Core Concepts
 
 Keptn integrates seamlessly with cloud-native deployment tools

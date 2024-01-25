@@ -191,7 +191,7 @@ jobs:
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0.15.3
+        uses: anchore/sbom-action@v0.15.5
         with:
           image: ${{ env.IMAGE_NAME }}:${{ steps.clean-image-tag.outputs.IMAGE_TAG }}
           artifact-name: sbom-${{ matrix.config.name }}
@@ -202,6 +202,17 @@ jobs:
         with:
           tag_name: ${{ matrix.config.tagName }}
           files: ./sbom-${{ matrix.config.name }}.spdx.json
+
+      - name: Attest the Image with SBOM
+        env:
+          IMAGE_DIGEST: ${{ steps.docker_build_image.outputs.digest }}
+        run: |
+          cosign attest --yes --type spdx --predicate ./sbom-${{ matrix.config.name }}.spdx.json ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
+          cosign verify-attestation --type spdx \
+            --certificate-identity-regexp="https://github.com/keptn/lifecycle-toolkit/.*" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+            ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
+
   update-examples:
     name: Update examples
     needs:

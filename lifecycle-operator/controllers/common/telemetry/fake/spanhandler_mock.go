@@ -17,7 +17,7 @@ import (
 //
 //		// make and configure a mocked telemetry.ISpanHandler
 //		mockedISpanHandler := &ISpanHandlerMock{
-//			GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+//			GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string, links ...trace.Link) (context.Context, trace.Span, error) {
 //				panic("mock out the GetSpan method")
 //			},
 //			UnbindSpanFunc: func(reconcileObject client.Object, phase string) error {
@@ -31,7 +31,7 @@ import (
 //	}
 type ISpanHandlerMock struct {
 	// GetSpanFunc mocks the GetSpan method.
-	GetSpanFunc func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error)
+	GetSpanFunc func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string, links ...trace.Link) (context.Context, trace.Span, error)
 
 	// UnbindSpanFunc mocks the UnbindSpan method.
 	UnbindSpanFunc func(reconcileObject client.Object, phase string) error
@@ -48,6 +48,8 @@ type ISpanHandlerMock struct {
 			ReconcileObject client.Object
 			// Phase is the phase argument value.
 			Phase string
+			// Links is the links argument value.
+			Links []trace.Link
 		}
 		// UnbindSpan holds details about calls to the UnbindSpan method.
 		UnbindSpan []struct {
@@ -62,7 +64,7 @@ type ISpanHandlerMock struct {
 }
 
 // GetSpan calls GetSpanFunc.
-func (mock *ISpanHandlerMock) GetSpan(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+func (mock *ISpanHandlerMock) GetSpan(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string, links ...trace.Link) (context.Context, trace.Span, error) {
 	if mock.GetSpanFunc == nil {
 		panic("ISpanHandlerMock.GetSpanFunc: method is nil but ISpanHandler.GetSpan was just called")
 	}
@@ -71,16 +73,18 @@ func (mock *ISpanHandlerMock) GetSpan(ctx context.Context, tracer telemetry.ITra
 		Tracer          telemetry.ITracer
 		ReconcileObject client.Object
 		Phase           string
+		Links           []trace.Link
 	}{
 		Ctx:             ctx,
 		Tracer:          tracer,
 		ReconcileObject: reconcileObject,
 		Phase:           phase,
+		Links:           links,
 	}
 	mock.lockGetSpan.Lock()
 	mock.calls.GetSpan = append(mock.calls.GetSpan, callInfo)
 	mock.lockGetSpan.Unlock()
-	return mock.GetSpanFunc(ctx, tracer, reconcileObject, phase)
+	return mock.GetSpanFunc(ctx, tracer, reconcileObject, phase, links...)
 }
 
 // GetSpanCalls gets all the calls that were made to GetSpan.
@@ -92,12 +96,14 @@ func (mock *ISpanHandlerMock) GetSpanCalls() []struct {
 	Tracer          telemetry.ITracer
 	ReconcileObject client.Object
 	Phase           string
+	Links           []trace.Link
 } {
 	var calls []struct {
 		Ctx             context.Context
 		Tracer          telemetry.ITracer
 		ReconcileObject client.Object
 		Phase           string
+		Links           []trace.Link
 	}
 	mock.lockGetSpan.RLock()
 	calls = mock.calls.GetSpan

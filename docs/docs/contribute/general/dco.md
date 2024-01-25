@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # DCO
 
 ## Developer Certification of Origin (DCO)

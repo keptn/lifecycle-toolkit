@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # KeptnMetricsProvider
 
 KeptnMetricsProvider defines an instance of the data provider

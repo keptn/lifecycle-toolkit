@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Reference
 
 Welcome to the Keptn documentation reference section,

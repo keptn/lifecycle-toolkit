@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Build Documentation Locally
 
 You can run MkDocs locally so that you can view the formatted version

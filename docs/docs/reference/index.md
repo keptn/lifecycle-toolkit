@@ -17,13 +17,6 @@ the CRD Reference guides you through the manual steps for specific manifests.
 
 For a comprehensive list of all Keptn resources, see the [API Reference](./api-reference/index.md).
 
-To learn more about CRDs, APIs, and Kubernetes objects, consult the Kubernetes documentation:
-
-* [API Overview](https://kubernetes.io/docs/reference/using-api/)
-* [Custom Resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-* [API versioning](https://kubernetes.io/docs/reference/using-api/#api-versioning)
-* [Understanding Kubernetes Objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)
-
 ## [API Reference](./api-reference/index.md)
 
 This auto-generated content from source code offers insights into the structure,
@@ -32,3 +25,12 @@ versioning, and functionality of Keptn APIs.
 Each API corresponds to an object in our API library, following Kubernetes API versioning.
 Keptn APIs extend the base Kubernetes API with additional objects and functionality.
 Notably, Keptn generates many of its resources automatically, minimizing the need for manual input.
+
+## Learn More 
+
+To learn more about CRDs, APIs, and Kubernetes objects, consult the Kubernetes documentation:
+
+* [API Overview](https://kubernetes.io/docs/reference/using-api/)
+* [Custom Resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+* [API versioning](https://kubernetes.io/docs/reference/using-api/#api-versioning)
+* [Understanding Kubernetes Objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/)

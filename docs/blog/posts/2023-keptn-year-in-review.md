@@ -11,7 +11,7 @@ comments: true
 Hello and Happy New Year from the entire Keptn Team.
 We hope you had a wonderful holiday season and that you’re all having a wonderful 2024 so far!
 We’d like to take a moment to reflect back on what a great year 2023 was for Keptn and all the
-road ahead for this year.  
+road ahead for this year.
 
 The biggest news for the project in 2023 was probably the maturing of the cloud native Keptn,
 with the former subproject named Keptn Lifecycle Toolkit officially becoming Keptn in August 2023,
@@ -20,7 +20,7 @@ We focused on having Keptn be a 100% cloud native,
 opinionated way of delivering Kubernetes apps and it was important for us to implement the
 “big pillars” of Keptn v1: supporting the metrics component of the Keptn v1 quality gates feature,
 observability (new), and deployments by defining KeptnTasks & Evaluations to execute any container
-the user provides and extending deployments (job executor service in Keptn v1).  
+the user provides and extending deployments (job executor service in Keptn v1).
 
 We’re happy to report that Keptn has now reached a general level of maturity and stabilization that
 we now have beta APIs.
@@ -42,9 +42,9 @@ Please find our new Keptn v0.9.0 release [here](https://github.com/keptn/lifecyc
 and the corresponding Helm chart version 0.3.0 [here](https://github.com/keptn/lifecycle-toolkit-charts/releases/tag/keptn-0.3.0).
 
 More details:
-🚀 Helm chart revamp:  We restructured the helm charts so that each operator has its own helm chart,
+🚀 Helm chart revamp: We restructured the helm charts so that each operator has its own helm chart,
 with an umbrella chart implemented.
-This supports users who want to install  or upgrade just specific
+This supports users who want to install or upgrade just specific
 components rather than the entire product while still allow users to install all of Keptn.
 The keptn helm chart was renamed from klt to keptn.
 Also, labels for some components were changed to better describe them.
@@ -68,7 +68,7 @@ See the [Kubernetes doc: Pod Scheduling Readiness](https://kubernetes.io/docs/co
 We are so grateful to our community who continue to give talks/presentations about our project.
 Let us know if we missed yours, for now here's a collection from 2023:
 
-- Dec 2023: [GitOpsCon Europe (Virtual): Working Your Way Through GitOps with Keptn - Rakshit Gondwal, Cloud Native Computing Foundation & Shivang Shandilya, Open Source ](https://youtu.be/CQhXfzYVAwY?feature=shared)
+- Dec 2023: [GitOpsCon Europe (Virtual): Working Your Way Through GitOps with Keptn - Rakshit Gondwal, Cloud Native Computing Foundation & Shivang Shandilya, Open Source](https://youtu.be/CQhXfzYVAwY?feature=shared)
 - Nov 2023: KubeCon CloudNativeCon North America (Chicago):
   - [Lightning Talk: From Novice to Keptn Contributor: Empowering My Journey in Cloud Native Communities by Yash Pimple](https://youtu.be/TyZS5mH6vM0?feature=shared)
   - [Keptn Lifecycle Toolkit Updates and Deep Dive by Anna Reale](https://youtu.be/H3UxOwS06iI?feature=shared)
@@ -94,7 +94,7 @@ utilizing the [#keptn channel](https://cloud-native.slack.com/messages/keptn/) t
 better align with the Cloud Native ecosystem & other CNCF projects.
 We also saw a [new website](https://keptn.sh/) and [docs](https://keptn.sh/latest/docs/)
 (the new [docs folder in GitHub](https://github.com/keptn/lifecycle-toolkit/tree/main/docs)
-has been updated as well) and look forward to major improvements to both in 2024.  
+has been updated as well) and look forward to major improvements to both in 2024.
 
 During the 2023 year, we had 221 PRs Opened, 203 PRs Merged, and 176 Active GitHub Members of those 110 were new members,
 and 66 were returning members.
@@ -128,7 +128,7 @@ You can read the project proposal here:
 All in all, we were quite pleased with the results, and because of Rakshit’s continued contributions upon GSoC
 completion we were happy to welcome him on as an official Keptn Approver in August 2023.
 Rakshit’s GSoC project summary can be found [here](https://github.com/rakshitgondwal/gsoc-2023)
-if you’d like to read about his experience.  
+if you’d like to read about his experience.
 
 <!-- markdownlint-disable MD028 -->
 > Working with Keptn and my mentors was a great experience.

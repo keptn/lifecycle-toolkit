@@ -444,6 +444,7 @@ opencontainers
 openfeature
 Openshift
 opentelemetry
+opentracing
 operatorcommon
 operatorvalue
 optionskeptnsh
@@ -489,6 +490,7 @@ printcolumn
 privs
 proj
 promapi
+prome
 promhttp
 providerref
 providerresult
@@ -657,4 +659,3 @@ yannh
 yml
 YOURNAME
 yourregistry
-opentracing

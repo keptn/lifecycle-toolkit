@@ -336,6 +336,14 @@ func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx conte
 		return true, nil
 	}
 
+	// set the App context metadata
+	if !reflect.DeepEqual(appVersion.Spec.Metadata, workloadVersion.Status.AppContextMetadata) {
+		workloadVersion.Status.AppContextMetadata = appVersion.Spec.Metadata
+		if err := r.Status().Update(ctx, workloadVersion); err != nil {
+			return true, err
+		}
+	}
+
 	// set the App trace id if not already set
 	if len(workloadVersion.Spec.TraceId) < 1 {
 		appDeploymentTraceID := appVersion.Status.PhaseTraceIDs[apicommon.PhaseAppDeployment.ShortName]
@@ -345,14 +353,6 @@ func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx conte
 			workloadVersion.Spec.TraceId = appVersion.Spec.TraceId
 		}
 		if err := r.Update(ctx, workloadVersion); err != nil {
-			return true, err
-		}
-	}
-
-	// set the App context metadata
-	if !reflect.DeepEqual(appVersion.Spec.Metadata, workloadVersion.Status.AppContextMetadata) {
-		workloadVersion.Status.AppContextMetadata = appVersion.Spec.Metadata
-		if err := r.Status().Update(ctx, workloadVersion); err != nil {
 			return true, err
 		}
 	}

@@ -166,6 +166,10 @@ spec:
 ## Differences between versions
 
 - The `spec.revision` field is introduced in v1alpha2.
+- The pre/post-deployment tasks and evaluations are not
+supported anymore in v1beta1.
+For more information please refer
+to the [migration section](../../migrate/keptnapp/index.md).
 
 ## See also
 

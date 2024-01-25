@@ -39,7 +39,12 @@ site_description: >-
   Achieve cloud-native application lifecycle orchestration with Keptn.
   Enhance Kubernetes monitoring, streamline metrics ingestion, and
   automate deployment validation. Join the Keptn community for insights.
+copyright: The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation,
+  please see our <a href="https://www.linuxfoundation.org/legal/trademark-usage">Trademark Usage page</a>.
 extra:
+  analytics:
+    provider: google
+    property: !ENV GLOBAL_ANALYTICS_CODE
   social:
     - icon: fontawesome/solid/house
       link: https://keptn.sh
@@ -166,6 +171,8 @@ nav:
               - docs/migrate/keptn/index.md
               - Migration strategy: docs/migrate/keptn/strategy.md
               - Migrate Quality Gates: docs/migrate/keptn/metrics-observe.md
+          - KeptnApp Migration:
+              - docs/migrate/keptnapp/index.md
   - Contributing:
       - docs/contribute/index.md
       - General information:

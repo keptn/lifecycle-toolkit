@@ -38,10 +38,10 @@ but could be run on any Kubernetes cluster.
 1. [Set up the cluster](#set-up-the-cluster)
    by creating a local Kubernetes cluster,
    installing an instance of Prometheus to use as a data source,
-   and installing Kepn on the cluster.
+   and installing Keptn on the cluster.
 1. [Configure Keptn for your metrics](#configure-keptn-for-your-metrics)
    by defining custom resources
-   for eacm data provider and each piece of data you use.
+   for each data provider and each piece of data you use.
 1. Run the metrics
 
 If you want to create your own cluster to run this exercise,

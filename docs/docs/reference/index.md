@@ -9,9 +9,6 @@ which provides comprehensive information about the Keptn Custom Resource Definit
 
 ## CRD Reference
 
-This section provides comprehensive reference information about the CRDs
-that must be populated to tailor Keptn to your needs.
-
 While the [API Reference](./api-reference/index.md) caters to advanced users with detailed technical specifications,
 the CRD Reference serves as a more user-friendly alternative.
 It presents the same information found in the API Reference but in a format

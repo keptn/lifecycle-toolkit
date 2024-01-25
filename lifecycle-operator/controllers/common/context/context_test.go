@@ -2,6 +2,7 @@ package context
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -23,6 +24,32 @@ func TestContextWithAppMetadata(t *testing.T) {
 
 	require.True(t, ok)
 	require.Equal(t, "bar", metadata["foo"])
+}
+
+func TestContextWithAppMetadataMultiThreaded(t *testing.T) {
+
+	numThreads := 1000
+
+	for i := 0; i < numThreads; i++ {
+		go func(id int) {
+			ctx := context.Background()
+
+			key := fmt.Sprintf("foo%d", id)
+			value := fmt.Sprintf("bar%d", id)
+			metadata := map[string]string{
+				key: value,
+			}
+
+			ctx = WithAppMetadata(ctx, metadata)
+
+			require.NotNil(t, ctx)
+
+			metadata, ok := GetAppMetadataFromContext(ctx)
+
+			require.True(t, ok)
+			require.Equal(t, value, metadata[key])
+		}(i)
+	}
 }
 
 func TestGetAppMetadataFromContext(t *testing.T) {

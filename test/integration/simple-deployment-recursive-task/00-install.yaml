@@ -10,6 +10,8 @@ apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
+  labels:
+    task-definition: "child"
 spec:
   ttlSecondsAfterFinished: 1000
   function:
@@ -26,6 +28,8 @@ apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-parent
+  labels:
+    task-definition: "parent"
 spec:
   ttlSecondsAfterFinished: 300
   function:

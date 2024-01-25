@@ -114,7 +114,7 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 
 	// TODO remove
 	m, _ := keptncontext.GetAppMetadataFromContext(ctxAppTrace)
-	r.Log.Info("app context 1", "metadata", m)
+	r.Log.Info("app context 1", "metadata", m, "requestInfo", requestInfo)
 
 	// this will be the parent span for all phases of the WorkloadVersion
 	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), workloadVersion, "")
@@ -124,7 +124,7 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 
 	// TODO remove
 	m, _ = keptncontext.GetAppMetadataFromContext(ctxWorkloadTrace)
-	r.Log.Info("app context 2", "metadata", m)
+	r.Log.Info("app context 2", "metadata", m, "requestInfo", requestInfo)
 
 	if workloadVersion.Status.CurrentPhase == "" {
 		spanWorkloadTrace.AddEvent("WorkloadVersion Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
@@ -364,7 +364,8 @@ func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx conte
 		if appDeploymentTraceID != nil {
 			workloadVersion.Spec.TraceId = appDeploymentTraceID
 		} else {
-			workloadVersion.Spec.TraceId = appVersion.Spec.TraceId
+			// if we do not have a trace ID for the KeptnAppVersion's deployment phase yet, do not proceed
+			return true, nil
 		}
 		if err := r.Update(ctx, workloadVersion); err != nil {
 			return true, err

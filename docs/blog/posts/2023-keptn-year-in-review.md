@@ -33,7 +33,7 @@ of Keptn, or migrating, we recommend the following articles:
 
 ## Latest Release
 
-### Keptn v.0.9.0
+### Keptn v0.9.0
 
 This release introduces a new way of scheduling your Keptn workloads by making use of the new
 Kubernetes Scheduling Gates feature on Kubernetes clusters with version v1.27 or greater.

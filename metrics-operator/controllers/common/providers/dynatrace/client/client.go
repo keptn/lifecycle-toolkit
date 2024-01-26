@@ -57,7 +57,7 @@ func NewAPIClient(config apiConfig, options ...APIClientOption) *apiClient {
 
 // Do sends and API request to the Dynatrace API and returns its result as a string containing the raw response payload
 func (client *apiClient) Do(ctx context.Context, path, method string, payload []byte) ([]byte, int, error) {
-	if err := client.auth(ctx); err != nil {
+	if _, err := client.auth(ctx); err != nil {
 		return nil, http.StatusUnauthorized, err
 	}
 	api := fmt.Sprintf("%s%s", client.config.serverURL, path)
@@ -89,10 +89,10 @@ func (client *apiClient) Do(ctx context.Context, path, method string, payload []
 	return b, res.StatusCode, nil
 }
 
-func (client *apiClient) auth(ctx context.Context) error {
+func (client *apiClient) auth(ctx context.Context) (int, error) {
 	// return if we already have a token
 	if client.config.oAuthCredentials.accessToken != "" {
-		return nil
+		return http.StatusOK, nil
 	}
 	client.Log.V(10).Info("OAuth login")
 	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
@@ -103,12 +103,12 @@ func (client *apiClient) auth(ctx context.Context) error {
 
 	req, err := http.NewRequestWithContext(ctx, "POST", client.config.authURL, bytes.NewBuffer(body))
 	if err != nil {
-		return err
+		return http.StatusInternalServerError, err
 	}
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	res, err := client.httpClient.Do(req)
 	if err != nil {
-		return err
+		return http.StatusInternalServerError, err
 	}
 	defer func() {
 		err := res.Body.Close()
@@ -117,20 +117,20 @@ func (client *apiClient) auth(ctx context.Context) error {
 		}
 	}()
 	if isErrorStatus(res.StatusCode) {
-		return ErrRequestFailed
+		return res.StatusCode, ErrRequestFailed
 	}
 	// we ignore the error here because we fail later while unmarshalling
 	oauthResponse := OAuthResponse{}
 	b, _ := io.ReadAll(res.Body)
 	err = json.Unmarshal(b, &oauthResponse)
 	if err != nil {
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	if oauthResponse.AccessToken == "" {
-		return ErrAuthenticationFailed
+		return http.StatusInternalServerError, ErrAuthenticationFailed
 	}
 
 	client.config.oAuthCredentials.accessToken = oauthResponse.AccessToken
-	return nil
+	return http.StatusOK, nil
 }

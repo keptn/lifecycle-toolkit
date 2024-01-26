@@ -90,6 +90,7 @@ spec:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-hat
         keptn.sh/version: 0.1.0
+        keptn.sh/metadata: "commit-id=1234,stage=dev"
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -137,6 +138,7 @@ spec:
         keptn.sh/workload: podtato-head-left-leg
         keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: check-entry-service
+        keptn.sh/metadata: "commit-id=1234,stage=dev"
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -184,6 +186,7 @@ spec:
         keptn.sh/workload: podtato-head-left-arm
         keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: check-entry-service
+        keptn.sh/metadata: "commit-id=1234,stage=dev"
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -231,6 +234,7 @@ spec:
         keptn.sh/workload: podtato-head-right-leg
         keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: check-entry-service
+        keptn.sh/metadata: "commit-id=1234,stage=dev"
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -278,6 +282,7 @@ spec:
         keptn.sh/workload: podtato-head-right-arm
         keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: check-entry-service
+        keptn.sh/metadata: "commit-id=1234,stage=dev"
     spec:
       terminationGracePeriodSeconds: 5
       containers:
@@ -311,6 +316,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: post-deployment-hello
 spec:
+  ttlSecondsAfterFinished: 1000
   function:
     inline:
       code: |
@@ -321,6 +327,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
 spec:
+  ttlSecondsAfterFinished: 1000
   function:
     inline:
       code: |
@@ -331,6 +338,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: check-entry-service
 spec:
+  ttlSecondsAfterFinished: 1000
   function:
     httpRef:
       url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/http.ts

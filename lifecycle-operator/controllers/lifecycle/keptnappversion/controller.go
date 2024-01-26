@@ -206,9 +206,7 @@ func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appV
 
 	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
-	ctxAppTrace = appcontext.WithAppMetadata(ctxAppTrace, appVersion.Spec.Metadata, map[string]string{
-		"traceParent": appVersion.Spec.TraceId["traceparent"],
-	})
+	ctxAppTrace = appcontext.WithAppMetadata(ctxAppTrace, appVersion.Spec.Metadata)
 	endFunc := func() {
 		if appVersion.IsEndTimeSet() {
 			r.Log.Info("Increasing app count")

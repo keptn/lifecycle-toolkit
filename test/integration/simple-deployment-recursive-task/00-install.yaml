@@ -10,7 +10,10 @@ apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
+  labels:
+    task-definition: "child"
 spec:
+  ttlSecondsAfterFinished: 1000
   function:
     functionRef:
       name: pre-deployment-parent
@@ -25,7 +28,10 @@ apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-parent
+  labels:
+    task-definition: "parent"
 spec:
+  ttlSecondsAfterFinished: 300
   function:
     parameters:
       map:
@@ -66,7 +72,3 @@ spec:
         - image: busybox
           name: busybox
           command: ['sh', '-c', 'echo The app is running! && sleep infinity']
-      initContainers:
-        - name: init-myservice
-          image: busybox:1.36.1
-          command: ['sh', '-c', 'sleep 30']

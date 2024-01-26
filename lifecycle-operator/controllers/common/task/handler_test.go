@@ -2,18 +2,23 @@ package task
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"testing"
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/trace"
 	"go.opentelemetry.io/otel/trace/noop"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -463,6 +468,7 @@ func TestTaskHandler_createTask(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := v1beta1.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
+
 			handler := Handler{
 				SpanHandler: &telemetryfake.ISpanHandlerMock{},
 				Log:         ctrl.Log.WithName("controller"),
@@ -471,9 +477,43 @@ func TestTaskHandler_createTask(t *testing.T) {
 				Tracer:      noop.NewTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
 			}
-			name, err := handler.CreateKeptnTask(context.TODO(), "namespace", tt.object, tt.createAttr)
+
+			// create a context with a traceParent and metadata attributes
+
+			name, err := handler.CreateKeptnTask(context.TODO(), context.TODO(), "namespace", tt.object, tt.createAttr)
+
 			require.True(t, strings.Contains(name, tt.wantName))
 			require.Equal(t, tt.wantErr, err)
 		})
 	}
+}
+
+func Test_injectKeptnContext(t *testing.T) {
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+
+	tp := sdktrace.NewTracerProvider()
+
+	tracer := tp.Tracer("keptn")
+
+	ctx := keptncontext.WithAppMetadata(context.TODO(), map[string]string{
+		"foo": "bar",
+	})
+	ctx, span := tracer.Start(ctx, "my-span")
+	defer span.End()
+
+	task := &v1beta1.KeptnTask{}
+	injectKeptnContext(ctx, task)
+
+	require.Equal(
+		t, map[string]string{
+			"foo": "bar",
+			"traceparent": fmt.Sprintf(
+				"00-%s-%s-01",
+				span.SpanContext().TraceID().String(),
+				span.SpanContext().SpanID().String(),
+			),
+		},
+		task.Spec.Context.Metadata,
+	)
+
 }

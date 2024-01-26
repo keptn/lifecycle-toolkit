@@ -9,12 +9,16 @@ import (
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
+	"golang.org/x/exp/maps"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -124,7 +128,7 @@ func (r Handler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, r
 }
 
 //nolint:dupl
-func (r Handler) CreateKeptnTask(ctx context.Context, namespace string, reconcileObject client.Object, taskCreateAttributes CreateTaskAttributes) (string, error) {
+func (r Handler) CreateKeptnTask(ctx, phaseCtx context.Context, namespace string, reconcileObject client.Object, taskCreateAttributes CreateTaskAttributes) (string, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return "", err
@@ -133,6 +137,7 @@ func (r Handler) CreateKeptnTask(ctx context.Context, namespace string, reconcil
 	phase := apicommon.PhaseCreateTask
 
 	newTask := piWrapper.GenerateTask(taskCreateAttributes.Definition, taskCreateAttributes.CheckType)
+	injectKeptnContext(phaseCtx, &newTask)
 	err = controllerutil.SetControllerReference(reconcileObject, &newTask, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference:")
@@ -145,6 +150,18 @@ func (r Handler) CreateKeptnTask(ctx context.Context, namespace string, reconcil
 	}
 
 	return newTask.Name, nil
+}
+
+func injectKeptnContext(phaseCtx context.Context, newTask *klcv1beta1.KeptnTask) {
+	if metadata, ok := keptncontext.GetAppMetadataFromContext(phaseCtx); ok {
+		traceContextCarrier := &propagation.MapCarrier{}
+		otel.GetTextMapPropagator().Inject(phaseCtx, traceContextCarrier)
+		newTask.Spec.Context.Metadata = map[string]string{}
+		maps.Copy(newTask.Spec.Context.Metadata, metadata)
+		for _, key := range traceContextCarrier.Keys() {
+			newTask.Spec.Context.Metadata[key] = traceContextCarrier.Get(key)
+		}
+	}
 }
 
 func (r Handler) setTaskFailureEvents(task *klcv1beta1.KeptnTask, spanTrace trace.Span) {
@@ -172,7 +189,7 @@ func (r Handler) handleTaskNotExists(ctx context.Context, phaseCtx context.Conte
 		return controllererrors.ErrCannotGetKeptnTaskDefinition
 	}
 	taskCreateAttributes.Definition = *definition
-	taskName, err = r.CreateKeptnTask(ctx, piWrapper.GetNamespace(), reconcileObject, taskCreateAttributes)
+	taskName, err = r.CreateKeptnTask(ctx, phaseCtx, piWrapper.GetNamespace(), reconcileObject, taskCreateAttributes)
 	if err != nil {
 		return err
 	}

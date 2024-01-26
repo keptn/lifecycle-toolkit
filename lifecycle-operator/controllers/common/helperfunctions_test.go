@@ -361,6 +361,18 @@ func Test_MergeMaps(t *testing.T) {
 				"test3": "testy3",
 			},
 		},
+		{
+			name: "one map is nil",
+			map1: nil,
+			map2: map[string]string{
+				"test1": "testy1",
+				"test3": "testy3",
+			},
+			want: map[string]string{
+				"test1": "testy1",
+				"test3": "testy3",
+			},
+		},
 	}
 
 	for _, tt := range tests {

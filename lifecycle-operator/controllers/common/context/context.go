@@ -1,6 +1,8 @@
 package context
 
-import "context"
+import (
+	"context"
+)
 
 type keptnAppContextKeyType string
 

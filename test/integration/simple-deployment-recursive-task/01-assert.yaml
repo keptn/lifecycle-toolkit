@@ -6,6 +6,8 @@ metadata:
     keptn.sh/app: waiter
     keptn.sh/version: "0.4"
     keptn.sh/workload: waiter-waiter
+  labels:
+    task-definition: "parent"
 spec:
   template:
     spec:
@@ -36,6 +38,8 @@ metadata:
     keptn.sh/app: waiter
     keptn.sh/version: "0.4"
     keptn.sh/workload: waiter-waiter
+  labels:
+    task-definition: "child"
   ownerReferences:
     - apiVersion: lifecycle.keptn.sh/v1beta1
       blockOwnerDeletion: true

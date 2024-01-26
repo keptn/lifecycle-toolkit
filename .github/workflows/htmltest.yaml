@@ -7,14 +7,12 @@ on:
       - '[0-9]+.[1-9][0-9]*.x'
     paths:
       - 'docs/**'
-      - 'docs-new/**'
   pull_request:
     branches:
       - 'main'
       - '[0-9]+.[1-9][0-9]*.x'
     paths:
       - 'docs/**'
-      - 'docs-new/**'
 
 jobs:
   htmltest:
@@ -30,7 +28,7 @@ jobs:
           fetch-depth: 0
 
       - name: Cache HTMLTest packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             docs/tmp/.htmltest
@@ -38,7 +36,7 @@ jobs:
           key: ${{ runner.os }}-htmltest
 
       - name: Cache Hugo packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             docs/tmp/.hugo

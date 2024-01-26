@@ -50,9 +50,9 @@ type KeptnAppContextSpec struct {
 	Metadata map[string]string `json:"metadata,omitempty"`
 
 	// +optional
-	// TraceLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
+	// SpanLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
 	// For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links
-	TraceLinks []string `json:"traceLinks,omitempty"`
+	SpanLinks []string `json:"spanLinks,omitempty"`
 }
 
 // KeptnAppContextStatus defines the observed state of KeptnAppContext

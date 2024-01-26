@@ -17,6 +17,7 @@ spec:
       annotations:
         keptn.sh/workload: waiter
         keptn.sh/container: busybox
+        keptn.sh/metadata: "commit-id=1234,stage=dev"
     spec:
       containers:
         - image: busybox:1.35

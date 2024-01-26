@@ -1,11 +1,11 @@
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnEvaluationDefinition
 metadata:
-  name: app-pre-deploy-eval-1
+  name: app-pre-deploy-eval-2
   namespace: podtato-kubectl
 spec:
   objectives:
     - keptnMetricRef:
         name: available-cpus
         namespace: podtato-kubectl
-      evaluationTarget: ">100"
+      evaluationTarget: ">1"

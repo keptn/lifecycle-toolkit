@@ -6,7 +6,7 @@ KEPTN VERSION: {{ .Chart.AppVersion  }}
 
 The following controllers have been deployed:
 
-  {{- if .Values.certManager.enabled }}
+  {{- if .Values.global.certManagerEnabled }}
   - keptn-cert-manager
   {{- end }}
   {{- if .Values.lifecycleOperator.enabled }}

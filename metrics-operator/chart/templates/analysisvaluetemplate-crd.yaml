@@ -3,8 +3,10 @@ kind: CustomResourceDefinition
 metadata:
   name: analysisvaluetemplates.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
-    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
+    controller-gen.kubebuilder.io/version: v0.14.0
+    {{- with .Values.global.caInjectionAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- include "common.annotations" ( dict "context" . ) }}
   labels:
     app.kubernetes.io/part-of: keptn
@@ -31,14 +33,19 @@ spec:
           API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -60,9 +67,9 @@ spec:
                 - name
                 type: object
               query:
-                description: Query represents the query to be run. It can include
-                  placeholders that are defined using the go template syntax. More
-                  info on go templating - https://pkg.go.dev/text/template
+                description: |-
+                  Query represents the query to be run. It can include placeholders that are defined using the go template
+                  syntax. More info on go templating - https://pkg.go.dev/text/template
                 type: string
             required:
             - provider
@@ -87,14 +94,19 @@ spec:
           API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -116,9 +128,9 @@ spec:
                 - name
                 type: object
               query:
-                description: Query represents the query to be run. It can include
-                  placeholders that are defined using the go template syntax. More
-                  info on go templating - https://pkg.go.dev/text/template
+                description: |-
+                  Query represents the query to be run. It can include placeholders that are defined using the go template
+                  syntax. More info on go templating - https://pkg.go.dev/text/template
                 type: string
             required:
             - provider

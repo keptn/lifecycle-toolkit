@@ -71,8 +71,10 @@ func TestEvaluationHandler(t *testing.T) {
 			name: "evaluation not started",
 			object: &v1beta1.KeptnAppVersion{
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
-						PreDeploymentEvaluations: []string{"eval-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentEvaluations: []string{"eval-def"},
+						},
 					},
 				},
 			},
@@ -102,8 +104,10 @@ func TestEvaluationHandler(t *testing.T) {
 			name: "already done evaluation",
 			object: &v1beta1.KeptnAppVersion{
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
-						PreDeploymentEvaluations: []string{"eval-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentEvaluations: []string{"eval-def"},
+						},
 					},
 				},
 				Status: v1beta1.KeptnAppVersionStatus{
@@ -146,8 +150,10 @@ func TestEvaluationHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
-						PreDeploymentEvaluations: []string{"eval-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentEvaluations: []string{"eval-def"},
+						},
 					},
 				},
 				Status: v1beta1.KeptnAppVersionStatus{
@@ -208,8 +214,10 @@ func TestEvaluationHandler(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
-						PreDeploymentEvaluations: []string{"eval-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentEvaluations: []string{"eval-def"},
+						},
 					},
 				},
 				Status: v1beta1.KeptnAppVersionStatus{
@@ -260,7 +268,7 @@ func TestEvaluationHandler(t *testing.T) {
 			err := v1beta1.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			spanHandlerMock := telemetryfake.ISpanHandlerMock{
-				GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string) (context.Context, trace.Span, error) {
+				GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string, links ...trace.Link) (context.Context, trace.Span, error) {
 					return context.TODO(), trace.SpanFromContext(context.TODO()), nil
 				},
 				UnbindSpanFunc: func(reconcileObject client.Object, phase string) error {
@@ -325,8 +333,10 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 					Namespace: "namespace",
 				},
 				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
-						PreDeploymentEvaluations: []string{"eval-def"},
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentEvaluations: []string{"eval-def"},
+						},
 					},
 				},
 			},

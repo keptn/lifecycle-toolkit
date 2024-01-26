@@ -92,8 +92,12 @@ var _ = Describe("Appversion", Ordered, func() {
 					Spec: klcv1beta1.KeptnAppVersionSpec{
 						AppName: appName,
 						KeptnAppSpec: klcv1beta1.KeptnAppSpec{
-							Version:                  version,
-							PreDeploymentEvaluations: []string{"eval-def-appversion"},
+							Version: version,
+						},
+						KeptnAppContextSpec: klcv1beta1.KeptnAppContextSpec{
+							DeploymentTaskSpec: klcv1beta1.DeploymentTaskSpec{
+								PreDeploymentEvaluations: []string{"eval-def-appversion"},
+							},
 						},
 					},
 				}

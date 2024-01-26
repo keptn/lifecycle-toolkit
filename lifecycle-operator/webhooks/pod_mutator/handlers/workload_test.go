@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"reflect"
 	"testing"
 
 	"github.com/go-logr/logr/testr"
@@ -51,6 +52,10 @@ func TestHandle(t *testing.T) {
 		Spec: klcv1beta1.KeptnWorkloadSpec{
 			AppName: TestWorkload,
 			Version: "0.1",
+			Metadata: map[string]string{
+				"foo": "bar",
+				"bar": "foo",
+			},
 		},
 	}
 
@@ -61,6 +66,7 @@ func TestHandle(t *testing.T) {
 			Annotations: map[string]string{
 				apicommon.WorkloadAnnotation: TestWorkload,
 				apicommon.VersionAnnotation:  "0.1",
+				apicommon.MetadataAnnotation: "foo=bar,bar=foo",
 			},
 		}}
 	// Define test cases
@@ -200,6 +206,7 @@ func TestGenerateWorkload(t *testing.T) {
 					PostDeploymentTasks:       []string{"task3", "task4"},
 					PreDeploymentEvaluations:  []string{"eval1", "eval2"},
 					PostDeploymentEvaluations: []string{"eval3", "eval4"},
+					Metadata:                  map[string]string{},
 				},
 			},
 		},
@@ -222,7 +229,11 @@ func TestGenerateWorkload(t *testing.T) {
 					ResourceReference: klcv1beta1.ResourceReference{
 						UID:  "owner-uid",
 						Kind: "Deployment",
-						Name: "deployment-1"}}},
+						Name: "deployment-1",
+					},
+					Metadata: map[string]string{},
+				},
+			},
 		},
 	}
 
@@ -246,6 +257,49 @@ func TestGenerateWorkload(t *testing.T) {
 
 			result := generateWorkload(ctx, pod, "my-namespace")
 			require.Equal(t, tc.expected, result)
+		})
+	}
+}
+
+func Test_parseWorkloadMetadata(t *testing.T) {
+	type args struct {
+		annotations []string
+	}
+	tests := []struct {
+		name string
+		args args
+		want map[string]string
+	}{
+		{
+			name: "valid input",
+			args: args{
+				annotations: []string{"foo=bar", "bar=foo"},
+			},
+			want: map[string]string{
+				"foo": "bar",
+				"bar": "foo",
+			},
+		},
+		{
+			name: "invalid input",
+			args: args{
+				annotations: []string{"foobar"},
+			},
+			want: map[string]string{},
+		},
+		{
+			name: "empty input",
+			args: args{
+				annotations: []string{},
+			},
+			want: map[string]string{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := parseWorkloadMetadata(tt.args.annotations); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("parseWorkloadMetadata() = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

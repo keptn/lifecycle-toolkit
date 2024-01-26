@@ -24,20 +24,16 @@ import (
 // KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
 type KeptnTaskDefinitionSpec struct {
 	// Deprecated
-	// Function contains the definition for the function that is to be executed in KeptnTasks based on
-	// the KeptnTaskDefinitions.
+	// Function contains the definition for the function that is to be executed in KeptnTasks.
 	// +optional
 	Function *RuntimeSpec `json:"function,omitempty"`
-	// Python contains the definition for the python function that is to be executed in KeptnTasks based on
-	//	the KeptnTaskDefinitions.
+	// Python contains the definition for the python function that is to be executed in KeptnTasks.
 	// +optional
 	Python *RuntimeSpec `json:"python,omitempty"`
-	// Deno contains the definition for the Deno function that is to be executed in KeptnTasks based on
-	//	the KeptnTaskDefinitions.
+	// Deno contains the definition for the Deno function that is to be executed in KeptnTasks.
 	// +optional
 	Deno *RuntimeSpec `json:"deno,omitempty"`
-	// Container contains the definition for the container that is to be used in Job based on
-	// the KeptnTaskDefinitions.
+	// Container contains the definition for the container that is to be used in Job.
 	// +optional
 	Container *ContainerSpec `json:"container,omitempty"`
 	// Retries specifies how many times a job executing the KeptnTaskDefinition should be restarted in the case

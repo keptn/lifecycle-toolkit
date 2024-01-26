@@ -1,55 +1,61 @@
 # Contribute to the Keptn documentation
 
-This document provides information about contributing to
-the [Keptn documentation](https://lifecycle.keptn.sh/docs/),
-which is part of the [Keptn](https://keptn.sh) website.
+This is the root of the source code for
+the
+[Keptn documentation](https://lifecycle.keptn.sh/docs/),
+which is part of the
+[Keptn](https://keptn.sh) website.
 
 The Keptn documentation is authored with
 [markdown](https://www.markdownguide.org/basic-syntax/)
-and rendered using the Hugo
-[Docsy](https://www.docsy.dev/) theme.
+and rendered using
+[MkDocs](https://www.mkdocs.org/).
 
 We welcome and encourage contributions of all levels.
-You can make modifications using the GitHub editor;
-this works well for small modifications but,
-if you are making significant changes,
-you may find it better to fork and clone the repository
-and make changes using the text editor or IDE of your choice.
-You can also run the Docsy based website locally
-to check the rendered documentation
-and then push your changes to the repository as a pull request.
+You can make modifications in various ways:
+
+- Use the GitHub editor;
+  this works well for small modifications.
+- Use GitHub Codespaces.
+   See
+  [Codespaces](https://keptn.sh/latest/docs/contribute/general/codespace/)
+- If you are making significant changes,
+  you may find it better to fork and clone the repository
+  and make changes using the text editor or IDE of your choice.
+  See [Working with Git](https://keptn.sh/latest/docs/contribute/general/git/)
+
+  You can run the website locally
+  to check the rendered documentation.
+  and then push your changes to the repository as a pull request.
+
+See the
+[Contributing guide](https://keptn.sh/latest/docs/contribute/)
+for more information about tools and practices to use
+when contributing to the Keptn project.
 
 If you need help getting started,
-feel free to ask for help on the
-[Keptn Slack](https://cloud-native.slack.com/archives/C017GAX90GM)
-channel.
+feel free to ask for help on the `#keptn` channel on the [CNCF Slack](https://cloud-native.slack.com).
 We were all new to this once and are happy to help you!
-
-## Guidelines for Contributing
-
-Please check [Contribution Guidelines](content/en/contribute/docs/contrib-guidelines-docs/_index.md).
 
 ## Building the Documentation Locally
 
-Please check [Building the Documentation Locally](content/en/contribute/docs/local-building/_index.md).
+To build and deploy the documentation in a container, execute
 
-## Interacting with github
+```shell
+make docs-serve
+```
 
-The documentation source is stored on github.com
-and you use the standard github facilities to modify it.
-Please check [Working with Git](content/en/contribute/general/git/_index.md).
+This sets up a container, installs all needed dependencies,
+builds the documentation, and serves it.
 
-### Developer Certification of Origin (DCO)
+The URL on which your local documentation website is deployed
+is displayed in the logs.
+By default this should be `http://0.0.0.0:8000/`
 
-All commits must be accompanied by a DCO sign-off.
- See
-[DCO](content/en/contribute/general/dco)
-for more information.
+For more details, see
+[Build documentation locally](https://keptn.sh/latest/docs/contribute/docs/local-building/)
 
-## Source File Structure
-
-Please check [Source File Structure](content/en/contribute/docs/source-file-structure/_index.md)..
-
-## Location of published docs
-
-Please check [Published doc structure](content/en/contribute/docs/publish/_index.md).
+For information about previewing `.md` files
+that are outside the documentation NAV path
+(such as `README.md` and `CONTRIBUTING.md` files), see
+[Building markdown files without Hugo](https://keptn.sh/latest/docs/contribute/docs/local-building/#building-markdown-files-without-hugo).

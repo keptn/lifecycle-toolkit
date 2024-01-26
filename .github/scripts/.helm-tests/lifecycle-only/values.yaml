@@ -1,10 +1,11 @@
 global:
+  certManagerEnabled: false
   imageRegistry: "testreg"
   commonLabels:
     app.kubernetes.io/version: vmyversion
+  caInjectionAnnotations:
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
 
-certManager:
-  enabled: false
 lifecycleOperator:
   enabled: true
   lifecycleOperator:

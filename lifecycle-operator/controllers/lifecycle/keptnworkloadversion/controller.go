@@ -19,12 +19,14 @@ package keptnworkloadversion
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/go-logr/logr"
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
@@ -54,7 +56,7 @@ type KeptnWorkloadVersionReconciler struct {
 	EventSender            eventsender.IEvent
 	Log                    logr.Logger
 	Meters                 apicommon.KeptnMeters
-	SpanHandler            *telemetry.Handler
+	SpanHandler            telemetry.ISpanHandler
 	TracerFactory          telemetry.TracerFactory
 	SchedulingGatesHandler schedulinggates.ISchedulingGatesHandler
 	EvaluationHandler      evaluation.IEvaluationHandler
@@ -104,6 +106,11 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 
 	appTraceContextCarrier := propagation.MapCarrier(workloadVersion.Spec.TraceId)
 	ctxAppTrace := otel.GetTextMapPropagator().Extract(context.TODO(), appTraceContextCarrier)
+
+	ctxAppTrace = keptncontext.WithAppMetadata(
+		ctxAppTrace,
+		controllercommon.MergeMaps(workloadVersion.Status.AppContextMetadata, workloadVersion.Spec.Metadata),
+	)
 
 	// this will be the parent span for all phases of the WorkloadVersion
 	ctxWorkloadTrace, spanWorkloadTrace, err := r.SpanHandler.GetSpan(ctxAppTrace, r.getTracer(), workloadVersion, "")
@@ -338,6 +345,14 @@ func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx conte
 			workloadVersion.Spec.TraceId = appVersion.Spec.TraceId
 		}
 		if err := r.Update(ctx, workloadVersion); err != nil {
+			return true, err
+		}
+	}
+
+	// set the App context metadata
+	if !reflect.DeepEqual(appVersion.Spec.Metadata, workloadVersion.Status.AppContextMetadata) {
+		workloadVersion.Status.AppContextMetadata = appVersion.Spec.Metadata
+		if err := r.Status().Update(ctx, workloadVersion); err != nil {
 			return true, err
 		}
 	}

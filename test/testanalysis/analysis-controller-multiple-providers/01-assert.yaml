@@ -1,3 +1,9 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+collectors:
+  - command: kubectl logs -l control-plane=metrics-operator -n keptn-system
+  - command: kubectl describe Analysis -n $NAMESPACE
+---
 apiVersion: metrics.keptn.sh/v1beta1
 kind: Analysis
 metadata:

@@ -6,3 +6,4 @@ commands:
   - script: ./retrieve-metrics.sh "podtato-head3"
   - script: ./retrieve-metrics.sh "podtato-head4"
   - script: ./retrieve-metrics.sh "podtato-head5"
+  - script: ./retrieve-metrics.sh "podtato-head6"

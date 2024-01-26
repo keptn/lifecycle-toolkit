@@ -1,7 +1,7 @@
 site_name: Keptn - Supercharge Your Deployments
 theme:
   name: material
-  custom_dir: docs-new/overrides
+  custom_dir: docs/overrides
   palette:
     # Palette toggle for light mode
     - scheme: default
@@ -29,16 +29,22 @@ theme:
     - content.action.view
     - search.suggest
     - search.highlight
+    - content.code.copy
 site_url: !ENV READTHEDOCS_CANONICAL_URL
 repo_name: keptn/lifecycle-toolkit
 repo_url: https://github.com/keptn/lifecycle-toolkit
-edit_uri: edit/main/docs-new/
-docs_dir: docs-new
+edit_uri: edit/main/docs/
+docs_dir: docs
 site_description: >-
   Achieve cloud-native application lifecycle orchestration with Keptn.
   Enhance Kubernetes monitoring, streamline metrics ingestion, and
   automate deployment validation. Join the Keptn community for insights.
+copyright: The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation,
+  please see our <a href="https://www.linuxfoundation.org/legal/trademark-usage">Trademark Usage page</a>.
 extra:
+  analytics:
+    provider: google
+    property: !ENV GLOBAL_ANALYTICS_CODE
   social:
     - icon: fontawesome/solid/house
       link: https://keptn.sh
@@ -55,6 +61,7 @@ extra_javascript:
 extra_css:
   - assets/stylesheets/versions.css
   - assets/stylesheets/color-schemes.css
+  - assets/stylesheets/mermaid.css
 plugins:
   - search
   - social
@@ -65,6 +72,18 @@ plugins:
   - blog:
       blog_dir: blog
       draft_if_future_date: true
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
   - Home:
@@ -105,7 +124,7 @@ nav:
           - docs/use-cases/index.md
           - Day 2 Operations: docs/use-cases/day-2-operations.md
           - Keptn + HorizontalPodAutoscaler: docs/use-cases/hpa.md
-          - Keptn - Kubernetes: docs/use-cases/non-k8s.md
+          - Keptn for non-Kubernetes deployments: docs/use-cases/non-k8s.md
       - Components:
           - docs/components/index.md
           - Lifecycle Operator:
@@ -125,6 +144,7 @@ nav:
                   - v1alpha2: docs/reference/api-reference/lifecycle/v1alpha2/index.md
                   - v1alpha3: docs/reference/api-reference/lifecycle/v1alpha3/index.md
                   - v1alpha4: docs/reference/api-reference/lifecycle/v1alpha4/index.md
+                  - v1beta1: docs/reference/api-reference/lifecycle/v1beta1/index.md
               - Metrics API:
                   - docs/reference/api-reference/metrics/index.md
                   - v1alpha1: docs/reference/api-reference/metrics/v1alpha1/index.md
@@ -146,13 +166,16 @@ nav:
               - KeptnMetricsProvider: docs/reference/crd-reference/metricsprovider.md
               - KeptnTask: docs/reference/crd-reference/task.md
               - KeptnTaskDefinition: docs/reference/crd-reference/taskdefinition.md
-      - Migrating to Keptn:
-          - docs/migrate/index.md
-          - Migration strategy: docs/migrate/strategy.md
-          - Migrate Quality Gates: docs/migrate/metrics-observe.md
+      - Migration:
+          - Migrating to Keptn:
+              - docs/migrate/keptn/index.md
+              - Migration strategy: docs/migrate/keptn/strategy.md
+              - Migrate Quality Gates: docs/migrate/keptn/metrics-observe.md
+          - KeptnApp Migration:
+              - docs/migrate/keptnapp/index.md
   - Contributing:
       - docs/contribute/index.md
-      - General information about contributing:
+      - General information:
           - docs/contribute/general/index.md
           - Technologies and concepts you should know: docs/contribute/general/technologies.md
           - Codespaces: docs/contribute/general/codespace.md
@@ -164,17 +187,17 @@ nav:
               - Create PR: docs/contribute/general/git/pr-create.md
               - PR review process: docs/contribute/general/git/review.md
           - Contribution Guidelines: docs/contribute/general/contrib-guidelines-gen.md
+          - Refinement Process: docs/contribute/general/refinement-guide.md
       - Software contributions:
           - docs/contribute/software/index.md
           - Software development environment: docs/contribute/software/dev-environ.md
       - Documentation contributions:
           - docs/contribute/docs/index.md
-          - CRD name: docs/contribute/docs/yaml-crd-ref-template.md
           - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs.md
           - Build Documentation Locally: docs/contribute/docs/local-building.md
           - Linter Requirements: docs/contribute/docs/linter-requirements.md
-          - Spell Checker: docs/contribute/docs/spell-check.md
           - Source File Structure: docs/contribute/docs/source-file-structure.md
+          - Spell Checker: docs/contribute/docs/spell-check.md
           - Published Doc Structure: docs/contribute/docs/publish.md
           - Word list: docs/contribute/docs/word-list.md
   - Blog:

@@ -19,6 +19,7 @@ metadata:
     keptn.sh/workload: work
     keptn.sh/version: "0.4"
     keptn.sh/pre-deployment-tasks: pre-deployment-hello
+    keptn.sh/metadata: "commit-id=1234,stage=dev"
 spec:
   selector:
     matchLabels:

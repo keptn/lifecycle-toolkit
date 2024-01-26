@@ -96,6 +96,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		if err != nil {
 			return reconcile.Result{}, err
 		}
+
 		err = r.Client.Create(ctx, workloadVersion)
 		if err != nil {
 			r.Log.Error(err, "could not create WorkloadVersion")
@@ -142,6 +143,7 @@ func (r *KeptnWorkloadReconciler) createWorkloadVersion(ctx context.Context, wor
 	}
 
 	workloadVersion := generateWorkloadVersion(previousVersion, traceContextCarrier, workload)
+
 	err := controllerutil.SetControllerReference(workload, &workloadVersion, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference for WorkloadVersion: "+workloadVersion.Name)

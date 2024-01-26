@@ -1,5 +1,4 @@
 certManager:
-  enabled: true
   image:
     tag: v0.0.0
 lifecycleOperator:
@@ -18,3 +17,5 @@ metricsOperator:
 global:
   commonLabels:
     app.kubernetes.io/version: vmyversion
+  caInjectionAnnotations:
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs

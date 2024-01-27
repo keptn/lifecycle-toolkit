@@ -1,0 +1,8 @@
+name: Upgrade Helm Chart
+on:
+    schedule:
+        - cron: '0 1 * * 1-5'
+defaults:
+  run:
+    shell: bash
+jobs:

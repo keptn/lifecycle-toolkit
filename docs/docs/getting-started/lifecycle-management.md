@@ -256,6 +256,7 @@ a set of pre/post deployment tasks or evaluations for the whole application.
 Note that the name of the `KeptnAppContext` resource needs to match the name of the automatically
 created `KeptnApp` and the value present in the `keptn.sh/app` or `app.kubernetes.io/part-of`
 annotations.
+In this case it needs to be `keptndemoapp`.
 An example of `KeptnAppContext`:
 
 ```yaml
@@ -269,10 +270,11 @@ spec:
   - send-event
 ```
 
-This way the `send-event` task will be executed after the deployment of the whole application
-(all of the workloads present in the `KeptnApp` are un a `Running` state).
+This way, the `send-event` task is executed after the deployment of the whole application;
+in other words, after all of the workloads present in the `KeptnApp`
+are in a `Running` state.
 
-A detailed descriprion of all the available fields of `KeptnAppContext` resource can be find in the
+A detailed description of all the available fields of the `KeptnAppContext` resource can be found in the
 [KeptnAppContext API reference page](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappcontext).
 
 ## Further Information

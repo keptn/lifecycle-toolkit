@@ -479,24 +479,26 @@ View the Keptn Applications Dashboard and you should see the DORA metrics and an
 To enrich the workload traces with custom metadata you can use the
 `keptn.sh/metadata` annotation.
 The values specified in the annotation
-will be added as key-value attributes to the workload trace.
+are added as key-value attributes to the workload trace.
 
-Modify your `app.yaml` and change the `app.kubernetes.io/version` from `0.0.2` to `0.0.3`
+Modify your `app.yaml` file and change the `app.kubernetes.io/version` from `0.0.2` to `0.0.3`
 (or `keptn.sh/version` if you used the Keptn specific labels earlier) and add a new
 `keptn.sh/metadata: "stage=dev"` annotation.
-This way, the workload trace will contain `stage=dev` attribute.
+This way, after the re-deployment, the workload trace will contain the `stage=dev` attribute.
 
 ## Step 15: Include metadata in application traces
 
-To enrich the application traces with custom metadata you can use the `KeptnAppContext`
-custom resource.
-In the `.spec.metadata` field you can define multiple key-value pairs, which will be propagated
+Similar to the previous step, custom metadata can also be added to application traces via the
+[KeptnAppContext](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappcontext) custom resource.
+In the `.spec.metadata` field you can define multiple key-value pairs, which are propagated
 to the application trace as attributes in the same manner as for workloads.
-Additionally to adding the metadata to the application trace, the key-value pairs are added
-to each workload trace, which is part of the application, where in case of a common key in
-applocation and workload metadata attributes, values specified for workload take precedence.
+In addition to adding the metadata to the application trace, the key-value pairs are also added
+to each workload trace that is part of the application.
+If the same key is specified for both
+application and workload metadata attributes,
+values specified for the workload take precedence.
 
-`KeptnAppContext` custom resource needs to be created:
+A `KeptnAppContext` custom resource needs to be created:
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1beta1
@@ -511,25 +513,28 @@ spec:
 ```
 
 After applying the `KeptnAppContext` to your cluster, you need to bump the version of your
-application by modifying your `app.yaml` and changing the `app.kubernetes.io/version` from
+application by modifying your `app.yaml` file and changing the
+value of the`app.kubernetes.io/version` field from
 `0.0.3` to `0.0.4` (or `keptn.sh/version` if you used the Keptn specific labels earlier).
 
-After this, you should be able to see that the `keptndemoapp` application trace
-as well as the `nginx` workload trace contain defined metadata as key-value attributes.
+After deploying the `KeptnAppContext` resource and re-deploying the application, you should be able
+to see the `keptndemoapp` application trace as well as the `nginx` workload trace
+contain the defined metadata as key-value attributes.
 
 ## Step 16: Link application traces through deployed versions
 
-To create connection between the traces of versions of your application, you can enrich the
-`KeptnAppContext` resource with an
+To create connections between the traces of versions of your application, you can enrich the
+`KeptnAppContext` resource with
 [Opentelemetry span links](https://opentelemetry.io/docs/concepts/signals/traces/#span-links).
-The span link you can retrieve from the JSON representation of the trace in Jeager, where
-it should look like the following:
+You can retrieve the span link from the JSON representation of the trace in Jaeger, where
+it has the following structure:
 
 ```yaml
 00-<trace-id>-<span-id>-01
 ```
 
-The resulting `KeptnAppContext` will look similar to the following:
+This span link needs to be added the the `KeptnAppContext`, which will ensure the connection
+between traces of different versions of the application.
 
 ```yaml
 apiVersion: lifecycle.keptn.sh/v1beta1
@@ -545,11 +550,15 @@ spec:
     - "00-c088f5c586bab8649159ccc39a9862f7-f862289833f1fba3-01"
 ```
 
+> **Note**
 Please be aware that the span link is just an example and you need to retrieve the traceID and spanID
 of the `keptndemoapp-0.0.4` application trace.
 
-In the end, you need to bump the version of your `keptndemoapp` application to version `0.0.5` and
-afterwards, you should be able to see a link to the previous trace in the references section in Jaeger.
+In the end, you need to bump the version of your `keptndemoapp` application to version `0.0.5`, redeploy
+the application as well as `KeptnAppContext` and
+afterwards, Jaeger should show a link to the previous trace in the references section.
+
+![linked trace](./assets/linkedtrace.png)
 
 ## What's next?
 

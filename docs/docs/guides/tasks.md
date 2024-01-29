@@ -209,7 +209,7 @@ For more information, see
 
 Sometimes, to provide this crucial task context,
 you may need to embed it directly into the `function` code of your
-Keptn tasks defined in YAML files that defines a
+Keptn tasks defined in YAML files to define a
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 resource.
 The [keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)

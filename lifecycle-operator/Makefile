@@ -74,10 +74,13 @@ manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and Cust
 generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="{./apis/..., ./controllers/..., ./webhooks/...}"
 
+# Command for end tasks to make generate, make manifests, copy crds from config to helm templates
 .PHONY: resource
 resource: manifests generate
 	kustomize build config/crd
-	./.github/scripts/resource.sh
+	./.github/scripts/lifecycle-operator.sh
+	./.github/scripts/generate-crd-docs/generate-crd-docs.sh
+	./.github/scripts/generate-helm-docs.sh
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.

@@ -199,7 +199,6 @@ page.
 
 ## Context
 
-
 The Keptn task context includes details like the application name, version, and object type.
 Keptn uses this when orchestrating automated tasks during deployments, providing a specialized focus on
 the task at hand.
@@ -213,7 +212,6 @@ specific cluster, user, namespace, and sometimes application/workload details wi
 It serves as your personalized key to different areas within your Kubernetes infrastructure.
 For more information, see
 [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
-
 
 Sometimes, to provide this crucial task context,
 you may need to embed it directly into the `function` code of your

@@ -149,7 +149,7 @@ spec:
   * **container** -- Container definition.
     * **name** -- Name of the container that will run,
       which is not the same as the `metadata.name` field
-      that is used in the `KeptnApp` resource.
+      that is used in the `KeptnTaskDefinition` resource.
     * **image** -- name of the image you defined according to
       [image reference](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#image)
       and
@@ -270,7 +270,7 @@ spec:
       possibly with different parameters
       that are set in the calling `KeptnTaskDefinition` resource.
 
-      You must annotate the `KeptnApp` resource to run the
+      You must create the `KeptnAppContext` resource to run the
       calling `KeptnTaskDefinition` resource.
 
       The `KeptnTaskDefinition` called with `functionref`

@@ -18,7 +18,6 @@ Some considerations for Keptn:
   [Workload](https://kubernetes.io/docs/concepts/workloads/)
   resources and
   [KeptnApp](../../reference/crd-reference/app.md)
-  [KeptnApp](../../reference/crd-reference/app.md)
   resources
   that are activated and defined by annotations to each workload.
 * [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)

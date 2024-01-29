@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Keptn Helm Testing
+# Keptn script for endtasks
 #
-# This script supports the comparison of standard values and expected templated results to helm chart
-# it is used to make sure changes to the chart are intentional and produce expected outcomes
+# This script copies the crds from lifecycle-operator(lifecycle-operator/config/crd/bases) to the directory's helm chart(lifecycle-operator/chart/templates)
+# It also appends the respective annotations
 
 echo "copying manifests"
 

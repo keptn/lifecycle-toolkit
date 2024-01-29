@@ -112,7 +112,7 @@ of the lifecycle operator.
 
 ## See also
 
-* [KeptnApp](../app.md)
+* [KeptnApp](app.md)
 * [KeptnTaskDefinition](taskdefinition.md)
 * [KeptnEvaluationDefinition](evaluationdefinition.md)
 * [Deployment tasks](../../guides/tasks.md)

@@ -6,16 +6,11 @@ comments: true
 
 A `KeptnApp` resource lists all the [workloads](https://kubernetes.io/docs/concepts/workloads/)
 that constitute a logical application.
+Keptn auto-generates it to work with the corresponding
+[KeptnAppContext](appcontext.md).
 It contains information about:
-
-- All [workloads](https://kubernetes.io/docs/concepts/workloads/) and checks
-  that are associated with a Keptn application
-- A list of tasks and evaluations to be executed
-  pre- and post-deployment.
-- Tasks referenced by `KeptnApp` are defined in a
-  [KeptnTaskDefinition](taskdefinition.md) resource.
-  `KeptnApp` identifies the task by the value of the `metadata.name` field
-  and does not need to understand what runner is used to define the task.
+all [workloads](https://kubernetes.io/docs/concepts/workloads/) and checks
+that are associated with a Keptn application
 
 ## Synopsis
 
@@ -25,6 +20,9 @@ kind: KeptnApp
 metadata:
   name: <app-name>
   namespace: <application-namespace>
+  labels:
+     my-custom-label: <label-name>
+     app.kubernetes.io/managed-by: keptn
 spec:
   version: "x.y"
   revision: x
@@ -33,14 +31,6 @@ spec:
     version: <version-string>
   - name: <workload2-name>
     version: <version-string>
-  preDeploymentTasks:
-  - <list of tasks>
-  postDeploymentTasks:
-  - <list of tasks>
-  preDeploymentEvaluations:
-  - <list of evaluations>
-  postDeploymentEvaluations:
-  - <list of evaluations>
 ```
 
 ## Fields
@@ -54,60 +44,37 @@ when the app discovery feature generates the `KeptnApp` resource:
 
 - **metadata**
   - **name** -- Unique name of this application.
-    Names must comply with the
-    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-    specification.
+       Names must comply with the
+       [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+       specification.
   - **namespace** -- Namespace of this application.
+  - **labels**
+    - **my-custom-label**
+    - **app-kibernetes.io/managed-by:keptn**
 
 - **spec**
   - **version** (required) -- version of the Keptn application.
-    Changing this version number causes a new execution
-    of all application-level checks
+       Changing this version number causes a new execution
+       of all application-level checks
   - **revision** -- revision of a `version`.
-    The value is an integer that can be modified
-    to trigger another deployment of a `KeptnApp` of the same version.
-    For example, increment this number to restart a `KeptnApp` version
-    that failed to deploy, perhaps because a
-    `preDeploymentEvaluation` or `preDeploymentTask` failed.
-    See
-    [Restart an Application Deployment](../../guides/restart-application-deployment.md)
-    for a longer discussion of this.
+       The value is an integer that can be modified
+       to trigger another deployment of a `KeptnApp` of the same version.
+       For example, increment this number to restart a `KeptnApp` version
+       that failed to deploy, perhaps because a
+       `preDeploymentEvaluation` or `preDeploymentTask` failed.
+       See
+       [Restart an Application Deployment](../../guides/restart-application-deployment.md)
+       for a longer discussion of this.
   - **workloads**
     - **name** (required) -- name of this Kubernetes
-      [workload](https://kubernetes.io/docs/concepts/workloads/).
-      Use the same naming rules listed above for the application name.
-      Provide one entry for each [workload](https://kubernetes.io/docs/concepts/workloads/)
-      associated with this Keptn application.
+            [workload](https://kubernetes.io/docs/concepts/workloads/).
+            Use the same naming rules listed above for the application name.
+            Provide one entry for each [workload](https://kubernetes.io/docs/concepts/workloads/)
+            associated with this Keptn application.
     - **version** (required) -- version number for this [workload](https://kubernetes.io/docs/concepts/workloads/).
-      Changing this number causes a new execution
-      of checks for this [workload](https://kubernetes.io/docs/concepts/workloads/) only,
-      not the entire application.
-
-The remaining fields are required only when implementing
-the release lifecycle management feature.
-If used, these fields must be populated manually:
-
-- **preDeploymentTasks** -- list each task
-    to be run as part of the pre-deployment stage.
-    Task names must match the value of the `metadata.name` field
-    for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
-- **postDeploymentTasks** -- list each task
-    to be run as part of the post-deployment stage.
-    Task names must match the value of the `metadata.name` field
-    for the associated
-    [KeptnTaskDefinition](taskdefinition.md)
-    resource.
-- **preDeploymentEvaluations** -- list each evaluation to be run
-    as part of the pre-deployment stage.
-    Evaluation names must match the value of the `metadata.name` field
-    for the associated
-    [KeptnEvaluationDefinition](evaluationdefinition.md)
-    resource.
-- **postDeploymentEvaluations** -- list each evaluation to be run
-    as part of the post-deployment stage.
-    Evaluation names must match the value of the `metadata.name` field
-    for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
-    resource.
+            Changing this number causes a new execution
+            of checks for this [workload](https://kubernetes.io/docs/concepts/workloads/) only,
+            not the entire application.
 
 ## Usage
 
@@ -165,14 +132,36 @@ spec:
 
 ## Differences between versions
 
-- The `spec.revision` field is introduced in v1alpha2.
-- The pre/post-deployment tasks and evaluations are not
-supported anymore in v1beta1.
+The synopsis of the `KeptnApp` resource
+is changed in `v1beta1` library:
+
+- The `apiVersion` field now references the `v1beta1` version
+  of the `lifecycle.keptn.sh` API.
+- `KeptnApp` must be
+  [autogenerated](../guides/auto-app-discovery.md);
+  you cannot create it manually by applying a manifest.
+- The `name` and `namespace` fields are populated
+  from the fields of the same name in the `KeptnAppContext` resource
+  and must have identical values to those
+  in the corresponding `KeptnAppContext` resource.
+- The `app.kubernetes.io/managed-by: keptn` label or annotation
+  is new for the `v1beta1` library.
+- The pre/post-deployment tasks and evaluations are now defined in the
+  [KeptnAppContext](appcontext.md)
+  resource rather than in `KeptnApp`.
+
+`KeptnApp` resources that were completely autogenerated
+for earlier versions are converted automatically to the new structure.
+You must manually migrate older `KeptnApp` resources
+that were created manually
+or that were manually edited
+to add `preDeployment` and `postDeployment tasks and evaluations.
 For more information please refer
 to the [migration section](../../migrate/keptnapp/index.md).
 
 ## See also
 
+- [KeptnAppContext](appcontext.md)
 - [KeptnTaskDefinition](taskdefinition.md)
 - [KeptnEvaluationDefinition](evaluationdefinition.md)
 - [Deployment tasks](../../guides/tasks.md)

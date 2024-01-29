@@ -160,6 +160,7 @@ nav:
               - AnalysisDefinition: docs/reference/crd-reference/analysisdefinition.md
               - AnalysisValueTemplate: docs/reference/crd-reference/analysisvaluetemplate.md
               - KeptnApp: docs/reference/crd-reference/app.md
+              - KeptnAppContext: docs/reference/crd-reference/appcontext.md
               - KeptnConfig: docs/reference/crd-reference/config.md
               - KeptnEvaluationDefinition: docs/reference/crd-reference/evaluationdefinition.md
               - KeptnMetric: docs/reference/crd-reference/metric.md

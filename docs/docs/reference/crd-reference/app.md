@@ -4,13 +4,14 @@ comments: true
 
 # KeptnApp
 
-A `KeptnApp` resource lists all the [workloads](https://kubernetes.io/docs/concepts/workloads/)
+A `KeptnApp` resource lists all the
+[workloads](https://kubernetes.io/docs/concepts/workloads/)
 that constitute a logical application.
 Keptn auto-generates it to work with the corresponding
 [KeptnAppContext](appcontext.md).
-It contains information about:
-all [workloads](https://kubernetes.io/docs/concepts/workloads/) and checks
-that are associated with a Keptn application
+It contains information about
+all [workloads](https://kubernetes.io/docs/concepts/workloads/)
+that are associated with a Keptn application.
 
 ## Synopsis
 

@@ -1,10 +1,10 @@
---
+---
 comments: true
 ---
 
 # KeptnAppContext
 
-<describe>
+(Need to add description)
 
 It works with the corresponding
 [KeptnApp](app.md) resource
@@ -50,12 +50,14 @@ spec:
 * **kind** -- Resource type
    Must be set to `KeptnAppContext`
 * **metadata**
-  * **name** -- Unique name of this <resource>.
+  * **name** -- Unique name of this `KeptnAppContext` resource.
        Names must comply with the
-markdownlint-disable-next-line line-length
        [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
        specification
        and match the `name` given to the associated `KeptnApp` resource..
+  * **namespace** -- Namespace of this application.
+       This must match the `namespace` given to
+       the associated `KeptnAp` resource.
 
 The remaining fields are required only when implementing
 the release lifecycle management feature.
@@ -68,7 +70,7 @@ If used, these fields must be populated manually:
         Task names must match the value of the `metadata.name` field
         for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
   * **postDeploymentTasks** -- list each task
-            to be run as part of the post-deployment stage.
+        to be run as part of the post-deployment stage.
         Task names must match the value of the `metadata.name` field
         for the associated
         [KeptnTaskDefinition](taskdefinition.md)
@@ -89,7 +91,7 @@ If used, these fields must be populated manually:
 
 ## Example
 
-```
+```yaml
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnAppContext
 metadata:
@@ -103,7 +105,7 @@ spec:
 
 ## Files
 
-[KeptnAppContext](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappcontext)
+[KeptnAppContext](../api-reference/lifecycle/v1beta1/index.md#keptnappcontext)
 
 ## Differences between versions
 

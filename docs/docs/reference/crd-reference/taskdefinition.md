@@ -270,8 +270,9 @@ spec:
       possibly with different parameters
       that are set in the calling `KeptnTaskDefinition` resource.
 
-      You must create the `KeptnAppContext` resource to run the
-      calling `KeptnTaskDefinition` resource.
+      To be able to run the pre/post-deployment task, you must create
+      the `KeptnAppContext` resource and link the `KeptnTaskDefinition`
+      in the pre/post-deployment section of `KeptnAppContext`.
 
       The `KeptnTaskDefinition` called with `functionref`
       is the `parent task` whose runner is used for the execution

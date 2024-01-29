@@ -208,7 +208,7 @@ Imagine it as a task-specific guide, instructing Keptn on what to do and where t
 deployment workflow.
 
 This contrasts with the Kubernetes context, which is a set of access parameters that defines the
-specific cluster, user, namespace, and sometimes application/workload details with which you interact.
+specific cluster, user and namespace with which you interact.
 It serves as your personalized key to different areas within your Kubernetes infrastructure.
 For more information, see
 [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).

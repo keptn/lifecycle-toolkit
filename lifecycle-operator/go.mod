@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	dario.cat/mergo v1.0.0
-	github.com/argoproj/argo-rollouts v1.6.4
+	github.com/argoproj/argo-rollouts v1.6.5
 	github.com/benbjohnson/clock v1.3.5
 	github.com/cloudevents/sdk-go/v2 v2.15.0
 	github.com/go-logr/logr v1.4.1
@@ -26,7 +26,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.22.0
 	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a
 	golang.org/x/net v0.20.0
-	google.golang.org/grpc v1.60.1
+	google.golang.org/grpc v1.61.0
 	k8s.io/api v0.28.6
 	k8s.io/apiextensions-apiserver v0.28.6
 	k8s.io/apimachinery v0.28.6

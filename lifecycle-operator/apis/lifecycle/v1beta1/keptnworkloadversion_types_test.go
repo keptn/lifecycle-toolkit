@@ -180,7 +180,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 
 	require.Equal(t, "version", workload.GetVersion())
 
-	require.Equal(t, "trace1.workloadname.version.phase", workload.GetSpanKey("phase"))
+	require.Equal(t, "trace1.workloadname.namespace.version.phase", workload.GetSpanKey("phase"))
 
 	retries := int32(5)
 	task := workload.GenerateTask(KeptnTaskDefinition{

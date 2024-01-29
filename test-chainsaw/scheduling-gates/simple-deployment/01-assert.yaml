@@ -13,13 +13,13 @@ status:
   postDeploymentEvaluationStatus: Succeeded
   postDeploymentStatus: Succeeded
   postDeploymentTaskStatus:
-  - definitionName: pre-deployment-hello
-    status: Succeeded
+    - definitionName: pre-deployment-hello
+      status: Succeeded
   preDeploymentEvaluationStatus: Succeeded
   preDeploymentStatus: Succeeded
   preDeploymentTaskStatus:
-  - definitionName: pre-deployment-hello
-    status: Succeeded
+    - definitionName: pre-deployment-hello
+      status: Succeeded
 ---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnApp

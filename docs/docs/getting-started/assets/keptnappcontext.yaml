@@ -5,4 +5,4 @@ metadata:
   namespace: keptndemo
 spec:
   postDeploymentTasks:
-  - send-event
+    - send-event

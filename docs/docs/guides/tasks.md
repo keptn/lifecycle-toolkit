@@ -200,9 +200,17 @@ page.
 ## Context
 
 
-The Keptn task context includes details like the application name, version, and object type. Keptn uses this when orchestrating automated tasks during deployments, providing a specialized focus on the task at hand. This information pinpoints the specific application or workload involved, acting as a task-specific blueprint. It ensures that Keptn knows precisely where and how to execute each step within your chosen Kubernetes environment. Imagine it as a task-specific guide, instructing Keptn on what to do and where to do it within your broader deployment workflow.
+The Keptn task context includes details like the application name, version, and object type.
+Keptn uses this when orchestrating automated tasks during deployments, providing a specialized focus on
+the task at hand.
+This information pinpoints the specific application or workload involved, acting as a task-specific blueprint.
+It ensures that Keptn knows precisely where and how to execute each step within your chosen Kubernetes environment.
+Imagine it as a task-specific guide, instructing Keptn on what to do and where to do it within your broader
+deployment workflow.
 
-This contrasts with the Kubernetes context, which is a set of access parameters that defines the specific cluster, user, namespace, and sometimes application/workload details with which you interact. It serves as your personalized key to different areas within your Kubernetes infrastructure.
+This contrasts with the Kubernetes context, which is a set of access parameters that defines the
+specific cluster, user, namespace, and sometimes application/workload details with which you interact.
+It serves as your personalized key to different areas within your Kubernetes infrastructure.
 For more information, see
 [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
 

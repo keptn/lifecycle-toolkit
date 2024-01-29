@@ -260,14 +260,7 @@ In this case it needs to be `keptndemoapp`.
 An example of `KeptnAppContext`:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnAppContext
-metadata:
-  name: keptndemoapp
-  namespace: keptndemo
-spec:
-  postDeploymentTasks:
-  - send-event
+{% include "./assets/keptnappcontext.yaml" %}
 ```
 
 This way, the `send-event` task is executed after the deployment of the whole application;

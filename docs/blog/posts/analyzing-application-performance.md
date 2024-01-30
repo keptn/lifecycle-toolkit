@@ -10,7 +10,7 @@ categories:
 comments: true
 ---
 
-# Analyzing Application Performance with Keptn
+# Application Performance Analysis with Keptn
 
 In the dynamic world of DevOps and continuous delivery, keeping applications reliable
 and high-performing is a top priority.

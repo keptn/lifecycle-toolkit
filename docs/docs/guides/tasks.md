@@ -35,7 +35,7 @@ To implement a `KeptnTask`:
   [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
   resource that defines the runner to use for the container
   and the executables to be run
-pre- and post-deployment
+  pre- and post-deployment
 - Apply [basic-annotations](./integrate.md#basic-annotations)
   to your workloads to integrate your tasks with Kubernetes.
 - Generate the required
@@ -199,43 +199,54 @@ page.
 
 ## Context
 
-The Keptn task context includes details like the application name, version, and object type.
-Keptn uses this when orchestrating automated tasks during deployments, providing a specialized focus on
-the task at hand.
-This information pinpoints the specific application or workload involved, acting as a task-specific blueprint.
-It ensures that Keptn knows precisely where and how to execute each step within your chosen Kubernetes environment.
-Imagine it as a task-specific guide, instructing Keptn on what to do and where to do it within your broader
-deployment workflow.
+The Keptn task context includes details about the current deployment, application name, version, object type and other user-defined metadata.
+Keptn populates this metadata while running tasks before and after deployments, to provide the necessary context associated with each task.
 
 This contrasts with the Kubernetes context, which is a set of access parameters that defines the
 specific cluster, user and namespace with which you interact.
-It serves as your personalized key to different areas within your Kubernetes infrastructure.
 For more information, see
 [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
 
-Sometimes, to provide this crucial task context,
-you may need to embed it directly into the `function` code of your
-Keptn tasks defined in YAML files to define a
+For Tasks generated for applications running in Kubernetes, Keptn populates a `KEPTN_CONTEXT` variable containing a set of parameters that correlate a task
+to a specific stage, cluster or application.
+
+You can use this context information
+in the `function` code in your
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 resource.
-The [keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)
-file offers a practical example of how this works.
 
-A context environment variable is available via `Deno.env.get("KEPTN_CONTEXT")`.
-It can be used like this:
+By default, `KEPTN_CONTEXT` contains:
 
+- "appName"
+- "appVersion"
+- "workloadName"
+- "workloadVersion"
+- "taskType"
+- "objectType"
+- "metadata"
+
+TODO json
+
+You can customize the metadata field to hold any key value pair of interest to share among
+your workloads and tasks in a KeptnApp (for instance a commit id value).
+To do so, the metadata needs to be specified for the workload or for the application.
+Follow our guide on [Context and Metadata here](./context.md).
+
+For example of how to access the KEPTN_CONTEXT follow our reference here TODO
+
+move this
 ```javascript
 let context = Deno.env.get("KEPTN_CONTEXT");
-    
+
 if (context.objectType == "Application") {
-    let application_name = contextdata.appName;
-    let application_version = contextdata.appVersion;
-}       
-        
+  let application_name = contextdata.appName;
+  let application_version = contextdata.appVersion;
+}
+
 if (context.objectType == "Workload") {
-    let application_name = contextdata.appName;
-    let workload_name = contextdata.workloadName;
-    let workload_version = contextdata.workloadVersion;
+  let application_name = contextdata.appName;
+  let workload_name = contextdata.workloadName;
+  let workload_version = contextdata.workloadVersion;
 }
 ```
 
@@ -295,8 +306,8 @@ kind: KeptnTaskDefinition
 metadata:
   name: dummy-task
   namespace: "default"
-spec: 
-  function: 
+spec:
+  function:
     secureParameters:
       secret: my-secret
     inline:

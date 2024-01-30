@@ -199,23 +199,31 @@ page.
 
 ## Context
 
-A Kubernetes context is a set of access parameters
-that contains a Kubernetes cluster, a user, a namespace,
-the application name, workload name, and version.
+The Keptn task context includes details like the application name, version, and object type.
+Keptn uses this when orchestrating automated tasks during deployments, providing a specialized focus on
+the task at hand.
+This information pinpoints the specific application or workload involved, acting as a task-specific blueprint.
+It ensures that Keptn knows precisely where and how to execute each step within your chosen Kubernetes environment.
+Imagine it as a task-specific guide, instructing Keptn on what to do and where to do it within your broader
+deployment workflow.
+
+This contrasts with the Kubernetes context, which is a set of access parameters that defines the
+specific cluster, user and namespace with which you interact.
+It serves as your personalized key to different areas within your Kubernetes infrastructure.
 For more information, see
 [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
 
-You may need to include context information in the `function` code
-included in the YAML file that defines a
+Sometimes, to provide this crucial task context,
+you may need to embed it directly into the `function` code of your
+Keptn tasks defined in YAML files to define a
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 resource.
-For an example of how to do this, see the
-[keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)
-file.
+The [keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)
+file offers a practical example of how this works.
 
 A context environment variable is available via `Deno.env.get("KEPTN_CONTEXT")`.
 It can be used like this:
-  
+
 ```javascript
 let context = Deno.env.get("KEPTN_CONTEXT");
     

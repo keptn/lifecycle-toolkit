@@ -4,24 +4,15 @@ comments: true
 
 # KeptnAppContext
 
-(Need to add description)
+The `KeptnAppContext` custom resource
+allows you to add metadata and links to traces for a specific application. 
+This enables you to enrich your traces with additional information, 
+making it easier to understand and analyze
+the performance of your applications.
 
 It works with the corresponding
 [KeptnApp](app.md) resource
 that has the same name and is located in the same namespace.
-
-`KeptnAppContext` lists the tasks and evaluations
-to be executed pre/post-deployment.
-Tasks referenced by `KeptnAppContext` are defined in a
-[KeptnTaskDefinition](taskdefinition.md)
-resource.
-`KeptnAppContext` identifies the task by the value of the `metadata.name` field
-and does not need to understand what runner is used to define the task.
-Similarly, evaluations referenced are defined in a
-[KeptnEvaluationDefinition](evaluationdefinition.md)
-resource and identified by the value of the `metadata.name` field;
-`KeptnAppContext` does not need to understand
-the data source or query being used for the evaluation.
 
 ## Synopsis
 
@@ -88,6 +79,20 @@ If used, these fields must be populated manually:
         resource.
 
 ## Usage
+
+`KeptnAppContext` lists the tasks and evaluations
+to be executed pre/post-deployment.
+Tasks referenced by `KeptnAppContext` are defined in a
+[KeptnTaskDefinition](taskdefinition.md)
+resource.
+`KeptnAppContext` identifies each task
+by the value of the `metadata.name` field
+and does not need to understand what runner is used to define the task.
+Similarly, evaluations referenced are defined in a
+[KeptnEvaluationDefinition](evaluationdefinition.md)
+resource and identified by the value of the `metadata.name` field;
+`KeptnAppContext` does not need to understand
+the data source or query being used for the evaluation.
 
 ## Example
 

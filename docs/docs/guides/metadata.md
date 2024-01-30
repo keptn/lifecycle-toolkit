@@ -93,11 +93,14 @@ contain the defined metadata as key-value attributes.
 ## Conclusion
 
 Congratulations! You've learned how to use `KeptnAppContext` to add
-metadata and links to traces for a specific application.
+metadata to applications and their traces.
 This can be valuable for understanding the context of your traces and
 establishing connections between
 different versions and stages of your application.
 
-What's next? Explore more Keptn features and integrations
-by referring to the official documentation.
-TODO add links here
+What's next? Explore more about [traces on Keptn](./otel.md).
+The paragraph on 
+[linking traces between different application](./otel.md#advanced-tracing-configurations-in-keptn-linking-traces) 
+also uses KeptnAppContext.  
+
+

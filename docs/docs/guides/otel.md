@@ -160,3 +160,43 @@ kubectl port-forward deployment/metrics-operator 9999 -n keptn-system
 ```
 
 You can access the metrics from your browser at: `http://localhost:9999`
+
+# Advanced tracing configurations in Keptn: Linking traces
+
+In Keptn you can connect multiple traces, for instance to connect deployments 
+of the same application trough different stages. 
+To create connections between the traces of versions of your application, you can enrich the
+`KeptnAppContext` resource with
+[Opentelemetry span links](https://opentelemetry.io/docs/concepts/signals/traces/#span-links).
+You can retrieve the span link from the JSON representation of the trace in Jaeger, where
+it has the following structure:
+
+```yaml
+00-<trace-id>-<span-id>-01
+```
+
+This span link needs to be added the the `KeptnAppContext`, which will ensure the connection
+between traces of different versions of the application.
+
+```yaml
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnAppContext
+metadata:
+  name: keptndemoapp
+  namespace: keptndemo
+spec:
+  metadata:
+    commit-id: "1234"
+    author: "myUser"
+  spanLinks:
+    - "00-c088f5c586bab8649159ccc39a9862f7-f862289833f1fba3-01"
+```
+
+> **Note**
+> Please be aware that the span link is just an example, and you need to retrieve the traceID and spanID
+> of the `keptndemoapp-0.0.4` application trace.
+In the end, you need to bump the version of your `keptndemoapp` application to version `0.0.5`, redeploy
+the application as well as `KeptnAppContext` and
+afterward, Jaeger should show a link to the previous trace in the references section.
+
+![linked trace](./assets/linkedtrace.png)

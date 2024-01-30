@@ -230,25 +230,10 @@ TODO json
 You can customize the metadata field to hold any key value pair of interest to share among
 your workloads and tasks in a KeptnApp (for instance a commit id value).
 To do so, the metadata needs to be specified for the workload or for the application.
-Follow our guide on [Context and Metadata here](./context.md).
+Follow our guide on [Context and Metadata here](./metadata.md).
 
-For example of how to access the KEPTN_CONTEXT follow our reference here TODO
-
-move this
-```javascript
-let context = Deno.env.get("KEPTN_CONTEXT");
-
-if (context.objectType == "Application") {
-  let application_name = contextdata.appName;
-  let application_version = contextdata.appVersion;
-}
-
-if (context.objectType == "Workload") {
-  let application_name = contextdata.appName;
-  let workload_name = contextdata.workloadName;
-  let workload_version = contextdata.workloadVersion;
-}
-```
+For an example of how to access the `KEPTN_CONTEXT`follow our 
+[reference page](../reference/crd-reference/taskdefinition.md#example-6-accessing-keptn_context-environment-variable-in-a-deno-task)
 
 ## Parameterized functions
 

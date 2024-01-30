@@ -143,7 +143,7 @@ kubectl apply -f .
 ```
 
 Afterward, use the following command
-to  monitor the status of the deployment:
+to monitor the status of the deployment:
 
 ```shell
 kubectl get keptnworkloadversion -n podtato-kubectl -w
@@ -199,15 +199,18 @@ page.
 
 ## Context
 
-The Keptn task context includes details about the current deployment, application name, version, object type and other user-defined metadata.
-Keptn populates this metadata while running tasks before and after deployments, to provide the necessary context associated with each task.
+The Keptn task context includes details about the current deployment, application name, version, object type and other
+user-defined metadata.
+Keptn populates this metadata while running tasks before and after deployments, to provide the necessary context
+associated with each task.
 
 This contrasts with the Kubernetes context, which is a set of access parameters that defines the
 specific cluster, user and namespace with which you interact.
 For more information, see
 [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
 
-For Tasks generated for applications running in Kubernetes, Keptn populates a `KEPTN_CONTEXT` variable containing a set of parameters that correlate a task
+For Tasks generated for applications running in Kubernetes, Keptn populates a `KEPTN_CONTEXT` variable containing a set
+of parameters that correlate a task
 to a specific stage, cluster or application.
 
 You can use this context information
@@ -225,14 +228,41 @@ By default, `KEPTN_CONTEXT` contains:
 - "objectType"
 - "metadata"
 
-TODO json
+A Job created by a Keptn Task with `KEPTN_CONTEXT`, may look like the following
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+spec:
+  template:
+    spec:
+      containers:
+        - name: "my-task-container"
+          env:
+            - name: KEPTN_CONTEXT
+              value: '{
+                         "workloadName":"waiter-waiter",
+                         "appName":"waiter",
+                         "appVersion":"",
+                         "workloadVersion":"0.4",
+                         "taskType":"pre",
+                         "objectType":"Workload",
+                         "metadata":{
+                            "commit-id":"1234",
+                            "stage":"dev",
+                            "test-metadata":"test-metadata"
+                         }
+                      }'
+            - name: SCRIPT
+              value: /var/data/function.ts
+```
 
 You can customize the metadata field to hold any key value pair of interest to share among
 your workloads and tasks in a KeptnApp (for instance a commit id value).
 To do so, the metadata needs to be specified for the workload or for the application.
 Follow our guide on [Context and Metadata here](./metadata.md).
 
-For an example of how to access the `KEPTN_CONTEXT`follow our 
+For an example of how to access the `KEPTN_CONTEXT`follow our
 [reference page](../reference/crd-reference/taskdefinition.md#example-6-accessing-keptn_context-environment-variable-in-a-deno-task)
 
 ## Parameterized functions

@@ -194,9 +194,9 @@ spec:
 
 > **Note**
 > Please be aware that the span link is just an example, and you need to retrieve the traceID and spanID
-> of the `keptndemoapp-0.0.4` application trace.
-In the end, you need to bump the version of your `keptndemoapp` application to version `0.0.5`, redeploy
-the application as well as `KeptnAppContext` and
-afterward, Jaeger should show a link to the previous trace in the references section.
+> of the application trace stored in the KeptnAppVersion resource you want to link.
+To store this new information in the traces, you need to bump the version 
+of your application and apply the`KeptnAppContext`.
+Keptn will re-deploy your application and Jaeger should show a link to the previous trace in the references section.
 
 ![linked trace](./assets/linkedtrace.png)

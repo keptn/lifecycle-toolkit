@@ -83,7 +83,7 @@ the performance of your applications.
 In the `.spec.metadata` field you can define multiple key-value pairs, which are propagated
 to the application trace as attributes in the same manner as for workloads.
 
-The key-value pairs that are added to the application trace are also added
+> **Note** The key-value pairs that are added to the application trace are also added
 to each workload trace that is part of the application.
 If the same key is specified for both
 application and workload metadata attributes,
@@ -106,16 +106,15 @@ and all traces will contain the new metadata as defined in the above code exampl
 In other words, you should be able to see the application trace as well as the workload trace
 contain the defined metadata as key-value attributes.
 
-## Conclusion
+## What's next?
 
 Congratulations!
-You've learned how to use `KeptnAppContext` to add
+You've learned how to use the `KeptnAppContext` CRD to add
 metadata to applications and their traces.
 This can be valuable for understanding the context of your traces and
 establishing connections between
 different versions and stages of your application.
 
-What's next?
 Explore more about [traces on Keptn](./otel.md).
 The paragraph on
 [linking traces between different application](./otel.md#advanced-tracing-configurations-in-keptn-linking-traces)

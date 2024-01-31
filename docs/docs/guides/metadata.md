@@ -30,11 +30,11 @@ such as who committed this change? In what repo? What is the associated ticket? 
 To collect traces you will require Jaeger.
 To visualise and inspect the traces, you can either use the Jaeger UI or Grafana.
 
-- Install
+1. Install
   [Grafana](https://grafana.com/grafana/)
   following the instructions in [Grafana Setup](https://grafana.com/docs/grafana/latest/setup-grafana/)
   or the visualization tool of your choice.
-- Install
+2. Install
   [Jaeger](https://www.jaegertracing.io/)
   or a similar tool for traces following the instructions in
   [Jaeger Setup](https://www.jaegertracing.io/docs/1.50/getting-started/).

@@ -209,7 +209,7 @@ specific cluster, user and namespace with which you interact.
 For more information, see
 [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
 
-For Tasks generated for applications running in Kubernetes, Keptn populates a `KEPTN_CONTEXT` variable containing a set
+For Tasks generated for applications running in Kubernetes, Keptn populates a `KEPTN_CONTEXT` environment variable containing a set
 of parameters that correlate a task
 to a specific stage, cluster or application.
 
@@ -218,7 +218,7 @@ in the `function` code in your
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 resource.
 
-By default, `KEPTN_CONTEXT` contains:
+`KEPTN_CONTEXT` is encoded as JSON and by default, contains:
 
 - "appName"
 - "appVersion"
@@ -235,12 +235,12 @@ A Job created by a `KeptnTask` with `KEPTN_CONTEXT`, may look like the following
 {% include "./assets/job-context.yaml" %}
 ```
 
-You can customize the metadata field to hold any key value pair of interest to share among
-your workloads and tasks in a `KeptnApp` (for instance a commit id value).
+You can customize the metadata field to hold any key-value pair of interest to share among
+your workloads and tasks in a `KeptnApp` (for instance a commit ID value).
 To do so, the metadata needs to be specified for the workload or for the application.
 Follow our guide on [Context and Metadata here](./metadata.md).
 
-For an example of how to access the `KEPTN_CONTEXT`follow our
+For an example of how to access the `KEPTN_CONTEXT`, follow our
 [reference page](../reference/crd-reference/taskdefinition.md#example-6-accessing-keptn_context-environment-variable-in-a-deno-task)
 
 ## Parameterized functions

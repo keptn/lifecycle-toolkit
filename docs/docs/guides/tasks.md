@@ -211,7 +211,10 @@ For more information, see
 
 For Tasks generated for applications running in Kubernetes, Keptn populates a `KEPTN_CONTEXT` environment variable containing a set
 of parameters that correlate a task
-to a specific stage, cluster or application.
+to a specific application/workload,
+information about the phase in which the task is being executed,
+as well as any metadata that has been attached to
+the related application/workload
 
 You can use this context information
 in the `function` code in your

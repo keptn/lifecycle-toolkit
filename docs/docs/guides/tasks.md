@@ -303,7 +303,7 @@ kubectl create secret generic my-secret \
 
 ### Pass secrets to a function
 
-[Kubernetes' secrets](https://kubernetes.io/docs/concepts/configuration/secret/)
+[Kubernetes secrets](https://kubernetes.io/docs/concepts/configuration/secret/)
 can be passed to the function
 using the `secureParameters` field.
 

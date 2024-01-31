@@ -188,7 +188,7 @@ KeptnAppList contains a list of KeptnApp
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnAppList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnApp](#keptnapp) array_ |  || x |
 
 
@@ -257,7 +257,7 @@ KeptnAppVersionList contains a list of KeptnAppVersion
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnAppVersionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnAppVersion](#keptnappversion) array_ |  || x |
 
 
@@ -360,7 +360,7 @@ KeptnEvaluationDefinitionList contains a list of KeptnEvaluationDefinition
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnEvaluationDefinitionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnEvaluationDefinition](#keptnevaluationdefinition) array_ |  || x |
 
 
@@ -391,7 +391,7 @@ KeptnEvaluationList contains a list of KeptnEvaluation
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnEvaluationList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnEvaluation](#keptnevaluation) array_ |  || x |
 
 
@@ -485,7 +485,7 @@ KeptnTaskDefinitionList contains a list of KeptnTaskDefinition
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnTaskDefinitionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnTaskDefinition](#keptntaskdefinition) array_ |  || x |
 
 
@@ -529,7 +529,7 @@ KeptnTaskList contains a list of KeptnTask
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnTaskList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnTask](#keptntask) array_ |  || x |
 
 
@@ -621,7 +621,7 @@ KeptnWorkloadInstanceList contains a list of KeptnWorkloadInstance
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnWorkloadInstanceList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnWorkloadInstance](#keptnworkloadinstance) array_ |  || x |
 
 
@@ -687,7 +687,7 @@ KeptnWorkloadList contains a list of KeptnWorkload
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnWorkloadList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnWorkload](#keptnworkload) array_ |  || x |
 
 

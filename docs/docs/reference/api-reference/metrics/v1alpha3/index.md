@@ -74,7 +74,7 @@ AnalysisDefinitionList contains a list of AnalysisDefinition
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `AnalysisDefinitionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[AnalysisDefinition](#analysisdefinition) array_ |  || x |
 
 
@@ -105,7 +105,7 @@ AnalysisList contains a list of Analysis
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `AnalysisList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[Analysis](#analysis) array_ |  || x |
 
 
@@ -185,7 +185,7 @@ AnalysisValueTemplateList contains a list of AnalysisValueTemplate
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `AnalysisValueTemplateList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[AnalysisValueTemplate](#analysisvaluetemplate) array_ |  || x |
 
 
@@ -251,7 +251,7 @@ KeptnMetricList contains a list of KeptnMetric
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `KeptnMetricList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnMetric](#keptnmetric) array_ |  || x |
 
 
@@ -320,7 +320,7 @@ KeptnMetricsProviderList contains a list of KeptnMetricsProvider
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `KeptnMetricsProviderList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnMetricsProvider](#keptnmetricsprovider) array_ |  || x |
 
 

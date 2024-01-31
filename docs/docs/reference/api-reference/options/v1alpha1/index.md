@@ -48,7 +48,7 @@ KeptnConfigList contains a list of KeptnConfig
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `options.keptn.sh/v1alpha1` | | |
 | `kind` _string_ | `KeptnConfigList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnConfig](#keptnconfig) array_ |  || x |
 
 

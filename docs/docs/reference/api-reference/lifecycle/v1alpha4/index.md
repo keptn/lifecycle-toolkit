@@ -48,7 +48,7 @@ KeptnWorkloadVersionList contains a list of KeptnWorkloadVersion
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1alpha4` | | |
 | `kind` _string_ | `KeptnWorkloadVersionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnWorkloadVersion](#keptnworkloadversion) array_ |  || x |
 
 

@@ -1,6 +1,6 @@
 {{- define "type_members" -}}
 {{- $field := . -}}
-{{- if eq $field.Name "metadata" -}}
+{{- if and (eq $field.Name "metadata") (eq (printf "%s" $field.Type) "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta") -}}
 Refer to Kubernetes API documentation for fields of `metadata`.
 {{- else -}}
 {{ markdownRenderFieldDoc $field.Doc }}

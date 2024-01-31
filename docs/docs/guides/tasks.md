@@ -250,7 +250,8 @@ spec:
                          "metadata":{
                             "commit-id":"1234",
                             "stage":"dev",
-                            "test-metadata":"test-metadata"
+                            "test-metadata":"test-metadata",
+                            "traceparent": "00-traceid-spanid-01"
                          }
                       }'
             - name: SCRIPT

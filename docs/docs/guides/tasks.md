@@ -7,7 +7,7 @@ comments: true
 A
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 resource defines one or more "executables"
-(functions, programs, scripts, etc)
+(functions, programs, scripts, etc.)
 that Keptn runs
 as part of the pre- and post-deployment phases of a
 [KeptnApp](../reference/crd-reference/app.md) or
@@ -45,7 +45,7 @@ To implement a `KeptnTask`:
 - Annotate the appropriate
   [KeptnApp](../reference/crd-reference/app.md)
   resource to associate your `KeptnTaskDefinition`
-  with the pre/post-deployment tasks that should be run.
+  with the pre-/post-deployment tasks that should be run.
 
 This page provides information to help you create your tasks:
 
@@ -107,7 +107,7 @@ reference page for the synopsis and examples for each runner.
 
 ## Annotations to KeptnApp
 
-To define pre/post-deployment tasks,
+To define pre-/post-deployment tasks,
 you must manually edit the YAML files
 to add annotations for your tasks to the appropriate
 [KeptnApp](../reference/crd-reference/app.md)
@@ -128,7 +128,7 @@ resource.
 
 ## Example of pre/post-deployment actions
 
-A comprehensive example of pre/post-deployment
+A comprehensive example of pre-/post-deployment
 evaluations and tasks can be found in our
 [examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
 where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
@@ -151,7 +151,7 @@ kubectl get keptnworkloadversion -n podtato-kubectl -w
 
 The deployment for a workload stays in a `Pending`
 state until all pre-deployment tasks and evaluations complete successfully.
-Afterwards, the deployment starts and when the workload is deployed,
+Afterward, the deployment starts and when the workload is deployed,
 the post-deployment checks start.
 
 ## Executing sequential tasks
@@ -177,7 +177,7 @@ You have the following options:
   and build an image
   that Keptn executes in a `container-runtime` runner.
   This is often the best solution if you need to execute complex sequences
-  because it gives you the most flexibility..
+  because it gives you the most flexibility.
 
 - Use the `inline` syntax for one of the Keptn pre-defined runners
   (either `deno-runtime` or `python-runtime`)
@@ -236,7 +236,7 @@ resource.
 A Job created by a `KeptnTask` with `KEPTN_CONTEXT`, may look like the following
 
 ```yaml
-{% include "./assets/job-context.yaml" %}
+{% include "./assets/tasks/job-context.yaml" %}
 ```
 
 You can customize the metadata field to hold any key-value pair of interest to share among
@@ -256,19 +256,7 @@ while the `secret` parameters refer to a single Kubernetes `secret`.
 Consider the following example:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnTaskDefinition
-metadata:
-  name: slack-notification-dev
-spec:
-  function:
-    functionRef:
-      name: slack-notification
-    parameters:
-      map:
-        textMessage: "This is my configuration"
-    secureParameters:
-      secret: slack-token
+{% include "./assets/tasks/slack.yaml" %}
 ```
 
 Note the following about using parameters with functions:
@@ -298,19 +286,7 @@ kubectl create secret generic my-secret --from-literal=SECURE_DATA=foo
 ```
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: dummy-task
-  namespace: "default"
-spec:
-  function:
-    secureParameters:
-      secret: my-secret
-    inline:
-      code: |
-        let secret_text = Deno.env.get("SECURE_DATA");
-        // secret_text = "foo"
+{% include "./assets/tasks/dummy-task.yaml" %}
 ```
 
 To pass multiple variables
@@ -322,26 +298,12 @@ kubectl create secret generic my-secret \
 ```
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: dummy-task
-  namespace: "default"
-spec:
-  function:
-    secureParameters:
-      secret: my-secret
-    inline:
-      code: |
-        let secret_text = Deno.env.get("SECURE_DATA");
-        let secret_text_obj = JSON.parse(secret_text);
-        // secret_text_obj["foo"] = "bar"
-        // secret_text_obj["foo2"] = "bar2"
+{% include "./assets/tasks/multi-secret.yaml" %}
 ```
 
 ### Pass secrets to a function
 
-[Kubernetes secrets](https://kubernetes.io/docs/concepts/configuration/secret/)
+[Kubernetes' secrets](https://kubernetes.io/docs/concepts/configuration/secret/)
 can be passed to the function
 using the `secureParameters` field.
 
@@ -355,33 +317,11 @@ you must first ensure that the secret containing the `SECURE_DATA` key exists
 For example:
 
 ```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: deno-demo-secret
-  namespace: default
-type: Opaque
-data:
-  SECURE_DATA: YmFyCg== # base64 encoded string, e.g. 'bar'
+{% include "./assets/tasks/secret-data.yaml" %}
 ```
 
 Then, you can make use of that secret as follows:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: deployment-hello
-  namespace: "default"
-spec:
-  function:
-    secureParameters:
-      secret: deno-demo-secret
-    inline:
-      code: |
-        console.log("Deployment Hello Task has been executed");
-
-        let foo = Deno.env.get('SECURE_DATA');
-        console.log(foo);
-        Deno.exit(0);
+{% include "./assets/tasks/taskdef-secure-data.yaml" %}
 ```

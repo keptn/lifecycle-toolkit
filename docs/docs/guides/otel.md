@@ -180,7 +180,7 @@ of your `KeptnAppContext` resource
 to connect traces of different versions of the application.
 
 ```yaml
-{% include "./assets/keptn-app-context-span.yaml" %}
+{% include "./assets/otel/keptn-app-context-span.yaml" %}
 ```
 
 > **Note**

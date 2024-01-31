@@ -45,7 +45,7 @@ are added as key-value attributes to the workload trace.
 
 Modify your deployment file adding`keptn.sh/metadata: "stage=dev"` annotation.
 
-To see any change Keptn will have to redeploy: bump the `app.kubernetes.io/version`
+To see the changes Keptn must redeploy: increment the `app.kubernetes.io/version` value
 (ex. if you are following our getting started guide change the version
 from `0.0.2` to `0.0.3`) or change the `keptn.sh/version`
 if you used the Keptn specific labels in your deployment yaml file.

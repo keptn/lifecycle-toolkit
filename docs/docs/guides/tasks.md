@@ -259,7 +259,7 @@ spec:
 ```
 
 You can customize the metadata field to hold any key value pair of interest to share among
-your workloads and tasks in a KeptnApp (for instance a commit id value).
+your workloads and tasks in a `KeptnApp` (for instance a commit id value).
 To do so, the metadata needs to be specified for the workload or for the application.
 Follow our guide on [Context and Metadata here](./metadata.md).
 

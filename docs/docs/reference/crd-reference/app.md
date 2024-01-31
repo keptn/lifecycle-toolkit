@@ -155,7 +155,7 @@ is changed in `v1beta1` library:
   that had been created manually.
 - If you are using the context propagation feature,
   the `name` and `namespace` fields
-  and must have identical values to those
+  must have identical values to those
   in the corresponding `KeptnAppContext` resource.
 - The `metadata.version` field is now completely managed by Keptn.
   You do not increment this value to cause

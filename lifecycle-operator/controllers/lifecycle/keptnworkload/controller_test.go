@@ -3,8 +3,6 @@ package keptnworkload
 import (
 	"context"
 	"errors"
-	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
-	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 	"testing"
 	"time"
 
@@ -18,6 +16,8 @@ import (
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
+	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
@@ -71,6 +71,45 @@ func TestKeptnWorkloadReconciler_CreateWorkloadVersion(t *testing.T) {
 	require.Nil(t, err)
 
 	require.Equal(t, expectedWorkloadVersion.Spec, createdWorkloadVersion.Spec)
+}
+
+func TestKeptnWorkloadReconciler_CreateWorkloadVersionErrorWhenCreating(t *testing.T) {
+
+	workload := &klcv1beta1.KeptnWorkload{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-workload",
+			Namespace: "my-namespace",
+		},
+		Spec: klcv1beta1.KeptnWorkloadSpec{
+			AppName: "my-app",
+			Version: "v1",
+			ResourceReference: klcv1beta1.ResourceReference{
+				UID:  "id1",
+				Kind: "ReplicaSet",
+				Name: "my-replica-set",
+			},
+		},
+	}
+
+	r, _ := setupReconciler(workload)
+
+	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme.Scheme).WithInterceptorFuncs(interceptor.Funcs{
+		Create: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.CreateOption) error {
+			return errors.New("unexpected error")
+		},
+	}).WithObjects(workload).Build()
+
+	r.Client = fakeClient
+
+	res, err := r.Reconcile(context.TODO(), ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: workload.Namespace,
+			Name:      workload.Name,
+		},
+	})
+
+	require.NotNil(t, err)
+	require.Equal(t, 10*time.Second, res.RequeueAfter)
 }
 
 func TestKeptnWorkloadReconciler_UpdateExistingWorkloadVersion(t *testing.T) {

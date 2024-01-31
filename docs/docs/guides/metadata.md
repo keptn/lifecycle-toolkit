@@ -24,10 +24,7 @@ Common uses of this feature include:
 
 - adding a commit ID or references related to your GitOps and CI-CD tooling
 - referencing different stages and actors
-  such as who committed this change?
-  In what repo?
-  What is the associated ticket?
-  Was it a hot fix?
+  such as: who committed the change, in what repo, for what ticket...
 
 ### Before you start
 

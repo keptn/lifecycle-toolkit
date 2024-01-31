@@ -85,7 +85,7 @@ value of the`app.kubernetes.io/version` field (or `keptn.sh/version` if you used
 (Alternatively you could apply the context resource before or together with the workloads)
 
 After deploying the `KeptnAppContext` resource and re-deploying the application,
-Keptn will trigger another deployment of your Application with the new context metadata, 
+Keptn triggers another deployment of your application with the new context metadata, 
 and all traces will contain commit-id=1234,author=myUser.
 In other words, you should be able to see the application trace as well as the workload trace
 contain the defined metadata as key-value attributes.

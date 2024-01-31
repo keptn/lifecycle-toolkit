@@ -18,8 +18,8 @@ the performance of your applications.
 Common uses of this feature include:
 
 - adding commit id or references related to your GitOps and CI-CD tooling
-- referring to different stages and actors 
-(ex. who committed this change? In what repo? What is the referred ticket? Was it a hot fix? )
+- referencing different stages and actors 
+such as who committed this change? In what repo? What is the associated ticket? Was it a hot fix? )
 
 To exploit this feature you need to install Keptn and deploy an application,
 for instance, you can follow [step #1-#3 here](../getting-started/observability.md#step-1-install-keptn)

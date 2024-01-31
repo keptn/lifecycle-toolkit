@@ -175,9 +175,9 @@ it has the following structure:
 00-<trace-id>-<span-id>-01
 ```
 
-This span link needs to be added the `KeptnAppContext` resource,
-which ensures the connection
-between traces of different versions of the application.
+Use this value to populate the `spanLinks` field
+of your `KeptnAppContext` resource
+to connect traces of different versions of the application.
 
 ```yaml
 {% include "./assets/keptn-app-context-span.yaml" %}

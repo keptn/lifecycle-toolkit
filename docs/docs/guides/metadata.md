@@ -24,7 +24,8 @@ Common usage of this feature may include:
 To exploit this feature you need to install Keptn and deploy an application,
 for instance, you can follow [step #1-#3 here](../getting-started/observability.md#step-1-install-keptn)
 
-To visualize traces you will require either Jaeger or Grafana:
+To collect traces you will require Jaeger.
+To visualise and inspect the traces, you can either use the Jaeger UI or Grafana.
 
 - Install
   [Grafana](https://grafana.com/grafana/)

@@ -62,19 +62,19 @@ integration-test-allowed-namespaces-local: install-prometheus
 
 .PHONY: chainsaw-integration-test-scheduling-gates #these tests should run on a real cluster!
 chainsaw-integration-test-scheduling-gates:
-	chainsaw test --test-dir ./test/scheduling-gates/
+	chainsaw test --test-dir ./test-chainsaw/scheduling-gates/
 
 .PHONY: chainsaw-integration-test-scheduling-gates-local #these tests should run on a real cluster!
 chainsaw-integration-test-scheduling-gates-local: install-prometheus
-	chainsaw test --test-dir ./test/scheduling-gates/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test-chainsaw/scheduling-gates/ --config ./.chainsaw-local.yaml
 
 .PHONY: chainsaw-integration-test-allowed-namespaces #these tests should run on a real cluster!
 chainsaw-integration-test-allowed-namespaces:
-	chainsaw test --test-dir ./test/allowed-namespaces/
+	chainsaw test --test-dir ./test-chainsaw/allowed-namespaces/
 
 .PHONY: chainsaw-integration-test-allowed-namespaces-local #these tests should run on a real cluster!
 chainsaw-integration-test-allowed-namespaces-local: install-prometheus
-	chainsaw test --test-dir ./test/allowed-namespaces/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test-chainsaw/allowed-namespaces/ --config ./.chainsaw-local.yaml
 
 .PHONY: load-test
 load-test:

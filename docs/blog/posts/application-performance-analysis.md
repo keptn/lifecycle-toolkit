@@ -49,7 +49,7 @@ We notify Keptn about our monitoring data sources by adding two KeptnMetricsProv
 resources to our Kubernetes cluster - one for our Prometheus instance, the other one for our Dynatrace tenant.
 
 ```yaml
-{% include "./analyzing-application-performance/metric-providers.yaml" %}
+{% include "./application-performance-analysis/metric-providers.yaml" %}
 ```
 
 ## Defining SLIs
@@ -76,13 +76,13 @@ In our case, we will create two `AnalysisValueTemplates` resources.
 The first one measures the error rate of our workload, using data from Prometheus:
 
 ```yaml
-{% include "./analyzing-application-performance/error-rate.yaml" %}
+{% include "./application-performance-analysis/error-rate.yaml" %}
 ```
 
 As a second metric, we measure the memory usage of our application using the following `AnalysisValueTemplate`:
 
 ```yaml
-{% include "./analyzing-application-performance/memory-usage.yaml" %}
+{% include "./application-performance-analysis/memory-usage.yaml" %}
 ```
 
 As can be seen in the `spec.query` field of the resource above,
@@ -102,7 +102,7 @@ goals we would like them to meet.
 This is done via an `AnalysisDefinition` resource like the following:
 
 ```yaml
-{% include "./analyzing-application-performance/analysis-definition.yaml" %}
+{% include "./application-performance-analysis/analysis-definition.yaml" %}
 ```
 
 This `AnalysisDefinition` resource has two objectives, which both refer
@@ -126,7 +126,7 @@ Now, it is time to trigger an Analysis.
 This is done by applying an Analysis resource which looks as follows:
 
 ```yaml
-{% include "./analyzing-application-performance/analysis.yaml" %}
+{% include "./application-performance-analysis/analysis.yaml" %}
 ```
 
 Applying this resource causes Keptn to:
@@ -187,7 +187,7 @@ kubectl get analysis service-analysis -n simple-go –oyaml
 This command gives us the complete YAML representation of the `Analysis`:
 
 ```yaml
-{% include "./analyzing-application-performance/analysis-status.yaml" %}
+{% include "./application-performance-analysis/analysis-status.yaml" %}
 ```
 
 As you can see, this already gives us a lot more information,
@@ -202,7 +202,7 @@ kubectl get analyses service-analysis -n simple-go -o=jsonpath='{.status.raw}' |
 Giving us the following as a result:
 
 ```json
-{% include "./analyzing-application-performance/analysis-breakdown.json" %}
+{% include "./application-performance-analysis/analysis-breakdown.json" %}
 ```
 
 In the JSON object, we see:

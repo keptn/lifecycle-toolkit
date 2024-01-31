@@ -28,10 +28,6 @@ metadata:
 It also includes a `spec.workloads` list
 that defines the workloads to be included.
 
-Pre-/post-deployment tasks and evaluations for the `KeptnApp`
-can also be added to this resource manually
-but this is not required for observability.
-
 As an example, consider the following application,
 consisting of multiple deployments,
 which is going to be deployed into a Keptn-enabled namespace.
@@ -90,7 +86,7 @@ Applying these resources results in the creation
 of the following `KeptnApp` resource:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnApp
 metadata:
   name: podtato-head
@@ -112,3 +108,14 @@ by using the OpenTelemetry tracing features
 that are provided by Keptn:
 
 ![Application deployment trace](./assets/trace.png)
+
+To execute pre-/post-deployment checks for a `KeptnApp`,
+a `KeptnAppContext` with the same name as the `KeptnApp`
+can be created.
+The `KeptnAppContext` contains a list of
+pre-/post-deployment tasks and evaluations
+that should be executed before and after the
+workloads withing the `KeptnApp` are being deployed.
+See the [Getting started guide](../getting-started/lifecycle-management.md#more-control-over-the-application)
+for more information on how to configure a `KeptnAppContext`
+to execute pre-/post-deployment checks.

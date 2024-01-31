@@ -34,21 +34,16 @@ metadata:
   annotations:
     keptn.sh/lifecycle-toolkit: "enabled"
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnApp
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnAppContext
 metadata:
   name: podtato-head
   namespace: restartable-apps
 spec:
-  version: "0.1.1"
-  revision: 1
-  workloads:
-    - name: podtato-head-entry
-      version: "0.1.2"
   preDeploymentTasks:
     - pre-deployment-check
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-check
@@ -91,17 +86,43 @@ spec:
               value: "9000"
 ```
 
-In this example, the `KeptnApp` executes a pre-deployment check
-which clearly fails because of the `pre-deployment-check` task,
-and therefore is not able to proceed with the deployment.
+Applying these resources causes a `KeptnApp`
+to be created.
+The `KeptnApp` contains all workloads that are part of
+the application, and a version number that is
+derived from the workloads:
 
-After applying this manifest,
-you can inspect the status of the created `KeptnAppVersion`:
+```yaml
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnApp
+metadata:
+  name: podtato-head
+  namespace: restartable-apps
+  annotations:
+    app.kubernetes.io/managed-by: "keptn"
+spec:
+  version: "0.1.2"
+  revision: 1
+  workloads:
+    - name: podtato-head-entry
+      version: "0.1.2"
+```
+
+Then, based of the `KeptnApp` and `KeptnAppContext`,
+a `KeptnAppVersion` is created automatically and
+the execution of the pre-deployment checks defined in
+the `KeptnAppContext` starts.
+In this example, the pre deployment checks
+contain a task which clearly fails.
+Therefore, the `KeptnAppVersion` is not able
+to proceed with the deployment.
+
+You can inspect the status of the created `KeptnAppVersion`:
 
 ```shell
 $ kubectl get keptnappversions.lifecycle.keptn.sh -n restartable-apps
 NAME                   APPNAME        VERSION   PHASE
-podtato-head-0.1.1-1   podtato-head   0.1.1     AppPreDeployTasks
+podtato-head-0.1.2-ab1223js   podtato-head   0.1.1     AppPreDeployTasks
 ```
 
 Notice that the `KeptnAppVersion` stays
@@ -114,8 +135,8 @@ is in a `Failed` state, with the remaining phases being `Deprecated`.
 <!-- markdownlint-disable MD013 -->
 ```shell
 $ kubectl get keptnappversions.lifecycle.keptn.sh -n restartable-apps -owide
-NAME                   APPNAME        VERSION   PHASE               PREDEPLOYMENTSTATUS   PREDEPLOYMENTEVALUATIONSTATUS   WORKLOADOVERALLSTATUS   POSTDEPLOYMENTSTATUS   POSTDEPLOYMENTEVALUATIONSTATUS
-podtato-head-0.1.1-1   podtato-head   0.1.1     AppPreDeployTasks   Failed                Deprecated                      Deprecated              Deprecated             Deprecated
+NAME                          APPNAME        VERSION   PHASE               PREDEPLOYMENTSTATUS   PREDEPLOYMENTEVALUATIONSTATUS   WORKLOADOVERALLSTATUS   POSTDEPLOYMENTSTATUS   POSTDEPLOYMENTEVALUATIONSTATUS
+podtato-head-0.1.2-ab1223js   podtato-head   0.1.2     AppPreDeployTasks   Failed                Deprecated                      Deprecated              Deprecated             Deprecated
 ```
 <!-- markdownlint-enable MD013 -->
 
@@ -130,7 +151,7 @@ kubectl -n restartable-apps edit keptntaskdefinitions.lifecycle.keptn.sh pre-dep
 Modify the manifest to look like this:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-check
@@ -152,19 +173,17 @@ kubectl -n restartable-apps edit keptnapps.lifecycle.keptn.sh podtato-head
 Increment the value of the `spec.revision` field by one:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnApp
 metadata:
   name: podtato-head
   namespace: restartable-apps
 spec:
-  version: "0.1.1"
+  version: "0.1.2"
   revision: 2 # Increased this value from 1 to 2
   workloads:
     - name: podtato-head-entry
       version: "0.1.2"
-  preDeploymentTasks:
-    - pre-deployment-check
 ```
 
 After those changes have been made,
@@ -172,12 +191,12 @@ you will notice a new revision of the `podtato-head` `KeptnAppVersion`:
 
 ```shell
 $ kubectl get keptnappversions.lifecycle.keptn.sh -n restartable-apps       
-NAME                   APPNAME        VERSION   PHASE
-podtato-head-0.1.1-1   podtato-head   0.1.1     AppPreDeployTasks
-podtato-head-0.1.1-2   podtato-head   0.1.1     AppDeploy
+NAME                          APPNAME        VERSION   PHASE
+podtato-head-0.1.2-ab1223js   podtato-head   0.1.2     AppPreDeployTasks
+podtato-head-0.1.2-xbhj9073   podtato-head   0.1.2     AppDeploy
 ```
 
-See that the newly created revision `podtato-head-0.1.1-2`
+See that the newly created revision `podtato-head-0.1.2-xbhj9073`
 has made it beyond the pre-deployment check phase
 and has reached its `AppDeployPhase`.
 
@@ -189,8 +208,8 @@ the `restartable-apps` namespace:
 ```shell
 $ kubectl get keptntasks.lifecycle.keptn.sh -n restartable-apps
 NAME                             APPNAME        APPVERSION   WORKLOADNAME   WORKLOADVERSION   JOB NAME                              STATUS
-pre-pre-deployment-check-49827   podtato-head   0.1.1                                         klc-pre-pre-deployment-check--77601   Failed
-pre-pre-deployment-check-65056   podtato-head   0.1.1                                         klc-pre-pre-deployment-check--57313   Succeeded
+pre-pre-deployment-check-49827   podtato-head   0.1.2                                         klc-pre-pre-deployment-check--77601   Failed
+pre-pre-deployment-check-65056   podtato-head   0.1.2                                         klc-pre-pre-deployment-check--57313   Succeeded
 ```
 <!-- markdownlint-enable MD013 -->
 

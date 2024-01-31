@@ -21,6 +21,47 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
+func TestKeptnWorkloadReconciler_CannotLookupWorkloadVersion(t *testing.T) {
+
+	workload := &klcv1beta1.KeptnWorkload{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-workload",
+			Namespace: "my-namespace",
+		},
+		Spec: klcv1beta1.KeptnWorkloadSpec{
+			AppName: "my-app",
+			Version: "v1",
+			ResourceReference: klcv1beta1.ResourceReference{
+				UID:  "id1",
+				Kind: "ReplicaSet",
+				Name: "my-replica-set",
+			},
+		},
+	}
+
+	r, _ := setupReconciler(workload)
+
+	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme.Scheme).WithInterceptorFuncs(interceptor.Funcs{
+		Get: func(ctx context.Context, client client.WithWatch, key client.ObjectKey, obj client.Object, opts ...client.GetOption) error {
+			if key.Name == "my-workload-v1" {
+				return errors.New("unexpected error")
+			}
+			return nil
+		},
+	}).WithObjects(workload).Build()
+
+	r.Client = fakeClient
+
+	res, err := r.Reconcile(context.TODO(), ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: workload.Namespace,
+			Name:      workload.Name,
+		},
+	})
+	require.NotNil(t, err)
+	require.Equal(t, 10*time.Second, res.RequeueAfter)
+}
+
 func TestKeptnWorkloadReconciler_CreateWorkloadVersion(t *testing.T) {
 
 	workload := &klcv1beta1.KeptnWorkload{

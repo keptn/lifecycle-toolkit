@@ -10,8 +10,7 @@ comments: true
 
 Hello and Happy New Year from the entire Keptn Team.
 We hope you had a wonderful holiday season and that you’re all having a wonderful 2024 so far!
-We’d like to take a moment to reflect back on what a great year 2023 was for Keptn and all the
-road ahead for this year.
+We’d like to take a moment to reflect back on what a great year 2023 was for Keptn and what we're looking forward to in 2024!
 
 The biggest news for the project in 2023 was probably the maturing of the cloud native Keptn,
 with the former subproject named Keptn Lifecycle Toolkit officially becoming Keptn in August 2023,

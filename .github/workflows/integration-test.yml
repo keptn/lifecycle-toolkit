@@ -98,12 +98,12 @@ jobs:
       - name: (Chainsaw) Run Scheduling Gates Integration Tests
         if: inputs.scheduling-gates == 'gates_on' && inputs.allowed-namespaces == 'allowed_ns_off'
         working-directory: .
-        run: chainsaw test --test-dir ./test-chainsaw/scheduling-gates
+        run: make chainsaw-integration-test-scheduling-gates
 
       - name: (Chainsaw) Run Allowed namespaces Integration Tests
         if: inputs.allowed-namespaces == 'allowed_ns_on'
         working-directory: .
-        run: chainsaw test --test-dir ./test-chainsaw/allowed-namespaces
+        run: make chainsaw-integration-test-allowed-namespaces
 
       # - name: (Chainsaw) Run Integration Tests
       #   if: inputs.allowed-namespaces == 'allowed_ns_off'

@@ -27,7 +27,7 @@ data:
       health_check: {}
     exporters:
       otlp:
-        endpoint: "jaeger-collector:14250"
+        endpoint: "jaeger-collector:4317"
         tls:
           insecure: true
       prometheus:
@@ -103,7 +103,7 @@ spec:
           env:
             - name: GOGC
               value: "80"
-          image: otel/opentelemetry-collector:0.92.0
+          image: otel/opentelemetry-collector:0.93.0
           name: otel-collector
           resources:
             limits:

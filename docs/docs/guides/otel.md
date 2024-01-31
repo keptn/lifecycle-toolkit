@@ -164,7 +164,7 @@ You can access the metrics from your browser at: `http://localhost:9999`
 # Advanced tracing configurations in Keptn: Linking traces
 
 In Keptn you can connect multiple traces, for instance to connect deployments 
-of the same application trough different stages. 
+of the same application through different stages. 
 To create connections between the traces of versions of your application, you can enrich the
 `KeptnAppContext` resource with
 [Opentelemetry span links](https://opentelemetry.io/docs/concepts/signals/traces/#span-links).

@@ -15,7 +15,7 @@ This enables you to enrich your Keptn resources and your traces with additional
 information, making it easier to understand and analyze
 the performance of your applications.
 
-Common usage of this feature may include:
+Common uses of this feature include:
 
 - adding commit id or references related to your GitOps/ CI-CD tooling
 - referring to different stages and actors 

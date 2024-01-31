@@ -59,7 +59,7 @@ Similar to the previous step, custom metadata can also be added to application t
 In the `.spec.metadata` field you can define multiple key-value pairs, which are propagated
 to the application trace as attributes in the same manner as for workloads.
 
-In addition to adding the metadata to the application trace, the key-value pairs are also added
+The key-value pairs that are added to the application trace are also added
 to each workload trace that is part of the application.
 If the same key is specified for both
 application and workload metadata attributes,

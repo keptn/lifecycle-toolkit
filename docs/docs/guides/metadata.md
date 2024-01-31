@@ -47,7 +47,7 @@ Modify your deployment file adding`keptn.sh/metadata: "stage=dev"` annotation.
 
 To see the changes Keptn must redeploy: increment the `app.kubernetes.io/version` value
 (ex. if you are following our getting started guide change the version
-from `0.0.2` to `0.0.3`) or change the `keptn.sh/version`
+from `0.0.2` to `0.0.3`) or change the `keptn.sh/version` value
 if you used the Keptn specific labels in your deployment yaml file.
 
 This way, after the re-deployment, the workload trace will contain the `stage=dev` attribute.

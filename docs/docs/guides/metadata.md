@@ -17,7 +17,7 @@ the performance of your applications.
 
 Common uses of this feature include:
 
-- adding commit id or references related to your GitOps/ CI-CD tooling
+- adding commit id or references related to your GitOps and CI-CD tooling
 - referring to different stages and actors 
 (ex. who committed this change? In what repo? What is the referred ticket? Was it a hot fix? )
 

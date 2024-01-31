@@ -40,11 +40,11 @@ derived from the workloads:
 {% include "./assets/restart-application-deployment/generated-app.yaml" %}
 ```
 
-Then, based of the `KeptnApp` and `KeptnAppContext`,
+Then, based on the `KeptnApp` and `KeptnAppContext`,
 a `KeptnAppVersion` is created automatically and
 the execution of the pre-deployment checks defined in
 the `KeptnAppContext` starts.
-In this example, the pre deployment checks
+In this example, the pre-deployment checks
 contain a task which clearly fails.
 Therefore, the `KeptnAppVersion` is not able
 to proceed with the deployment.

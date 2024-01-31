@@ -60,6 +60,7 @@ The `KeptnAppContext` contains a list of
 pre-/post-deployment tasks and evaluations
 that should be executed before and after the
 workloads withing the `KeptnApp` are being deployed.
+
 See the [Getting started guide](../getting-started/lifecycle-management.md#more-control-over-the-application)
 for more information on how to configure a `KeptnAppContext`
 to execute pre-/post-deployment checks.

@@ -232,31 +232,7 @@ By default, `KEPTN_CONTEXT` contains:
 A Job created by a `KeptnTask` with `KEPTN_CONTEXT`, may look like the following
 
 ```yaml
-apiVersion: batch/v1
-kind: Job
-spec:
-  template:
-    spec:
-      containers:
-        - name: "my-task-container"
-          env:
-            - name: KEPTN_CONTEXT
-              value: '{
-                         "workloadName":"waiter-waiter",
-                         "appName":"waiter",
-                         "appVersion":"",
-                         "workloadVersion":"0.4",
-                         "taskType":"pre",
-                         "objectType":"Workload",
-                         "metadata":{
-                            "commit-id":"1234",
-                            "stage":"dev",
-                            "test-metadata":"test-metadata",
-                            "traceparent": "00-traceid-spanid-01"
-                         }
-                      }'
-            - name: SCRIPT
-              value: /var/data/function.ts
+{% include "./assets/job-context.yaml" %}
 ```
 
 You can customize the metadata field to hold any key value pair of interest to share among

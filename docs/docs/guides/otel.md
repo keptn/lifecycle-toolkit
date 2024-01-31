@@ -180,17 +180,7 @@ which ensures the connection
 between traces of different versions of the application.
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnAppContext
-metadata:
-  name: keptndemoapp
-  namespace: keptndemo
-spec:
-  metadata:
-    commit-id: "1234"
-    author: "myUser"
-  spanLinks:
-    - "00-c088f5c586bab8649159ccc39a9862f7-f862289833f1fba3-01"
+{% include "./assets/keptn-app-context-span.yaml" %}
 ```
 
 > **Note**

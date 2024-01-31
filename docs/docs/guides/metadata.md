@@ -82,15 +82,7 @@ values specified for the workload take precedence.
 A `KeptnAppContext` custom resource looks like the following:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnAppContext
-metadata:
-  name: keptndemoapp
-  namespace: keptndemo
-spec:
-  metadata:
-    commit-id: "1234"
-    author: "myUser"
+{% include "./assets/keptn-app-context.yaml" %}
 ```
 
 After applying the `KeptnAppContext` to your cluster, you need to increment the version of your

@@ -6,3 +6,40 @@ defaults:
   run:
     shell: bash
 jobs:
+  upgrade-helm-chart:
+    name: Upgrade Helm Chart
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        config:
+          - name: keptn
+            path: chart
+          - name: keptn-lifecycle-operator
+            path: lifecycle-operator/chart
+          - name: keptn-metrics-operator
+            path: metrics-operator/chart
+          - name: keptn-cert-manager
+            path: keptn-cert-manager/chart
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Install Helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh      
+      - name: Upgrade Helm Chart
+        id: check-upgrades
+        run: |
+
+      - name: Open Issue for Upgrade Failure
+        if: steps.check-upgrades.outputs.exit-code != 0
+        uses: peter-evans/create-issue-from-file@v2
+        with:
+          title: Upgrade Failed for Helm Chart
+          body: |
+            Upgrade for the Helm chart failed. Please investigate and fix the issue.
+          labels: bug
+ 
+          

@@ -92,7 +92,7 @@ values specified for the workload take precedence.
 A `KeptnAppContext` custom resource looks like the following:
 
 ```yaml
-{ % include "./assets/metadata/keptn-app-context.yaml" % }
+{% include "./assets/metadata/keptn-app-context.yaml" %}
 ```
 
 After applying the `KeptnAppContext` to your cluster, you need to increment the version of your

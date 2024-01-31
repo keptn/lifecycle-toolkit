@@ -43,8 +43,8 @@ completed for the version set in the labels/annotations.
 
 To illustrate the update of a [workload](https://kubernetes.io/docs/concepts/workloads/),
 let's assume the following example, including
-a [workload](https://kubernetes.io/docs/concepts/workloads/) called `podtato-head-frontend` that includes a pre-task and
-a pre-evaluation.
+a [workload](https://kubernetes.io/docs/concepts/workloads/) called `podtato-head-frontend` that includes a
+pre-deployment task.
 
 ```yaml
 {% include "./assets/deployment-initial.yaml" %}
@@ -76,25 +76,27 @@ In this case, the deployment should be changed as follows:
 {% include "./assets/deployment-new-image-and-version.yaml" %}
 ```
 
-If you have defined the related `KeptnApp` resource yourself,
-this must also be updated to refer to the updated `KeptnWorkload`.
-This is a mandatory step, since the `KeptnWorkload` associated with
-this updated deployment is not able to progress otherwise.
-Therefore, make sure that the version of `podtato-head-frontend`
-is updated accordingly:
 
-```yaml
-{% include "./assets/app-updated-version.yaml" %}
-```
 
-Updating the `KeptnApp` also causes all pre-/post-tasks/evaluations
-of the `KeptnApp` to be executed again.
-In this example, this means that the tasks `wait-for-prometheus`,
-and `post-deployment-loadtests` will run again.
-
-If you are using the [automatic app discovery](../guides/auto-app-discovery.md),
-you do not need to update the `KeptnApp` resource.
-Keptn will take care of that for you.
+             OBSOLETE If you have defined the related `KeptnApp` resource yourself,
+             OBSOLETE this must also be updated to refer to the updated `KeptnWorkload`.
+             OBSOLETE This is a mandatory step, since the `KeptnWorkload` associated with
+             OBSOLETE this updated deployment is not able to progress otherwise.
+             OBSOLETE Therefore, make sure that the version of `podtato-head-frontend`
+             OBSOLETE is updated accordingly:
+             OBSOLETE 
+             OBSOLETE ```yaml
+             OBSOLETE {% include "./assets/app-updated-version.yaml" %}
+             OBSOLETE ```
+             OBSOLETE 
+             OBSOLETE Updating the `KeptnApp` also causes all pre-/post-tasks/evaluations
+             OBSOLETE of the `KeptnApp` to be executed again.
+             OBSOLETE In this example, this means that the tasks `wait-for-prometheus`,
+             OBSOLETE and `post-deployment-loadtests` will run again.
+             OBSOLETE 
+             OBSOLETE If you are using the [automatic app discovery](../guides/auto-app-discovery.md),
+             OBSOLETE you do not need to update the `KeptnApp` resource.
+             OBSOLETE Keptn will take care of that for you.
 
 After applying the updated manifests, you can monitor the status
 of the application and related [workloads](https://kubernetes.io/docs/concepts/workloads/) using the following commands:
@@ -145,16 +147,16 @@ would look like this, with the required label being set:
 {% include "./assets/new-deployment.yaml" %}
 ```
 
-The `KeptnApp`, if defined by the user, should contain the
-reference to the newly added [workload](https://kubernetes.io/docs/concepts/workloads/).
-This is mandatory, as the [workload](https://kubernetes.io/docs/concepts/workloads/) itself is not able to
-progress if it is not part of a `KeptnApp`.
-For automatically discovered apps this is done
-automatically.
-
-```yaml
-{% include "./assets/app-with-new-workload.yaml" %}
-```
+         OBSOLETE The `KeptnApp`, if defined by the user, should contain the
+         OBSOLETE reference to the newly added [workload](https://kubernetes.io/docs/concepts/workloads/).
+         OBSOLETE This is mandatory, as the [workload](https://kubernetes.io/docs/concepts/workloads/) itself is not able to
+         OBSOLETE progress if it is not part of a `KeptnApp`.
+         OBSOLETE For automatically discovered apps this is done
+         OBSOLETE automatically.
+         OBSOLETE 
+         OBSOLETE ```yaml
+         OBSOLETE {% include "./assets/app-with-new-workload.yaml" %}
+         OBSOLETE ```
 
 After applying the updated manifests, you can monitor the status
 of the application and related [workloads](https://kubernetes.io/docs/concepts/workloads/) using the following commands:

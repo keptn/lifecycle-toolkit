@@ -93,7 +93,8 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	// Try to find the workload instance
 	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workloadVersionName}, workloadVersion)
 	if client.IgnoreNotFound(err) != nil {
-		r.Log.Error(err, "could not get WorkloadVersion")
+		r.Log.Error(err, "could not get WorkloadVersion", "requestInfo", requestInfo)
+		return ctrl.Result{RequeueAfter: 10 * time.Second}, err
 	} else if errors.IsNotFound(err) {
 		// If the workload instance does not exist, create it
 		workloadVersion, err := r.createWorkloadVersion(ctx, workload)
@@ -103,7 +104,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 		err = r.Client.Create(ctx, workloadVersion)
 		if err != nil {
-			r.Log.Error(err, "could not create WorkloadVersion")
+			r.Log.Error(err, "could not create WorkloadVersion", "requestInfo", requestInfo)
 			r.EventSender.Emit(common.PhaseCreateWorkloadVersion, "Warning", workloadVersion, common.PhaseStateFailed, "could not create KeptnWorkloadVersion ", workloadVersion.Spec.Version)
 			return ctrl.Result{RequeueAfter: 10 * time.Second}, err
 		}
@@ -116,7 +117,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		r.Log.Info("updating spec of KeptnWorkloadVersion", "requestInfo", requestInfo, "workloadVersion", workloadVersion.Name)
 		workloadVersion.Spec.KeptnWorkloadSpec = workload.Spec
 		if err := r.Client.Update(ctx, workloadVersion); err != nil {
-			r.Log.Error(err, "could not update spec of Workload")
+			r.Log.Error(err, "could not update spec of Workload", "requestInfo", requestInfo)
 			// requeue to try again in case of an unexpected error
 			return ctrl.Result{RequeueAfter: 10 * time.Second}, err
 		}

@@ -20,9 +20,7 @@ The generated `KeptnApp` file includes `metadata`
 that names this `KeptnApp` and identifies the Namespace where it resides.
 
 ```yaml
-metadata:
-  name: simpleapp
-  namespace: simplenode-dev
+{% include "./assets/auto-app-discovery/keptnapp-metadata.yaml" %}
 ```
 
 It also includes a `spec.workloads` list
@@ -38,68 +36,14 @@ Note that:
    This example does not use other workloads.
 
 ```yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: podtato-kubectl
-  annotations:
-    keptn.sh/lifecycle-toolkit: "enabled"
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: podtato-head-frontend
-  namespace: podtato-kubectl
-spec:
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: podtato-head-frontend
-        app.kubernetes.io/part-of: podtato-head
-        app.kubernetes.io/version: 0.1.0
-    spec:
-      containers:
-        - name: podtato-head-frontend
-          image: podtato-head-frontend
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: podtato-head-hat
-  namespace: podtato-kubectl
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: podtato-head-hat
-        app.kubernetes.io/part-of: podtato-head
-        app.kubernetes.io/version: 0.1.1
-    spec:
-      containers:
-        - name: podtato-head-hat
-          image: podtato-head-hat
+{% include "./assets/auto-app-discovery/deployments.yaml" %}
 ```
 
 Applying these resources results in the creation
 of the following `KeptnApp` resource:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnApp
-metadata:
-  name: podtato-head
-  namespace: podtato-kubectl
-  annotations:
-    app.kubernetes.io/managed-by: "keptn"
-spec:
-  version: "<version string based on a hash of all containing workloads>"
-  workloads:
-  - name: podtato-head-frontend
-    version: 0.1.0
-  - name: podtato-head-hat
-    version: 1.1.1
+{% include "./assets/auto-app-discovery/keptnapp.yaml" %}
 ```
 
 With the `KeptnApp` resource created,

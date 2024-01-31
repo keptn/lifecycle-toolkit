@@ -1,19 +1,19 @@
 #  Add metadata to your application
 
-This guide will walk you through the usage of Context Metadata in Keptn.
+This guide walks you through the usage of context metadata in Keptn.
 
 After reading this guide you will be able to: 
 - add metadata to applications, workloads
 and tasks in two ways.
-- add metadata information to traces
+- add metadata information about applications to their traces
 
 ## Introduction
 
-`KeptnAppContext` is a custom resource in Keptn that allows you to add metadata
-and links to traces for a specific application.
-This enables you to enrich your Keptn resources and your traces with additional
-information, making it easier to understand and analyze
-the performance of your applications.
+Context metadata in Keptn are all those additional information that can
+be added to applications, workloads and task.
+
+There are two ways to add such metadata: using `keptn.sh/metadata` annotation and using `KeptnAppContext`, 
+in the following section we will explore both.
 
 Common uses of this feature include:
 
@@ -21,8 +21,11 @@ Common uses of this feature include:
 - referencing different stages and actors 
 such as who committed this change? In what repo? What is the associated ticket? Was it a hot fix? )
 
-To exploit this feature you need to install Keptn and deploy an application,
-for instance, you can follow [step #1-#3 here](../getting-started/observability.md#step-1-install-keptn)
+## Before you start
+
+1. [Install Keptn](../installation/index.md)
+2. Deploy an application, for instance, you can follow
+[a demo app installation here](../getting-started/observability.md#step-3-deploy-demo-application)
 
 To collect traces you will require Jaeger.
 To visualise and inspect the traces, you can either use the Jaeger UI or Grafana.
@@ -40,12 +43,14 @@ To visualise and inspect the traces, you can either use the Jaeger UI or Grafana
 
 To enrich the workload traces with custom metadata, use the
 `keptn.sh/metadata` annotation in your
-Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment)
+[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment)
 resource.
 The values specified in the annotation
 are added as key-value attributes to the workload trace.
 
-Modify your deployment file adding`keptn.sh/metadata: "stage=dev"` annotation.
+Modify your workload (for example your yaml file containing a Deployment) adding an annotation with any metadata you prefer, 
+for instance, to add info about a stage, you could add:
+`keptn.sh/metadata: "stage=dev"`.
 
 To see the changes Keptn must redeploy: increment the `app.kubernetes.io/version` value
 (ex. if you are following our getting started guide change the version
@@ -58,6 +63,13 @@ This way, after the re-deployment, the workload trace will contain the `stage=de
 
 Similar to the previous step, custom metadata can also be added to application traces via the
 [KeptnAppContext](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappcontext) custom resource.
+
+`KeptnAppContext` is a custom resource in Keptn that allows you to add metadata
+and links to traces for a specific application.
+This enables you to enrich your Keptn resources and your traces with additional
+information, making it easier to understand and analyze
+the performance of your applications.
+
 In the `.spec.metadata` field you can define multiple key-value pairs, which are propagated
 to the application trace as attributes in the same manner as for workloads.
 

@@ -226,9 +226,10 @@ By default, `KEPTN_CONTEXT` contains:
 - "workloadVersion"
 - "taskType"
 - "objectType"
+- "traceparent"
 - "metadata"
 
-A Job created by a Keptn Task with `KEPTN_CONTEXT`, may look like the following
+A Job created by a `KeptnTask` with `KEPTN_CONTEXT`, may look like the following
 
 ```yaml
 apiVersion: batch/v1

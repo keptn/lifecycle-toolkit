@@ -53,7 +53,7 @@ you must have the following on your cluster:
     to watch resources of your Keptn namespace
     (default is `keptn-system`).
     See
-    [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/)).
+    [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/).
 
 - To install Prometheus into the `monitoring` namespace
   using the example configuration included with Keptn,
@@ -84,7 +84,7 @@ kubectl apply -f config/prometheus/
 
   - Follow the instructions in the Grafana
     [README](https://github.com/keptn/lifecycle-toolkit/blob/main/dashboards/grafana/README.md)
-    file to configure the Grafana dashboard(s) for Keptn..
+    file to configure the Grafana dashboard(s) for Keptn.
 
     Metrics can also be retrieved without a dashboard.
     See
@@ -175,7 +175,7 @@ it has the following structure:
 00-<trace-id>-<span-id>-01
 ```
 
-This span link needs to be added the the `KeptnAppContext` resource, 
+This span link needs to be added the `KeptnAppContext` resource, 
 which ensures the connection
 between traces of different versions of the application.
 

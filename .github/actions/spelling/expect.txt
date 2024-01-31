@@ -377,6 +377,7 @@ Lifcycle
 lifecyclekeptnsh
 linenums
 linkedin
+likedtrace
 livenessprobe
 loadtests
 LOCALBIN
@@ -562,6 +563,7 @@ slo
 softprops
 sonarcloud
 spanhandler
+spanid
 spanitem
 spdx
 spf

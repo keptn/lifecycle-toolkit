@@ -33,7 +33,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnMetric` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects) || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnMetricSpec](#keptnmetricspec)_ |  || ✓ |
 | `status` _[KeptnMetricStatus](#keptnmetricstatus)_ |  || ✓ |
 
@@ -99,7 +99,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | |
 | `kind` _string_ | `KeptnMetricsProvider` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects) || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnMetricsProviderSpec](#keptnmetricsproviderspec)_ |  || ✓ |
 | `status` _string_ | unused field || ✓ |
 

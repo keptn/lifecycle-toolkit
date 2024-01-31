@@ -2,7 +2,11 @@ package keptnworkload
 
 import (
 	"context"
+	"errors"
+	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
+	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 	"testing"
+	"time"
 
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
@@ -126,6 +130,61 @@ func TestKeptnWorkloadReconciler_UpdateExistingWorkloadVersion(t *testing.T) {
 	require.Nil(t, err)
 
 	require.Equal(t, workload.Spec, updatedWorkloadVersion.Spec.KeptnWorkloadSpec)
+}
+
+func TestKeptnWorkloadReconciler_UpdateExistingWorkloadVersionUpdateFails(t *testing.T) {
+
+	workload := &klcv1beta1.KeptnWorkload{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-workload",
+			Namespace: "my-namespace",
+		},
+		Spec: klcv1beta1.KeptnWorkloadSpec{
+			AppName: "my-app",
+			Version: "v1",
+			ResourceReference: klcv1beta1.ResourceReference{
+				UID:  "id1",
+				Kind: "ReplicaSet",
+				Name: "my-replica-set",
+			},
+		},
+	}
+
+	workloadVersion := &klcv1beta1.KeptnWorkloadVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-workload-v1",
+			Namespace: "my-namespace",
+		},
+		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+				AppName: "my-app",
+				Version: "v1",
+				ResourceReference: klcv1beta1.ResourceReference{
+					UID:  "id2",
+					Kind: "ReplicaSet",
+					Name: "another-replica-set",
+				},
+			},
+		},
+	}
+
+	r, _ := setupReconciler(workload, workloadVersion)
+
+	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme.Scheme).WithInterceptorFuncs(interceptor.Funcs{
+		Update: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.UpdateOption) error {
+			return errors.New("unexpected error")
+		},
+	}).WithObjects(workload, workloadVersion).Build()
+
+	r.Client = fakeClient
+	res, err := r.Reconcile(context.TODO(), ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: workload.Namespace,
+			Name:      workload.Name,
+		},
+	})
+	require.NotNil(t, err)
+	require.Equal(t, 10*time.Second, res.RequeueAfter)
 }
 
 func TestKeptnWorkload(t *testing.T) {

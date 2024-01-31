@@ -38,8 +38,10 @@ To visualise and inspect the traces, you can either use the Jaeger UI or Grafana
 
 ## Include metadata in workload traces
 
-To enrich the workload traces with custom metadata, you can use the
-`keptn.sh/metadata` annotation in your deployment.
+To enrich the workload traces with custom metadata, use the
+`keptn.sh/metadata` annotation in your
+Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment)
+resource.
 The values specified in the annotation
 are added as key-value attributes to the workload trace.
 

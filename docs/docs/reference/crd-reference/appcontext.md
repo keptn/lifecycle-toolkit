@@ -25,6 +25,7 @@ metadata:
 spec:
   metadata:
     <custom-attributes>
+    spanLinks: "<link>
   preDeploymentTasks:
   - <list of tasks>
   postDeploymentTasks:
@@ -43,27 +44,43 @@ spec:
 * **kind** -- Resource type
    Must be set to `KeptnAppContext`
 * **metadata**
-  * **name** -- Unique name of this `KeptnAppContext` resource.
+     * **name** -- Unique name of this `KeptnAppContext` resource.
        Names must comply with the
        [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
        specification
        and match the `name` given to the associated `KeptnApp` resource..
-  * **namespace** -- Namespace of this application.
+     * **namespace** -- Namespace of this application.
        This must match the `namespace` given to
        the associated `KeptnAp` resource.
 * **spec**
-  * **custom-attributes** -- list of key-value pairs
+     * **custom-attributes** -- list of key-value pairs
        that are propagated to the application trace as attributes.
        For example, the following lines adds the `commit-id`
        and `author` information to the `KEPTN_CONTEXT`
        of the workload or `KeptnApp` where it is specified:
 
-       ```yaml
-       spec:
-          metadata:
-             commit-id: "1234"
-             author: "myUser"
-       ```
+          ```yaml
+          spec:
+             metadata:
+                commit-id: "1234"
+                author: "myUser"
+          ```
+     * **spanLinks** -- OpenTelemetry span link
+       that connects multiple traces.
+       For example, this can be used to connect
+       deployments of the same application
+       through different stages.
+       You can retrieve the value to use
+       from the JSON representation of the trace in Jaeger.
+       The structure of this is:
+
+         ```yaml
+         00-<trace-id>-<span-id>-01
+         ```
+
+       After you add this field to your `KeptnAppContext` manifest,
+       you must increment the `version` number
+       and apply the manifest to store the information in the traces.
 
 The remaining fields are required only when implementing
 the release lifecycle management feature.
@@ -71,23 +88,23 @@ If used, these fields must be populated manually:
 
 * **spec**
 
-  * **preDeploymentTasks** -- list each task
+     * **preDeploymentTasks** -- list each task
        to be run as part of the pre-deployment stage.
        Task names must match the value of the `metadata.name` field
        for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
-  * **postDeploymentTasks** -- list each task
+     * **postDeploymentTasks** -- list each task
        to be run as part of the post-deployment stage.
        Task names must match the value of the `metadata.name` field
        for the associated
        [KeptnTaskDefinition](taskdefinition.md)
        resource.
-  * **preDeploymentEvaluations** -- list each evaluation to be run
+     * **preDeploymentEvaluations** -- list each evaluation to be run
        as part of the pre-deployment stage.
        Evaluation names must match the value of the `metadata.name` field
        for the associated
        [KeptnEvaluationDefinition](evaluationdefinition.md)
        resource.
-  * **postDeploymentEvaluations** -- list each evaluation to be run
+     * **postDeploymentEvaluations** -- list each evaluation to be run
        as part of the post-deployment stage.
        Evaluation names must match the value of the `metadata.name` field
        for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)

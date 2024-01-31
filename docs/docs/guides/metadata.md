@@ -5,7 +5,7 @@ This guide will walk you through the usage of Context Metadata in Keptn.
 After reading this guide you will be able to: 
 - add metadata to applications, workloads
 and tasks in two ways.
-- add those same information also in traces
+- add metadata information to traces
 
 ## Introduction
 

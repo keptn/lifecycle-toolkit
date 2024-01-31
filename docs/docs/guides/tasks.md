@@ -209,7 +209,8 @@ specific cluster, user and namespace with which you interact.
 For more information, see
 [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
 
-For Tasks generated for applications running in Kubernetes, Keptn populates a `KEPTN_CONTEXT` environment variable containing a set
+For Tasks generated for applications running in Kubernetes,
+Keptn populates a `KEPTN_CONTEXT` environment variable containing a set
 of parameters that correlate a task
 to a specific application/workload,
 information about the phase in which the task is being executed,

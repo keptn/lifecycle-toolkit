@@ -167,7 +167,7 @@ In Keptn you can connect multiple traces, for instance to connect deployments
 of the same application through different stages.
 To create connections between the traces of versions of your application, you can enrich the
 `KeptnAppContext` resource with
-[Opentelemetry span links](https://opentelemetry.io/docs/concepts/signals/traces/#span-links).
+[OpenTelemetry span links](https://opentelemetry.io/docs/concepts/signals/traces/#span-links).
 You can retrieve the span link from the JSON representation of the trace in Jaeger, where
 it has the following structure:
 

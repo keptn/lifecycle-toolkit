@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Add metadata to your application
+# Context metadata
 
 This guide walks you through the usage of context metadata in Keptn.
 

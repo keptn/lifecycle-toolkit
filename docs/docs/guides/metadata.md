@@ -17,7 +17,12 @@ After reading this guide you will be able to:
 Context metadata in Keptn is defined as all additional information that can
 be added to applications, workloads and tasks.
 
-There are two ways to add such metadata: using the `keptn.sh/metadata` annotation and using the  `KeptnAppContext` CRD.
+Context metadata can be added to your application
+in either of the following ways:
+- Use the `keptn.sh/metadata` annotation in any of 
+your workloads you plan to deploy with Keptn 
+- Apply a `KeptnAppContext` custom resource
+
 In the following section we will explore both.
 
 Common uses of this feature include:

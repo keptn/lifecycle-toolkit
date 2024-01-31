@@ -35,12 +35,5 @@ jobs:
             tmp/.htmltest
           key: ${{ runner.os }}-htmltest
 
-      - name: Cache Hugo packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            docs/tmp/.hugo
-          key: ${{ runner.os }}-hugo-${{ hashFiles('docs/go.sum') }}
-
       - name: Check HTML
         run: make htmltest

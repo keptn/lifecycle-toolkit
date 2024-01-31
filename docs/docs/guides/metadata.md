@@ -79,7 +79,7 @@ spec:
     author: "myUser"
 ```
 
-After applying the `KeptnAppContext` to your cluster, you need to bump the version of your
+After applying the `KeptnAppContext` to your cluster, you need to increment the version of your
 application by modifying your deployment file and changing the
 value of the`app.kubernetes.io/version` field (or `keptn.sh/version` if you used the Keptn specific labels earlier).
 (Alternatively you could apply the context resource before or together with the workloads)

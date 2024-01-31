@@ -20,9 +20,9 @@ Common uses of this feature include:
 
 - adding commit id or references related to your GitOps and CI-CD tooling
 - referencing different stages and actors
-  such as who committed this change? 
-  In what repo?  
-  What is the associated ticket? 
+  such as who committed this change?
+  In what repo?
+  What is the associated ticket?
   Was it a hot fix?
 
 ## Before you start
@@ -104,13 +104,15 @@ contain the defined metadata as key-value attributes.
 
 ## Conclusion
 
-Congratulations! You've learned how to use `KeptnAppContext` to add
+Congratulations!
+You've learned how to use `KeptnAppContext` to add
 metadata to applications and their traces.
 This can be valuable for understanding the context of your traces and
 establishing connections between
 different versions and stages of your application.
 
-What's next? Explore more about [traces on Keptn](./otel.md).
+What's next?
+Explore more about [traces on Keptn](./otel.md).
 The paragraph on
 [linking traces between different application](./otel.md#advanced-tracing-configurations-in-keptn-linking-traces)
 also uses KeptnAppContext.

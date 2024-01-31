@@ -517,10 +517,10 @@ data:
 
 ### Example 6: Accessing KEPTN_CONTEXT environment variable in a Deno task
 
-For Task triggered as pre- and post- deployment of applications 
+For Task triggered as pre- and post- deployment of applications
 on k8s, Keptn populates an environment variable called `KEPTN_CONTEXT`.
 As all environment variables this can be accessed using language specific methods.
-An example in Deno would be the following: 
+An example in Deno would be the following:
 
 ```javascript
 let context = Deno.env.get("KEPTN_CONTEXT");

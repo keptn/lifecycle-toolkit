@@ -377,7 +377,7 @@ Lifcycle
 lifecyclekeptnsh
 linenums
 linkedin
-likedtrace
+linkedtrace
 livenessprobe
 loadtests
 LOCALBIN
@@ -622,6 +622,7 @@ tplvalues
 traceparent
 tracerfactory
 tracetest
+traceid
 trivy
 trivyignore
 trunc

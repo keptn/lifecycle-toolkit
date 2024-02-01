@@ -51,7 +51,7 @@ spec:
        Names must comply with the
        [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
        specification
-       and match the `name` given to the associated `KeptnApp` resource..
+       and match the `name` given to the associated `KeptnApp` resource.
   * **namespace** -- Namespace of this application.
        This must match the `namespace` given to
        the associated `KeptnAp` resource.

@@ -28,7 +28,8 @@ metadata:
 spec:
   metadata:
     <custom-attributes>
-    spanLinks: "<link>
+  spanLinks:
+  - "<list of links>"
   preDeploymentTasks:
   - <list of tasks>
   postDeploymentTasks:

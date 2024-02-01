@@ -159,7 +159,7 @@ is changed in the `v1beta1` API version:
   You do not increment this value to cause
   a new execution of tasks and evaluations;
   the only way to trigger a new execution is to increment
-  the `spec.version` field for the `KeptnApp` resource..
+  the `spec.version` field for the `KeptnApp` resource.
 - The pre/post-deployment tasks and evaluations are now defined in the
   [KeptnAppContext](appcontext.md)
   resource rather than in `KeptnApp`.

@@ -17,4 +17,4 @@ spec:
     spec:
       containers:
         - name: podtato-head-frontend
-          image: ghcr.io/podtato-head/podtato-server:v0.3.2 # the image tag has been updated to v0.3.1
+          image: ghcr.io/podtato-head/podtato-server:v0.3.1 # the image tag has been updated to v0.3.1

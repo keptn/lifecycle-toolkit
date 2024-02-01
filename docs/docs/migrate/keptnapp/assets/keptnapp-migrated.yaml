@@ -4,7 +4,6 @@ metadata:
   name: "some-keptn-app"
   namespace: "my-app-ns"
   labels:
-    my-custom-label: customValue
     app.kubernetes.io/managed-by: keptn # added annotation
 spec:
   version: "1.2.3"

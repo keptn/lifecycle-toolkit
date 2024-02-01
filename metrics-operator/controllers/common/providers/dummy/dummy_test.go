@@ -12,7 +12,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
-	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dummy"
 )
 
 func TestEvaluateQuery_HappyPath(t *testing.T) {

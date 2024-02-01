@@ -53,7 +53,7 @@ htmltest: docs-build
 		-v $(PWD)/docs/.htmltest.yml:/.htmltest.yml \
 		-v ${PWD}/site:/site \
 		-v ${PWD}/tmp/.htmltest:/tmp/.htmltest \
-		wjdp/htmltest:$(HTMLTEST_VERSION) -c /.htmltest.yml /site
+		wjdp/htmltest:$(HTMLTEST_VERSION) --log-level 0 -c /.htmltest.yml /site
 
 .PHONY: lint lint-fix
 lint: markdownlint

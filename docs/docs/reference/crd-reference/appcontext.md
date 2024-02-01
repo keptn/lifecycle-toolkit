@@ -38,7 +38,6 @@ spec:
   - <list of evaluations>
   postDeploymentEvaluations:
   - <list of evaluations>
-  ...
 ```
 
 ## Fields

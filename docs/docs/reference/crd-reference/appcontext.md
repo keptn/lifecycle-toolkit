@@ -54,7 +54,7 @@ spec:
        and match the `name` given to the associated `KeptnApp` resource.
   * **namespace** -- Namespace of this application.
        This must match the `namespace` given to
-       the associated `KeptnAp` resource.
+       the associated `KeptnApp` resource.
 * **spec**
   * **metadata** -- list of key-value pairs
        that are propagated to the application trace as attributes.

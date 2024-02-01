@@ -50,7 +50,8 @@ pre-deployment task.
 {% include "./assets/deployment-initial.yaml" %}
 ```
 
-Now, let's assume that the configuration of that [workload](https://kubernetes.io/docs/concepts/workloads/) needs to be changed.
+Now, let's assume that the configuration of that [workload](https://kubernetes.io/docs/concepts/workloads/)
+needs to be changed.
 In this example we assume that the image of that [workload](https://kubernetes.io/docs/concepts/workloads/)
 should be updated, but a configuration change is not limited to that.
 From here, you essentially have two options:
@@ -76,27 +77,11 @@ In this case, the deployment should be changed as follows:
 {% include "./assets/deployment-new-image-and-version.yaml" %}
 ```
 
-
-
-             OBSOLETE If you have defined the related `KeptnApp` resource yourself,
-             OBSOLETE this must also be updated to refer to the updated `KeptnWorkload`.
-             OBSOLETE This is a mandatory step, since the `KeptnWorkload` associated with
-             OBSOLETE this updated deployment is not able to progress otherwise.
-             OBSOLETE Therefore, make sure that the version of `podtato-head-frontend`
-             OBSOLETE is updated accordingly:
-             OBSOLETE 
-             OBSOLETE ```yaml
-             OBSOLETE {% include "./assets/app-updated-version.yaml" %}
-             OBSOLETE ```
-             OBSOLETE 
-             OBSOLETE Updating the `KeptnApp` also causes all pre-/post-tasks/evaluations
-             OBSOLETE of the `KeptnApp` to be executed again.
-             OBSOLETE In this example, this means that the tasks `wait-for-prometheus`,
-             OBSOLETE and `post-deployment-loadtests` will run again.
-             OBSOLETE 
-             OBSOLETE If you are using the [automatic app discovery](../guides/auto-app-discovery.md),
-             OBSOLETE you do not need to update the `KeptnApp` resource.
-             OBSOLETE Keptn will take care of that for you.
+Applying this causes the `KeptnApp` to be updated with a new
+version, and a new `KeptnAppVersion` to be created.
+Due to this, all checks defined in the `KeptnAppContext`,
+as well as those defined in the deployment's `keptn.sh/pre-deployment-tasks`
+label are executed again.
 
 After applying the updated manifests, you can monitor the status
 of the application and related [workloads](https://kubernetes.io/docs/concepts/workloads/) using the following commands:
@@ -105,9 +90,9 @@ of the application and related [workloads](https://kubernetes.io/docs/concepts/w
 $ kubectl get keptnworkloadversion -n podtato-kubectl
 
 NAMESPACE   NAME                                             APPNAME         WORKLOADNAME                         WORKLOADVERSION      PHASE
-podtato-kubectl   podtato-head-podtato-head-frontend-0.1.0   podtato-head    podtato-head-podtato-head-frontend   0.1.0                Completed
-podtato-kubectl   podtato-head-podtato-head-hat-0.1.1        podtato-head    podtato-head-podtato-head-hat        0.1.1                Completed
-podtato-kubectl   podtato-head-podtato-head-frontend-0.2.0   podtato-head    podtato-head-podtato-head-frontend   0.2.0                Completed
+podtato-kubectl   podtato-head-podtato-head-frontend-0.3.0   podtato-head    podtato-head-podtato-head-frontend   0.3.0                Completed
+podtato-kubectl   podtato-head-podtato-head-hat-0.3.0        podtato-head    podtato-head-podtato-head-hat        0.3.0                Completed
+podtato-kubectl   podtato-head-podtato-head-frontend-0.3.1   podtato-head    podtato-head-podtato-head-frontend   0.3.1                Completed
 ```
 
 As can be seen in the output of the command, the `KeptnWorkloadVersions` from the previous deployment
@@ -122,9 +107,9 @@ returning a newly created `KeptnAppVersion`.
 ```shell
 $ kubectl get keptnappversion -n podtato-kubectl
 
-NAMESPACE         NAME                          APPNAME        VERSION   PHASE
-podtato-kubectl   podtato-head-0.1.0-6bch3iak   podtato-head   0.1.0     Completed
-podtato-kubectl   podtato-head-0.1.0-hf52kauz   podtato-head   0.1.0     Completed
+NAMESPACE         NAME                               APPNAME        VERSION   PHASE
+podtato-kubectl   podtato-head-f13dcb00ea-6b86b273   podtato-head   0.1.0     Completed
+podtato-kubectl   podtato-head-1c40c739cf-d4735e3a   podtato-head   0.1.0     Completed
 ```
 
 ## Adding a new Workload to an Application
@@ -147,17 +132,6 @@ would look like this, with the required label being set:
 {% include "./assets/new-deployment.yaml" %}
 ```
 
-         OBSOLETE The `KeptnApp`, if defined by the user, should contain the
-         OBSOLETE reference to the newly added [workload](https://kubernetes.io/docs/concepts/workloads/).
-         OBSOLETE This is mandatory, as the [workload](https://kubernetes.io/docs/concepts/workloads/) itself is not able to
-         OBSOLETE progress if it is not part of a `KeptnApp`.
-         OBSOLETE For automatically discovered apps this is done
-         OBSOLETE automatically.
-         OBSOLETE 
-         OBSOLETE ```yaml
-         OBSOLETE {% include "./assets/app-with-new-workload.yaml" %}
-         OBSOLETE ```
-
 After applying the updated manifests, you can monitor the status
 of the application and related [workloads](https://kubernetes.io/docs/concepts/workloads/) using the following commands:
 
@@ -165,12 +139,13 @@ of the application and related [workloads](https://kubernetes.io/docs/concepts/w
 $ kubectl get keptnworkloadversion -n podtato-kubectl
 
 NAMESPACE   NAME                                             APPNAME         WORKLOADNAME                         WORKLOADVERSION      PHASE
-podtato-kubectl   podtato-head-podtato-head-frontend-0.1.0   podtato-head    podtato-head-podtato-head-frontend   0.1.0                Completed
-podtato-kubectl   podtato-head-podtato-head-hat-0.1.1        podtato-head    podtato-head-podtato-head-hat        0.1.1                Completed
-podtato-kubectl   podtato-head-podtato-head-left-leg-0.1.0   podtato-head    podtato-head-podtato-head-left-leg   0.1.0                Completed
+podtato-kubectl   podtato-head-podtato-head-frontend-0.3.0   podtato-head    podtato-head-podtato-head-frontend   0.3.0                Completed
+podtato-kubectl   podtato-head-podtato-head-frontend-0.3.1   podtato-head    podtato-head-podtato-head-frontend   0.3.1                Completed
+podtato-kubectl   podtato-head-podtato-head-hat-0.3.0        podtato-head    podtato-head-podtato-head-hat        0.3.0                Completed
+podtato-kubectl   podtato-head-podtato-head-left-leg-0.3.0   podtato-head    podtato-head-podtato-head-left-leg   0.3.0                Completed
 ```
 
 As can be seen in the output of the command, in addition
 to the previous `KeptnWorkloadVersions`, the newly created
-`KeptnWorkloadVersion`, `podtato-head-podtato-head-left-leg-0.1.0` has been added
+`KeptnWorkloadVersion`, `podtato-head-podtato-head-left-leg-0.3.0` has been added
 to the results.

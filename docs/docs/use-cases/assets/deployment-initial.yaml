@@ -20,12 +20,12 @@ spec:
       labels:
         app.kubernetes.io/name: podtato-head-frontend
         app.kubernetes.io/part-of: podtato-head
-        app.kubernetes.io/version: 0.3.1
+        app.kubernetes.io/version: 0.3.0
         keptn.sh/pre-deployment-tasks: pre-deployment-check
     spec:
       containers:
         - name: podtato-head-frontend
-          image: ghcr.io/podtato-head/entry:latest
+          image: ghcr.io/podtato-head/podtato-server:v0.3.0
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -42,11 +42,11 @@ spec:
       labels:
         app.kubernetes.io/name: podtato-head-hat
         app.kubernetes.io/part-of: podtato-head
-        app.kubernetes.io/version: 0.3.1
+        app.kubernetes.io/version: 0.3.0
     spec:
       containers:
         - name: podtato-head-hat
-          image: ghcr.io/podtato-head/hat:latest
+          image: ghcr.io/podtato-head/podtato-server:v0.3.0
 ---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
@@ -57,4 +57,14 @@ spec:
   function:
     inline:
       code: |
-        console.error("Success")
+        console.log("Success")
+---
+---
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnAppContext
+metadata:
+  name: podtato-head
+  namespace: podtato-kubectl
+spec:
+  preDeploymentTasks:
+    - pre-deployment-check

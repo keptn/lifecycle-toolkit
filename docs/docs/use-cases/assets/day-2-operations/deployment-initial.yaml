@@ -4,7 +4,6 @@ metadata:
   name: podtato-kubectl
   annotations:
     keptn.sh/lifecycle-toolkit: "enabled"
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -58,7 +57,6 @@ spec:
     inline:
       code: |
         console.log("Success")
----
 ---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnAppContext

@@ -17,7 +17,7 @@ To create a provider for the dummy endpoint, follow these steps:
   You can follow other existing implementations,
  such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
  as an example.
-  Ensure that you implement the EvaluateQuery function to fetch the metrics accurately.
+  Ensure that you implement the `EvaluateQuery` function to fetch the metrics accurately.
   In the implementation, make a request to the dummy endpoint and return the response.
 
     ```go

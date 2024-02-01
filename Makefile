@@ -22,6 +22,10 @@ $(LOCALBIN):
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
 
+#########
+# KUTTL #
+#########
+
 .PHONY: integration-test #these tests should run on a real cluster!
 integration-test:	# to run a single test by name use --test eg. --test=expose-keptn-metric
 	kubectl kuttl test --start-kind=false ./test/kuttl/integration/ --config=kuttl-test.yaml
@@ -51,6 +55,26 @@ integration-test-allowed-namespaces:	# to run a single test by name use --test e
 .PHONY: integration-test-allowed-namespaces-local #these tests should run on a real cluster!
 integration-test-allowed-namespaces-local: install-prometheus
 	kubectl kuttl test --start-kind=false ./test/kuttl/allowed-namespaces/ --config=kuttl-test-local.yaml
+
+############
+# CHAINSAW #
+############
+
+.PHONY: chainsaw-integration-test-scheduling-gates #these tests should run on a real cluster!
+chainsaw-integration-test-scheduling-gates:
+	chainsaw test --test-dir ./test/chainsaw/scheduling-gates/
+
+.PHONY: chainsaw-integration-test-scheduling-gates-local #these tests should run on a real cluster!
+chainsaw-integration-test-scheduling-gates-local: install-prometheus
+	chainsaw test --test-dir ./test/chainsaw/scheduling-gates/ --config ./.chainsaw-local.yaml
+
+.PHONY: chainsaw-integration-test-allowed-namespaces #these tests should run on a real cluster!
+chainsaw-integration-test-allowed-namespaces:
+	chainsaw test --test-dir ./test/chainsaw/allowed-namespaces/
+
+.PHONY: chainsaw-integration-test-allowed-namespaces-local #these tests should run on a real cluster!
+chainsaw-integration-test-allowed-namespaces-local: install-prometheus
+	chainsaw test --test-dir ./test/chainsaw/allowed-namespaces/ --config ./.chainsaw-local.yaml
 
 .PHONY: load-test
 load-test:

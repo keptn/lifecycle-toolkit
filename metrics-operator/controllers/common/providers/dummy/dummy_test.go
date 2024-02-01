@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-logr/logr"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	ctrl "sigs.k8s.io/controller-runtime"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 )
@@ -24,7 +24,7 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 
 	// Create a new instance of KeptnDummyProvider
 	dummyProvider := &KeptnDummyProvider{
-		Log:        logr.Discard(),
+		Log:        ctrl.Log.WithName("testytest"),
 		HttpClient: http.Client{},
 	}
 
@@ -57,7 +57,7 @@ func TestEvaluateQuery_Error(t *testing.T) {
 
 	// Create a new instance of KeptnDummyProvider
 	dummyProvider := &KeptnDummyProvider{
-		Log:        logr.Discard(),
+		Log:        ctrl.Log.WithName("testytest"),
 		HttpClient: http.Client{},
 	}
 
@@ -84,7 +84,7 @@ func TestEvaluateQuery_Error(t *testing.T) {
 func TestFetchAnalysisValue_HappyPath(t *testing.T) {
 	// Create a new instance of KeptnDummyProvider
 	dummyProvider := &KeptnDummyProvider{
-		Log:        logr.Discard(),
+		Log:        ctrl.Log.WithName("testytest"),
 		HttpClient: http.Client{},
 	}
 
@@ -112,7 +112,7 @@ func TestFetchAnalysisValue_HappyPath(t *testing.T) {
 func TestFetchAnalysisValue_Error(t *testing.T) {
 	// Create a new instance of KeptnDummyProvider
 	dummyProvider := &KeptnDummyProvider{
-		Log:        logr.Discard(),
+		Log:        ctrl.Log.WithName("testytest"),
 		HttpClient: http.Client{},
 	}
 

@@ -137,7 +137,7 @@ spec:
 ## Differences between versions
 
 The synopsis of the `KeptnApp` resource
-is changed in `v1beta1` library:
+is changed in the `v1beta1` API version:
 
 - The `apiVersion` field now references the `v1beta1` version
   of the `lifecycle.keptn.sh` API.

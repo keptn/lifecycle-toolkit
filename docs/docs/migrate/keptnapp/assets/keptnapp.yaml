@@ -3,8 +3,6 @@ kind: KeptnApp
 metadata:
   name: "some-keptn-app"
   namespace: "my-app-ns"
-  labels:
-    my-custom-label: customValue
 spec:
   version: "1.2.3"
   workloads:

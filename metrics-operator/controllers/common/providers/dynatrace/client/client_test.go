@@ -154,3 +154,39 @@ func TestAPIClientRequestError(t *testing.T) {
 	require.Empty(t, resp)
 	require.Equal(t, http.StatusInternalServerError, code)
 }
+
+func TestAPIClientAuthResponse(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if request.URL.Path == "/auth" {
+			_, _ = writer.Write([]byte(`{"access_token": "my-token"}`))
+			return
+		}
+		writer.WriteHeader(http.StatusInternalServerError)
+	}))
+
+	defer server.Close()
+
+	config, err := NewAPIConfig(
+		server.URL,
+		mockSecret,
+		WithAuthURL(server.URL+"/auth"),
+	)
+
+	require.Nil(t, err)
+	require.NotNil(t, config)
+
+	apiClient := NewAPIClient(
+		*config,
+		WithHTTPClient(http.Client{}),
+		WithLogger(logr.New(klog.NewKlogr().GetSink())),
+	)
+
+	require.NotNil(t, apiClient)
+
+	int, err := apiClient.auth(context.TODO())
+
+	require.Equal(t, int, http.StatusOK)
+	require.Equal(t, err, nil)
+
+	require.Equal(t, "my-token", apiClient.config.oAuthCredentials.accessToken)
+}

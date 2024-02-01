@@ -8,11 +8,10 @@ import (
 	"testing"
 	"time"
 
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
-
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 )
 
 func TestEvaluateQuery_HappyPath(t *testing.T) {

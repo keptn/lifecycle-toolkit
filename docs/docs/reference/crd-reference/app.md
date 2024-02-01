@@ -169,7 +169,7 @@ for earlier versions are converted automatically to the new structure.
 You must manually migrate older `KeptnApp` resources
 that were created manually
 or that were manually edited
-to add `preDeployment` and `postDeployment tasks and evaluations.
+to add pre/post-deployment tasks and evaluations.
 For more information please refer
 to the [migration section](../../migrate/keptnapp/index.md).
 

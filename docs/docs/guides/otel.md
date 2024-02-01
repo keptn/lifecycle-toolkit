@@ -53,7 +53,7 @@ you must have the following on your cluster:
     to watch resources of your Keptn namespace
     (default is `keptn-system`).
     See
-    [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/)).
+    [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/).
 
 - To install Prometheus into the `monitoring` namespace
   using the example configuration included with Keptn,
@@ -84,7 +84,7 @@ kubectl apply -f config/prometheus/
 
   - Follow the instructions in the Grafana
     [README](https://github.com/keptn/lifecycle-toolkit/blob/main/dashboards/grafana/README.md)
-    file to configure the Grafana dashboard(s) for Keptn..
+    file to configure the Grafana dashboard(s) for Keptn.
 
     Metrics can also be retrieved without a dashboard.
     See
@@ -160,3 +160,35 @@ kubectl port-forward deployment/metrics-operator 9999 -n keptn-system
 ```
 
 You can access the metrics from your browser at: `http://localhost:9999`
+
+## Advanced tracing configurations in Keptn: Linking traces
+
+In Keptn you can connect multiple traces, for instance to connect deployments
+of the same application through different stages.
+To create connections between the traces of versions of your application, you can enrich the
+`KeptnAppContext` resource with
+[OpenTelemetry span links](https://opentelemetry.io/docs/concepts/signals/traces/#span-links).
+You can retrieve the span link from the JSON representation of the trace in Jaeger, where
+it has the following structure:
+
+```yaml
+00-<trace-id>-<span-id>-01
+```
+
+Use this value to populate the `spanLinks` field
+of your `KeptnAppContext` resource
+to connect traces of different versions of the application.
+
+```yaml
+{% include "./assets/otel/keptn-app-context-span.yaml" %}
+```
+
+> **Note**
+> Please be aware that the span link is just an example, and you need to retrieve the traceID and spanID
+> of the application trace stored in the `KeptnAppVersion` resource you want to link.
+
+To store this new information in the traces, you need to increment the version
+of your application and apply the`KeptnAppContext`.
+Keptn will re-deploy your application and Jaeger should show a link to the previous trace in the references section.
+
+![linked trace](./assets/linkedtrace.png)

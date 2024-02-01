@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/stretchr/testify/require"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 )
@@ -22,7 +23,7 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 	defer svr.Close()
 
 	// Create a new instance of KeptnDummyProvider
-	dummyProvider := &dummy.KeptnDummyProvider{
+	dummyProvider := &KeptnDummyProvider{
 		Log:        logr.Discard(),
 		HttpClient: http.Client{},
 	}
@@ -55,7 +56,7 @@ func TestEvaluateQuery_Error(t *testing.T) {
 	defer svr.Close()
 
 	// Create a new instance of KeptnDummyProvider
-	dummyProvider := &dummy.KeptnDummyProvider{
+	dummyProvider := &KeptnDummyProvider{
 		Log:        logr.Discard(),
 		HttpClient: http.Client{},
 	}
@@ -82,7 +83,7 @@ func TestEvaluateQuery_Error(t *testing.T) {
 
 func TestFetchAnalysisValue_HappyPath(t *testing.T) {
 	// Create a new instance of KeptnDummyProvider
-	dummyProvider := &dummy.KeptnDummyProvider{
+	dummyProvider := &KeptnDummyProvider{
 		Log:        logr.Discard(),
 		HttpClient: http.Client{},
 	}
@@ -90,10 +91,13 @@ func TestFetchAnalysisValue_HappyPath(t *testing.T) {
 	// Create a sample query and analysis
 	query := "random"
 	analysis := metricsapi.Analysis{
-		From: time.Now().Add(-time.Minute),
-		To:   time.Now(),
+		Spec: metricsapi.AnalysisSpec{
+			Timeframe: metricsapi.Timeframe{
+				From: metav1.Time{Time: time.Now()},
+				To:   metav1.Time{Time: time.Now()},
+			},
+		},
 	}
-
 	// Create a sample provider
 	provider := &metricsapi.KeptnMetricsProvider{}
 
@@ -107,18 +111,22 @@ func TestFetchAnalysisValue_HappyPath(t *testing.T) {
 
 func TestFetchAnalysisValue_Error(t *testing.T) {
 	// Create a new instance of KeptnDummyProvider
-	dummyProvider := &dummy.KeptnDummyProvider{
+	dummyProvider := &KeptnDummyProvider{
 		Log:        logr.Discard(),
 		HttpClient: http.Client{},
 	}
 
 	// Create a sample query and analysis
 	query := "random"
-	analysis := metricsapi.Analysis{
-		From: time.Now().Add(-time.Minute),
-		To:   time.Now(),
-	}
 
+	analysis := metricsapi.Analysis{
+		Spec: metricsapi.AnalysisSpec{
+			Timeframe: metricsapi.Timeframe{
+				From: metav1.Time{Time: time.Now()},
+				To:   metav1.Time{Time: time.Now()},
+			},
+		},
+	}
 	// Create a sample provider that will return an error
 	provider := &metricsapi.KeptnMetricsProvider{}
 

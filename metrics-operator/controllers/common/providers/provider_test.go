@@ -6,6 +6,7 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/datadog"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dummy"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus"
 	"github.com/stretchr/testify/require"
@@ -35,6 +36,11 @@ func TestFactory(t *testing.T) {
 		{
 			providerType: DataDogProviderType,
 			provider:     &datadog.KeptnDataDogProvider{},
+			err:          false,
+		},
+		{
+			providerType: KeptnDummyProviderType,
+			provider:     &dummy.KeptnDummyProvider{},
 			err:          false,
 		},
 		{

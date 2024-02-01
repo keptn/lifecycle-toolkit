@@ -158,7 +158,7 @@ is changed in `v1beta1` library:
 - The `metadata.version` field is now completely managed by Keptn.
   You do not increment this value to cause
   a new execution of tasks and evaluations;
-  the only way to triger a new execution is to increment
+  the only way to trigger a new execution is to increment
   the `spec.version` field for the `KeptnApp` resource..
 - The pre/post-deployment tasks and evaluations are now defined in the
   [KeptnAppContext](appcontext.md)

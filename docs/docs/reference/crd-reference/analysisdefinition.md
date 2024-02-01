@@ -135,7 +135,9 @@ Each of these objectives must specify:
 
 ## Example
 
-{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysisdefinition.yaml" >}}
+```yaml
+{% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/metrics-operator/config/samples/metrics_v1beta1_analysisdefinition.yaml" %}
+```
 
 For a full example of how to implement the Keptn Analysis feature, see the
 [Analysis](../../guides/slo.md)

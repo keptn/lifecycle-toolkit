@@ -14,7 +14,7 @@ like using Keptn to manage workloads that are outside of the k8s cluster.
 ## Synopsis
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTask
 metadata:
   name: <name-of-this-run>
@@ -27,6 +27,8 @@ spec:
     taskType: ""
     workloadName: "my-workload"
     workloadVersion: "1.0.0"
+    metadata:
+      commit-id: "1234"
   parameters: <parameters to pass to job>
   secureParameters: <secure parameters to pass to job>
   checkType: ""
@@ -59,7 +61,11 @@ spec:
       for which the `KeptnTask` is being executed.
     * **appVersion** (required) -- Version of the `KeptnApp` resource
       for which the `KeptnTask` is being executed.
-
+    * **metadata** -- Additional key-value pairs with contextual information for the `KeptnTask`.
+      Keptn populates this field based on the metadata field of
+      the `KeptnWorkloadVersion` and `KeptnAppVersion` resources.
+      See [Context metadata](../../guides/metadata.md) for information on how to set
+      user defined values for those fields.
     * **objectType** (required) -- Indicates whether this `KeptnTask`
       is being executed for a `KeptnApp` or a `KeptnWorkload` resource.
       When populating this resource manually
@@ -67,7 +73,6 @@ spec:
       set this value to `""`:
       Keptn populates this field based on annotations
       to the `KeptnWorkload` and `KeptnApp` resources.
-
     * **taskType** (required) -- Indicates whether this `KeptnTask`
       is part of the pre- or post-deployment phase.
       When populating this resource manually
@@ -75,7 +80,6 @@ spec:
       set this value to `""`:
       Keptn populates this field based on annotations
       to the `KeptnWorkload` and `KeptnApp` resources.
-
     * **workloadName** (required) -- Name of the `KeptnWorkload`
       for which the `KeptnTask` is being executed.
     * **workloadVersion** (required) -- Version of the `KeptnWorkload`

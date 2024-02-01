@@ -55,7 +55,7 @@ spec:
 * **spec**
   * **custom-attributes** -- list of key-value pairs
        that are propagated to the application trace as attributes.
-       For example, the following lines adds the `commit-id`
+       For example, the following lines add the `commit-id`
        and `author` information to the `KEPTN_CONTEXT`
        of the workload or `KeptnApp` where it is specified:
 

@@ -45,12 +45,12 @@ spec:
 
 * **metadata**
   * **name** -- Unique name of this run of the task.
-    This name must be modified each time you run this `KeptnTask`,
-    so a common practice is to add a number to the end of the string
-    so you can increment the number for each run.
-    Names must comply with the
-    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-    specification.
+  This name must be modified each time you run this `KeptnTask`,
+  so a common practice is to add a number to the end of the string
+  so you can increment the number for each run.
+  Names must comply with the
+  [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+  specification.
 * **spec** - Defines the specification of this `KeptnTask` resource
   * **taskDefinition** (required) -- Name of the corresponding `KeptnTaskDefinition` resource.
     This `KeptnTaskDefinition` can be located in the same namespace
@@ -62,7 +62,7 @@ spec:
     * **appVersion** (required) -- Version of the `KeptnApp` resource
       for which the `KeptnTask` is being executed.
     * **metadata** -- Additional key-value pairs with contextual information for the `KeptnTask`.
-      Keptn populates this field based on the metadata field of
+      Keptn populates this field based on the `spec.metadata` field of
       the `KeptnWorkloadVersion` and `KeptnAppVersion` resources.
       See [Context metadata](../../guides/metadata.md) for information on how to set
       user defined values for those fields.

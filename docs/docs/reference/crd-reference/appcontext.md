@@ -61,9 +61,9 @@ spec:
 
        ```yaml
        spec:
-          metadata:
-             commit-id: "1234"
-             author: "myUser"
+         metadata:
+           commit-id: "1234"
+           author: "myUser"
        ```
 
   * **spanLinks** -- OpenTelemetry span link

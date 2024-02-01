@@ -2,14 +2,16 @@
 
 To create a provider for the dummy endpoint, follow these steps:
 
-1. **Define the Provider Type:** In the `metrics-operator/controllers/common/providers/common.go` file,
+1. Fork [this repo](https://github.com/keptn/lifecycle-toolkit)
+
+2. **Define the Provider Type:** In the `metrics-operator/controllers/common/providers/common.go` file,
  define the constant `KeptnDummyProviderType` with the value `"dummy"`.
 
     ```go
     const KeptnDummyProviderType = "dummy"
     ```
 
-2. **Implement the Provider:** Create your own new folder inside
+3. **Implement the Provider:** Create your own new folder inside
 [this folder](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers)
  matching the new service name: dummy and a new Go package for the dummy provider.
   This package should contain
@@ -95,7 +97,7 @@ To create a provider for the dummy endpoint, follow these steps:
     }
     ```
 
-3. **Instantiate the Provider:** In the `providers.NewProvider` function
+4. **Instantiate the Provider:** In the `providers.NewProvider` function
  in the `metrics-operator/controllers/common/providers/provider.go` file,
  add a case for the `KeptnDummyProviderType`.
   Instantiate the dummy provider struct and return it.
@@ -116,8 +118,8 @@ To create a provider for the dummy endpoint, follow these steps:
     }
     ```
 
-4. **Add Test Cases:** Write test cases to validate your implementation and ensure it works correctly.
+5. **Add Test Cases:** Write test cases to validate your implementation and ensure it works correctly.
  This step is crucial for maintaining code quality and reliability.
 
-5. **Test:** Thoroughly test your implementation to verify that it functions as expected.
+6. **Test:** Thoroughly test your implementation to verify that it functions as expected.
  Make sure to cover various scenarios and edge cases to ensure robustness.

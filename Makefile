@@ -164,23 +164,28 @@ yamllint:
 	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .
 
 ##Run lint for the subfiles
+.PHONY: install-golangci-lint
+install-golangci-lint:
+	@go install -v github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
 .PHONY: metrics-operator-lint
-metrics-operator-lint:
+metrics-operator-lint: install-golangci-lint
 	$(MAKE) -C metrics-operator lint
 
 .PHONY: certmanager-lint
-certmanager-lint:
+certmanager-lint: install-golangci-lint
 	$(MAKE) -C keptn-cert-manager lint
 
 .PHONY: operator-lint
-operator-lint:
+operator-lint: install-golangci-lint
 	$(MAKE) -C lifecycle-operator lint
 
 .PHONY: scheduler-lint
-scheduler-lint:
+scheduler-lint: install-golangci-lint
 	$(MAKE) -C scheduler lint
 
 .PHONY: lint
-lint: 
-	go install -v github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-	metrics-operator-lint certmanager-lint operator-lint scheduler-lint
+lint: metrics-operator-lint
+lint: certmanager-lint
+lint: operator-lint
+lint: scheduler-lint

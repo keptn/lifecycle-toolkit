@@ -39,7 +39,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `Analysis` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation on [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[AnalysisSpec](#analysisspec)_ |  || ✓ |
 | `status` _[AnalysisStatus](#analysisstatus)_ |  || ✓ |
 
@@ -57,7 +57,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `AnalysisDefinition` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation on [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[AnalysisDefinitionSpec](#analysisdefinitionspec)_ |  || ✓ |
 | `status` _string_ | unused field || ✓ |
 
@@ -168,7 +168,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `AnalysisValueTemplate` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation on [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[AnalysisValueTemplateSpec](#analysisvaluetemplatespec)_ | Spec contains the specification for the AnalysisValueTemplate || ✓ |
 | `status` _string_ | unused field || ✓ |
 
@@ -234,7 +234,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `KeptnMetric` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation on [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnMetricSpec](#keptnmetricspec)_ |  || ✓ |
 | `status` _[KeptnMetricStatus](#keptnmetricstatus)_ |  || ✓ |
 
@@ -303,7 +303,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1alpha3` | | |
 | `kind` _string_ | `KeptnMetricsProvider` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation on [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnMetricsProviderSpec](#keptnmetricsproviderspec)_ |  || ✓ |
 | `status` _string_ | unused field || ✓ |
 

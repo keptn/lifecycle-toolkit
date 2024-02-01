@@ -197,7 +197,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnApp` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnAppSpec](#keptnappspec)_ | Spec describes the desired state of the KeptnApp. || ✓ |
 | `status` _[KeptnAppStatus](#keptnappstatus)_ | Status describes the current state of the KeptnApp. || ✓ |
 
@@ -215,7 +215,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnAppContext` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || x |
 | `spec` _[KeptnAppContextSpec](#keptnappcontextspec)_ |  || x |
 | `status` _[KeptnAppContextStatus](#keptnappcontextstatus)_ |  || x |
 
@@ -232,7 +232,7 @@ KeptnAppContextList contains a list of KeptnAppContext
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnAppContextList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || x |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || x |
 | `items` _[KeptnAppContext](#keptnappcontext) array_ |  || x |
 
 
@@ -252,7 +252,7 @@ _Appears in:_
 | `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || x |
 | `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed during the pre-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || x |
 | `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed during the post-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || x |
-| `metadata` _object (keys:string, values:string)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _object (keys:string, values:string)_ | Metadata contains additional key-value pairs for contextual information. || ✓ |
 | `spanLinks` _string array_ | SpanLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing. For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links || ✓ |
 
 
@@ -283,7 +283,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnAppCreationRequest` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnAppCreationRequestSpec](#keptnappcreationrequestspec)_ | Spec describes the desired state of the KeptnAppCreationRequest. || ✓ |
 | `status` _string_ | Status describes the current state of the KeptnAppCreationRequest. || ✓ |
 
@@ -300,7 +300,7 @@ KeptnAppCreationRequestList contains a list of KeptnAppCreationRequest
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnAppCreationRequestList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnAppCreationRequest](#keptnappcreationrequest) array_ |  || x |
 
 
@@ -330,7 +330,7 @@ KeptnAppList contains a list of KeptnApp
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnAppList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnApp](#keptnapp) array_ |  || x |
 
 
@@ -378,7 +378,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnAppVersion` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnAppVersionSpec](#keptnappversionspec)_ | Spec describes the desired state of the KeptnAppVersion. || ✓ |
 | `status` _[KeptnAppVersionStatus](#keptnappversionstatus)_ | Status describes the current state of the KeptnAppVersion. || ✓ |
 
@@ -395,7 +395,7 @@ KeptnAppVersionList contains a list of KeptnAppVersion
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnAppVersionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnAppVersion](#keptnappversion) array_ |  || x |
 
 
@@ -414,7 +414,7 @@ _Appears in:_
 | `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || x |
 | `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed during the pre-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || x |
 | `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed during the post-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || x |
-| `metadata` _object (keys:string, values:string)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _object (keys:string, values:string)_ | Metadata contains additional key-value pairs for contextual information. || ✓ |
 | `spanLinks` _string array_ | SpanLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing. For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links || ✓ |
 | `version` _string_ | Version defines the version of the application. For automatically created KeptnApps, the version is a function of all KeptnWorkloads that are part of the KeptnApp. || x |
 | `revision` _integer_ | Revision can be modified to trigger another deployment of a KeptnApp of the same version. This can be used for restarting a KeptnApp which failed to deploy, e.g. due to a failed preDeploymentEvaluation/preDeploymentTask. |1| ✓ |
@@ -465,7 +465,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnEvaluation` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnEvaluationSpec](#keptnevaluationspec)_ | Spec describes the desired state of the KeptnEvaluation. || ✓ |
 | `status` _[KeptnEvaluationStatus](#keptnevaluationstatus)_ | Status describes the current state of the KeptnEvaluation. || ✓ |
 
@@ -483,7 +483,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnEvaluationDefinition` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnEvaluationDefinitionSpec](#keptnevaluationdefinitionspec)_ | Spec describes the desired state of the KeptnEvaluationDefinition. || ✓ |
 | `status` _string_ | unused field || ✓ |
 
@@ -500,7 +500,7 @@ KeptnEvaluationDefinitionList contains a list of KeptnEvaluationDefinition
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnEvaluationDefinitionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnEvaluationDefinition](#keptnevaluationdefinition) array_ |  || x |
 
 
@@ -530,7 +530,7 @@ KeptnEvaluationList contains a list of KeptnEvaluation
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnEvaluationList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnEvaluation](#keptnevaluation) array_ |  || x |
 
 
@@ -602,7 +602,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnTask` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnTaskSpec](#keptntaskspec)_ | Spec describes the desired state of the KeptnTask. || ✓ |
 | `status` _[KeptnTaskStatus](#keptntaskstatus)_ | Status describes the current state of the KeptnTask. || ✓ |
 
@@ -620,7 +620,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnTaskDefinition` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnTaskDefinitionSpec](#keptntaskdefinitionspec)_ | Spec describes the desired state of the KeptnTaskDefinition. || ✓ |
 | `status` _[KeptnTaskDefinitionStatus](#keptntaskdefinitionstatus)_ | Status describes the current state of the KeptnTaskDefinition. || ✓ |
 
@@ -637,7 +637,7 @@ KeptnTaskDefinitionList contains a list of KeptnTaskDefinition
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnTaskDefinitionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnTaskDefinition](#keptntaskdefinition) array_ |  || x |
 
 
@@ -690,7 +690,7 @@ KeptnTaskList contains a list of KeptnTask
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnTaskList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnTask](#keptntask) array_ |  || x |
 
 
@@ -746,7 +746,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnWorkload` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnWorkloadSpec](#keptnworkloadspec)_ | Spec describes the desired state of the KeptnWorkload. || ✓ |
 | `status` _[KeptnWorkloadStatus](#keptnworkloadstatus)_ | Status describes the current state of the KeptnWorkload. || ✓ |
 
@@ -763,7 +763,7 @@ KeptnWorkloadList contains a list of KeptnWorkload
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnWorkloadList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnWorkload](#keptnworkload) array_ |  || x |
 
 
@@ -803,7 +803,7 @@ _Appears in:_
 | `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed during the pre-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
 | `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed during the post-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
 | `resourceReference` _[ResourceReference](#resourcereference)_ | ResourceReference is a reference to the Kubernetes resource (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing. || x |
-| `metadata` _object (keys:string, values:string)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _object (keys:string, values:string)_ | Metadata contains additional key-value pairs for contextual information. || ✓ |
 
 
 #### KeptnWorkloadStatus
@@ -833,7 +833,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnWorkloadVersion` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnWorkloadVersionSpec](#keptnworkloadversionspec)_ | Spec describes the desired state of the KeptnWorkloadVersion. || ✓ |
 | `status` _[KeptnWorkloadVersionStatus](#keptnworkloadversionstatus)_ | Status describes the current state of the KeptnWorkloadVersion. || ✓ |
 
@@ -850,7 +850,7 @@ KeptnWorkloadVersionList contains a list of KeptnWorkloadVersion
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `lifecycle.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnWorkloadVersionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnWorkloadVersion](#keptnworkloadversion) array_ |  || x |
 
 
@@ -872,7 +872,7 @@ _Appears in:_
 | `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed during the pre-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
 | `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed during the post-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
 | `resourceReference` _[ResourceReference](#resourcereference)_ | ResourceReference is a reference to the Kubernetes resource (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing. || x |
-| `metadata` _object (keys:string, values:string)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _object (keys:string, values:string)_ | Metadata contains additional key-value pairs for contextual information. || ✓ |
 | `workloadName` _string_ | WorkloadName is the name of the KeptnWorkload. || x |
 | `previousVersion` _string_ | PreviousVersion is the version of the KeptnWorkload that has been deployed prior to this version. || ✓ |
 | `traceId` _object (keys:string, values:string)_ | TraceId contains the OpenTelemetry trace ID. || ✓ |
@@ -1004,6 +1004,7 @@ _Appears in:_
 | `workloadVersion` _string_ | WorkloadVersion the version of the KeptnWorkload the KeptnTask is being executed for. || ✓ |
 | `taskType` _string_ | TaskType indicates whether the KeptnTask is part of the pre- or postDeployment phase. || ✓ |
 | `objectType` _string_ | ObjectType indicates whether the KeptnTask is being executed for a KeptnApp or KeptnWorkload. || ✓ |
+| `metadata` _object (keys:string, values:string)_ | Metadata contains additional key-value pairs for contextual information. || ✓ |
 
 
 #### TaskParameters

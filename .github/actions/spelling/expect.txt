@@ -75,6 +75,7 @@ carryforward
 certificatehandler
 certmanager
 certwebhook
+chainsaw
 Chans
 Checkmarx
 clientgoscheme
@@ -370,6 +371,7 @@ kustomizeconfig
 kuttl
 kwi
 kwv
+kyverno
 lastword
 Lato
 LFC
@@ -377,6 +379,7 @@ Lifcycle
 lifecyclekeptnsh
 linenums
 linkedin
+linkedtrace
 livenessprobe
 loadtests
 LOCALBIN
@@ -562,6 +565,7 @@ slo
 softprops
 sonarcloud
 spanhandler
+spanid
 spanitem
 spdx
 spf
@@ -620,6 +624,7 @@ tplvalues
 traceparent
 tracerfactory
 tracetest
+traceid
 trivy
 trivyignore
 trunc

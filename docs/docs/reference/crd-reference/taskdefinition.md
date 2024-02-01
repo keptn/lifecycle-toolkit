@@ -149,7 +149,7 @@ spec:
   * **container** -- Container definition.
     * **name** -- Name of the container that will run,
       which is not the same as the `metadata.name` field
-      that is used in the `KeptnApp` resource.
+      that is used in the `KeptnTaskDefinition` resource.
     * **image** -- name of the image you defined according to
       [image reference](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#image)
       and
@@ -270,8 +270,9 @@ spec:
       possibly with different parameters
       that are set in the calling `KeptnTaskDefinition` resource.
 
-      You must annotate the `KeptnApp` resource to run the
-      calling `KeptnTaskDefinition` resource.
+      To be able to run the pre/post-deployment task, you must create
+      the `KeptnAppContext` resource and link the `KeptnTaskDefinition`
+      in the pre/post-deployment section of `KeptnAppContext`.
 
       The `KeptnTaskDefinition` called with `functionref`
       is the `parent task` whose runner is used for the execution
@@ -512,6 +513,17 @@ data:
         Deno.exit(1);
     }
     console.log(targetDate);
+```
+
+### Example 6: Accessing KEPTN_CONTEXT environment variable in a Deno task
+
+For Tasks triggered as pre- and post- deployment of applications
+on Kubernetes, Keptn populates an environment variable called `KEPTN_CONTEXT`.
+As all environment variables, this can be accessed using language specific methods.
+An example in Deno would be the following:
+
+```javascript
+let context = Deno.env.get("KEPTN_CONTEXT");
 ```
 
 ## Examples for a python-runtime runner

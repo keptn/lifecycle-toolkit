@@ -379,6 +379,7 @@ Lifcycle
 lifecyclekeptnsh
 linenums
 linkedin
+linkedtrace
 livenessprobe
 loadtests
 LOCALBIN
@@ -564,6 +565,7 @@ slo
 softprops
 sonarcloud
 spanhandler
+spanid
 spanitem
 spdx
 spf
@@ -622,6 +624,7 @@ tplvalues
 traceparent
 tracerfactory
 tracetest
+traceid
 trivy
 trivyignore
 trunc

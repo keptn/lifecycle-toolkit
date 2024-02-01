@@ -51,11 +51,15 @@ spec:
   Names must comply with the
   [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
   specification.
+  
 * **spec** - Defines the specification of this `KeptnTask` resource
+
   * **taskDefinition** (required) -- Name of the corresponding `KeptnTaskDefinition` resource.
     This `KeptnTaskDefinition` can be located in the same namespace
     or in the Keptn installation namespace.
+
   * **context** (required) -- Contextual information about the task execution
+
     * **appName** (required) -- Name of the
         [KeptnApp](app.md) resource
         for which the `KeptnTask` is being executed.
@@ -84,6 +88,7 @@ spec:
       for which the `KeptnTask` is being executed.
     * **workloadVersion** (required) -- Version of the `KeptnWorkload`
       for which the `KeptnTask` is being executed.
+    
   * **parameters** -- Parameters that are passed to the job
     that executes the `KeptnTask`.
   * **secureParameters** -- Secure parameters that are passed

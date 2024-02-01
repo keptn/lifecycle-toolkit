@@ -19,6 +19,7 @@ be added to applications, workloads and tasks.
 
 Context metadata can be added to your application
 in either of the following ways:
+
 - Use the `keptn.sh/metadata` annotation in any of 
 your workloads you plan to deploy with Keptn 
 - Apply a `KeptnAppContext` custom resource

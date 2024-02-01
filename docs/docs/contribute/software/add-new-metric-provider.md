@@ -10,7 +10,7 @@ To create a provider for the dummy endpoint, follow these steps:
     const KeptnDummyProviderType = "dummy"
     ```
 
-2. **Implement the Provider:** Create your own new folder inside [this folder](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers) matching the new service name: dummy and a new Go package for the dummy provider. This package should contain a struct that implements the `KeptnSLIProvider` interface. In the implementation, make a request to the dummy endpoint and return the response.
+2. **Implement the Provider:** Create your own new folder inside [this folder](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers) matching the new service name: dummy and a new Go package for the dummy provider. This package should contain a struct that implements the `KeptnSLIProvider` interface. You can follow other existing implementations, such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go), as an example. Ensure that you implement the EvaluateQuery function to fetch the metrics accurately. In the implementation, make a request to the dummy endpoint and return the response.
 
     ```go
     // Inside the dummy package
@@ -103,3 +103,6 @@ To create a provider for the dummy endpoint, follow these steps:
         }
     }
     ```
+4. **Add Test Cases:** Write test cases to validate your implementation and ensure it works correctly. This step is crucial for maintaining code quality and reliability.
+
+5. **Test:** Thoroughly test your implementation to verify that it functions as expected. Make sure to cover various scenarios and edge cases to ensure robustness.

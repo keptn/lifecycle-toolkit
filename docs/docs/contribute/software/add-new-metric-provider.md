@@ -1,16 +1,24 @@
-
-Copy code
-## Adding a New Metrics Provider for Dummy Endpoint
+# Adding a New Metrics Provider for Dummy Endpoint
 
 To create a provider for the dummy endpoint, follow these steps:
 
-1. **Define the Provider Type:** In the `metrics-operator/controllers/common/providers/common.go` file, define the constant `KeptnDummyProviderType` with the value `"dummy"`.
+1. **Define the Provider Type:** In the `metrics-operator/controllers/common/providers/common.go` file,
+ define the constant `KeptnDummyProviderType` with the value `"dummy"`.
 
     ```go
     const KeptnDummyProviderType = "dummy"
     ```
 
-2. **Implement the Provider:** Create your own new folder inside [this folder](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers) matching the new service name: dummy and a new Go package for the dummy provider. This package should contain a struct that implements the `KeptnSLIProvider` interface. You can follow other existing implementations, such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go), as an example. Ensure that you implement the EvaluateQuery function to fetch the metrics accurately. In the implementation, make a request to the dummy endpoint and return the response.
+2. **Implement the Provider:** Create your own new folder inside
+[this folder](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers)
+ matching the new service name: dummy and a new Go package for the dummy provider.
+  This package should contain
+ a struct that implements the `KeptnSLIProvider` interface.
+  You can follow other existing implementations,
+ such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
+ as an example.
+  Ensure that you implement the EvaluateQuery function to fetch the metrics accurately.
+  In the implementation, make a request to the dummy endpoint and return the response.
 
     ```go
     // Inside the dummy package
@@ -69,7 +77,8 @@ To create a provider for the dummy endpoint, follow these steps:
         return responseData, nil
     }
 
-    func (d *KeptnDummyProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+    func (d *KeptnDummyProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, 
+    provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
         // create a context for cancelling the request if it takes too long.
         ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
         defer cancel()
@@ -86,7 +95,10 @@ To create a provider for the dummy endpoint, follow these steps:
     }
     ```
 
-3. **Instantiate the Provider:** In the `providers.NewProvider` function in the `metrics-operator/controllers/common/providers/provider.go` file, add a case for the `KeptnDummyProviderType`. Instantiate the dummy provider struct and return it.
+3. **Instantiate the Provider:** In the `providers.NewProvider` function
+ in the `metrics-operator/controllers/common/providers/provider.go` file,
+ add a case for the `KeptnDummyProviderType`.
+  Instantiate the dummy provider struct and return it.
 
     ```go
     // Inside the providers package
@@ -103,6 +115,9 @@ To create a provider for the dummy endpoint, follow these steps:
         }
     }
     ```
-4. **Add Test Cases:** Write test cases to validate your implementation and ensure it works correctly. This step is crucial for maintaining code quality and reliability.
 
-5. **Test:** Thoroughly test your implementation to verify that it functions as expected. Make sure to cover various scenarios and edge cases to ensure robustness.
+4. **Add Test Cases:** Write test cases to validate your implementation and ensure it works correctly.
+ This step is crucial for maintaining code quality and reliability.
+
+5. **Test:** Thoroughly test your implementation to verify that it functions as expected.
+ Make sure to cover various scenarios and edge cases to ensure robustness.

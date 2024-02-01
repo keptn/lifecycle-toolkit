@@ -53,7 +53,7 @@ spec:
        This must match the `namespace` given to
        the associated `KeptnAp` resource.
 * **spec**
-  * **custom-attributes** -- list of key-value pairs
+  * **metadata** -- list of key-value pairs
        that are propagated to the application trace as attributes.
        For example, the following lines add the `commit-id`
        and `author` information to the `KEPTN_CONTEXT`

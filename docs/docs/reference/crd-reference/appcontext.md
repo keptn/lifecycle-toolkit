@@ -4,15 +4,18 @@ comments: true
 
 # KeptnAppContext
 
-The `KeptnAppContext` custom resource
-allows you to add metadata and links to traces for a specific application.
-This enables you to enrich your traces with additional information,
-making it easier to understand and analyze
-the performance of your applications.
-
-It works with the corresponding
+The `KeptnAppContext` custom resource works with the corresponding
 [KeptnApp](app.md) resource
 that has the same name and is located in the same namespace.
+It allows you to
+
+- Add metadata and links to traces for a specific application.
+  This enables enriches your traces with additional information,
+  you can use to understand and analyze
+  the performance of your applications.
+
+- Define tasks and evaluations that run
+  before or after the deployment of the `KeptnApp`.
 
 ## Synopsis
 

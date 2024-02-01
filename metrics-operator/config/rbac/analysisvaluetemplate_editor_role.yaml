@@ -1,0 +1,24 @@
+# permissions for end users to edit analysisvaluetemplates.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: analysisvaluetemplate-editor-role
+rules:
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analysisvaluetemplates
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - metrics.keptn.sh
+    resources:
+      - analysisvaluetemplates/status
+    verbs:
+      - get

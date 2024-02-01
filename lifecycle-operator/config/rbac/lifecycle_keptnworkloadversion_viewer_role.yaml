@@ -1,0 +1,20 @@
+# permissions for end users to view keptnworkloadversions.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: keptnworkloadversion-viewer-role
+rules:
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnworkloadversions
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - lifecycle.keptn.sh
+    resources:
+      - keptnworkloadversions/status
+    verbs:
+      - get

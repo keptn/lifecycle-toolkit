@@ -1,0 +1,19 @@
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetricsProvider
+metadata:
+  name: prometheus-provider
+  namespace: podtato-kubectl
+spec:
+  type: prometheus
+  targetServer: "<prometheus-url>"
+  secretKeyRef:
+    name: prometheus-secret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: prometheus-secret
+data:
+  password: password
+  user: user
+type: Opaque

@@ -1,0 +1,9 @@
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnApp
+metadata:
+  name: keptnapp-sample
+spec:
+  version: "1.3"
+  workloads:
+    - name: podtato-head-entry
+      version: 0.1.0

@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Validate Pull Request
-        uses: amannn/action-semantic-pull-request@v5.2.0
+        uses: amannn/action-semantic-pull-request@v5.4.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -33,12 +33,14 @@ jobs:
             test
             deps
           scopes: |
+            main
             helm-chart
             scheduler
-            operator
+            lifecycle-operator
             cert-manager
             metrics-operator
-            functions-runtime
+            deno-runtime
+            python-runtime
             dashboards
             examples
           # Configure that a scope must always be provided.
@@ -47,7 +49,7 @@ jobs:
           # will suggest using that commit message instead of the PR title for the
           # merge commit, and it's easy to commit this by mistake. Enable this option
           # to also validate the commit message for one commit PRs.
-          validateSingleCommit: true
+          validateSingleCommit: false
           # Configure additional validation for the subject based on a regex.
           # This ensures the subject doesn't start with an uppercase character.
           subjectPattern: ^(?![A-Z]).+$

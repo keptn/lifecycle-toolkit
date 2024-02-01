@@ -1,0 +1,79 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: metrics-validating-webhook-configuration
+{{- $caAnnotations := .Values.global.caInjectionAnnotations}}
+{{- $annotations := include "common.annotations" (dict "context" .) }}
+{{- if or $caAnnotations $annotations }}
+  annotations:
+    {{- with $annotations  }}
+    {{- . -}}
+    {{- end }}
+    {{- with $caAnnotations  }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end }}
+  labels:
+    keptn.sh/inject-cert: "true"
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: 'metrics-webhook-service'
+      namespace: '{{ .Release.Namespace }}'
+      path: /validate-metrics-keptn-sh-v1beta1-keptnmetric
+  failurePolicy: Fail
+  name: vkeptnmetric.kb.io
+  rules:
+  - apiGroups:
+    - metrics.keptn.sh
+    apiVersions:
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - keptnmetrics
+  sideEffects: None
+- admissionReviewVersions:
+    - v1
+  clientConfig:
+    service:
+      name: 'metrics-webhook-service'
+      namespace: '{{ .Release.Namespace }}'
+      path: /validate-metrics-keptn-sh-v1beta1-analysis
+  failurePolicy: Fail
+  name: vanalysis.kb.io
+  rules:
+    - apiGroups:
+        - metrics.keptn.sh
+      apiVersions:
+        - v1beta1
+      operations:
+        - CREATE
+        - UPDATE
+      resources:
+        - analyses
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: 'metrics-webhook-service'
+      namespace: '{{ .Release.Namespace }}'
+      path: /validate-metrics-keptn-sh-v1beta1-analysisdefinition
+  failurePolicy: Fail
+  name: vanalysisdefinition.kb.io
+  rules:
+  - apiGroups:
+    - metrics.keptn.sh
+    apiVersions:
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - analysisdefinitions
+  sideEffects: None

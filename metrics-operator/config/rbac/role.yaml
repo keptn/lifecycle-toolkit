@@ -2,7 +2,6 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp: null
   name: metrics-operator-role
 rules:
 - apiGroups:
@@ -19,6 +18,48 @@ rules:
   - secrets
   verbs:
   - get
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analyses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analyses/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analyses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analysisdefinitions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - metrics.keptn.sh
+  resources:
+  - analysisvaluetemplates
+  verbs:
+  - get
+  - list
+  - watch
 - apiGroups:
   - metrics.keptn.sh
   resources:

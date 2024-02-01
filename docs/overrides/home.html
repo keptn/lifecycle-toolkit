@@ -1,0 +1,168 @@
+<!-- Custom HTML site displayed as the Home chapter -->
+
+{% extends "main.html" %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ 'assets/stylesheets/home.css' | url }}" type="text/css" data-proofer-ignore>
+{% endblock %}
+
+{% block tabs %}
+{{ super() }}
+
+<!-- Main site Entry button descriptions -->
+<div class="gradient-container">
+    <section class="tx-container">
+        <div class="md-grid md-typeset">
+            <div class="tx-hero">
+                <div class="tx-hero__image">
+                </div>
+                <div class="tx-hero__content">
+                    <img src="assets/images/keptn-logo-white.svg" draggable="false"
+                         alt="keptn icon with keptn text next to it"
+                         data-proofer-ignore>
+                    <p id="keptn-supercharge-your-deployments">Supercharge your deployments with Keptn!</p>
+                    <a href="docs/getting-started/" data-proofer-ignore title="Get started"
+                       class="md-button md-button--primary">
+                        Get started
+                    </a>
+                    <a href="docs/" data-proofer-ignore title="Documentation" class="md-button">
+                        Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main site box descriptions -->
+    <div class="top-hr">
+        <div class="feature-item">
+            <a href="#deployment-observability">
+                <img src="assets/images/capabilities-04.svg" draggable="false"
+                     alt="a ship going around in circles with an infinity symbol next to it"
+                     data-proofer-ignore>
+                <h2>
+                    Deployment Observability
+                </h2>
+                <p>Make ANY Kubernetes Deployment observable</p>
+            </a>
+        </div>
+
+        <div class="feature-item">
+            <a href="#gather-metrics-from-anywhere">
+                <img src="assets/images/capabilities-03.svg" draggable="false"
+                     alt="a lighthouse with a heartbeat line and a sheet with SLIs and SLOs on it"
+                     data-proofer-ignore>
+                <h2>
+                    Gather metrics from anywhere
+                </h2>
+                <p>Standardize access for all Observability Data for K8s</p>
+            </a>
+        </div>
+        <div class="feature-item">
+            <a href="#orchestrate-deployment-checks">
+                <img src="assets/images/capabilities-01.svg" draggable="false"
+                     alt="a seaman holding a sheet of paper with cog on it"
+                     data-proofer-ignore>
+                <h2>
+                    Orchestrate Deployment Checks
+                </h2>
+                <p>Gain confidence in your work with pre/post-deployment checks</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+<section class="mdx-parallax__group" data-md-color-scheme="default">
+    <div class="md-content md-grid" data-md-component="content">
+        <div class="md-content__inner">
+            <header class="md-typeset">
+                <h1 id="supercharge-your-deployments">
+                    Supercharge your Deployments
+                </h1>
+            </header>
+            <div class="mdx-spotlight">
+                <figure class="mdx-spotlight__feature">
+                    <img
+                            src="assets/images/capabilities-04.svg"
+                            alt="a ship going around in circles with an infinity symbol next to it"
+                            loading="lazy"
+                            width="510"
+                            height="378"
+                            data-proofer-ignore
+                    />
+                    <figcaption class="md-typeset">
+                        <h2 id="deployment-observability">Deployment Observability</h2>
+                        <h3>Make any Kubernetes workload observable</h3>
+                        <p>
+                            If you deploy with ArgoCD, Flux, GitLab, kubectl, etc. we provide you:
+                        </p>
+                        <ul>
+                            <li>Automated App-Aware DORA metrics (OTel Metrics)</li>
+                            <li>Troubleshoot failed deployments (OTel Traces)</li>
+                            <li>Trace deployments from Git to cloud (traces across stages)</li>
+                        </ul>
+                    </figcaption>
+                </figure>
+                <figure class="mdx-spotlight__feature">
+                    <img
+                            src="assets/images/capabilities-03.svg"
+                            alt="a lighthouse with a heartbeat line and a sheet with SLIs and SLOs on it"
+                            loading="lazy"
+                            width="510"
+                            height="378"
+                            data-proofer-ignore
+                    />
+                    <figcaption class="md-typeset">
+                        <h2 id="gather-metrics-from-anywhere">Gather metrics from anywhere</h2>
+                        <h3>Standardize access for all Observability Data for K8s</h3>
+                        <p>
+                            The Keptn Metrics Operator provides the following features:
+                        </p>
+                        <ul>
+                            <li>Define Keptn Metrics once for Dynatrace, DataDog, AWS, Azure, GCP, …</li>
+                            <li>Access all those metrics via Prometheus or K8s Metric API</li>
+                            <li>Eliminate the need of multiple plugins for Argo Rollouts, KEDA, HPA, …</li>
+                        </ul>
+                    </figcaption>
+                </figure>
+                <figure class="mdx-spotlight__feature">
+                    <img
+                            src="assets/images/capabilities-01.svg"
+                            alt="a seaman holding a sheet of paper with cog on it"
+                            loading="lazy"
+                            width="510"
+                            height="378"
+                            data-proofer-ignore
+                    />
+                    <figcaption class="md-typeset">
+                        <h2 id="orchestrate-deployment-checks">Orchestrate Deployment Checks</h2>
+                        <p>
+                            To reduce complexity of custom checks use Keptn to:
+                        </p>
+                        <ul>
+                            <li>
+                                Pre-Deploy:
+                                <ul>
+                                    <li>Validate external dependencies</li>
+                                    <li>Confirm that images are scanned</li>
+                                </ul>
+                            </li>
+                            <li>
+                                Post-Deploy:
+                                <ul>
+                                    <li>Execute tests</li>
+                                    <li>Notify stakeholders</li>
+                                    <li>Promote to next state</li>
+                                </ul>
+                            </li>
+                            <li>Automatically validate against your SLOs (Service Level Objectives)</li>
+                        </ul>
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+{% block content %}{% endblock %}

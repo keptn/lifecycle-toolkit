@@ -27,7 +27,7 @@ github_checks:
 flags:
   keptn-lifecycle-operator:
     paths:
-      - operator/
+      - lifecycle-operator/
     carryforward: true
   scheduler:
     paths:
@@ -35,5 +35,5 @@ flags:
     carryforward: true
   component-tests:
     paths:
-      - operator/
+      - lifecycle-operator/
     carryforward: true

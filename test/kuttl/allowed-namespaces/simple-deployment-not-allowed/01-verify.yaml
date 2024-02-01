@@ -1,0 +1,6 @@
+apiVersion: kuttl.dev/v1
+kind: TestStep
+commands:
+  - script: ../../common-scripts/verify-number-of-resources.sh "keptntask" "0" "not-allowed-ns-test"
+  - script: ../../common-scripts/verify-number-of-resources.sh "keptnworkload" "0" "not-allowed-ns-test"
+  - script: ../../common-scripts/verify-number-of-resources.sh "keptnapp" "0" "not-allowed-ns-test"

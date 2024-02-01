@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lifecycle-webhook-service
+  namespace: {{ .Release.Namespace | quote }}
+  {{- $annotations := include "common.annotations" (dict "context" .) }}
+  {{- with $annotations }}
+  annotations: {{- . -}}
+  {{- end }}
+  labels:
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+spec:
+  type: {{ .Values.lifecycleWebhookService.type }}
+  selector:
+    control-plane: lifecycle-operator
+  {{- include "common.selectorLabels"  ( dict "context" . )  | nindent 4 }}
+  ports:
+	{{- .Values.lifecycleWebhookService.ports | toYaml | nindent 2 -}}

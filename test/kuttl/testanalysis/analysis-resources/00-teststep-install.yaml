@@ -1,0 +1,12 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+apply:
+  - valid-analysis-1.yaml
+  - valid-analysis-2.yaml
+commands:
+  - command: kubectl apply -f invalid-analysis-1.yaml
+    ignoreFailure: true # we must install ignoring the validating webhook error to proceed with the test
+  - command: kubectl apply -f invalid-analysis-2.yaml
+    ignoreFailure: true # we must install ignoring the validating webhook error to proceed with the test
+  - command: kubectl apply -f invalid-analysis-3.yaml
+    ignoreFailure: true # we must install ignoring the validating webhook error to proceed with the test

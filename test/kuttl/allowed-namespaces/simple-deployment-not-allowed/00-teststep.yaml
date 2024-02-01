@@ -1,0 +1,5 @@
+apiVersion: kuttl.dev/v1
+kind: TestStep
+commands:
+  - script: kubectl create ns not-allowed-ns-test
+  - script: kubectl annotate ns not-allowed-ns-test keptn.sh/lifecycle-toolkit='enabled'

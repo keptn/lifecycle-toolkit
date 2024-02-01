@@ -1,4 +1,7 @@
 bin/
+site/
+.cache/
+tmp/
 
 # Binaries for programs and plugins
 *.exe
@@ -25,9 +28,9 @@ kubeconfig
 
 manifests/
 /scheduler/config/rendered/release.yaml
-/operator/config/rendered/release.yaml
+/lifecycle-operator/config/rendered/release.yaml
 /metrics-operator/config/rendered/release.yaml
-/klt-cert-manager/config/rendered/release.yaml
+/keptn-cert-manager/config/rendered/release.yaml
 # macOS
 .DS_Store
 
@@ -39,6 +42,7 @@ manifests/
 ## Kubebuilder
 **/kubebuilder
 /docs/tmp/
+/docs/release/
 /docs/.hugo_build.lock
 /docs/resources/_gen
 /docs/public
@@ -48,4 +52,6 @@ node_modules
 readme-generator-for-helm/
 /out.yaml
 /test.yaml
-/helmchart.yaml
+**helm_tests_output.yaml
+
+/docs/site

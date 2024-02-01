@@ -1,0 +1,9 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+error: # this checks that kubectl get resource fails, AKA bad CRD not added
+  - invalid-analysis-1.yaml
+  - invalid-analysis-2.yaml
+  - invalid-analysis-3.yaml
+assert: # this checks that kubectl get resource succeeds
+  - valid-analysis-1.yaml
+  - valid-analysis-2.yaml

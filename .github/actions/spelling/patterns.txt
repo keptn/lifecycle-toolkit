@@ -1,0 +1,118 @@
+# Automatically suggested patterns
+# https/http/file urls
+(?:\b(?:https?|ftp|file)://)[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]
+
+# version suffix <word>v#
+(?:(?<=[A-Z]{2})V|(?<=[a-z]{2}|[A-Z]{2})v)\d+(?:\b|(?=[a-zA-Z_]))
+
+# GitHub SHAs (markdown)
+(?:\[`?[0-9a-f]+`?\]\(https:/|)/(?:www\.|)github\.com(?:/[^/\s"]+){2,}(?:/[^/\s")]+)(?:[0-9a-f]+(?:[-0-9a-zA-Z/#.]*|)\b|)
+
+# hex runs
+\b[0-9a-fA-F]{16,}\b
+
+# GitHub SHA refs
+\[([0-9a-f]+)\]\(https://(?:www\.|)github.com/[-\w]+/[-\w]+/commit/\g{-1}[0-9a-f]*
+
+# IServiceProvider / isAThing
+\b(?:I|isA)(?=(?:[A-Z][a-z]{2,})+\b)
+
+# base64 encoded content, possibly wrapped in mime
+(?:^|[\s=;:?])[-a-zA-Z=;:/0-9+]{50,}(?:[\s=;:?]|$)
+
+# githubusercontent
+/[-a-z0-9]+\.githubusercontent\.com/[-a-zA-Z0-9?&=_\/.]*
+
+# uuid:
+\b[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}\b
+
+# hex digits including css/html color classes:
+(?:[\\0][xX]|\\u|[uU]\+|#x?|\%23)[0-9_a-fA-FgGrR]*?[a-fA-FgGrR]{2,}[0-9_a-fA-FgGrR]*(?:[uUlL]{0,3}|[iu]\d+)\b
+
+# While you could try to match `http://` and `https://` by using `s?` in `https?://`, sometimes there
+# YouTube url
+\b(?:(?:www\.|)youtube\.com|youtu.be)/(?:channel/|embed/|user/|playlist\?list=|watch\?v=|v/|)[-a-zA-Z0-9?&=_%]*
+
+# shields.io
+\bshields\.io/[-\w/%?=&.:+;,]*
+
+# go install
+go install(?:\s+[a-z]+\.[-@\w/.]+)+
+
+# URL escaped characters
+\%[0-9A-F][A-F]
+
+# Compiler flags (Unix, Java/Scala)
+# Use if you have things like `-Pdocker` and want to treat them as `docker`
+(?:^|[\t ,>"'`=(])-(?:(?:J-|)[DPWXY]|[Llf])(?=[A-Z]{2,}|[A-Z][a-z]|[a-z]{2,})
+
+# Compiler flags (Windows / PowerShell)
+# This is a subset of the more general compiler flags pattern.
+# It avoids matching `-Path` to prevent it from being treated as `ath`
+(?:^|[\t ,"'`=(])-(?:[DPL](?=[A-Z]{2,})|[WXYlf](?=[A-Z]{2,}|[A-Z][a-z]|[a-z]{2,}))
+
+# Slack
+\bslack\.com/[-0-9a-zA-Z/_~?&=.]*
+
+# css url wrappings
+\burl\([^)]+\)
+
+# Wikipedia
+\ben\.wikipedia\.org/wiki/[-\w%.#]+
+
+# assign regex
+= /[^*]*?(?:[a-z]{3,}|[A-Z]{3,}|[A-Z][a-z]{2,}).*/
+
+# regex choice
+\(\?:[^)]+\|[^)]+\)
+
+# kubernetes pod status lists
+# https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-phase
+\w+(?:-\w+)+\s+\d+/\d+\s+(?:Running|Pending|Succeeded|Failed|Unknown)\s+
+
+# kubernetes object suffix
+-[0-9a-f]{10}-\w{5}\s
+
+# base64 encoded content
+([`'"])[-a-zA-Z=;:/0-9+]+=\g{-1}
+
+# vs devops
+\bvisualstudio.com(?::443|)/[-\w/?=%&.]*
+
+# YouTube image
+\bimg\.youtube\.com/vi/[-a-zA-Z0-9?&=_]*
+
+# medium
+\bmedium\.com/\@?[^/\s"]+/[-\w]+
+
+# Twitter status
+\btwitter\.com/[^/\s"')]*(?:/status/\d+(?:\?[-_0-9a-zA-Z&=]*|)|)
+
+# sha-... -- uses a fancy capture
+(\\?['"]|&quot;)[0-9a-f]{40,}\g{-1}
+
+# bearer auth
+(['"])Bear[e][r] .*?\g{-1}
+
+# Time Zones
+\b(?:Africa|Atlantic|America|Antarctica|Asia|Australia|Europe|Indian|Pacific)(?:/\w+)+
+
+# tar arguments
+\b(?:\\n|)g?tar(?:\.exe|)(?:(?:\s+--[-a-zA-Z]+|\s+-[a-zA-Z]+|\s[ABGJMOPRSUWZacdfh-pr-xz]+\b)(?:=[^ ]*|))+
+
+# hugo youtube links
+\{\{\< youtube [a-zA-Z0-9\-]+ \>\}\}$
+
+# tls certs
+LS0[a-zA-Z0-9]+
+
+# k8s CRD validation patterns
+pattern\: .*$
+
+# data-category-id from Giscus integration
+data-category-id=\".*\"$
+data-repo-id=\".*\"$
+
+# GA tag
+G-[A-Z0-9]+
+\<meta name=\"google-site-verification\" content=".*" \/\>$

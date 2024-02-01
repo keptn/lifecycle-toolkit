@@ -1,10 +1,12 @@
-apiVersion: metrics.keptn.sh/v1alpha1
+apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: keptnmetric-load-test-{{.Iteration}}-{{.Replica}}
-  namespace: keptn-lifecycle-toolkit-system
+  namespace: keptn-system
 spec:
   provider:
     name: "prometheus"
   query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
   fetchIntervalSeconds: 30
+  range:
+    interval: "5m"

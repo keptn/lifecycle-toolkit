@@ -25,7 +25,7 @@ import (
 //	}
 type DTAPIClientMock struct {
 	// DoFunc mocks the Do method.
-	DoFunc func(ctx context.Context, path string, method string, payload []byte) ([]byte, error)
+	DoFunc func(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -45,7 +45,7 @@ type DTAPIClientMock struct {
 }
 
 // Do calls DoFunc.
-func (mock *DTAPIClientMock) Do(ctx context.Context, path string, method string, payload []byte) ([]byte, error) {
+func (mock *DTAPIClientMock) Do(ctx context.Context, path string, method string, payload []byte) ([]byte, int, error) {
 	if mock.DoFunc == nil {
 		panic("DTAPIClientMock.DoFunc: method is nil but DTAPIClient.Do was just called")
 	}

@@ -1,0 +1,98 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certificate-operator
+  namespace: {{ .Release.Namespace | quote }}
+  {{- $annotations := include "common.annotations" (dict "context" .) }}
+  {{- with $annotations }}
+  annotations: {{- . -}}
+  {{- end }}
+  labels:
+    app.kubernetes.io/component: keptn-cert-manager
+    app.kubernetes.io/part-of: keptn
+    control-plane: certificate-operator
+    {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      control-plane: certificate-operator
+{{- include "common.selectorLabels"  ( dict "context" . ) | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        control-plane: certificate-operator
+{{- include "common.selectorLabels"  ( dict "context" . ) | nindent 8 }}
+      annotations:
+        kubectl.kubernetes.io/default-container: certificate-operator
+        {{- if .Values.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - args:
+            - --leader-elect
+          command:
+            - /manager
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: LABEL_SELECTOR_KEY
+              value: {{ .Values.env.labelSelectorKey | quote }}
+            - name: LABEL_SELECTOR_VALUE
+              value: {{ .Values.env.labelSelectorValue | quote }}
+            - name: KUBERNETES_CLUSTER_DOMAIN
+              value: {{ .Values.kubernetesClusterDomain }}
+          image: {{- include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) | indent 1}}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          name: certificate-operator
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: {{ .Values.containerSecurityContext.allowPrivilegeEscalation
+            }}
+            capabilities: {{- include "common.tplvalues.render" (dict "value" .Values.containerSecurityContext.capabilities "context" $) | nindent 14 }}
+            readOnlyRootFilesystem: {{ .Values.containerSecurityContext.readOnlyRootFilesystem
+            }}
+            runAsGroup: {{ .Values.containerSecurityContext.runAsGroup
+            }}
+            runAsUser: {{ .Values.containerSecurityContext.runAsUser
+            }}
+            seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.containerSecurityContext.seccompProfile
+            "context" $) | nindent 14 }}
+        {{- if .Values.livenessProbe }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.livenessProbe "context" $) | nindent 12 }}
+         {{- else }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+        {{- end }}
+        {{- if .Values.readinessProbe }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.readinessProbe "context" $) | nindent 12 }}
+         {{- else }}
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+        {{- end }}
+      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: certificate-operator
+      terminationGracePeriodSeconds: 10
+{{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
+{{- end }}

@@ -2,14 +2,14 @@ name: Load Tests
 on:
   workflow_call:
     inputs:
-      functions_runtime_tag:
-        description: "Tag for the functions runner image"
+      runtime_tag:
+        description: "Tag for the runner images"
         type: "string"
         required: true
 env:
-  GO_VERSION: "~1.19"
+  GO_VERSION: "~1.20"
   # renovate: datasource=github-tags depName=cloud-bulldozer/kube-burner
-  KUBE_BURNER_VERSION: "v1.3"
+  KUBE_BURNER_VERSION: "v1.7.11"
 defaults:
   run:
     shell: bash
@@ -20,12 +20,19 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Cache build tools
+        id: cache-build-tools
+        uses: actions/cache@v4
+        with:
+          path: /usr/local/bin/kube-burner
+          key: kube-burner-${{ env.KUBE_BURNER_VERSION }}
 
       - name: Setup cluster
-        uses: ./.github/actions/deploy-klt-on-cluster
+        uses: ./.github/actions/deploy-keptn-on-cluster
         with:
-          functions_runtime_tag: ${{ inputs.functions_runtime_tag }}
+          runtime_tag: ${{ inputs.runtime_tag }}
 
       - name: Install and expose Prometheus
         uses: ./.github/actions/deploy-prometheus-on-cluster
@@ -35,7 +42,7 @@ jobs:
           BASE_URL: https://github.com/cloud-bulldozer/kube-burner/releases
         run: |
           curl -fL \
-            "${BASE_URL}/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz" \
+            "${BASE_URL}/download/${{ env.KUBE_BURNER_VERSION }}/kube-burner-V${KUBE_BURNER_VERSION#v}-linux-x86_64.tar.gz" \
           -o kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz
           tar -xf kube-burner-${KUBE_BURNER_VERSION#v}-Linux-x86_64.tar.gz
           mv kube-burner /usr/local/bin
@@ -52,12 +59,12 @@ jobs:
           path: ./collected-metrics
 
       - name: Create reports
-        if: always()
+        if: failure()
         working-directory: ./.github/scripts
         run: ./create-reports-toolkit.sh
 
       - name: Upload cluster logs
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: logs-load-tests

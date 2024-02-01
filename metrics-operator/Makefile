@@ -7,7 +7,7 @@ RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
-TAG?="v0.7.0" # x-release-please-version
+TAG?="v0.9.0" # x-release-please-version
 RELEASE_IMAGE:=metrics-operator:$(TAG)
 CHART_APPVERSION?=""
 
@@ -21,13 +21,13 @@ BUILDENVVAR=CGO_ENABLED=0
 VERSION=$(shell echo $(RELEASE_VERSION) | awk -F - '{print $$2}')
 
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
-ENVTEST_K8S_VERSION=1.24.2
+ENVTEST_K8S_VERSION=1.27.1
 
 ## Tool Versions
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v5.0.1
+KUSTOMIZE_VERSION?=v5.3.0
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-CONTROLLER_TOOLS_VERSION?=v0.11.3
+CONTROLLER_TOOLS_VERSION?=v0.14.0
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -82,9 +82,13 @@ fmt: ## Run go fmt against code.
 vet: ## Run go vet against code.
 	go vet ./...
 
-.PHONY: test
-test: manifests generate fmt vet envtest ## Run tests.
+.PHONY: unit-test
+unit-test: manifests generate fmt vet envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
+
+#command(make test) to run all tests 
+.PHONY: test
+test: unit-test
 
 ##@ Build
 .PHONY: build
@@ -152,7 +156,6 @@ envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
 $(ENVTEST): $(LOCALBIN)
 	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
 
-
 #### developer build   ####
 .PHONY: clean
 clean:
@@ -206,3 +209,8 @@ push-local:
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 ;\
 	fi
 	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+
+##golangci-lint
+.PHONY: lint
+lint:
+	${GOPATH}/bin/golangci-lint run --config ../.golangci.yml -v

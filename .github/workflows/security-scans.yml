@@ -13,7 +13,7 @@ defaults:
     shell: bash
 
 env:
-  GO_VERSION: "~1.19"
+  GO_VERSION: "~1.20"
 
 jobs:
   prepare-security-scans:
@@ -49,8 +49,8 @@ jobs:
           echo "Run ID that will be used to download artifacts from: $RUN_ID"
           echo "RUN_ID=$RUN_ID" >> $GITHUB_OUTPUT
 
-      - name: Download all artifacts from last successful build of main branch
-        uses: dawidd6/action-download-artifact@v2.27.0
+      - name: Download all artifacts from last successful build of target branch
+        uses: dawidd6/action-download-artifact@v3.0.0
         id: download_artifacts_push
         with:
           # Download last successful artifact from a CI build
@@ -60,21 +60,12 @@ jobs:
           # directory where to extract artifacts to
           path: ./dist
 
-      - name: Upload manifests main build
-        uses: actions/upload-artifact@v3
-        if: ${{ github.event_name  == 'schedule' }}
-        with:
-          name: manifests
-          path: |
-            ./dist/*-manifest/
-
-      - name: Upload manifests user run
-        if: ${{ github.event_name  != 'schedule' }}
+      - name: Upload tag
         uses: actions/upload-artifact@v3
         with:
-          name: manifests
+          name: tag
           path: |
-            ./dist/*-manifest-test/
+            ./dist/dev-*/
 
       - name: Upload images
         uses: actions/upload-artifact@v3
@@ -104,26 +95,56 @@ jobs:
     steps:
       - name: Set up Go
         if: matrix.tool == 'kubeconform'
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+          cache: false
 
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'true'
 
-      - name: Download manifest files
+      - name: Download tag
         id: download_manifests
         uses: actions/download-artifact@v3
         with:
-          name: manifests
-          path: scans
+          name: tag
+          path: tag
+
+      - name: Setup helm charts
+        run: |
+          helm repo add keptn "https://charts.lifecycle.keptn.sh"
+          helm repo update
+
+          for chart_dir in ./lifecycle-operator/chart \
+                  ./metrics-operator/chart \
+                  ./keptn-cert-manager/chart \
+                  ./chart; do
+              cd "$chart_dir"
+              echo "updating charts for" $chart_dir
+              helm dependency update
+              helm dependency build
+              cd -  # Return to the previous directory
+          done
+
+      - name: Generate manifests
+        run: |
+          # Fetch tag of the images
+          export TAG=$(ls tag/)
+          echo "$TAG"
+          mkdir scans
+          envsubst < .github/actions/deploy-keptn-on-cluster/values.yaml > tmp.yaml
+          echo "used values.yaml file:"
+          cat tmp.yaml
+
+          helm template keptn-test --namespace helmtests -f tmp.yaml ./chart > ./scans/result.yaml
 
       - name: KICS Scan
         if: matrix.tool == 'kics'
-        uses: Checkmarx/kics-github-action@v1.6
+        uses: Checkmarx/kics-github-action@v1.7.0
         with:
           path: scans
           config_path: .github/kics-config.yml
@@ -144,8 +165,8 @@ jobs:
           go install github.com/yannh/kubeconform/cmd/kubeconform@${{ matrix.version }}
           echo "::endgroup::"
 
-          cd operator/config/default
-          sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/operator-manifest.yaml
+          cd lifecycle-operator/config/default
+          sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/lifecycle-operator-manifest.yaml
           cd ../crd && kustomize build ./ > /tmp/crds.yaml
           cd ../../../metrics-operator/config/default
           sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/metrics-operator-manifest.yaml
@@ -157,9 +178,9 @@ jobs:
           mkdir -p /tmp/schema && cd /tmp/schema
           python3 ../openapi2jsonschema.py ../crds.yaml
           cd .. && \
-            echo "---" >> operator-manifest.yaml && \
+            echo "---" >> lifecycle-operator-manifest.yaml && \
             echo "---" >> scheduler-manifest.yaml && \
-            cat operator-manifest.yaml scheduler-manifest.yaml metrics-operator-manifest.yaml > manifest.yaml
+            cat lifecycle-operator-manifest.yaml scheduler-manifest.yaml metrics-operator-manifest.yaml > manifest.yaml
           kubeconform \
             -schema-location default \
             -schema-location './schema/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' \
@@ -173,7 +194,8 @@ jobs:
           FAILURE_PERCENTAGE: 10
         run: |
           echo "::group::Kubescape installation"
-          curl -s https://raw.githubusercontent.com/armosec/kubescape/master/install.sh | /bin/bash
+          curl -s https://raw.githubusercontent.com/kubescape/kubescape/master/install.sh | /bin/bash
+          export PATH=$PATH:/home/runner/.kubescape/bin
           echo "::endgroup::"
           # Docs on how to configure exceptions: https://hub.armosec.io/docs/exceptions
           kubescape scan framework ${{ matrix.kubescape-framework }} \
@@ -190,12 +212,19 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - "functions-runtime"
+          - "deno-runtime"
+          - "python-runtime"
           - "lifecycle-operator"
           - "metrics-operator"
           - "scheduler"
           - "certificate-operator"
     steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: 'true'
+
       - name: Download images
         id: download_images
         uses: actions/download-artifact@v3
@@ -203,8 +232,18 @@ jobs:
           name: images
           path: images
 
+      - name: Trivy image scan scheduler
+        if: matrix.image == 'scheduler'
+        uses: aquasecurity/trivy-action@22d2755f774d925b191a185b74e782a4b0638a41 # 0.15.0
+        with:
+          input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+          trivyignores: .trivyignore
+
       - name: Trivy image scan
-        uses: aquasecurity/trivy-action@0.10.0
+        if: matrix.image != 'scheduler'
+        uses: aquasecurity/trivy-action@22d2755f774d925b191a185b74e782a4b0638a41 # 0.15.0
         with:
           input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
@@ -217,19 +256,20 @@ jobs:
       fail-fast: false
       matrix:
         artifact:
-          - "operator"
+          - "lifecycle-operator"
           - "metrics-operator"
           - "scheduler"
-          - "klt-cert-manager"
-
+          - "keptn-cert-manager"
     steps:
       - name: Set up Go 1.x
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
+          cache-dependency-path: ${{ matrix.artifact }}/go.sum
           go-version: ${{ env.GO_VERSION }}
+          check-latest: true
 
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install govulncheck
         run: go install golang.org/x/vuln/cmd/govulncheck@latest

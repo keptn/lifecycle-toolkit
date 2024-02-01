@@ -1,0 +1,15 @@
+lifecycleOperator:
+  enabled: false
+metricsOperator:
+  enabled: true
+  image:
+    tag: v0.0.0
+  customMetricsAPIService:
+    enabled: "false"
+
+global:
+  certManagerEnabled: false
+  commonLabels:
+    app.kubernetes.io/version: vmyversion
+  caInjectionAnnotations:
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs

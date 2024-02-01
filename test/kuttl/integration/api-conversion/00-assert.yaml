@@ -1,0 +1,37 @@
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnApp
+metadata:
+  name: "some-keptn-app2"
+spec:
+  version: "1.2.3"
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnAppVersion
+metadata:
+  name: "some-keptn-app-version-2"
+spec:
+  appName: podtato-head
+  preDeploymentTasks:
+    - pre-deployment-task
+  preDeploymentEvaluations:
+    - pre-deployment-evaluation
+  postDeploymentTasks:
+    - post-deployment-task
+  postDeploymentEvaluations:
+    - post-deployment-evaluation
+  traceId:
+    traceparent: my-trace-parent
+  version: 0.1.0
+  workloads:
+    - name: podtato-head-left-arm
+      version: 0.2.7
+---
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetric
+metadata:
+  name: my-metric-1
+spec:
+  fetchIntervalSeconds: 60
+  provider:
+    name: prometheus
+  query: "sum(kube_pod_container_resource_limits{resource='cpu'})"

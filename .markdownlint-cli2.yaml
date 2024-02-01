@@ -11,10 +11,10 @@ config:
   max-one-sentence-per-line: true
 
 customRules:
-  - "./docs/rules/admonition.js"
-  - "./docs/rules/max-one-sentence-per-line.js"
+  - ".github/actions/markdown-lint-rules/admonition.js"
+  - ".github/actions/markdown-lint-rules/max-one-sentence-per-line.js"
 
 ignores:
-  - "CHANGELOG.md"
+  - "**/CHANGELOG.md"
   - "node_modules"
-  - "docs/tmp"
+  - "readme-generator-for-helm"

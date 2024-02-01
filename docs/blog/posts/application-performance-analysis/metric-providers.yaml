@@ -1,0 +1,20 @@
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetricsProvider
+metadata:
+  name: my-prometheus-provider
+  namespace: simple-go
+spec:
+  targetServer: <prometheus-url>
+  type: prometheus
+---
+apiVersion: metrics.keptn.sh/v1alpha3
+kind: KeptnMetricsProvider
+metadata:
+  name: my-dynatrace-provider
+  namespace: simple-go
+spec:
+  targetServer: "https://<tenant-id>.live.dynatrace.com"
+  type: dynatrace
+  secretKeyRef:
+    name: dt-api-token
+    key: DT_TOKEN

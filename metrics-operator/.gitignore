@@ -5,7 +5,7 @@
 *.dll
 *.so
 *.dylib
-bin
+bin/
 testbin/*
 
 # Test binary, build with `go test -c`
@@ -28,3 +28,5 @@ load-report.*
 *~
 
 .dccache*
+
+chart/charts/*.tgz

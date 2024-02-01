@@ -22,13 +22,6 @@
     "**/test/**",
     "**/tests/**"
   ],
-  "ignoreDeps": [
-    "ghcr.keptn.sh/keptn/lifecycle-operator",
-    "ghcr.keptn.sh/keptn/scheduler",
-    "ghcr.keptn.sh/keptn/functions-runtime",
-    "ghcr.keptn.sh/keptn/certificate-operator",
-    "ghcr.keptn.sh/keptn/metrics-operator"
-  ],
   "packageRules": [
     {
       "excludePackagePatterns": [
@@ -37,7 +30,9 @@
         "docker.io\\/bacherfl\\/.*",
         "docker.io\\/mowies\\/.*",
         "docker.io\\/odubajdt\\/.*",
-        "docker.io\\/thisthatdc\\/.*"
+        "docker.io\\/thisthatdc\\/.*",
+        "testreg\\/.*",
+        "myrep"
       ]
     },
     {
@@ -55,6 +50,17 @@
     {
       "matchPackageNames": ["kubernetes-sigs/kustomize"],
       "extractVersion": "^kustomize/(?<version>.*)$"
+    },
+    {
+      "matchPackageNames": ["denoland/deno"],
+      "versioning": "regex:^(?<compatibility>[a-z]+?)-(?<major>\\d+)(\\.(?<minor>\\d+))?(\\.(?<patch>\\d+))?$"
+    },
+    {
+      "matchPackageNames": [
+        "ghcr.io/keptn/certificate-operator",
+        "github.com/keptn/lifecycle-toolkit/keptn-cert-manager"
+      ],
+      "groupName": "keptn/cert-manager"
     }
   ],
   "regexManagers": [
@@ -67,7 +73,7 @@
         "(^|\\/).*\\.sh$"
       ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)\\s.*?_VERSION ?(\\??=|\\: ?) ?\\\"?(?<currentValue>.+?)?\\\"?\\s"
+        "# renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)\\s.*?_VERSION ?(=|\\?=|:=|\\+=) ?\\\"?(?<currentValue>.+?)?\\\"?\\s"
       ]
     }
   ],
@@ -85,7 +91,8 @@
     ],
     "ignorePaths": [
       "examples/support/observability/config/prometheus/**/*",
-      "test/prometheus/**/*"
+      "test/prometheus/**/*",
+      "test/integration/simple-deployment-container-annotation/00-install.yaml"
     ]
   }
 }

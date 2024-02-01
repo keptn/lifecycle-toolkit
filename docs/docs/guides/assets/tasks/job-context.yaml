@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+spec:
+  template:
+    spec:
+      containers:
+        - name: "my-task-container"
+          env:
+            - name: KEPTN_CONTEXT
+              value: '{
+                         "workloadName":"waiter-waiter",
+                         "appName":"waiter",
+                         "appVersion":"",
+                         "workloadVersion":"0.4",
+                         "taskType":"pre",
+                         "objectType":"Workload",
+                         "metadata":{
+                            "commit-id":"1234",
+                            "stage":"dev",
+                            "test-metadata":"test-metadata",
+                            "traceparent": "00-traceid-spanid-01"
+                         }
+                      }'
+            - name: SCRIPT
+              value: /var/data/function.ts

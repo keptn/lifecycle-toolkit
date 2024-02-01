@@ -1,5 +1,5 @@
 # renovate: datasource=github-tags depName=jaegertracing/jaeger
-JAEGER_VERSION ?= v1.44.0
+JAEGER_VERSION ?= v1.53.0
 LFC_NAMESPACE ?= keptn-lifecycle-controller-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
@@ -23,10 +23,6 @@ deploy-version-1:
 .PHONY: deploy-version-2
 deploy-version-2:
 	kubectl apply -k version-2
-
-.PHONY: deploy-version-3
-deploy-version-3:
-	kubectl apply -k version-3
 
 .PHONY: undeploy-podtatohead
 undeploy-podtatohead:

@@ -64,7 +64,7 @@ rules:
     resources: ["podgroups", "elasticquotas"]
     verbs: ["get", "list", "watch", "create", "delete", "update", "patch"]
   - apiGroups: ["lifecycle.keptn.sh"]
-    resources: ["keptnworkloadinstances"]
+    resources: ["keptnworkloadversions"]
     verbs: ["get", "list", "watch"]
   - apiGroups: [""]
     resources: ["configmaps"]
@@ -81,7 +81,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: keptn-scheduler
-    namespace: keptn-lifecycle-toolkit-system
+    namespace: keptn-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -95,4 +95,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: keptn-scheduler
-    namespace: keptn-lifecycle-toolkit-system
+    namespace: keptn-system

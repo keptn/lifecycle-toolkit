@@ -11,8 +11,10 @@ metadata:
   name: metrics-operator
   namespace: system
   labels:
-    app.kubernetes.io/part-of: keptn-lifecycle-toolkit
+    app.kubernetes.io/part-of: keptn
     control-plane: metrics-operator
+    app.kubernetes.io/component: metrics-operator
+    keptn.sh/inject-cert: "true"
 spec:
   selector:
     matchLabels:
@@ -21,7 +23,7 @@ spec:
   template:
     metadata:
       annotations:
-        kubectl.kubernetes.io/default-container: manager
+        kubectl.kubernetes.io/default-container: metrics-operator
       labels:
         control-plane: metrics-operator
     spec:
@@ -36,16 +38,12 @@ spec:
         #   type: RuntimeDefault
       volumes:
         - emptyDir: {}
-          name: certs-dir
-        - emptyDir: {}
           name: adapter-certs-dir
       containers:
         - command:
             - /manager
           args:
             - webhook-server
-            # OLM mounts the certificates here, so we reuse it for simplicity
-            - --certs-dir=/tmp/k8s-webhook-server/serving-certs/
             - --leader-elect
             # Secure port for the metrics adapter
             - --adapter-port=6443
@@ -53,7 +51,7 @@ spec:
             # Log level for the metrics adapter
             - --v=10
           image: controller:latest
-          name: manager
+          name: metrics-operator
           env:
             - name: POD_NAMESPACE
               valueFrom:
@@ -65,8 +63,16 @@ spec:
                   fieldPath: metadata.name
             - name: EXPOSE_KEPTN_METRICS
               value: "true"
+            - name: ENABLE_CUSTOM_METRICS_API_SERVICE
+              value: "true"
+            - name: ENABLE_ANALYSIS
+              value: "true"
             - name: METRICS_CONTROLLER_LOG_LEVEL
               value: "0"
+            - name: ANALYSIS_CONTROLLER_LOG_LEVEL
+              value: "0"
+            - name: CERT_MANAGER_ENABLED
+              value: "true"
           ports:
             - containerPort: 9443
               name: webhook-server
@@ -82,6 +88,12 @@ spec:
             capabilities:
               drop:
                 - "ALL"
+            privileged: false
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
           livenessProbe:
             httpGet:
               path: /healthz
@@ -102,8 +114,6 @@ spec:
               cpu: 10m
               memory: 64Mi
           volumeMounts:
-            - name: certs-dir
-              mountPath: /tmp/k8s-webhook-server/serving-certs/
             - name: adapter-certs-dir
               mountPath: /tmp/metrics-adapter/serving-certs
       serviceAccountName: metrics-operator

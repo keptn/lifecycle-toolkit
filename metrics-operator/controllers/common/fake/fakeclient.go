@@ -1,7 +1,7 @@
 package fake
 
 import (
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 	corev1 "k8s.io/api/core/v1"
 	apiv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -14,7 +14,7 @@ import (
 // NewClient returns a new controller-runtime fake Client configured with the Operator's scheme, and initialized with objs.
 func NewClient(objs ...client.Object) client.Client {
 	setupSchemes()
-	return fake.NewClientBuilder().WithScheme(scheme.Scheme).WithObjects(objs...).Build()
+	return fake.NewClientBuilder().WithScheme(scheme.Scheme).WithStatusSubresource(objs...).WithObjects(objs...).Build()
 }
 
 func setupSchemes() {

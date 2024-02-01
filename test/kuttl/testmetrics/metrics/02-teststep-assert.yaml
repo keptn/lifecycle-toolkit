@@ -1,0 +1,21 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+error: # this checks that kubectl get resource fails, AKA bad CRD not added
+  - badmetric1.yaml
+  - badmetric2.yaml
+  - badmetric3.yaml
+assert: # this checks that kubectl get resource succeeds
+  - goodmetric1.yaml
+  - goodmetric2.yaml
+  - goodmetric3.yaml
+  - goodmetric4.yaml
+  - goodmetric5.yaml
+  - goodmetric6.yaml
+collectors:
+  - type: pod
+    selector: app=test
+  - command: |
+      kubectl logs -l app=metrics-operator -n keptn-system
+      kubectl describe keptnmetric podtatometric -n $NAMESPACE
+      kubectl describe keptnmetricsprovider dynatrace -n $NAMESPACE
+      kubectl describe pods -l app=podtato-head -n $NAMESPACE

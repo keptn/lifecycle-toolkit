@@ -14,6 +14,7 @@ for namespace in $(kubectl get namespaces -o jsonpath='{.items[*].metadata.name}
     createResourceReport "$logsDir/$namespace" "$namespace" "Daemonsets" false
     createResourceReport "$logsDir/$namespace" "$namespace" "Statefulsets" false
     createResourceReport "$logsDir/$namespace" "$namespace" "Jobs" false
+    createResourceReport "$logsDir/$namespace" "$namespace" "ConfigMaps" false
     createResourceReport "$logsDir/$namespace" "$namespace" "KeptnApp" false
     createResourceReport "$logsDir/$namespace" "$namespace" "KeptnAppVersion" false
     createResourceReport "$logsDir/$namespace" "$namespace" "KeptnEvaluationDefinition" false
@@ -22,7 +23,7 @@ for namespace in $(kubectl get namespaces -o jsonpath='{.items[*].metadata.name}
     createResourceReport "$logsDir/$namespace" "$namespace" "KeptnTaskDefinition" false
     createResourceReport "$logsDir/$namespace" "$namespace" "KeptnTask" false
     createResourceReport "$logsDir/$namespace" "$namespace" "KeptnWorkload" false
-    createResourceReport "$logsDir/$namespace" "$namespace" "KeptnWorkloadInstance" false
+    createResourceReport "$logsDir/$namespace" "$namespace" "KeptnWorkloadVersion" false
     createResourceReport "$logsDir/$namespace" "$namespace" "KeptnMetric" false
     createResourceReport "$logsDir/$namespace" "$namespace" "KeptnMetricsProvider" false
     

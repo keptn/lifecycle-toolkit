@@ -4,7 +4,7 @@
 
 #### {{ $type.Name }}
 
-{{ if $type.IsAlias }}_Underlying type:_ `{{ markdownRenderTypeLink $type.UnderlyingType  }}`{{ end }}
+{{ if $type.IsAlias }}_Underlying type:_ _{{ markdownRenderTypeLink $type.UnderlyingType  }}_{{ end }}
 
 {{ $type.Doc }}
 
@@ -16,18 +16,24 @@ _Appears in:_
 {{- end }}
 
 {{ if $type.Members -}}
-| Field | Description |
-| --- | --- |
+| Field | Description | Default | Optional |
+| --- | --- | --- | --- |
 {{ if $type.GVK -}}
-| `apiVersion` _string_ | `{{ $type.GVK.Group }}/{{ $type.GVK.Version }}`
-| `kind` _string_ | `{{ $type.GVK.Kind }}`
+| `apiVersion` _string_ | `{{ $type.GVK.Group }}/{{ $type.GVK.Version }}` | | |
+| `kind` _string_ | `{{ $type.GVK.Kind }}` | | |
 {{ end -}}
 
 {{ range $type.Members -}}
-| `{{ .Name  }}` _{{ markdownRenderType .Type }}_ | {{ template "type_members" . }} |
+| `{{ .Name }}` {{ if .Type.IsAlias }}_{{  markdownRenderTypeLink .Type.UnderlyingType  }}_{{else}}_{{ markdownRenderType .Type }}_{{ end }} | {{ template "type_members" . }} |
+{{- if index .Markers "kubebuilder:default" -}}
+{{- with index (index .Markers "kubebuilder:default") 0 -}}
+ {{ .Value -}}
 {{ end -}}
-
 {{ end -}}
+| {{ if index .Markers "optional" }}✓{{ else }}x{{ end }} |
+{{ end }}
 
 {{- end -}}
+{{- end -}}
+
 {{- end -}}

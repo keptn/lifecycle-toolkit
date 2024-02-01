@@ -1,0 +1,17 @@
+certManager:
+  image:
+    tag: v0.0.0
+lifecycleOperator:
+  enabled: false
+metricsOperator:
+  enabled: false
+
+global:
+  certManagerEnabled: true
+  imageRegistry: "testreg"
+  imagePullSecrets: []
+  commonAnnotations:
+    ciao: commonannotation
+  commonLabels:
+    mamma : "test"
+    app.kubernetes.io/version: vmyversion

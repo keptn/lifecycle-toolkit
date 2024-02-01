@@ -20,9 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // KeptnMetricSpec defines the desired state of KeptnMetric
 type KeptnMetricSpec struct {
 	// Provider represents the provider object
@@ -57,10 +54,13 @@ type ProviderRef struct {
 
 // KeptnMetric is the Schema for the keptnmetrics API
 type KeptnMetric struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KeptnMetricSpec   `json:"spec,omitempty"`
+	// +optional
+	Spec KeptnMetricSpec `json:"spec,omitempty"`
+	// +optional
 	Status KeptnMetricStatus `json:"status,omitempty"`
 }
 
@@ -69,6 +69,7 @@ type KeptnMetric struct {
 // KeptnMetricList contains a list of KeptnMetric
 type KeptnMetricList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []KeptnMetric `json:"items"`
 }

@@ -1,0 +1,10 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: keptntaskdefinition-sample-js
+spec:
+  function:
+    inline:
+      code: |
+        console.log('hello');
+  retries: 2

@@ -1,6 +1,6 @@
-# Keptn Lifecycle Controller Logos
+# Keptn Logos
 
-This directory contains the Keptn Lifecycle Controller logos in different formats and colors.
+This directory contains the Keptn logos in different formats and colors.
 
 ## Logos
 

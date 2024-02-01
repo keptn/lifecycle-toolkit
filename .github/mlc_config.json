@@ -2,6 +2,15 @@
   "ignorePatterns": [
     {
       "pattern": "^http://localhost"
+    },
+    {
+      "pattern": "^/images/why-keptn"
+    },
+    {
+      "pattern": "^../assets/"
+    },
+    {
+      "pattern": "^https?://twitter.com"
     }
   ],
   "timeout": "20s",

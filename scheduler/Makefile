@@ -15,7 +15,7 @@
 ARCHS = amd64 arm64
 COMMONENVVAR=GOOS=$(shell uname -s | tr A-Z a-z)
 BUILDENVVAR=CGO_ENABLED=0
-TAG?="v0.7.0" # x-release-please-version
+TAG?="v0.8.3" # x-release-please-version
 CHART_APPVERSION?=""
 
 LOCAL_REGISTRY=localhost:5000/scheduler-plugins
@@ -46,7 +46,7 @@ $(LOCALBIN):
 
 ## Tool Versions
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION ?= v5.0.1
+KUSTOMIZE_VERSION ?= v5.3.0
 
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
@@ -82,16 +82,19 @@ vet: ## Run go vet against code.
 e2e-test: manifests envtest ## Run tests.
 	go test ./test/e2e -v -coverprofile cover.out
 
-.PHONY: test
-test: manifests fmt vet envtest## Run tests.
+.PHONY: unit-test
+unit-test: manifests fmt vet envtest## Run tests.
 	go test ./pkg/... -coverprofile cover-pkg.out
 	go test ./cmd/scheduler -coverprofile cover-main.out
-	go test ./test/... -v -ginkgo.skip-file="e2e"
 	sed -i '/mode: set/d' cover-pkg.out
 	sed -i '/mode: set/d' cover-main.out
 	echo "mode: set" > cover.out
 	cat cover-main.out cover-pkg.out >> cover.out
 	rm cover-pkg.out cover-main.out
+
+#command(make test) to run all tests 
+.PHONY: test
+test: e2e-test unit-test
 
 
 .PHONY: kustomize
@@ -173,3 +176,8 @@ push-local:
 		docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)-arm64 ;\
 	fi
 	docker push $(RELEASE_REGISTRY)/$(RELEASE_IMAGE)
+
+##golangci-lint
+.PHONY: lint
+lint:
+	${GOPATH}/bin/golangci-lint run --config ../.golangci.yml -v

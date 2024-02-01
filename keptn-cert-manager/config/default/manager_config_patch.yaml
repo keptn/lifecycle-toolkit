@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certificate-operator
+  namespace: system
+spec:
+  template:
+    spec:
+      containers:
+        - name: certificate-operator

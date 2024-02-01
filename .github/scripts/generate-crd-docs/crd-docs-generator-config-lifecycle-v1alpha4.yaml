@@ -1,0 +1,25 @@
+processor:
+  useRawDocstring: true
+  ignoreFields:
+    - "TypeMeta$"
+render:
+  kubernetesVersion: 1.28
+  knownTypes:
+    - name: ResourceReference
+      package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3
+      link: ../v1alpha3/index.md#resourcereference
+    - name: ItemStatus
+      package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3
+      link: ../v1alpha3/index.md#itemstatus
+    - name: Quantity
+      package: "k8s.io/apimachinery/pkg/api/resource"
+      link: https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity
+    - name: Time
+      package: "k8s.io/apimachinery/pkg/apis/meta/v1"
+      link: https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Time
+    - name: Duration
+      package: "k8s.io/apimachinery/pkg/apis/meta/v1"
+      link: https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration
+    - name: MapCarrier
+      package: "go.opentelemetry.io/otel/propagation"
+      link: https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier

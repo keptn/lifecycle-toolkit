@@ -2,10 +2,10 @@
 {{- $groupVersions := . -}}
 {{- $groupVersion := index $groupVersions 0 -}}
 
----
-title: {{ $groupVersion.Version }}
-description: Reference information for {{ $groupVersion.GroupVersionString }}
----
+# {{ $groupVersion.Version }}
+
+Reference information for {{ $groupVersion.GroupVersionString }}
+
 <!-- markdownlint-disable -->
 
 ## Packages

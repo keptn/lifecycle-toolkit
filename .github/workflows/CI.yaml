@@ -13,11 +13,13 @@ on:
       - "docs/**"
       - "**.md"
       - "netlify.toml"
+      - "mkdocs.yml"
+      - ".github/actions/spelling/*"
 
 env:
-  GO_VERSION: "~1.19"
+  GO_VERSION: "~1.20"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.11.3"
+  CONTROLLER_TOOLS_VERSION: "v0.13.0"
   ENVTEST_K8S_VERSION: "1.24.2"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
 defaults:
@@ -38,7 +40,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Extract branch name
         id: extract_branch
@@ -77,27 +79,28 @@ jobs:
       matrix:
         config:
           - name: "lifecycle-operator"
-            folder: "operator/"
+            folder: "lifecycle-operator/"
           - name: "metrics-operator"
             folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
           - name: "certificate-operator"
-            folder: "klt-cert-manager/"
+            folder: "keptn-cert-manager/"
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Go 1.x
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
           cache-dependency-path: '${{ matrix.config.folder }}go.sum'
+          check-latest: true
 
       - name: Unit Test ${{ matrix.config.name }}
         working-directory: ./${{ matrix.config.folder }}
-        run: make test
+        run: make unit-test
 
       - name: Report code coverage
         uses: codecov/codecov-action@v3
@@ -118,32 +121,34 @@ jobs:
       matrix:
         config:
           - name: "lifecycle-operator"
-            folder: "operator/"
+            folder: "lifecycle-operator/"
           - name: "metrics-operator"
             folder: "metrics-operator/"
           - name: "scheduler"
             folder: "scheduler/"
-          - name: "functions-runtime"
-            folder: "functions-runtime/"
+          - name: "deno-runtime"
+            folder: "runtimes/deno-runtime/"
+          - name: "python-runtime"
+            folder: "runtimes/python-runtime/"
           - name: "certificate-operator"
-            folder: "klt-cert-manager/"
+            folder: "keptn-cert-manager/"
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache build tools
         id: cache-build-tools
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./${{ matrix.config.folder }}bin
           key: build-tools-${{ github.ref_name }}
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Build Docker Image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64
@@ -168,24 +173,21 @@ jobs:
           name: ${{ matrix.config.name }}-image.tar
           path: /tmp/${{ matrix.config.name }}-image.tar
 
-      - name: Install controller-gen
-        if: matrix.config.name == 'lifecycle-operator' || matrix.config.name == 'metrics-operator'
-        working-directory: ./${{ matrix.config.folder }}
-        run: make controller-gen
+  image_tag:
+    name: Store tag of the built images
+    needs: prepare_ci_run
+    runs-on: ubuntu-22.04
+    env:
+      DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
+    steps:
+      - name: Create empty file to store image tag
+        run: echo "" > tag
 
-      - name: Generate release.yaml
-        if: matrix.config.name != 'functions-runtime'
-        working-directory: ./${{ matrix.config.folder }}
-        env:
-          CHART_APPVERSION: dev-${{ env.DATETIME }}
-        run: make release-manifests
-
-      - name: Upload release.yaml for tests
-        if: matrix.config.name != 'functions-runtime'
+      - name: Upload tag for tests
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.config.name }}-manifest-test
-          path: ${{ matrix.config.folder }}/config/rendered/release.yaml
+          name: dev-${{ env.DATETIME }}
+          path: tag
 
   component_tests:
     name: Component Tests
@@ -194,66 +196,85 @@ jobs:
 
   integration_tests:
     name: Integration Tests
-    needs: [prepare_ci_run, build_image]
+    needs:
+      - prepare_ci_run
+      - build_image
+    strategy:
+      matrix:
+        scheduling-gates: [gates_on, gates_off]
+        allowed-namespaces: [allowed_ns_on, allowed_ns_off]
     with:
-      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      scheduling-gates: ${{ matrix.scheduling-gates }}
+      allowed-namespaces: ${{ matrix.allowed-namespaces }}
     uses: ./.github/workflows/integration-test.yml
 
   load-tests:
     name: Load Tests
     needs: [prepare_ci_run, build_image]
     with:
-      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/load-test.yml
 
   e2e_tests:
     name: End to End Tests
     needs: [prepare_ci_run, build_image]
     with:
-      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
     uses: ./.github/workflows/e2e-test.yml
 
-  performance_tests:
-    name: Performance Tests
-    needs: [prepare_ci_run, build_image]
-    with:
-      functions_runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-    uses: ./.github/workflows/performance-test.yml
-
-  helm_charts_build:
+  helm_charts_publish:
     name: Publish helm chart changes to charts repo
     if: github.event_name == 'push' && needs.prepare_ci_run.outputs.NON_FORKED_AND_NON_ROBOT_RUN == 'true'
     needs: [prepare_ci_run, build_image]
+    strategy:
+      matrix:
+        config:
+          - name: keptn
+            path: chart
+          - name: keptn-lifecycle-operator
+            path: lifecycle-operator/chart
+          - name: keptn-metrics-operator
+            path: metrics-operator/chart
+          - name: keptn-cert-manager
+            path: keptn-cert-manager/chart
     runs-on: ubuntu-22.04
     steps:
-      - name: Check out klt repo
-        uses: actions/checkout@v3
+      - name: Check out keptn repo
+        uses: actions/checkout@v4
 
       - name: Check out helm-charts repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: 'keptn/lifecycle-toolkit-charts'
           path: ./helm-charts-repository
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
 
-      - name: Generate helm charts
-        env:
-          RELEASE_REGISTRY: ghcr.keptn.sh/keptn
-        run: make helm-package
+      - name: Substitue local paths with official chart URL
+        if: matrix.config.name == 'keptn'
+        working-directory: ./${{ matrix.config.path }}
+        run: |
+          # substitute local charts path with official ones
+          yq -i '.dependencies.[].repository = "https://charts.lifecycle.keptn.sh"' ./Chart.yaml
+          # update Chart.lock files
+          helm repo add keptn https://charts.lifecycle.keptn.sh
+          helm repo update
+          helm dependency update
+          helm dependency build
 
-      - name: Copy charts from klt to helm repo
-        run: rsync -av --delete --exclude='charts/*.tgz' ./helm/chart/ ./helm-charts-repository/charts/keptn-lifecycle-toolkit/
+      - name: Copy chart from keptn to helm repo
+        run: rsync -av --delete --exclude='charts/*.tgz' ./${{ matrix.config.path }}/ ./helm-charts-repository/charts/${{ matrix.config.name }}/
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
           path: ./helm-charts-repository
-          commit-message: "feat: update KLT chart"
+          commit-message: "feat: update ${{ matrix.config.name }} helm chart"
           signoff: true
-          branch: klt-chart-update-${{ needs.prepare_ci_run.outputs.BRANCH_SLUG }}
+          branch: chart-update-${{ matrix.config.name }}
           delete-branch: true
           base: main
-          title: "Update KLT Helm chart"
+          title: "Update ${{ matrix.config.name }} Helm chart"
           body: |
             :robot: **This is an automated PR for updating and releasing Helm charts from keptn/lifecycle-toolkit!** :robot:

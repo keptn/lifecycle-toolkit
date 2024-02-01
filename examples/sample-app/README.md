@@ -1,6 +1,6 @@
 # Sample Application
 
-This example should demonstrate the capabilities of the lifecycle toolkit as illustrated here:
+This example demonstrates Keptn's capabilities as illustrated here:
 
 ![img.png](assets/big-picture.png)
 
@@ -30,14 +30,14 @@ kubectl create secret generic slack-secret --from-literal=SECURE_DATA='{"slack_h
 ### Enable post deployment task
 
 To enable Slack notification add `post-deployment-notification` in as a postDeploymentTasks in the
-[app.yaml](base/app.yaml) file as shown below.
+[appcontext.yaml](base/appcontext.yaml) file as shown below.
 
 ```yaml
   postDeploymentTasks:
     - post-deployment-notification
 ```
 
-## Deploy the Observability Part and Keptn-lifecycle-toolkit
+## Deploy the Observability Part and Keptn
 
 ```make install```
 
@@ -53,27 +53,17 @@ If you want to port-forward to a different port, please execute:
 ```make deploy-version-1```
 
 Now watch the progress on the cluster
-```kubectl get keptnworkloadinstances```
+```kubectl get keptnworkloadversions```
 ```kubectl get keptnappversions```
 
 You could also open up a browser and watch the progress in Jaeger.
 You can find the Context ID in the "TraceId" Field of
 the KeptnAppVersion
 
-The deployment should fail because of too few cpu resources
+After some time, you should see that everything is successful
 
-## Deploy Version 2 of the PodTatoHead
+## Deploy Version 2
 
 ```make deploy-version-2```
 
-* Watch the progress of the deployments
-* After some time, you should see that everything is successful
-
-## Deploy Version 3
-
-```make deploy-version-3```
-
 * This should only change one service, you can see that only this changed in the trace
-
-<!-- markdownlint-disable-next-line MD033 MD013 -->
-<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=858843d8-8da2-4ce5-a325-e5321c770a78" />

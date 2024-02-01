@@ -1,0 +1,6 @@
+certManager:
+  enabled: true
+lifecycleOperator:
+  enabled: true
+metricsOperator:
+  enabled: false

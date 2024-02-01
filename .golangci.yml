@@ -1,6 +1,6 @@
 run:
   timeout: 5m
-  go: '1.19'
+  go: '1.20'
 linters:
   enable:
     - gofmt         # Gofmt checks whether code was gofmt-ed. By default, this tool runs with -s option to check for code simplification

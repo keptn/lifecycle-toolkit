@@ -13,16 +13,7 @@ import (
 
 const mockSecret = "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
-func TestNewConfigInvalidSecretFormat(t *testing.T) {
-
-	config, err := NewAPIConfig("", "my-secret")
-
-	require.ErrorIs(t, err, ErrClientSecretInvalid)
-	require.Nil(t, config)
-}
-
 func TestAPIClient(t *testing.T) {
-
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
 			_, _ = writer.Write([]byte(`{"access_token": "my-token"}`))
@@ -51,23 +42,21 @@ func TestAPIClient(t *testing.T) {
 
 	require.NotNil(t, apiClient)
 
-	resp, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
+	resp, code, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
 
 	require.Nil(t, err)
 	require.Equal(t, "success", string(resp))
+	require.Equal(t, 200, code)
 
 	require.Equal(t, "my-token", apiClient.config.oAuthCredentials.accessToken)
 }
 
 func TestAPIClientAuthError(t *testing.T) {
-
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		writer.WriteHeader(http.StatusInternalServerError)
 	}))
 
 	defer server.Close()
-
-	mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 	config, err := NewAPIConfig(
 		server.URL,
@@ -86,14 +75,14 @@ func TestAPIClientAuthError(t *testing.T) {
 
 	require.NotNil(t, apiClient)
 
-	resp, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
+	resp, code, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
 
 	require.ErrorIs(t, err, ErrRequestFailed)
 	require.Empty(t, resp)
+	require.Equal(t, http.StatusUnauthorized, code)
 }
 
 func TestAPIClientAuthNoToken(t *testing.T) {
-
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
 			_, _ = writer.Write([]byte(`{"something": "else"}`))
@@ -104,8 +93,6 @@ func TestAPIClientAuthNoToken(t *testing.T) {
 
 	defer server.Close()
 
-	mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-
 	config, err := NewAPIConfig(
 		server.URL,
 		mockSecret,
@@ -123,14 +110,14 @@ func TestAPIClientAuthNoToken(t *testing.T) {
 
 	require.NotNil(t, apiClient)
 
-	resp, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
+	resp, code, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
 
 	require.ErrorIs(t, err, ErrAuthenticationFailed)
 	require.Empty(t, resp)
+	require.Equal(t, http.StatusUnauthorized, code)
 }
 
 func TestAPIClientRequestError(t *testing.T) {
-
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/auth" {
 			_, _ = writer.Write([]byte(`{"access_token": "my-token"}`))
@@ -141,8 +128,6 @@ func TestAPIClientRequestError(t *testing.T) {
 
 	defer server.Close()
 
-	mockSecret := "dt0s08.XX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-
 	config, err := NewAPIConfig(
 		server.URL,
 		mockSecret,
@@ -160,11 +145,12 @@ func TestAPIClientRequestError(t *testing.T) {
 
 	require.NotNil(t, apiClient)
 
-	resp, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
+	resp, code, err := apiClient.Do(context.TODO(), "/query", http.MethodPost, nil)
 
 	// authentication should have worked
 	require.Equal(t, "my-token", apiClient.config.oAuthCredentials.accessToken)
 
 	require.ErrorIs(t, err, ErrRequestFailed)
 	require.Empty(t, resp)
+	require.Equal(t, http.StatusInternalServerError, code)
 }

@@ -18,10 +18,15 @@ package metrics
 
 import (
 	"context"
+	"fmt"
+	"sort"
+	"strconv"
 	"time"
 
 	"github.com/go-logr/logr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1alpha3"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+	ctrlcommon "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/aggregation"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -40,6 +45,7 @@ type KeptnMetricReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 	Log    logr.Logger
+	providers.ProviderFactory
 }
 
 // clusterrole
@@ -55,68 +61,126 @@ type KeptnMetricReconciler struct {
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the KeptnMetric object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	r.Log.Info("Reconciling Metric")
+	requestInfo := ctrlcommon.GetRequestInfo(req)
+	r.Log.Info("Reconciling Metric", "requestInfo", requestInfo)
 	metric := &metricsapi.KeptnMetric{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, metric); err != nil {
 		if errors.IsNotFound(err) {
 			// taking down all associated K8s resources is handled by K8s
-			r.Log.Info("Metric resource not found. Ignoring since object must be deleted")
+			r.Log.Info("Metric resource not found. Ignoring since object must be deleted", "requestInfo", requestInfo)
 			return ctrl.Result{}, nil
 		}
-		r.Log.Error(err, "Failed to get the Metric")
+		r.Log.Error(err, "Failed to get the Metric", "requestInfo", requestInfo)
 		return ctrl.Result{}, nil
 	}
 
 	fetchTime := metric.Status.LastUpdated.Add(time.Second * time.Duration(metric.Spec.FetchIntervalSeconds))
 	if time.Now().Before(fetchTime) {
 		diff := time.Until(fetchTime)
-		r.Log.Info("Metric has not been updated for the configured interval. Skipping")
+		r.Log.Info("Metric has not been updated for the configured interval. Skipping", "requestInfo", requestInfo)
 		return ctrl.Result{Requeue: true, RequeueAfter: diff}, nil
 	}
 
 	metricProvider, err := r.fetchProvider(ctx, types.NamespacedName{Name: metric.Spec.Provider.Name, Namespace: metric.Namespace})
 	if err != nil {
 		if errors.IsNotFound(err) {
-			r.Log.Info(err.Error() + ", ignoring error since object must be deleted")
+			r.Log.Info(err.Error()+", ignoring error since object must be deleted", "requestInfo", requestInfo)
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
 		}
-		r.Log.Error(err, "Failed to retrieve the provider")
+		r.Log.Error(err, "Failed to retrieve the provider", "requestInfo", requestInfo)
 		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 	}
 	// load the provider
-	provider, err2 := providers.NewProvider(metricProvider.GetType(), r.Log, r.Client)
+	provider, err2 := r.ProviderFactory(metricProvider.GetType(), r.Log, r.Client)
 	if err2 != nil {
-		r.Log.Error(err2, "Failed to get the correct Metric Provider")
+		r.Log.Error(err2, "Failed to get the correct Metric Provider", "requestInfo", requestInfo)
 		return ctrl.Result{Requeue: false}, err2
 	}
+	reconcile := ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}
 
-	value, rawValue, err := provider.EvaluateQuery(ctx, *metric, *metricProvider)
-	if err != nil {
-		r.Log.Error(err, "Failed to evaluate the query")
-		return ctrl.Result{Requeue: false}, err
-	}
-	metric.Status.Value = value
-	metric.Status.RawValue = cupSize(rawValue)
-	metric.Status.LastUpdated = metav1.Time{Time: time.Now()}
+	value, rawValue, err := r.getResults(ctx, metric, provider, metricProvider)
+
+	reconcile = r.updateMetric(metric, value, rawValue, reconcile, err)
 
 	if err := r.Client.Status().Update(ctx, metric); err != nil {
-		r.Log.Error(err, "Failed to update the Metric status")
+		r.Log.Error(err, "Failed to update the Metric status", "requestInfo", requestInfo)
 		return ctrl.Result{}, err
 	}
 
-	return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+	return reconcile, err
+}
+
+func (r *KeptnMetricReconciler) updateMetric(metric *metricsapi.KeptnMetric, value string, rawValue []byte, reconcile ctrl.Result, err error) ctrl.Result {
+	if metric.Spec.Range != nil && metric.Spec.Range.StoredResults > 0 {
+		intervalResult := metricsapi.IntervalResult{
+			LastUpdated: metav1.Time{Time: time.Now().UTC()},
+			ErrMsg:      "",
+		}
+
+		if err != nil {
+			r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
+			intervalResult.ErrMsg = err.Error()
+		} else {
+			intervalResult.Value = value
+			intervalResult.Range = metric.Spec.Range
+		}
+
+		if len(metric.Status.IntervalResults) >= int(metric.Spec.Range.StoredResults) {
+			metric.Status.IntervalResults = append(metric.Status.IntervalResults[1:], intervalResult)
+		} else {
+			metric.Status.IntervalResults = append(metric.Status.IntervalResults, intervalResult)
+		}
+	} else {
+		if err != nil {
+			r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
+			metric.Status.ErrMsg = err.Error()
+		} else {
+			metric.Status.ErrMsg = ""
+			metric.Status.Value = value
+			metric.Status.RawValue = cupSize(rawValue)
+		}
+	}
+	metric.Status.LastUpdated = metav1.Time{Time: time.Now().UTC()}
+
+	return reconcile
+}
+
+func (r *KeptnMetricReconciler) getResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	if metric.Spec.Range != nil && metric.Spec.Range.Step != "" {
+		return r.getStepQueryResults(ctx, metric, provider, metricProvider)
+	}
+	return r.getQueryResults(ctx, metric, provider, metricProvider)
+}
+func (r *KeptnMetricReconciler) getQueryResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	value, rawValue, err := provider.EvaluateQuery(ctx, *metric, *metricProvider)
+	if err != nil {
+		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
+		return "", cupSize(rawValue), err
+	}
+	return value, cupSize(rawValue), nil
+}
+func (r *KeptnMetricReconciler) getStepQueryResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	value, rawValue, err := provider.EvaluateQueryForStep(ctx, *metric, *metricProvider)
+	if err != nil {
+		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
+		return "", cupSize(rawValue), err
+	}
+	aggValue, err := aggregateValues(value, metric.Spec.Range.Aggregation)
+	if err != nil {
+		return "", nil, err
+	}
+	return aggValue, cupSize(rawValue), nil
 }
 
 func cupSize(value []byte) []byte {
+	if len(value) == 0 {
+		return []byte{}
+	}
 	if len(value) > MB {
 		return value[:MB]
 	}
@@ -136,4 +200,43 @@ func (r *KeptnMetricReconciler) fetchProvider(ctx context.Context, namespacedMet
 		return nil, err
 	}
 	return provider, nil
+}
+
+func aggregateValues(stringSlice []string, aggFunc string) (string, error) {
+	floatSlice, err := stringSliceToFloatSlice(stringSlice)
+	if err != nil {
+		return "", err
+	}
+	var aggValue float64
+	switch aggFunc {
+	case "max":
+		aggValue = aggregation.CalculateMax(floatSlice)
+	case "min":
+		aggValue = aggregation.CalculateMin(floatSlice)
+	case "median":
+		aggValue = aggregation.CalculateMedian(floatSlice)
+	case "avg":
+		aggValue = aggregation.CalculateAverage(floatSlice)
+	case "p90":
+		aggValue = aggregation.CalculatePercentile(sort.Float64Slice(floatSlice), 90)
+	case "p95":
+		aggValue = aggregation.CalculatePercentile(sort.Float64Slice(floatSlice), 95)
+	case "p99":
+		aggValue = aggregation.CalculatePercentile(sort.Float64Slice(floatSlice), 99)
+	}
+	return fmt.Sprintf("%v", aggValue), nil
+}
+
+func stringSliceToFloatSlice(strSlice []string) ([]float64, error) {
+	floatSlice := make([]float64, len(strSlice))
+
+	for i, str := range strSlice {
+		floatValue, err := strconv.ParseFloat(str, 64)
+		if err != nil {
+			return nil, err
+		}
+		floatSlice[i] = floatValue
+	}
+
+	return floatSlice, nil
 }

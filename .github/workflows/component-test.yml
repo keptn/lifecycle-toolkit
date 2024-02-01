@@ -2,7 +2,7 @@ name: Component Tests
 on:
   workflow_call:
 env:
-  GO_VERSION: "~1.19"
+  GO_VERSION: "~1.20"
 defaults:
   run:
     shell: bash
@@ -12,17 +12,18 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Go 1.x
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
-          cache-dependency-path: 'operator/go.sum'
+          cache-dependency-path: 'lifecycle-operator/go.sum'
+          check-latest: true
 
       - name: Execute Component Tests
-        working-directory: operator
+        working-directory: lifecycle-operator
         run: make component-test
 
       - name: Report code coverage

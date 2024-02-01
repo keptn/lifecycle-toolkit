@@ -1,0 +1,10 @@
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnTaskDefinition
+metadata:
+  name: keptntaskdefinition-sample-py
+spec:
+  function:
+    inline:
+      code: |
+        print("hello");
+  retries: 2

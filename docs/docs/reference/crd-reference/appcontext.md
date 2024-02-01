@@ -42,21 +42,22 @@ spec:
 
 ## Fields
 
-* **apiVersion** -- API version being used
+- **apiVersion** -- API version being used
    Must be set to `lifecycle.keptn.sh/v1beta1`
-* **kind** -- Resource type
+- **kind** -- Resource type
    Must be set to `KeptnAppContext`
+
 - **metadata**
   - **name** -- Unique name of this `KeptnAppContext` resource.
        Names must comply with the
        [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
        specification
        and match the `name` given to the associated `KeptnApp` resource.
-  * **namespace** -- Namespace of this application.
+  - **namespace** -- Namespace of this application.
        This must match the `namespace` given to
        the associated `KeptnApp` resource.
-* **spec**
-  * **metadata** -- list of key-value pairs
+- **spec**
+  - **metadata** -- list of key-value pairs
        that are propagated to the application trace as attributes.
        For example, the following lines add the `commit-id`
        and `author` information to the `KEPTN_CONTEXT`

@@ -75,6 +75,7 @@ carryforward
 certificatehandler
 certmanager
 certwebhook
+chainsaw
 Chans
 Checkmarx
 clientgoscheme
@@ -370,6 +371,7 @@ kustomizeconfig
 kuttl
 kwi
 kwv
+kyverno
 lastword
 Lato
 LFC

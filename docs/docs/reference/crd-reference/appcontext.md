@@ -43,7 +43,7 @@ spec:
 ## Fields
 
 * **apiVersion** -- API version being used
-   Must be set to `v1beta1`
+   Must be set to `lifecycle.keptn.sh/v1beta1`
 * **kind** -- Resource type
    Must be set to `KeptnAppContext`
 * **metadata**

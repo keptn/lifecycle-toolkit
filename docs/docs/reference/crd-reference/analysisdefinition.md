@@ -134,8 +134,9 @@ Each of these objectives must specify:
 * Weight of the objective on the overall Analysis
 
 ## Example
-
-{{< embed path="/metrics-operator/config/samples/metrics_v1beta1_analysisdefinition.yaml" >}}
+```yaml
+{% include "https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/config/samples/metrics_v1beta1_analysisdefinition.yaml" %}
+```
 
 For a full example of how to implement the Keptn Analysis feature, see the
 [Analysis](../../guides/slo.md)

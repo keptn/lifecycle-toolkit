@@ -150,7 +150,7 @@ is changed in the `v1beta1` API version:
   In earlier releases, this label was not included in `KeptnApp` resources
   that were created by applying a manifest
   that had been created manually.
-- If you are using the context propagation feature,
+- If you want to use a `KeptnAppContext` resource with your application,
   the `name` and `namespace` fields
   are taken from the annotations of the deployed Kubernetes workloads.
   The corresponding `KeptnAppContext` resource (if any),

@@ -54,12 +54,11 @@ that are provided by Keptn:
 ![Application deployment trace](./assets/trace.png)
 
 To execute pre-/post-deployment checks for a `KeptnApp`,
-a `KeptnAppContext` with the same name as the `KeptnApp`
-can be created.
+create a `KeptnAppContext` with the same name and in the same `namespace` as the `KeptnApp`.
 The `KeptnAppContext` contains a list of
 pre-/post-deployment tasks and evaluations
 that should be executed before and after the
-workloads withing the `KeptnApp` are being deployed.
+workloads within the `KeptnApp` are deployed.
 
 See the [Getting started guide](../getting-started/lifecycle-management.md#more-control-over-the-application)
 for more information on how to configure a `KeptnAppContext`

@@ -66,8 +66,8 @@ spec:
            author: "myUser"
        ```
 
-  * **spanLinks** -- OpenTelemetry span link
-    that connects multiple traces.
+  * **spanLinks** -- List of OpenTelemetry span links
+    that connect multiple traces.
     For example, this can be used to connect
     deployments of the same application
     through different stages.

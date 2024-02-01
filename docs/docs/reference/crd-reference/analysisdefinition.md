@@ -134,8 +134,9 @@ Each of these objectives must specify:
 * Weight of the objective on the overall Analysis
 
 ## Example
+
 ```yaml
-{% include "https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/config/samples/metrics_v1beta1_analysisdefinition.yaml" %}
+{% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/metrics-operator/config/samples/metrics_v1beta1_analysisdefinition.yaml" %}
 ```
 
 For a full example of how to implement the Keptn Analysis feature, see the

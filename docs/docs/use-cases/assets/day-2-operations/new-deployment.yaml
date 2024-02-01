@@ -16,4 +16,4 @@ spec:
     spec:
       containers:
         - name: podtato-head-left-leg
-          image: ghcr.io/podtato-head/podtato-server:v0.3.0
+          image: ghcr.io/podtato-head/podtato-server:v0.3.1

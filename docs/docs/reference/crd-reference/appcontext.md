@@ -85,7 +85,7 @@ spec:
           ```
 
           After you add this field to your `KeptnAppContext` manifest,
-          you must increment the `version` number
+          you must increment the `revision` number
           of the corresponding `KeptnApp` resource
           and apply the manifest to store the information in the traces.
 

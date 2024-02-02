@@ -5,40 +5,40 @@ metadata:
   name: cert-recreates
 spec:
   steps:
-  - name: step-00
-    try:
-    - delete:
-        ref:
-          apiVersion: v1
-          kind: Secret
-          namespace: keptn-system
-          name: keptn-certs
-    - script:
-        content: |
-          set -euo pipefail
-          kubectl rollout restart deployment -n keptn-system -l control-plane=lifecycle-operator
-          kubectl rollout restart deployment -n keptn-system -l control-plane=metrics-operator
-    - assert:
-        file: 00-assert.yaml
-  - name: step-01
-    try:
-    - apply:
-        file: 01-delete.yaml
-    - assert:
-        file: 01-assert.yaml
-  - name: step-02
-    try:
-    - apply:
-        file: 02-install.yaml
-    - script:
-        content: |
-          str1=$(kubectl get secret keptn-certs -n keptn-system -o=go-template='{{index .data "tls.crt"}}')
-          str2="LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNkekNDQWg2Z0F3SUJBZ0lRZUpBWkJMcmxCY2VqNzh3cm4wV1ZIekFLQmdncWhrak9QUVFEQWpDQmlURUwKa0ZGY1FpY29hdE8yRFJnPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t"
-          if [ "$str1" == "$str2" ]; then
-          echo "Strings are equal" $str1
-          exit 1
-          else
-          echo "Strings are not equal" $str1 "!=" $str2
-          fi
-    - assert:
-        file: 02-assert.yaml
+    - name: step-00
+      try:
+        - delete:
+            ref:
+              apiVersion: v1
+              kind: Secret
+              namespace: keptn-system
+              name: keptn-certs
+        - script:
+            content: |
+              set -e
+              kubectl rollout restart deployment -n keptn-system -l control-plane=lifecycle-operator
+              kubectl rollout restart deployment -n keptn-system -l control-plane=metrics-operator
+        - assert:
+            file: 00-assert.yaml
+    - name: step-01
+      try:
+        - apply:
+            file: 01-delete.yaml
+        - assert:
+            file: 01-assert.yaml
+    - name: step-02
+      try:
+        - apply:
+            file: 02-install.yaml
+        - script:
+            content: |
+              str1=$(kubectl get secret keptn-certs -n keptn-system -o=go-template='{{index .data "tls.crt"}}')
+              str2="LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNkekNDQWg2Z0F3SUJBZ0lRZUpBWkJMcmxCY2VqNzh3cm4wV1ZIekFLQmdncWhrak9QUVFEQWpDQmlURUwKa0ZGY1FpY29hdE8yRFJnPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t"
+              if [ "$str1" == "$str2" ]; then
+              echo "Strings are equal" $str1
+              exit 1
+              else
+              echo "Strings are not equal" $str1 "!=" $str2
+              fi
+        - assert:
+            file: 02-assert.yaml

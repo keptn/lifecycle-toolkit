@@ -6,25 +6,25 @@ metadata:
   name: metrics-hpa
 spec:
   steps:
-  - name: step-00
-    try:
-    - apply:
-        file: 00-install.yaml
-    - script:
-        content: |
-          kubectl apply -f mock-server.yaml -n $NAMESPACE
-    - script:
-        content: |
-          echo "registering the metric"
-          envsubst < metric.yaml | kubectl apply -f - -n $NAMESPACE
-          echo "configuring HPA"
-          kubectl apply -f hpa.yaml -n $NAMESPACE
-    catch:
-    - podLogs:
-        selector: app=podtato-head
-    - script:
-        content: |
-          kubectl logs -l app=metrics-operator -n keptn-system
-          kubectl describe keptnmetric podtatometric -n $NAMESPACE
-          kubectl describe keptnmetricsprovider dynatrace -n $NAMESPACE
-          kubectl describe pods -l app=podtato-head -n $NAMESPACE
+    - name: step-00
+      try:
+        - apply:
+            file: 00-install.yaml
+        - script:
+            content: |
+              kubectl apply -f mock-server.yaml -n $NAMESPACE
+        - script:
+            content: |
+              echo "registering the metric"
+              envsubst < metric.yaml | kubectl apply -f - -n $NAMESPACE
+              echo "configuring HPA"
+              kubectl apply -f hpa.yaml -n $NAMESPACE
+      catch:
+        - podLogs:
+            selector: app=podtato-head
+        - script:
+            content: |
+              kubectl logs -l app=metrics-operator -n keptn-system
+              kubectl describe keptnmetric podtatometric -n $NAMESPACE
+              kubectl describe keptnmetricsprovider dynatrace -n $NAMESPACE
+              kubectl describe pods -l app=podtato-head -n $NAMESPACE

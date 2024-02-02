@@ -66,7 +66,7 @@ chainsaw-integration-test:
 # chainsaw test --test-dir ./test/chainsaw/integration/
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/
 # chainsaw test --test-dir ./test/chainsaw/testanalysis/
-	chainsaw test --test-dir ./test/kuttl/testcertificate/
+	chainsaw test --test-dir ./test/chainsaw/testcertificate/
 
 .PHONY: chainsaw-integration-test-local #these tests should run on a real cluster!
 chainsaw-integration-test-local:
@@ -74,7 +74,7 @@ chainsaw-integration-test-local:
 # chainsaw test --test-dir ./test/chainsaw/integration/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/ --config ./.chainsaw-local.yaml
 # chainsaw test --test-dir ./test/chainsaw/testanalysis/ --config ./.chainsaw-local.yaml
-	chainsaw test --test-dir ./test/kuttl/testcertificate/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/testcertificate/ --config ./.chainsaw-local.yaml
 
 .PHONY: chainsaw-integration-test-scheduling-gates #these tests should run on a real cluster!
 chainsaw-integration-test-scheduling-gates:

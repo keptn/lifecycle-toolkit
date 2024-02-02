@@ -2,7 +2,7 @@
 
 To create a provider for the dummy endpoint, follow these steps:
 
-1. Fork [this repo](https://github.com/keptn/lifecycle-toolkit)
+1. Fork the [Keptn repo](https://github.com/keptn/lifecycle-toolkit)
 
 2. **Define the Provider Type:** In the `metrics-operator/controllers/common/providers/common.go` file,
  define the constant `KeptnDummyProviderType` with the value `"dummy"`.

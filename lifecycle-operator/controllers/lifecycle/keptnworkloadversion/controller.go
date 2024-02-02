@@ -295,12 +295,7 @@ func (r *KeptnWorkloadVersionReconciler) SetupWithManager(mgr ctrl.Manager) erro
 		return err
 	}
 	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &klcv1beta1.KeptnWorkloadVersion{}, resourceReferenceUIDField, func(rawObj client.Object) []string {
-		// Extract the ConfigMap name from the ConfigDeployment Spec, if one is provided
-		workloadVersion := rawObj.(*klcv1beta1.KeptnWorkloadVersion)
-		if workloadVersion.Spec.ResourceReference.UID == "" {
-			return nil
-		}
-		return []string{string(workloadVersion.Spec.ResourceReference.UID)}
+		return resourceRefUIDIndexFunc(rawObj)
 	}); err != nil {
 		return err
 	}
@@ -312,6 +307,15 @@ func (r *KeptnWorkloadVersionReconciler) SetupWithManager(mgr ctrl.Manager) erro
 			handler.EnqueueRequestsFromMapFunc(r.findObjectsForPod),
 		).
 		Complete(r)
+}
+
+func resourceRefUIDIndexFunc(rawObj client.Object) []string {
+	// Extract the ConfigMap name from the ConfigDeployment Spec, if one is provided
+	workloadVersion := rawObj.(*klcv1beta1.KeptnWorkloadVersion)
+	if workloadVersion.Spec.ResourceReference.UID == "" {
+		return nil
+	}
+	return []string{string(workloadVersion.Spec.ResourceReference.UID)}
 }
 
 func (r *KeptnWorkloadVersionReconciler) sendUnfinishedPreEvaluationEvents(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadVersion *klcv1beta1.KeptnWorkloadVersion) {

@@ -4,10 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/go-logr/logr"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
-	"k8s.io/apimachinery/pkg/runtime"
-	"reflect"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"strings"
 	"testing"
@@ -1628,47 +1624,193 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppErrorWhenUp
 }
 
 func TestKeptnWorkloadVersionReconciler_findObjectsForPod(t *testing.T) {
-	type fields struct {
-		Client                 client.Client
-		Scheme                 *runtime.Scheme
-		EventSender            eventsender.IEvent
-		Log                    logr.Logger
-		Meters                 apicommon.KeptnMeters
-		SpanHandler            telemetry.ISpanHandler
-		TracerFactory          telemetry.TracerFactory
-		SchedulingGatesHandler schedulinggates.ISchedulingGatesHandler
-		EvaluationHandler      evaluation.IEvaluationHandler
-		PhaseHandler           phase.IHandler
+	podMeta := metav1.ObjectMeta{
+		Name:      "my-pod",
+		Namespace: "my-namespace",
+		OwnerReferences: []metav1.OwnerReference{
+			{
+				Kind: "ReplicaSet",
+				Name: "my-replica-set",
+				UID:  "some-uid",
+			},
+		},
 	}
 	type args struct {
 		ctx    context.Context
 		object client.Object
 	}
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   []reconcile.Request
+		name             string
+		workloadVersions []client.Object
+		args             args
+		lookupError      bool
+		want             []reconcile.Request
 	}{
-		// TODO: Add test cases.
+		{
+			name:             "no scheduling gate",
+			workloadVersions: nil,
+			args: args{
+				ctx: context.TODO(),
+				object: &v1.Pod{
+					ObjectMeta: podMeta,
+					Spec:       v1.PodSpec{},
+				},
+			},
+			want: []reconcile.Request{},
+		},
+		{
+			name:             "not a pod",
+			workloadVersions: nil,
+			args: args{
+				ctx:    context.TODO(),
+				object: &appsv1.Deployment{},
+			},
+			want: []reconcile.Request{},
+		},
+		{
+			name:             "no owner references",
+			workloadVersions: nil,
+			args: args{
+				ctx: context.TODO(),
+				object: &v1.Pod{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "my-pod",
+						Namespace: "my-namespace",
+					},
+					Spec: v1.PodSpec{
+						SchedulingGates: []v1.PodSchedulingGate{
+							{
+								Name: apicommon.KeptnGate,
+							},
+						},
+					},
+				},
+			},
+			want: []reconcile.Request{},
+		},
+		{
+			name:             "no related WorkloadVersions",
+			workloadVersions: nil,
+			args: args{
+				ctx: context.TODO(),
+				object: &v1.Pod{
+					ObjectMeta: podMeta,
+					Spec: v1.PodSpec{
+						SchedulingGates: []v1.PodSchedulingGate{
+							{
+								Name: apicommon.KeptnGate,
+							},
+						},
+					},
+				},
+			},
+			want: []reconcile.Request{},
+		},
+		{
+			name:             "error when executing list request",
+			workloadVersions: nil,
+			args: args{
+				ctx: context.TODO(),
+				object: &v1.Pod{
+					ObjectMeta: podMeta,
+					Spec: v1.PodSpec{
+						SchedulingGates: []v1.PodSchedulingGate{
+							{
+								Name: apicommon.KeptnGate,
+							},
+						},
+					},
+				},
+			},
+			lookupError: true,
+			want:        []reconcile.Request{},
+		},
+		{
+			name: "get requests for related WorkloadVersions",
+			workloadVersions: []client.Object{
+				&klcv1beta1.KeptnWorkloadVersion{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "my-wlv",
+						Namespace: "my-namespace",
+					},
+					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+							ResourceReference: klcv1beta1.ResourceReference{
+								UID: podMeta.OwnerReferences[0].UID,
+							},
+						},
+					},
+				},
+				&klcv1beta1.KeptnWorkloadVersion{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "my-other-wlv",
+						Namespace: "my-namespace",
+					},
+					Spec: klcv1beta1.KeptnWorkloadVersionSpec{},
+				},
+				&klcv1beta1.KeptnWorkloadVersion{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      "my-wlv",
+						Namespace: "my-other-namespace",
+					},
+					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+							ResourceReference: klcv1beta1.ResourceReference{
+								UID: podMeta.OwnerReferences[0].UID,
+							},
+						},
+					},
+				},
+			},
+			args: args{
+				ctx: context.TODO(),
+				object: &v1.Pod{
+					ObjectMeta: podMeta,
+					Spec: v1.PodSpec{
+						SchedulingGates: []v1.PodSchedulingGate{
+							{
+								Name: apicommon.KeptnGate,
+							},
+						},
+					},
+				},
+			},
+			want: []reconcile.Request{
+				{
+					NamespacedName: types.NamespacedName{
+						Namespace: "my-namespace",
+						Name:      "my-wlv",
+					},
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := &KeptnWorkloadVersionReconciler{
-				Client:                 tt.fields.Client,
-				Scheme:                 tt.fields.Scheme,
-				EventSender:            tt.fields.EventSender,
-				Log:                    tt.fields.Log,
-				Meters:                 tt.fields.Meters,
-				SpanHandler:            tt.fields.SpanHandler,
-				TracerFactory:          tt.fields.TracerFactory,
-				SchedulingGatesHandler: tt.fields.SchedulingGatesHandler,
-				EvaluationHandler:      tt.fields.EvaluationHandler,
-				PhaseHandler:           tt.fields.PhaseHandler,
-			}
-			if got := r.findObjectsForPod(tt.args.ctx, tt.args.object); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("findObjectsForPod() = %v, want %v", got, tt.want)
-			}
+			r, _, _ := setupReconciler(tt.workloadVersions...)
+
+			mockClient := k8sfake.
+				NewClientBuilder().
+				WithScheme(scheme.Scheme).
+				WithObjects(tt.workloadVersions...).
+				WithIndex(&klcv1beta1.KeptnWorkloadVersion{}, resourceReferenceUIDField, func(object client.Object) []string {
+					return resourceRefUIDIndexFunc(object)
+				}).
+				WithInterceptorFuncs(
+					interceptor.Funcs{
+						List: func(ctx context.Context, client client.WithWatch, list client.ObjectList, opts ...client.ListOption) error {
+							if tt.lookupError {
+								return errors.New("unexpected error")
+							}
+							return client.List(ctx, list, opts...)
+						}}).
+				Build()
+
+			r.Client = mockClient
+
+			requests := r.findObjectsForPod(context.TODO(), tt.args.object)
+
+			require.Equal(t, tt.want, requests)
 		})
 	}
 }

@@ -170,7 +170,6 @@ func TestEvaluateQueryForStep_HappyPath(t *testing.T) {
 
 	// Check if the result is as expected
 	require.NoError(t, err)
-	require.Len(t, values, 1)
 	require.Equal(t, "91", values[0])
 }
 

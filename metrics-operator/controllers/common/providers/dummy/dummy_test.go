@@ -99,10 +99,14 @@ func TestFetchAnalysisValue_HappyPath(t *testing.T) {
 		},
 	}
 	// Create a sample provider
-	provider := &metricsapi.KeptnMetricsProvider{}
+	provider := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			TargetServer: "http://www.randomnumberapi.com/api/v1.0/",
+		},
+	}
 
 	// Call the FetchAnalysisValue method
-	value, err := dummyProvider.FetchAnalysisValue(context.TODO(), query, analysis, provider)
+	value, err := dummyProvider.FetchAnalysisValue(context.TODO(), query, analysis, &provider)
 
 	// Check if the result is as expected
 	require.NoError(t, err)

@@ -40,7 +40,7 @@ func (r *KeptnDummyProvider) query(ctx context.Context, query string, provider m
 	// create a new request with context
 	//baseURL := "http://www.randomnumberapi.com/api/v1.0/"
 	qURL := provider.Spec.TargetServer
-	request, err := http.NewRequestWithContext(ctx, http.MethodGet, qURL+query, nil)
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, qURL+query+"?min=42&max=43", nil)
 	if err != nil {
 		r.Log.Error(err, "Error in creating the request")
 		return nil, err

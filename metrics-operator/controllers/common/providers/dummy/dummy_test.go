@@ -50,10 +50,10 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 
 func TestEvaluateQuery_Error(t *testing.T) {
 	// Create a dummy HTTP server that always returns an error
-	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		http.Error(w, "mock error", http.StatusInternalServerError)
-	}))
-	defer svr.Close()
+	// svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	// 	http.Error(w, "mock error", http.StatusInternalServerError)
+	// }))
+	// defer svr.Close()
 
 	// Create a new instance of KeptnDummyProvider
 	dummyProvider := &KeptnDummyProvider{
@@ -69,7 +69,7 @@ func TestEvaluateQuery_Error(t *testing.T) {
 	}
 	provider := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: svr.URL,
+			TargetServer: "http://www.randomnumberapierror.com/api/v1.0/",
 		},
 	}
 
@@ -132,10 +132,14 @@ func TestFetchAnalysisValue_Error(t *testing.T) {
 		},
 	}
 	// Create a sample provider that will return an error
-	provider := &metricsapi.KeptnMetricsProvider{}
+	provider := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			TargetServer: "http://www.randomnumberapierror.com/api/v1.0/",
+		},
+	}
 
 	// Call the FetchAnalysisValue method
-	_, err := dummyProvider.FetchAnalysisValue(context.TODO(), query, analysis, provider)
+	_, err := dummyProvider.FetchAnalysisValue(context.TODO(), query, analysis, &provider)
 
 	// Check if an error occurred
 	require.Error(t, err)

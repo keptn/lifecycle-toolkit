@@ -441,11 +441,13 @@ func (r *KeptnWorkloadVersionReconciler) findObjectsForPod(ctx context.Context, 
 
 	requests := make([]reconcile.Request, len(attachedWorkloadVersions.Items))
 	for i, item := range attachedWorkloadVersions.Items {
-		requests[i] = reconcile.Request{
-			NamespacedName: types.NamespacedName{
-				Name:      item.GetName(),
-				Namespace: item.GetNamespace(),
-			},
+		if item.Status.DeploymentStatus == apicommon.StateSucceeded {
+			requests[i] = reconcile.Request{
+				NamespacedName: types.NamespacedName{
+					Name:      item.GetName(),
+					Namespace: item.GetNamespace(),
+				},
+			}
 		}
 	}
 	return requests

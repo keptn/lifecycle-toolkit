@@ -134,10 +134,10 @@ func TestFetchAnalysisValue_Error(t *testing.T) {
 	// Create a sample provider that will return an error
 	provider := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: "http://www.randomnumberapi.com/api/v1.0/",
+			TargetServer: "",
 		},
 	}
-
+	//http://www.randomnumberapi.com/api/v1.0/
 	// Call the FetchAnalysisValue method
 	_, err := dummyProvider.FetchAnalysisValue(context.TODO(), query, analysis, &provider)
 

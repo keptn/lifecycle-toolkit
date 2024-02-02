@@ -19,7 +19,11 @@ package keptnworkloadversion
 import (
 	"context"
 	"fmt"
+	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/fields"
+	"k8s.io/apimachinery/pkg/types"
 	"reflect"
+	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -47,7 +51,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
-const traceComponentName = "keptn/lifecycle-operator/workloadversion"
+const (
+	traceComponentName        = "keptn/lifecycle-operator/workloadversion"
+	resourceReferenceUIDField = ".spec.resourceReference.uid"
+)
 
 // KeptnWorkloadVersionReconciler reconciles a KeptnWorkloadVersion object
 type KeptnWorkloadVersionReconciler struct {
@@ -287,9 +294,23 @@ func (r *KeptnWorkloadVersionReconciler) SetupWithManager(mgr ctrl.Manager) erro
 	}); err != nil {
 		return err
 	}
+	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &klcv1beta1.KeptnWorkloadVersion{}, resourceReferenceUIDField, func(rawObj client.Object) []string {
+		// Extract the ConfigMap name from the ConfigDeployment Spec, if one is provided
+		workloadVersion := rawObj.(*klcv1beta1.KeptnWorkloadVersion)
+		if workloadVersion.Spec.ResourceReference.UID == "" {
+			return nil
+		}
+		return []string{string(workloadVersion.Spec.ResourceReference.UID)}
+	}); err != nil {
+		return err
+	}
 	return ctrl.NewControllerManagedBy(mgr).
 		// predicate disabling the auto reconciliation after updating the object status
 		For(&klcv1beta1.KeptnWorkloadVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		Watches(
+			&v1.Pod{},
+			handler.EnqueueRequestsFromMapFunc(r.findObjectsForPod),
+		).
 		Complete(r)
 }
 
@@ -386,6 +407,53 @@ func (r *KeptnWorkloadVersionReconciler) getAppVersionForWorkloadVersion(ctx con
 
 func (r *KeptnWorkloadVersionReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
+}
+
+func (r *KeptnWorkloadVersionReconciler) findObjectsForPod(ctx context.Context, object client.Object) []reconcile.Request {
+	attachedWorkloadVersions := &klcv1beta1.KeptnWorkloadVersionList{}
+
+	pod, ok := object.(*v1.Pod)
+	if !ok {
+		return []reconcile.Request{}
+	}
+	if !hasKeptnSchedulingGate(pod) {
+		return []reconcile.Request{}
+	}
+
+	// check if the owner of the pod refers is the one that the KeptnWorkloadVersion is referring to
+	owner := pod.GetOwnerReferences()
+	if len(owner) == 0 {
+		return []reconcile.Request{}
+	}
+	listOps := &client.ListOptions{
+		FieldSelector: fields.OneTermEqualSelector(resourceReferenceUIDField, string(owner[0].UID)),
+		Namespace:     pod.GetNamespace(),
+	}
+	err := r.List(context.TODO(), attachedWorkloadVersions, listOps)
+	if err != nil {
+		r.Log.Error(err, "Could not list WorkloadVersions related to pod", "pod", pod.GetName(), "namespace", pod.GetNamespace())
+		return []reconcile.Request{}
+	}
+
+	requests := make([]reconcile.Request, len(attachedWorkloadVersions.Items))
+	for i, item := range attachedWorkloadVersions.Items {
+		requests[i] = reconcile.Request{
+			NamespacedName: types.NamespacedName{
+				Name:      item.GetName(),
+				Namespace: item.GetNamespace(),
+			},
+		}
+	}
+	return requests
+}
+
+func hasKeptnSchedulingGate(pod *v1.Pod) bool {
+	for _, gate := range pod.Spec.SchedulingGates {
+		if gate.Name == apicommon.KeptnGate {
+			return true
+		}
+	}
+	return false
 }
 
 func getLatestAppVersion(apps *klcv1beta1.KeptnAppVersionList, wli *klcv1beta1.KeptnWorkloadVersion) (bool, klcv1beta1.KeptnAppVersion, error) {

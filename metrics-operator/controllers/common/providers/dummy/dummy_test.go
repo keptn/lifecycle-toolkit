@@ -69,7 +69,7 @@ func TestEvaluateQuery_Error(t *testing.T) {
 	}
 	provider := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: "http://www.randomnumberapierror.com/api/v1.0/",
+			TargetServer: "http://www.randomnumberapi.com/api/v1.0/",
 		},
 	}
 
@@ -134,7 +134,7 @@ func TestFetchAnalysisValue_Error(t *testing.T) {
 	// Create a sample provider that will return an error
 	provider := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: "http://www.randomnumberapierror.com/api/v1.0/",
+			TargetServer: "http://www.randomnumberapi.com/api/v1.0/",
 		},
 	}
 

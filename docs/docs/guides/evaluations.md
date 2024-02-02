@@ -14,11 +14,11 @@ When an evaluation is run pre-deployment,
 the deployment is kept in a pending state
 until the evaluation passes with a successful result.
 
-Evaluation can be defined at:
+Evaluations can be defined at:
 
-- KeptnApp level, so befor or after the entire ensamble of workloads that make your 
-  application is deployed.
-- Workload level, so before or after a single deployment/stateful-set/daemon-set is deployed
+- `KeptnApp` level, so before or after the deployment of the entire ensemble of workloads 
+  that makes your application.
+- `KeptnWorkload` level, so before or after a single deployment/stateful-set/daemon-set is deployed
 
 Use the
 [Analysis](slo.md)
@@ -58,8 +58,8 @@ To implement evaluations, you must:
 1. [Create KeptnEvaluationDefinition](#create-keptnevaluationdefinition-resources)
    resources for each evaluation you want to perform.
 1. Manually create the appropriate `KeptnAppContext` resource 
-   listing all KeptnApp level evaluations, referring to `KeptnEvaluationDefinition`
-2. Annotate any workload YAML file for each `KeptnEvaluationDefinition` resource
+   listing all `KeptnApp` level evaluations, referring to `KeptnEvaluationDefinition`
+2. Annotate any of your workload YAML file for each `KeptnEvaluationDefinition` resource
    you want to run pre- and/or post-deployment .
 
 
@@ -119,10 +119,10 @@ Note the following:
 
 ## Annotate your workload resource for workload level Evaluations
 
-To define the pre/post-deployment evaluations to run
+To define the pre-/post-deployment evaluations to run
 for a single Kubernetes workload, you need to provide an annotation
 for each `KeptnEvaluationDefinition` resource to be run
-pre/post-deployment.
+pre-/post-deployment.
 The annotations for evaluations are:
 
 ```yaml

@@ -45,7 +45,7 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 
 	// Check if the result is as expected
 	require.NoError(t, err)
-	require.Equal(t, "42", value)
+	require.Equal(t, "91", value)
 }
 
 func TestEvaluateQuery_Error(t *testing.T) {

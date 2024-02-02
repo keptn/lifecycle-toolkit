@@ -429,7 +429,7 @@ func (r *KeptnWorkloadVersionReconciler) findObjectsForPod(ctx context.Context, 
 		FieldSelector: fields.OneTermEqualSelector(resourceReferenceUIDField, string(owner[0].UID)),
 		Namespace:     pod.GetNamespace(),
 	}
-	err := r.List(context.TODO(), attachedWorkloadVersions, listOps)
+	err := r.List(ctx, attachedWorkloadVersions, listOps)
 	if err != nil {
 		r.Log.Error(err, "Could not list WorkloadVersions related to pod", "pod", pod.GetName(), "namespace", pod.GetNamespace())
 		return []reconcile.Request{}

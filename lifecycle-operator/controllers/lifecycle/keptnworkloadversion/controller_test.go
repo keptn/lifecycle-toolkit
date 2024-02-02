@@ -4,6 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/go-logr/logr"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
+	"k8s.io/apimachinery/pkg/runtime"
+	"reflect"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"strings"
 	"testing"
 	"time"
@@ -1620,4 +1625,50 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppErrorWhenUp
 
 	require.NotNil(t, err)
 	require.True(t, requeue)
+}
+
+func TestKeptnWorkloadVersionReconciler_findObjectsForPod(t *testing.T) {
+	type fields struct {
+		Client                 client.Client
+		Scheme                 *runtime.Scheme
+		EventSender            eventsender.IEvent
+		Log                    logr.Logger
+		Meters                 apicommon.KeptnMeters
+		SpanHandler            telemetry.ISpanHandler
+		TracerFactory          telemetry.TracerFactory
+		SchedulingGatesHandler schedulinggates.ISchedulingGatesHandler
+		EvaluationHandler      evaluation.IEvaluationHandler
+		PhaseHandler           phase.IHandler
+	}
+	type args struct {
+		ctx    context.Context
+		object client.Object
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   []reconcile.Request
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := &KeptnWorkloadVersionReconciler{
+				Client:                 tt.fields.Client,
+				Scheme:                 tt.fields.Scheme,
+				EventSender:            tt.fields.EventSender,
+				Log:                    tt.fields.Log,
+				Meters:                 tt.fields.Meters,
+				SpanHandler:            tt.fields.SpanHandler,
+				TracerFactory:          tt.fields.TracerFactory,
+				SchedulingGatesHandler: tt.fields.SchedulingGatesHandler,
+				EvaluationHandler:      tt.fields.EvaluationHandler,
+				PhaseHandler:           tt.fields.PhaseHandler,
+			}
+			if got := r.findObjectsForPod(tt.args.ctx, tt.args.object); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("findObjectsForPod() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }

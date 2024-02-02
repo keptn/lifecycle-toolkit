@@ -4,6 +4,8 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -38,9 +40,9 @@ func (d *KeptnDummyProvider) EvaluateQuery(ctx context.Context, metric metricsap
 
 func (r *KeptnDummyProvider) query(ctx context.Context, query string, provider metricsapi.KeptnMetricsProvider, fromTime int64, toTime int64) ([]byte, error) {
 	// create a new request with context
-	baseURL := "http://www.randomnumberapi.com/api/v1.0/"
-
-	request, err := http.NewRequestWithContext(ctx, http.MethodGet, baseURL+query, nil)
+	//baseURL := "http://www.randomnumberapi.com/api/v1.0/"
+	qURL := provider.Spec.TargetServer + "/api/v1/query?from=" + strconv.Itoa(int(fromTime)) + "&to=" + strconv.Itoa(int(toTime)) + "&query=" + url.QueryEscape(query)
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, qURL, nil)
 	if err != nil {
 		r.Log.Error(err, "Error in creating the request")
 		return nil, err

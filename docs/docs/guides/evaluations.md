@@ -16,8 +16,8 @@ until the evaluation passes with a successful result.
 
 Evaluations can be defined at:
 
-- `KeptnApp` level, so before or after the deployment of the entire ensemble of workloads 
-  that makes your application.
+- `KeptnApp` level, so before or after the deployment of the
+  entire ensemble of workloads that makes your application.
 - `KeptnWorkload` level, so before or after a single deployment/stateful-set/daemon-set is deployed.
 
 Use the
@@ -57,7 +57,7 @@ To implement evaluations, you must:
    that you need for your evaluations.
 1. [Create KeptnEvaluationDefinition](#create-keptnevaluationdefinition-resources)
    resources for each evaluation you want to perform.
-1. Manually create the appropriate `KeptnAppContext` resource 
+1. Manually create the appropriate `KeptnAppContext` resource
    listing all `KeptnApp` level evaluations, referring to `KeptnEvaluationDefinition`
 2. Annotate any of your workload YAML file for each `KeptnEvaluationDefinition` resource
    you want to run pre- and/or post-deployment .
@@ -95,24 +95,24 @@ file:
 
 Note the following:
 
-* One `KeptnEvaluationDefinition` resource can include
+- One `KeptnEvaluationDefinition` resource can include
   multiple `objective` fields that reference additional metrics.
   In this example, you might want to also query
   available memory, disk space, and other resources
   that are required for the deployment.
-* The `KeptnMetric` resources that are referenced
+- The `KeptnMetric` resources that are referenced
   in a `KeptnEvaluationDefinition` resource
-  * can be defined on different namespaces in the cluster
-  * can query different instances of different types of metric providers
-* All objectives within a `KeptnEvaluationDefinition` resource
+  - can be defined on different namespaces in the cluster
+  -can query different instances of different types of metric providers
+- All objectives within a `KeptnEvaluationDefinition` resource
   are evaluated in order.
   If the evaluation of any objective fails,
   the `KeptnEvaluation` itself fails.
-* You can define multiple evaluations
+- You can define multiple evaluations
   for each stage (pre- and post-deployment).
   These evaluations run in parallel so the failure of one evaluation
   has no effect on whether other evaluations are completed.
-* The results of each evaluation
+- The results of each evaluation
   is written to a
   [KeptnEvaluation](../reference/api-reference/lifecycle/v1alpha3/index.md#keptnevaluation)
   resource.

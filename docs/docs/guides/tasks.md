@@ -42,11 +42,11 @@ To implement a `KeptnTask`:
   [KeptnApp](../reference/crd-reference/app.md)
   resources following the instructions in
   [Auto app discovery](auto-app-discovery.md).
-- Annotate your workloads YAML files 
+- Annotate your workloads YAML files
   to associate your `KeptnTaskDefinition`
   with the pre-/post-deployment tasks that should be run.
 - Create the appropriate `KeptnAppContext` resource
-  to associate `KeptnTaskDefinition` to yhe generated `KeptnApp` 
+  to associate `KeptnTaskDefinition` to the generated `KeptnApp`.
 
 This page provides information to help you create your tasks:
 
@@ -140,7 +140,7 @@ for more information on how to configure a `KeptnAppContext`
 to execute pre-/post-deployment checks.
 `KeptnAppContext` is also used to collect user defined
 metadata information to use during your Task execution.
-As explained later in this guide. 
+As explained later in this guide.
 (See [the context section](#context))
 
 ## Example of pre/post-deployment actions

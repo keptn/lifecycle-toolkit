@@ -11,8 +11,8 @@ To create a provider for the dummy endpoint, follow these steps:
     const KeptnDummyProviderType = "dummy"
     ```
 
-3. **Implement the Provider:** Create your own new folder inside
-[this folder](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers)
+3. **Implement the Provider:** Create your own new folder inside the
+[metrics-operator/controllers/common/providers](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers)
  matching the new service name: dummy and a new Go package for the dummy provider.
   This package should contain
  a struct that implements the `KeptnSLIProvider` interface.

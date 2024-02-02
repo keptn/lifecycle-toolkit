@@ -41,18 +41,18 @@ a change of a [workload](https://kubernetes.io/docs/concepts/workloads/) configu
 and therefore no pre- and post-tasks/evaluations are executed because they have already been
 completed for the version set in the labels/annotations.
 
-To illustrate the update of a [workload](https://kubernetes.io/docs/concepts/workloads/),
+To illustrate the update of a workload,
 let's assume the following example, including
 a [workload](https://kubernetes.io/docs/concepts/workloads/) called `podtato-head-frontend` that includes a
 pre-deployment task.
 
-```yaml
-{% include "./assets/day-2-operations/deployment-initial.yaml" %}
-```
+   ```yaml
+   {% include "./assets/day-2-operations/deployment-initial.yaml" %}
+   ```
 
-Now, let's assume that the configuration of that [workload](https://kubernetes.io/docs/concepts/workloads/)
+Now, let's assume that the configuration of that workload
 needs to be changed.
-In this example we assume that the image of that [workload](https://kubernetes.io/docs/concepts/workloads/)
+In this example we assume that the image of that workload
 should be updated, but a configuration change is not limited to that.
 From here, you essentially have two options:
 
@@ -62,9 +62,9 @@ of the result of any task or evaluation, e.g., when the previously used image ha
 and the image must be updated as quickly as possible.
 To do that, change `podtato-head-frontend` as follows:
 
-```yaml
-{% include "./assets/day-2-operations/deployment-new-image.yaml" %}
-```
+   ```yaml
+   {% include "./assets/day-2-operations/deployment-new-image.yaml" %}
+   ```
 
 * **Update the configuration *and* the version label:**
 Doing so causes the `KeptnWorkload` that is associated
@@ -73,9 +73,9 @@ and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`
 are executed before the updated pods are scheduled.
 In this case, the deployment should be changed as follows:
 
-```yaml
-{% include "./assets/day-2-operations/deployment-new-image-and-version.yaml" %}
-```
+   ```yaml
+   {% include "./assets/day-2-operations/deployment-new-image-and-version.yaml" %}
+   ```
 
 Applying this causes the
 [KeptnApp](../reference/crd-reference/app.md)
@@ -84,13 +84,13 @@ version, and a new
 [KeptnAppVersion](../reference/api-reference/lifecycle/v1beta1#keptnappversion)
 resource to be created.
 Due to this, all checks defined in the
-[KeptnAppContext](../reference/api-reference/appcontext.md)
+[KeptnAppContext](../reference/api-reference/lifecycle/v1beta1#appcontext.md)
 resource
 as well as those defined in the deployment's `keptn.sh/pre-deployment-tasks`
 label are executed again.
 
 After applying the updated manifests, you can monitor the status
-of the application and related [workloads](https://kubernetes.io/docs/concepts/workloads/) using the following commands:
+of the application and related workloads using the following commands:
 
 ```shell
 $ kubectl get keptnworkloadversion -n podtato-kubectl
@@ -102,11 +102,11 @@ podtato-kubectl   podtato-head-podtato-head-frontend-0.3.1   podtato-head    pod
 ```
 
 As can be seen in the output of the command, the
-[KeptnWorkloadVersion](reference/api-reference/lifecycle/v1beta1#keptnworkloadversion)
+[KeptnWorkloadVersion](../reference/api-reference/lifecycle/v1beta1#keptnworkloadversion)
 resources from the previous deployment
-are still here, but a new `KeptnWorkloadVersion` for the updated [workload](https://kubernetes.io/docs/concepts/workloads/)
+are still here, but a new `KeptnWorkloadVersion` for the updated workload
 has been added.
-For the [workload](https://kubernetes.io/docs/concepts/workloads/) that
+For the workload that
 remained unchanged (`podtato-head-hat`), no new `KeptnWorkloadVersion` needed to be created.
 
 Similarly, retrieving the list of `KeptnAppVersions` will reflect the update by
@@ -122,7 +122,7 @@ podtato-kubectl   podtato-head-1c40c739cf-d4735e3a   podtato-head   0.1.0     Co
 
 ## Adding a new Workload to an Application
 
-To add a new [workload](https://kubernetes.io/docs/concepts/workloads/) (e.g. a new deployment) to an existing app,
+To add a new workload (e.g. a new deployment) to an existing app,
 you must:
 
 * Make sure the
@@ -136,12 +136,12 @@ For example, to add the deployment `podtato-head-left-leg` to the
 `podtato-head` application, the configuration for that new deployment
 would look like this, with the required label being set:
 
-```yaml
-{% include "./assets/day-2-operations/new-deployment.yaml" %}
-```
+   ```yaml
+   {% include "./assets/day-2-operations/new-deployment.yaml" %}
+   ```
 
 After applying the updated manifests, you can monitor the status
-of the application and related [workloads](https://kubernetes.io/docs/concepts/workloads/) using the following commands:
+of the application and related workloads using the following commands:
 
 ```shell
 $ kubectl get keptnworkloadversion -n podtato-kubectl

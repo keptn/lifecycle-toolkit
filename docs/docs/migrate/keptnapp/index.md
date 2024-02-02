@@ -98,9 +98,9 @@ However, new capabilities can be added:
   [KeptnTaskDefinition](../../reference/crd-reference/taskdefinition.md)
   resource.
   This allows you to correlate a task to a specific application/workload,
-  provide informaton about the phase in which the task is executed,
+  provide information about the phase in which the task is executed,
   and access any metadata that has been attached to the application/workload
   such as commit ID or user name.
   For instructions, see
-  [Context](../../guides/tasks#context).
+  [Context](../../guides/tasks.md#context).
   

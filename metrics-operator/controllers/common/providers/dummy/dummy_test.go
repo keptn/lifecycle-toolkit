@@ -2,7 +2,7 @@ package dummy
 
 import (
 	"context"
-	"errors"
+	//"errors"
 	"net/http"
 	//"net/http/httptest"
 	"testing"

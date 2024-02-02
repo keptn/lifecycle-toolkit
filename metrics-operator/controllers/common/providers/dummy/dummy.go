@@ -33,7 +33,7 @@ func (d *KeptnDummyProvider) EvaluateQuery(ctx context.Context, metric metricsap
 		return "", nil, err
 	}
 	res, err := d.query(ctx, metric.Spec.Query, provider, fromTime, toTime)
-	return string(res), res, err
+	return string(res[0]), res, err
 }
 
 func (r *KeptnDummyProvider) query(ctx context.Context, query string, provider metricsapi.KeptnMetricsProvider, fromTime int64, toTime int64) ([]byte, error) {

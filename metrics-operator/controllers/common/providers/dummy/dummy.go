@@ -75,11 +75,11 @@ func (d *KeptnDummyProvider) EvaluateQueryForStep(ctx context.Context, metric me
 	if err != nil {
 		return result, nil, err
 	}
-	responseStr, responseData, err := d.query(ctx, metric.Spec.Query, provider, fromTime, toTime)
+	resStr, resData, err := d.query(ctx, metric.Spec.Query, provider, fromTime, toTime)
 
 	// Append strings to the slice
-	result = append(result, responseStr)
-	return result, responseData, err
+	result = append(result, resStr)
+	return result, resData, err
 }
 
 func (d *KeptnDummyProvider) bytesToString(data []byte) string {

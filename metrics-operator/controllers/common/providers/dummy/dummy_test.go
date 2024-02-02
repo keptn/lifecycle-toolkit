@@ -145,3 +145,58 @@ func TestFetchAnalysisValue_Error(t *testing.T) {
 	require.Error(t, err)
 	//require.True(t, errors.Is(err, context.DeadlineExceeded))
 }
+
+func TestEvaluateQueryForStep_HappyPath(t *testing.T) {
+	// Create a new instance of KeptnDummyProvider
+	dummyProvider := &KeptnDummyProvider{
+		Log:        ctrl.Log.WithName("testytest"),
+		HttpClient: http.Client{},
+	}
+
+	// Create a sample metric and provider
+	metric := metricsapi.KeptnMetric{
+		Spec: metricsapi.KeptnMetricSpec{
+			Query: "random",
+		},
+	}
+	provider := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			TargetServer: "http://www.randomnumberapi.com/api/v1.0/",
+		},
+	}
+
+	// Call the EvaluateQueryForStep method
+	values, _, err := dummyProvider.EvaluateQueryForStep(context.TODO(), metric, provider)
+
+	// Check if the result is as expected
+	require.NoError(t, err)
+	require.Len(t, values, 1)
+	require.Equal(t, "91", values[0])
+}
+
+func TestEvaluateQueryForStep_Error(t *testing.T) {
+	// Create a new instance of KeptnDummyProvider
+	dummyProvider := &KeptnDummyProvider{
+		Log:        ctrl.Log.WithName("testytest"),
+		HttpClient: http.Client{},
+	}
+
+	// Create a sample metric and provider that will return an error
+	metric := metricsapi.KeptnMetric{
+		Spec: metricsapi.KeptnMetricSpec{
+			Query: "random",
+		},
+	}
+	provider := metricsapi.KeptnMetricsProvider{
+		Spec: metricsapi.KeptnMetricsProviderSpec{
+			TargetServer: "",
+		},
+	}
+
+	// Call the EvaluateQueryForStep method
+	values, _, err := dummyProvider.EvaluateQueryForStep(context.TODO(), metric, provider)
+
+	// Check if an error occurred
+	require.Error(t, err)
+	require.Len(t, values, 0)
+}

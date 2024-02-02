@@ -10,7 +10,7 @@ that has the same name and is located in the same namespace.
 It allows you to
 
 - Add metadata and links to traces for a specific application.
-  This enables enriches your traces with additional information,
+  This enables you to enrich your traces with additional information that
   you can use to understand and analyze
   the performance of your applications.
 

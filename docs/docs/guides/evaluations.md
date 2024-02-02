@@ -18,7 +18,7 @@ Evaluations can be defined at:
 
 - `KeptnApp` level, so before or after the deployment of the entire ensemble of workloads 
   that makes your application.
-- `KeptnWorkload` level, so before or after a single deployment/stateful-set/daemon-set is deployed
+- `KeptnWorkload` level, so before or after a single deployment/stateful-set/daemon-set is deployed.
 
 Use the
 [Analysis](slo.md)

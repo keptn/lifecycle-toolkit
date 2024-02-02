@@ -20,7 +20,7 @@ func (d *KeptnDummyProvider) FetchAnalysisValue(ctx context.Context, query strin
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 	res, _, err := d.query(ctx, query, *provider, analysis.GetFrom().Unix(), analysis.GetTo().Unix())
-	return string(res), err
+	return res, err
 }
 
 // EvaluateQuery evaluates the query against the random number API endpoint.

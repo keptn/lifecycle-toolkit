@@ -31,6 +31,9 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 	metric := metricsapi.KeptnMetric{
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "random",
+			Range: &metricsapi.RangeSpec{
+				Interval: "5m",
+			},
 		},
 	}
 	///svr.URL

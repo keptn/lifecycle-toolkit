@@ -65,6 +65,9 @@ func TestEvaluateQuery_Error(t *testing.T) {
 	metric := metricsapi.KeptnMetric{
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "random",
+			Range: &metricsapi.RangeSpec{
+				Interval: "5m",
+			},
 		},
 	}
 	provider := metricsapi.KeptnMetricsProvider{
@@ -157,6 +160,9 @@ func TestEvaluateQueryForStep_HappyPath(t *testing.T) {
 	metric := metricsapi.KeptnMetric{
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "random",
+			Range: &metricsapi.RangeSpec{
+				Interval: "5m",
+			},
 		},
 	}
 	provider := metricsapi.KeptnMetricsProvider{
@@ -184,6 +190,9 @@ func TestEvaluateQueryForStep_Error(t *testing.T) {
 	metric := metricsapi.KeptnMetric{
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "random",
+			Range: &metricsapi.RangeSpec{
+				Interval: "5m",
+			},
 		},
 	}
 	provider := metricsapi.KeptnMetricsProvider{

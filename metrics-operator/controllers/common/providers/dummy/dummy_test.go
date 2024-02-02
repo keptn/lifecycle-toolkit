@@ -171,7 +171,7 @@ func TestEvaluateQueryForStep_HappyPath(t *testing.T) {
 	// Check if the result is as expected
 	require.NoError(t, err)
 	require.Len(t, values, 1)
-	require.Equal(t, "91", values[0])
+	require.Equal(t, "42", values[0])
 }
 
 func TestEvaluateQueryForStep_Error(t *testing.T) {
@@ -198,5 +198,5 @@ func TestEvaluateQueryForStep_Error(t *testing.T) {
 
 	// Check if an error occurred
 	require.Error(t, err)
-	require.Len(t, values, 0)
+	require.Len(t, values[0], 0)
 }

@@ -16,10 +16,10 @@ import (
 
 func TestEvaluateQuery_HappyPath(t *testing.T) {
 	// Create a dummy HTTP server that responds with a predefined payload
-	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, _ = w.Write([]byte("42")) // Respond with a dummy value
-	}))
-	defer svr.Close()
+	// svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	// 	_, _ = w.Write([]byte("42")) // Respond with a dummy value
+	// }))
+	// defer svr.Close()
 
 	// Create a new instance of KeptnDummyProvider
 	dummyProvider := &KeptnDummyProvider{
@@ -33,9 +33,10 @@ func TestEvaluateQuery_HappyPath(t *testing.T) {
 			Query: "random",
 		},
 	}
+	///svr.URL
 	provider := metricsapi.KeptnMetricsProvider{
 		Spec: metricsapi.KeptnMetricsProviderSpec{
-			TargetServer: svr.URL,
+			TargetServer: "http://www.randomnumberapi.com/api/v1.0/",
 		},
 	}
 

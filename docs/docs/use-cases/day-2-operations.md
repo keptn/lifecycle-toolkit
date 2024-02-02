@@ -46,9 +46,9 @@ let's assume the following example, including
 a [workload](https://kubernetes.io/docs/concepts/workloads/) called `podtato-head-frontend` that includes a
 pre-deployment task.
 
-   ```yaml
-   {% include "./assets/day-2-operations/deployment-initial.yaml" %}
-   ```
+```yaml
+{% include "./assets/day-2-operations/deployment-initial.yaml" %}
+```
 
 Now, let's assume that the configuration of that workload
 needs to be changed.
@@ -62,9 +62,9 @@ of the result of any task or evaluation, e.g., when the previously used image ha
 and the image must be updated as quickly as possible.
 To do that, change `podtato-head-frontend` as follows:
 
-   ```yaml
-   {% include "./assets/day-2-operations/deployment-new-image.yaml" %}
-   ```
+    ```yaml
+    {% include "./assets/day-2-operations/deployment-new-image.yaml" %}
+    ```
 
 * **Update the configuration *and* the version label:**
 Doing so causes the `KeptnWorkload` that is associated
@@ -73,9 +73,9 @@ and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`
 are executed before the updated pods are scheduled.
 In this case, the deployment should be changed as follows:
 
-   ```yaml
-   {% include "./assets/day-2-operations/deployment-new-image-and-version.yaml" %}
-   ```
+    ```yaml
+    {% include "./assets/day-2-operations/deployment-new-image-and-version.yaml" %}
+    ```
 
 Applying this causes the
 [KeptnApp](../reference/crd-reference/app.md)
@@ -136,9 +136,9 @@ For example, to add the deployment `podtato-head-left-leg` to the
 `podtato-head` application, the configuration for that new deployment
 would look like this, with the required label being set:
 
-   ```yaml
-   {% include "./assets/day-2-operations/new-deployment.yaml" %}
-   ```
+```yaml
+{% include "./assets/day-2-operations/new-deployment.yaml" %}
+```
 
 After applying the updated manifests, you can monitor the status
 of the application and related workloads using the following commands:

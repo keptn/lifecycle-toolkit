@@ -2,7 +2,7 @@
 
 The
 [KeptnAppContext](../../reference/crd-reference/appcontext.md)
-resource is new in the `v1beta1` API included in Keptn v0.11.0.
+resource is new in the `v1beta1` API.
 Existing
 [KeptnApp](../../reference/crd-reference/app.md)
 resources that were generated manually must be migrated
@@ -24,7 +24,8 @@ This page gives instructions for doing that.
 ## Migration steps
 
 The steps to migrate an existing `KeptnApp` resource
-to work with the `KeptnAppContext` resource introduced in version 0.11.0,
+to work with the `KeptnAppContext` resource
+introduced in the `v1beta1` API version.
 you need to execute the following steps:
 
 1. Create a `KeptnAppContext` custom resource
@@ -33,8 +34,8 @@ you need to execute the following steps:
    from `KeptnApp` to `KeptnAppContext`.
    In other words, delete them from `KeptnApp.spec`
    and add them under the `KeptnAppContext.spec` field.
-3. If necessary, add the `app.kubernetes.io/managed-by: keptn` annotation
-   to the `KeptnApp` resource.
+3. Add the `app.kubernetes.io/managed-by: keptn` annotation
+   to the `KeptnApp` resource if it is not already there.
 
 > **Note**
 Be sure that all of your application resources
@@ -62,9 +63,8 @@ Let's say we have the following `KeptnApp` in our cluster:
 {% include "./assets/keptnapp.yaml" %}
 ```
 
-Applying the migration steps from the previous subsection,
-we get the following result.
-You see the following changes:
+After applying the migration steps from the previous subsection,
+you see the following changes:
 
 * The `app.kubernetes.io/managed-by` annotation
   has been added to the `labels` section of the revised `KeptnApp` resource.
@@ -84,14 +84,15 @@ These modified resources can be now applied to your cluster.
 
 ## What's next?
 
-Making these modifications allows your existing `KeptnApp` functionality
-run as it did before.
-However, new capabilities can be added:
+Making these modifications does not alter Keptn's behavior.
+However, you might want to enhance your traces, tasks, and evaluations
+with the new functionality that is available:
 
 * Add context metadata to your traces.
-  This allows you to include information like `stage` in your workload traces
-  and information such as commit ID or user name
-  in your `KeptnApp` traces.
+  This allows you to include information
+  like the stage into which the application is deployed, a commit ID,
+  or other information relevant to the deployment traces of
+  the application and its workloads.
   For instructions, see
   [Metadata](../../guides/metadata.md).
 * Add `KEPTN_CONTEXT` information to the `function` code in your

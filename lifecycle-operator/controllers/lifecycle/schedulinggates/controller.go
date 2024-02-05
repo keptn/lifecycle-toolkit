@@ -3,6 +3,8 @@ package schedulinggates
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/go-logr/logr"
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
@@ -15,8 +17,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
-	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"time"
 )
 
 // SchedulingGatesReconciler reconciles a KeptnWorkloadVersion object
@@ -37,22 +37,22 @@ func (r *SchedulingGatesReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	err := r.Get(ctx, req.NamespacedName, pod)
 	if errors.IsNotFound(err) {
-		return reconcile.Result{}, nil
+		return ctrl.Result{}, nil
 	}
 
 	if err != nil {
 		r.Log.Error(err, "Could not retrieve pod", "requestInfo", requestInfo)
-		return reconcile.Result{}, fmt.Errorf("could not retrieve pod, %w", err)
+		return ctrl.Result{}, fmt.Errorf("could not retrieve pod, %w", err)
 	}
 
 	if !hasKeptnSchedulingGate(pod) {
-		return reconcile.Result{}, nil
+		return ctrl.Result{}, nil
 	}
 
 	// check if the owner of the pod is the one that the KeptnWorkloadVersion is referring to
 	owner := pod.GetOwnerReferences()
 	if len(owner) == 0 {
-		return reconcile.Result{}, nil
+		return ctrl.Result{}, nil
 	}
 	listOps := &client.ListOptions{
 		FieldSelector: fields.OneTermEqualSelector(".spec.resourceReference.uid", string(owner[0].UID)),
@@ -63,27 +63,31 @@ func (r *SchedulingGatesReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	if err := r.List(ctx, attachedWorkloadVersions, listOps); err != nil {
 		r.Log.Error(err, "Could not list WorkloadVersions related to pod", "pod", pod.GetName(), "namespace", pod.GetNamespace())
-		return reconcile.Result{}, err
+		return ctrl.Result{}, err
 	}
 
-	for _, item := range attachedWorkloadVersions.Items {
-		if item.Status.DeploymentStatus.IsCompleted() || item.Status.DeploymentStatus == apicommon.StateProgressing {
-			pod.Spec.SchedulingGates = nil
-			if len(pod.Annotations) == 0 {
-				pod.Annotations = make(map[string]string, 1)
-			}
-			pod.Annotations[apicommon.SchedulingGateRemoved] = "true"
-			r.Log.Info("removing scheduling gate of pod", "pod", pod.Name, "uid", pod.UID)
-
-			if err := r.Update(ctx, pod); err != nil {
-				r.Log.Error(err, "Could not remove pod scheduling gate", "namespace", pod.Namespace, "pod", pod.Name, "workloadVersion", item.Name)
-				return reconcile.Result{}, err
-			}
-			return reconcile.Result{}, nil
+	for _, workloadVersion := range attachedWorkloadVersions.Items {
+		if workloadVersion.Status.DeploymentStatus.IsCompleted() || workloadVersion.Status.DeploymentStatus == apicommon.StateProgressing {
+			return r.removeGate(ctx, pod)
 		}
 	}
-	return reconcile.Result{RequeueAfter: 10 * time.Second}, nil
+	return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 
+}
+
+func (r *SchedulingGatesReconciler) removeGate(ctx context.Context, pod *v1.Pod) (ctrl.Result, error) {
+	pod.Spec.SchedulingGates = nil
+	if len(pod.Annotations) == 0 {
+		pod.Annotations = make(map[string]string, 1)
+	}
+	pod.Annotations[apicommon.SchedulingGateRemoved] = "true"
+	r.Log.Info("removing scheduling gate of pod", "pod", pod.Name, "uid", pod.UID)
+
+	if err := r.Update(ctx, pod); err != nil {
+		r.Log.Error(err, "Could not remove pod scheduling gate", "namespace", pod.Namespace, "pod", pod.Name)
+		return ctrl.Result{}, err
+	}
+	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

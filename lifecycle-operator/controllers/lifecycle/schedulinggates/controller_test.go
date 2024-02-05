@@ -3,6 +3,9 @@ package schedulinggates
 import (
 	"context"
 	"errors"
+	"testing"
+	"time"
+
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
@@ -16,8 +19,6 @@ import (
 	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	"testing"
-	"time"
 )
 
 func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {

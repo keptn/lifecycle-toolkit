@@ -49,12 +49,16 @@ To create a provider for the dummy endpoint, follow these steps:
     ```
 
 5. **Add Test Cases:**
-- Write a unit test to validate your implementation at the function level. Unit tests ensure that individual
+
+- Write a unit test to validate your implementation at the function level.
+  Unit tests ensure that individual
  functions behave as expected and meet their functional requirements.
   Below is a unit test example for our dummy provider
 
   ```go
   {% include "./dummy-test-example.go" %}
   ```
-- Include a KUTTL test to validate the behavior of Kubernetes resources managed by your code. KUTTL tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring the correctness of your Kubernetes configurations and deployments.
 
+- Include a KUTTL test to validate the behavior of Kubernetes resources managed by your code.
+  KUTTL tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
+  the correctness of your Kubernetes configurations and deployments.

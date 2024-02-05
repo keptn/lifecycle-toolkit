@@ -81,10 +81,10 @@ Applying this causes the
 [KeptnApp](../reference/crd-reference/app.md)
 resource to be updated with a new
 version, and a new
-[KeptnAppVersion](../reference/api-reference/lifecycle/v1beta1#keptnappversion)
+[KeptnAppVersion](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappversion)
 resource to be created.
 Due to this, all checks defined in the
-[KeptnAppContext](../reference/api-reference/lifecycle/v1beta1#appcontext.md)
+[KeptnAppContext](../reference/api-reference/lifecycle/v1beta1/index.md#appcontext.md)
 resource
 as well as those defined in the deployment's `keptn.sh/pre-deployment-tasks`
 label are executed again.
@@ -102,7 +102,7 @@ podtato-kubectl   podtato-head-podtato-head-frontend-0.3.1   podtato-head    pod
 ```
 
 As can be seen in the output of the command, the
-[KeptnWorkloadVersion](../reference/api-reference/lifecycle/v1beta1#keptnworkloadversion)
+[KeptnWorkloadVersion](../reference/api-reference/lifecycle/v1beta1/index.md#keptnworkloadversion)
 resources from the previous deployment
 are still here, but a new `KeptnWorkloadVersion` for the updated workload
 has been added.

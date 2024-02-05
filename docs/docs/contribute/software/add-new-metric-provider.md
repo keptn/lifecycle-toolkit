@@ -16,7 +16,8 @@ To create a provider for the dummy endpoint, follow these steps:
  matching the new service name: dummy and a new Go package for the dummy provider.
   This package should contain
  a struct that implements the `KeptnSLIProvider` interface.
-  To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the `EvaluateQuery`, `EvaluateQueryForStep` and `FetchAnalysisValue` functions.
+  To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the
+  `EvaluateQuery`, `EvaluateQueryForStep` and `FetchAnalysisValue` functions.
   You can follow other existing implementations,
  such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
  as an example.

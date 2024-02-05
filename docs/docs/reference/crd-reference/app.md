@@ -115,7 +115,7 @@ you can code them all into a single `KeptnTaskDefinition`.
 
 This shows an example `v1beta1` `KeptnApp` resource
 with the corresponding
-[KeptnAppContext](appcontext)
+[KeptnAppContext](appcontext.md)
 resource.
 
 ```yaml

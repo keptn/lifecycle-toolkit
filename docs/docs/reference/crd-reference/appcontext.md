@@ -71,6 +71,9 @@ spec:
               author: "myUser"
           ```
 
+       For more information, see
+       [Advanced tracing configurations in Keptn Linking traces](../../guides/otel.md#advanced-tracing-configurations-in-keptn-linking-traces)
+
      - **spanLinks** -- List of OpenTelemetry span links
     that connect multiple traces.
     For example, this can be used to connect
@@ -167,3 +170,4 @@ of the lifecycle operator.
   [Release Lifecycle Management](../../getting-started/lifecycle-management.md)
 - [Use Keptn automatic app discovery](../../guides/auto-app-discovery.md)
 - [Restart an Application Deployment](../../guides/restart-application-deployment.md)
+- [Advanced tracing configurations in Keptn Linking traces](../../guides/otel.md#advanced-tracing-configurations-in-keptn-linking-traces)

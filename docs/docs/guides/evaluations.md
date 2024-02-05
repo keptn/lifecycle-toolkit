@@ -59,7 +59,7 @@ To implement evaluations, you must:
    resources for each evaluation you want to perform.
 1. Manually create the appropriate `KeptnAppContext` resource
    listing all `KeptnApp` level evaluations, referring to `KeptnEvaluationDefinition`
-1. Annotate any of your workload YAML file for each `KeptnEvaluationDefinition` resource
+1. Annotate the workload YAMLs file for each `KeptnEvaluationDefinition` resource
    you want to run pre- and/or post-deployment .
 
 ## Create KeptnEvaluationDefinition resources
@@ -112,11 +112,11 @@ Note the following:
   These evaluations run in parallel so the failure of one evaluation
   has no effect on whether other evaluations are completed.
 - The results of each evaluation
-  is written to a
+  are written to a
   [KeptnEvaluation](../reference/api-reference/lifecycle/v1alpha3/index.md#keptnevaluation)
   resource.
 
-## Annotate your workload resource for workload level Evaluations
+## Annotate the workload resource for workload level evaluations
 
 To define the pre-/post-deployment evaluations to run
 for a single Kubernetes workload, you need to provide an annotation
@@ -145,8 +145,8 @@ If everything is fine, the deployment continues.
 ## Create KeptnAppContext for App level Evaluations
 
 To execute pre-/post-deployment evaluations for a `KeptnApp`,
-create a `KeptnAppContext` with the same name and in the same `namespace` as the `KeptnApp`.
-The `KeptnAppContext` contains a list of
+create a `KeptnAppContext` resource with the same name and in the same `namespace` as the `KeptnApp`.
+The `KeptnAppContext` resource contains a list of
 pre-/post-deployment evaluations
 that should be executed before and after the
 workloads within the `KeptnApp` are deployed.
@@ -162,5 +162,5 @@ evaluations and tasks can be found in our
 [examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
 where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
 to run some simple pre-deployment checks both at App and Workload level.
-Checkout the [readme](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/README.md)
+Check out the [readme](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/README.md)
 to learn how to test this example on your machine.

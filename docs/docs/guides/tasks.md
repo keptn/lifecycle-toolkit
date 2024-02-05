@@ -130,13 +130,13 @@ resource.
 
 To execute pre-/post-deployment tasks for a `KeptnApp`,
 create a `KeptnAppContext` with the same name and in the same `namespace` as the `KeptnApp`.
-The `KeptnAppContext` contains a list of
+The `KeptnAppContext` resource contains a list of
 pre-/post-deployment tasks
 that should be executed before and after the
 workloads within the `KeptnApp` are deployed.
 
 See the [Getting started guide](../getting-started/lifecycle-management.md#more-control-over-the-application)
-for more information on how to configure a `KeptnAppContext`
+for more information on how to configure a `KeptnAppContext` resource
 to execute pre-/post-deployment checks.
 `KeptnAppContext` is also used to collect user defined
 metadata information to use during your Task execution.
@@ -150,7 +150,7 @@ evaluations and tasks can be found in our
 [examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
 where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
 to run some simple pre-deployment checks.
-Checkout the [readme](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/README.md)
+Check out the [readme](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/README.md)
 to learn how to test this example on your machine.
 
 ## Executing sequential tasks

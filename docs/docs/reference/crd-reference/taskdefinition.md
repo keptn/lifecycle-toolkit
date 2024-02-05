@@ -483,7 +483,7 @@ spec:
 This example illustrates the use of both a `ConfigMapRef` and a `ConfigMap`:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: scheduled-deployment

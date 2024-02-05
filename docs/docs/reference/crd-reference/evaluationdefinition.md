@@ -117,7 +117,7 @@ that are now taken from the specified [KeptnMetric](metric.md) CRD.
 The synopsis was:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnEvaluationDefinition
 metadata:
   name: <evaluation-name>

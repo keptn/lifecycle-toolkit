@@ -1,9 +1,10 @@
 package main
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"os"
 	"testing"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const inputFileName = "example_keptnapp.yaml"

@@ -23,7 +23,7 @@ To create a provider for the dummy endpoint, follow these steps:
   In the implementation, make a request to the dummy endpoint and return the response.
 
 ```go
-{% include "dummy-code-example.go" %}
+{% include "./dummy-code-example.go" %}
 ```
 
 4. **Instantiate the Provider:** In the `providers.NewProvider` function

@@ -25,7 +25,7 @@ This page gives instructions for doing that.
 
 You need the following steps to migrate an existing `KeptnApp` resource
 to work with the `KeptnAppContext` resource
-introduced in the `v1beta1` API version.
+introduced in the `v1beta1` API version:
 
 1. Create a `KeptnAppContext` custom resource
    that has the same name as your `KeptnApp`.

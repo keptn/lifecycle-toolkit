@@ -84,7 +84,7 @@ version, and a new
 [KeptnAppVersion](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappversion)
 resource to be created.
 Due to this, all checks defined in the
-[KeptnAppContext](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappcontext.md)
+[KeptnAppContext](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappcontext)
 resource
 as well as those defined in the deployment's `keptn.sh/pre-deployment-tasks`
 label are executed again.

@@ -37,15 +37,16 @@ To implement a `KeptnTask`:
   and the executables to be run
   pre- and post-deployment
 - Apply [basic-annotations](./integrate.md#basic-annotations)
-  to your workloads to integrate your tasks with Kubernetes.
+  to your workloads.
 - Generate the required
   [KeptnApp](../reference/crd-reference/app.md)
   resources following the instructions in
   [Auto app discovery](auto-app-discovery.md).
-- Annotate the appropriate
-  [KeptnApp](../reference/crd-reference/app.md)
-  resource to associate your `KeptnTaskDefinition`
+- Annotate your workload YAML files
+  to associate your `KeptnTaskDefinition`
   with the pre-/post-deployment tasks that should be run.
+- Create the appropriate `KeptnAppContext` resource
+  to associate `KeptnTaskDefinition` resources to the generated `KeptnApp`.
 
 This page provides information to help you create your tasks:
 
@@ -105,13 +106,12 @@ See the
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 reference page for the synopsis and examples for each runner.
 
-## Annotations to KeptnApp
+## Run a task associated with your workload deployment
 
 To define pre-/post-deployment tasks,
 you must manually edit the YAML files
 to add annotations for your tasks to the appropriate
-[KeptnApp](../reference/crd-reference/app.md)
-resource.
+workload YAML file.
 
 Specify one of the following annotations/labels
 for each task you want to execute:
@@ -126,6 +126,23 @@ to the value of the `name` field of the
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 resource.
 
+## Run a task associated with your entire KeptnApp
+
+To execute pre-/post-deployment tasks for a `KeptnApp`,
+create a `KeptnAppContext` with the same name and in the same `namespace` as the `KeptnApp`.
+The `KeptnAppContext` resource contains a list of
+pre-/post-deployment tasks
+that should be executed before and after the
+workloads within the `KeptnApp` are deployed.
+
+See the [Getting started guide](../getting-started/lifecycle-management.md#more-control-over-the-application)
+for more information on how to configure a `KeptnAppContext` resource
+to execute pre-/post-deployment checks.
+`KeptnAppContext` is also used to collect user defined
+metadata information to use during your Task execution.
+As explained later in this guide.
+(See [the context section](#context))
+
 ## Example of pre/post-deployment actions
 
 A comprehensive example of pre-/post-deployment
@@ -133,26 +150,8 @@ evaluations and tasks can be found in our
 [examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
 where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
 to run some simple pre-deployment checks.
-
-To run the example, download the example and
-then issue the following commands:
-
-```shell
-cd ./examples/podtatohead-deployment/
-kubectl apply -f .
-```
-
-Afterward, use the following command
-to monitor the status of the deployment:
-
-```shell
-kubectl get keptnworkloadversion -n podtato-kubectl -w
-```
-
-The deployment for a workload stays in a `Pending`
-state until all pre-deployment tasks and evaluations complete successfully.
-Afterward, the deployment starts and when the workload is deployed,
-the post-deployment checks start.
+Check out the [readme](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/README.md)
+to learn how to test this example on your machine.
 
 ## Executing sequential tasks
 

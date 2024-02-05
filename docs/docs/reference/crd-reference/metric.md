@@ -37,6 +37,7 @@ spec:
 ```
 
 ## Fields
+<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
 
@@ -44,42 +45,44 @@ spec:
    Must be set to `KeptnMetric`.
 
 * **metadata**
-  * **name** -- Unique name of this metric.
-    Names must comply with the
-    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-    specification.
-  * **namespace** -- Namespace of the application using this metric.
+     * **name** -- Unique name of this metric.
+       Names must comply with the
+       [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+       specification.
+     * **namespace** -- Namespace of the application using this metric.
 
 * **spec**
-  * **provider.name** (required) --
-    Name of this instance of the data source
-    from which the metric is collected.
-    This value must match the value of the `metadata.name` field
-    of the corresponding [KeptnMetricsProvider](metricsprovider.md) CRD.
+     * **provider.name** (required) --
+       Name of this instance of the data source
+       from which the metric is collected.
+       This value must match the value of the `metadata.name` field
+       of the corresponding [KeptnMetricsProvider](metricsprovider.md) CRD.
 
-    Assigning your own name to the provider
-    rather than just the type of provider
-    enables you to support multiple instances of a data provider.
-    For example, you might have `dev-prometheus`
-    as the name of the Prometheus server that monitors the dev deployment
-    and `prod-prometheus` as the name of the Prometheus server
-    that monitors the production deployment.
-  * **query** (required) -- String in the provider-specific query language,
-    used to obtain a metric.
+          Assigning your own name to the provider
+          rather than just the type of provider
+          enables you to support multiple instances of a data provider.
+          For example, you might have `dev-prometheus`
+          as the name of the Prometheus server that monitors the dev deployment
+          and `prod-prometheus` as the name of the Prometheus server
+          that monitors the production deployment.
+     * **query** (required) -- String in the provider-specific query language,
+       used to obtain a metric.
 
-  * **fetchIntervalSeconds** (required) -- Number of seconds between updates of the metric.
-  * **range**
-    * **interval** -- Timeframe for which the metric is queried.
-    Defaults to 5m.
+     * **fetchIntervalSeconds** (required) --
+       Number of seconds between updates of the metric.
+     * **range**
+       * **interval** -- Timeframe for which the metric is queried.
+       Defaults to 5m.
 
-* **status**
-  * Keptn fills in this information when the metric is evaluated.
-    It always records the time the metric was last evaluated.
-    If the evaluation is successful,
-    this stores the result in both human-readable and raw format.
-    If the evaluation is not successful,
-    this stores error details that you can use to understand the problem
-    such as a forbidden code.
+     * **status** --
+       Keptn fills in this information when the metric is evaluated.
+       It always records the time the metric was last evaluated.
+       If the evaluation is successful,
+       this stores the result in both human-readable and raw format.
+       If the evaluation is not successful,
+       this stores error details that you can use to understand the problem
+       such as a forbidden code.
+<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

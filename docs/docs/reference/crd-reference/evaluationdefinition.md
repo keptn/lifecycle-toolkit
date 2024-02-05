@@ -13,7 +13,7 @@ as part of pre- and post-analysis phases of a [workload](https://kubernetes.io/d
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnEvaluationDefinition
 metadata:
   name: <evaluation-name>
@@ -29,7 +29,7 @@ spec:
 <!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
-  Must be `v1alpha3` or later for this syntax.
+  Must be `v1beta1` or later for this syntax.
 * **kind** -- Resource type.
    Must be set to `KeptnEvaluationDefinition`
 
@@ -85,7 +85,7 @@ on all namespaces in the cluster.
 ## Example
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnEvaluationDefinition
 metadata:
   name: my-prometheus-evaluation
@@ -132,7 +132,7 @@ spec:
       evaluationTarget: >4
 ```
 
-Beginning with `v1alpha3` API version,
+Beginning with `v1beta1` API version,
 `KeptnEvaluationDefinition` references a `keptnMetricRef`
 that points to a [KeptnMetric](metric.md) CR,
 that defines the data source, the query and the namespace to use.

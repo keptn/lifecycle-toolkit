@@ -318,6 +318,10 @@ RELEASE_REGISTRY=<YOUR_DOCKER_REGISTRY>
 # Build and deploy the dev images to the current kubernetes cluster
 make build-deploy-dev-environment
 ```
+## Governance
+
+- [Community Membership](https://github.com/keptn/community/blob/main/community-membership.md)
+- [Members and Charter](https://github.com/keptn/community/blob/main/governance/members-and-charter.md)
 
 ## License
 

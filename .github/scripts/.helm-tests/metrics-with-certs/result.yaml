@@ -1932,7 +1932,7 @@ spec:
                 type: string
               type:
                 description: Type represents the provider type. This can be one of
-                  prometheus, dynatrace, datadog, dql.
+                  prometheus, dynatrace, datadog, dql, dummy.
                 pattern: prometheus|dynatrace|datadog|dql|dummy
                 type: string
             required:
@@ -1999,7 +1999,7 @@ spec:
                 type: string
               type:
                 description: Type represents the provider type. This can be one of
-                  prometheus, dynatrace, datadog, dql.
+                  prometheus, dynatrace, datadog, dql, dummy.
                 pattern: prometheus|dynatrace|datadog|dql|dummy
                 type: string
             required:

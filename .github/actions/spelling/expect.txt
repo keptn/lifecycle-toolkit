@@ -514,6 +514,7 @@ readyz
 Reale
 realpath
 redis
+refcache
 remediations
 replicasets
 replicationcontrollers

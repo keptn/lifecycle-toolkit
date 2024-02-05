@@ -6,6 +6,9 @@ LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolki
     org.opencontainers.image.vendor="Keptn" \
     org.opencontainers.image.licenses="Apache-2.0"
 
+RUN apk update ** \
+    apk add --no-cache libcrypto>=3.0.12-r0
+
 COPY entrypoint.sh /entrypoint.sh
 
 USER deno

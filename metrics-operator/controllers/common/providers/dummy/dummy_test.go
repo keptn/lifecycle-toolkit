@@ -2,6 +2,7 @@ package dummy
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -45,11 +46,12 @@ func TestFetchAnalysisValue_HappyPath(t *testing.T) {
 	}
 
 	query := "random"
+	currentTime := metav1.Time{Time: time.Now()}
 	analysis := metricsapi.Analysis{
 		Spec: metricsapi.AnalysisSpec{
 			Timeframe: metricsapi.Timeframe{
-				From: metav1.Time{Time: time.Now()},
-				To:   metav1.Time{Time: time.Now()},
+				From: currentTime,
+				To:   currentTime,
 			},
 		},
 	}
@@ -61,8 +63,9 @@ func TestFetchAnalysisValue_HappyPath(t *testing.T) {
 
 	value, err := dummyProvider.FetchAnalysisValue(context.TODO(), query, analysis, &provider)
 
+	expected := fmt.Sprintf("dummy provider EvaluateQueryForStep was called with query random from %q to %q", currentTime, currentTime)
 	require.NoError(t, err)
-	require.Equal(t, "dummy provider FetchAnalysisValue was called with query random", value)
+	require.Equal(t, expected, value)
 }
 
 func TestEvaluateQueryForStep_HappyPath(t *testing.T) {
@@ -75,7 +78,9 @@ func TestEvaluateQueryForStep_HappyPath(t *testing.T) {
 		Spec: metricsapi.KeptnMetricSpec{
 			Query: "random",
 			Range: &metricsapi.RangeSpec{
-				Interval: "5m",
+				Interval:    "5m",
+				Step:        "1m",
+				Aggregation: "max",
 			},
 		},
 	}
@@ -85,8 +90,17 @@ func TestEvaluateQueryForStep_HappyPath(t *testing.T) {
 		},
 	}
 
+	intervalDuration, _ := time.ParseDuration("5m")
+
+	stepDuration, _ := time.ParseDuration("1m")
+	fromTime := time.Now().Add(-intervalDuration).Unix()
+	toTime := time.Now().Unix()
+	stepInterval := stepDuration.Milliseconds()
+
 	values, _, err := dummyProvider.EvaluateQueryForStep(context.TODO(), metric, provider)
 
+	expected := fmt.Sprintf("dummy provider EvaluateQueryForStep was called with query random from %q to %q at an interval %q", fromTime, toTime, stepInterval)
 	require.NoError(t, err)
-	require.Equal(t, "dummy provider EvaluateQueryForStep was called with query random", values[0])
+
+	require.Equal(t, expected, values[0])
 }

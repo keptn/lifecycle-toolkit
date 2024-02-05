@@ -68,7 +68,7 @@ for the `KeptnApp` resource itself:
   that contain the identifications required
   to run the Keptn observability features.
 * You must create a `KeptnAppContext` resource
-  to the basic `KeptnApp` manifest to define
+  that has the same name and namespace of your `KeptnApp` to define
   the evaluations and tasks you want to run pre-/post-deployment.
   For more information check [how to create tasks](../../guides/tasks.md/#run-a-task-associated-with-your-entire-keptnapp)
   and [how to create evaluations](../../guides/evaluations.md/#create-keptnappcontext-for-app-level-evaluations).

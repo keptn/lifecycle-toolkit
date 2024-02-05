@@ -204,7 +204,7 @@ spec:
               type:
                 description: Type represents the provider type. This can be one of
                   prometheus, dynatrace, datadog, dql.
-                pattern: prometheus|dynatrace|datadog|dql
+                pattern: prometheus|dynatrace|datadog|dql|dummy
                 type: string
             required:
             - targetServer

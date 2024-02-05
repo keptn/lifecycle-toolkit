@@ -22,13 +22,15 @@ spec:
   taskDefinition: <name-of-KeptnTaskDefinition resource>
   context:
     appName: "<name-of-KeptnApp-resource>"
-    appVersion: "1.0.0"
+    appVersion: "KeptnApp-version"
     objectType: ""
     taskType: ""
-    workloadName: "my-workload"
-    workloadVersion: "1.0.0"
+    workloadName: "name-of-KeptnWorkload resource""
+    workloadVersion: "version-of-KeptnWorkload resource"
     metadata:
-      commit-id: "1234"
+      <custom-info1>: "<custom-info1-value>"
+      <custom-info2>: "<custom-info2-value>"
+      ...
   parameters: <parameters to pass to job>
   secureParameters: <secure parameters to pass to job>
   checkType: ""
@@ -60,10 +62,22 @@ spec:
         * **appVersion** (required) -- Version of the `KeptnApp` resource
           for which the `KeptnTask` is being executed.
         * **metadata** -- Additional key-value pairs with contextual information for the `KeptnTask`.
-          Keptn populates this field based on the `spec.metadata` field of
-          the `KeptnWorkloadVersion` and `KeptnAppVersion` resources.
-          See [Context metadata](../../guides/metadata.md) for information on how to set
-          user defined values for those fields.
+          Keptn populates this field based on the `spec.metadata` field of the
+          [KeptnWorkloadVersion](../api-reference/lifecycle/v1beta1/index.md#keptnworkloadversion)
+          and
+          [KeptnAppVersion](../api-reference/lifecycle/v1beta1/index.md#keptnappversion)
+          resources.
+
+             For example, the following lines reference the commit ID and user ID:
+
+             ```yaml
+             commit-id: "1234"
+             user-id: "person3"
+             ```
+
+             See [Context metadata](../../guides/metadata.md)
+             for information about setting user defined values for those fields.
+
         * **objectType** (required) -- Indicates whether this `KeptnTask`
           is being executed for a `KeptnApp` or a `KeptnWorkload` resource.
           When populating this resource manually

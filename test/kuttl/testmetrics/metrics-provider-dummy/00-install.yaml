@@ -1,0 +1,20 @@
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetric
+metadata:
+  name: podtatometric
+  namespace: keptn-system
+spec:
+  provider:
+    name: "dummy"
+  query: "random"
+  fetchIntervalSeconds: 5
+
+---
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetricsProvider
+metadata:
+  name: dummy
+  namespace: keptn-system
+spec:
+  type: dummy
+  targetServer: "http://www.randomnumberapi.com/api/v1.0/"  # string

@@ -1,4 +1,15 @@
- // Inside the dummy package
+package dummy
+
+import (
+	"context"
+	"io"
+	"net/http"
+	"strconv"
+	"time"
+
+	"github.com/go-logr/logr"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+)
 
 type KeptnDummyProvider struct {
 	Log        logr.Logger

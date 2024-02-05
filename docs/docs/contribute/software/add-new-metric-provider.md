@@ -48,8 +48,13 @@ To create a provider for the dummy endpoint, follow these steps:
     }
     ```
 
-5. **Add Test Cases:** Write test cases to validate your implementation and ensure it works correctly.
- This step is crucial for maintaining code quality and reliability.
+5. **Add Test Cases:**
+- Write a unit test to validate your implementation at the function level. Unit tests ensure that individual
+ functions behave as expected and meet their functional requirements.
+  Below is a unit test example for our dummy provider
 
-6. **Test:** Thoroughly test your implementation to verify that it functions as expected.
- Make sure to cover various scenarios and edge cases to ensure robustness.
+  ```go
+  {% include "./dummy-test-example.go" %}
+  ```
+- Include a KUTTL test to validate the behavior of Kubernetes resources managed by your code. KUTTL tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring the correctness of your Kubernetes configurations and deployments.
+

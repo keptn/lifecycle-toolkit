@@ -73,7 +73,7 @@ you see the following changes:
 
 * The list of tasks and evaluations
 has been moved from the `KeptnApp` resource
-to the `KeptnAppContext` resource
+to the `KeptnAppContext` resource.
 
 ```yaml
 {% include "./assets/keptnapp-migrated.yaml" %}

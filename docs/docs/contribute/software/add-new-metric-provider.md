@@ -65,8 +65,13 @@ To create a provider for the dummy endpoint, follow these steps:
         }
     }
     ```
+5. **Update validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.
+- Add the provider name next to last provider in this 
+[line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go#L29)
+to look like this `// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql|dummy`
+- In the metric-operator directory run `make manifests` to update the metrics-operator crd config
 
-5. **Add Test Cases:**
+6. **Add Test Cases:**
 
 - Write a unit test to validate your implementation at the function level.
   Unit tests ensure that individual

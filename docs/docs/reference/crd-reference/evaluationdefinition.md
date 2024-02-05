@@ -26,6 +26,7 @@ spec:
 ```
 
 ## Fields
+<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
   Must be `v1alpha3` or later for this syntax.

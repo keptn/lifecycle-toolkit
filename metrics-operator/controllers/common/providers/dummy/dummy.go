@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -17,9 +16,7 @@ type KeptnDummyProvider struct {
 }
 
 func (d *KeptnDummyProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
-	fromTime := strconv.Itoa(int(analysis.GetFrom().Unix()))
-	toTime := strconv.Itoa(int(analysis.GetFrom().Unix()))
-	return fmt.Sprintf("dummy provider FetchAnalysisValue was called with query %s from %q to %q", query, fromTime, toTime), nil
+	return fmt.Sprintf("dummy provider FetchAnalysisValue was called with query %s from %q to %q", query, analysis.GetFrom(), analysis.GetTo()), nil
 }
 
 func (d *KeptnDummyProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {

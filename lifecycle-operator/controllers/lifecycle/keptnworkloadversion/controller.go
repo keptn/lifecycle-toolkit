@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 	"reflect"
-	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -31,7 +30,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
@@ -39,9 +37,7 @@ import (
 	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
-	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
@@ -58,15 +54,14 @@ const (
 // KeptnWorkloadVersionReconciler reconciles a KeptnWorkloadVersion object
 type KeptnWorkloadVersionReconciler struct {
 	client.Client
-	Scheme                 *runtime.Scheme
-	EventSender            eventsender.IEvent
-	Log                    logr.Logger
-	Meters                 apicommon.KeptnMeters
-	SpanHandler            telemetry.ISpanHandler
-	TracerFactory          telemetry.TracerFactory
-	SchedulingGatesHandler schedulinggates.ISchedulingGatesHandler
-	EvaluationHandler      evaluation.IEvaluationHandler
-	PhaseHandler           phase.IHandler
+	Scheme            *runtime.Scheme
+	EventSender       eventsender.IEvent
+	Log               logr.Logger
+	Meters            apicommon.KeptnMeters
+	SpanHandler       telemetry.ISpanHandler
+	TracerFactory     telemetry.TracerFactory
+	EvaluationHandler evaluation.IEvaluationHandler
+	PhaseHandler      phase.IHandler
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions,verbs=get;list;watch;create;update;patch;delete
@@ -136,14 +131,6 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	// Wait for pre-evaluation checks of Workload
 	if result, err := r.doPreDeploymentEvaluationPhase(ctx, workloadVersion, ctxWorkloadTrace); !result.Continue {
 		return result.Result, err
-	}
-
-	if r.SchedulingGatesHandler.Enabled() {
-		// pre-evaluation checks done at this moment, we can remove the gate
-		if err := r.SchedulingGatesHandler.RemoveGates(ctx, workloadVersion); err != nil {
-			r.Log.Error(err, "could not remove SchedulingGates")
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
-		}
 	}
 
 	// Wait for deployment of Workload
@@ -294,7 +281,7 @@ func (r *KeptnWorkloadVersionReconciler) SetupWithManager(mgr ctrl.Manager) erro
 		return err
 	}
 	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &klcv1beta1.KeptnWorkloadVersion{}, resourceReferenceUIDField, func(rawObj client.Object) []string {
-		return resourceRefUIDIndexFunc(rawObj)
+		return controllercommon.KeptnWorkloadVersionResourceRefUIDIndexFunc(rawObj)
 	}); err != nil {
 		return err
 	}
@@ -302,22 +289,7 @@ func (r *KeptnWorkloadVersionReconciler) SetupWithManager(mgr ctrl.Manager) erro
 		// predicate disabling the auto reconciliation after updating the object status
 		For(&klcv1beta1.KeptnWorkloadVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{}))
 
-	if r.SchedulingGatesHandler.Enabled() {
-		controllerBuilder = controllerBuilder.Watches(
-			&v1.Pod{},
-			handler.EnqueueRequestsFromMapFunc(r.onPodEvent),
-		)
-	}
 	return controllerBuilder.Complete(r)
-}
-
-func resourceRefUIDIndexFunc(rawObj client.Object) []string {
-	// Extract the ConfigMap name from the ConfigDeployment Spec, if one is provided
-	workloadVersion := rawObj.(*klcv1beta1.KeptnWorkloadVersion)
-	if workloadVersion.Spec.ResourceReference.UID == "" {
-		return nil
-	}
-	return []string{string(workloadVersion.Spec.ResourceReference.UID)}
 }
 
 func (r *KeptnWorkloadVersionReconciler) sendUnfinishedPreEvaluationEvents(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadVersion *klcv1beta1.KeptnWorkloadVersion) {
@@ -413,60 +385,6 @@ func (r *KeptnWorkloadVersionReconciler) getAppVersionForWorkloadVersion(ctx con
 
 func (r *KeptnWorkloadVersionReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
-}
-
-func (r *KeptnWorkloadVersionReconciler) onPodEvent(ctx context.Context, object client.Object) []reconcile.Request {
-	attachedWorkloadVersions := &klcv1beta1.KeptnWorkloadVersionList{}
-
-	pod, ok := object.(*v1.Pod)
-	if !ok {
-		return []reconcile.Request{}
-	}
-	if !hasKeptnSchedulingGate(pod) {
-		return []reconcile.Request{}
-	}
-
-	// check if the owner of the pod is the one that the KeptnWorkloadVersion is referring to
-	owner := pod.GetOwnerReferences()
-	if len(owner) == 0 {
-		return []reconcile.Request{}
-	}
-	listOps := &client.ListOptions{
-		FieldSelector: fields.OneTermEqualSelector(resourceReferenceUIDField, string(owner[0].UID)),
-		Namespace:     pod.GetNamespace(),
-	}
-	err := r.List(ctx, attachedWorkloadVersions, listOps)
-	if err != nil {
-		r.Log.Error(err, "Could not list WorkloadVersions related to pod", "pod", pod.GetName(), "namespace", pod.GetNamespace())
-		return []reconcile.Request{}
-	}
-
-	for _, item := range attachedWorkloadVersions.Items {
-		if item.Status.DeploymentStatus == apicommon.StateSucceeded || item.Status.DeploymentStatus == apicommon.StateProgressing {
-
-			pod.Spec.SchedulingGates = nil
-			if len(pod.Annotations) == 0 {
-				pod.Annotations = make(map[string]string, 1)
-			}
-			pod.Annotations[apicommon.SchedulingGateRemoved] = "true"
-			r.Log.Info("removing scheduling gate of pod", "pod", pod.Name, "uid", pod.UID)
-
-			if err := r.Update(ctx, pod); err != nil {
-				r.Log.Error(err, "Could not remove pod scheduling gate", "namespace", pod.Namespace, "pod", pod.Name, "workloadVersion", item.Name)
-			}
-			return []reconcile.Request{}
-		}
-	}
-	return []reconcile.Request{}
-}
-
-func hasKeptnSchedulingGate(pod *v1.Pod) bool {
-	for _, gate := range pod.Spec.SchedulingGates {
-		if gate.Name == apicommon.KeptnGate {
-			return true
-		}
-	}
-	return false
 }
 
 func getLatestAppVersion(apps *klcv1beta1.KeptnAppVersionList, wli *klcv1beta1.KeptnWorkloadVersion) (bool, klcv1beta1.KeptnAppVersion, error) {

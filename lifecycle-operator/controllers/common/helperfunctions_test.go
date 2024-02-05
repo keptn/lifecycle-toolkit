@@ -2,6 +2,9 @@ package common
 
 import (
 	"context"
+	v1 "k8s.io/api/core/v1"
+	"reflect"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"testing"
 
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
@@ -9,7 +12,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -130,7 +133,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 		{
 			name: "taskDef not found",
 			taskDef: &klcv1beta1.KeptnTaskDefinition{
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "taskDef",
 					Namespace: "some-other-namespace",
 				},
@@ -143,7 +146,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 		{
 			name: "taskDef found",
 			taskDef: &klcv1beta1.KeptnTaskDefinition{
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "taskDef",
 					Namespace: "some-namespace",
 				},
@@ -151,7 +154,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 			taskDefName:      "taskDef",
 			taskDefNamespace: "some-namespace",
 			out: &klcv1beta1.KeptnTaskDefinition{
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "taskDef",
 					Namespace: "some-namespace",
 				},
@@ -161,7 +164,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 		{
 			name: "taskDef found in default Keptn namespace",
 			taskDef: &klcv1beta1.KeptnTaskDefinition{
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "taskDef",
 					Namespace: testcommon.KeptnNamespace,
 				},
@@ -169,7 +172,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 			taskDefName:      "taskDef",
 			taskDefNamespace: "some-namespace",
 			out: &klcv1beta1.KeptnTaskDefinition{
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "taskDef",
 					Namespace: testcommon.KeptnNamespace,
 				},
@@ -214,7 +217,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 		{
 			name: "evalDef not found",
 			evalDef: &klcv1beta1.KeptnEvaluationDefinition{
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "evalDef",
 					Namespace: "some-other-namespace",
 				},
@@ -227,7 +230,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 		{
 			name: "evalDef found",
 			evalDef: &klcv1beta1.KeptnEvaluationDefinition{
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "evalDef",
 					Namespace: "some-namespace",
 				},
@@ -235,7 +238,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 			evalDefName:      "evalDef",
 			evalDefNamespace: "some-namespace",
 			out: &klcv1beta1.KeptnEvaluationDefinition{
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "evalDef",
 					Namespace: "some-namespace",
 				},
@@ -245,7 +248,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 		{
 			name: "evalDef found in default Keptn namespace",
 			evalDef: &klcv1beta1.KeptnEvaluationDefinition{
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "evalDef",
 					Namespace: testcommon.KeptnNamespace,
 				},
@@ -253,7 +256,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 			evalDefName:      "evalDef",
 			evalDefNamespace: "some-namespace",
 			out: &klcv1beta1.KeptnEvaluationDefinition{
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "evalDef",
 					Namespace: testcommon.KeptnNamespace,
 				},
@@ -378,6 +381,47 @@ func Test_MergeMaps(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			require.Equal(t, MergeMaps(tt.map1, tt.map2), tt.want)
+		})
+	}
+}
+
+func Test_resourceRefUIDIndexFunc(t *testing.T) {
+	type args struct {
+		rawObj client.Object
+	}
+	tests := []struct {
+		name string
+		args args
+		want []string
+	}{
+		{
+			name: "get uid of resource reference",
+			args: args{
+				rawObj: &klcv1beta1.KeptnWorkloadVersion{
+					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+							ResourceReference: klcv1beta1.ResourceReference{
+								UID: "my-uid",
+							},
+						},
+					},
+				},
+			},
+			want: []string{"my-uid"},
+		},
+		{
+			name: "not a KeptnWorkloadVersion",
+			args: args{
+				rawObj: &v1.Pod{},
+			},
+			want: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := KeptnWorkloadVersionResourceRefUIDIndexFunc(tt.args.rawObj); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("KeptnWorkloadVersionResourceRefUIDIndexFunc() = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

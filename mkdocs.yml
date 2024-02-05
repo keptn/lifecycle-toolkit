@@ -192,6 +192,7 @@ nav:
       - Software contributions:
           - docs/contribute/software/index.md
           - Software development environment: docs/contribute/software/dev-environ.md
+          - docs/contribute/software/add-new-metric-provider.md
       - Documentation contributions:
           - docs/contribute/docs/index.md
           - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs.md

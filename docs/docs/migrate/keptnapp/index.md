@@ -66,7 +66,7 @@ After applying the migration steps from the previous subsection,
 you see the following changes:
 
 * The `app.kubernetes.io/managed-by` annotation
-  has been added to the `labels` section of the revised `KeptnApp` resource.
+  has been added to the `metadata.labels` section of the revised `KeptnApp` resource.
 
      If your original `KeptnApp` resource was auto-generated,
      it already had this annotation.

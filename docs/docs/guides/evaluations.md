@@ -58,9 +58,9 @@ To implement evaluations, you must:
 1. [Create KeptnEvaluationDefinition](#create-keptnevaluationdefinition-resources)
    resources for each evaluation you want to perform.
 1. Manually create the appropriate `KeptnAppContext` resource
-   listing all `KeptnApp` level evaluations, referring to `KeptnEvaluationDefinition`
+   listing all `KeptnApp` level evaluations, referring to `KeptnEvaluationDefinition` resources
 1. Annotate the workload YAML files for each `KeptnEvaluationDefinition` resource
-   you want to run pre- and/or post-deployment .
+   you want to run pre- and/or post-deployment.
 
 ## Create KeptnEvaluationDefinition resources
 
@@ -142,7 +142,7 @@ that can execute before and after the deployment.
 
 If everything is fine, the deployment continues.
 
-## Create KeptnAppContext for App level Evaluations
+## Create KeptnAppContext for app level evaluations
 
 To execute pre-/post-deployment evaluations for a `KeptnApp`,
 create a `KeptnAppContext` resource with the same name and in the same `namespace` as the `KeptnApp`.

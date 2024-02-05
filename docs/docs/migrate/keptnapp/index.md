@@ -83,7 +83,7 @@ These modified resources can be now applied to your cluster.
 
 ## What's next?
 
-Making these modifications does not alter Keptn's behavior.
+Making these modifications does not alter the behavior of Keptn.
 However, you might want to enhance your traces, tasks, and evaluations
 with the new functionality that is available:
 

@@ -6,7 +6,7 @@ resource is new in the `v1beta1` API version.
 Existing
 [KeptnApp](../../reference/crd-reference/app.md)
 resources that were generated manually must be migrated
-because of this new feature..
+because of this new feature.
 This page gives instructions for doing that.
 
 > **Note**

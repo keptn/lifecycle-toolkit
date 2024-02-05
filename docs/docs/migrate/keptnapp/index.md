@@ -23,7 +23,7 @@ This page gives instructions for doing that.
 
 ## Migration steps
 
-The steps to migrate an existing `KeptnApp` resource
+You need the following steps to migrate an existing `KeptnApp` resource
 to work with the `KeptnAppContext` resource
 introduced in the `v1beta1` API version.
 you need to execute the following steps:

@@ -2,7 +2,7 @@
 
 The
 [KeptnAppContext](../../reference/crd-reference/appcontext.md)
-resource is new in the `v1beta1` API.
+resource is new in the `v1beta1` API version.
 Existing
 [KeptnApp](../../reference/crd-reference/app.md)
 resources that were generated manually must be migrated

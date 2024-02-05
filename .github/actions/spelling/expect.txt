@@ -260,7 +260,6 @@ iobjective
 IOperator
 IProviders
 IRound
-IScheduling
 Isitobservable
 ISpan
 ITarget
@@ -534,8 +533,7 @@ runtimes
 runtimespec
 Sambhav
 sbom
-schedulinggate
-schedulinggateshandler
+schedulinggates
 sclient
 screenshot
 sdkmetric
@@ -621,10 +619,10 @@ tokenreviews
 toml
 totalscore
 tplvalues
+traceid
 traceparent
 tracerfactory
 tracetest
-traceid
 trivy
 trivyignore
 trunc

@@ -88,7 +88,21 @@ func (r *SchedulingGatesReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *SchedulingGatesReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).For(&v1.Pod{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).Complete(r)
+	return ctrl.NewControllerManagedBy(mgr).
+		For(
+			&v1.Pod{},
+			builder.WithPredicates(
+				predicate.GenerationChangedPredicate{},
+				predicate.NewPredicateFuncs(func(object client.Object) bool {
+					pod, ok := object.(*v1.Pod)
+					if !ok {
+						return false
+					}
+					return hasKeptnSchedulingGate(pod)
+				}),
+			),
+		).
+		Complete(r)
 }
 
 func hasKeptnSchedulingGate(pod *v1.Pod) bool {

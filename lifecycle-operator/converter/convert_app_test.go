@@ -1,6 +1,7 @@
 package main
 
 import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"os"
 	"testing"
 )
@@ -32,4 +33,43 @@ func TestMigration(t *testing.T) {
 	if string(actualOutput) != string(expectedOutput) {
 		t.Errorf("Unexpected output content. Expected:\n%s\n\nActual:\n%s", string(expectedOutput), string(actualOutput))
 	}
+}
+
+func TestAddKeptnAnnotation(t *testing.T) {
+	// Test case 1: Annotations map is nil
+	t.Run("AnnotationsMapIsNil", func(t *testing.T) {
+		resource := &metav1.ObjectMeta{}
+		addKeptnAnnotation(resource)
+
+		// Check if the annotation was added
+		if value, exists := resource.Annotations[keptnAnnotation]; !exists || value != keptn {
+			t.Errorf("Annotation not added correctly. Expected: %s=%s, Actual: %s=%s", keptnAnnotation, keptn, keptnAnnotation, value)
+		}
+	})
+
+	// Test case 2: Annotations map is not nil
+	t.Run("AnnotationsMapIsNotNil", func(t *testing.T) {
+		// Existing annotations
+		existingAnnotations := map[string]string{
+			"existing-key": "existing-value",
+		}
+
+		resource := &metav1.ObjectMeta{
+			Annotations: existingAnnotations,
+		}
+
+		addKeptnAnnotation(resource)
+
+		// Check if the annotation was added
+		if value, exists := resource.Annotations[keptnAnnotation]; !exists || value != keptn {
+			t.Errorf("Annotation not added correctly. Expected: %s=%s, Actual: %s=%s", keptnAnnotation, keptn, keptnAnnotation, value)
+		}
+
+		// Check if existing annotations are preserved
+		for key, value := range existingAnnotations {
+			if resource.Annotations[key] != value {
+				t.Errorf("Existing annotation %s=%s is not preserved", key, value)
+			}
+		}
+	})
 }

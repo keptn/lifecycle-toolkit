@@ -20,7 +20,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	schedulinggates2 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/schedulinggates"
 	"log"
 	"net/http"
 	"os"
@@ -50,6 +49,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadversion"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/schedulinggates"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/options"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -368,7 +368,7 @@ func main() {
 
 	schedulingGatesLogger := ctrl.Log.WithName("SchedulingGates Controller").V(env.KeptnSchedulingGatesControllerLogLevel)
 	if env.SchedulingGatesEnabled {
-		schedulingGatesReconciler := &schedulinggates2.SchedulingGatesReconciler{
+		schedulingGatesReconciler := &schedulinggates.SchedulingGatesReconciler{
 			Client: mgr.GetClient(),
 			Scheme: mgr.GetScheme(),
 			Log:    schedulingGatesLogger,

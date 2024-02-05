@@ -16,8 +16,21 @@ To create a provider for the dummy endpoint, follow these steps:
  matching the new service name: dummy and a new Go package for the dummy provider.
   This package should contain
  a struct that implements the `KeptnSLIProvider` interface.
-  To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the
-  `EvaluateQuery`, `EvaluateQueryForStep` and `FetchAnalysisValue` functions.
+  To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the following functions.
+  `EvaluateQuery`(Fetches metric values from the dummy provider)
+   - This function fetches metric values based on the provided
+     metric query from the dummy provider.
+     It evaluates the query and returns the metric values
+     along with any additional data if required.
+  `EvaluateQueryForStep`(Fetches metric values with step interval from the dummy provider)
+   - This function fetches metric values with a specified step interval from the dummy provider.
+      It takes into account the metric query and the step interval provided, executes the query,
+      and returns the metric values along with any additional data if required.
+  `FetchAnalysisValue`(Fetches analysis values from the dummy provider) functions.
+   - This function fetches analysis values based on the provided query and time range from the
+     dummy provider.
+     It evaluates the query within the specified time range and returns the analysis
+     values along with any additional data if required.
   You can follow other existing implementations,
  such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
  as an example.
@@ -26,6 +39,11 @@ To create a provider for the dummy endpoint, follow these steps:
     ```go
     {% include "./dummy-code-example.go" %}
     ```
+
+   **NB:** Ensure to refer to the documentation of
+    [metrics](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/metric.md)
+    and [analysis](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/analysis.md)
+    to understand what data should be retrieved from the methods inputs to compute accurate results.
 
 4. **Instantiate the Provider:** In the `providers.NewProvider` function
  in the `metrics-operator/controllers/common/providers/provider.go` file,

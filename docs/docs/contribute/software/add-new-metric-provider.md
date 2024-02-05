@@ -22,9 +22,9 @@ To create a provider for the dummy endpoint, follow these steps:
   Ensure that you implement the `EvaluateQuery` function to fetch the metrics accurately.
   In the implementation, make a request to the dummy endpoint and return the response.
 
-```go
-{% include "./dummy-code-example.go" %}
-```
+    ```go
+    {% include "./dummy-code-example.go" %}
+    ```
 
 4. **Instantiate the Provider:** In the `providers.NewProvider` function
  in the `metrics-operator/controllers/common/providers/provider.go` file,

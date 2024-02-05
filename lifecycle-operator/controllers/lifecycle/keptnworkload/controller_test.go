@@ -46,7 +46,7 @@ func TestKeptnWorkloadReconciler_CannotLookupWorkloadVersion(t *testing.T) {
 			if key.Name == "my-workload-v1" {
 				return errors.New("unexpected error")
 			}
-			return nil
+			return client.Get(ctx, key, obj, opts...)
 		},
 	}).WithObjects(workload).Build()
 

@@ -359,7 +359,7 @@ and
 and in the
 [KeptnApp](app.md) resource.
 See
-[Annotations to KeptnApp](../../guides/tasks.md/#annotations-to-keptnapp)
+[Annotations to KeptnApp](../../guides/tasks.md/#run-a-task-associated-with-your-entire-keptnapp)
 for details.
 Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition

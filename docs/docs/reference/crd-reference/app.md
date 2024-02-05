@@ -79,6 +79,8 @@ when the app discovery feature generates the `KeptnApp` resource:
             of checks for this
             [workload](https://kubernetes.io/docs/concepts/workloads/) only,
             not the entire application.
+            <!-- markdownlint-enable MD007 -->
+<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

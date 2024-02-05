@@ -82,6 +82,7 @@ spec:
        If the evaluation is not successful,
        this stores error details that you can use to understand the problem
        such as a forbidden code.
+<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

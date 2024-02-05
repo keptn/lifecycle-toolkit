@@ -69,6 +69,7 @@ spec:
              * **name:** -- Name of the Secret used by the provider
              * **key:** -- Key of the Secret from which to select
              * **optional** -- Specify whether the Secret or its key are required
+<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

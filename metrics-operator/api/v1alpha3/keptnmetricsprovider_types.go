@@ -24,7 +24,7 @@ import (
 // KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
 type KeptnMetricsProviderSpec struct {
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql
+	// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql|dummy
 	// Type represents the provider type. This can be one of prometheus, dynatrace, datadog, dql.
 	Type string `json:"type"`
 	// TargetServer defined the URL at which the metrics provider is reachable with included port and protocol.

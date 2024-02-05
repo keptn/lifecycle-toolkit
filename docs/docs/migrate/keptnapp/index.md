@@ -36,6 +36,19 @@ introduced in the `v1beta1` API version:
 3. Add the `app.kubernetes.io/managed-by: keptn` annotation
    to the `KeptnApp` resource if it is not already there.
 
+You can migrate your KeptnApp manually or, if you have go installed
+on your machine, use the script provided 
+[here](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/converter).
+
+```bash
+    go run convert_app.go path_to_keptnapp_to_convert path_to_desired_output_file
+```
+For instance, to run the example file conversion, you can do: 
+
+```bash
+    go run convert_app.go example_keptnapp.yaml example_output.yaml
+```
+
 > **Note**
 Be sure that all of your application resources
 (such as

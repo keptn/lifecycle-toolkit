@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -42,11 +43,9 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
@@ -299,14 +298,17 @@ func (r *KeptnWorkloadVersionReconciler) SetupWithManager(mgr ctrl.Manager) erro
 	}); err != nil {
 		return err
 	}
-	return ctrl.NewControllerManagedBy(mgr).
+	controllerBuilder := ctrl.NewControllerManagedBy(mgr).
 		// predicate disabling the auto reconciliation after updating the object status
-		For(&klcv1beta1.KeptnWorkloadVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
-		Watches(
+		For(&klcv1beta1.KeptnWorkloadVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{}))
+
+	if r.SchedulingGatesHandler.Enabled() {
+		controllerBuilder = controllerBuilder.Watches(
 			&v1.Pod{},
-			handler.EnqueueRequestsFromMapFunc(r.findObjectsForPod),
-		).
-		Complete(r)
+			handler.EnqueueRequestsFromMapFunc(r.onPodEvent),
+		)
+	}
+	return controllerBuilder.Complete(r)
 }
 
 func resourceRefUIDIndexFunc(rawObj client.Object) []string {
@@ -413,7 +415,7 @@ func (r *KeptnWorkloadVersionReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
 }
 
-func (r *KeptnWorkloadVersionReconciler) findObjectsForPod(ctx context.Context, object client.Object) []reconcile.Request {
+func (r *KeptnWorkloadVersionReconciler) onPodEvent(ctx context.Context, object client.Object) []reconcile.Request {
 	attachedWorkloadVersions := &klcv1beta1.KeptnWorkloadVersionList{}
 
 	pod, ok := object.(*v1.Pod)
@@ -424,7 +426,7 @@ func (r *KeptnWorkloadVersionReconciler) findObjectsForPod(ctx context.Context, 
 		return []reconcile.Request{}
 	}
 
-	// check if the owner of the pod refers is the one that the KeptnWorkloadVersion is referring to
+	// check if the owner of the pod is the one that the KeptnWorkloadVersion is referring to
 	owner := pod.GetOwnerReferences()
 	if len(owner) == 0 {
 		return []reconcile.Request{}
@@ -439,18 +441,23 @@ func (r *KeptnWorkloadVersionReconciler) findObjectsForPod(ctx context.Context, 
 		return []reconcile.Request{}
 	}
 
-	requests := make([]reconcile.Request, len(attachedWorkloadVersions.Items))
-	for i, item := range attachedWorkloadVersions.Items {
-		if item.Status.DeploymentStatus == apicommon.StateSucceeded {
-			requests[i] = reconcile.Request{
-				NamespacedName: types.NamespacedName{
-					Name:      item.GetName(),
-					Namespace: item.GetNamespace(),
-				},
+	for _, item := range attachedWorkloadVersions.Items {
+		if item.Status.DeploymentStatus == apicommon.StateSucceeded || item.Status.DeploymentStatus == apicommon.StateProgressing {
+
+			pod.Spec.SchedulingGates = nil
+			if len(pod.Annotations) == 0 {
+				pod.Annotations = make(map[string]string, 1)
 			}
+			pod.Annotations[apicommon.SchedulingGateRemoved] = "true"
+			r.Log.Info("removing scheduling gate of pod", "pod", pod.Name, "uid", pod.UID)
+
+			if err := r.Update(ctx, pod); err != nil {
+				r.Log.Error(err, "Could not remove pod scheduling gate", "namespace", pod.Namespace, "pod", pod.Name, "workloadVersion", item.Name)
+			}
+			return []reconcile.Request{}
 		}
 	}
-	return requests
+	return []reconcile.Request{}
 }
 
 func hasKeptnSchedulingGate(pod *v1.Pod) bool {

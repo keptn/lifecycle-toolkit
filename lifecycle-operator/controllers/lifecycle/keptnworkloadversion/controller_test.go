@@ -1775,14 +1775,7 @@ func TestKeptnWorkloadVersionReconciler_findObjectsForPod(t *testing.T) {
 					},
 				},
 			},
-			want: []reconcile.Request{
-				{
-					NamespacedName: types.NamespacedName{
-						Namespace: "my-namespace",
-						Name:      "my-wlv",
-					},
-				},
-			},
+			want: []reconcile.Request{},
 		},
 	}
 	for _, tt := range tests {
@@ -1808,7 +1801,7 @@ func TestKeptnWorkloadVersionReconciler_findObjectsForPod(t *testing.T) {
 
 			r.Client = mockClient
 
-			requests := r.findObjectsForPod(context.TODO(), tt.args.object)
+			requests := r.onPodEvent(context.TODO(), tt.args.object)
 
 			require.Equal(t, tt.want, requests)
 		})

@@ -63,7 +63,7 @@ func TestFetchAnalysisValue_HappyPath(t *testing.T) {
 
 	value, err := dummyProvider.FetchAnalysisValue(context.TODO(), query, analysis, &provider)
 
-	expected := fmt.Sprintf("dummy provider FetchAnalysisValue was called with query random from %q to %q", currentTime.Unix(), currentTime.Unix())
+	expected := fmt.Sprintf("dummy provider FetchAnalysisValue was called with query random from %d to %d", analysis.GetFrom().Unix(), analysis.GetTo().Unix())
 	require.NoError(t, err)
 	require.Equal(t, expected, value)
 }
@@ -99,7 +99,7 @@ func TestEvaluateQueryForStep_HappyPath(t *testing.T) {
 
 	values, _, err := dummyProvider.EvaluateQueryForStep(context.TODO(), metric, provider)
 
-	expected := fmt.Sprintf("dummy provider EvaluateQueryForStep was called with query random from %q to %q at an interval %q", fromTime, toTime, stepInterval)
+	expected := fmt.Sprintf("dummy provider EvaluateQueryForStep was called with query random from %d to %d at an interval %d", fromTime, toTime, stepInterval)
 	require.NoError(t, err)
 
 	require.Equal(t, expected, values[0])

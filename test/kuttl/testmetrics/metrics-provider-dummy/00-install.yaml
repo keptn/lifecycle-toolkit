@@ -59,6 +59,7 @@ metadata:
   ##namespace: keptn-system
 spec:
   timeframe:
-    recent: 5m
+    from: "2023-09-14T11:20:19Z"
+    to: "2023-09-14T11:22:19Z"
   analysisDefinition:
     name: ed-my-proj-dev-svc1

@@ -37,7 +37,7 @@ resource.
 | `env.labelSelectorValue`   | specify the value for the label selector                                  | `true`                       |
 | `image.registry`           | specify the container registry for the certificate-operator image         | `ghcr.io`                    |
 | `image.repository`         | specify repo for manager image                                            | `keptn/certificate-operator` |
-| `image.tag`                | select tag for manager container                                          | `v1.2.0`                     |
+| `image.tag`                | select tag for manager container                                          | `v2.0.0`                     |
 | `imagePullPolicy`          | select image pull policy for manager container                            | `Always`                     |
 | `livenessProbe`            | custom RBAC proxy liveness probe                                          |                              |
 | `readinessProbe`           | custom manager readiness probe                                            |                              |

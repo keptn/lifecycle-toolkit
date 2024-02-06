@@ -13,7 +13,7 @@ as part of pre- and post-analysis phases of a [workload](https://kubernetes.io/d
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnEvaluationDefinition
 metadata:
   name: <evaluation-name>
@@ -26,9 +26,10 @@ spec:
 ```
 
 ## Fields
+<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
-  Must be `v1alpha3` or later for this syntax.
+  Must be `v1beta1` or later for this syntax.
 * **kind** -- Resource type.
    Must be set to `KeptnEvaluationDefinition`
 
@@ -60,6 +61,7 @@ spec:
        This is used to define success or failure criteria
        for the referenced `KeptnMetric` in order to pass or fail
        the pre- and post-evaluation stages
+<!-- markdownlint-enable MD007 -->
 
 ## Usage
 
@@ -83,7 +85,7 @@ on all namespaces in the cluster.
 ## Example
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnEvaluationDefinition
 metadata:
   name: my-prometheus-evaluation
@@ -115,7 +117,7 @@ that are now taken from the specified [KeptnMetric](metric.md) CRD.
 The synopsis was:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnEvaluationDefinition
 metadata:
   name: <evaluation-name>
@@ -130,7 +132,7 @@ spec:
       evaluationTarget: >4
 ```
 
-Beginning with `v1alpha3` API version,
+Beginning with `v1beta1` API version,
 `KeptnEvaluationDefinition` references a `keptnMetricRef`
 that points to a [KeptnMetric](metric.md) CR,
 that defines the data source, the query and the namespace to use.

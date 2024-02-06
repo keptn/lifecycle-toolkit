@@ -138,7 +138,7 @@ to use for a deployment being done outside of Kubernetes, see
 
 ## Files
 
-[API reference](../api-reference/lifecycle/v1alpha3/index.md#keptntaskspec)
+[API reference](../api-reference/lifecycle/v1beta1/index.md#keptntaskspec)
 
 ## Differences between versions
 

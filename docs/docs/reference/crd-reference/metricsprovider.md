@@ -7,11 +7,13 @@ comments: true
 KeptnMetricsProvider defines an instance of the data provider
 (such as Prometheus, Dynatrace, or Datadog)
 that is used by the [KeptnMetric](metric.md) resource.
-One Keptn application can perform evaluations based on metrics
+
+One Keptn application can perform
+traces, evaluations, and analyses based on metrics
 from more than one data provider
 and, beginning with the v1alpha3 API version,
 can use more than one instance of each data provider.
-To implement this, create a KeptnMetricsProvider resource
+To implement this, create a `KeptnMetricsProvider` resource
 for each instance of each data provider being used,
 then reference the appropriate provider
 for each metric definition by its name.
@@ -50,12 +52,12 @@ spec:
        [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
        specification.
 
-       For example, you might define `dev-prometheus`
-       for the Prometheus instance that monitors the development deployment,
-       and `qa-prometheus` for the Prometheus instance
-       that monitors the Prometheus instance that monitors the QA deployment,
-       and `prod-dynatrace` for the Dynatrace instance
-       that monitors the production deployment.
+          For example, you might define `dev-prometheus`
+          for the Prometheus instance that monitors the development deployment,
+          and `qa-prometheus` for the Prometheus instance
+          that monitors the Prometheus instance that monitors the QA deployment,
+          and `prod-dynatrace` for the Dynatrace instance
+          that monitors the production deployment.
 
      * **namespace** -- Namespace where this provider is used.
 
@@ -67,6 +69,7 @@ spec:
        * **name:** -- Name of the Secret used by the provider
        * **key:** -- Key of the Secret from which to select
        * **optional** -- Specify whether the Secret or its key must be defined
+
 <!-- markdownlint-enable MD007 -->
 
 ## Usage
@@ -76,20 +79,22 @@ in the same namespace as the
 [KeptnMetric](metric.md)
 resources that are associated with it.
 KeptnMetric resources are used to generate metrics for the cluster
-and are used as the SLI (Service Level Indicator) for
+and are used as the SLI (Service Level Indicator) for the
 [KeptnEvaluationDefinition](evaluationdefinition.md)
-resources that are used for pre- and post-deployment evaluations.
+and
+[AnalysisValueTemplate](analysisvaluetemplate.md)
+resources.
 
 `KeptnEvaluationDefinition` resources can reference metrics
 from any namespace.
-This means that you can create KeptnMetricsProvider
-and KeptnMetric resources
+This means that you can create `KeptnMetricsProvider`
+and `KeptnMetric` resources
 in a centralized namespace (e.g. in `keptn-system`)
 and access those metrics in evaluations
 on all namespaces in the cluster.
 
 Metrics providers may require authentication data.
-These can be stored in a Secret and referenced in the KeptnMetricsProvider.
+These can be stored in a Secret and referenced in the `KeptnMetricsProvider`.
 Those Secret resources need to be configured differently for each metrics provider.
 The Secret holding the data must have a specific structure
 and contain the required data fields.
@@ -107,7 +112,7 @@ the authentication data looks like the following:
 ```
 
 > **Note**
-Setting the `.spec.secretKeyRef.key` field in KeptnMetricsProvider is not necessary,
+Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
 as `user` and `password` key names are required to be present in the linked Secret.
 Setting this field won't have any effect.
 
@@ -121,7 +126,7 @@ the authentication data looks like the following:
 ```
 
 > **Note**
-Setting the `.spec.secretKeyRef.key` field in KeptnMetricsProvider is not necessary,
+Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
 as `DD_CLIENT_API_KEY` and `DD_CLIENT_API_KEY` key names must be
 present in the linked Secret.
 Setting this field has no effect.
@@ -175,13 +180,14 @@ spec:
 ```
 
 Also note that, for the v1alpha1 and v1alpha2 API versions,
-KeptnMetricsProvider only specifies the provider
-for the KeptnMetric resource.
+`KeptnMetricsProvider` only specifies the provider
+for the `KeptnMetric` resource.
 Beginning with `v1alpha3` API version,
-KeptnMetricsProvider is also used to specify the provider
+`KeptnMetricsProvider` is also used to specify the provider
 for the KeptnEvaluationDefinition resource.
 
 ## See also
 
 * [KeptnEvaluationDefinition](evaluationdefinition.md)
+* [AnalysisValueTemplate](analysisvaluetemplate.md)
 * [KeptnMetric](metric.md)

@@ -73,6 +73,8 @@ To create a provider for the dummy endpoint, follow these steps:
    to look like this `// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql|dummy`.
 
    In the metric-operator directory run `make manifests` to update the metrics-operator crd config
+
+   Then modify the helm chart and the helm chart crd validation to match the update in the metrics-operator crd config
   
 6. **Add Test Cases:**
 

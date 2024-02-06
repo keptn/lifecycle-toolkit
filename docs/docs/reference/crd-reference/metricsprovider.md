@@ -65,10 +65,11 @@ spec:
 
      * **type** (required) -- The type of data provider for this instance
      * **targetServer** (required) -- URL of the data provider, enclosed in double quotes
-        * **secretKeyRef**
-             * **name:** -- Name of the Secret used by the provider
-             * **key:** -- Key of the Secret from which to select
-             * **optional** -- Specify whether the Secret or its key are required
+     * **secretKeyRef**
+          * **name:** -- Name of the Secret used by the provider
+          * **key:** -- Key of the Secret from which to select
+          * **optional** -- Specify whether the Secret or its key must be defined
+
 <!-- markdownlint-enable MD007 -->
 
 ## Usage

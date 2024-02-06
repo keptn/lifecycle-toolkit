@@ -17,7 +17,7 @@ that are used in the `AnalysisDefinition` query.
 apiVersion: metrics.keptn.sh/v1beta1
 kind: Analysis
 metadata:
-  name: analysis-sample
+  name: <name-of-analysis>
 spec:
   timeframe: from: <start-time> to: <end-time> | `recent <timespan>`
   args:
@@ -35,52 +35,55 @@ status:
 ```
 
 ## Fields
+<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used
 * **kind** -- Resource type.
    Must be set to `Analysis`
 * **metadata**
-  * **name** -- Unique name of this analysis.
-    Names must comply with the
-    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-    specification.
+     * **name** -- Unique name of this analysis.
+       Names must comply with the
+       [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+       specification.
 * **spec**
-  * **timeframe** (required) -- Specifies the range  for the corresponding query
-    in the AnalysisValueTemplate.
-    This can be populated as one of the following:
+     * **timeframe** (required) -- Specifies the range  for the corresponding query
+       in the AnalysisValueTemplate.
+       This can be populated as one of the following:
 
-    * A combination of ‘from’ and ’to’
-      to specify the start and stop times for the analysis.
-      These fields follow the
-      [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt)
-      timestamp format.
-    * Set the ‘recent’ property to a time span.
-      This causes the Analysis to use data going back that amount of time.
-      For example, if `recent: 10m` is set,
-      the Analysis studies data from the last ten minutes.
-    If neither is set, the Analysis can not be added to the cluster.
-  * **args** -- Map of key/value pairs that can be used
-    to substitute variables in the `AnalysisValueTemplate` query.
-  * **analysisDefinition** (required) -- Identify the `AnalysisDefinition` resource
-    that stores the `AnalysisValuesTemplate` associated with this `Analysis`
-    * **name** -- Name of the `AnalysisDefinition` resource
-    * **namespace** (optional) --
-      Namespace of the `AnalysisDefinition` resource.
-      The `AnalysisDefinition` resource can be located in any namespace.
-      If the namespace is not specified,
-      the analysis controller looks for the `AnalysisDefinition` resource
-      in the same namespace as the `Analysis` resource.
-  * **status** -- results of this Analysis run,
-    added to the resource by Keptn,
-    based on criteria defined in the `AnalysisDefinition` resource.
-    <!-- markdownlint-disable -->
-    * **warning** -- Whether the analysis returned a warning.
-    * **raw** --  String-encoded JSON object that reports the results
-      of evaluating one or more objectives or metrics.
-      See
-      [Interpreting Analysis results](#interpreting-analysis-results)
-      for details.
-    * **state** -- Set to `Completed` or `Progressing` as appropriate.
+          * A combination of ‘from’ and ’to’
+            to specify the start and stop times for the analysis.
+            These fields follow the
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt)
+            timestamp format.
+          * Set the ‘recent’ property to a time span.
+            This causes the Analysis to use data going back that amount of time.
+            For example, if `recent: 10m` is set,
+            the Analysis studies data from the last ten minutes.
+
+          If neither is set, the Analysis can not be added to the cluster.
+
+     * **args** -- Map of key/value pairs that can be used
+       to substitute variables in the `AnalysisValueTemplate` query.
+     * **analysisDefinition** (required) -- Identify the `AnalysisDefinition` resource
+       that stores the `AnalysisValuesTemplate` associated with this `Analysis`
+          * **name** -- Name of the `AnalysisDefinition` resource
+          * **namespace** (optional) --
+            Namespace of the `AnalysisDefinition` resource.
+            The `AnalysisDefinition` resource can be located in any namespace.
+            If the namespace is not specified,
+            the analysis controller looks for the `AnalysisDefinition` resource
+            in the same namespace as the `Analysis` resource.
+     * **status** -- results of this Analysis run,
+       added to the resource by Keptn,
+       based on criteria defined in the `AnalysisDefinition` resource.
+          > **Warning** -- Whether the analysis returned a warning.
+          * **raw** --  String-encoded JSON object that reports the results
+            of evaluating one or more objectives or metrics.
+            See
+            [Interpreting Analysis results](#interpreting-analysis-results)
+            for details.
+          * **state** -- Set to `Completed` or `Progressing` as appropriate.
+<!-- markdownlint-enable MD007 -->
 
 ## Interpreting Analysis results
 
@@ -260,6 +263,7 @@ based on the objectives evaluated (totalScore: 2).
 <!-- markdownlint-disable-next-line -->
 **`warning`** -- Indicates whether any warnings have been issued
 during the evaluation (false in this case).
+<!-- markdownlint-enable MD007 -->
 
 ## Usage
 
@@ -332,25 +336,10 @@ API reference: [Analysis](../api-reference/metrics/v1beta1/index.md#analysis)
 
 ## Differences between versions
 
-Keptn v0.8.3 and v0.9.0 include a preliminary release
-of the Keptn Analysis feature
-but it is hidden behind a feature flag.
-To preview these features, do one of the following for your Keptn cluster:
-
-* Set the environment variable `ENABLE_ANALYSIS` to `true`
-  in the `metrics-operator` deployment
-* Add the following to your `helm upgrade` command line:
-
-  ```shell
-  --set metricsOperator.env.enableKeptnAnalysis=true
-  ```
-* Set `enableKeptnAnalysis: "true"` in the
-  [keptn-metrics-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/values.yaml)
-  file
-
-See
-[Customizing the configuration of components](../../installation/index.md#customizing-the-configuration-of-components)
-for more information.
+The Keptn Analysis feature is an official part of Keptn v0.10.0 and later.
+Keptn v0.8.3 included a preliminary release of this feature
+but it was hidden behind a feature flag.
+The behavior of this feature is unchanged since v0.8.3.
 
 ## See also
 

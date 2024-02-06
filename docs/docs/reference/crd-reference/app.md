@@ -13,7 +13,7 @@ and to work with the corresponding
 ## Synopsis
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnApp
 metadata:
   name: <app-name>

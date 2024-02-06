@@ -7,7 +7,7 @@ comments: true
 ## Keptn Workloads
 
 A
-[KeptnWorkload](../../reference/api-reference/lifecycle/v1alpha3/index.md#keptnworkload)
+[KeptnWorkload](../../reference/api-reference/lifecycle/v1beta1/index.md#keptnworkload)
 resource augments a Kubernetes
 [Workload](https://kubernetes.io/docs/concepts/workloads/)
 with the ability to handle extra phases.

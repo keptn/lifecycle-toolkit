@@ -22,7 +22,7 @@ To create a provider for the dummy endpoint, follow these steps:
      metric query from the dummy provider.
      It evaluates the query and returns the metric values
      along with any additional data if required.
-  `EvaluateQueryForStep`(Fetches metric values with step interval from the dummy provider)
+  `EvaluateQueryForStep`(Fetches metric values with step interval from the provider)
    - This function fetches metric values with a specified step interval from the dummy provider.
       It takes into account the metric query and the step interval provided, executes the query,
       and returns the metric values along with any additional data if required.

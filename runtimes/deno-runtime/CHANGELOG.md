@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/keptn/lifecycle-toolkit/compare/deno-runtime-v2.0.0...deno-runtime-v2.0.1) (2024-02-06)
+
+
+### Other
+
+* revert "deps(deno-runtime): update libcrypto3 and libssl3" ([7e18270](https://github.com/keptn/lifecycle-toolkit/commit/7e1827088848dc486afb007c354155d2f9a5ed5c))
+
 ## [2.0.0](https://github.com/keptn/lifecycle-toolkit/compare/deno-runtime-v1.0.2...deno-runtime-v2.0.0) (2024-02-06)
 
 

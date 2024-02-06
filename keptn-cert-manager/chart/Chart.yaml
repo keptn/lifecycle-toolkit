@@ -37,7 +37,7 @@ version: 0.2.0
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "v1.2.0" # x-release-please-version
+appVersion: "v2.0.0" # x-release-please-version
 dependencies:
   - name: common
     repository: "https://charts.lifecycle.keptn.sh"

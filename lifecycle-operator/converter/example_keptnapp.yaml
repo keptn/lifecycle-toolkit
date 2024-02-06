@@ -1,0 +1,18 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnApp
+metadata:
+  name: "some-keptn-app"
+  namespace: "my-app-ns"
+spec:
+  version: "1.2.3"
+  workloads:
+    - name: podtato-head-left-arm
+      version: 0.2.7
+  preDeploymentTasks:
+    - pre-deployment-task
+  preDeploymentEvaluations:
+    - pre-deployment-evaluation
+  postDeploymentTasks:
+    - post-deployment-task
+  postDeploymentEvaluations:
+    - post-deployment-evaluation

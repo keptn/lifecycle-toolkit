@@ -32,7 +32,7 @@ jobs:
         with:
           path: |
             tmp/.htmltest
-          key: htmltest-{{ hashFiles('tmp/.htmltest/refcache.json') }}
+          key: htmltest-${{ hashFiles('tmp/.htmltest/refcache.json') }}
 
       - name: Check HTML
         run: make htmltest

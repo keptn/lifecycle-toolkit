@@ -88,3 +88,11 @@ To create a provider for the dummy endpoint, follow these steps:
 - Include a KUTTL test to validate the behavior of Kubernetes resources managed by your code.
   KUTTL tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
   the correctness of your Kubernetes configurations and deployments.
+    ```yaml
+    {% include "./00-install.yaml" %}
+    ```
+    Below is the assert check 
+    ```yaml
+    {% include "./01-assert.yaml" %}
+    ```
+    

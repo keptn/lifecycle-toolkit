@@ -11,5 +11,5 @@ var SupportedProviders = []string{
 	DynatraceDQLProviderType,
 	PrometheusProviderType,
 	DataDogProviderType,
-  ThanosProviderType
+  ThanosProviderType,
 }

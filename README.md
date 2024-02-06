@@ -62,6 +62,10 @@ stable ![status](https://img.shields.io/badge/status-stable-brightgreen) )
 The status follows the
 [Kubernetes API versioning schema](https://kubernetes.io/docs/reference/using-api/#api-versioning).
 
+## Community
+
+Please find details on regular hosted community events in the [keptn/community repo](https://github.com/keptn/community) as well as our Slack channel(s) in the [CNCF Slack workspace.](https://cloud-native.slack.com/messages/keptn/)
+
 ## Governance
 
 - [Community Membership](https://github.com/keptn/community/blob/main/community-membership.md)
@@ -326,9 +330,6 @@ RELEASE_REGISTRY=<YOUR_DOCKER_REGISTRY>
 # Build and deploy the dev images to the current kubernetes cluster
 make build-deploy-dev-environment
 ```
-## Community
-
-Please find details on regular hosted community events as well as our Slack workspace in the [keptn/community repo.](https://cloud-native.slack.com/messages/keptn/)
 
 ## License
 

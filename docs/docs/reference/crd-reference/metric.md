@@ -28,6 +28,7 @@ spec:
   fetchIntervalSeconds: <#-seconds>
   range:
     interval: "<timeframe>"
+    storedResults: <integer>
   status:
     properties:
       value: <resulting value in human-readable language>
@@ -71,8 +72,20 @@ spec:
      * **fetchIntervalSeconds** (required) --
        Number of seconds between updates of the metric.
      * **range**
-       * **interval** -- Timeframe for which the metric is queried.
-       Defaults to 5m.
+          * **interval** -- Timeframe for which the metric is queried.
+            Defaults to 5m.
+          * **step** - A string that represents
+            the query resolution step width for the data query
+          * **aggregation**  type of aggregation function
+            to be applied to the data.
+            Valid values are `p90`, `p95`, `p99`,
+            `max`, `min`, `avg`, `median`.
+          * **storeResults** -- Maximum number of past results
+            to store in the status of a `KeptnMetric` resource.
+            This can be set to an integer that is less than or equal to 255.
+            When set to a value greater than `,
+            the user can see a slice of this number of metrics
+            in the`metric.status.intervalResults` field
 
      * **status** --
        Keptn fills in this information when the metric is evaluated.
@@ -82,6 +95,21 @@ spec:
        If the evaluation is not successful,
        this stores error details that you can use to understand the problem
        such as a forbidden code.
+
+          By default, Keptn stores the most recent metric that was run.
+          If the value of the `spec.range.storedResults` field
+          is set to a value greater than 1 and no larger than 255,
+          Keptn stores that number of metrics.
+
+          * **value** -- A string that represents the resulting value
+            in human-readable format.
+          * **rawValue** -- An array that represents the resulting value
+            in raw format.
+          * **lastUpdated** -- Time when the status data was last updated.
+          * **errMsg** -- Error details if the query could not be evaluated.
+          * **Interval results** -- Slice(s) of all internal results.
+            Up to 255 results can be stored,
+            depending on the value of the `spec.range` field.
 <!-- markdownlint-enable MD007 -->
 
 ## Usage
@@ -135,30 +163,33 @@ API Reference:
 
 ## Differences between versions
 
-Beginning with the `v1alpha3` API version,
-Keptn allows you to define multiple instances of the same data source.
-In earlier versions, you could use multiple data sources
-but only one instance of each.
-Consequently, the `v1alpha1` and `v1alpha2` API versions
-define the `provider` field with the type of the data provider
-(`prometheus`, `dynatrace`, or `dql`)
-rather than the particular name assigned
-to the instance of the data provider
-that is assigned in the
-[KeptnMetricsProvider](metricsprovider.md) CR.
+* Beginning with the `v1beta1` API version,
+  the metrics controller supports multiple metrics in its `status` field
+  if the value of the `spec.range.storedResults` field is greater than 1.
+* Beginning with the `v1alpha3` API version,
+  Keptn allows you to define multiple instances of the same data source.
+  In earlier versions, you could use multiple data sources
+  but only one instance of each.
+  Consequently, the `v1alpha1` and `v1alpha2` API versions
+  define the `provider` field with the type of the data provider
+  (`prometheus`, `dynatrace`, or `dql`)
+  rather than the particular name assigned
+  to the instance of the data provider
+  that is assigned in the
+  [KeptnMetricsProvider](metricsprovider.md) CR.
 
-So the `v1alpha1` and `v1alpha2` synopsis
-of the `spec` field is:
+     So the `v1alpha1` and `v1alpha2` synopsis
+     of the `spec` field is:
 
-```yaml
-...
-spec:
-  provider:
-    name: "prometheus | dynatrace | dql"
-  fetchIntervalSeconds: <seconds>
-  query: >-
-    "<query-from-provider>"
-```
+     ```yaml
+     ...
+     spec:
+       provider:
+         name: "prometheus | dynatrace | dql"
+       fetchIntervalSeconds: <seconds>
+       query: >-
+         "<query-from-provider>"
+     ```
 
 ## See also
 

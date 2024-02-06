@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/stretchr/testify/require"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"os"
 	"testing"
-
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const inputFileName = "example_keptnapp.yaml"
@@ -74,4 +74,35 @@ func TestAddKeptnAnnotation(t *testing.T) {
 			}
 		}
 	})
+}
+
+func TestParseAndTransformBadYAML(t *testing.T) {
+	invalidYAML := []byte("This is not valid YAML")
+	// Attempt to parse and transform the invalid app YAML
+	_, _, err := parseAndTransform(invalidYAML)
+	if err == nil {
+		t.Error("Expected an error but got nil")
+	}
+}
+
+func TestTransformKeptnApp_UnmarshalFailure(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	// Create a temporary file with invalid YAML content
+	invalidYAML := []byte("This is not valid YAML")
+	err := os.WriteFile(tmpDir+"/validfile.yaml", invalidYAML, 0644)
+	require.NoError(t, err)
+
+	// Attempt to transform the invalid YAML file
+	err = transformKeptnApp(tmpDir+"/validfile.yaml", tmpDir+"/output.yaml")
+
+	require.Error(t, err)
+}
+
+func TestTransformKeptnApp_ReadFileFailure(t *testing.T) {
+	//unexisting file
+	tmpDir := t.TempDir()
+	err := transformKeptnApp(tmpDir+"/validfile.yaml", tmpDir+"/output.yaml")
+	require.Error(t, err)
+	t.Log(err)
 }

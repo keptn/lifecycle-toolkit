@@ -58,7 +58,7 @@ For example, you might create a `test-task-definition.yaml` file
 with the following content:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: helloworldtask
@@ -98,7 +98,7 @@ For example, you might create a `test-task.yaml` file
 with the following content:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTask
 metadata:
   name: runhelloworld1
@@ -141,7 +141,7 @@ For example, you could create a `test-task-2.yaml` file
 with the `metadata.name` field set to `runhelloworld2`:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTask
 metadata:
   name: runhelloworld2

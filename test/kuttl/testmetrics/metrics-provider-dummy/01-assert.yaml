@@ -8,7 +8,7 @@ apiVersion: metrics.keptn.sh/v1beta1
 kind: Analysis
 metadata:
   name: analysis-sample
-  ##namespace: keptn-system
+  # namespace: keptn-system
 spec:
   analysisDefinition:
     name: ed-my-proj-dev-svc1

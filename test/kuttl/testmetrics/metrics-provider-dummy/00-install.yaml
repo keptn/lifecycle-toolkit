@@ -2,19 +2,23 @@ apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: podtatometric
-  ##namespace: keptn-system
+  # namespace: keptn-system
 spec:
   provider:
     name: "dummy"
   query: "random"
   fetchIntervalSeconds: 5
+  range:
+    interval: "5m"
+    step: "1m"
+    aggregation: "max"
 
 ---
 apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
 metadata:
   name: dummy
-  ####namespace: keptn-system
+  # namespace: keptn-system
 spec:
   type: dummy
   targetServer: "http://www.randomnumberapi.com/api/v1.0/"  # string
@@ -24,7 +28,7 @@ apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisValueTemplate
 metadata:
   name: ready
-  ##namespace: keptn-system
+  # namespace: keptn-system
 spec:
   provider:
     name: dummy
@@ -34,7 +38,7 @@ apiVersion: metrics.keptn.sh/v1beta1
 kind: AnalysisDefinition
 metadata:
   name: ed-my-proj-dev-svc1
-  ##namespace: keptn-system
+  # namespace: keptn-system
 spec:
   objectives:
     - analysisValueTemplateRef:
@@ -56,7 +60,7 @@ apiVersion: metrics.keptn.sh/v1beta1
 kind: Analysis
 metadata:
   name: analysis-sample
-  ##namespace: keptn-system
+  # namespace: keptn-system
 spec:
   timeframe:
     from: "2023-09-14T11:20:19Z"

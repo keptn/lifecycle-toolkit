@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolki
     org.opencontainers.image.vendor="Keptn" \
     org.opencontainers.image.licenses="Apache-2.0"
 
-RUN apk add --no-cache libcrypto3~=3.0.12 libssl3~=3.0.12
+RUN apk add --no-cache --upgrade libcrypto3==3.0.12-r4 libssl3==3.0.12-r4
 
 COPY entrypoint.sh /entrypoint.sh
 

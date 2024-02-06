@@ -105,10 +105,10 @@ jobs:
         working-directory: .
         run: make chainsaw-integration-test-allowed-namespaces
 
-      # - name: (Chainsaw) Run Integration Tests
-      #   if: inputs.allowed-namespaces == 'allowed_ns_off'
-      #   working-directory: .
-      #   run: make integration-test
+      - name: (Chainsaw) Run Integration Tests
+        if: inputs.allowed-namespaces == 'allowed_ns_off'
+        working-directory: .
+        run: make chainsaw-integration-test
 
       - name: Create reports
         if: failure()

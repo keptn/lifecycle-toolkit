@@ -34,6 +34,7 @@ func TestMigration(t *testing.T) {
 	if string(actualOutput) != string(expectedOutput) {
 		t.Errorf("Unexpected output content. Expected:\n%s\n\nActual:\n%s", string(expectedOutput), string(actualOutput))
 	}
+
 }
 
 func TestAddKeptnAnnotation(t *testing.T) {

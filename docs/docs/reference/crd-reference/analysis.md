@@ -336,26 +336,10 @@ API reference: [Analysis](../api-reference/metrics/v1beta1/index.md#analysis)
 
 ## Differences between versions
 
-Keptn v0.8.3 and v0.9.0 include a preliminary release
-of the Keptn Analysis feature
-but it is hidden behind a feature flag.
-To preview these features, do one of the following for your Keptn cluster:
-
-* Set the environment variable `ENABLE_ANALYSIS` to `true`
-  in the `metrics-operator` deployment
-* Add the following to your `helm upgrade` command line:
-
-  ```shell
-  --set metricsOperator.env.enableKeptnAnalysis=true
-  ```
-
-* Set `enableKeptnAnalysis: "true"` in the
-  [keptn-metrics-operator/values.yaml](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-metrics-operator/values.yaml)
-  file
-
-See
-[Customizing the configuration of components](../../installation/index.md#customizing-the-configuration-of-components)
-for more information.
+The Keptn Analysis feature is an official part of Keptn v0.10.0 and later.
+Keptn v0.8.3 included a preliminary release of this feature
+but it was hidden behind a feature flag.
+The behavior of this feature is unchanged since v0.8.3.
 
 ## See also
 

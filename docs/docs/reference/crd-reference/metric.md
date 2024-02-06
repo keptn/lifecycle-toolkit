@@ -83,9 +83,9 @@ spec:
           * **storeResults** -- Maximum number of past results
             to store in the status of a `KeptnMetric` resource.
             This can be set to an integer that is less than or equal to 255.
-            When set to a value greater than `,
+            When set to a value greater than 1,
             the user can see a slice of this number of metrics
-            in the`metric.status.intervalResults` field
+            in the`status.intervalResults` field.
 
      * **status** --
        Keptn fills in this information when the metric is evaluated.
@@ -109,7 +109,7 @@ spec:
           * **errMsg** -- Error details if the query could not be evaluated.
           * **Interval results** -- Slice(s) of all internal results.
             Up to 255 results can be stored,
-            depending on the value of the `spec.range` field.
+            determined by the value of the `spec.range` field.
 <!-- markdownlint-enable MD007 -->
 
 ## Usage

@@ -75,17 +75,6 @@ you must define a
 resource for each instance of each data provider you are using.
 The template refers to that provider and queries it.
 
-The Analysis feature uses the
-`name` and `part-of` labels that are discussed in
-[Basic annotations](../../guides/integrate.md#basic-annotations)
-plus the following:
-
-* **app.kubernetes.io/instance** analysis-sample
-* **app.kubernetes.io/managed-by** -- Tool used to manage
-  the operation of the application.
-  Valid values are `helm` and `kustomize`.
-* **app.kubernetes.io/created-by** metrics-operator
-
 ## Example
 
 ```yaml

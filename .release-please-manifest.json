@@ -2,7 +2,7 @@
   ".": "0.9.0",
   "keptn-cert-manager": "1.2.0",
   "runtimes/python-runtime": "1.0.1",
-  "runtimes/deno-runtime": "1.0.2",
+  "runtimes/deno-runtime": "2.0.0",
   "lifecycle-operator": "0.8.3",
   "scheduler": "0.8.3",
   "metrics-operator": "0.9.0"

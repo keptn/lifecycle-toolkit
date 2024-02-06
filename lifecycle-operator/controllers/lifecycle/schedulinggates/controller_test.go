@@ -67,21 +67,6 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "no scheduling gate",
-			objects: []client.Object{
-				&v1.Pod{
-					ObjectMeta: podMeta,
-					Spec:       v1.PodSpec{},
-				},
-			},
-			args: args{
-				ctx: context.TODO(),
-				req: req,
-			},
-			want:    controllerruntime.Result{},
-			wantErr: false,
-		},
-		{
 			name: "no owner references",
 			objects: []client.Object{
 				&v1.Pod{

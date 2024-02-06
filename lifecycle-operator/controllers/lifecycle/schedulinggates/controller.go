@@ -45,10 +45,6 @@ func (r *SchedulingGatesReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		return ctrl.Result{}, fmt.Errorf("could not retrieve pod, %w", err)
 	}
 
-	if !hasKeptnSchedulingGate(pod) {
-		return ctrl.Result{}, nil
-	}
-
 	// check if the owner of the pod is the one that the KeptnWorkloadVersion is referring to
 	owner := pod.GetOwnerReferences()
 	if len(owner) == 0 {
@@ -96,7 +92,6 @@ func (r *SchedulingGatesReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		For(
 			&v1.Pod{},
 			builder.WithPredicates(
-				predicate.GenerationChangedPredicate{},
 				predicate.NewPredicateFuncs(func(object client.Object) bool {
 					pod, ok := object.(*v1.Pod)
 					if !ok {

@@ -151,7 +151,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.config.folder }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           target: production
           tags: |
             ${{ env.RELEASE_REGISTRY }}/${{ matrix.config.name }}:dev-${{ env.DATETIME }}

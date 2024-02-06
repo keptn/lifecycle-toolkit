@@ -36,7 +36,9 @@ introduced in the `v1beta1` API version:
 3. Add the `app.kubernetes.io/managed-by: keptn` annotation
    to the `KeptnApp` resource if it is not already there.
 
-You can migrate your KeptnApp manually or, if you have go installed
+You can migrate your KeptnApp manually or, if you have
+[go](https://go.dev/)
+installed
 on your machine, use the script provided
 [here](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/converter).
 

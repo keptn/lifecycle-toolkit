@@ -1,5 +1,13 @@
 # Check for the KeptnApp to be created - the KeptnAppCreationRequest will not be here anymore as it is
 # deleted after reconciliation
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+collectors:
+  - command: kubectl logs -l control-plane=lifecycle-operator -n keptn-system
+  - command: kubectl logs -l control-plane=metrics-operator -n keptn-system
+  - command: kubectl describe workload my-workload -n $NAMESPACE
+  - command: kubectl describe app my-app -n $NAMESPACE
+---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnApp
 metadata:

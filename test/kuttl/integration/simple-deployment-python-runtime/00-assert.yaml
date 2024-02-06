@@ -1,3 +1,12 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+collectors:
+  - command: kubectl logs -l app=test -n $NAMESPACE
+  - command: kubectl describe keptnworkloadversion -n $NAMESPACE
+  - command: kubectl describe keptnappversion -n $NAMESPACE
+  - command: kubectl logs -l control-plane=metrics-operator -n keptn-system
+  - command: kubectl logs -l control-plane=lifecycle-operator -n keptn-system
+---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnWorkloadVersion
 metadata:
@@ -28,10 +37,10 @@ metadata:
   annotations:
     python: test
     keptn.sh/app: waiter
-    keptn.sh/version: '0.4'
+    keptn.sh/version: "0.4"
     keptn.sh/workload: waiter-waiter
 status:
   conditions:
     - type: Complete
-      status: 'True'
+      status: "True"
   succeeded: 1

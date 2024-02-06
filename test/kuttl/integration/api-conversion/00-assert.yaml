@@ -1,3 +1,13 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+collectors:
+  - type: pod
+    selector: app=lifecycle-operator
+  - type: pod
+    selector: app=metrics-operator
+  - command: kubectl describe keptnworkloadversion -n $NAMESPACE
+  - command: kubectl describe keptnappversion -n $NAMESPACE
+---
 apiVersion: lifecycle.keptn.sh/v1alpha1
 kind: KeptnApp
 metadata:

@@ -1,3 +1,13 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+collectors:
+  - type: pod
+    selector: app=podtato-head-0.1.0-6b86b273
+  - command: kubectl logs -l app=lifecycle-operator -n keptn-system
+  - command: kubectl logs -l app=metrics-operator -n keptn-system
+  - command: kubectl describe workloadversion podtato-head-0.1.0-6b86b273
+  - command: kubectl describe appversion podtato-head-0.1.0-6b86b273
+---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnAppVersion
 metadata:

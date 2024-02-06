@@ -1,3 +1,14 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+collectors:
+  - type: pod
+    selector: app=podtato-head
+  - command: |
+      kubectl logs -l app=metrics-operator -n keptn-system
+      kubectl describe keptnmetric podtatometric -n $NAMESPACE
+      kubectl describe keptnmetricsprovider dynatrace -n $NAMESPACE
+      kubectl describe pods -l app=podtato-head -n $NAMESPACE
+---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnApp
 metadata:
@@ -6,7 +17,7 @@ metadata:
     app.kubernetes.io/managed-by: "keptn"
 spec:
   revision: 1
-  version: '95a0b0ddca'
+  version: "95a0b0ddca"
   workloads:
     - name: podtato-head-entry
       version: 0.1.0

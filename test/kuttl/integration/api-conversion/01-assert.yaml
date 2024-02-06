@@ -1,3 +1,27 @@
+apiVersion: kuttl.dev/v1alpha1
+kind: TestAssert
+
+collectors:
+  - type: pod
+    selector: app=some-keptn-app1
+  - type: pod
+    selector: app=some-keptn-app-version-1
+  - type: pod
+    selector: app=my-metric-2
+  - type: pod
+    selector: app=slack-deployment-notification
+  - type: pod
+    selector: app=lifecycle-operator
+  - type: pod
+    selector: app=metrics-operator
+commands:
+  - command: kubectl describe keptnworkloadversion -n $NAMESPACE
+  - command: kubectl describe keptnappversion -n $NAMESPACE
+  - command: kubectl describe keptntask slack-deployment-notification -n $NAMESPACE
+  - command: kubectl logs -l control-plane=lifecycle-operator -n keptn-system
+  - command: kubectl logs -l app=metrics-operator -n keptn-system
+
+---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnApp
 metadata:

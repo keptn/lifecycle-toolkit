@@ -1,3 +1,13 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+collectors:
+  - type: pod
+    selector: app=test
+  - command: kubectl logs -l control-plane=lifecycle-operator -n keptn-system
+  - command: kubectl logs -l control-plane=metrics-operator -n keptn-system
+  - command: kubectl describe keptnworkloadversion -n $NAMESPACE
+  - command: kubectl describe keptnappversion -n $NAMESPACE
+---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnWorkloadVersion
 metadata:
@@ -28,7 +38,7 @@ metadata:
   annotations:
     container: test
     keptn.sh/app: waiter
-    keptn.sh/version: '0.4'
+    keptn.sh/version: "0.4"
     keptn.sh/workload: waiter-waiter
 spec:
   template:
@@ -40,13 +50,13 @@ spec:
             - name: KEPTN_CONTEXT
               value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"pre","objectType":"Workload"}'
           command:
-            - 'sh'
-            - '-c'
-            - 'sleep 30'
+            - "sh"
+            - "-c"
+            - "sleep 30"
       imagePullSecrets:
         - name: my-registry-secret
 status:
   conditions:
     - type: Complete
-      status: 'True'
+      status: "True"
   succeeded: 1

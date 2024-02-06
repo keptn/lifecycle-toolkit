@@ -11,6 +11,16 @@ status:
   status: Succeeded
   workloadOverallStatus: Succeeded
 ---
+apiVersion: kuttl.dev/v1beta1
+kind: TestAssert
+collectors:
+  - type: pod
+    selector: app=podtato-head
+  - command: kubectl describe keptnworkloadversion -n $NAMESPACE
+  - command: kubectl describe keptnappversion -n $NAMESPACE
+  - command: kubectl logs -l control-plane=metrics-operator -n keptn-system
+  - command: kubectl logs -l control-plane=lifecycle-operator -n keptn-system
+---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnAppVersion
 metadata:

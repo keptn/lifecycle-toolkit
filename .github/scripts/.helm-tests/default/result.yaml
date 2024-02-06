@@ -11402,7 +11402,7 @@ spec:
         - name: FUNCTION_RUNNER_IMAGE
           value: "ghcr.io/keptn/deno-runtime:v1.0.2"
         - name: PYTHON_RUNNER_IMAGE
-          value: "ghcr.io/keptn/python-runtime:v1.0.1"
+          value: "ghcr.io/keptn/python-runtime:v1.0.2"
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL

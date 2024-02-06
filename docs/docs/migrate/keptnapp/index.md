@@ -44,7 +44,7 @@ on your machine, use the script provided
     go run convert_app.go path_to_keptnapp_to_convert path_to_desired_output_file
 ```
 
-For instance, to run the example file conversion, you can do:
+For instance, to run the example file conversion, the command is:
 
 ```bash
     go run convert_app.go example_keptnapp.yaml example_output.yaml

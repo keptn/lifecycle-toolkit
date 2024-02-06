@@ -163,6 +163,7 @@ envsubst
 envtest
 errorlint
 Etco
+euo
 evaluatemetrics
 evaluationdefinition
 evaluationhandler

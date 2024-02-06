@@ -69,11 +69,12 @@ Please find details on regular hosted community events in the [keptn/community r
 ## Governance
 
 - [Community Membership](https://github.com/keptn/community/blob/main/community-membership.md)
-  This outlines the roles and responsibilities of contributors in the Keptn community, including members, subproject approvers, subproject maintainers, and maintainers. It provides guidelines for community engagement, contribution expectations, and the process for becoming a community member at different levels. Maintained by Keptn maintainers.
+   It provides guidelines for community engagement, contribution expectations, and the process for becoming a community member at different levels. Maintained by Keptn maintainers.
 
 - [Members and Charter](https://github.com/keptn/community/blob/main/governance/members-and-charter.md)
-  The Governance Charter describes the formation and responsibilities of the Keptn Governance Committee, including its scope, members, and core responsibilities. It covers the governance processes, decision-making, and relationships with the CNCF.
-
+  The Governance Charter describes the formation and responsibilities of the Keptn
+  Governance Committee, including its scope, members, and core responsibilities.
+  
 ## Installation
 
 Keptn can be installed on any Kubernetes cluster

@@ -33,7 +33,7 @@ func main() {
 func transformKeptnApp(inputFile, outputFile string) error {
 	inputContent, err := os.ReadFile(inputFile)
 	if err != nil {
-		return fmt.Errorf("error reading input file: %v", err)
+		return fmt.Errorf("error reading input file: %w", err)
 	}
 
 	keptnAppV1beta1, keptnAppContext, err := parseAndTransform(inputContent)
@@ -43,7 +43,7 @@ func transformKeptnApp(inputFile, outputFile string) error {
 
 	outputContent := combineYAML(keptnAppV1beta1, keptnAppContext)
 	if err := os.WriteFile(outputFile, []byte(outputContent), 0644); err != nil {
-		return fmt.Errorf("error writing to output file: %v", err)
+		return fmt.Errorf("error writing to output file: %w", err)
 	}
 	return nil
 }
@@ -51,12 +51,12 @@ func transformKeptnApp(inputFile, outputFile string) error {
 func parseAndTransform(inputContent []byte) ([]byte, []byte, error) {
 	var keptnApp klcv1alpha3.KeptnApp
 	if err := yaml.Unmarshal(inputContent, &keptnApp); err != nil {
-		return nil, nil, fmt.Errorf("error unmarshalling KeptnApp: %v", err)
+		return nil, nil, fmt.Errorf("error unmarshalling KeptnApp: %w", err)
 	}
 
 	var keptnAppV1beta1 klcv1beta1.KeptnApp
 	if err := yaml.Unmarshal(inputContent, &keptnAppV1beta1); err != nil {
-		return nil, nil, fmt.Errorf("error unmarshalling KeptnAppV1beta1: %v", err)
+		return nil, nil, fmt.Errorf("error unmarshalling KeptnAppV1beta1: %w", err)
 	}
 
 	addKeptnAnnotation(&keptnAppV1beta1.ObjectMeta)
@@ -66,12 +66,12 @@ func parseAndTransform(inputContent []byte) ([]byte, []byte, error) {
 
 	keptnAppV1beta1YAML, err := yaml.Marshal(keptnAppV1beta1)
 	if err != nil {
-		return nil, nil, fmt.Errorf("error marshalling KeptnAppV1beta1 to YAML: %v", err)
+		return nil, nil, fmt.Errorf("error marshalling KeptnAppV1beta1 to YAML: %w", err)
 	}
 
 	keptnAppContextYAML, err := yaml.Marshal(keptnAppContext)
 	if err != nil {
-		return nil, nil, fmt.Errorf("error marshalling KeptnAppContext to YAML: %v", err)
+		return nil, nil, fmt.Errorf("error marshalling KeptnAppContext to YAML: %w", err)
 	}
 
 	return keptnAppV1beta1YAML, keptnAppContextYAML, nil

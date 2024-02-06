@@ -122,7 +122,6 @@ jobs:
         config:
           - name: "lifecycle-operator"
             folder: "lifecycle-operator/"
-            platform:
           - name: "metrics-operator"
             folder: "metrics-operator/"
           - name: "scheduler"

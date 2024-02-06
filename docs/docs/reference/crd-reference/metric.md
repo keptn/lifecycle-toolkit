@@ -80,7 +80,7 @@ spec:
             to be applied to the data.
             Valid values are `p90`, `p95`, `p99`,
             `max`, `min`, `avg`, `median`.
-          * **storeResults** -- Maximum number of past results
+          * **storedResults** -- Maximum number of past results
             to store in the status of a `KeptnMetric` resource.
             This can be set to an integer that is less than or equal to 255.
             When set to a value greater than 1,

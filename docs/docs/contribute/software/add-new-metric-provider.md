@@ -17,7 +17,7 @@ To create a provider for the dummy endpoint, follow these steps:
   This package should contain
  a struct that implements the `KeptnSLIProvider` interface.
   To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the following functions.
-  `EvaluateQuery`(Fetches metric values from the dummy provider)
+  `EvaluateQuery`(Fetches metric values from the provider)
    - This function fetches metric values based on the provided
      metric query from the provider.
      It evaluates the query and returns the metric values
@@ -26,9 +26,9 @@ To create a provider for the dummy endpoint, follow these steps:
    - This function fetches metric values with a specified step interval from the dummy provider.
       It takes into account the metric query and the step interval provided, executes the query,
       and returns the metric values along with any additional data if required.
-  `FetchAnalysisValue`(Fetches analysis values from the dummy provider) functions.
+  `FetchAnalysisValue`(Fetches analysis values from the provider) functions.
    - This function fetches analysis values based on the provided query and time range from the
-     dummy provider.
+     provider.
      It evaluates the query within the specified time range and returns the analysis
      values along with any additional data if required.
   You can follow other existing implementations,

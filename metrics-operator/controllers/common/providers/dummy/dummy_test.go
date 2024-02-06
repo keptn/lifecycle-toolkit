@@ -63,7 +63,7 @@ func TestFetchAnalysisValue_HappyPath(t *testing.T) {
 
 	value, err := dummyProvider.FetchAnalysisValue(context.TODO(), query, analysis, &provider)
 
-	expected := fmt.Sprintf("dummy provider FetchAnalysisValue was called with query random from %d to %d", currentTime.Unix(), currentTime.Unix())
+	expected := fmt.Sprintf("dummy provider FetchAnalysisValue was called with query random from %d to %d", analysis.GetFrom().Unix(), analysis.GetTo().Unix())
 	require.NoError(t, err)
 	require.Equal(t, expected, value)
 }

@@ -122,6 +122,7 @@ jobs:
         config:
           - name: "lifecycle-operator"
             folder: "lifecycle-operator/"
+            platform:
           - name: "metrics-operator"
             folder: "metrics-operator/"
           - name: "scheduler"
@@ -165,7 +166,7 @@ jobs:
           push: false
           cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
-          outputs: type=docker,dest=/tmp/${{ matrix.config.name }}-image.tar
+          outputs: type=oci,dest=/tmp/${{ matrix.config.name }}-image.tar
 
       - name: Upload image as artifact
         uses: actions/upload-artifact@v3

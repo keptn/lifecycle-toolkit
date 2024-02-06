@@ -17,7 +17,7 @@ metadata:
   namespace: <namespace-where-this-resource-resides>
 spec:
   objectives:
-      analysisValueTemplateRef:
+    - analysisValueTemplateRef:
         name: <name-of-referenced-analysisValueTemplate-resource>
         namespace: <namespace-of-referenced-analysisValueTemplate-resource>
       target:

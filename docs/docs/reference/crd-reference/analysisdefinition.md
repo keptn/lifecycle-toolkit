@@ -121,7 +121,7 @@ spec:
 * **totalScore** (required) --
   * **passPercentage** -- threshold to reach for the full analysis
     (all objectives) to pass
-  > **Warning**Percentage
+  * **warning** Percentage
     for the full analysis (all objectives) to pass with  `warning` status
 <!-- markdownlint-enable MD007 -->
 

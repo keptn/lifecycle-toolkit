@@ -19,7 +19,7 @@ To create a provider for the dummy endpoint, follow these steps:
   To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the following functions.
   `EvaluateQuery`(Fetches metric values from the dummy provider)
    - This function fetches metric values based on the provided
-     metric query from the dummy provider.
+     metric query from the provider.
      It evaluates the query and returns the metric values
      along with any additional data if required.
   `EvaluateQueryForStep`(Fetches metric values with step interval from the provider)

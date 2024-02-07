@@ -40,7 +40,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnappcreationrequest"
@@ -50,6 +49,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadversion"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/schedulinggates"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/options"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -99,6 +99,7 @@ type envConfig struct {
 	KeptnTaskDefinitionControllerLogLevel     int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadControllerLogLevel           int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadVersionControllerLogLevel    int `envconfig:"KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnSchedulingGatesControllerLogLevel    int `envconfig:"KEPTN_SCHEDULING_GATES_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnDoraMetricsPort                      int `envconfig:"KEPTN_DORA_METRICS_PORT" default:"2222"`
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
@@ -292,16 +293,15 @@ func main() {
 		spanHandler,
 	)
 	workloadVersionReconciler := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
-		SchedulingGatesHandler: schedulinggates.NewHandler(mgr.GetClient(), workloadVersionLogger, env.SchedulingGatesEnabled),
-		Client:                 mgr.GetClient(),
-		Scheme:                 mgr.GetScheme(),
-		Log:                    workloadVersionLogger,
-		EventSender:            workloadVersionEventSender,
-		Meters:                 keptnMeters,
-		TracerFactory:          telemetry.GetOtelInstance(),
-		SpanHandler:            spanHandler,
-		EvaluationHandler:      workloadVersionEvaluationHandler,
-		PhaseHandler:           workloadVersionPhaseHandler,
+		Client:            mgr.GetClient(),
+		Scheme:            mgr.GetScheme(),
+		Log:               workloadVersionLogger,
+		EventSender:       workloadVersionEventSender,
+		Meters:            keptnMeters,
+		TracerFactory:     telemetry.GetOtelInstance(),
+		SpanHandler:       spanHandler,
+		EvaluationHandler: workloadVersionEvaluationHandler,
+		PhaseHandler:      workloadVersionPhaseHandler,
 	}
 	if err = (workloadVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadVersion")
@@ -364,6 +364,20 @@ func main() {
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")
 		os.Exit(1)
+	}
+
+	schedulingGatesLogger := ctrl.Log.WithName("SchedulingGates Controller").V(env.KeptnSchedulingGatesControllerLogLevel)
+	if env.SchedulingGatesEnabled {
+		schedulingGatesReconciler := &schedulinggates.SchedulingGatesReconciler{
+			Client: mgr.GetClient(),
+			Scheme: mgr.GetScheme(),
+			Log:    schedulingGatesLogger,
+		}
+
+		if err := schedulingGatesReconciler.SetupWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "SchedulingGates")
+			os.Exit(1)
+		}
 	}
 
 	if err = (&lifecyclev1beta1.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {

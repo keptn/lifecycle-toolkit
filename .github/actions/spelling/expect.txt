@@ -163,7 +163,6 @@ envsubst
 envtest
 errorlint
 Etco
-euo
 evaluatemetrics
 evaluationdefinition
 evaluationhandler
@@ -236,7 +235,6 @@ htmltest
 httpref
 httpreference
 HUGOx
-iak
 IAnalysis
 ICertificate
 IConfig
@@ -261,7 +259,6 @@ iobjective
 IOperator
 IProviders
 IRound
-IScheduling
 Isitobservable
 ISpan
 ITarget
@@ -275,7 +272,6 @@ Jhb
 jsonschema
 jwt
 kacr
-kauz
 kav
 kebabcase
 keda
@@ -382,7 +378,6 @@ linenums
 linkedin
 linkedtrace
 livenessprobe
-loadtests
 LOCALBIN
 logf
 logr
@@ -443,6 +438,7 @@ objectmeta
 objectreference
 objref
 objs
+oci
 ocimage
 odubaj
 odubajdt
@@ -536,8 +532,7 @@ runtimes
 runtimespec
 Sambhav
 sbom
-schedulinggate
-schedulinggateshandler
+schedulinggates
 sclient
 screenshot
 sdkmetric
@@ -570,6 +565,7 @@ spanhandler
 spanid
 spanitem
 spdx
+spdxjson
 spf
 squidfunk
 sre

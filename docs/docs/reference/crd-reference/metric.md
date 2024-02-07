@@ -107,7 +107,7 @@ spec:
             in raw format.
           * **lastUpdated** -- Time when the status data was last updated.
           * **errMsg** -- Error details if the query could not be evaluated.
-          * **Interval results** -- Slice(s) of all internal results.
+          * **intervalResults** -- Slice of all interval results.
             Up to 255 results can be stored,
             determined by the value of the `spec.range` field.
 <!-- markdownlint-enable MD007 -->

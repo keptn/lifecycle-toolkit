@@ -14,4 +14,3 @@ spec:
       catch:
         - podLogs:
             selector: app=test
-     

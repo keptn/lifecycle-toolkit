@@ -83,7 +83,8 @@
         "converter/sli_converter.md",
         "converter/slo_converter.md",
         "chart/Chart.yaml",
-        "chart/values.yaml"
+        "chart/values.yaml",
+        "../docs/docs/migrate/keptn/metrics-observe.md"
       ]
     },
     "runtimes/python-runtime": {

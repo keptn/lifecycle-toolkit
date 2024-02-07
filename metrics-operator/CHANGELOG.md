@@ -1,5 +1,52 @@
 # Changelog
 
+## [0.9.1](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v0.9.0...metrics-operator-v0.9.1) (2024-02-07)
+
+
+### Features
+
+* add `step` and `aggregation` fields for `kubectl get KeptnMetric` ([#2556](https://github.com/keptn/lifecycle-toolkit/issues/2556)) ([abe00fc](https://github.com/keptn/lifecycle-toolkit/commit/abe00fc337eafbb65f510e4864984094288e4f6b))
+* introduce configurable support of cert-manager.io CA injection ([#2811](https://github.com/keptn/lifecycle-toolkit/issues/2811)) ([d6d83c7](https://github.com/keptn/lifecycle-toolkit/commit/d6d83c7f67a18a4b30aabe774a8fa2c93399f301))
+* **metrics-operator:** update controller logic to support multiple metric values ([#2190](https://github.com/keptn/lifecycle-toolkit/issues/2190)) ([42b805c](https://github.com/keptn/lifecycle-toolkit/commit/42b805c73035566c4dbfc25d4e6fe67e58e3a497))
+
+
+### Bug Fixes
+
+* **metrics-operator:** flush error message after successful retrieval of value from provider ([#2754](https://github.com/keptn/lifecycle-toolkit/issues/2754)) ([89d5a47](https://github.com/keptn/lifecycle-toolkit/commit/89d5a47412690f4752b627329c960d01dafddabf))
+
+
+### Other
+
+* **metrics-operator:** make Dynatrace DQL provider oAuth URL configurable ([#2713](https://github.com/keptn/lifecycle-toolkit/issues/2713)) ([b77191c](https://github.com/keptn/lifecycle-toolkit/commit/b77191cfa8d4aec4942cd12fdc6791b25c48d5ce))
+* re-generate CRD manifests ([#2830](https://github.com/keptn/lifecycle-toolkit/issues/2830)) ([c0b1942](https://github.com/keptn/lifecycle-toolkit/commit/c0b1942e8f2ddd177776ed681432016d81805724))
+* revert helm charts bump ([#2806](https://github.com/keptn/lifecycle-toolkit/issues/2806)) ([2e85214](https://github.com/keptn/lifecycle-toolkit/commit/2e85214ecd6112e9f9af750d9bde2d491dc8ae73))
+* upgrade helm chart versions ([#2801](https://github.com/keptn/lifecycle-toolkit/issues/2801)) ([ad26093](https://github.com/keptn/lifecycle-toolkit/commit/ad2609373c4819fc560766e64bc032fcfd801889))
+
+
+### Docs
+
+* remove old docs folder and replace with new one ([#2825](https://github.com/keptn/lifecycle-toolkit/issues/2825)) ([e795c5a](https://github.com/keptn/lifecycle-toolkit/commit/e795c5a6845ca1fb19ea31239e42bac7a6a4f042))
+
+
+### Dependency Updates
+
+* update dependency kubernetes-sigs/controller-tools to v0.14.0 ([#2797](https://github.com/keptn/lifecycle-toolkit/issues/2797)) ([71f20a6](https://github.com/keptn/lifecycle-toolkit/commit/71f20a63f8e307d6e94c9c2df79a1258ab147ede))
+* update golang.org/x/exp digest to 0dcbfd6 ([#2783](https://github.com/keptn/lifecycle-toolkit/issues/2783)) ([2cd4491](https://github.com/keptn/lifecycle-toolkit/commit/2cd4491fa49876534b0f5344c1e3dd4fcab7e540))
+* update golang.org/x/exp digest to 1b97071 ([#2844](https://github.com/keptn/lifecycle-toolkit/issues/2844)) ([99dabcb](https://github.com/keptn/lifecycle-toolkit/commit/99dabcbe1784d557bef474619f08fd6b0adde7fb))
+* update golang.org/x/exp digest to 2c58cdc ([#2971](https://github.com/keptn/lifecycle-toolkit/issues/2971)) ([fddbce7](https://github.com/keptn/lifecycle-toolkit/commit/fddbce72ea68e3f507adf61d76f259eab4303cdb))
+* update golang.org/x/exp digest to db7319d ([#2791](https://github.com/keptn/lifecycle-toolkit/issues/2791)) ([66f199a](https://github.com/keptn/lifecycle-toolkit/commit/66f199a7ab54eb8c9b8160cbe021d81306c7927a))
+* update keptn/common helm chart to 0.1.3 ([#2831](https://github.com/keptn/lifecycle-toolkit/issues/2831)) ([29187fa](https://github.com/keptn/lifecycle-toolkit/commit/29187fa7eeab148b7188b4c3f05317cc291c15e4))
+* update kubernetes packages to v0.28.6 (patch) ([#2827](https://github.com/keptn/lifecycle-toolkit/issues/2827)) ([da080fa](https://github.com/keptn/lifecycle-toolkit/commit/da080fafadef25028f9e4b1a78d8a862e58b47e7))
+* update module github.com/datadog/datadog-api-client-go/v2 to v2.21.0 ([#2796](https://github.com/keptn/lifecycle-toolkit/issues/2796)) ([456ff57](https://github.com/keptn/lifecycle-toolkit/commit/456ff570840ce27e9959d0aead34f70fba9a48da))
+* update module github.com/keptn/lifecycle-toolkit/keptn-cert-manager to v2.0.0 ([#2668](https://github.com/keptn/lifecycle-toolkit/issues/2668)) ([be6523b](https://github.com/keptn/lifecycle-toolkit/commit/be6523b39b431e9c1cfac51ac553c4c71e0ad4a1))
+* update module github.com/prometheus/common to v0.46.0 ([#2818](https://github.com/keptn/lifecycle-toolkit/issues/2818)) ([16e1f86](https://github.com/keptn/lifecycle-toolkit/commit/16e1f8690ac786e3f831d18f87dfb0a0bf8d9b16))
+* update module go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc to v0.47.0 ([#2857](https://github.com/keptn/lifecycle-toolkit/issues/2857)) ([4ee5938](https://github.com/keptn/lifecycle-toolkit/commit/4ee5938a531f43ccd492d3fd05939178507c4c09))
+* update module go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp to v0.47.0 ([#2864](https://github.com/keptn/lifecycle-toolkit/issues/2864)) ([155bc02](https://github.com/keptn/lifecycle-toolkit/commit/155bc0273b24887a37429a59f9dd874a58dba09d))
+* update module golang.org/x/net to v0.20.0 ([#2786](https://github.com/keptn/lifecycle-toolkit/issues/2786)) ([8294c7b](https://github.com/keptn/lifecycle-toolkit/commit/8294c7b471d7f4d33961513e056c36ba14c940c7))
+* update module k8s.io/klog/v2 to v2.120.0 ([#2794](https://github.com/keptn/lifecycle-toolkit/issues/2794)) ([e2c2cff](https://github.com/keptn/lifecycle-toolkit/commit/e2c2cffa18c9787a4b3f05b0982d8442d4621f59))
+* update module k8s.io/klog/v2 to v2.120.1 ([#2854](https://github.com/keptn/lifecycle-toolkit/issues/2854)) ([5982d73](https://github.com/keptn/lifecycle-toolkit/commit/5982d73e693e55cba07892c6870d3906a16b78b6))
+* update opentelemetry-go monorepo (minor) ([#2865](https://github.com/keptn/lifecycle-toolkit/issues/2865)) ([be0ecde](https://github.com/keptn/lifecycle-toolkit/commit/be0ecde8088af5e4a43d01951f6b7f354267308d))
+
 ## [0.9.0](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v0.8.3...metrics-operator-v0.9.0) (2024-01-10)
 
 

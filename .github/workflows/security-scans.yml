@@ -232,11 +232,15 @@ jobs:
           name: images
           path: images
 
+      - name: Untar OCI image
+        run: |
+          tar -xvf images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar -C images/${{ matrix.image }}-image.tar/
+
       - name: Trivy image scan scheduler
         if: matrix.image == 'scheduler'
         uses: aquasecurity/trivy-action@22d2755f774d925b191a185b74e782a4b0638a41 # 0.15.0
         with:
-          input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
+          input: "images/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
           exit-code: '1'
           trivyignores: .trivyignore
@@ -245,7 +249,7 @@ jobs:
         if: matrix.image != 'scheduler'
         uses: aquasecurity/trivy-action@22d2755f774d925b191a185b74e782a4b0638a41 # 0.15.0
         with:
-          input: "images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar"
+          input: "images/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
           exit-code: '1'
 

@@ -28,6 +28,8 @@ spec:
   fetchIntervalSeconds: <#-seconds>
   range:
     interval: "<timeframe>"
+    step: <query-resolution-step-width>
+    aggregation: p90 | p95 | p99 | max | min | avg | median
     storedResults: <integer>
   status:
     properties:
@@ -66,6 +68,7 @@ spec:
           as the name of the Prometheus server that monitors the dev deployment
           and `prod-prometheus` as the name of the Prometheus server
           that monitors the production deployment.
+
      * **query** (required) -- String in the provider-specific query language,
        used to obtain a metric.
 
@@ -74,9 +77,9 @@ spec:
      * **range**
           * **interval** -- Timeframe for which the metric is queried.
             Defaults to 5m.
-          * **step** - A string that represents
+          * **step** -- A string that represents
             the query resolution step width for the data query
-          * **aggregation**  type of aggregation function
+          * **aggregation** --  type of aggregation function
             to be applied to the data.
             Valid values are `p90`, `p95`, `p99`,
             `max`, `min`, `avg`, `median`.
@@ -166,6 +169,7 @@ API Reference:
 * Beginning with the `v1beta1` API version,
   the metrics controller supports multiple metrics in its `status` field
   if the value of the `spec.range.storedResults` field is greater than 1.
+
 * Beginning with the `v1alpha3` API version,
   Keptn allows you to define multiple instances of the same data source.
   In earlier versions, you could use multiple data sources

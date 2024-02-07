@@ -151,7 +151,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.config.folder }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           target: production
           tags: |
             ${{ env.RELEASE_REGISTRY }}/${{ matrix.config.name }}:dev-${{ env.DATETIME }}
@@ -165,7 +165,7 @@ jobs:
           push: false
           cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
-          outputs: type=docker,dest=/tmp/${{ matrix.config.name }}-image.tar
+          outputs: type=oci,dest=/tmp/${{ matrix.config.name }}-image.tar
 
       - name: Upload image as artifact
         uses: actions/upload-artifact@v3

@@ -259,7 +259,6 @@ iobjective
 IOperator
 IProviders
 IRound
-IScheduling
 Isitobservable
 ISpan
 ITarget
@@ -533,8 +532,7 @@ runtimes
 runtimespec
 Sambhav
 sbom
-schedulinggate
-schedulinggateshandler
+schedulinggates
 sclient
 screenshot
 sdkmetric

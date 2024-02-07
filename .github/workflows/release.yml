@@ -207,7 +207,22 @@ jobs:
         env:
           IMAGE_DIGEST: ${{ steps.docker_build_image.outputs.digest }}
         run: |
-          cosign attest --yes --type spdx --predicate ./sbom-${{ matrix.config.name }}.spdx.json ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
+          echo "Attesting SBOM for this releaseand image..."
+          cosign attest --yes --type spdxjson --predicate ./sbom-${{ matrix.config.name }}.spdx.json ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
+          echo "Verifying that the attestation worked..."
+          cosign verify-attestation --type spdx \
+            --certificate-identity-regexp="https://github.com/keptn/lifecycle-toolkit/.*" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+            --output-file ./cosign-attest-output.json
+            ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
+          echo "Result of verification:"
+          cat ./cosign-attest-output.json
+
+      - name: Upload verification log as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: cosign-attest-verification-log
+          path: ./cosign-attest-output.json
 
   update-examples:
     name: Update examples

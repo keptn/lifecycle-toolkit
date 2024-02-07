@@ -410,6 +410,21 @@ func Test_resourceRefUIDIndexFunc(t *testing.T) {
 			want: []string{"my-uid"},
 		},
 		{
+			name: "empty uid",
+			args: args{
+				rawObj: &klcv1beta1.KeptnWorkloadVersion{
+					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+							ResourceReference: klcv1beta1.ResourceReference{
+								UID: "",
+							},
+						},
+					},
+				},
+			},
+			want: nil,
+		},
+		{
 			name: "not a KeptnWorkloadVersion",
 			args: args{
 				rawObj: &v1.Pod{},

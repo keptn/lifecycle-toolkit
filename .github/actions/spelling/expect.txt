@@ -565,6 +565,7 @@ spanhandler
 spanid
 spanitem
 spdx
+spdxjson
 spf
 squidfunk
 sre

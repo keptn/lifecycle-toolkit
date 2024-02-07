@@ -207,7 +207,7 @@ jobs:
         env:
           IMAGE_DIGEST: ${{ steps.docker_build_image.outputs.digest }}
         run: |
-          echo "Attesting SBOM for this releaseand image..."
+          echo "Attesting SBOM for this release and image..."
           cosign attest --yes --type spdxjson --predicate ./sbom-${{ matrix.config.name }}.spdx.json ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
           echo "Verifying that the attestation worked..."
           cosign verify-attestation --type spdx \

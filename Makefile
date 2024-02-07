@@ -63,7 +63,7 @@ integration-test-allowed-namespaces-local: install-prometheus
 .PHONY: chainsaw-integration-test #these tests should run on a real cluster!
 chainsaw-integration-test:
 	kubectl apply -f ./lifecycle-operator/config/crd/bases
-# chainsaw test --test-dir ./test/chainsaw/integration/
+	chainsaw test --test-dir ./test/chainsaw/integration/
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/
 	chainsaw test --test-dir ./test/chainsaw/testcertificate/
@@ -71,7 +71,7 @@ chainsaw-integration-test:
 .PHONY: chainsaw-integration-test-local #these tests should run on a real cluster!
 chainsaw-integration-test-local:
 	kubectl apply -f ./lifecycle-operator/config/crd/bases
-# chainsaw test --test-dir ./test/chainsaw/integration/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/integration/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testcertificate/ --config ./.chainsaw-local.yaml

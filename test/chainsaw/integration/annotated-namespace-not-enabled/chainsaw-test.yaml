@@ -14,5 +14,4 @@ spec:
       catch:
         - podLogs:
             selector: app=test
-        - script:
-            content: kubectl logs -l app=test -n $NAMESPACE
+     

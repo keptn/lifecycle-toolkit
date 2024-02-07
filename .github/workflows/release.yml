@@ -216,7 +216,6 @@ jobs:
             --output-file ./cosign-attest-output.json
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
           echo "Result of verification:"
-          cat ./cosign-attest-output.json
 
       - name: Upload verification log as artifact
         uses: actions/upload-artifact@v3

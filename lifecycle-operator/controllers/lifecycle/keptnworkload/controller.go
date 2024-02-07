@@ -113,6 +113,7 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 			r.Log.Error(err, "could not update Current Version of Workload")
 			return ctrl.Result{}, err
 		}
+
 	} else if !reflect.DeepEqual(workloadVersion.Spec.KeptnWorkloadSpec, workload.Spec) {
 		r.Log.Info("updating spec of KeptnWorkloadVersion", "requestInfo", requestInfo, "workloadVersion", workloadVersion.Name)
 		workloadVersion.Spec.KeptnWorkloadSpec = workload.Spec

@@ -30,7 +30,6 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel"
@@ -47,20 +46,22 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
-const traceComponentName = "keptn/lifecycle-operator/workloadversion"
+const (
+	traceComponentName        = "keptn/lifecycle-operator/workloadversion"
+	resourceReferenceUIDField = ".spec.resourceReference.uid"
+)
 
 // KeptnWorkloadVersionReconciler reconciles a KeptnWorkloadVersion object
 type KeptnWorkloadVersionReconciler struct {
 	client.Client
-	Scheme                 *runtime.Scheme
-	EventSender            eventsender.IEvent
-	Log                    logr.Logger
-	Meters                 apicommon.KeptnMeters
-	SpanHandler            telemetry.ISpanHandler
-	TracerFactory          telemetry.TracerFactory
-	SchedulingGatesHandler schedulinggates.ISchedulingGatesHandler
-	EvaluationHandler      evaluation.IEvaluationHandler
-	PhaseHandler           phase.IHandler
+	Scheme            *runtime.Scheme
+	EventSender       eventsender.IEvent
+	Log               logr.Logger
+	Meters            apicommon.KeptnMeters
+	SpanHandler       telemetry.ISpanHandler
+	TracerFactory     telemetry.TracerFactory
+	EvaluationHandler evaluation.IEvaluationHandler
+	PhaseHandler      phase.IHandler
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions,verbs=get;list;watch;create;update;patch;delete
@@ -130,14 +131,6 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	// Wait for pre-evaluation checks of Workload
 	if result, err := r.doPreDeploymentEvaluationPhase(ctx, workloadVersion, ctxWorkloadTrace); !result.Continue {
 		return result.Result, err
-	}
-
-	if r.SchedulingGatesHandler.Enabled() {
-		// pre-evaluation checks done at this moment, we can remove the gate
-		if err := r.SchedulingGatesHandler.RemoveGates(ctx, workloadVersion); err != nil {
-			r.Log.Error(err, "could not remove SchedulingGates")
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
-		}
 	}
 
 	// Wait for deployment of Workload
@@ -287,10 +280,16 @@ func (r *KeptnWorkloadVersionReconciler) SetupWithManager(mgr ctrl.Manager) erro
 	}); err != nil {
 		return err
 	}
-	return ctrl.NewControllerManagedBy(mgr).
+	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &klcv1beta1.KeptnWorkloadVersion{}, resourceReferenceUIDField, func(rawObj client.Object) []string {
+		return controllercommon.KeptnWorkloadVersionResourceRefUIDIndexFunc(rawObj)
+	}); err != nil {
+		return err
+	}
+	controllerBuilder := ctrl.NewControllerManagedBy(mgr).
 		// predicate disabling the auto reconciliation after updating the object status
-		For(&klcv1beta1.KeptnWorkloadVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
-		Complete(r)
+		For(&klcv1beta1.KeptnWorkloadVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{}))
+
+	return controllerBuilder.Complete(r)
 }
 
 func (r *KeptnWorkloadVersionReconciler) sendUnfinishedPreEvaluationEvents(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadVersion *klcv1beta1.KeptnWorkloadVersion) {

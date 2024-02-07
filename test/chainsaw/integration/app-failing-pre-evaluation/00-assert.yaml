@@ -1,0 +1,12 @@
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnAppVersion
+metadata:
+  name: podtato-head-0.1.0-6b86b273
+status:
+  currentPhase: AppPreDeployEvaluations
+  postDeploymentEvaluationStatus: Deprecated
+  postDeploymentStatus: Deprecated
+  preDeploymentEvaluationStatus: Failed
+  preDeploymentStatus: Succeeded
+  status: Failed
+  workloadOverallStatus: Deprecated

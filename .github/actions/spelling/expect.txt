@@ -163,7 +163,6 @@ envsubst
 envtest
 errorlint
 Etco
-euo
 evaluatemetrics
 evaluationdefinition
 evaluationhandler
@@ -236,7 +235,6 @@ htmltest
 httpref
 httpreference
 HUGOx
-iak
 IAnalysis
 ICertificate
 IConfig
@@ -275,7 +273,6 @@ Jhb
 jsonschema
 jwt
 kacr
-kauz
 kav
 kebabcase
 keda
@@ -376,14 +373,12 @@ kyverno
 lastword
 Lato
 LFC
-libcrypto
 Lifcycle
 lifecyclekeptnsh
 linenums
 linkedin
 linkedtrace
 livenessprobe
-loadtests
 LOCALBIN
 logf
 logr
@@ -444,6 +439,7 @@ objectmeta
 objectreference
 objref
 objs
+oci
 ocimage
 odubaj
 odubajdt

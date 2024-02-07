@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kyverno/chainsaw/main/.schemas/json/test-chainsaw-v1alpha1.json
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: analysis-resources
+spec:
+  steps:
+    - name: step-00
+      try:
+        - apply:
+            file: invalid-analysis-1.yaml
+            expect:
+              - check:
+                  ($error != null): true
+        - apply:
+            file: invalid-analysis-2.yaml
+            expect:
+              - check:
+                  ($error != null): true
+        - apply:
+            file: invalid-analysis-3.yaml
+            expect:
+              - check:
+                  ($error != null): true
+        - apply:
+            file: valid-analysis-1.yaml
+        - apply:
+            file: valid-analysis-2.yaml
+    - name: step-01
+      try:
+        - assert:
+            file: valid-analysis-1.yaml
+        - assert:
+            file: valid-analysis-2.yaml
+        - error:
+            file: invalid-analysis-1.yaml
+        - error:
+            file: invalid-analysis-2.yaml
+        - error:
+            file: invalid-analysis-3.yaml

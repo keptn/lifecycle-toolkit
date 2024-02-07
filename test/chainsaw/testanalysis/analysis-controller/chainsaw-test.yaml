@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kyverno/chainsaw/main/.schemas/json/test-chainsaw-v1alpha1.json
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: analysis-controller
+spec:
+  steps:
+    - name: step-00
+      try:
+        - script:
+            content: |
+              kubectl apply -f mock-server.yaml -n $NAMESPACE
+        - script:
+            content: |
+              envsubst < install.yaml | kubectl apply -f - -n $NAMESPACE
+    - name: step-01
+      try:
+        - assert:
+            file: assert-1.yaml
+      catch:
+        - script:
+            content: kubectl logs -l control-plane=metrics-operator -n keptn-system
+        - script:
+            content: kubectl describe Analysis -n $NAMESPACE

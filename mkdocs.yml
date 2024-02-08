@@ -120,7 +120,7 @@ nav:
           - Evaluations: docs/guides/evaluations.md
           - DORA metrics: docs/guides/dora.md
           - OpenTelemetry observability: docs/guides/otel.md
-          - Metadata: docs/guides/metadata.md
+          - Context metadata: docs/guides/metadata.md
       - Use Cases:
           - docs/use-cases/index.md
           - Day 2 Operations: docs/use-cases/day-2-operations.md

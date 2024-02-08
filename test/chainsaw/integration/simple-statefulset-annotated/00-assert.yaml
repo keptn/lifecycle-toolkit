@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: statefultest
+  name: statefultest
+status:
+  replicas: 2
+  availableReplicas: 2
+  readyReplicas: 2

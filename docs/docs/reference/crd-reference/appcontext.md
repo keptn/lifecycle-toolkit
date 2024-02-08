@@ -173,5 +173,5 @@ of the lifecycle operator.
   [Release Lifecycle Management](../../getting-started/lifecycle-management.md)
 - [Use Keptn automatic app discovery](../../guides/auto-app-discovery.md)
 - [Restart an Application Deployment](../../guides/restart-application-deployment.md)
-- [Context metadata](../../guides/metadata.md).
+- [Context metadata](../../guides/metadata.md)
 - [Advanced tracing configurations in Keptn Linking traces](../../guides/otel.md#advanced-tracing-configurations-in-keptn-linking-traces)

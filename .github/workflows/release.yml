@@ -210,12 +210,11 @@ jobs:
           echo "Attesting SBOM for this release and image..."
           cosign attest --yes --type spdxjson --predicate ./sbom-${{ matrix.config.name }}.spdx.json ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
           echo "Verifying that the attestation worked..."
-          cosign verify-attestation --type spdx \
+          cosign verify-attestation --type spdxjson \
             --certificate-identity-regexp="https://github.com/keptn/lifecycle-toolkit/.*" \
             --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
-            --output-file ./cosign-attest-output.json
+            --output-file ./cosign-attest-output.json \
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
-          echo "Result of verification:"
 
       - name: Upload verification log as artifact
         uses: actions/upload-artifact@v3

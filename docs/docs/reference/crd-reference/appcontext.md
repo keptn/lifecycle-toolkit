@@ -72,16 +72,16 @@ spec:
           ```
 
        For more information, see
-       [Advanced tracing configurations in Keptn Linking traces](../../guides/otel.md#advanced-tracing-configurations-in-keptn-linking-traces)
+       [Context metadata](../../guides/metadata.md).
 
      - **spanLinks** -- List of OpenTelemetry span links
-    that connect multiple traces.
-    For example, this can be used to connect
-    deployments of the same application
-    through different stages.
-    You can retrieve the value to use
-    from the JSON representation of the trace in Jaeger.
-    The structure of this is:
+       that connect multiple traces.
+       For example, this can be used to connect
+       deployments of the same application
+       through different stages.
+       You can retrieve the value to use
+       from the JSON representation of the trace in Jaeger.
+       The structure of this is:
 
           ```yaml
           00-<trace-id>-<span-id>-01
@@ -91,6 +91,9 @@ spec:
           you must increment the `revision` number
           of the corresponding `KeptnApp` resource
           and apply the manifest to store the information in the traces.
+
+          For more information, see
+          [Advanced tracing configurations in Keptn Linking traces](../../guides/otel.md#advanced-tracing-configurations-in-keptn-linking-traces)
 
 The remaining fields are required only when implementing
 the release lifecycle management feature.
@@ -171,4 +174,5 @@ of the lifecycle operator.
   [Release Lifecycle Management](../../getting-started/lifecycle-management.md)
 - [Use Keptn automatic app discovery](../../guides/auto-app-discovery.md)
 - [Restart an Application Deployment](../../guides/restart-application-deployment.md)
+- [Context metadata](../../guides/metadata.md)
 - [Advanced tracing configurations in Keptn Linking traces](../../guides/otel.md#advanced-tracing-configurations-in-keptn-linking-traces)

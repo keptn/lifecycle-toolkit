@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    keptn.sh/task-name: pre-deployment-hello-1234
+spec:
+  template:
+    spec:
+      containers:
+        - env:
+            - name: KEPTN_CONTEXT
+              # yamllint disable-line rule:line-length
+              value: '{"workloadName":"workload","appName":"podtato-head","appVersion":"1.0.0","workloadVersion":"0.1.0","taskType":"","objectType":"","metadata":{"commit-id":"1234"}}'
+            - name: CMD_ARGS
+            - name: SCRIPT
+              value: /var/data/function.ts
+          imagePullPolicy: IfNotPresent
+          name: keptn-function-runner
+  ttlSecondsAfterFinished: 1000

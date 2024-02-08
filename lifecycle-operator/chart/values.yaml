@@ -217,7 +217,7 @@ scheduler:
 ## @param scheduler.image.repository set image repository for scheduler
     repository: keptn/scheduler
 ## @param scheduler.image.tag set image tag for scheduler
-    tag: v0.8.3
+    tag: v0.9.0
 ## @param scheduler.imagePullPolicy set image pull policy for scheduler
   imagePullPolicy: Always
 ## @extra scheduler.livenessProbe customizable liveness probe for the scheduler

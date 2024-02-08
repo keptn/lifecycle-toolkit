@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test
+  name: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: test
+        keptn.sh/workload: waiter
+      annotations:
+        keptn.sh/version: "0.4"
+        keptn.sh/pre-deployment-tasks: pre-deployment-hello
+    spec:
+      containers:
+        - image: busybox
+          name: busybox
+          command: ['sh', '-c', 'echo The app is running! && sleep infinity']

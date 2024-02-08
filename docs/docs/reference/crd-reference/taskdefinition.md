@@ -73,6 +73,7 @@ spec:
 ```
 
 ### Fields used for all containers
+<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
 `
@@ -80,42 +81,43 @@ spec:
    Must be set to `KeptnTaskDefinition`
 
 * **metadata**
-  * **name** -- Unique name of this task or container.
-    This is the name used to insert this task or container
-    into the `preDeployment` or `postDeployment` list.
-    Names must comply with the
-    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-    specification.
+     * **name** -- Unique name of this task or container.
+       This is the name used to insert this task or container
+       into the `preDeployment` or `postDeployment` list.
+       Names must comply with the
+       [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+       specification.
 * **spec**
-  * **deno | python | container** (required) -- Define the container type
-  to use for this task.
-  Each task can use one type of runner,
-  identified by this field:
-    * **deno** -- Use a `deno-runtime` runner
-    and code the functionality in Deno script,
-    which is similar to JavaScript and Typescript.
-    See
-    [Synopsis for deno-runtime container](#deno-runtime)
-    * **python** -- Use a `python-runtime` function
-    and code the functionality in Python 3.
-    See
-    [Synopsis for python-runtime runner](#python-runtime)
-    * **container** -- Use the runner defined
-      for the `container-runtime` container.
-      This is a standard Kubernetes container
-      for which you define the image, runner, runtime parameters, etc.
-      and code the functionality to match the container you define.
-      See
-      [Synopsis for container-runtime container](#synopsis-for-container-runtime).
-  * **retries** -- specifies the number of times
-    a job executing the `KeptnTaskDefinition`
-    should be restarted if an attempt is unsuccessful.
-  * **timeout** -- specifies the maximum time
-    to wait for the task to be completed successfully.
-    The value supplied should specify the unit of measurement;
-    for example, `5s` indicates 5 seconds and `5m` indicates 5 minutes.
-    If the task does not complete successfully within this time frame,
-    it is considered to be failed.
+     * **deno | python | container** (required) -- Define the container type
+       to use for this task.
+       Each task can use one type of runner,
+       identified by this field:
+
+          * **deno** -- Use a `deno-runtime` runner
+            and code the functionality in Deno script,
+            which is similar to JavaScript and Typescript.
+            See
+            [Synopsis for deno-runtime container](#deno-runtime)
+          * **python** -- Use a `python-runtime` function
+            and code the functionality in Python 3.
+            See
+            [Synopsis for python-runtime runner](#python-runtime)
+          * **container** -- Use the runner defined
+            for the `container-runtime` container.
+            This is a standard Kubernetes container
+            for which you define the image, runner, runtime parameters, etc.
+            and code the functionality to match the container you define.
+            See
+            [Synopsis for container-runtime container](#synopsis-for-container-runtime).
+     * **retries** -- specifies the number of times
+       a job executing the `KeptnTaskDefinition`
+       should be restarted if an attempt is unsuccessful.
+     * **timeout** -- specifies the maximum time
+       to wait for the task to be completed successfully.
+       The value supplied should specify the unit of measurement;
+       for example, `5s` indicates 5 seconds and `5m` indicates 5 minutes.
+       If the task does not complete successfully within this time frame,
+       it is considered to be failed.
 
 ## Synopsis for container-runtime
 
@@ -329,6 +331,7 @@ spec:
       [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
     * **python example:**
       [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
+<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

@@ -1,0 +1,9 @@
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnTaskDefinition
+metadata:
+  name: goodtaskdefinition4
+spec:
+  deno:
+    inline:
+      code: |
+        console.log('hello');

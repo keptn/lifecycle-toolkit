@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    keptn.sh/app: test-app
+    keptn.sh/task-name: ttlsecondstask-job
+    keptn.sh/version: 1.0.0
+    keptn.sh/workload: my-test-workload
+spec:
+  ttlSecondsAfterFinished: 100
+status:
+  conditions:
+    - type: Complete
+      status: 'True'
+  succeeded: 1

@@ -70,6 +70,7 @@ spec:
               commit-id: "1234"
               author: "myUser"
           ```
+
        For more information, see
        [Context metadata](../../guides/metadata.md).
 

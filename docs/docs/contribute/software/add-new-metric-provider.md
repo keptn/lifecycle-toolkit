@@ -96,12 +96,15 @@ To create a provider for the placeholder endpoint, follow these steps:
     ```yaml
     {% include "./chainsaw-test.yaml" %}
     ```
+
     the installation file
+
     ```yaml
     {% include "./00-install.yaml" %}
     ```
 
     the assert check
+
     ```yaml
     {% include "./assert-1.yaml" %}
     ```

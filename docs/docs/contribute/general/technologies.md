@@ -46,10 +46,6 @@ for working with and contributing to Keptn.
     is used with the
     [Gomega matcher](https://onsi.github.io/gomega/)
     to implement component tests and end-to-end tests.
-* **KUTTL (KUbernetes Test TooL)**
-  Some test tools are written in KUTTL
-  * [KUTTL web page](https://kuttl.dev/)
-  has information to get you started
 * **Chainsaw**
   Some test tools are written with chainsaw
   * [Chainsaw web page](https://kyverno.github.io/chainsaw/)

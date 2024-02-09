@@ -157,7 +157,7 @@ so, in this case, the query becomes:
 The other key-value pairs such as 'project' and 'stage' are just examples of how one could pass to the provider
 information similar to Keptn v1 objectives.
 For a working example, you can
-check [here](https://github.com/keptn/lifecycle-toolkit/tree/main/test/kuttl/testanalysis/analysis-controller-multiple-providers).
+check [here](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testanalysis/analysis-controller-multiple-providers).
 
 ## Accessing Analysis
 

@@ -361,11 +361,9 @@ kubeflow
 kubescape
 kubescheduler
 kubeutils
-kudobuilder
 kustomization
 kustomize
 kustomizeconfig
-kuttl
 kwi
 kwv
 kyverno
@@ -421,7 +419,6 @@ mysecret
 myservice
 myuser
 myversion
-namespacedelete
 netlify
 nifi
 nilnil
@@ -603,7 +600,6 @@ testcertificate
 testcommon
 testmetrics
 testreg
-teststep
 tgz
 thisthatdc
 thschue

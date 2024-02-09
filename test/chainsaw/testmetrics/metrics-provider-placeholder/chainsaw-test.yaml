@@ -8,14 +8,14 @@ spec:
   steps:
     - name: step-00
       try:
-      - apply:
-          file: 00-install.yaml
+        - apply:
+            file: 00-install.yaml
     - catch:
-      - script:
-          content: kubectl logs -l control-plane=metrics-operator -n keptn-system
-      - script:
-          content: kubectl describe Analysis -n $NAMESPACE
+        - script:
+            content: kubectl logs -l control-plane=metrics-operator -n keptn-system
+        - script:
+            content: kubectl describe Analysis -n $NAMESPACE
       name: step-01
       try:
-      - assert:
-          file: assert-1.yaml
+        - assert:
+            file: assert-1.yaml

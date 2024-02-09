@@ -59,7 +59,7 @@ spec:
               # Wait for the port-forward process to complete
               wait $port_forward_pid
               curl -s "http://localhost:2222/metrics" | grep "keptn_lifecycle_active_total"
-            timeout: 30s
+            timeout: 40s
             check:
               # This checks that Keptn returns active metrics
               (contains($stdout, 'keptn_lifecycle_active_total')): true

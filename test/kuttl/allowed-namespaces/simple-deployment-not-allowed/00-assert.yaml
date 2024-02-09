@@ -1,9 +1,0 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: test
-  name: test
-  namespace: not-allowed-ns-test
-status:
-  readyReplicas: 2

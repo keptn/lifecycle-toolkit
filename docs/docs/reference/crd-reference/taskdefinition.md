@@ -7,7 +7,7 @@ comments: true
 A `KeptnTaskDefinition` defines tasks
 that Keptn runs as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
-[KeptnWorkload](../api-reference/lifecycle/v1alpha3/index.md#keptnworkload).
+[KeptnWorkload](../api-reference/lifecycle/v1beta1/index.md#keptnworkload).
 
 A Keptn task executes as a
 [runner](https://docs.gitlab.com/runner/executors/kubernetes.html#how-the-runner-creates-kubernetes-pods)
@@ -73,6 +73,7 @@ spec:
 ```
 
 ### Fields used for all containers
+<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
 `
@@ -80,42 +81,43 @@ spec:
    Must be set to `KeptnTaskDefinition`
 
 * **metadata**
-  * **name** -- Unique name of this task or container.
-    This is the name used to insert this task or container
-    into the `preDeployment` or `postDeployment` list.
-    Names must comply with the
-    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-    specification.
+     * **name** -- Unique name of this task or container.
+       This is the name used to insert this task or container
+       into the `preDeployment` or `postDeployment` list.
+       Names must comply with the
+       [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+       specification.
 * **spec**
-  * **deno | python | container** (required) -- Define the container type
-  to use for this task.
-  Each task can use one type of runner,
-  identified by this field:
-    * **deno** -- Use a `deno-runtime` runner
-    and code the functionality in Deno script,
-    which is similar to JavaScript and Typescript.
-    See
-    [Synopsis for deno-runtime container](#deno-runtime)
-    * **python** -- Use a `python-runtime` function
-    and code the functionality in Python 3.
-    See
-    [Synopsis for python-runtime runner](#python-runtime)
-    * **container** -- Use the runner defined
-      for the `container-runtime` container.
-      This is a standard Kubernetes container
-      for which you define the image, runner, runtime parameters, etc.
-      and code the functionality to match the container you define.
-      See
-      [Synopsis for container-runtime container](#synopsis-for-container-runtime).
-  * **retries** -- specifies the number of times
-    a job executing the `KeptnTaskDefinition`
-    should be restarted if an attempt is unsuccessful.
-  * **timeout** -- specifies the maximum time
-    to wait for the task to be completed successfully.
-    The value supplied should specify the unit of measurement;
-    for example, `5s` indicates 5 seconds and `5m` indicates 5 minutes.
-    If the task does not complete successfully within this time frame,
-    it is considered to be failed.
+     * **deno | python | container** (required) -- Define the container type
+       to use for this task.
+       Each task can use one type of runner,
+       identified by this field:
+
+          * **deno** -- Use a `deno-runtime` runner
+            and code the functionality in Deno script,
+            which is similar to JavaScript and Typescript.
+            See
+            [Synopsis for deno-runtime container](#deno-runtime)
+          * **python** -- Use a `python-runtime` function
+            and code the functionality in Python 3.
+            See
+            [Synopsis for python-runtime runner](#python-runtime)
+          * **container** -- Use the runner defined
+            for the `container-runtime` container.
+            This is a standard Kubernetes container
+            for which you define the image, runner, runtime parameters, etc.
+            and code the functionality to match the container you define.
+            See
+            [Synopsis for container-runtime container](#synopsis-for-container-runtime).
+     * **retries** -- specifies the number of times
+       a job executing the `KeptnTaskDefinition`
+       should be restarted if an attempt is unsuccessful.
+     * **timeout** -- specifies the maximum time
+       to wait for the task to be completed successfully.
+       The value supplied should specify the unit of measurement;
+       for example, `5s` indicates 5 seconds and `5m` indicates 5 minutes.
+       If the task does not complete successfully within this time frame,
+       it is considered to be failed.
 
 ## Synopsis for container-runtime
 
@@ -156,7 +158,7 @@ spec:
       [image concepts](https://kubernetes.io/docs/concepts/containers/images/)
       and pushed to a registry
     * **other fields** -- The full list of valid fields is available at
-      [ContainerSpec](../api-reference/lifecycle/v1alpha3/index.md#containerspec),
+      [ContainerSpec](../api-reference/lifecycle/v1beta1/index.md#containerspec),
       with additional information in the Kubernetes
       [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
       spec documentation.
@@ -329,12 +331,13 @@ spec:
       [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
     * **python example:**
       [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
+<!-- markdownlint-enable MD007 -->
 
 ## Usage
 
 A Task executes the TaskDefinition of a
 [KeptnApp](app.md) or a
-[KeptnWorkload](../api-reference/lifecycle/v1alpha3/index.md#keptnworkload).
+[KeptnWorkload](../api-reference/lifecycle/v1beta1/index.md#keptnworkload).
 The execution is done by spawning a Kubernetes
 [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
 to handle a single Task.
@@ -359,7 +362,7 @@ and
 and in the
 [KeptnApp](app.md) resource.
 See
-[Annotations to KeptnApp](../../guides/tasks.md/#annotations-to-keptnapp)
+[Annotations to KeptnApp](../../guides/tasks.md/#run-a-task-associated-with-your-entire-keptnapp)
 for details.
 Note that the annotation identifies the task by `name`.
 This means that you can modify the `function` code in the resource definition
@@ -399,7 +402,7 @@ This example defines a full-fledged Deno script
 within the `KeptnTaskDefinition` YAML file:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: hello-keptn-inline
@@ -421,7 +424,7 @@ spec:
 This example fetches the Deno script from a remote webserver at runtime:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: hello-keptn-http
@@ -447,7 +450,7 @@ In this case, it calls `slack-notification-dev`,
 passing `parameters` and `secureParameters` to that other task:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: slack-notification-dev
@@ -468,7 +471,7 @@ This example references a `ConfigMap` by the name of `dev-configmap`
 that contains the code for the function to be executed.
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: keptntaskdefinition-sample
@@ -483,7 +486,7 @@ spec:
 This example illustrates the use of both a `ConfigMapRef` and a `ConfigMap`:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: scheduled-deployment
@@ -596,14 +599,14 @@ directory for more example `KeptnTaskDefinition` YAML files.
 
 API Reference:
 
-* [KeptnTaskDefinition](../api-reference/lifecycle/v1alpha3/index.md#keptntaskdefinition)
-* [KeptnTaskDefinitionList](../api-reference/lifecycle/v1alpha3/index.md#keptntaskdefinitionlist)
-* [KeptnTaskDefinitionSpec](../api-reference/lifecycle/v1alpha3/index.md#keptntaskdefinitionspec)
-* [FunctionReference](../api-reference/lifecycle/v1alpha3/index.md#functionreference)
-* [FunctionSpec](../api-reference/lifecycle/v1alpha3/index.md#runtimespec)
-* [FunctionStatus](../api-reference/lifecycle/v1alpha3/index.md#functionstatus)
-* [HttpReference](../api-reference/lifecycle/v1alpha3/index.md#httpreference)
-* [Inline](../api-reference/lifecycle/v1alpha3/index.md#inline)
+* [KeptnTaskDefinition](../api-reference/lifecycle/v1beta1/index.md#keptntaskdefinition)
+* [KeptnTaskDefinitionList](../api-reference/lifecycle/v1beta1/index.md#keptntaskdefinitionlist)
+* [KeptnTaskDefinitionSpec](../api-reference/lifecycle/v1beta1/index.md#keptntaskdefinitionspec)
+* [FunctionReference](../api-reference/lifecycle/v1beta1/index.md#functionreference)
+* [FunctionSpec](../api-reference/lifecycle/v1beta1/index.md#runtimespec)
+* [FunctionStatus](../api-reference/lifecycle/v1beta1/index.md#functionstatus)
+* [HttpReference](../api-reference/lifecycle/v1beta1/index.md#httpreference)
+* [Inline](../api-reference/lifecycle/v1beta1/index.md#inline)
 
 ## Differences between versions
 

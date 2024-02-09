@@ -24,7 +24,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.22.0
 	go.opentelemetry.io/otel/sdk/metric v1.22.0
 	go.opentelemetry.io/otel/trace v1.22.0
-	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a
+	golang.org/x/exp v0.0.0-20240205201215-2c58cdc269a3
 	golang.org/x/net v0.20.0
 	google.golang.org/grpc v1.61.0
 	k8s.io/api v0.28.6
@@ -33,6 +33,7 @@ require (
 	k8s.io/apiserver v0.28.6
 	k8s.io/client-go v0.28.6
 	sigs.k8s.io/controller-runtime v0.16.3
+	sigs.k8s.io/yaml v1.4.0
 )
 
 require (
@@ -97,5 +98,4 @@ require (
 	k8s.io/utils v0.0.0-20230406110748-d93618cff8a2 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
-	sigs.k8s.io/yaml v1.3.0 // indirect
 )

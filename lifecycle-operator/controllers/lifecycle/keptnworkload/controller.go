@@ -19,6 +19,8 @@ package keptnworkload
 import (
 	"context"
 	"fmt"
+	"reflect"
+	"time"
 
 	"github.com/go-logr/logr"
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
@@ -90,8 +92,11 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 	// Try to find the workload instance
 	err = r.Get(ctx, types.NamespacedName{Namespace: workload.Namespace, Name: workloadVersionName}, workloadVersion)
-	// If the workload instance does not exist, create it
-	if errors.IsNotFound(err) {
+	if client.IgnoreNotFound(err) != nil {
+		r.Log.Error(err, "could not get WorkloadVersion", "requestInfo", requestInfo)
+		return ctrl.Result{RequeueAfter: 10 * time.Second}, err
+	} else if errors.IsNotFound(err) {
+		// If the workload instance does not exist, create it
 		workloadVersion, err := r.createWorkloadVersion(ctx, workload)
 		if err != nil {
 			return reconcile.Result{}, err
@@ -99,20 +104,24 @@ func (r *KeptnWorkloadReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 		err = r.Client.Create(ctx, workloadVersion)
 		if err != nil {
-			r.Log.Error(err, "could not create WorkloadVersion")
+			r.Log.Error(err, "could not create WorkloadVersion", "requestInfo", requestInfo)
 			r.EventSender.Emit(common.PhaseCreateWorkloadVersion, "Warning", workloadVersion, common.PhaseStateFailed, "could not create KeptnWorkloadVersion ", workloadVersion.Spec.Version)
-			return ctrl.Result{}, err
+			return ctrl.Result{RequeueAfter: 10 * time.Second}, err
 		}
 		workload.Status.CurrentVersion = workload.Spec.Version
 		if err := r.Client.Status().Update(ctx, workload); err != nil {
 			r.Log.Error(err, "could not update Current Version of Workload")
 			return ctrl.Result{}, err
 		}
-		return ctrl.Result{}, nil
-	}
-	if err != nil {
-		r.Log.Error(err, "could not get WorkloadVersion")
-		return ctrl.Result{}, err
+
+	} else if !reflect.DeepEqual(workloadVersion.Spec.KeptnWorkloadSpec, workload.Spec) {
+		r.Log.Info("updating spec of KeptnWorkloadVersion", "requestInfo", requestInfo, "workloadVersion", workloadVersion.Name)
+		workloadVersion.Spec.KeptnWorkloadSpec = workload.Spec
+		if err := r.Client.Update(ctx, workloadVersion); err != nil {
+			r.Log.Error(err, "could not update spec of Workload", "requestInfo", requestInfo)
+			// requeue to try again in case of an unexpected error
+			return ctrl.Result{RequeueAfter: 10 * time.Second}, err
+		}
 	}
 
 	return ctrl.Result{}, nil

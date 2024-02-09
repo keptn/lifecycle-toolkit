@@ -39,7 +39,7 @@ func TestFactory(t *testing.T) {
 			err:          false,
 		},
 		{
-			providerType: KeptnDummyProviderType,
+			providerType: KeptnPlaceholderProviderType,
 			provider:     &placeholder.KeptnPlaceholderProvider{},
 			err:          false,
 		},

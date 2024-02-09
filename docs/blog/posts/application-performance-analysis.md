@@ -41,6 +41,7 @@ and make sense of SLOs, making the whole process more straightforward and effici
 
 The example application will provide some metrics by itself by serving them via its Prometheus endpoint,
 while other data will come from Dynatrace.
+<!-- more -->
 
 ## Defining data providers
 

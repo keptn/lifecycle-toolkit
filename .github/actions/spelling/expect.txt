@@ -366,6 +366,7 @@ kustomize
 kustomizeconfig
 kwi
 kwv
+kwds
 kyverno
 lastword
 Lato

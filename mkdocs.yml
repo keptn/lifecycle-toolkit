@@ -88,7 +88,7 @@ markdown_extensions:
       alternate_style: true
       slugify: !!python/object/apply:pymdownx.slugs.slugify
         kwds:
-          case: lower  
+          case: lower
 
 nav:
   - Home:

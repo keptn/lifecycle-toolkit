@@ -1,4 +1,4 @@
-package dummy
+package placeholder
 
 import (
 	"context"
@@ -10,25 +10,25 @@ import (
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
 )
 
-type KeptnDummyProvider struct {
+type KeptnPlaceholderProvider struct {
 	Log        logr.Logger
 	HttpClient http.Client
 }
 
-func (d *KeptnDummyProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
-	return fmt.Sprintf("dummy provider FetchAnalysisValue was called with query %s from %d to %d", query, analysis.GetFrom().Unix(), analysis.GetTo().Unix()), nil
+func (d *KeptnPlaceholderProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
+	return fmt.Sprintf("placeholder provider FetchAnalysisValue was called with query %s from %d to %d", query, analysis.GetFrom().Unix(), analysis.GetTo().Unix()), nil
 }
 
-func (d *KeptnDummyProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
-	return fmt.Sprintf("dummy provider EvaluateQuery was called with query %s", metric.Spec.Query), nil, nil
+func (d *KeptnPlaceholderProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	return fmt.Sprintf("placeholder provider EvaluateQuery was called with query %s", metric.Spec.Query), nil, nil
 }
 
-func (d *KeptnDummyProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
+func (d *KeptnPlaceholderProvider) EvaluateQueryForStep(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
 	fromTime, toTime, stepInterval, err := getTimeRangeForStep(metric)
 	if err != nil {
 		return nil, nil, err
 	}
-	result := fmt.Sprintf("dummy provider EvaluateQueryForStep was called with query %s from %d to %d at an interval %d", metric.Spec.Query, fromTime, toTime, stepInterval)
+	result := fmt.Sprintf("placeholder provider EvaluateQueryForStep was called with query %s from %d to %d at an interval %d", metric.Spec.Query, fromTime, toTime, stepInterval)
 	return []string{result}, nil, nil
 }
 

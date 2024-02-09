@@ -43,7 +43,8 @@ spec:
       try:
         - script:
             content: |
-              kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/${NAMESPACE}/keptnmetrics.metrics.sh/podtato-head/podtato-head" | jq '.items | length'
+              METRIC_VALUE=$(kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/${NAMESPACE}/keptnmetrics.metrics.sh/podtato-head/podtato-head")
+              echo $METRIC_VALUE | jq '.items | length'
             check:
               (contains($stdout, '1')): true
     - name: step-04

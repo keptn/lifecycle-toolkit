@@ -76,7 +76,16 @@ spec:
     - name: step-04
       try:
         - script:
-            content: curl -s "http://lifecycle-operator-metrics-service.keptn-system.svc.cluster.local:2222/metrics" | grep "keptn_lifecycle_active"
+            content: |
+              kubectl port-forward svc/lifecycle-operator-metrics-service -n keptn-system 2222 > /dev/null 2>&1 &
+              pid=$!
+              # echo pid: $pi
+              # kill the port-forward regardless of how this script exits
+                trap '{
+                # echo killing $pid
+                kill $pid
+              }' EXIT
+              curl -s "http://localhost:2222/metrics" | grep "keptn_lifecycle_active_total"
             check:
-            # This checks that Keptn returns active metrics
-            (contains($stdout, "keptn_lifecycle_active")): true
+              # This checks that Keptn returns active metrics
+              (contains($stdout, 'keptn_lifecycle_active_total')): true

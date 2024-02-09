@@ -32,6 +32,8 @@ differentiated by the `spec` section:
   [Synopsis for container-runtime](#synopsis-for-container-runtime)
   and
   [Examples for a container-runtime runner](#examples-for-a-container-runtime-runner).
+<!-- markdownlint-disable MD046 -->
+<!-- markdownlint-disable MD051 -->
 * Pre-defined containers
 
   * Use the pre-defined `deno-runtime` runner
@@ -568,7 +570,8 @@ file.
     ```yaml
     {% include "../../assets/crd/python-configmap.yaml" %}
     ```
-
+<!-- markdownlint-enable MD051 -->
+<!-- markdownlint-enable MD046 -->
 ### Allowed libraries for the python-runtime runner
 
 The following example shows how to use some of the allowed packages, namely:

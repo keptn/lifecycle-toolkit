@@ -102,6 +102,8 @@ For detailed information please look at the [Examples section](#examples).
 
 ## Examples
 
+<!-- markdownlint-disable MD046 -->
+<!-- markdownlint-disable MD051 -->
 === "Prometheus"
 
     An example of Prometheus as a metrics provider with a Secret holding
@@ -144,6 +146,8 @@ For detailed information please look at the [Examples section](#examples).
     which is not possible for Datadog or Prometheus.
     For this example `myCustomTokenKey` was used.
 
+<!-- markdownlint-enable MD051 -->
+<!-- markdownlint-enable MD046 -->
 ## Files
 
 API Reference:

@@ -76,13 +76,17 @@ spec:
     - name: step-04
       try:
         - script:
-            content: |       
+            content: |      
               kubectl port-forward svc/lifecycle-operator-metrics-service -n keptn-system 2222 > /dev/null 2>&1 &
-              pid=$!
-              echo pid: $pid
-              # kill the port-forward regardless of how this script exits
-              trap 'kill $pid' EXIT
+              port_forward_pid=$!
+        
+              # trap to kill the port-forward process on script exit
+              trap 'kill $port_forward_pid' EXIT
+              # Wait for the port-forward process to complete
+              wait $port_forward_pid
+              
               curl -s "http://localhost:2222/metrics" | grep "keptn_lifecycle_active_total"
+            timeout: 20s
             check:
               # This checks that Keptn returns active metrics
               (contains($stdout, 'keptn_lifecycle_active_total')): true

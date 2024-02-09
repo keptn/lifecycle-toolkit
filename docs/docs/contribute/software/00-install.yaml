@@ -5,7 +5,7 @@ metadata:
   # namespace: keptn-system
 spec:
   provider:
-    name: "placeholder"
+    name: "dummy"
   query: "random"
   fetchIntervalSeconds: 5
   range:
@@ -17,10 +17,10 @@ spec:
 apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
 metadata:
-  name: placeholder
+  name: dummy
   # namespace: keptn-system
 spec:
-  type: placeholder
+  type: dummy
   targetServer: "http://www.randomnumberapi.com/api/v1.0/"  # string
 
 ---
@@ -31,7 +31,7 @@ metadata:
   # namespace: keptn-system
 spec:
   provider:
-    name: placeholder
+    name: dummy
   query: "random"
 ---
 apiVersion: metrics.keptn.sh/v1beta1

@@ -87,16 +87,21 @@ To create a provider for the placeholder endpoint, follow these steps:
   {% include "./placeholder-test-example.go" %}
   ```
 
-- Include a KUTTL test to validate the behavior of Kubernetes resources managed by your code.
-  KUTTL tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
+- Include a Chainsaw test to validate the behavior of Kubernetes resources managed by your code.
+  Chainsaw tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
   the correctness of your Kubernetes configurations and deployments.
 
+    Below is the chainsaw test
+
+    ```yaml
+    {% include "./chainsaw-test.yaml" %}
+    ```
+    the installation file
     ```yaml
     {% include "./00-install.yaml" %}
     ```
 
-    Below is the assert check
-
+    the assert check
     ```yaml
-    {% include "./01-assert.yaml" %}
+    {% include "./assert-1.yaml" %}
     ```

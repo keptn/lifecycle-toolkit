@@ -102,49 +102,47 @@ For detailed information please look at the [Examples section](#examples).
 
 ## Examples
 
-### Prometheus
+=== "Prometheus"
 
-An example of Prometheus as a metrics provider with a Secret holding
-the authentication data looks like the following:
+    An example of Prometheus as a metrics provider with a Secret holding
+    the authentication data looks like the following:
 
-```yaml
-{% include "./assets/keptnmetricsprovider-prometheus.yaml" %}
-```
+    ```yaml
+    {% include "./assets/keptnmetricsprovider-prometheus.yaml" %}
+    ```
+    > **Note**
+    Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
+    as `user` and `password` key names are required to be present in the linked Secret.
+    Setting this field won't have any effect.
 
-> **Note**
-Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
-as `user` and `password` key names are required to be present in the linked Secret.
-Setting this field won't have any effect.
+=== "Datadog"
 
-### Datadog
+    An example of Datadog as a metrics provider with a Secret holding
+    the authentication data looks like the following:
+ 
+    ```yaml
+    {% include "./assets/keptnmetricsprovider-datadog.yaml" %}
+    ```
+    > **Note**
+    Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
+    as `DD_CLIENT_API_KEY` and `DD_CLIENT_API_KEY` key names must be
+    present in the linked Secret.
+    Setting this field has no effect.
 
-An example of Datadog as a metrics provider with a Secret holding
-the authentication data looks like the following:
+=== "Dynatrace and DQL"
 
-```yaml
-{% include "./assets/keptnmetricsprovider-datadog.yaml" %}
-```
+    An example of Dynatrace as a metrics provider with a Secret holding
+    the authentication data looks like the following:
 
-> **Note**
-Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
-as `DD_CLIENT_API_KEY` and `DD_CLIENT_API_KEY` key names must be
-present in the linked Secret.
-Setting this field has no effect.
+    ```yaml
+    {% include "./assets/keptnmetricsprovider-dynatrace.yaml" %}
+    ```
 
-### Dynatrace and DQL
-
-An example of Dynatrace as a metrics provider with a Secret holding
-the authentication data looks like the following:
-
-```yaml
-{% include "./assets/keptnmetricsprovider-dynatrace.yaml" %}
-```
-
-> **Note**
-When using Dynatrace as metrics provider you can
-define the key name of your DT token stored in a secret,
-which is not possible for Datadog or Prometheus.
-For this example `myCustomTokenKey` was used.
+    > **Note**
+    When using Dynatrace as metrics provider you can
+    define the key name of your DT token stored in a secret,
+    which is not possible for Datadog or Prometheus.
+    For this example `myCustomTokenKey` was used.
 
 ## Files
 

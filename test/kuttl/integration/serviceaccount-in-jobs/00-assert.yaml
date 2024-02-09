@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Pod
-status:
-  phase: Succeeded
-spec:
-  serviceAccountName: keptn-serviceaccount
-  automountServiceAccountToken: false

@@ -142,7 +142,7 @@ before you create a PR with your changes.
 
 If your change introduces a new feature,
 you may need to update the test suites to cover your changes.
-These tests use basic go-library, Ginkgo or KUTTL tests.
+These tests use basic go-library, Ginkgo or chainsaw tests.
 You can ask the maintainers to tell you where to put your additional test data.
 
 Tests are run on your local machine.
@@ -161,10 +161,10 @@ Run the integration tests from the root directory of your clone:
   make integration-test-local
   ```
 
-This runs a series of Kuttl
-([KUbernetes Test TooL](https://kuttl.dev/))
+This runs a series of chainsaw
+([chainsaw](https://kyverno.github.io/chainsaw))
 tests locally and then cleans up your local environment.
-You can run individual tests with the `kubectl kuttl` command;
+You can run individual tests with the `chainsaw test` command;
 see the *Makefile* for the specific syntax of each test.
 
 ### Component test

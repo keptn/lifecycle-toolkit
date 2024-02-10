@@ -189,35 +189,13 @@ and Keptn sets up the container and runs the script as part of the task.
     may not function out of the box when run in the `deno-runtime` runner.
 
     ```yaml
-    apiVersion: lifecycle.keptn.sh/v?alpha?
-    kind: KeptnTaskDefinition
-    metadata:
-      name: <task-name>
-    spec:
-      deno:
-        inline | httpRef | functionRef | ConfigMapRef
-        parameters:
-          map:
-            textMessage: "This is my configuration"
-        secureParameters:
-          secret: <secret-name>
+    {% include "../../assets/crd/examples/synopsis-for-deno-runtime-container.yaml" %}
     ```
 
 === "python-runtime"
 
     ```yaml
-    apiVersion: lifecycle.keptn.sh/v?alpha?
-    kind: KeptnTaskDefinition
-    metadata:
-      name: <task-name>
-    spec:
-        python:
-          inline | httpRef | functionRef | ConfigMapRef
-          parameters:
-            map:
-              textMessage: "This is my configuration"
-          secureParameters:
-            secret: <secret-name>
+    {% include "../../assets/crd/examples/synopsis-for-python-runtime-runner.yaml" %}
     ```
 
 ### Fields for predefined containers
@@ -404,21 +382,7 @@ file.
     within the `KeptnTaskDefinition` YAML file:
 
     ```yaml
-    apiVersion: lifecycle.keptn.sh/v1beta1
-    kind: KeptnTaskDefinition
-    metadata:
-      name: hello-keptn-inline
-    spec:
-      deno:
-        inline:
-          code: |
-            let text = Deno.env.get("DATA");
-            let data;
-            let name;
-            data = JSON.parse(text);
-
-            name = data.name
-            console.log("Hello, " + name + " new");
+    {% include "../../assets/crd/examples/inline-script-for-deno-script.yaml" %} 
     ```
 
 === "Example 2: httpRef script for a Deno script"
@@ -426,14 +390,7 @@ file.
     This example fetches the Deno script from a remote webserver at runtime:
 
     ```yaml
-    apiVersion: lifecycle.keptn.sh/v1beta1
-    kind: KeptnTaskDefinition
-    metadata:
-      name: hello-keptn-http
-    spec:
-      deno:
-        httpRef:
-          url: "https://www.example.com/yourscript.js"
+    {% include "../../assets/crd/examples/httpref-script-for-deno-script.yaml" %}
     ```
 
     For another example, see the
@@ -452,19 +409,7 @@ file.
     passing `parameters` and `secureParameters` to that other task:
 
     ```yaml
-    apiVersion: lifecycle.keptn.sh/v1beta1
-    kind: KeptnTaskDefinition
-    metadata:
-      name: slack-notification-dev
-    spec:
-      deno:
-        functionRef:
-          name: slack-notification
-        parameters:
-          map:
-            textMessage: "This is my configuration"
-        secureParameters:
-          secret: slack-token
+    {% include "../../assets/crd/examples/functionref-for-deno-script.yaml" %} 
     ```
 
 === "Example 4: ConfigMapRef for a Deno script"
@@ -473,14 +418,7 @@ file.
     that contains the code for the function to be executed.
 
     ```yaml
-    apiVersion: lifecycle.keptn.sh/v1beta1
-    kind: KeptnTaskDefinition
-    metadata:
-      name: keptntaskdefinition-sample
-    spec:
-      deno:
-        configMapRef:
-          name: dev-configmap
+    {% include "../../assets/crd/examples/configmapref-for-deno-script.yaml" %} 
     ```
 
 === "Example 5: ConfigMap for a Deno script"
@@ -488,36 +426,7 @@ file.
     This example illustrates the use of both a `ConfigMapRef` and a `ConfigMap`:
 
     ```yaml
-    apiVersion: lifecycle.keptn.sh/v1beta1
-    kind: KeptnTaskDefinition
-    metadata:
-      name: scheduled-deployment
-    spec:
-      function:
-        configMapRef:
-          name: scheduled-deployment-cm-1
-    ---
-    apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: scheduled-deployment-1
-    data:
-      code: |
-        let text = Deno.env.get("DATA");
-        let data;
-        if (text != "") {
-            data = JSON.parse(text);
-        }
-        let targetDate = new Date(data.targetDate)
-        let dateTime = new Date();
-        if(targetDate < dateTime) {
-            console.log("Date has passed - ok");
-            Deno.exit(0);
-        } else {
-            console.log("It's too early - failing");
-            Deno.exit(1);
-        }
-        console.log(targetDate);
+    {% include "../../assets/crd/examples/configmap-for-deno-script.yaml" %} 
     ```
 
 === "Example 6: Accessing KEPTN_CONTEXT environment variable in a Deno task"

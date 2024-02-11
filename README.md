@@ -64,17 +64,14 @@ The status follows the
 
 ## Community
 
-Please find details on regular hosted community events in the [keptn/community repo](https://github.com/keptn/community) as well as our Slack channel(s) in the [CNCF Slack workspace.](https://cloud-native.slack.com/messages/keptn/)
+Find details on regular hosted community events in the [keptn/community repo](https://github.com/keptn/community) and our Slack channel(s) in the [CNCF Slack workspace.](https://cloud-native.slack.com/messages/keptn/)
 
 ## Governance
 
-- [Community Membership](https://github.com/keptn/community/blob/main/community-membership.md)
-   It provides guidelines for community engagement, contribution expectations, and the process for becoming a community member at different levels. Maintained by Keptn maintainers.
+- [Community Membership](https://github.com/keptn/community/blob/main/community-membership.md):         Guidelines for community engagement, contribution expectations, and the process for becoming a community member at different levels.
 
-- [Members and Charter](https://github.com/keptn/community/blob/main/governance/members-and-charter.md)
-  The Governance Charter describes the formation and responsibilities of the Keptn
-  Governance Committee, including its scope, members, and core responsibilities.
-  
+- [Members and Charter](https://github.com/keptn/community/blob/main/governance/members-and-charter.md): Describes the formation and responsibilities of the Keptn Governance Committee, including its scope, members, and core responsibilities.
+
 ## Installation
 
 Keptn can be installed on any Kubernetes cluster

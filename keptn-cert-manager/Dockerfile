@@ -11,7 +11,7 @@ RUN go mod download
 
 # Copy the go source
 COPY ./ ./
-cgr.dev/chainguard/static
+
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
 ARG CONTROLLER_TOOLS_VERSION=v0.14.0
 RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION

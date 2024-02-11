@@ -37,7 +37,7 @@ COPY --from=builder /scheduler/bin/kube-scheduler /bin/kube-scheduler
 WORKDIR /bin
 CMD ["kube-scheduler"]
 
-FROM gcr.io/distroless/static-debian11:nonroot AS production
+FROM cgr.dev/chainguard/static AS production
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \

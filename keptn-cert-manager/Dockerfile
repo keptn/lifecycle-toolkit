@@ -11,7 +11,7 @@ RUN go mod download
 
 # Copy the go source
 COPY ./ ./
-
+cgr.dev/chainguard/static
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
 ARG CONTROLLER_TOOLS_VERSION=v0.14.0
 RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
@@ -45,7 +45,7 @@ COPY --from=builder /workspace/manager .
 
 ENTRYPOINT ["/manager"]
 
-FROM gcr.io/distroless/static-debian11:nonroot AS production
+FROM cgr.dev/chainguard/static AS production
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit/keptn-cert-manager" \
     org.opencontainers.image.url="https://keptn.sh" \

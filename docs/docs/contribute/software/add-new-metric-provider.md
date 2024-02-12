@@ -37,7 +37,7 @@ To create a provider for the placeholder endpoint, follow these steps:
   Below is an example of a placeholder provider implementation.
 
     ```go
-    {% include "./placeholder-code-example.go" %}
+    {% include "./assets/example-code/placeholder-code-example.go" %}
     ```
 
    **NB:** Ensure to refer to the documentation of
@@ -84,7 +84,7 @@ To create a provider for the placeholder endpoint, follow these steps:
   Below is a unit test example for our placeholder provider
 
   ```go
-  {% include "./placeholder-test-example.go" %}
+  {% include "./assets/example-code/placeholder-test-example.go" %}
   ```
 
 - Include a Chainsaw test to validate the behavior of Kubernetes resources managed by your code.
@@ -94,17 +94,17 @@ To create a provider for the placeholder endpoint, follow these steps:
     Below is the chainsaw test
 
     ```yaml
-    {% include "./chainsaw-test.yaml" %}
+    {% include "./assets/example-integration-test/chainsaw-test.yaml" %}
     ```
 
     the installation file
 
     ```yaml
-    {% include "./00-install.yaml" %}
+    {% include "./assets/example-integration-test/00-install.yaml" %}
     ```
 
     the assert check
 
     ```yaml
-    {% include "./assert-1.yaml" %}
+    {% include "./assets/example-integration-test/assert-1.yaml" %}
     ```

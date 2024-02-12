@@ -41,7 +41,7 @@ jobs:
       - name: Install Chainsaw
         uses: kyverno/action-install-chainsaw@07b6c986572f2abaf6647c85d37cbecfddc4a6ab # v0.1.3
         with:
-          release: v0.1.4-alpha.1
+          release: v0.1.4-alpha.2
 
       - name: Run Scheduling Gates Integration Tests
         if: inputs.scheduling-gates == 'gates_on' && inputs.allowed-namespaces == 'allowed_ns_off'

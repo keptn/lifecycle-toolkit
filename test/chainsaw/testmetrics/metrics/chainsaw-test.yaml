@@ -43,7 +43,7 @@ spec:
       try:
         - script:
             content: |
-            # yamllint disable-line rule:line-length
+              # yamllint disable-line rule:line-length
               METRIC_VALUE=$(kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/${NAMESPACE}/keptnmetrics.metrics.sh/podtato-head/podtato-head")
               echo $METRIC_VALUE | jq '.items | length'
             check:

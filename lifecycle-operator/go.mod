@@ -1,6 +1,6 @@
 module github.com/keptn/lifecycle-toolkit/lifecycle-operator
 
-go 1.20
+go 1.21
 
 require (
 	dario.cat/mergo v1.0.0

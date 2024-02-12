@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Adding a New Metrics Provider for Placeholder Endpoint
 
 In this guide, we will create a placeholder provider.

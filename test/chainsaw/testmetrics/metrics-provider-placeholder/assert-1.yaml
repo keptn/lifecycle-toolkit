@@ -7,5 +7,5 @@ spec:
     name: ed-my-proj-dev-svc1
 status:
   # yamllint disable-line rule:line-length
-  raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{},"fulfilled":false},"warnResult":{"operator":{},"fulfilled":false},"warning":false,"pass":false},"objective":{"analysisValueTemplateRef":{"name":"ready"},"target":{"failure":{"lessThan":{"fixedValue":"2"}},"warning":{"lessThan":{"fixedValue":"3"}}},"weight":1}, "value":0,"query":"random","score":0,"error":{"Func":"ParseFloat","Num":"dummy provider FetchAnalysisValue was called with query random from 1694690419 to 1694690539","Err":{}}}],"totalScore":0,"maximumScore":1,"pass":false,"warning":false}'
+  raw: '{"objectiveResults":[{"result":{"failResult":{"operator":{},"fulfilled":false},"warnResult":{"operator":{},"fulfilled":false},"warning":false,"pass":false},"objective":{"analysisValueTemplateRef":{"name":"ready"},"target":{"failure":{"lessThan":{"fixedValue":"2"}},"warning":{"lessThan":{"fixedValue":"3"}}},"weight":1}, "value":0,"query":"random","score":0,"error":{"Func":"ParseFloat","Num":"placeholder provider FetchAnalysisValue was called with query random from 1694690419 to 1694690539","Err":{}}}],"totalScore":0,"maximumScore":1,"pass":false,"warning":false}'
   state: Completed

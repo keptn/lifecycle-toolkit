@@ -4,7 +4,7 @@ metadata:
   name: podtato-head1
 spec:
   provider:
-    name: "my-provider"
+    name: "prometheus"
   query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
   fetchIntervalSeconds: 5
   range:

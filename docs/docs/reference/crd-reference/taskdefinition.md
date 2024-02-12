@@ -307,7 +307,8 @@ spec:
                      * **python example:**
                          [Example 4: ConfigMapRef for a python-runtime runner](#example-4-configmapref-for-a-python-runtime-runner)
 
-            * **parameters** - An optional field to supply input parameters to a function.
+            * **parameters** - An optional field
+              to supply input parameters to a function.
               Keptn passes the values defined inside the `map` field
               as a JSON object.
               See
@@ -321,7 +322,8 @@ spec:
                  * **python example:**
                    [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
 
-            * **secureParameters** -- An optional field used to pass a Kubernetes secret.
+            * **secureParameters** -- An optional field
+              used to pass a Kubernetes secret.
               The `secret` value is the Kubernetes secret name
               that is mounted into the runtime and made available to functions
               using the `SECURE_DATA` environment variable.

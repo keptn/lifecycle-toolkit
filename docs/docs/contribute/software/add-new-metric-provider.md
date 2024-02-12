@@ -22,18 +22,29 @@ In this guide, we will create a placeholder provider. The following steps can be
      metric query from the provider.
      It evaluates the query and returns the metric values
      along with any additional data if required.
+   - It takes as input a [KeptnMetric]
+   (<https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetric_types.go>)
+   and [KeptnMetricsProvider](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go)
   `EvaluateQueryForStep`(Fetches metric values with step interval from the provider)
    - This function fetches metric values with a specified step interval from the placeholder provider.
       It takes into account the metric query and the step interval provided, executes the query,
       and returns the metric values along with any additional data if required.
+   - It takes as input a [KeptnMetric]
+   (<https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetric_types.go>)
+   and [KeptnMetricsProvider](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go)
   `FetchAnalysisValue`(Fetches analysis values from the provider) functions.
    - This function fetches analysis values based on the provided query and time range from the
      provider.
      It evaluates the query within the specified time range and returns the analysis
      values along with any additional data if required.
+   - It takes as input a `query`, [Analysis]
+   (<https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/analysis_types.go>) and [KeptnMetricsProvider](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go)
   You can follow other existing implementations,
  such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
  as an example.
+   **NB:** All 3 functions expects a string containing a float value in it.
+  But for example purposes
+           we returned some of the data accessible in the function.
   Below is an example of a placeholder provider implementation.
 
     ```go

@@ -1,20 +1,9 @@
 apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnApp
-metadata:
-  name: podtato-head
-spec:
-  version: "1.3"
-  workloads:
-    - name: podtato-head-entry
-      version: 0.1.0
-  postDeploymentTasks:
-    - post-deployment-hello
----
-apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: check-entry-service
 spec:
+  retries: 1
   function:
     httpRef:
       url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/http.ts

@@ -15,10 +15,6 @@ spec:
             file: 00-assert.yaml
     - name: step-01
       try:
-        - assert:
-            file: 01-assert.yaml
-    - name: step-02
-      try:
         - apply:
             file: 02-install.yaml
         - assert:

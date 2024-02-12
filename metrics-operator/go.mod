@@ -1,6 +1,6 @@
 module github.com/keptn/lifecycle-toolkit/metrics-operator
 
-go 1.20
+go 1.21
 
 require (
 	github.com/DataDog/datadog-api-client-go/v2 v2.21.0

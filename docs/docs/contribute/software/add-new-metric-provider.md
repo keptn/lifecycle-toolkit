@@ -1,11 +1,13 @@
 # Adding a New Metrics Provider for Placeholder Endpoint
 
-In this guide, we will create a placeholder provider. The following steps can be a starting point to create your own custom provider:
+In this guide, we will create a placeholder provider.
+The following steps can be a starting point to create your own custom provider:
 
 1. Fork the [Keptn repo](https://github.com/keptn/lifecycle-toolkit)
 
 2. **Define the Provider Type:** In the `metrics-operator/controllers/common/providers/common.go` file,
- define the constant `KeptnPlaceholderProviderType`. In our example we use `"placeholder"`.
+ define the constant `KeptnPlaceholderProviderType`.
+  In our example we use `"placeholder"`.
 
     ```go
     const KeptnPlaceholderProviderType = "placeholder"

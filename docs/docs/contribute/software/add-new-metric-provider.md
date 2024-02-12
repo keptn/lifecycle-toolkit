@@ -5,7 +5,7 @@ comments: true
 # Adding a New Metrics Provider for Placeholder Endpoint
 
 In this guide, we will create a placeholder provider.
-The following steps can be a starting point to create your own custom provider:
+The following steps are a starting point to create your own custom provider:
 
 1. Fork the [Keptn repo](https://github.com/keptn/lifecycle-toolkit)
 

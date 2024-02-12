@@ -18,7 +18,3 @@ spec:
       version: 0.1.0
     - name: podtato-head-hat
       version: 0.1.0
-  postDeploymentTasks:
-    - post-deployment-hello
-  preDeploymentTasks:
-    - post-deployment-hello

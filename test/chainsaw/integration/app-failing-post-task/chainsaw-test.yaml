@@ -4,11 +4,12 @@ kind: Test
 metadata:
   name: app-failing-post-task
 spec:
+  namespaceModifiers:
+    - annotate:
+        keptn.sh/lifecycle-toolkit: enabled
   steps:
     - name: step-00
       try:
-        - script:
-            content: kubectl annotate ns $NAMESPACE keptn.sh/lifecycle-toolkit='enabled'
         - apply:
             file: 00-install.yaml
         - assert:

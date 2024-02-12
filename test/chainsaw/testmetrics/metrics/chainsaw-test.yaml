@@ -57,7 +57,7 @@ spec:
               # trap to kill the port-forward process on script exit
               trap 'kill $port_forward_pid' EXIT
               # Wait for the port-forward process to complete
-              wait $port_forward_pid
+              sleep 10s
               curl -s "http://localhost:2222/metrics" | grep "keptn_lifecycle_active_total"
             timeout: 40s
             check:

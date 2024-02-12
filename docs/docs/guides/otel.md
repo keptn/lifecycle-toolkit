@@ -49,7 +49,7 @@ you must have the following on your cluster:
 - A Prometheus Operator.
   See [Prometheus Operator Setup](https://github.com/prometheus-operator/kube-prometheus/blob/main/docs/customizing.md).
 
-  - The Prometheus Operator must have the required permissions
+    - The Prometheus Operator must have the required permissions
     to watch resources of your Keptn namespace
     (default is `keptn-system`).
     See
@@ -73,16 +73,16 @@ kubectl apply -f config/prometheus/
 
 - If you want a dashboard for reviewing metrics and traces:
 
-  - Install
+    - Install
     [Grafana](https://grafana.com/grafana/)
     or the visualization tool of your choice, following the instructions in
     [Grafana Setup](https://grafana.com/docs/grafana/latest/setup-grafana/).
-  - Install
+    - Install
     [Jaeger](https://www.jaegertracing.io/)
     or a similar tool for traces following the instructions in
     [Jaeger Setup](https://www.jaegertracing.io/docs/1.50/getting-started/).
 
-  - Follow the instructions in the Grafana
+    - Follow the instructions in the Grafana
     [README](https://github.com/keptn/lifecycle-toolkit/blob/main/dashboards/grafana/README.md)
     file to configure the Grafana dashboard(s) for Keptn.
 

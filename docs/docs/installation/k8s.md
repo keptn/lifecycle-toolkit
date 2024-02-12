@@ -79,14 +79,14 @@ Your cluster should include the following:
   you can use multiple instances of different data providers.
   These provide:
 
-  * Metrics used for
+    * Metrics used for
     [Keptn Metrics](../guides/evaluatemetrics.md/)
-  * Metrics used for
+    * Metrics used for
     [OpenTelemetry](../guides/otel.md/)
     observability
-  * SLIs for pre- and post-deployment
+    * SLIs for pre- and post-deployment
     [evaluations](../guides/evaluations.md/)
-  * SLIs used for
+    * SLIs used for
     [analyses](../guides/slo.md)
 
 * If you want to use the standardized observability feature,

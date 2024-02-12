@@ -45,83 +45,83 @@ spec:
 * **apiVersion** -- API version being used
 * **kind** -- Resource type.
   Must be set to `AnalysisDefinition`.
-   * **metadata**
-     * **name** -- Unique name of this analysis definition.
-       Names must comply with the
-       [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-       specification.
-     * **namespace** -- Namespace where this resource is located.
-       `Analysis` resources must specify this namespace
-       when referencing this definition,
-       unless it resides in the same namespace as the `Analysis` resource.
+    * **metadata**
+        * **name** -- Unique name of this analysis definition.
+          Names must comply with the
+          [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+          specification.
+        * **namespace** -- Namespace where this resource is located.
+          `Analysis` resources must specify this namespace
+          when referencing this definition,
+          unless it resides in the same namespace as the `Analysis` resource.
 * **spec**
-     * **objectives**
-       A list of objectives whose results are combined
-       to determine whether the analysis fails, passes, or passes with a warning.
-          * **analysisValueTemplateRef** (required) --
-            This string marks the beginning of each objective
+    * **objectives**
+      A list of objectives whose results are combined
+      to determine whether the analysis fails, passes, or passes with a warning.
+        * **analysisValueTemplateRef** (required) --
+          This string marks the beginning of each objective
             * **name** (required) -- The `metadata.name` value of the
-               [AnalysisValueTemplateRef](analysisvaluetemplate.md)
-               resource that defines the SLI used for this objective.
-               That resource defines the data provider and the query to use.
+              [AnalysisValueTemplateRef](analysisvaluetemplate.md)
+              resource that defines the SLI used for this objective.
+              That resource defines the data provider and the query to use.
             * **namespace** --
               Namespace of the `analysisValueTemplateRef` resource.
               If the namespace is not specified,
               the analysis controller looks for the `AnalysisValueTemplateRef` resource
               in the same namespace as the `Analysis` resource.
 
-          * **target** -- defines failure or, optionally, warning criteria.
-            Values not specified for failure or warning result in a pass.
-            Keptn writes the results of the analysis to the `status` section
-            of the
-            [Analysis](analysis.md)
-            resource after the analysis runs.
+        * **target** -- defines failure or, optionally, warning criteria.
+          Values not specified for failure or warning result in a pass.
+          Keptn writes the results of the analysis to the `status` section
+          of the
+          [Analysis](analysis.md)
+          resource after the analysis runs.
 
-               To use a value that includes a fraction, use a Kubernetes
-               [quantity](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/)
-               value rather than a `float`.
-               For example, use the `3m` quantity
-               rather than the `0.003` float;
-               a `float` value here causes `Invalid value` errors.
-               A whole number (integer) is also a legal `quantity` value.
+          To use a value that includes a fraction, use a Kubernetes
+          [quantity](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/)
+          value rather than a `float`.
+          For example, use the `3m` quantity
+          rather than the `0.003` float;
+          a `float` value here causes `Invalid value` errors.
+          A whole number (integer) is also a legal `quantity` value.
 
-              * **failure** -- criteria for failure, specified as
-                `operator: <quantity>`.
-                This can be specified either as an absolute `quantity` value
-                or as a range of values.
+            * **failure** -- criteria for failure, specified as
+              `operator: <quantity>`.
+              This can be specified either as an absolute `quantity` value
+              or as a range of values.
 
-                   Valid operators for absolute values are:
+              Valid operators for absolute values are:
 
-                   * `lessThan` -- `<` operator
-                   * `lessThanOrEqual` -- `<=` operator
-                   * `greaterThan` -- `>` operator
-                   * `greaterThanOrEqual` -- `>=` operator
-                   * `equalTo` -- `==` operator
+                * `lessThan` -- `<` operator
+                * `lessThanOrEqual` -- `<=` operator
+                * `greaterThan` -- `>` operator
+                * `greaterThanOrEqual` -- `>=` operator
+                * `equalTo` -- `==` operator
 
-                   Valid operators for specifying ranges are:
+                  Valid operators for specifying ranges are:
 
-                   * `inRange` -- value is inclusively in the defined range
-                   * `notInRange` --  value is exclusively out of the defined range
+                * `inRange` -- value is inclusively in the defined range
+                * `notInRange` -- value is exclusively out of the defined range
 
-                     Each of these operators require two arguments:
+                  Each of these operators require two arguments:
 
-                     * `lowBound` -- minimum `quantity` value
-                       of the range included or excluded
-                     * `highBound` -- maximum `quantity` value
-                       of the range included or excluded
+                    * `lowBound` -- minimum `quantity` value
+                      of the range included or excluded
+                    * `highBound` -- maximum `quantity` value
+                      of the range included or excluded
               > **Warning** -- criteria for a warning,
-                specified in the same way as the `failure` field.
+              specified in the same way as the `failure` field.
 
-     * **weight**  -- used to emphasize the importance
-       of one `objective` over others
-     * **keyObjective** -- If set to `true`,
-       the entire analysis fails if this particular objective fails,
-       no matter what the actual `score` of the analysis is
+    * **weight**  -- used to emphasize the importance
+      of one `objective` over others
+    * **keyObjective** -- If set to `true`,
+      the entire analysis fails if this particular objective fails,
+      no matter what the actual `score` of the analysis is
 * **totalScore** (required) --
-  * **passPercentage** -- threshold to reach for the full analysis
-    (all objectives) to pass
+    * **passPercentage** -- threshold to reach for the full analysis
+      (all objectives) to pass
   > **Warning** Percentage
-    for the full analysis (all objectives) to pass with  `warning` status
+  for the full analysis (all objectives) to pass with  `warning` status
 
 ## Usage
 

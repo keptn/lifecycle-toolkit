@@ -40,48 +40,49 @@ status:
 * **kind** -- Resource type.
    Must be set to `Analysis`
 * **metadata**
-     * **name** -- Unique name of this analysis.
+    * **name** -- Unique name of this analysis.
        Names must comply with the
        [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
        specification.
 * **spec**
-     * **timeframe** (required) -- Specifies the range  for the corresponding query
+    * **timeframe** (required) -- Specifies the range  for the corresponding query
        in the AnalysisValueTemplate.
        This can be populated as one of the following:
 
-          * A combination of ‘from’ and ’to’
+        * A combination of ‘from’ and ’to’
             to specify the start and stop times for the analysis.
             These fields follow the
             [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt)
             timestamp format.
-          * Set the ‘recent’ property to a time span.
+        * Set the ‘recent’ property to a time span.
             This causes the Analysis to use data going back that amount of time.
             For example, if `recent: 10m` is set,
             the Analysis studies data from the last ten minutes.
 
-          If neither is set, the Analysis can not be added to the cluster.
+            If neither is set, the Analysis can not be added to the cluster.
 
-     * **args** -- Map of key/value pairs that can be used
+    * **args** -- Map of key/value pairs that can be used
        to substitute variables in the `AnalysisValueTemplate` query.
-     * **analysisDefinition** (required) -- Identify the `AnalysisDefinition` resource
+    * **analysisDefinition** (required) -- Identify the `AnalysisDefinition` resource
        that stores the `AnalysisValuesTemplate` associated with this `Analysis`
-          * **name** -- Name of the `AnalysisDefinition` resource
-          * **namespace** (optional) --
+        * **name** -- Name of the `AnalysisDefinition` resource
+        * **namespace** (optional) --
             Namespace of the `AnalysisDefinition` resource.
             The `AnalysisDefinition` resource can be located in any namespace.
             If the namespace is not specified,
             the analysis controller looks for the `AnalysisDefinition` resource
             in the same namespace as the `Analysis` resource.
-     * **status** -- results of this Analysis run,
+    * **status** -- results of this Analysis run,
        added to the resource by Keptn,
        based on criteria defined in the `AnalysisDefinition` resource.
-          > **Warning** -- Whether the analysis returned a warning.
-          * **raw** --  String-encoded JSON object that reports the results
+
+        * **warning** -- Whether the analysis returned a warning.
+        * **raw** --  String-encoded JSON object that reports the results
             of evaluating one or more objectives or metrics.
             See
             [Interpreting Analysis results](#interpreting-analysis-results)
             for details.
-          * **state** -- Set to `Completed` or `Progressing` as appropriate.
+        * **state** -- Set to `Completed` or `Progressing` as appropriate.
 
 ## Interpreting Analysis results
 
@@ -187,68 +188,68 @@ The meaning of each of these properties is as follows:
 each representing the results of a specific objective or performance metric.
 
 * The first item in the array:
-  * **`result`** -- This object contains information
+    * **`result`** -- This object contains information
     about whether the objective has passed or failed.
     It has two sub-objects:
-    * **`failResult`** -- Indicates whether the objective has failed.
+        * **`failResult`** -- Indicates whether the objective has failed.
       In this case, it checks if a value is greater than 500 milliseconds
       and it has not been fulfilled (`fulfilled: false`).
-    * **`warnResult`** -- Indicates whether the objective has issued a warning.
+        * **`warnResult`** -- Indicates whether the objective has issued a warning.
       It checks if a value is greater than 300 milliseconds
       and it has not been fulfilled (`fulfilled: false`).
-    - **`warning`** -- Indicates whether a warning has been issued
+    * **`warning`**
       (false in this case).
-    * **`pass`** -- Indicates whether the objective has passed
+        * **`pass`** -- Indicates whether the objective has passed
       (true in this case).
-  * **`objective`** -- Describes the objective being evaluated.
+    * **`objective`** -- Describes the objective being evaluated.
     It includes:
-    * **`analysisValueTemplateRef`** -- Refers to the template
+        * **`analysisValueTemplateRef`** -- Refers to the template
       used for analysis (`response-time-p95`).
-    * **`target`** -- Sets the target values for failure and warning conditions.
+        * **`target`** -- Sets the target values for failure and warning conditions.
       In this case, failure occurs
       if the value is greater than 500 milliseconds
       and warning occurs if it's greater than 300 milliseconds.
-    * **`weight`** -- Specifies the weight assigned to this objective
+        * **`weight`** -- Specifies the weight assigned to this objective
       (weight: 1).
-  * **`value`** -- Indicates the actual value measured for this objective
+    * **`value`** -- Indicates the actual value measured for this objective
     (value: 0.00475).
-  * **`score`** -- Indicates the score assigned to this objective (score: 1).
+    * **`score`** -- Indicates the score assigned to this objective (score: 1).
 
 * The second item in the array:
-  * **`result`** -- Similar to the first objective,
+    * **`result`** -- Similar to the first objective,
     it checks whether a value is greater than 0 and has not been fulfilled
     (`fulfilled: false`).
     There are no warning conditions in this case.
-  * **`objective`** -- Describes the objective related to error rate analysis.
-    * **`analysisValueTemplateRef`** -- Refers to the template
+    * **`objective`** -- Describes the objective related to error rate analysis.
+        * **`analysisValueTemplateRef`** -- Refers to the template
       used for analysis (`error-rate`).
-    * **`target`** -- Sets the target value for failure
+        * **`target`** -- Sets the target value for failure
       (failure occurs if the value is greater than 0).
-    * **`weight`** -- Specifies the weight assigned to this objective
+        * **`weight`** -- Specifies the weight assigned to this objective
       (weight: 1).
-    * **`keyObjective`** -- Indicates that this is a key objective (true).
+        * **`keyObjective`** -- Indicates that this is a key objective (true).
 
-  * **`value`** -- Indicates the actual value measured for this objective
+    * **`value`** -- Indicates the actual value measured for this objective
       (value: 0).
-  * **`score`** -- Indicates the score assigned to this objective (score: 1).
+    * **`score`** -- Indicates the score assigned to this objective (score: 1).
 
 * The second item in the array:
-  * **`result`** -- Similar to the first objective,
+    * **`result`** -- Similar to the first objective,
     it checks whether a value is greater than 0 and has not been fulfilled
     (`fulfilled: false`).
     There are no warning conditions in this case.
-  * **`objective`** -- Describes the objective related to error rate analysis.
-    * **`analysisValueTemplateRef`** -- Refers to the template
+    * **`objective`** -- Describes the objective related to error rate analysis.
+        * **`analysisValueTemplateRef`** -- Refers to the template
       used for analysis (`error-rate`).
-    * **`target`** -- Sets the target value for failure
+        * **`target`** -- Sets the target value for failure
       (failure occurs if the value is greater than 0).
-    * **`weight`** -- Specifies the weight assigned to this objective
+        * **`weight`** -- Specifies the weight assigned to this objective
       (weight: 1).
-    * **`keyObjective`** -- Indicates that this is a key objective (true).
+        * **`keyObjective`** -- Indicates that this is a key objective (true).
 
-  * **`value`** -- Indicates the actual value measured for this objective
+    * **`value`** -- Indicates the actual value measured for this objective
       (value: 0).
-  * **`score`** -- Indicates the score assigned to this objective (score: 1).
+    * **`score`** -- Indicates the score assigned to this objective (score: 1).
 
 **`totalScore`** -- Represents the total score achieved
 based on the objectives evaluated (totalScore: 2).

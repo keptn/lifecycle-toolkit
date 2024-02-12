@@ -97,9 +97,9 @@ You need to provide the following information:
    Follow the
   [conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/)
   for your PR title.
-  * Title should begin with an appropriate
+    * Title should begin with an appropriate
     [commit type](#commit-types).feature type.
-  * The first word after the feature type should be lowercase.
+    * The first word after the feature type should be lowercase.
 
     An example for a pull request title is:
 
@@ -109,17 +109,17 @@ You need to provide the following information:
 
 * Full description of what the PR is about.
 
-  * Link to relevant GitHub issue(s).
+    * Link to relevant GitHub issue(s).
      Use the phrase `Closes <issue>` for this link;
        is ensures that the issue is closed when this PR is merged.
         this PR does not completely satisfy the issue,
        e some other phrasing for the link to the issue.
-  * Describe what this PR does,
+    * Describe what this PR does,
     including related work that will be in other PRs.
-  * If you changed something that is visible to the user,
+    * If you changed something that is visible to the user,
     add a screenshot.
-  * Describe tests that are included or were run to test this PR.
-  * Anything else that will help reviewers understand
+    * Describe tests that are included or were run to test this PR.
+    * Anything else that will help reviewers understand
     the scope and purpose of this PR.
 
 * If you have **breaking changes** in your PR,

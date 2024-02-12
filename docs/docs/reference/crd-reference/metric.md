@@ -47,14 +47,14 @@ spec:
    Must be set to `KeptnMetric`.
 
 * **metadata**
-     * **name** -- Unique name of this metric.
+    * **name** -- Unique name of this metric.
        Names must comply with the
        [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
        specification.
-     * **namespace** -- Namespace of the application using this metric.
+    * **namespace** -- Namespace of the application using this metric.
 
 * **spec**
-     * **provider.name** (required) --
+    * **provider.name** (required) --
        Name of this instance of the data source
        from which the metric is collected.
        This value must match the value of the `metadata.name` field
@@ -68,28 +68,28 @@ spec:
           and `prod-prometheus` as the name of the Prometheus server
           that monitors the production deployment.
 
-     * **query** (required) -- String in the provider-specific query language,
+    * **query** (required) -- String in the provider-specific query language,
        used to obtain a metric.
 
-     * **fetchIntervalSeconds** (required) --
+    * **fetchIntervalSeconds** (required) --
        Number of seconds between updates of the metric.
-     * **range**
-          * **interval** -- Timeframe for which the metric is queried.
+    * **range**
+        * **interval** -- Timeframe for which the metric is queried.
             Defaults to 5m.
-          * **step** -- A string that represents
+        * **step** -- A string that represents
             the query resolution step width for the data query
-          * **aggregation** --  type of aggregation function
+        * **aggregation** --  type of aggregation function
             to be applied to the data.
             Valid values are `p90`, `p95`, `p99`,
             `max`, `min`, `avg`, `median`.
-          * **storedResults** -- Maximum number of past results
+        * **storedResults** -- Maximum number of past results
             to store in the status of a `KeptnMetric` resource.
             This can be set to an integer that is less than or equal to 255.
             When set to a value greater than 1,
             the user can see a slice of this number of metrics
             in the`status.intervalResults` field.
 
-     * **status** --
+    * **status** --
        Keptn fills in this information when the metric is evaluated.
        It always records the time the metric was last evaluated.
        If the evaluation is successful,
@@ -103,13 +103,13 @@ spec:
           is set to a value greater than 1 and no larger than 255,
           Keptn stores that number of metrics.
 
-          * **value** -- A string that represents the resulting value
+        * **value** -- A string that represents the resulting value
             in human-readable format.
-          * **rawValue** -- An array that represents the resulting value
+        * **rawValue** -- An array that represents the resulting value
             in raw format.
-          * **lastUpdated** -- Time when the status data was last updated.
-          * **errMsg** -- Error details if the query could not be evaluated.
-          * **intervalResults** -- Slice of all interval results.
+        * **lastUpdated** -- Time when the status data was last updated.
+        * **errMsg** -- Error details if the query could not be evaluated.
+        * **intervalResults** -- Slice of all interval results.
             Up to 255 results can be stored,
             determined by the value of the `spec.range` field.
 

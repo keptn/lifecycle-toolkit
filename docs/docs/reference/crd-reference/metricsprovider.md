@@ -43,7 +43,7 @@ spec:
    Must be set to KeptnMetricsProvider
 
 * **metadata**
-     * **name** -- Unique name of this provider,
+    * **name** -- Unique name of this provider,
        used to reference the provider for the
        [KeptnEvaluationDefinition](evaluationdefinition.md)
        and [KeptnMetric](metric.md) resources.
@@ -58,17 +58,16 @@ spec:
           and `prod-dynatrace` for the Dynatrace instance
           that monitors the production deployment.
 
-     * **namespace** -- Namespace where this provider is used.
+    * **namespace** -- Namespace where this provider is used.
 
 * **spec**
 
-     * **type** (required) -- The type of data provider for this instance
-     * **targetServer** (required) -- URL of the data provider, enclosed in double quotes
-     * **secretKeyRef**
-          * **name:** -- Name of the Secret used by the provider
-          * **key:** -- Key of the Secret from which to select
-          * **optional** -- Specify whether the Secret or its key must be defined
-
+    * **type** (required) -- The type of data provider for this instance
+    * **targetServer** (required) -- URL of the data provider, enclosed in double quotes
+    * **secretKeyRef**
+        * **name:** -- Name of the Secret used by the provider
+        * **key:** -- Key of the Secret from which to select
+        * **optional** -- Specify whether the Secret or its key must be defined
 
 ## Usage
 

@@ -33,7 +33,7 @@ spec:
    Must be set to `KeptnEvaluationDefinition`
 
 * **metadata**
-  * **name** -- Unique name of this evaluation
+    * **name** -- Unique name of this evaluation
     such as `pre-deploy-eval` or `post-deploy-resource-eval`.
     Names must comply with the
     [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
@@ -41,20 +41,20 @@ spec:
 
 * **spec**
 
-  * **objectives** (required) -- define the evaluations to be performed.
+    * **objectives** (required) -- define the evaluations to be performed.
      Each objective is expressed as a `keptnMetricRef`
      and an `evaluationTarget` value.
 
-    * **keptnMetricRef** (required) -- A reference to the
+        * **keptnMetricRef** (required) -- A reference to the
       [KeptnMetric](metric.md) object
 
-      * **name** (required) -- Name of the referenced
+            * **name** (required) -- Name of the referenced
         [KeptnMetric](metric.md) object
 
-      * **namespace** -- Name of the referenced
+            * **namespace** -- Name of the referenced
         [KeptnMetric](metric.md) object
 
-    * **evaluationTarget** (required) -- Desired value of the query,
+        * **evaluationTarget** (required) -- Desired value of the query,
        expressed as an arithmetic formula,
        usually less than (`<`) or greater than (`>`)
        This is used to define success or failure criteria

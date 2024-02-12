@@ -32,10 +32,10 @@ and
 [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 with either Keptn or Kubernetes keys.
 
-  - [Basic annotations](#basic-annotations)
+    - [Basic annotations](#basic-annotations)
     or labels
     are required for all Keptn features except Keptn metrics.
-  - [Pre- and post-deployment checks](#basic-annotations)
+    - [Pre- and post-deployment checks](#basic-annotations)
     are required only for the Release lifecycle management feature.
 
 Keptn uses these annotations to the Kubernetes workloads to create the
@@ -152,17 +152,17 @@ Both annotations and labels are can be attached to Kubernetes objects.
 Some key differences between the two:
 
 - Annotations
-  - Are not used to identify and select objects
-  - Can contain up to 262144 chars
-  - Metadata in an annotation can be small or large,
+    - Are not used to identify and select objects
+    - Can contain up to 262144 chars
+    - Metadata in an annotation can be small or large,
     structured or unstructured,
     and can include characters not permitted by labels
 
 - Labels
-  - Can be used to select objects
+    - Can be used to select objects
     and to find collections of objects that satisfy certain conditions
-  - Can contain up to 63 chars
-  - Are appropriate for identifying attributes of objects
+    - Can contain up to 63 chars
+    - Are appropriate for identifying attributes of objects
     that are meaningful and relevant to users
     but do not directly imply semantics to the core system
 

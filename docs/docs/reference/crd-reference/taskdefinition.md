@@ -34,7 +34,7 @@ differentiated by the `spec` section:
   [Examples for a container-runtime runner](#examples-for-a-container-runtime-runner).
 * Pre-defined containers
 
-  * Use the pre-defined `deno-runtime` runner
+    * Use the pre-defined `deno-runtime` runner
     to define tasks using
     [Deno](https://deno.com/)
     scripts,
@@ -46,7 +46,7 @@ differentiated by the `spec` section:
     [Synopsis for Deno-runtime container](#deno-runtime)
     and
     [Deno-runtime examples](#examples-for-deno-runtime-runner).
-  * Use the pre-defined `python-runtime` runner
+    * Use the pre-defined `python-runtime` runner
     to define your task using
     [Python 3](https://www.python.org/).
     See
@@ -80,28 +80,28 @@ spec:
    Must be set to `KeptnTaskDefinition`
 
 * **metadata**
-     * **name** -- Unique name of this task or container.
+    * **name** -- Unique name of this task or container.
        This is the name used to insert this task or container
        into the `preDeployment` or `postDeployment` list.
        Names must comply with the
        [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
        specification.
 * **spec**
-     * **deno | python | container** (required) -- Define the container type
+    * **deno | python | container** (required) -- Define the container type
        to use for this task.
        Each task can use one type of runner,
        identified by this field:
 
-          * **deno** -- Use a `deno-runtime` runner
+        * **deno** -- Use a `deno-runtime` runner
             and code the functionality in Deno script,
             which is similar to JavaScript and Typescript.
             See
             [Synopsis for deno-runtime container](#deno-runtime)
-          * **python** -- Use a `python-runtime` function
+        * **python** -- Use a `python-runtime` function
             and code the functionality in Python 3.
             See
             [Synopsis for python-runtime runner](#python-runtime)
-          * **container** -- Use the runner defined
+        * **container** -- Use the runner defined
             for the `container-runtime` container.
             This is a standard Kubernetes container
             for which you define the image, runner, runtime parameters, etc.
@@ -109,10 +109,10 @@ spec:
             See
             [Synopsis for container-runtime container](#synopsis-for-container-runtime).
 
-     * **retries** -- specifies the number of times
+    * **retries** -- specifies the number of times
        a job executing the `KeptnTaskDefinition`
        should be restarted if an attempt is unsuccessful.
-     * **timeout** -- specifies the maximum time
+    * **timeout** -- specifies the maximum time
        to wait for the task to be completed successfully.
        The value supplied should specify the unit of measurement;
        for example, `5s` indicates 5 seconds and `5m` indicates 5 minutes.
@@ -148,16 +148,16 @@ spec:
 ### Fields used only for container-runtime
 
 * **spec**
-     * **container** -- Container definition.
-          * **name** -- Name of the container that will run,
+    * **container** -- Container definition.
+        * **name** -- Name of the container that will run,
             which is not the same as the `metadata.name` field
             that is used in the `KeptnTaskDefinition` resource.
-          * **image** -- name of the image you defined according to
+        * **image** -- name of the image you defined according to
             [image reference](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#image)
             and
             [image concepts](https://kubernetes.io/docs/concepts/containers/images/)
             and pushed to a registry
-          * **other fields** -- The full list of valid fields is available at
+        * **other fields** -- The full list of valid fields is available at
             [ContainerSpec](../api-reference/lifecycle/v1beta1/index.md#containerspec),
             with additional information in the Kubernetes
             [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
@@ -221,7 +221,7 @@ spec:
 ### Fields for predefined containers
 
 * **spec** -- choose either `deno` or `python`
-     * **deno | python**
+    * **deno | python**
         * **deno** -- Specify that the task uses the `deno-runtime`
           and is expressed as a [Deno](https://deno.com/) script.
           Refer to [deno runtime](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/deno-runtime)
@@ -232,7 +232,7 @@ spec:
               used to call the executables.
               Only one of these can be specified per `KeptnTaskDefinition` resource:
 
-                 * **inline** - Include the actual executable code to execute.
+                * **inline** - Include the actual executable code to execute.
                    You can code a sequence of executables here
                    that need to be run in order
                    as long as they are executables that are part of the lifecycle workflow.
@@ -240,13 +240,13 @@ spec:
                    should be handled by the pipeline engine tools being used
                    such as Jenkins, Argo Workflows, Flux, and Tekton.
 
-                   * **deno example:**
+                    * **deno example:**
                        [Example 1: inline script for a Deno script](#example-1-inline-script-for-a-deno-script)
 
-                   * **python example:**
+                    * **python example:**
                        [Example 1: inline code for a python-runtime runner](#example-1-inline-code-for-a-python-runtime-runner)
 
-                   * **httpRef** - Specify a script to be executed at runtime
+                    * **httpRef** - Specify a script to be executed at runtime
                      from the remote webserver that is specified.
 
                      This syntax allows you to call a general function
@@ -259,12 +259,12 @@ spec:
                      Only one script can be executed.
                      Any other scripts listed here are silently ignored.
 
-                     * **deno example:**
+                        * **deno example:**
                        [Example 2: httpRef script for a Deno script](#example-2-httpref-script-for-a-deno-script)
-                     * **python example:**
+                        * **python example:**
                        [Example 2: httpRef for a python-runtime runner](#example-2-httpref-for-a-python-runtime-runner)
 
-                 * **functionRef** -- Execute another `KeptnTaskDefinition` resources.
+                * **functionRef** -- Execute another `KeptnTaskDefinition` resources.
                      Populate this field with the value(s) of the `metadata.name` field
                      for each `KeptnDefinitionTask` to be called.
 
@@ -289,18 +289,18 @@ spec:
                      Any calls to additional `KeptnTaskDefinition` resources
                      are silently ignored.
 
-                     * **deno example:**
+                    * **deno example:**
                        [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
-                     * **python example:**
+                    * **python example:**
                        [Example 3: functionRef for a python-runtime runner](#example-3-functionref-for-a-python-runtime-runner)
 
-                 * **ConfigMapRef** - Specify the name of a
+                * **ConfigMapRef** - Specify the name of a
                        [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
                        resource that contains the function to be executed.
 
-                     * **deno example:**
+                    * **deno example:**
                          [Example 5: ConfigMap for a Deno script](#example-5-configmap-for-a-deno-script)
-                     * **python example:**
+                    * **python example:**
                          [Example 4: ConfigMapRef for a python-runtime runner](#example-4-configmapref-for-a-python-runtime-runner)
 
             * **parameters** - An optional field to supply input parameters to a function.
@@ -312,9 +312,9 @@ spec:
               [Parameterized functions](../../guides/tasks.md#parameterized-functions)
               for more information.
 
-                 * **deno example:**
+                * **deno example:**
                    [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
-                 * **python example:**
+                * **python example:**
                    [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
 
             * **secureParameters** -- An optional field used to pass a Kubernetes secret.
@@ -328,9 +328,9 @@ spec:
               See [Create secret text](../../guides/tasks.md#create-secret-text)
               for details.
 
-              * **deno example:**
+                * **deno example:**
                 [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
-              * **python example:**
+                * **python example:**
                 [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
 
 ## Usage

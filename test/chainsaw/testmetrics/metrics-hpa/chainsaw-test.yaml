@@ -33,6 +33,6 @@ spec:
         - describe:
             resource: keptnmetricsprovider
             name: dynatrace
-        - pods:
+        - describe:
             resource: pods
             selector: app=podtato-head

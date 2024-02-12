@@ -18,8 +18,6 @@ spec:
       catch:
         - podLogs:
             selector: app=daemonset
-        - script:
-            content: kubectl logs -l app=daemonset -n $NAMESPACE
     - name: step-01
       try:
         - apply:

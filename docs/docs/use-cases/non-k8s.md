@@ -206,6 +206,6 @@ To implement a Keptn analysis for your deployment:
 See the
 [Analysis](../guides/slo.md)
 guide and the
-[Analyzing Application Performance with Keptn](https://keptn.sh/latest/blog/2023/12/19/analyzing-application-performance-with-keptn/)
+[Analyzing Application Performance with Keptn](https://keptn.sh/stable/blog/2023/12/19/analyzing-application-performance-with-keptn/)
 blog
 for more details and examples for the Keptn analysis feature.

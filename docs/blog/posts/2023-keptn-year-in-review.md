@@ -29,7 +29,7 @@ of Keptn, or migrating, we recommend the following articles:
 
 - [September 2023: Keptn Lifecycle Toolkit is now Keptn!](https://medium.com/keptn/keptn-lifecycle-toolkit-is-now-keptn-e0812217bf46)
 - [July 2022: Keptn reaches incubating status in CNCF!](https://medium.com/keptn/keptn-reaches-the-incubating-status-in-the-cncf-67291e2dda7)
-- [Migrating to Keptn](https://keptn.sh/latest/docs/migrate/keptn/)
+- [Migrating to Keptn](https://keptn.sh/stable/docs/migrate/keptn/)
 
 ## Latest Release
 
@@ -92,7 +92,7 @@ At the end of 2023 we transitioned away from our own Keptn Slack workspace to
 [CNCF Slack](http://cloud-native.slack.com/)
 utilizing the [#keptn channel](https://cloud-native.slack.com/messages/keptn/) to
 better align with the Cloud Native ecosystem & other CNCF projects.
-We also saw a [new website](https://keptn.sh/) and [docs](https://keptn.sh/latest/docs/)
+We also saw a [new website](https://keptn.sh/) and [docs](https://keptn.sh/stable/docs/)
 (the new [docs folder in GitHub](https://github.com/keptn/lifecycle-toolkit/tree/main/docs)
 has been updated as well) and look forward to major improvements to both in 2024.
 

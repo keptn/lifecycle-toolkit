@@ -16,15 +16,13 @@ on:
         default: allowed_ns_off
 env:
   GO_VERSION: "~1.20"
-  # renovate: datasource=github-tags depName=kudobuilder/kuttl
-  KUTTL_VERSION: "v0.15.0"
 defaults:
   run:
     shell: bash
 
 jobs:
   run-integration-test:
-    name: Run Integration Tests
+    name: Run Chainsaw Tests
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
@@ -40,13 +38,8 @@ jobs:
       - name: Install and expose Prometheus
         uses: ./.github/actions/deploy-prometheus-on-cluster
 
-      - name: Download KUTTL
-        env:
-          BASE_URL: "https://github.com/kudobuilder/kuttl/releases"
-        run: |
-          curl -fL "${BASE_URL}/download/${{ env.KUTTL_VERSION }}/kubectl-kuttl_${KUTTL_VERSION#v}_linux_x86_64" -o kubectl-kuttl
-          chmod +x kubectl-kuttl
-          mv kubectl-kuttl /usr/local/bin
+      - name: Install Chainsaw
+        uses: kyverno/action-install-chainsaw@07b6c986572f2abaf6647c85d37cbecfddc4a6ab # v0.1.3
 
       - name: Run Scheduling Gates Integration Tests
         if: inputs.scheduling-gates == 'gates_on' && inputs.allowed-namespaces == 'allowed_ns_off'
@@ -73,51 +66,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: logs-integration-tests-${{ inputs.scheduling-gates }}-${{ inputs.allowed-namespaces }}
-          path: .github/scripts/logs
-
-  run-chainsaw-test:
-    name: Run Chainsaw Tests
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-
-      - name: Setup cluster
-        uses: ./.github/actions/deploy-keptn-on-cluster
-        with:
-          runtime_tag: ${{ inputs.runtime_tag }}
-          scheduling-gates: ${{ inputs.scheduling-gates }}
-          allowed-namespaces: ${{ inputs.allowed-namespaces }}
-
-      - name: Install and expose Prometheus
-        uses: ./.github/actions/deploy-prometheus-on-cluster
-
-      - name: Install Chainsaw
-        uses: kyverno/action-install-chainsaw@56be3cb4ec65a987b6ef4d7ab3a55ee17760a57c # v0.1.2
-
-      - name: (Chainsaw) Run Scheduling Gates Integration Tests
-        if: inputs.scheduling-gates == 'gates_on' && inputs.allowed-namespaces == 'allowed_ns_off'
-        working-directory: .
-        run: make chainsaw-integration-test-scheduling-gates
-
-      - name: (Chainsaw) Run Allowed namespaces Integration Tests
-        if: inputs.allowed-namespaces == 'allowed_ns_on'
-        working-directory: .
-        run: make chainsaw-integration-test-allowed-namespaces
-
-      - name: (Chainsaw) Run Integration Tests
-        if: inputs.allowed-namespaces == 'allowed_ns_off'
-        working-directory: .
-        run: make chainsaw-integration-test
-
-      - name: Create reports
-        if: failure()
-        working-directory: ./.github/scripts
-        run: ./create-reports-full.sh
-
-      - name: Upload cluster logs
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: logs-chainsaw-integration-tests-${{ inputs.scheduling-gates }}-${{ inputs.allowed-namespaces }}
           path: .github/scripts/logs

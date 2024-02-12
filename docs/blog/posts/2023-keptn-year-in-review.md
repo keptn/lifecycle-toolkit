@@ -20,6 +20,7 @@ opinionated way of delivering Kubernetes apps and it was important for us to imp
 “big pillars” of Keptn v1: supporting the metrics component of the Keptn v1 quality gates feature,
 observability (new), and deployments by defining KeptnTasks & Evaluations to execute any container
 the user provides and extending deployments (job executor service in Keptn v1).
+<!-- more -->
 
 We’re happy to report that Keptn has now reached a general level of maturity and stabilization that
 we now have beta APIs.

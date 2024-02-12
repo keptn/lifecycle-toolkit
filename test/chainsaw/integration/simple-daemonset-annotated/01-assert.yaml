@@ -27,3 +27,11 @@ status:
     - status: Succeeded
       definitionName: pre-deployment-hello
   status: Succeeded
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: daemonset
+status:
+  phase: Running

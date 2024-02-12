@@ -42,10 +42,11 @@ spec:
     - name: step-03
       try:
         - script:
+            # yamllint disable rule:line-length
             content: |
-              # yamllint disable-line rule:line-length
               METRIC_VALUE=$(kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/${NAMESPACE}/keptnmetrics.metrics.sh/podtato-head/podtato-head")
               echo $METRIC_VALUE | jq '.items | length'
+            # yamllint enable rule:line-length
             check:
               (contains($stdout, '1')): true
     - name: step-04

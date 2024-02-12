@@ -81,13 +81,13 @@ that are relevant only to documentation.
     page
     ```
 
-  * Always build the documentation locally to check the formatting
-    and verify that all links are working properly.
-    See [Build Documentation Locally](./local-building.md)
-    for details.
+* Always build the documentation locally to check the formatting
+  and verify that all links are working properly.
+  See [Build Documentation Locally](./local-building.md)
+  for details.
 
-  * Always run the following to fix most markdown issues in your PR
-    and identify issues that can not be fixed automatically:
+* Always run the following to fix most markdown issues in your PR
+  and identify issues that can not be fixed automatically:
 
     ```shell
     make markdownlint-fix

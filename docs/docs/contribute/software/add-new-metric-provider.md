@@ -13,7 +13,7 @@ In this guide, we will create a placeholder provider. The following steps can be
 
 3. **Implement the Provider:** Create your own new folder inside the
 [metrics-operator/controllers/common/providers](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers)
- matching the new service name: placeholder and a new Go package for the placeholder provider.
+ matching the new provider name: in our case placeholder and a new Go package for the placeholder provider.
   This package should contain
  a struct that implements the `KeptnSLIProvider` interface.
   To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the following functions.

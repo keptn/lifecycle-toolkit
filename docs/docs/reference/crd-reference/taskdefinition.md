@@ -35,24 +35,24 @@ differentiated by the `spec` section:
 * Pre-defined containers
 
     * Use the pre-defined `deno-runtime` runner
-    to define tasks using
-    [Deno](https://deno.com/)
-    scripts,
-    which use a syntax similar to JavaScript and Typescript,
-    with a few limitations.
-    You can use this to specify simple actions
-    without having to define a full container.
-    See
-    [Synopsis for Deno-runtime container](#deno-runtime)
-    and
-    [Deno-runtime examples](#examples-for-deno-runtime-runner).
+      to define tasks using
+      [Deno](https://deno.com/)
+      scripts,
+      which use a syntax similar to JavaScript and Typescript,
+      with a few limitations.
+      You can use this to specify simple actions
+      without having to define a full container.
+      See
+      [Synopsis for Deno-runtime container](#deno-runtime)
+      and
+      [Deno-runtime examples](#examples-for-deno-runtime-runner).
     * Use the pre-defined `python-runtime` runner
-    to define your task using
-    [Python 3](https://www.python.org/).
-    See
-    [Synopsis for python-runtime runner](#python-runtime)
-    and
-    [Examples for a python-runtime runner](#examples-for-a-python-runtime-runner).
+      to define your task using
+      [Python 3](https://www.python.org/).
+      See
+      [Synopsis for python-runtime runner](#python-runtime)
+      and
+      [Examples for a python-runtime runner](#examples-for-a-python-runtime-runner).
 
 ## Synopsis for all runners
 
@@ -75,49 +75,49 @@ spec:
 ### Fields used for all containers
 
 * **apiVersion** -- API version being used.
-`
+  `
 * **kind** -- Resource type.
-   Must be set to `KeptnTaskDefinition`
+  Must be set to `KeptnTaskDefinition`
 
 * **metadata**
     * **name** -- Unique name of this task or container.
-       This is the name used to insert this task or container
-       into the `preDeployment` or `postDeployment` list.
-       Names must comply with the
-       [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-       specification.
+      This is the name used to insert this task or container
+      into the `preDeployment` or `postDeployment` list.
+      Names must comply with the
+      [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+      specification.
 * **spec**
     * **deno | python | container** (required) -- Define the container type
-       to use for this task.
-       Each task can use one type of runner,
-       identified by this field:
+      to use for this task.
+      Each task can use one type of runner,
+      identified by this field:
 
         * **deno** -- Use a `deno-runtime` runner
-            and code the functionality in Deno script,
-            which is similar to JavaScript and Typescript.
-            See
-            [Synopsis for deno-runtime container](#deno-runtime)
+          and code the functionality in Deno script,
+          which is similar to JavaScript and Typescript.
+          See
+          [Synopsis for deno-runtime container](#deno-runtime)
         * **python** -- Use a `python-runtime` function
-            and code the functionality in Python 3.
-            See
-            [Synopsis for python-runtime runner](#python-runtime)
+          and code the functionality in Python 3.
+          See
+          [Synopsis for python-runtime runner](#python-runtime)
         * **container** -- Use the runner defined
-            for the `container-runtime` container.
-            This is a standard Kubernetes container
-            for which you define the image, runner, runtime parameters, etc.
-            and code the functionality to match the container you define.
-            See
-            [Synopsis for container-runtime container](#synopsis-for-container-runtime).
+          for the `container-runtime` container.
+          This is a standard Kubernetes container
+          for which you define the image, runner, runtime parameters, etc.
+          and code the functionality to match the container you define.
+          See
+          [Synopsis for container-runtime container](#synopsis-for-container-runtime).
 
     * **retries** -- specifies the number of times
-       a job executing the `KeptnTaskDefinition`
-       should be restarted if an attempt is unsuccessful.
+      a job executing the `KeptnTaskDefinition`
+      should be restarted if an attempt is unsuccessful.
     * **timeout** -- specifies the maximum time
-       to wait for the task to be completed successfully.
-       The value supplied should specify the unit of measurement;
-       for example, `5s` indicates 5 seconds and `5m` indicates 5 minutes.
-       If the task does not complete successfully within this time frame,
-       it is considered to be failed.
+      to wait for the task to be completed successfully.
+      The value supplied should specify the unit of measurement;
+      for example, `5s` indicates 5 seconds and `5m` indicates 5 minutes.
+      If the task does not complete successfully within this time frame,
+      it is considered to be failed.
 
 ## Synopsis for container-runtime
 
@@ -150,18 +150,18 @@ spec:
 * **spec**
     * **container** -- Container definition.
         * **name** -- Name of the container that will run,
-            which is not the same as the `metadata.name` field
-            that is used in the `KeptnTaskDefinition` resource.
+          which is not the same as the `metadata.name` field
+          that is used in the `KeptnTaskDefinition` resource.
         * **image** -- name of the image you defined according to
-            [image reference](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#image)
-            and
-            [image concepts](https://kubernetes.io/docs/concepts/containers/images/)
-            and pushed to a registry
+          [image reference](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#image)
+          and
+          [image concepts](https://kubernetes.io/docs/concepts/containers/images/)
+          and pushed to a registry
         * **other fields** -- The full list of valid fields is available at
-            [ContainerSpec](../api-reference/lifecycle/v1beta1/index.md#containerspec),
-            with additional information in the Kubernetes
-            [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
-            spec documentation.
+          [ContainerSpec](../api-reference/lifecycle/v1beta1/index.md#containerspec),
+          with additional information in the Kubernetes
+          [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
+          spec documentation.
 
 ## Synopsis for predefined containers
 
@@ -209,13 +209,13 @@ kind: KeptnTaskDefinition
 metadata:
   name: <task-name>
 spec:
-    python:
-      inline | httpRef | functionRef | ConfigMapRef
-      parameters:
-        map:
-          textMessage: "This is my configuration"
-      secureParameters:
-        secret: <secret-name>
+  python:
+    inline | httpRef | functionRef | ConfigMapRef
+    parameters:
+      map:
+        textMessage: "This is my configuration"
+    secureParameters:
+      secret: <secret-name>
 ```
 
 ### Fields for predefined containers
@@ -233,75 +233,75 @@ spec:
               Only one of these can be specified per `KeptnTaskDefinition` resource:
 
                 * **inline** - Include the actual executable code to execute.
-                   You can code a sequence of executables here
-                   that need to be run in order
-                   as long as they are executables that are part of the lifecycle workflow.
-                   Task sequences that are not part of the lifecycle workflow
-                   should be handled by the pipeline engine tools being used
-                   such as Jenkins, Argo Workflows, Flux, and Tekton.
+                  You can code a sequence of executables here
+                  that need to be run in order
+                  as long as they are executables that are part of the lifecycle workflow.
+                  Task sequences that are not part of the lifecycle workflow
+                  should be handled by the pipeline engine tools being used
+                  such as Jenkins, Argo Workflows, Flux, and Tekton.
 
                     * **deno example:**
-                       [Example 1: inline script for a Deno script](#example-1-inline-script-for-a-deno-script)
+                      [Example 1: inline script for a Deno script](#example-1-inline-script-for-a-deno-script)
 
                     * **python example:**
-                       [Example 1: inline code for a python-runtime runner](#example-1-inline-code-for-a-python-runtime-runner)
+                      [Example 1: inline code for a python-runtime runner](#example-1-inline-code-for-a-python-runtime-runner)
 
                     * **httpRef** - Specify a script to be executed at runtime
-                     from the remote webserver that is specified.
+                      from the remote webserver that is specified.
 
-                     This syntax allows you to call a general function
-                     that is used in multiple places,
-                     possibly with different parameters
-                     that are provided in the calling `KeptnTaskDefinition` resource.
-                     Another `KeptnTaskDefinition` resource could call this same script
-                     but with different parameters.
+                  This syntax allows you to call a general function
+                  that is used in multiple places,
+                  possibly with different parameters
+                  that are provided in the calling `KeptnTaskDefinition` resource.
+                  Another `KeptnTaskDefinition` resource could call this same script
+                  but with different parameters.
 
-                     Only one script can be executed.
-                     Any other scripts listed here are silently ignored.
+                  Only one script can be executed.
+                  Any other scripts listed here are silently ignored.
 
-                        * **deno example:**
-                       [Example 2: httpRef script for a Deno script](#example-2-httpref-script-for-a-deno-script)
-                        * **python example:**
-                       [Example 2: httpRef for a python-runtime runner](#example-2-httpref-for-a-python-runtime-runner)
+                    * **deno example:**
+                    [Example 2: httpRef script for a Deno script](#example-2-httpref-script-for-a-deno-script)
+                    * **python example:**
+                    [Example 2: httpRef for a python-runtime runner](#example-2-httpref-for-a-python-runtime-runner)
 
                 * **functionRef** -- Execute another `KeptnTaskDefinition` resources.
-                     Populate this field with the value(s) of the `metadata.name` field
-                     for each `KeptnDefinitionTask` to be called.
+                  Populate this field with the value(s) of the `metadata.name` field
+                  for each `KeptnDefinitionTask` to be called.
 
-                     Like the `httpRef` syntax,this is commonly used
-                     to call a general function that is used in multiple places,
-                     possibly with different parameters
-                     that are set in the calling `KeptnTaskDefinition` resource.
+                  Like the `httpRef` syntax,this is commonly used
+                  to call a general function that is used in multiple places,
+                  possibly with different parameters
+                  that are set in the calling `KeptnTaskDefinition` resource.
 
-                     To be able to run the pre/post-deployment task, you must create
-                     the `KeptnAppContext` resource and link the `KeptnTaskDefinition`
-                     in the pre/post-deployment section of `KeptnAppContext`.
+                  To be able to run the pre/post-deployment task, you must create
+                  the `KeptnAppContext` resource and link the `KeptnTaskDefinition`
+                  in the pre/post-deployment section of `KeptnAppContext`.
 
-                     The `KeptnTaskDefinition` called with `functionref`
-                     is the `parent task` whose runner is used for the execution
-                     even if it is not the same runner defined in the
-                     calling `KeptnTaskDefinition`.
+                  The `KeptnTaskDefinition` called with `functionref`
+                  is the `parent task` whose runner is used for the execution
+                  even if it is not the same runner defined in the
+                  calling `KeptnTaskDefinition`.
 
-                     Only one `KeptnTaskDefinition` resources can be listed
-                     with the `functionRef` syntax
-                     although that `KeptnTaskDefinition` can call multipe
-                     executables (programs, functions, and scripts)..
-                     Any calls to additional `KeptnTaskDefinition` resources
-                     are silently ignored.
+                  Only one `KeptnTaskDefinition` resources can be listed
+                  with the `functionRef` syntax
+                  although that `KeptnTaskDefinition` can call multipe
+                  executables (programs, functions, and scripts)..
+                  Any calls to additional `KeptnTaskDefinition` resources
+                  are silently ignored.
 
                     * **deno example:**
-                       [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
+                      [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
                     * **python example:**
-                       [Example 3: functionRef for a python-runtime runner](#example-3-functionref-for-a-python-runtime-runner)
+                      [Example 3: functionRef for a python-runtime runner](#example-3-functionref-for-a-python-runtime-runner)
 
                 * **ConfigMapRef** - Specify the name of a
-                       [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
-                       resource that contains the function to be executed.
+                  [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
+                  resource that contains the function to be executed.
 
                     * **deno example:**
-                         [Example 5: ConfigMap for a Deno script](#example-5-configmap-for-a-deno-script)
+                      [Example 5: ConfigMap for a Deno script](#example-5-configmap-for-a-deno-script)
                     * **python example:**
-                         [Example 4: ConfigMapRef for a python-runtime runner](#example-4-configmapref-for-a-python-runtime-runner)
+                      [Example 4: ConfigMapRef for a python-runtime runner](#example-4-configmapref-for-a-python-runtime-runner)
 
             * **parameters** - An optional field to supply input parameters to a function.
               Keptn passes the values defined inside the `map` field
@@ -313,9 +313,9 @@ spec:
               for more information.
 
                 * **deno example:**
-                   [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
+                  [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
                 * **python example:**
-                   [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
+                  [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
 
             * **secureParameters** -- An optional field used to pass a Kubernetes secret.
               The `secret` value is the Kubernetes secret name
@@ -329,9 +329,9 @@ spec:
               for details.
 
                 * **deno example:**
-                [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
+                  [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
                 * **python example:**
-                [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
+                  [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
 
 ## Usage
 
@@ -381,7 +381,7 @@ for more information.
 ## Examples for a container-runtime runner
 
 For an example of a `KeptnTaskDefinition` that defines a custom container.
- see
+see
 [container-task.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/container-task.yaml).
 This is a trivial example that just runs `busybox`,
 then spawns a shell and runs the `sleep 30` command:
@@ -592,7 +592,8 @@ which prints the help message for the python3 interpreter:
 
 ## More examples
 
-See the [lifecycle-operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/config/samples/function_execution)
+See
+the [lifecycle-operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/config/samples/function_execution)
 directory for more example `KeptnTaskDefinition` YAML files.
 
 ## Files

@@ -60,13 +60,13 @@ spec:
        This value must match the value of the `metadata.name` field
        of the corresponding [KeptnMetricsProvider](metricsprovider.md) CRD.
 
-          Assigning your own name to the provider
-          rather than just the type of provider
-          enables you to support multiple instances of a data provider.
-          For example, you might have `dev-prometheus`
-          as the name of the Prometheus server that monitors the dev deployment
-          and `prod-prometheus` as the name of the Prometheus server
-          that monitors the production deployment.
+       Assigning your own name to the provider
+       rather than just the type of provider
+       enables you to support multiple instances of a data provider.
+       For example, you might have `dev-prometheus`
+       as the name of the Prometheus server that monitors the dev deployment
+       and `prod-prometheus` as the name of the Prometheus server
+       that monitors the production deployment.
 
     * **query** (required) -- String in the provider-specific query language,
        used to obtain a metric.
@@ -98,10 +98,10 @@ spec:
        this stores error details that you can use to understand the problem
        such as a forbidden code.
 
-          By default, Keptn stores the most recent metric that was run.
-          If the value of the `spec.range.storedResults` field
-          is set to a value greater than 1 and no larger than 255,
-          Keptn stores that number of metrics.
+       By default, Keptn stores the most recent metric that was run.
+       If the value of the `spec.range.storedResults` field
+       is set to a value greater than 1 and no larger than 255,
+       Keptn stores that number of metrics.
 
         * **value** -- A string that represents the resulting value
             in human-readable format.

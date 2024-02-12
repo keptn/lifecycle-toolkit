@@ -29,70 +29,70 @@ spec:
   metadata:
     <custom-attributes>
   spanLinks:
-  - "<list of links>"
+    - "<list of links>"
   preDeploymentTasks:
-  - <list of tasks>
+    - <list of tasks>
   postDeploymentTasks:
-  - <list of tasks>
+    - <list of tasks>
   preDeploymentEvaluations:
-  - <list of evaluations>
+    - <list of evaluations>
   postDeploymentEvaluations:
-  - <list of evaluations>
+    - <list of evaluations>
 ```
 
 ## Fields
 
 - **apiVersion** -- API version being used
-   Must be set to `lifecycle.keptn.sh/v1beta1`
+  Must be set to `lifecycle.keptn.sh/v1beta1`
 - **kind** -- Resource type
-   Must be set to `KeptnAppContext`
+  Must be set to `KeptnAppContext`
 
 - **metadata**
     - **name** -- Unique name of this `KeptnAppContext` resource.
-       Names must comply with the
-       [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-       specification
-       and match the `name` given to the associated `KeptnApp` resource.
+      Names must comply with the
+      [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+      specification
+      and match the `name` given to the associated `KeptnApp` resource.
     - **namespace** -- Namespace of this application.
-       This must match the `namespace` given to
-       the associated `KeptnApp` resource.
+      This must match the `namespace` given to
+      the associated `KeptnApp` resource.
 - **spec**
     - **metadata** -- list of key-value pairs
-       that are propagated to the application trace as attributes.
-       For example, the following lines add the `commit-id`
-       and `author` information to the `KEPTN_CONTEXT`
-       of the workload or `KeptnApp` where it is specified:
+      that are propagated to the application trace as attributes.
+      For example, the following lines add the `commit-id`
+      and `author` information to the `KEPTN_CONTEXT`
+      of the workload or `KeptnApp` where it is specified:
 
-          ```yaml
-          spec:
-            metadata:
-              commit-id: "1234"
-              author: "myUser"
-          ```
+      ```yaml
+      spec:
+        metadata:
+          commit-id: "1234"
+          author: "myUser"
+      ```
 
-       For more information, see
-       [Context metadata](../../guides/metadata.md).
+      For more information, see
+      [Context metadata](../../guides/metadata.md).
 
     - **spanLinks** -- List of OpenTelemetry span links
-       that connect multiple traces.
-       For example, this can be used to connect
-       deployments of the same application
-       through different stages.
-       You can retrieve the value to use
-       from the JSON representation of the trace in Jaeger.
-       The structure of this is:
+      that connect multiple traces.
+      For example, this can be used to connect
+      deployments of the same application
+      through different stages.
+      You can retrieve the value to use
+      from the JSON representation of the trace in Jaeger.
+      The structure of this is:
 
-          ```yaml
-          00-<trace-id>-<span-id>-01
-          ```
+      ```yaml
+      00-<trace-id>-<span-id>-01
+      ```
 
-          After you add this field to your `KeptnAppContext` manifest,
-          you must increment the `revision` number
-          of the corresponding `KeptnApp` resource
-          and apply the manifest to store the information in the traces.
+      After you add this field to your `KeptnAppContext` manifest,
+      you must increment the `revision` number
+      of the corresponding `KeptnApp` resource
+      and apply the manifest to store the information in the traces.
 
-          For more information, see
-          [Advanced tracing configurations in Keptn Linking traces](../../guides/otel.md#advanced-tracing-configurations-in-keptn-linking-traces)
+      For more information, see
+      [Advanced tracing configurations in Keptn Linking traces](../../guides/otel.md#advanced-tracing-configurations-in-keptn-linking-traces)
 
 The remaining fields are required only when implementing
 the release lifecycle management feature.
@@ -101,26 +101,26 @@ If used, these fields must be populated manually:
 - **spec**
 
     - **preDeploymentTasks** -- list each task
-       to be run as part of the pre-deployment stage.
-       Task names must match the value of the `metadata.name` field
-       for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
+      to be run as part of the pre-deployment stage.
+      Task names must match the value of the `metadata.name` field
+      for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
     - **postDeploymentTasks** -- list each task
-       to be run as part of the post-deployment stage.
-       Task names must match the value of the `metadata.name` field
-       for the associated
-       [KeptnTaskDefinition](taskdefinition.md)
-       resource.
+      to be run as part of the post-deployment stage.
+      Task names must match the value of the `metadata.name` field
+      for the associated
+      [KeptnTaskDefinition](taskdefinition.md)
+      resource.
     - **preDeploymentEvaluations** -- list each evaluation to be run
-       as part of the pre-deployment stage.
-       Evaluation names must match the value of the `metadata.name` field
-       for the associated
-       [KeptnEvaluationDefinition](evaluationdefinition.md)
-       resource.
+      as part of the pre-deployment stage.
+      Evaluation names must match the value of the `metadata.name` field
+      for the associated
+      [KeptnEvaluationDefinition](evaluationdefinition.md)
+      resource.
     - **postDeploymentEvaluations** -- list each evaluation to be run
-       as part of the post-deployment stage.
-       Evaluation names must match the value of the `metadata.name` field
-       for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
-       resource.
+      as part of the post-deployment stage.
+      Evaluation names must match the value of the `metadata.name` field
+      for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
+      resource.
 
 ## Usage
 

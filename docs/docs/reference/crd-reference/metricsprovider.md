@@ -51,12 +51,12 @@ spec:
        [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
        specification.
 
-          For example, you might define `dev-prometheus`
-          for the Prometheus instance that monitors the development deployment,
-          and `qa-prometheus` for the Prometheus instance
-          that monitors the Prometheus instance that monitors the QA deployment,
-          and `prod-dynatrace` for the Dynatrace instance
-          that monitors the production deployment.
+       For example, you might define `dev-prometheus`
+       for the Prometheus instance that monitors the development deployment,
+       and `qa-prometheus` for the Prometheus instance
+       that monitors the Prometheus instance that monitors the QA deployment,
+       and `prod-dynatrace` for the Dynatrace instance
+       that monitors the production deployment.
 
     * **namespace** -- Namespace where this provider is used.
 

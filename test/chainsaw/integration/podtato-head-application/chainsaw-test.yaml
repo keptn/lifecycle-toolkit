@@ -5,8 +5,9 @@ metadata:
   creationTimestamp: null
   name: podtato-head-application
 spec:
-  namespaceModifiers:
-    - annotate:
+  namespaceTemplate:
+    metadata:
+      annotations:
         keptn.sh/lifecycle-toolkit: enabled
   steps:
     - name: step-00

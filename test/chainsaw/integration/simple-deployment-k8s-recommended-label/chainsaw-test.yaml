@@ -4,8 +4,9 @@ kind: Test
 metadata:
   name: simple-deployment-k8s-recommended-label
 spec:
-  namespaceModifiers:
-    - annotate:
+  namespaceTemplate:
+    metadata:
+      annotations:
         keptn.sh/lifecycle-toolkit: enabled
   steps:
     - name: step-00

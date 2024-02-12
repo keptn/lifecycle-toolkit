@@ -4,8 +4,9 @@ kind: Test
 metadata:
   name: app-failing-pre-task
 spec:
-  namespaceModifiers:
-    - annotate:
+  namespaceTemplate:
+    metadata:
+      annotations:
         keptn.sh/lifecycle-toolkit: enabled
   steps:
     - name: step-00

@@ -70,6 +70,7 @@ plugins:
   - git-revision-date-localized:
       fallback_to_build_date: true
   - blog:
+      post_excerpt: required
       blog_dir: blog
       draft_if_future_date: true
 markdown_extensions:

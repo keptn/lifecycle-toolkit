@@ -14,7 +14,7 @@ spec:
             file: 00-assert.yaml
     - name: step-01
       try:
-      # we expect none of these resources to be present
+# we expect none of these resources to be present
         - error:
             resource:
               apiVersion: lifecycle.keptn.sh/v1beta1

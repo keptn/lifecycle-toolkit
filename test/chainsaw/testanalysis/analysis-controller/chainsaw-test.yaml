@@ -18,7 +18,8 @@ spec:
         - assert:
             file: assert-1.yaml
       catch:
-        - script:
-            content: kubectl logs -l control-plane=metrics-operator -n keptn-system
-        - script:
-            content: kubectl describe Analysis -n $NAMESPACE
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=metrics-operator
+        - describe:
+            resource: Analysis

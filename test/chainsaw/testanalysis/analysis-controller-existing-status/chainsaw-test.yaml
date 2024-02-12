@@ -13,8 +13,8 @@ spec:
       catch:
         - script:
             content: kubectl logs -l control-plane=metrics-operator -n keptn-system
-        - script:
-            content: kubectl describe Analysis -n $NAMESPACE
+        - describe:
+            resource: Analysis
     - name: step-01
       try:
         - assert:
@@ -25,8 +25,8 @@ spec:
       catch:
         - script:
             content: kubectl logs -l control-plane=metrics-operator -n keptn-system
-        - script:
-            content: kubectl describe Analysis -n $NAMESPACE
+        - describe:
+            resource: Analysis
     - name: step-02
       try:
         - assert:
@@ -34,5 +34,5 @@ spec:
       catch:
         - script:
             content: kubectl logs -l control-plane=metrics-operator -n keptn-system
-        - script:
-            content: kubectl describe Analysis -n $NAMESPACE
+        - describe:
+            resource: Analysis

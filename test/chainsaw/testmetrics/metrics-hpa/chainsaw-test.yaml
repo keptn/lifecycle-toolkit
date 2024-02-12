@@ -24,9 +24,15 @@ spec:
       catch:
         - podLogs:
             selector: app=podtato-head
-        - script:
-            content: |
-              kubectl logs -l app=metrics-operator -n keptn-system
-              kubectl describe keptnmetric podtatometric -n $NAMESPACE
-              kubectl describe keptnmetricsprovider dynatrace -n $NAMESPACE
-              kubectl describe pods -l app=podtato-head -n $NAMESPACE
+        - podLogs:
+            namespace: keptn-system
+            selector: app=metrics-operator
+        - describe:
+            resource: keptnmetric
+            name: podtatometric
+        - describe:
+            resource: keptnmetricsprovider
+            name: dynatrace
+        - pods:
+            resource: pods
+            selector: app=podtato-head

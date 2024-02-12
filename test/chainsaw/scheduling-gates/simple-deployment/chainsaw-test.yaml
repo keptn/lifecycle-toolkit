@@ -19,12 +19,13 @@ spec:
       catch:
         - podLogs:
             selector: app=test
-        - script:
-            content: kubectl describe keptnworkloadversion -n $NAMESPACE
-        - script:
-            content: kubectl describe keptnappversion -n $NAMESPACE
-        - script:
-            content: kubectl logs -l control-plane=lifecycle-operator -n keptn-system
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
+        - podLogs:
+            selector: control-plane=lifecycle-operator
+            namespace: keptn-system
     - name: step-01
       try:
         - assert:
@@ -32,9 +33,10 @@ spec:
       catch:
         - podLogs:
             selector: app=test
-        - script:
-            content: kubectl describe keptnworkloadversion -n $NAMESPACE
-        - script:
-            content: kubectl describe keptnappversion -n $NAMESPACE
-        - script:
-            content: kubectl logs -l control-plane=lifecycle-operator -n keptn-system
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
+        - podLogs:
+            selector: control-plane=lifecycle-operator
+            namespace: keptn-system

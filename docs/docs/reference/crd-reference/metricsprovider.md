@@ -36,7 +36,6 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
 `
@@ -70,7 +69,6 @@ spec:
           * **key:** -- Key of the Secret from which to select
           * **optional** -- Specify whether the Secret or its key must be defined
 
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

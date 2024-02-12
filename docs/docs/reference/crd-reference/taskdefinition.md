@@ -73,7 +73,6 @@ spec:
 ```
 
 ### Fields used for all containers
-<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
 `
@@ -147,7 +146,6 @@ spec:
 ```
 
 ### Fields used only for container-runtime
-<!-- markdownlint-disable MD007 -->
 
 * **spec**
      * **container** -- Container definition.
@@ -164,7 +162,6 @@ spec:
             with additional information in the Kubernetes
             [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
             spec documentation.
-<!-- markdownlint-enable MD007 -->
 
 ## Synopsis for predefined containers
 
@@ -222,7 +219,6 @@ spec:
 ```
 
 ### Fields for predefined containers
-<!-- markdownlint-disable MD007 -->
 
 * **spec** -- choose either `deno` or `python`
      * **deno | python**
@@ -336,7 +332,6 @@ spec:
                 [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
               * **python example:**
                 [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

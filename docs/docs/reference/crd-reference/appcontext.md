@@ -41,7 +41,6 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 
 - **apiVersion** -- API version being used
    Must be set to `lifecycle.keptn.sh/v1beta1`
@@ -122,7 +121,6 @@ If used, these fields must be populated manually:
        Evaluation names must match the value of the `metadata.name` field
        for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
        resource.
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

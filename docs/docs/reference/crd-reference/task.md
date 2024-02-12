@@ -39,7 +39,6 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 * **apiVersion** -- API version being used.
 * **kind** -- Resource type.
   Must be set to `KeptnTask`
@@ -113,7 +112,6 @@ spec:
       to wait for the `KeptnTask` to complete successfully.
       If the `KeptnTask` does not complete successfully in this timeframe,
       it is considered to be failed.
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

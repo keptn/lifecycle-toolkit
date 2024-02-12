@@ -40,7 +40,6 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
 
@@ -113,7 +112,6 @@ spec:
           * **intervalResults** -- Slice of all interval results.
             Up to 255 results can be stored,
             determined by the value of the `spec.range` field.
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

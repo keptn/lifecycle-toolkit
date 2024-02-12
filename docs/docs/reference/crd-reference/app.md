@@ -31,7 +31,6 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 
 The first set of fields are created automatically
 when the app discovery feature generates the `KeptnApp` resource:
@@ -79,7 +78,6 @@ when the app discovery feature generates the `KeptnApp` resource:
             of checks for this
             [workload](https://kubernetes.io/docs/concepts/workloads/) only,
             not the entire application.
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

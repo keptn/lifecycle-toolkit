@@ -20,7 +20,6 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
 * **kind** -- Resource type.
@@ -42,7 +41,6 @@ spec:
        The default value is 30 (seconds).
      * **cloudEventsEndpoint** --
        Endpoint where the lifecycle operator posts Cloud Events.
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

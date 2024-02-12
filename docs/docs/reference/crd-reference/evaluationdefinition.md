@@ -26,7 +26,6 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
   Must be `v1beta1` or later for this syntax.
@@ -61,7 +60,6 @@ spec:
        This is used to define success or failure criteria
        for the referenced `KeptnMetric` in order to pass or fail
        the pre- and post-evaluation stages
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

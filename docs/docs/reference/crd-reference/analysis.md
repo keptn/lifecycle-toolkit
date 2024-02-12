@@ -35,7 +35,6 @@ status:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used
 * **kind** -- Resource type.
@@ -83,7 +82,6 @@ status:
             [Interpreting Analysis results](#interpreting-analysis-results)
             for details.
           * **state** -- Set to `Completed` or `Progressing` as appropriate.
-<!-- markdownlint-enable MD007 -->
 
 ## Interpreting Analysis results
 
@@ -198,7 +196,6 @@ each representing the results of a specific objective or performance metric.
     * **`warnResult`** -- Indicates whether the objective has issued a warning.
       It checks if a value is greater than 300 milliseconds
       and it has not been fulfilled (`fulfilled: false`).
-    <!-- markdownlint-disable-next-line -->
     - **`warning`** -- Indicates whether a warning has been issued
       (false in this case).
     * **`pass`** -- Indicates whether the objective has passed
@@ -260,10 +257,8 @@ based on the objectives evaluated (totalScore: 2).
 
 **`pass`** -- Indicates whether the overall evaluation has passed
 (true in this case).
-<!-- markdownlint-disable-next-line -->
 **`warning`** -- Indicates whether any warnings have been issued
 during the evaluation (false in this case).
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

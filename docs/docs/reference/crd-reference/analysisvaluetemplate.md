@@ -26,7 +26,6 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used
 * **kind** -- Resource type.
@@ -59,7 +58,6 @@ spec:
        the value to substitute for that variable for this Analysis
        is defined in the `spec.args` section of the `AnalysisTemplate` resource,
        which might be set to `nodename: test`.
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

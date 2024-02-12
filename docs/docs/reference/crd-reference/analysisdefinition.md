@@ -41,7 +41,6 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used
 * **kind** -- Resource type.
@@ -123,7 +122,6 @@ spec:
     (all objectives) to pass
   > **Warning** Percentage
     for the full analysis (all objectives) to pass with  `warning` status
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

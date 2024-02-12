@@ -1,4 +1,6 @@
 config:
+  ul-indent:
+    indent: 4
   line-length:
     line_length: 120
     tables: false
@@ -11,7 +13,6 @@ config:
   max-one-sentence-per-line: true
 
 customRules:
-  - ".github/actions/markdown-lint-rules/admonition.js"
   - ".github/actions/markdown-lint-rules/max-one-sentence-per-line.js"
 
 ignores:

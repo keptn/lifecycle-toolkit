@@ -8,6 +8,7 @@ In this guide, we will create a placeholder provider.
 The following steps are a starting point to create your own custom provider:
 
 1. Fork and clone the [Keptn repo](https://github.com/keptn/lifecycle-toolkit)
+  for more information [checkout this link](https://keptn.sh/stable/docs/contribute/general/git/fork-clone/)
 
 2. **Define the Provider Type:** In the `metrics-operator/controllers/common/providers/common.go` file,
  define the constant `KeptnPlaceholderProviderType`.

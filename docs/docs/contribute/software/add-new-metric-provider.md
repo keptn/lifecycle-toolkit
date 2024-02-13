@@ -7,6 +7,9 @@ comments: true
 In this guide, we will create a placeholder provider.
 The following steps are a starting point to create your own custom provider:
 
+```markdown
+<!-- markdownlint-disable MD007 -->
+
 1. Fork and clone the [Keptn repo](https://github.com/keptn/lifecycle-toolkit)
   for more information [checkout this link](https://keptn.sh/stable/docs/contribute/general/git/fork-clone/)
 
@@ -26,9 +29,6 @@ Create a new Go package for the placeholder provider in that folder.
 This package should contain a `struct` that implements the `KeptnSLIProvider` interface.
 To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the following functions.
 
-  ```markdown
-  <!-- markdownlint-disable MD007 -->
-
   * `EvaluateQuery`(Fetches metric values from the provider)
     * This function fetches metric values based on the provided
       metric query from the provider.
@@ -42,18 +42,16 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
       and returns the metric values along with any additional data if required.
     * It takes as input a [KeptnMetric]
       (<https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetric_types.go>)
-      and [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)   
+      and [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)
   * `FetchAnalysisValue`(Fetches analysis values from the provider) functions.
     * This function fetches analysis values based on the provided query and time range from the
       provider.
       It evaluates the query within the specified time range and returns the analysis
       values along with any additional data if required.
     * It takes as input an [Analysis](../../reference/crd-reference/analysis.md),
-      resource that contains a `query` and a 
+      resource that contains a `query` and a
       [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md) resource.
-      
-    <!-- markdownlint-enable MD007 -->
-    ```
+ 
 
   You can follow other existing implementations,
  such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
@@ -67,13 +65,12 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
     {% include "./assets/example-code/placeholder-code-example.go" %}
     ```
 
-
->   **Note:** Refer to the documentation of the
->    [KeptnMetric](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/metric.md)
->    and
->   [Analysis](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/analysis.md)
+> **Note** Refer to the documentation of the
+> [KeptnMetric](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/metric.md)
+> and
+> [Analysis](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/analysis.md)
 > resources
->  to understand what data should be retrieved from the methods inputs to compute accurate results.
+> to understand what data should be retrieved from the methods inputs to compute accurate results.
 
 4. **Instantiate the Provider** in the `providers.NewProvider` function
  in the `metrics-operator/controllers/common/providers/provider.go` file.
@@ -108,22 +105,25 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
   
 6. **Add Test Cases:**
 
-  * Write a unit test to validate your implementation at the function level.
+* Write a unit test to validate your implementation at the function level.
     Unit tests ensure that individual
     functions behave as expected and meet their functional requirements.
 
-  * Include a Chainsaw test to validate the behavior of Kubernetes resources managed by your code.
+* Include a Chainsaw test to validate the behavior of Kubernetes resources managed by your code.
     Chainsaw tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
     the correctness of your Kubernetes configurations and deployments.
 
     Below are the steps for adding an integration test.
-      * In the directory `test/chainsaw/testmetrics`, create a folder `keptn-metrics-validation` in our case.
-      * Within the `keptn-metrics-validation` folder, create three YAML files `00-install.yaml`, `goodmetrics.yaml`
+  * In the directory `test/chainsaw/testmetrics`, create a folder `keptn-metrics-validation` in our case.
+  * Within the `keptn-metrics-validation` folder, create three YAML files `00-install.yaml`, `goodmetrics.yaml`
         and `badmetrics.yaml`.
-        * ` 00-install.yaml` contains a sample configuration that installs a valid `KeptnMetricsProvider` 
-          in our case `placeholder`. 
-        * `goodmetrics.yaml` define a sample `KeptnMetric` configuration representing a valid use case, while
-        * `badmetrics.yaml` define a sample `KeptnMetric` configuration containing errors or incorrect values.
-      * Create a file named `chainsaw-test.yaml` and define the steps for the integration test in chainsaw-test.yaml.
-      
+    * `00-install.yaml` contains a sample configuration that installs a valid `KeptnMetricsProvider`
+          in our case `placeholder`.
+    * `goodmetrics.yaml` define a sample `KeptnMetric` configuration representing a valid use case, while
+    * `badmetrics.yaml` define a sample `KeptnMetric` configuration containing errors or incorrect values.
+  * Create a file named `chainsaw-test.yaml` and define the steps for the integration test in chainsaw-test.yaml.
+
       for more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics)
+
+<!-- markdownlint-enable MD007 -->
+```

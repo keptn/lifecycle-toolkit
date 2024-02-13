@@ -29,8 +29,8 @@ KUSTOMIZE ?= $(LOCALBIN)/kustomize
 .PHONY: integration-test #these tests should run on a real cluster!
 integration-test:
 	kubectl apply -f ./lifecycle-operator/config/crd/bases
-	chainsaw test --test-dir ./test/chainsaw/integration/
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/
+	chainsaw test --test-dir ./test/chainsaw/integration/
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/
 	chainsaw test --test-dir ./test/chainsaw/testcertificate/
 

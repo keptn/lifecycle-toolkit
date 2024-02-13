@@ -55,7 +55,7 @@ for working with and contributing to Keptn.
   and processed with Hugo using the `docsy` theme.
     * [Markdown Guide](https://www.markdownguide.org/)
 
-## Understanding SLO, SLA, SLIs
+## Understanding SLOs and SLIs
 
 * **Overview**
     * [Overview](https://www.youtube.com/watch?v=tEylFyxbDLE)

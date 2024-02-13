@@ -70,8 +70,8 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
     and [analysis](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/analysis.md)
     to understand what data should be retrieved from the methods inputs to compute accurate results.
 
-4. **Instantiate the Provider:** In the `providers.NewProvider` function
- in the `metrics-operator/controllers/common/providers/provider.go` file,
+4. **Instantiate the Provider** in the `providers.NewProvider` function
+ in the `metrics-operator/controllers/common/providers/provider.go` file.
  add a case for the `KeptnPlaceholderProviderType`.
   Instantiate the placeholder provider struct and return it.
 

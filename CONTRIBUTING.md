@@ -40,21 +40,21 @@ on Slack and a mentor will surely guide you!
 ### Prerequisites
 
 See
-[Set up the development environment](https://keptn.sh/latest/docs/contribute/software/dev-environ/)
+[Set up the development environment](https://keptn.sh/stable/docs/contribute/software/dev-environ/)
 for information about how to set up an environment
 in which you can develop and test software for Keptn.
 
 ## Related Technologies
 
-Please check [Related Technologies](https://keptn.sh/latest/docs/contribute/general/technologies/).
+Please check [Related Technologies](https://keptn.sh/stable/docs/contribute/general/technologies/).
 
 ## Linter Requirements
 
-Please check [Linter Requirements](https://keptn.sh/latest/docs/contribute/docs/linter-requirements/).
+Please check [Linter Requirements](https://keptn.sh/stable/docs/contribute/docs/linter-requirements/).
 
 ## Working with git
 
-See [Working with Git](https://keptn.sh/latest/docs/contribute/general/git/)
+See [Working with Git](https://keptn.sh/stable/docs/contribute/general/git/)
 
 Your PR will usually be reviewed by the Keptn team within a
 couple of days, but feel free to let us know about your PR
@@ -64,5 +64,5 @@ couple of days, but feel free to let us know about your PR
 
 All commits must be accompanied by a DCO sign-off.
 See
-[DCO](https://keptn.sh/latest/docs/contribute/general/dco/)
+[DCO](https://keptn.sh/stable/docs/contribute/general/dco/)
 for more information.

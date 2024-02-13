@@ -84,7 +84,7 @@ The same coding is used for an totally unordered list.
 1. First item of numbered list.
    And more description
 
-     * **subitem-1** -- Some verbage about this item
+     * **subitem-1** -- Some description about this item,
        which may go on and on.
        Note that the mark is indented
        two spaces from the text of the preceding item.
@@ -92,9 +92,9 @@ The same coding is used for an totally unordered list.
          It could also go into a second paragraph
          which must be indented an additional two spaces.
 
-          * **sub-subitem-1** -- Some verbage about this item
+          * **sub-subitem-1** -- Some description about this item,
             which may go on and on.
-          * **sub-subitem-2** -- Some verbage about this item
+          * **sub-subitem-2** -- Some description about this item
             which may go on and on.
 
 1. Second item of numbered list

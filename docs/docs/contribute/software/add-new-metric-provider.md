@@ -68,7 +68,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
    **NB:** Ensure to refer to the documentation of
     [metrics](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/metric.md)
     and [analysis](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/analysis.md)
-    to understand what data should be retrieved from the methods inputs to compute accurate results.
+>  to understand what data should be retrieved from the methods inputs to compute accurate results.
 
 4. **Instantiate the Provider** in the `providers.NewProvider` function
  in the `metrics-operator/controllers/common/providers/provider.go` file.

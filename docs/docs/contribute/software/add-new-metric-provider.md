@@ -56,7 +56,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
   You can follow other existing implementations,
  such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
  as an example.
-   **NB:** All 3 functions expects a string containing a float value in it.
+   **NB:** Each of the three functions expects a string containing a float value in it.
   But for example purposes
            we returned some of the data accessible in the function.
   Below is an example of a placeholder provider implementation.

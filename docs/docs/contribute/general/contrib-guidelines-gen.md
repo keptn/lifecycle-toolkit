@@ -33,7 +33,7 @@ For additional guidelines that are relevant only to documentation, see
   This helps reviewers understand each commit
   and provides a good history after the PR is merged.
 * If your PR is not reviewed in a timely fashion,
-  feel free to post a gentle reminder to the `#keptn-help-contributing` Slack channel.
+  feel free to post a gentle reminder to the `#keptn` Slack channel.
 * Resolve review comments and suggestions promptly.
 
 If you see a problem and are unable to fix it yourself

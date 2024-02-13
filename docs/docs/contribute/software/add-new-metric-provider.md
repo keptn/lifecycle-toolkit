@@ -24,7 +24,7 @@ The following steps are a starting point to create your own custom provider:
  (`placeholder` in our example).
 Create a new Go package for the placeholder provider in that folder.
   This package should contain
- a struct that implements the `KeptnSLIProvider` interface.
+ a `struct` that implements the `KeptnSLIProvider` interface.
   To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the following functions.
   `EvaluateQuery`(Fetches metric values from the provider)
    - This function fetches metric values based on the provided

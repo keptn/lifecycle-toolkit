@@ -54,14 +54,14 @@ A Keptn Analysis is implemented with three resources:
   defines the SLI with the `KeptnMetricsProvider` (data source)
   and the query to perform for each SLI
 
-  Each `AnalysisValueTemplate` resource identifies the data source
-  and the query for the analysis of the SLI.
-  One `Analysis` can use data from multiple instances
-  of multiple types of data provider;
-  you must define a
-  [KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
-  resource for each instance of each data provider you are using.
-  The template refers to that provider and queries it.
+    Each `AnalysisValueTemplate` resource identifies the data source
+    and the query for the analysis of the SLI.
+    One `Analysis` can use data from multiple instances
+    of multiple types of data provider;
+    you must define a
+    [KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
+    resource for each instance of each data provider you are using.
+    The template refers to that provider and queries it.
 
 * [AnalysisDefinition](../reference/crd-reference/analysisdefinition.md)
   define the list of SLOs for an `Analysis`

@@ -50,10 +50,10 @@ you must have the following on your cluster:
   See [Prometheus Operator Setup](https://github.com/prometheus-operator/kube-prometheus/blob/main/docs/customizing.md).
 
     - The Prometheus Operator must have the required permissions
-    to watch resources of your Keptn namespace
-    (default is `keptn-system`).
-    See
-    [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/).
+      to watch resources of your Keptn namespace
+      (default is `keptn-system`).
+      See
+      [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/).
 
 - To install Prometheus into the `monitoring` namespace
   using the example configuration included with Keptn,
@@ -61,30 +61,30 @@ you must have the following on your cluster:
   You can modify these commands to define a different configuration:
 
     > **Note**
-  You must clone the `lifecycle-toolkit` repository
-  and `cd` into the correct directory
-  (`examples/support/observability`) before running the following commands.
+    You must clone the `lifecycle-toolkit` repository
+    and `cd` into the correct directory
+    (`examples/support/observability`) before running the following commands.
 
-```shell
-kubectl create namespace monitoring
-kubectl apply --server-side -f config/prometheus/setup/
-kubectl apply -f config/prometheus/
-```
+    ```shell
+    kubectl create namespace monitoring
+    kubectl apply --server-side -f config/prometheus/setup/
+    kubectl apply -f config/prometheus/
+    ```
 
 - If you want a dashboard for reviewing metrics and traces:
 
     - Install
-    [Grafana](https://grafana.com/grafana/)
-    or the visualization tool of your choice, following the instructions in
-    [Grafana Setup](https://grafana.com/docs/grafana/latest/setup-grafana/).
+      [Grafana](https://grafana.com/grafana/)
+      or the visualization tool of your choice, following the instructions in
+      [Grafana Setup](https://grafana.com/docs/grafana/latest/setup-grafana/).
     - Install
-    [Jaeger](https://www.jaegertracing.io/)
-    or a similar tool for traces following the instructions in
-    [Jaeger Setup](https://www.jaegertracing.io/docs/1.50/getting-started/).
+      [Jaeger](https://www.jaegertracing.io/)
+      or a similar tool for traces following the instructions in
+      [Jaeger Setup](https://www.jaegertracing.io/docs/1.50/getting-started/).
 
     - Follow the instructions in the Grafana
-    [README](https://github.com/keptn/lifecycle-toolkit/blob/main/dashboards/grafana/README.md)
-    file to configure the Grafana dashboard(s) for Keptn.
+      [README](https://github.com/keptn/lifecycle-toolkit/blob/main/dashboards/grafana/README.md)
+      file to configure the Grafana dashboard(s) for Keptn.
 
 Metrics can also be retrieved without a dashboard.
 See

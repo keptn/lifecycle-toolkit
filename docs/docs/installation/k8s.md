@@ -33,7 +33,9 @@ The basic steps are:
 2. Download [KinD](https://kind.sigs.k8s.io/)
 3. Create the local KinD cluster with the following command:
 
-        kind create cluster
+    ```shell
+    kind create cluster
+    ```
 
    See the
    [KinD Quick Start Guide](https://kind.sigs.k8s.io/docs/user/quick-start/)
@@ -44,7 +46,9 @@ The basic steps are:
    and that it is running a supported version of Kubernetes
    with the following command:
 
-        kubectl version --short
+    ```shell
+    kubectl version --short
+    ```
 
 ## Prepare your cluster for Keptn
 

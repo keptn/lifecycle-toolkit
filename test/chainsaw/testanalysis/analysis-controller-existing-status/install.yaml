@@ -55,4 +55,4 @@ metadata:
   name: my-mocked-provider
 spec:
   type: prometheus
-  targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"
+  targetServer: (join('.', ['http://mockserver', $namespace, 'svc.cluster.local:1080']))

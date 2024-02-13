@@ -7,12 +7,10 @@ spec:
   steps:
     - name: step-00
       try:
-        - script:
-            content: |
-              kubectl apply -f mock-server.yaml -n $NAMESPACE
-        - script:
-            content: |
-              envsubst < install.yaml | kubectl apply -f - -n $NAMESPACE
+        - apply:
+            file: mock-server.yaml
+        - apply:
+            file: install.yaml
     - name: step-01
       try:
         - assert:

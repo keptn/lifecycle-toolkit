@@ -85,7 +85,7 @@ metadata:
   name: my-first-mocked-provider
 spec:
   type: prometheus
-  targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"
+  targetServer: (join('.', ['http://mockserver', $namespace, 'svc.cluster.local:1080']))
 ---
 apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
@@ -93,7 +93,7 @@ metadata:
   name: my-second-mocked-provider
 spec:
   type: prometheus
-  targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"
+  targetServer: (join('.', ['http://mockserver', $namespace, 'svc.cluster.local:1080']))
 ---
 apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
@@ -101,4 +101,4 @@ metadata:
   name: my-third-mocked-provider
 spec:
   type: prometheus
-  targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"
+  targetServer: (join('.', ['http://mockserver', $namespace, 'svc.cluster.local:1080']))

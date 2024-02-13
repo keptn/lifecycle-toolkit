@@ -7,9 +7,8 @@ spec:
   steps:
     - name: step-00
       try:
-        - script:
-            content: |
-              envsubst < install.yaml | kubectl apply -f - -n $NAMESPACE
+        - apply:
+            file: install.yaml
       catch:
         - podLogs:
             namespace: keptn-system
@@ -20,9 +19,8 @@ spec:
       try:
         - assert:
             file: assert-1.yaml
-        - script:
-            content: |
-              envsubst < mock-server.yaml  | kubectl apply -f - -n $NAMESPACE
+        - apply:
+            file: mock-server.yaml
       catch:
         - podLogs:
             namespace: keptn-system

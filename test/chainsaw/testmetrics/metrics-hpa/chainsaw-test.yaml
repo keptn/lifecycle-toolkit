@@ -10,15 +10,12 @@ spec:
       try:
         - apply:
             file: 00-install.yaml
-        - script:
-            content: |
-              kubectl apply -f mock-server.yaml -n $NAMESPACE
-        - script:
-            content: |
-              echo "registering the metric"
-              envsubst < metric.yaml | kubectl apply -f - -n $NAMESPACE
-              echo "configuring HPA"
-              kubectl apply -f hpa.yaml -n $NAMESPACE
+        - apply:
+            file: mock-server.yaml
+        - apply:
+            file: metric.yaml
+        - apply:
+            file: hpa.yaml
         - assert:
             file: deployment.yaml
       catch:

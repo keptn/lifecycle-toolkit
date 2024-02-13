@@ -91,7 +91,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
     }
     ```
 
-5. **Update validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.
+5. **Update the validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.
 
    Add the provider name next to last providers on this
    [line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go#L29)

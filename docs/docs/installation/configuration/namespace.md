@@ -48,7 +48,7 @@ Some considerations for Keptn:
       the `Analysis`, `AnalysisDefinition`, and `AnalysisValueTemplate` resources
       can each reside in different namespaces.
 
-  This provides configuration options such as the following:
+    This provides configuration options such as the following:
 
     * You can have one namespace
       with all of your `AnalysisDefinition` and `AnalysisValueTemplate` resources

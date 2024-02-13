@@ -66,28 +66,28 @@ A Keptn Analysis is implemented with three resources:
 * [AnalysisDefinition](../reference/crd-reference/analysisdefinition.md)
   define the list of SLOs for an `Analysis`
 
-  An `AnalysisDefinition` resource contains a list of objectives to satisfy.
-  Each of these objectives must specify:
+    An `AnalysisDefinition` resource contains a list of objectives to satisfy.
+    Each of these objectives must specify:
 
     * The `AnalysisValueTemplate` resource that contains the SLIs,
-    defining the data provider from which to gather the data
-    and how to compute the Analysis
+      defining the data provider from which to gather the data
+      and how to compute the Analysis
     * Failure or warning target criteria
     * Whether the objective is a key objective
-    meaning that its failure fails the Analysis
+      meaning that its failure fails the Analysis
     * Weight of the objective on the overall Analysis
 
 * [Analysis](../reference/crd-reference/analysis.md)
   define the specific configurations and the Analysis to report.
 
-  An `Analysis` resource customizes the templates
-  defined inside an `AnalysisDefinition` resource
-  by adding configuration information such as:
+    An `Analysis` resource customizes the templates
+    defined inside an `AnalysisDefinition` resource
+    by adding configuration information such as:
 
     * Timeframe that specifies the range to use
-    for the corresponding query in the `AnalysisValueTemplate`
+      for the corresponding query in the `AnalysisValueTemplate`
     * Map of key/value pairs that can be used
-    to substitute placeholders in the `AnalysisValueTemplate`
+      to substitute placeholders in the `AnalysisValueTemplate`
 
 ## Example Analysis
 

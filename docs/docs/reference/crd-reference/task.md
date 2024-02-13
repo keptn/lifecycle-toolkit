@@ -68,15 +68,15 @@ spec:
           [KeptnAppVersion](../api-reference/lifecycle/v1beta1/index.md#keptnappversion)
           resources.
 
-             For example, the following lines reference the commit ID and user ID:
+            For example, the following lines reference the commit ID and user ID:
 
-             ```yaml
-             commit-id: "1234"
-             user-id: "person3"
-             ```
+            ```yaml
+            commit-id: "1234"
+            user-id: "person3"
+            ```
 
-             See [Context metadata](../../guides/metadata.md)
-             for information about setting user defined values for those fields.
+            See [Context metadata](../../guides/metadata.md)
+            for information about setting user defined values for those fields.
 
         * **objectType** (required) -- Indicates whether this `KeptnTask`
           is being executed for a `KeptnApp` or a `KeptnWorkload` resource.

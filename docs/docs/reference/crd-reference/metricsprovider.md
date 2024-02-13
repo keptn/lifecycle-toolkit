@@ -38,25 +38,25 @@ spec:
 ## Fields
 
 * **apiVersion** -- API version being used.
-`
+
 * **kind** -- Resource type.
-   Must be set to KeptnMetricsProvider
+  Must be set to KeptnMetricsProvider
 
 * **metadata**
     * **name** -- Unique name of this provider,
-       used to reference the provider for the
-       [KeptnEvaluationDefinition](evaluationdefinition.md)
-       and [KeptnMetric](metric.md) resources.
-       Names must comply with the
-       [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-       specification.
+      used to reference the provider for the
+      [KeptnEvaluationDefinition](evaluationdefinition.md)
+      and [KeptnMetric](metric.md) resources.
+      Names must comply with the
+      [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+      specification.
 
-       For example, you might define `dev-prometheus`
-       for the Prometheus instance that monitors the development deployment,
-       and `qa-prometheus` for the Prometheus instance
-       that monitors the Prometheus instance that monitors the QA deployment,
-       and `prod-dynatrace` for the Dynatrace instance
-       that monitors the production deployment.
+        For example, you might define `dev-prometheus`
+        for the Prometheus instance that monitors the development deployment,
+        and `qa-prometheus` for the Prometheus instance
+        that monitors the Prometheus instance that monitors the QA deployment,
+        and `prod-dynatrace` for the Dynatrace instance
+        that monitors the production deployment.
 
     * **namespace** -- Namespace where this provider is used.
 
@@ -109,9 +109,9 @@ the authentication data looks like the following:
 ```
 
 > **Note**
-Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
-as `user` and `password` key names are required to be present in the linked Secret.
-Setting this field won't have any effect.
+> Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
+> as `user` and `password` key names are required to be present in the linked Secret.
+> Setting this field won't have any effect.
 
 ### Datadog
 
@@ -123,10 +123,10 @@ the authentication data looks like the following:
 ```
 
 > **Note**
-Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
-as `DD_CLIENT_API_KEY` and `DD_CLIENT_API_KEY` key names must be
-present in the linked Secret.
-Setting this field has no effect.
+> Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
+> as `DD_CLIENT_API_KEY` and `DD_CLIENT_API_KEY` key names must be
+> present in the linked Secret.
+> Setting this field has no effect.
 
 ### Dynatrace and DQL
 
@@ -138,10 +138,10 @@ the authentication data looks like the following:
 ```
 
 > **Note**
-When using Dynatrace as metrics provider you can
-define the key name of your DT token stored in a secret,
-which is not possible for Datadog or Prometheus.
-For this example `myCustomTokenKey` was used.
+> When using Dynatrace as metrics provider you can
+> define the key name of your DT token stored in a secret,
+> which is not possible for Datadog or Prometheus.
+> For this example `myCustomTokenKey` was used.
 
 ## Files
 

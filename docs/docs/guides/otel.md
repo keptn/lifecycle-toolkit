@@ -86,9 +86,9 @@ kubectl apply -f config/prometheus/
     [README](https://github.com/keptn/lifecycle-toolkit/blob/main/dashboards/grafana/README.md)
     file to configure the Grafana dashboard(s) for Keptn.
 
-    Metrics can also be retrieved without a dashboard.
-    See
-    [Accessing Metrics via the Kubernetes Custom Metrics API](evaluatemetrics.md/#accessing-metrics-via-the-kubernetes-custom-metrics-api)
+Metrics can also be retrieved without a dashboard.
+See
+[Accessing Metrics via the Kubernetes Custom Metrics API](evaluatemetrics.md/#accessing-metrics-via-the-kubernetes-custom-metrics-api)
 
 ## Integrate OpenTelemetry into Keptn
 

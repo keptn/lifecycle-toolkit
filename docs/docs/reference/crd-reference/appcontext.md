@@ -42,9 +42,9 @@ spec:
 
 ## Fields
 
-- **apiVersion** -- API version being used
+- **apiVersion** -- API version being used.
   Must be set to `lifecycle.keptn.sh/v1beta1`
-- **kind** -- Resource type
+- **kind** -- Resource type.
   Must be set to `KeptnAppContext`
 
 - **metadata**
@@ -54,48 +54,39 @@ spec:
       specification
       and match the `name` given to the associated `KeptnApp` resource.
     - **namespace** -- Namespace of this application.
-      This must match the `namespace` given to
-      the associated `KeptnApp` resource.
+      This must match the `namespace` given to the associated `KeptnApp` resource.
 - **spec**
     - **metadata** -- list of key-value pairs
       that are propagated to the application trace as attributes.
-      For example, the following lines add the `commit-id`
-      and `author` information to the `KEPTN_CONTEXT`
+      For example, the following lines add the `commit-id` and `author` information to the `KEPTN_CONTEXT`
       of the workload or `KeptnApp` where it is specified:
 
-      ```yaml
-      spec:
-        metadata:
-          commit-id: "1234"
-          author: "myUser"
-      ```
+        ```yaml
+        spec:
+          metadata:
+            commit-id: "1234"
+            author: "myUser"
+        ```
 
-      For more information, see
-      [Context metadata](../../guides/metadata.md).
+        For more information, see [Context metadata](../../guides/metadata.md).
 
     - **spanLinks** -- List of OpenTelemetry span links
       that connect multiple traces.
-      For example, this can be used to connect
-      deployments of the same application
-      through different stages.
-      You can retrieve the value to use
-      from the JSON representation of the trace in Jaeger.
+      For example, this can be used to connect deployments of the same application through different stages.
+      You can retrieve the value to use from the JSON representation of the trace in Jaeger.
       The structure of this is:
 
-      ```yaml
-      00-<trace-id>-<span-id>-01
-      ```
+        ```yaml
+        00-<trace-id>-<span-id>-01
+        ```
 
-      After you add this field to your `KeptnAppContext` manifest,
-      you must increment the `revision` number
-      of the corresponding `KeptnApp` resource
-      and apply the manifest to store the information in the traces.
+        After you add this field to your `KeptnAppContext` manifest, you must increment the `revision` number
+        of the corresponding `KeptnApp` resource and apply the manifest to store the information in the traces.
 
-      For more information, see
-      [Advanced tracing configurations in Keptn Linking traces](../../guides/otel.md#advanced-tracing-configurations-in-keptn-linking-traces)
+        For more information, see
+        [Advanced tracing configurations in Keptn Linking traces](../../guides/otel.md#advanced-tracing-configurations-in-keptn-linking-traces)
 
-The remaining fields are required only when implementing
-the release lifecycle management feature.
+The remaining fields are required only when implementing the release lifecycle management feature.
 If used, these fields must be populated manually:
 
 - **spec**
@@ -124,19 +115,13 @@ If used, these fields must be populated manually:
 
 ## Usage
 
-`KeptnAppContext` lists the tasks and evaluations
-to be executed pre/post-deployment.
-Tasks referenced by `KeptnAppContext` are defined in a
-[KeptnTaskDefinition](taskdefinition.md)
-resource.
-`KeptnAppContext` identifies each task
-by the value of the `metadata.name` field
+`KeptnAppContext` lists the tasks and evaluations to be executed pre/post-deployment.
+Tasks referenced by `KeptnAppContext` are defined in a [KeptnTaskDefinition](taskdefinition.md) resource.
+`KeptnAppContext` identifies each task by the value of the `metadata.name` field
 and does not need to understand what runner is used to define the task.
-Similarly, evaluations referenced are defined in a
-[KeptnEvaluationDefinition](evaluationdefinition.md)
+Similarly, evaluations referenced are defined in a [KeptnEvaluationDefinition](evaluationdefinition.md)
 resource and identified by the value of the `metadata.name` field;
-`KeptnAppContext` does not need to understand
-the data source or query being used for the evaluation.
+`KeptnAppContext` does not need to understand the data source or query being used for the evaluation.
 
 ## Example
 
@@ -158,8 +143,7 @@ spec:
 
 ## Differences between versions
 
-The `KeptnAppContext` resource is new in the `v1beta1` version
-of the lifecycle operator.
+The `KeptnAppContext` resource is new in the `v1beta1` version of the lifecycle operator.
 
 ## See also
 

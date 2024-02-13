@@ -89,68 +89,68 @@ Click the `Compare & pull request` button in that box
 to open a PR template that you can populate.
 
 > **Note**
-  The PR template can also be found at `.github/pull_request_template.md`.
+> The PR template can also be found at `.github/pull_request_template.md`.
 
 You need to provide the following information:
 
-* Title for the PR.
-   Follow the
+* Title for the PR:
+  Follow the
   [conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/)
   for your PR title.
     * Title should begin with an appropriate
-    [commit type](#commit-types).feature type.
+      [commit type](#commit-types).
     * The first word after the feature type should be lowercase.
 
-    An example for a pull request title is:
+An example for a pull request title is:
 
-    ```bash
-    feat(api): new endpoint for feature X
-    ```
+```bash
+feat(api): new endpoint for feature X
+```
 
 * Full description of what the PR is about.
 
     * Link to relevant GitHub issue(s).
-     Use the phrase `Closes <issue>` for this link;
-       is ensures that the issue is closed when this PR is merged.
-        this PR does not completely satisfy the issue,
-       e some other phrasing for the link to the issue.
+      Use the phrase `Closes <issue>` for this link;
+      is ensures that the issue is closed when this PR is merged.
+      this PR does not completely satisfy the issue,
+      e some other phrasing for the link to the issue.
     * Describe what this PR does,
-    including related work that will be in other PRs.
+      including related work that will be in other PRs.
     * If you changed something that is visible to the user,
-    add a screenshot.
+      add a screenshot.
     * Describe tests that are included or were run to test this PR.
     * Anything else that will help reviewers understand
-    the scope and purpose of this PR.
+      the scope and purpose of this PR.
 
 * If you have **breaking changes** in your PR,
   it is important to note them in both the PR description
   and in the merge commit for that PR.
 
-   When pressing "squash and merge",
-   you have the option to fill out the commit message.
-   Please use that feature to add the breaking changes according to the
-   [conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/).
-   Also, please remove the PR number at the end and just add the issue number.
+When pressing "squash and merge",
+you have the option to fill out the commit message.
+Please use that feature to add the breaking changes according to the
+[conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/).
+Also, please remove the PR number at the end and just add the issue number.
 
-   An example for a PR with breaking changes and the according merge commit:
+An example for a PR with breaking changes and the according merge commit:
 
-   ```bash
-   feat(bridge): New button that breaks other things (#345) 
+```bash
+feat(bridge): New button that breaks other things (#345) 
 
-   BREAKING CHANGE: The new button added with #345 introduces
-   new functionality that is not compatible with the previous
-   type of sent events.
-   ```
+BREAKING CHANGE: The new button added with #345 introduces
+new functionality that is not compatible with the previous
+type of sent events.
+```
 
-   If your breaking change can be explained in a single line,
-   you can also use this form:
+If your breaking change can be explained in a single line,
+you can also use this form:
 
-   ```bash
-   feat(bridge)!: New button that breaks other things (#345)
-   ```
+```bash
+feat(bridge)!: New button that breaks other things (#345)
+```
 
-   Following these guidelines helps us create automated releases
-   where the commit and PR messages are directly used in the changelog.
+Following these guidelines helps us create automated releases
+where the commit and PR messages are directly used in the changelog.
 
 When you have filled in the PR template,
 you should also quickly scroll down to see the changes

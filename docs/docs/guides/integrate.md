@@ -32,11 +32,8 @@ and
 [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 with either Keptn or Kubernetes keys.
 
-    - [Basic annotations](#basic-annotations)
-    or labels
-    are required for all Keptn features except Keptn metrics.
-    - [Pre- and post-deployment checks](#basic-annotations)
-    are required only for the Release lifecycle management feature.
+    - [Basic annotations](#basic-annotations) or labels are required for all Keptn features except Keptn metrics.
+    - [Pre- and post-deployment checks](#basic-annotations) are required only for the Release lifecycle management feature.
 
 Keptn uses these annotations to the Kubernetes workloads to create the
 [KeptnWorkload](../reference/api-reference/lifecycle/v1beta1/index.md#keptnworkload)

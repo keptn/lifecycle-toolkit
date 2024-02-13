@@ -56,7 +56,7 @@ Some key points:
 * Keptn is not a delivery tool
   because it does not provide promotion.
   Instead, it works with standard deployment tools
-  such as ArgoCD, Flux, even `kubectl -- apply`.
+  such as ArgoCD, Flux, even `kubectl apply`.
   Keptn then prevents the scheduling and deployment
   of workflows if the environment does not meet
   the user-defined requirements.

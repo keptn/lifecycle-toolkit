@@ -28,6 +28,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
 
   ```markdown
   <!-- markdownlint-disable MD007 -->
+
   * `EvaluateQuery`(Fetches metric values from the provider)
     * This function fetches metric values based on the provided
       metric query from the provider.
@@ -50,6 +51,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
     * It takes as input an [Analysis](../../reference/crd-reference/analysis.md),
       resource that contains a `query` and a 
       [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md) resource.
+      
     <!-- markdownlint-enable MD007 -->
     ```
 

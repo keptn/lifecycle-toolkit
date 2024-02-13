@@ -115,8 +115,10 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
     the correctness of your Kubernetes configurations and deployments.
 
     Below are the steps for adding an integration test.
-      * In the directory `test/chainsaw/testmetrics`, create a folder `metrics-placeholder` in our case.
-      * create both the goodmetrics to test right configuration and the badmetrics for wrong configuration.
-      * then create the `chainsaw-test.yaml` file and define the steps for the test.
+      * In the directory `test/chainsaw/testmetrics`, create a folder `keptn-metrics-validation` in our case.
+      * Within the keptn-metrics-validation folder, create two YAML files `goodmetrics.yaml` and `badmetrics.yaml`.
+        `goodmetrics.yaml` define a sample KeptnMetric configuration representing a valid use case, while
+        `badmetrics.yaml` define a sample KeptnMetric configuration containing errors or incorrect values.
+      * Create a file named `chainsaw-test.yaml` and define the steps for the integration test in chainsaw-test.yaml.
       
       for more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics)

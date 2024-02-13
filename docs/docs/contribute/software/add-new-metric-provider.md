@@ -101,30 +101,7 @@ Create a new Go package for the placeholder provider in that folder.
 - Write a unit test to validate your implementation at the function level.
   Unit tests ensure that individual
  functions behave as expected and meet their functional requirements.
-  Below is a unit test example for our placeholder provider
-
-  ```go
-  {% include "./assets/example-code/placeholder-test-example.go" %}
-  ```
 
 - Include a Chainsaw test to validate the behavior of Kubernetes resources managed by your code.
   Chainsaw tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
   the correctness of your Kubernetes configurations and deployments.
-
-    Below is the chainsaw test
-
-    ```yaml
-    {% include "./assets/example-integration-test/chainsaw-test.yaml" %}
-    ```
-
-    the installation file
-
-    ```yaml
-    {% include "./assets/example-integration-test/00-install.yaml" %}
-    ```
-
-    the assert check
-
-    ```yaml
-    {% include "./assets/example-integration-test/assert-1.yaml" %}
-    ```

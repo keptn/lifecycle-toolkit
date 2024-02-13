@@ -273,7 +273,7 @@ func TestProvidersPool_StartProviders(t *testing.T) {
 	time.Sleep(time.Millisecond * 100)
 
 	// Assert the expected number of workers (goroutines) were started
-	require.Equal(t, 5, len(pool.providers))
+	require.Equal(t, 4, len(pool.providers))
 	require.Equal(t, numJobs, cap(pool.providers["prometheus"]))
 	// Stop the providers after testing
 	pool.StopProviders()

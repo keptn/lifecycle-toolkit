@@ -571,7 +571,6 @@ stakeholders
 statefulset
 statefultest
 stdouttrace
-stretchr
 storageclasses
 storageversion
 sts
@@ -584,7 +583,6 @@ Sudipto
 superfences
 superinterval
 SVCNAME
-svr
 sync'ed
 TARGETARCH
 TARGETOS
@@ -602,8 +600,6 @@ testcertificate
 testcommon
 testmetrics
 testreg
-teststep
-testytest
 tgz
 thisthatdc
 thschue

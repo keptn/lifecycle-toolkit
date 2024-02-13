@@ -30,6 +30,7 @@ spec:
         app: mockserver
       name: mockserver
     spec:
+      automountServiceAccountToken: false
       containers:
         - env:
             - name: MOCKSERVER_LOG_LEVEL
@@ -38,6 +39,13 @@ spec:
               value: "1080"
           image: mockserver/mockserver:mockserver-5.13.0
           imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 500m
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
           livenessProbe:
             failureThreshold: 10
             initialDelaySeconds: 10

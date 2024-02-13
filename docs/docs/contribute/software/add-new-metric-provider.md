@@ -33,23 +33,23 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
       metric query from the provider.
       It evaluates the query and returns the metric values
       along with any additional data if required.
-    * It takes as input a [KeptnMetric]
-      (<https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetric_types.go>)
-      and [KeptnMetricsProvider](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go)
+    * It takes as input a [KeptnMetric](../../reference/crd-reference/metric.md)
+      and [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)
   * `EvaluateQueryForStep`(Fetches metric values with step interval from the provider)
     * This function fetches metric values with a specified step interval from the placeholder provider.
       It takes into account the metric query and the step interval provided, executes the query,
       and returns the metric values along with any additional data if required.
     * It takes as input a [KeptnMetric]
       (<https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetric_types.go>)
-      and [KeptnMetricsProvider](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go)
+      and [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)   
   * `FetchAnalysisValue`(Fetches analysis values from the provider) functions.
     * This function fetches analysis values based on the provided query and time range from the
       provider.
       It evaluates the query within the specified time range and returns the analysis
       values along with any additional data if required.
-    * It takes as input a `query`, [Analysis]
-      (<https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/analysis_types.go>) and [KeptnMetricsProvider](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go)
+    * It takes as input an [Analysis](../../reference/crd-reference/analysis.md),
+      resource that contains a `query` and a 
+      [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md) resource.
     <!-- markdownlint-enable MD007 -->
     ```
 

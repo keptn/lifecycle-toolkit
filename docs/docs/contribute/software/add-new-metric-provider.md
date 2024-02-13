@@ -7,9 +7,6 @@ comments: true
 In this guide, we will create a placeholder provider.
 The following steps are a starting point to create your own custom provider:
 
-```markdown
-<!-- markdownlint-disable MD007 -->
-
 1. Fork and clone the [Keptn repo](https://github.com/keptn/lifecycle-toolkit)
   for more information [checkout this link](https://keptn.sh/stable/docs/contribute/general/git/fork-clone/)
 
@@ -28,7 +25,7 @@ matching the new provider name (`placeholder` in our example).
 Create a new Go package for the placeholder provider in that folder.
 This package should contain a `struct` that implements the `KeptnSLIProvider` interface.
 To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the following functions.
-
+  <!-- markdownlint-disable MD007 -->
   * `EvaluateQuery`(Fetches metric values from the provider)
     * This function fetches metric values based on the provided
       metric query from the provider.
@@ -51,8 +48,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
     * It takes as input an [Analysis](../../reference/crd-reference/analysis.md),
       resource that contains a `query` and a
       [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md) resource.
- 
-
+  <!-- markdownlint-enable MD007 -->
   You can follow other existing implementations,
  such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
  as an example.
@@ -125,5 +121,3 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
 
       for more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics)
 
-<!-- markdownlint-enable MD007 -->
-```

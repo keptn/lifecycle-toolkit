@@ -44,10 +44,10 @@ spec:
           resources:
             limits:
               cpu: 500m
-              memory: 64Mi
+              memory: 128Mi
             requests:
               cpu: 10m
-              memory: 32Mi
+              memory: 64Mi
           livenessProbe:
             failureThreshold: 10
             initialDelaySeconds: 10

@@ -113,3 +113,10 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
   * Include a Chainsaw test to validate the behavior of Kubernetes resources managed by your code.
     Chainsaw tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
     the correctness of your Kubernetes configurations and deployments.
+
+    Below are the steps for adding an integration test.
+      * In the directory `test/chainsaw/testmetrics`, create a folder `metrics-placeholder` in our case.
+      * create both the goodmetrics to test right configuration and the badmetrics for wrong configuration.
+      * then create the `chainsaw-test.yaml` file and define the steps for the test.
+      
+      for more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics)

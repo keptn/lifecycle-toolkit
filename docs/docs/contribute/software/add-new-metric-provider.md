@@ -6,9 +6,8 @@ comments: true
 
 In this guide, we will create a placeholder provider.
 The following steps are a starting point to create your own custom provider:
-
-<!-- markdownlint-disable MD029 -->
 <!-- markdownlint-disable MD007 -->
+
 1. Fork and clone the [Keptn repo](https://github.com/keptn/lifecycle-toolkit)
   for more information [checkout this link](https://keptn.sh/stable/docs/contribute/general/git/fork-clone/)
 
@@ -68,7 +67,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
 > resources
 > to understand what data should be retrieved from the methods inputs to compute accurate results.
 
-4. **Instantiate the Provider** in the `providers.NewProvider` function
+1. **Instantiate the Provider** in the `providers.NewProvider` function
   in the `metrics-operator/controllers/common/providers/provider.go` file.
   add a case for the `KeptnPlaceholderProviderType`.
   Instantiate the placeholder provider struct and return it.
@@ -89,7 +88,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
     }
     ```
 
-5. **Update the validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.
+2. **Update the validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.
 
    Add the provider name next to last providers on this
    [line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go#L29)
@@ -100,28 +99,27 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
 
    Then modify the helm chart and the helm chart crd validation to match the update in the metrics-operator crd config
   
-6. **Add Test Cases:**
+3. **Add Test Cases:**
 
   * Write a unit test to validate your implementation at the function level.
-      Unit tests ensure that individual
-      functions behave as expected and meet their functional requirements.
+        Unit tests ensure that individual
+        functions behave as expected and meet their functional requirements.
 
   * Include a Chainsaw test to validate the behavior of Kubernetes resources managed by your code.
-      Chainsaw tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
-      the correctness of your Kubernetes configurations and deployments.
+        Chainsaw tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
+        the correctness of your Kubernetes configurations and deployments.
 
-    **NB:** For testing the metricsprovider a single KeptnMetric and KeptnMetricsProvider is needed
-    Below are the steps for adding an integration test.
+      **NB:** For testing the metricsprovider a single KeptnMetric and KeptnMetricsProvider is needed
+      Below are the steps for adding an integration test.
     * In the directory `test/chainsaw/testmetrics`, create a folder `keptn-metrics-validation` in our case.
     * Within the `keptn-metrics-validation` folder, create three YAML files `00-install.yaml`, `goodmetrics.yaml`
-          and `badmetrics.yaml`.
+            and `badmetrics.yaml`.
       * `00-install.yaml` contains a sample configuration that installs a valid `KeptnMetricsProvider`
-            in our case `placeholder`.
+              in our case `placeholder`.
       * `goodmetrics.yaml` define a sample `KeptnMetric` configuration representing a valid use case, while
       * `badmetrics.yaml` define a sample `KeptnMetric` configuration containing errors or incorrect values.
     * Create a file named `chainsaw-test.yaml` and define the steps for the integration test in chainsaw-test.yaml.
 
-    For more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics)
+      For more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics)
 
 <!-- markdownlint-enable MD007 -->
-<!-- markdownlint-disable MD029 -->

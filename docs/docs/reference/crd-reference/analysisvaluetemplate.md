@@ -26,32 +26,31 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 
-* **apiVersion** -- API version being used
-* **kind** -- Resource type.
+- **apiVersion** -- API version being used
+- **kind** -- Resource type.
   Must be set to `AnalysisValueTemplate`
-* **metadata**
+- **metadata**
 
-     * **name** -- Unique name of this template.
+    - **name** -- Unique name of this template.
        Names must comply with the
        [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
        specification.
-     * **namespace** (optional) -- Namespace where this template lives.
+    - **namespace** (optional) -- Namespace where this template lives.
        `Analysis` resources must specify this namespace
        when referencing this definition,
        unless it resides in the same namespace as the `Analysis` resource.
 
-* **spec**
-     * **provider** (required) -- the KeptnMetricProvider
-          * **name** -- The `spec.name` value of the
+- **spec**
+    - **provider** (required) -- the KeptnMetricProvider
+        - **name** -- The `spec.name` value of the
             [KeptnMetricsProvider](metricsprovider.md) resource to use.
             Note that each `AnalysisValueTemplate` resource
             can use only one data source.
             However, an `Analysis` resource
             can use multiple `AnalysisValueTemplate` resources,
             each of which uses a different data source.
-     * **query** (required) -- query to be made.
+    - **query** (required) -- query to be made.
        This is done in the data provider's query language.
        It can include variables that use the go templating syntax
        to insert a placeholder in the query.
@@ -59,7 +58,6 @@ spec:
        the value to substitute for that variable for this Analysis
        is defined in the `spec.args` section of the `AnalysisTemplate` resource,
        which might be set to `nodename: test`.
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 
@@ -100,6 +98,6 @@ The behavior of this feature is unchanged since v0.8.3.
 
 ## See also
 
-* [Analysis](analysis.md)
-* [AnalysisDefinition](analysisdefinition.md)
-* [Analysis](../../guides/slo.md) guide
+- [Analysis](analysis.md)
+- [AnalysisDefinition](analysisdefinition.md)
+- [Analysis](../../guides/slo.md) guide

@@ -93,7 +93,8 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
 
    Add the provider name next to last providers on this
    [line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go#L29)
-   to look like this `// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql|placeholder`.
+   to look like this 
+   `// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql|placeholder`.
 
    In the metric-operator directory run `make manifests` to update the metrics-operator crd config
 
@@ -120,7 +121,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
       * `badmetrics.yaml` define a sample `KeptnMetric` configuration containing errors or incorrect values.
     * Create a file named `chainsaw-test.yaml` and define the steps for the integration test in chainsaw-test.yaml.
 
-        for more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics)
+    For more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics)
 
 <!-- markdownlint-enable MD007 -->
 <!-- markdownlint-disable MD029 -->

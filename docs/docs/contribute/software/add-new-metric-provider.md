@@ -89,38 +89,35 @@ The following steps are a starting point to create your own custom provider:
     ```
 
 5. **Update the validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.
-
-   Add the provider name next to last providers on this
+    * Add the provider name next to last providers on this
    [line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go#L29)
    to look like this
 
    `// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql|placeholder`.
 
    In the metric-operator directory run `make manifests` to update the metrics-operator crd config
-
    Then modify the helm chart and the helm chart crd validation to match the update in the metrics-operator crd config
   
 6. **Add Test Cases:**
+     * Write a unit test to validate your implementation at the function level.
+       Unit tests ensure that individual
+       functions behave as expected and meet their functional requirements.
 
-    * Write a unit test to validate your implementation at the function level.
-      Unit tests ensure that individual
-      functions behave as expected and meet their functional requirements.
+     * Include a Chainsaw test to validate the behavior of Kubernetes resources managed by your code.
+       Chainsaw tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
+       the correctness of your Kubernetes configurations and deployments.
 
-    * Include a Chainsaw test to validate the behavior of Kubernetes resources managed by your code.
-      Chainsaw tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
-      the correctness of your Kubernetes configurations and deployments.
-
-        **NB:** For testing the metricsprovider a single KeptnMetric and KeptnMetricsProvider is needed
-      Below are the steps for adding an integration test.
-      * In the directory `test/chainsaw/testmetrics`, create a folder `keptn-metrics-validation` in our case.
-      * Within the `keptn-metrics-validation` folder, create three YAML files `00-install.yaml`, `goodmetrics.yaml`
+         **NB:** For testing the metricsprovider a single KeptnMetric and KeptnMetricsProvider is needed
+        Below are the steps for adding an integration test.
+        * In the directory `test/chainsaw/testmetrics`, create a folder `keptn-metrics-validation` in our case.
+        * Within the `keptn-metrics-validation` folder, create three YAML files `00-install.yaml`, `goodmetrics.yaml`
           and `badmetrics.yaml`.
-        * `00-install.yaml` contains a sample configuration that installs a valid `KeptnMetricsProvider`
+          * `00-install.yaml` contains a sample configuration that installs a valid `KeptnMetricsProvider`
               in our case `placeholder`.
-        * `goodmetrics.yaml` define a sample `KeptnMetric` configuration representing a valid use case, while
-        * `badmetrics.yaml` define a sample `KeptnMetric` configuration containing errors or incorrect values.
-      * Create a file named `chainsaw-test.yaml` and define the steps for the integration test in chainsaw-test.yaml.
+          * `goodmetrics.yaml` define a sample `KeptnMetric` configuration representing a valid use case, while
+          * `badmetrics.yaml` define a sample `KeptnMetric` configuration containing errors or incorrect values.
+        * Create a file named `chainsaw-test.yaml` and define the steps for the integration test in chainsaw-test.yaml.
 
-        For more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics)
+        > For more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics)
 
 <!-- markdownlint-enable MD007 -->

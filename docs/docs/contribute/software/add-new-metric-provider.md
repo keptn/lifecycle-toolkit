@@ -51,9 +51,20 @@ The following steps are a starting point to create your own custom provider:
    You can follow other existing implementations,
    such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
    as an example.
+
    **NB:** Each of the three functions expects a string containing a float value in it.
    But for example purposes we returned some of the data accessible in the function.
    Below is an example of a placeholder provider implementation.
+
+    ```go
+      {% include "./assets/example-code/placeholder-code-example.go" %}
+    ```
+    > **Note** Refer to the documentation of the
+    > [KeptnMetric](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/metric.md)
+    > and
+    > [Analysis](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/analysis.md)
+    > resources
+    > to understand what data should be retrieved from the methods inputs to compute accurate results.
 
 4. **Instantiate the Provider** in the `providers.NewProvider` function
    in the `metrics-operator/controllers/common/providers/provider.go` file.
@@ -81,6 +92,7 @@ The following steps are a starting point to create your own custom provider:
    Add the provider name next to last providers on this
    [line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go#L29)
    to look like this
+   
    `// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql|placeholder`.
 
    In the metric-operator directory run `make manifests` to update the metrics-operator crd config

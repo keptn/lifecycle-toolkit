@@ -36,41 +36,38 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
-`
+
 * **kind** -- Resource type.
-   Must be set to KeptnMetricsProvider
+  Must be set to KeptnMetricsProvider
 
 * **metadata**
-     * **name** -- Unique name of this provider,
-       used to reference the provider for the
-       [KeptnEvaluationDefinition](evaluationdefinition.md)
-       and [KeptnMetric](metric.md) resources.
-       Names must comply with the
-       [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-       specification.
+    * **name** -- Unique name of this provider,
+      used to reference the provider for the
+      [KeptnEvaluationDefinition](evaluationdefinition.md)
+      and [KeptnMetric](metric.md) resources.
+      Names must comply with the
+      [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+      specification.
 
-          For example, you might define `dev-prometheus`
-          for the Prometheus instance that monitors the development deployment,
-          and `qa-prometheus` for the Prometheus instance
-          that monitors the Prometheus instance that monitors the QA deployment,
-          and `prod-dynatrace` for the Dynatrace instance
-          that monitors the production deployment.
+        For example, you might define `dev-prometheus`
+        for the Prometheus instance that monitors the development deployment,
+        and `qa-prometheus` for the Prometheus instance
+        that monitors the Prometheus instance that monitors the QA deployment,
+        and `prod-dynatrace` for the Dynatrace instance
+        that monitors the production deployment.
 
-     * **namespace** -- Namespace where this provider is used.
+    * **namespace** -- Namespace where this provider is used.
 
 * **spec**
 
-     * **type** (required) -- The type of data provider for this instance
-     * **targetServer** (required) -- URL of the data provider, enclosed in double quotes
-     * **secretKeyRef**
-          * **name:** -- Name of the Secret used by the provider
-          * **key:** -- Key of the Secret from which to select
-          * **optional** -- Specify whether the Secret or its key must be defined
-
-<!-- markdownlint-enable MD007 -->
+    * **type** (required) -- The type of data provider for this instance
+    * **targetServer** (required) -- URL of the data provider, enclosed in double quotes
+    * **secretKeyRef**
+        * **name:** -- Name of the Secret used by the provider
+        * **key:** -- Key of the Secret from which to select
+        * **optional** -- Specify whether the Secret or its key must be defined
 
 ## Usage
 
@@ -101,6 +98,7 @@ and contain the required data fields.
 For detailed information please look at the [Examples section](#examples).
 
 ## Examples
+
 
 <!-- markdownlint-disable MD046 -->
 <!-- markdownlint-disable MD051 -->
@@ -148,6 +146,7 @@ For detailed information please look at the [Examples section](#examples).
 
 <!-- markdownlint-enable MD051 -->
 <!-- markdownlint-enable MD046 -->
+
 ## Files
 
 API Reference:

@@ -1,6 +1,6 @@
 module github.com/keptn/lifecycle-toolkit/metrics-operator
 
-go 1.20
+go 1.21
 
 require (
 	github.com/DataDog/datadog-api-client-go/v2 v2.21.0
@@ -8,7 +8,7 @@ require (
 	github.com/go-logr/logr v1.4.1
 	github.com/gorilla/mux v1.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240206141444-f42bb7182ba8
+	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240209083610-2f77ae8867b1
 	github.com/open-feature/go-sdk v1.9.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.18.0
@@ -26,7 +26,7 @@ require (
 	k8s.io/component-base v0.28.6
 	k8s.io/klog/v2 v2.120.1
 	k8s.io/metrics v0.28.6
-	sigs.k8s.io/controller-runtime v0.16.3
+	sigs.k8s.io/controller-runtime v0.16.4
 	sigs.k8s.io/custom-metrics-apiserver v1.28.0
 	sigs.k8s.io/yaml v1.4.0
 )

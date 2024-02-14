@@ -6,6 +6,7 @@ metadata:
 spec:
   steps:
     - name: step-00
+      description: "verify certificate is mounted in restarted operators"
       try:
         - delete:
             ref:
@@ -21,12 +22,18 @@ spec:
         - assert:
             file: 00-assert.yaml
     - name: step-01
+      description: "verify certificate is working with new secret"
       try:
-        - apply:
-            file: 01-delete.yaml
+        - delete:
+            ref:
+              apiVersion: v1
+              kind: Secret
+              namespace: keptn-system
+              name: keptn-certs
         - assert:
             file: 01-assert.yaml
     - name: step-02
+      description: "force an invalid/expired certificate to check recreation"
       try:
         - apply:
             file: 02-install.yaml

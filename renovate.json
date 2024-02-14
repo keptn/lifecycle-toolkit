@@ -61,6 +61,13 @@
         "github.com/keptn/lifecycle-toolkit/keptn-cert-manager"
       ],
       "groupName": "keptn/cert-manager"
+    },
+    {
+      "matchPackageNames": [
+        "squidfunk/mkdocs-material",
+        "mkdocs-material"
+      ],
+      "groupName": "squidfunk/mkdocs-material"
     }
   ],
   "regexManagers": [

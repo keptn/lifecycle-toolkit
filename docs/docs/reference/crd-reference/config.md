@@ -20,34 +20,29 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
 
 * **apiVersion** -- API version being used.
 * **kind** -- Resource type.
-   Must be set to `KeptnConfig`.
+  Must be set to `KeptnConfig`.
 
 * **metadata**
-     * **name** -- Unique name of this set of configurations.
-       Names must comply with the
-       [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-       specification.
+    * **name** -- Unique name of this set of configurations.
+      Names must comply with the
+      [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+      specification.
 
 * **spec**
-     * **OTelCollectorUrl** -- The URL and port of the OpenTelemetry collector
-       This field must be populated
-       in order to export traces to the OpenTelemetry Collector.
-     * **keptnAppCreationRequestTimeoutSeconds** --
-       Interval in which automatic app discovery searches for [workloads](https://kubernetes.io/docs/concepts/workloads/)
-       to put into the same auto-generated [KeptnApp](app.md).
-       The default value is 30 (seconds).
-     * **cloudEventsEndpoint** --
-       Endpoint where the lifecycle operator posts Cloud Events.
-<!-- markdownlint-enable MD007 -->
+    * **OTelCollectorUrl** -- The URL and port of the OpenTelemetry collector.
+      This field must be populated in order to export traces to the OpenTelemetry Collector.
+    * **keptnAppCreationRequestTimeoutSeconds** --
+      Interval in which automatic app discovery searches for [workloads](https://kubernetes.io/docs/concepts/workloads/)
+      to put into the same auto-generated [KeptnApp](app.md).
+      The default value is 30 (seconds).
+    * **cloudEventsEndpoint** -- Endpoint where the lifecycle operator posts Cloud Events.
 
 ## Usage
 
-Each cluster should have a single `KeptnConfig` CRD
-that describes all configurations for that cluster.
+Each cluster should have a single `KeptnConfig` CRD that describes all configurations for that cluster.
 
 ## Example
 

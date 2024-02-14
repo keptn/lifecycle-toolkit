@@ -1,6 +1,6 @@
 module github.com/keptn/lifecycle-toolkit/lifecycle-operator
 
-go 1.20
+go 1.21
 
 require (
 	dario.cat/mergo v1.0.0
@@ -9,21 +9,21 @@ require (
 	github.com/cloudevents/sdk-go/v2 v2.15.0
 	github.com/go-logr/logr v1.4.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20231220125738-6b5f424f8cf1
+	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240209083610-2f77ae8867b1
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.15.0
 	github.com/onsi/gomega v1.31.1
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.18.0
 	github.com/stretchr/testify v1.8.4
-	go.opentelemetry.io/otel v1.22.0
+	go.opentelemetry.io/otel v1.23.1
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.22.0
-	go.opentelemetry.io/otel/exporters/prometheus v0.45.0
+	go.opentelemetry.io/otel/exporters/prometheus v0.45.2
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.22.0
-	go.opentelemetry.io/otel/metric v1.22.0
-	go.opentelemetry.io/otel/sdk v1.22.0
-	go.opentelemetry.io/otel/sdk/metric v1.22.0
-	go.opentelemetry.io/otel/trace v1.22.0
+	go.opentelemetry.io/otel/metric v1.23.1
+	go.opentelemetry.io/otel/sdk v1.23.1
+	go.opentelemetry.io/otel/sdk/metric v1.23.1
+	go.opentelemetry.io/otel/trace v1.23.1
 	golang.org/x/exp v0.0.0-20240205201215-2c58cdc269a3
 	golang.org/x/net v0.20.0
 	google.golang.org/grpc v1.61.0
@@ -32,7 +32,7 @@ require (
 	k8s.io/apimachinery v0.28.6
 	k8s.io/apiserver v0.28.6
 	k8s.io/client-go v0.28.6
-	sigs.k8s.io/controller-runtime v0.16.3
+	sigs.k8s.io/controller-runtime v0.16.4
 	sigs.k8s.io/yaml v1.4.0
 )
 

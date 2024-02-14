@@ -24,6 +24,7 @@ In this article, we're delving into the topic of Helm charts, in particular Umbr
 simplifies the deployment and maintenance of microservice application architectures.
 Let's uncover how these consolidated charts pave the way for smoother deployments, enhance scalability, and bring
 harmony to the orchestration of complex Kubernetes environments.
+<!-- more -->
 
 ## What is Helm?
 

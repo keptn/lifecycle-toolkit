@@ -8,10 +8,47 @@ The source files for the Keptn documentation
 are stored in the same GitHub repository as the source code for the software.
 This page explains how the documentation source files are organized.
 
-> **Note** The structure of the documentation
-  and the source code for the documentation is evolving.
-  You may find small discrepancies between
-  what is documented here and what is currently implemented.
+## Specifying the doc structure
+
+The documentation builds are controlled by the
+[mkdocs.yml](https://github.com/keptn/lifecycle-toolkit/blob/main/mkdocs.yml)
+file in the root directory of the Keptn repository.
+The documentation structure is defined under the `nav` section
+that is roughly the second half of the file.
+The following snippet illustrates how this is structured:
+
+```markdown
+...
+nav:
+  - Home:
+      - index.md
+  - Documentation:
+      - docs/index.md
+    ...
+      - Use Cases:
+          - docs/use-cases/index.md
+          - Day 2 Operations: docs/use-cases/day-2-operations.md
+          - Keptn + HorizontalPodAutoscaler: docs/use-cases/hpa.md
+          - Keptn for non-Kubernetes deployments: docs/use-cases/non-k8s.md
+   ...
+```
+
+* The `Home` item specifies the file for the `keptn.sh` landing page.
+* The `Documentataion` item is the beginning of the specification
+  for what files are are included and the order they will be listed.
+* Each subitem to `Documentation` is a section of the docs
+  as displayed in the left frame.
+* Under each section are the individual pages,
+  listed in the order they are displayed in the left frame.
+  Each page line shows the title of the page
+  that will be displayed in the left frame
+  and the path to the source file.
+
+  Note that the page title displayed in the main canvas
+  is defined by the value of the H1 header in the page source file.
+  When creating a new page or modifying the title,
+  it is important to ensure that the title in the page source
+  and the title in the `mkdocs.yml` file match.
 
 ## Coding the documentation
 
@@ -27,6 +64,14 @@ The top of each documentation source file must include:
 - A comments block
 - A level 1 header with the title of the page.
   This must be preceded and followed by a single blank line.
+
+  Remember that this is the title
+  displayed in the main canvas of the doc page.
+  The title displayed in the left frame
+  is determined by the page line in the `mkdocs.yml` file.
+  When creating or renaming a page,
+  be sure that the title in the page source
+  and the title in the `mkdocs.yml` file match.
 
 For example:
 

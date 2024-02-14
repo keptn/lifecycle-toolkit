@@ -242,9 +242,7 @@ Keptn is generating DORA metrics and OpenTelemetry traces for your deployments.
 
 These metrics are exposed via the Keptn lifecycle operator `/metrics` endpoint on port `2222`.
 
-To see these raw metrics:
-
-- Port forward to the lifecycle operator metrics service:
+To see these raw metrics, port forward to the lifecycle operator metrics service:
 
 ```shell
 SERVICE=$(kubectl get svc -l control-plane=lifecycle-operator -A -ojsonpath="{.items[0].metadata.name}")

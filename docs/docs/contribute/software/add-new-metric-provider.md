@@ -56,9 +56,9 @@ The following steps are a starting point to create your own custom provider:
    But for example purposes we returned some of the data accessible in the function.
    Below is an example of a placeholder provider implementation.
 
-   ```go
-    {% include "./assets/example-code/placeholder-code-example.go" %}
-   ```
+      ```go
+       {% include "./assets/example-code/placeholder-code-example.go" %}
+      ```
 
    > **Note** Refer to the documentation of the
    > [KeptnMetric](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/metric.md)
@@ -89,11 +89,11 @@ The following steps are a starting point to create your own custom provider:
     ```
 
 5. **Update the validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.
-    * Add the provider name next to last providers on this
+   Add the provider name next to last providers on this
    [line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go#L29)
    to look like this
 
-   `// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql|placeholder`.
+      `// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql|placeholder`.
 
    In the metric-operator directory run `make manifests` to update the metrics-operator crd config
    Then modify the helm chart and the helm chart crd validation to match the update in the metrics-operator crd config

@@ -20,8 +20,7 @@ The following steps are a starting point to create your own custom provider:
     ```
 
 3. **Implement the Provider:** Create your own new folder inside the
-   [metrics-operator/controllers/common/providers]
-   (<https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers>),
+   [metrics-operator/controllers/common/providers](<https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers>),
    matching the new provider name (`placeholder` in our example).
    Create a new Go package for the placeholder provider in that folder.
    This package should contain a `struct` that implements the `KeptnSLIProvider` interface.
@@ -49,26 +48,25 @@ The following steps are a starting point to create your own custom provider:
           resource that contains a `query` and a
           [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md) resource.
 
-  You can follow other existing implementations,
-  such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
-  as an example.
-  **NB:** Each of the three functions expects a string containing a float value in it.
-  But for example purposes
-           we returned some of the data accessible in the function.
-  Below is an example of a placeholder provider implementation.
+   You can follow other existing implementations,
+   such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
+   as an example.
+   **NB:** Each of the three functions expects a string containing a float value in it.
+   But for example purposes we returned some of the data accessible in the function.
+   Below is an example of a placeholder provider implementation.
 
-  ```go
-  {% include "./assets/example-code/placeholder-code-example.go" %}
-  ```
+   ```go
+   {% include "./assets/example-code/placeholder-code-example.go" %}
+   ```
 
-> **Note** Refer to the documentation of the
-> [KeptnMetric](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/metric.md)
-> and
-> [Analysis](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/analysis.md)
-> resources
-> to understand what data should be retrieved from the methods inputs to compute accurate results.
+   > **Note** Refer to the documentation of the
+   > [KeptnMetric](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/metric.md)
+   > and
+   > [Analysis](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/analysis.md)
+   > resources
+   > to understand what data should be retrieved from the methods inputs to compute accurate results.
 
-1. **Instantiate the Provider** in the `providers.NewProvider` function
+4. **Instantiate the Provider** in the `providers.NewProvider` function
   in the `metrics-operator/controllers/common/providers/provider.go` file.
   add a case for the `KeptnPlaceholderProviderType`.
   Instantiate the placeholder provider struct and return it.
@@ -89,7 +87,7 @@ The following steps are a starting point to create your own custom provider:
     }
     ```
 
-2. **Update the validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.
+5. **Update the validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.
 
    Add the provider name next to last providers on this
    [line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go#L29)
@@ -100,7 +98,7 @@ The following steps are a starting point to create your own custom provider:
 
    Then modify the helm chart and the helm chart crd validation to match the update in the metrics-operator crd config
   
-3. **Add Test Cases:**
+6. **Add Test Cases:**
 
     * Write a unit test to validate your implementation at the function level.
       Unit tests ensure that individual

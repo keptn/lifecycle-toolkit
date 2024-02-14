@@ -56,9 +56,9 @@ The following steps are a starting point to create your own custom provider:
    But for example purposes we returned some of the data accessible in the function.
    Below is an example of a placeholder provider implementation.
 
-      ```go
+    ```go
        {% include "./assets/example-code/placeholder-code-example.go" %}
-      ```
+    ```
 
    > **Note** Refer to the documentation of the
    > [KeptnMetric](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/metric.md)

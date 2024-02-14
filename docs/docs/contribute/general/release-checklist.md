@@ -10,7 +10,7 @@ This page should be used to document the current process to create a full releas
 1. update helm tests and helm chart docs with new python runtime version in renovate PR
 1. merge python runtime renovate PRs
 1. release deno runtime
-1. update helm tests and helm chart docs with new python runtime version in renovate PR
+1. update helm tests and helm chart docs with new deno runtime version in renovate PR
 1. merge deno runtime renovate PRs
 1. re-generate cert-manager Helm chart docs bump cert-manager chart version in main chart
 1. release cert-manager by merging pr in charts

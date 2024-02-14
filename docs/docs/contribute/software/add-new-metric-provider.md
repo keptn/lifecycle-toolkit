@@ -93,7 +93,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
 
    Add the provider name next to last providers on this
    [line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go#L29)
-   to look like this 
+   to look like this
    `// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql|placeholder`.
 
    In the metric-operator directory run `make manifests` to update the metrics-operator crd config

@@ -67,9 +67,9 @@ The following steps are a starting point to create your own custom provider:
    > to understand what data should be retrieved from the methods inputs to compute accurate results.
 
 4. **Instantiate the Provider** in the `providers.NewProvider` function
-  in the `metrics-operator/controllers/common/providers/provider.go` file.
-  add a case for the `KeptnPlaceholderProviderType`.
-  Instantiate the placeholder provider struct and return it.
+   in the `metrics-operator/controllers/common/providers/provider.go` file.
+   add a case for the `KeptnPlaceholderProviderType`.
+   Instantiate the placeholder provider struct and return it.
 
     ```go
     // Inside the providers package

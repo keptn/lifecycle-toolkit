@@ -10,7 +10,6 @@ about the proper use of terminology for the Keptn project.
 The Keptn project does not maintain a formal style guide
 but should adhere to recommendations in:
 
-<!-- markdownlint-disable MD007 -->
 * [CNCF Style Guide](https://github.com/cncf/foundation/blob/main/style-guide.md).
 
 * The [Kubernetes documentation](https://kubernetes.io/docs/home/)
@@ -27,8 +26,6 @@ but should adhere to recommendations in:
     * [Word list](https://developers.google.com/style/word-list)
       includes good information about words and phrases
       that are commonly used in technical documentation
-
-<!-- markdownlint-enable MD007 -->
 
 ## Keptn terminology
 
@@ -64,7 +61,7 @@ Here are some guidelines for using these terms in Keptn documentation.
 
 * Kubernetes concepts and objects (such as workload or resource)
   should be lowercase unless they are the proper name of an object.
-  
+
     This means that "workload" is not capitalized, but "Pod" and "Deployment" are.
 
 * The first instance of one of these terms in a section

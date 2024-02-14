@@ -39,7 +39,7 @@ spec:
 ```
 
 ## Fields
-<!-- markdownlint-disable MD007 -->
+
 * **apiVersion** -- API version being used.
 * **kind** -- Resource type.
   Must be set to `KeptnTask`
@@ -68,15 +68,15 @@ spec:
           [KeptnAppVersion](../api-reference/lifecycle/v1beta1/index.md#keptnappversion)
           resources.
 
-             For example, the following lines reference the commit ID and user ID:
+            For example, the following lines reference the commit ID and user ID:
 
-             ```yaml
-             commit-id: "1234"
-             user-id: "person3"
-             ```
+            ```yaml
+            commit-id: "1234"
+            user-id: "person3"
+            ```
 
-             See [Context metadata](../../guides/metadata.md)
-             for information about setting user defined values for those fields.
+            See [Context metadata](../../guides/metadata.md)
+            for information about setting user defined values for those fields.
 
         * **objectType** (required) -- Indicates whether this `KeptnTask`
           is being executed for a `KeptnApp` or a `KeptnWorkload` resource.
@@ -113,7 +113,6 @@ spec:
       to wait for the `KeptnTask` to complete successfully.
       If the `KeptnTask` does not complete successfully in this timeframe,
       it is considered to be failed.
-<!-- markdownlint-enable MD007 -->
 
 ## Usage
 

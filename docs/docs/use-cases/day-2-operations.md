@@ -11,13 +11,13 @@ Keptn also assists you with day 2 operations for your application.
 Tasks that fall under this category include:
 
 * Updating the version of one or more [workloads](https://kubernetes.io/docs/concepts/workloads/)
-that are part of the same application
+  that are part of the same application
 * Adding a new [workload](https://kubernetes.io/docs/concepts/workloads/) to an existing application
 * Monitoring the health of your application using `KeptnMetrics`, as described [here](../guides/evaluatemetrics.md)
 * Optimizing the resource usage of your applications by integrating
-`KeptnMetrics` into a
-[HorizontalPodAutoscaler (HPA)](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/),
-as described [here](./hpa.md)
+  `KeptnMetrics` into a
+  [HorizontalPodAutoscaler (HPA)](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/),
+  as described [here](./hpa.md)
 
 ## Updating Workload Versions
 
@@ -57,21 +57,21 @@ should be updated, but a configuration change is not limited to that.
 From here, you essentially have two options:
 
 * **Only update the configuration *without* updating the `app.kubernetes.io/version`
-label:** This can be useful when the change in the configuration should happen regardless
-of the result of any task or evaluation, e.g., when the previously used image has a critical vulnerability
-and the image must be updated as quickly as possible.
-To do that, change `podtato-head-frontend` as follows:
+  label:** This can be useful when the change in the configuration should happen regardless
+  of the result of any task or evaluation, e.g., when the previously used image has a critical vulnerability
+  and the image must be updated as quickly as possible.
+  To do that, change `podtato-head-frontend` as follows:
 
     ```yaml
     {% include "./assets/day-2-operations/deployment-new-image.yaml" %}
     ```
 
 * **Update the configuration *and* the version label:**
-Doing so causes the `KeptnWorkload` that is associated
-with the `podtato-head-frontend` deployment to be updated,
-and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`
-are executed before the updated pods are scheduled.
-In this case, the deployment should be changed as follows:
+  Doing so causes the `KeptnWorkload` that is associated
+  with the `podtato-head-frontend` deployment to be updated,
+  and therefore the pre-task `my-task` and pre-evaluation `my-evaluation`
+  are executed before the updated pods are scheduled.
+  In this case, the deployment should be changed as follows:
 
     ```yaml
     {% include "./assets/day-2-operations/deployment-new-image-and-version.yaml" %}
@@ -126,11 +126,11 @@ To add a new workload (e.g. a new deployment) to an existing app,
 you must:
 
 * Make sure the
-`keptn.sh/app`/`app.kubernetes.io/part-of` label/annotation is present
-on the new [workload](https://kubernetes.io/docs/concepts/workloads/)
+  `keptn.sh/app`/`app.kubernetes.io/part-of` label/annotation is present
+  on the new [workload](https://kubernetes.io/docs/concepts/workloads/)
 * Add the new [workload](https://kubernetes.io/docs/concepts/workloads/) to the `KeptnApp`,
-if you have previously defined the `KeptnApp` resource manually.
-If the application has been discovered automatically, this step is not needed.
+  if you have previously defined the `KeptnApp` resource manually.
+  If the application has been discovered automatically, this step is not needed.
 
 For example, to add the deployment `podtato-head-left-leg` to the
 `podtato-head` application, the configuration for that new deployment

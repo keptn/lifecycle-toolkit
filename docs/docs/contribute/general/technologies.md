@@ -17,60 +17,51 @@ Keptn runs on Kubernetes and primarily works with deployments that run on Kubern
 so a good understanding of Kubernetes is essential
 for working with and contributing to Keptn.
 
-<!-- markdownlint-disable MD007 -->
 * **Understand the basics of Kubernetes**
-     * [Kubernetes official documentation](https://kubernetes.io/docs/concepts/overview/)
-     * [Kubernetes For Beginner](https://youtu.be/X48VuDVv0do)
+    * [Kubernetes official documentation](https://kubernetes.io/docs/concepts/overview/)
+    * [Kubernetes For Beginner](https://youtu.be/X48VuDVv0do)
 * **Kubernetes Architecture**
-     * [Philosophy](https://youtu.be/ZuIQurh_kDk)
-     * [Kubernetes Deconstructed: Understanding Kubernetes by Breaking It Down](https://www.youtube.com/watch?v=90kZRyPcRZw)
+    * [Philosophy](https://youtu.be/ZuIQurh_kDk)
+    * [Kubernetes Deconstructed: Understanding Kubernetes by Breaking It Down](https://www.youtube.com/watch?v=90kZRyPcRZw)
 * **CRD**
-     * [Custom Resource Definition (CRD)](https://www.youtube.com/watch?v=xGafiZEX0YA)
-     * [Kubernetes Operator simply explained in 10 mins](https://www.youtube.com/watch?v=ha3LjlD6g7g)
-     * [Writing Kubernetes Controllers for CRDs](https://www.youtube.com/watch?v=7wdUa4Ulwxg)
+    * [Custom Resource Definition (CRD)](https://www.youtube.com/watch?v=xGafiZEX0YA)
+    * [Kubernetes Operator simply explained in 10 mins](https://www.youtube.com/watch?v=ha3LjlD6g7g)
+    * [Writing Kubernetes Controllers for CRDs](https://www.youtube.com/watch?v=7wdUa4Ulwxg)
 * **Kube-builder Tutorial**
-     * [book.kubebuilder.io](https://book.kubebuilder.io/introduction.html)
-* **Isitobservable** -- Keptn has tight integrations
-    with Observability tools
-    and therefore knowing how to _Observe a System_ is important.
-     * [Isitobservable website](https://isitobservable.io/)
-     * [Is it Observable?
-       with Henrik Rexed](https://www.youtube.com/watch?v=aMwk2qo0v40)
-<!-- markdownlint-enable MD007 -->
+    * [book.kubebuilder.io](https://book.kubebuilder.io/introduction.html)
+* **Isitobservable**
+    * Keptn has tight integrations with Observability tools and therefore knowing how to _Observe a System_ is important.
+    * [Isitobservable website](https://isitobservable.io/)
+    * [Is it Observable?
+    with Henrik Rexed](https://www.youtube.com/watch?v=aMwk2qo0v40)
 
 ## Development tools
 
-<!-- markdownlint-disable MD007 -->
-* **Go language** --
+* **Go language**
   Most of the Keptn software and many of the test tools
   are written in the Go language.
-     * [Go web page](https://go.dev/)
-     has tutorials and documentation.
-     * [Ginkgo library](https://github.com/onsi/ginkgo/blob/master/README.md)
-       is used with the
-       [Gomega matcher](https://onsi.github.io/gomega/)
-       to implement component tests and end-to-end tests.
-* **Chainsaw** --
+    * [Go web page](https://go.dev/)
+  has tutorials and documentation.
+    * [Ginkgo library](https://github.com/onsi/ginkgo/blob/master/README.md)
+    is used with the
+    [Gomega matcher](https://onsi.github.io/gomega/)
+    to implement component tests and end-to-end tests.
+* **Chainsaw**
   Some test tools are written with chainsaw
-     * [Chainsaw web page](https://kyverno.github.io/chainsaw/)
-     has information to get you started
-* **Markdown** --
+    * [Chainsaw web page](https://kyverno.github.io/chainsaw/)
+  has information to get you started
+* **Markdown**
   Keptn documentation is authored in Markdown
   and processed with Hugo using the `docsy` theme.
-     * [Markdown Guide](https://www.markdownguide.org/)
-<!-- markdownlint-enable MD007 -->
+    * [Markdown Guide](https://www.markdownguide.org/)
 
 ## Understanding SLOs and SLIs
 
-<!-- markdownlint-disable MD007 -->
 * **Overview**
-     * [Overview](https://www.youtube.com/watch?v=tEylFyxbDLE)
-     * [The Art of SLOs (Service Level Objectives)](https://www.youtube.com/watch?v=E3ReKuJ8ewA)
-<!-- markdownlint-enable MD007 -->
+    * [Overview](https://www.youtube.com/watch?v=tEylFyxbDLE)
+    * [The Art of SLOs (Service Level Objectives)](https://www.youtube.com/watch?v=E3ReKuJ8ewA)
 
 ### Operator SDK
 
-<!-- markdownlint-disable MD007 -->
 * **Go-based Operators**
-     * [Go operator tutorial from RedHat](https://docs.okd.io/latest/operators/operator_sdk/golang/osdk-golang-tutorial.html)
-<!-- markdownlint-enable MD007 -->
+    * [Go operator tutorial from RedHat](https://docs.okd.io/latest/operators/operator_sdk/golang/osdk-golang-tutorial.html)

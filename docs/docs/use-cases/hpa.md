@@ -7,7 +7,8 @@ comments: true
 ## Scaling Workloads based on Keptn metrics
 
 Kubernetes provides many built-in capabilities to ensure
-that enough replicas are running in order to meet the current demand of your [workloads](https://kubernetes.io/docs/concepts/workloads/).
+that enough replicas are running in order to meet the current demand of
+your [workloads](https://kubernetes.io/docs/concepts/workloads/).
 One of these is the
 [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
 (HPA).
@@ -26,7 +27,7 @@ For more information about installation please refer to the
 [installation guide](../installation/index.md).
 
 > **Note**
-The Keptn Lifecycle Operator does not need to be installed for this use-case.
+  The Keptn Lifecycle Operator does not need to be installed for this use-case.
 
 ### Installation of metrics provider (optional)
 

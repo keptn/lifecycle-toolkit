@@ -20,38 +20,38 @@ The following steps are a starting point to create your own custom provider:
     ```
 
 3. **Implement the Provider:** Create your own new folder inside the
-[metrics-operator/controllers/common/providers](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers),
-matching the new provider name (`placeholder` in our example).
-Create a new Go package for the placeholder provider in that folder.
-This package should contain a `struct` that implements the `KeptnSLIProvider` interface.
-To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the following functions.
-
-  * `EvaluateQuery`(Fetches metric values from the provider)
-    * This function fetches metric values based on the provided
-      metric query from the provider.
-      It evaluates the query and returns the metric values
-      along with any additional data if required.
-    * It takes as input a [KeptnMetric](../../reference/crd-reference/metric.md)
-      and [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)
-  * `EvaluateQueryForStep`(Fetches metric values with step interval from the provider)
-    * This function fetches metric values with a specified step interval from the placeholder provider.
-      It takes into account the metric query and the step interval provided, executes the query,
-      and returns the metric values along with any additional data if required.
-    * It takes as input a [KeptnMetric](../../reference/crd-reference/metric.md)
-      and [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)
-  * `FetchAnalysisValue`(Fetches analysis values from the provider) functions.
-    * This function fetches analysis values based on the provided query and time range from the
-      provider.
-      It evaluates the query within the specified time range and returns the analysis
-      values along with any additional data if required.
-    * It takes as input an [Analysis](../../reference/crd-reference/analysis.md),
-      resource that contains a `query` and a
-      [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md) resource.
+  [metrics-operator/controllers/common/providers](<https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/>    controllers/common/providers),
+  matching the new provider name (`placeholder` in our example).
+  Create a new Go package for the placeholder provider in that folder.
+  This package should contain a `struct` that implements the `KeptnSLIProvider` interface.
+  To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the following functions.
+  
+    * `EvaluateQuery`(Fetches metric values from the provider)
+      * This function fetches metric values based on the provided
+        metric query from the provider.
+        It evaluates the query and returns the metric values
+        along with any additional data if required.
+      * It takes as input a [KeptnMetric](../../reference/crd-reference/metric.md)
+        and [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)
+    * `EvaluateQueryForStep`(Fetches metric values with step interval from the provider)
+      * This function fetches metric values with a specified step interval from the placeholder provider.
+        It takes into account the metric query and the step interval provided, executes the query,
+        and returns the metric values along with any additional data if required.
+      * It takes as input a [KeptnMetric](../../reference/crd-reference/metric.md)
+        and [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)
+    * `FetchAnalysisValue`(Fetches analysis values from the provider) functions.
+      * This function fetches analysis values based on the provided query and time range from the
+        provider.
+        It evaluates the query within the specified time range and returns the analysis
+        values along with any additional data if required.
+      * It takes as input an [Analysis](../../reference/crd-reference/analysis.md),
+        resource that contains a `query` and a
+        [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md) resource.
 
   You can follow other existing implementations,
- such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
- as an example.
-   **NB:** Each of the three functions expects a string containing a float value in it.
+  such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
+  as an example.
+  **NB:** Each of the three functions expects a string containing a float value in it.
   But for example purposes
            we returned some of the data accessible in the function.
   Below is an example of a placeholder provider implementation.
@@ -67,7 +67,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
 > resources
 > to understand what data should be retrieved from the methods inputs to compute accurate results.
 
-1. **Instantiate the Provider** in the `providers.NewProvider` function
+4. **Instantiate the Provider** in the `providers.NewProvider` function
   in the `metrics-operator/controllers/common/providers/provider.go` file.
   add a case for the `KeptnPlaceholderProviderType`.
   Instantiate the placeholder provider struct and return it.
@@ -88,7 +88,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
     }
     ```
 
-2. **Update the validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.
+5. **Update the validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.
 
    Add the provider name next to last providers on this
    [line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go#L29)
@@ -99,7 +99,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
 
    Then modify the helm chart and the helm chart crd validation to match the update in the metrics-operator crd config
   
-3. **Add Test Cases:**
+6. **Add Test Cases:**
 
   * Write a unit test to validate your implementation at the function level.
         Unit tests ensure that individual

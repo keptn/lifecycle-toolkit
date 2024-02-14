@@ -110,7 +110,8 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
   * Include a Chainsaw test to validate the behavior of Kubernetes resources managed by your code.
       Chainsaw tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
       the correctness of your Kubernetes configurations and deployments.
-
+      
+      **NB:** For testing the metricsprovider a single KeptnMetric and KeptnMetricsProvider is needed
       Below are the steps for adding an integration test.
     * In the directory `test/chainsaw/testmetrics`, create a folder `keptn-metrics-validation` in our case.
     * Within the `keptn-metrics-validation` folder, create three YAML files `00-install.yaml`, `goodmetrics.yaml`

@@ -39,8 +39,7 @@ To fully implement the `KeptnSLIProvider` interface, it's necessary to implement
     * This function fetches metric values with a specified step interval from the placeholder provider.
       It takes into account the metric query and the step interval provided, executes the query,
       and returns the metric values along with any additional data if required.
-    * It takes as input a [KeptnMetric]
-      (<https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetric_types.go>)
+    * It takes as input a [KeptnMetric](../../reference/crd-reference/metric.md)
       and [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)
   * `FetchAnalysisValue`(Fetches analysis values from the provider) functions.
     * This function fetches analysis values based on the provided query and time range from the

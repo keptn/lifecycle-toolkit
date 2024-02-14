@@ -55,10 +55,6 @@ The following steps are a starting point to create your own custom provider:
    But for example purposes we returned some of the data accessible in the function.
    Below is an example of a placeholder provider implementation.
 
-   ```go
-   {% include "./assets/example-code/placeholder-code-example.go" %}
-   ```
-
 4. **Instantiate the Provider** in the `providers.NewProvider` function
    in the `metrics-operator/controllers/common/providers/provider.go` file.
    add a case for the `KeptnPlaceholderProviderType`.

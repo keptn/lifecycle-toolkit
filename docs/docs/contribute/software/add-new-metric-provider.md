@@ -59,13 +59,6 @@ The following steps are a starting point to create your own custom provider:
    {% include "./assets/example-code/placeholder-code-example.go" %}
    ```
 
-   > **Note** Refer to the documentation of the
-   > [KeptnMetric](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/metric.md)
-   > and
-   > [Analysis](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/analysis.md)
-   > resources
-   > to understand what data should be retrieved from the methods inputs to compute accurate results.
-
 4. **Instantiate the Provider** in the `providers.NewProvider` function
    in the `metrics-operator/controllers/common/providers/provider.go` file.
    add a case for the `KeptnPlaceholderProviderType`.

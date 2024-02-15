@@ -95,6 +95,12 @@ func TestPhaseItem(t *testing.T) {
 		GetPostDeploymentEvaluationTaskStatusFunc: func() []v1beta1.ItemStatus {
 			return nil
 		},
+		GetPromotionTasksFunc: func() []string {
+			return []string{}
+		},
+		GetPromotionTaskStatusFunc: func() []v1beta1.ItemStatus {
+			return []v1beta1.ItemStatus{}
+		},
 		GenerateTaskFunc: func(taskDefinition v1beta1.KeptnTaskDefinition, checkType apicommon.CheckType) v1beta1.KeptnTask {
 			return v1beta1.KeptnTask{}
 		},
@@ -186,5 +192,11 @@ func TestPhaseItem(t *testing.T) {
 
 	wrapper.DeprecateRemainingPhases(apicommon.PhaseAppDeployment)
 	require.Len(t, phaseItemMock.DeprecateRemainingPhasesCalls(), 1)
+
+	_ = wrapper.GetPromotionTaskStatus()
+	require.Len(t, phaseItemMock.GetPromotionTaskStatusCalls(), 1)
+
+	_ = wrapper.GetPromotionTasks()
+	require.Len(t, phaseItemMock.GetPromotionTasks(), 1)
 
 }

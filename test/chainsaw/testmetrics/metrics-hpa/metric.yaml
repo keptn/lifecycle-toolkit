@@ -4,7 +4,7 @@ metadata:
   name: my-provider
 spec:
   type: prometheus
-  targetServer: "http://mockserver.$NAMESPACE.svc.cluster.local:1080"
+  targetServer: (join('.', ['http://mockserver', $namespace, 'svc.cluster.local:1080']))
 ---
 apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric

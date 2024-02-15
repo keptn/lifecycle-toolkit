@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Add a metrics provider endpoint
+# Add a metrics provider
 
 The
 [KeptnMetric](../../../guides/evaluatemetrics.md)

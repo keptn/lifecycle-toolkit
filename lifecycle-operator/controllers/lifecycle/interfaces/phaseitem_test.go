@@ -197,6 +197,6 @@ func TestPhaseItem(t *testing.T) {
 	require.Len(t, phaseItemMock.GetPromotionTaskStatusCalls(), 1)
 
 	_ = wrapper.GetPromotionTasks()
-	require.Len(t, phaseItemMock.GetPromotionTasks(), 1)
+	require.Len(t, phaseItemMock.GetPromotionTasksCalls(), 1)
 
 }

@@ -74,9 +74,9 @@ The steps to create your own metrics provider are:
     ```
 
    > **Note** Refer to the documentation of the
-   > [KeptnMetric](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/metric.md)
+   > [KeptnMetric](../../reference/crd-reference/metric.md)
    > and
-   > [Analysis](https://github.com/keptn/lifecycle-toolkit/blob/main/docs/docs/reference/crd-reference/analysis.md)
+   > [Analysis](../../reference/crd-reference/analysis.md)
    > resources
    > to understand what data should be retrieved from the methods inputs to compute accurate results.
 

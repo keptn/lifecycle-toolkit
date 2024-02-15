@@ -28,8 +28,13 @@ The steps to create your own metrics provider are:
     ```
 
 3. **Implement the Provider:** Create a new folder inside the
-   [metrics-operator/controllers/common/providers](<https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers>),
-   matching the new provider name (`placeholder` in our example).
+   [metrics-operator/controllers/common/providers](<https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers>).
+ Use the provider name as the name of the folder.
+ This name defines the string used to identify this provider
+ in the `spec.type` field of the
+ [KeptnMetricsProvider](../../../reference/crd-reference/metricsprovider.md)
+ resource.
+ In this example, the folder is named `placeholder`.
    Create a new Go package for the placeholder provider in that folder.
    This package should contain a `struct` that implements the `KeptnSLIProvider` interface.
    To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the following functions.

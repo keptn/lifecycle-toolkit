@@ -5,7 +5,7 @@ comments: true
 # Add a metrics provider
 
 The
-[KeptnMetric](../../../guides/evaluatemetrics.md)
+[KeptnMetric](../../guides/evaluatemetrics.md)
 feature works with almost any data platform
 but Keptn requires that a metrics provider be defined
 for any data platform it uses as a data source.
@@ -33,7 +33,7 @@ The steps to create your own metrics provider are:
    Use the provider name as the name of the folder.
    This name defines the string used to identify this provider
    in the `spec.type` field of the
-   [KeptnMetricsProvider](../../../reference/crd-reference/metricsprovider.md)
+   [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md)
    resource.
    In this example, the folder is named `placeholder`.
    Create a new Go package for the placeholder provider in that folder.
@@ -70,6 +70,8 @@ The steps to create your own metrics provider are:
    But for example purposes we returned some of the data accessible in the function.
    Below is an example of a placeholder provider implementation.
 
+   ## Example provider implementation
+
       ```go
         {% include "./assets/example-code/placeholder-code-example.go" %}
       ```
@@ -85,6 +87,8 @@ The steps to create your own metrics provider are:
    in the `metrics-operator/controllers/common/providers/provider.go` file.
    add a case for the `KeptnPlaceholderProviderType`.
    Instantiate the placeholder provider struct and return it.
+
+    ## Example instantiation case
 
     ```go
     // Inside the providers package

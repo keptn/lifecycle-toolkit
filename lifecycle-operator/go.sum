@@ -82,6 +82,8 @@ github.com/kelseyhightower/envconfig v1.4.0 h1:Im6hONhd3pLkfDFsbRgu68RDNkGF1r3dv
 github.com/kelseyhightower/envconfig v1.4.0/go.mod h1:cccZRl6mQpaq41TPp5QxidR+Sa3axMbJDNb//FQX6Gg=
 github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240209083610-2f77ae8867b1 h1:NIwoJ4l+YL1ZIOQat05nhTjz27KjaJNL4Cz9FvE5gZo=
 github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240209083610-2f77ae8867b1/go.mod h1:YlpbtfBoX6hwKrBNDXoWIQQ+JZvKB0vrFoxELdo0pKw=
+github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240214135802-4eeac278ce20 h1:5qgTmsgNhsQLRDcUT2UaHmOH2v5NhwuLXLR/PNeICoE=
+github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240214135802-4eeac278ce20/go.mod h1:3MUcNFFT+l5IC/v9WaT/sCkyQBjYn+bBMzRjVpMLclk=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=

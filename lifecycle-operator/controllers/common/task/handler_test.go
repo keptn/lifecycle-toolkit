@@ -376,6 +376,60 @@ func TestTaskHandler(t *testing.T) {
 			getSpanCalls:    1,
 			unbindSpanCalls: 1,
 		},
+		{
+			name: "succeeded promotion task",
+			object: &v1beta1.KeptnAppVersion{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+				},
+				Spec: v1beta1.KeptnAppVersionSpec{
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PromotionTasks: []string{"task-def"},
+						},
+					},
+				},
+				Status: v1beta1.KeptnAppVersionStatus{
+					PromotionStatus: apicommon.StateSucceeded,
+					PromotionTaskStatus: []v1beta1.ItemStatus{
+						{
+							DefinitionName: "task-def",
+							Status:         apicommon.StateProgressing,
+							Name:           "prom-task-def-",
+						},
+					},
+				},
+			},
+			taskObj: v1beta1.KeptnTask{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+					Name:      "prom-task-def-",
+				},
+				Status: v1beta1.KeptnTaskStatus{
+					Status: apicommon.StateSucceeded,
+				},
+			},
+			createAttr: CreateTaskAttributes{
+				SpanName: "",
+				Definition: v1beta1.KeptnTaskDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "task-def",
+					},
+				},
+				CheckType: apicommon.PromotionCheckType,
+			},
+			wantStatus: []v1beta1.ItemStatus{
+				{
+					DefinitionName: "task-def",
+					Status:         apicommon.StateSucceeded,
+					Name:           "prom-task-def-",
+				},
+			},
+			wantSummary:     apicommon.StatusSummary{Total: 1, Succeeded: 1},
+			wantErr:         nil,
+			getSpanCalls:    1,
+			unbindSpanCalls: 1,
+		},
 	}
 	config.Instance().SetDefaultNamespace(testcommon.KeptnNamespace)
 

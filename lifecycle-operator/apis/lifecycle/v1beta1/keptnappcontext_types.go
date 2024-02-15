@@ -39,6 +39,10 @@ type DeploymentTaskSpec struct {
 	// The items of this list refer to the names of KeptnEvaluationDefinitions
 	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
 	PostDeploymentEvaluations []string `json:"postDeploymentEvaluations,omitempty"`
+	// PromotionTasks is a list of all tasks to be performed during the promotion phase of the KeptnApp.
+	// The items of this list refer to the names of KeptnTaskDefinitions
+	// located in the same namespace as the KeptnApp, or in the Keptn namespace.
+	PromotionTasks []string `json:"promotionTasks,omitempty"`
 }
 
 // KeptnAppContextSpec defines the desired state of KeptnAppContext

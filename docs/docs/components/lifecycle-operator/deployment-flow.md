@@ -22,7 +22,7 @@ Within each phase, all tasks and evaluations for each phase
 are executed in parallel.
 They are not affected by the order
 in which evaluations and tasks are listed in the
-[KeptnAppContext](../../reference/crd-reference/appxontext.md)
+[KeptnAppContext](../../reference/crd-reference/appcontext.md)
 resource
 or in the order of the pre/post-tasks, pre/post-evaluations and promotion tasks
 that are listed in the Workflow manifests.

@@ -10,11 +10,11 @@ spec:
     name: curlcontainer
     image: curlimages/curl:latest
     args: [
-        '-X',
-        'POST',
-        'http://webhook.webhook.svc.cluster.local:8084/YOUR-UUID-HERE',
-        '-H',
-        'Content-Type: application/json',
-        '-d',
-        '{ "from": "keptn send-event" }'
+      '-X',
+      'POST',
+      'http://webhook.webhook.svc.cluster.local:8084/YOUR-UUID-HERE',
+      '-H',
+      'Content-Type: application/json',
+      '-d',
+      '{ "from": "keptn send-event" }'
     ]

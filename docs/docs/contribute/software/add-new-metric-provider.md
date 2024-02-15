@@ -3,7 +3,11 @@ comments: true
 ---
 
 # Add a metrics provider endpoint
-
+The
+[KeptnMetric](../../../guides/evaluatemetrics.md)
+feature works with almost any data platform
+but Keptn requires that a metrics provider be defined
+for any data platform it uses as a data source.
 This guide gives instructions for creating a new metrics provider.
 For these instructions,
 we define a sample provider called `placeholder`. 

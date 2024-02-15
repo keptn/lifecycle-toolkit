@@ -5,6 +5,7 @@ metadata:
   name: configuration
 spec:
   skipDelete: true
+  template: true
   timeouts:
     assert: 6m40s
     cleanup: 6m40s

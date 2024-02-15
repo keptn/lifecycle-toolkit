@@ -42,7 +42,7 @@ kubectl -n prod logs job/...
 
 ## I have pending Pods after Keptn is uninstalled
 
-> **Note**_ This section particularly affects clusters managed by ArgoCD.
+> **Note** This section particularly affects clusters managed by ArgoCD.
 
 If you have uninstalled Keptn and are now facing issues scheduling or deleting pods, follow these steps:
 

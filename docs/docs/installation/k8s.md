@@ -33,7 +33,9 @@ The basic steps are:
 2. Download [KinD](https://kind.sigs.k8s.io/)
 3. Create the local KinD cluster with the following command:
 
-        kind create cluster
+    ```shell
+    kind create cluster
+    ```
 
    See the
    [KinD Quick Start Guide](https://kind.sigs.k8s.io/docs/user/quick-start/)
@@ -44,7 +46,9 @@ The basic steps are:
    and that it is running a supported version of Kubernetes
    with the following command:
 
-        kubectl version --short
+    ```shell
+    kubectl version --short
+    ```
 
 ## Prepare your cluster for Keptn
 
@@ -79,15 +83,10 @@ Your cluster should include the following:
   you can use multiple instances of different data providers.
   These provide:
 
-  * Metrics used for
-    [Keptn Metrics](../guides/evaluatemetrics.md/)
-  * Metrics used for
-    [OpenTelemetry](../guides/otel.md/)
-    observability
-  * SLIs for pre- and post-deployment
-    [evaluations](../guides/evaluations.md/)
-  * SLIs used for
-    [analyses](../guides/slo.md)
+    * Metrics used for [Keptn Metrics](../guides/evaluatemetrics.md)
+    * Metrics used for [OpenTelemetry](../guides/otel.md) observability
+    * SLIs for pre- and post-deployment [evaluations](../guides/evaluations.md)
+    * SLIs used for [analyses](../guides/slo.md)
 
 * If you want to use the standardized observability feature,
   you must have an OpenTelemetry collector

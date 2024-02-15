@@ -21,22 +21,20 @@ to identify the workloads of interest.
 To integrate Keptn with your workloads:
 
 - You must first
-[install and enable](../installation/index.md#basic-installation)
-Keptn.
+  [install and enable](../installation/index.md#basic-installation)
+  Keptn.
 - Annotate or label your
-[workloads](https://kubernetes.io/docs/concepts/workloads/)
-([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
-[StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
-[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
-and
-[ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
-with either Keptn or Kubernetes keys.
+  [workloads](https://kubernetes.io/docs/concepts/workloads/)
+  ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
+  [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
+  [DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/),
+  and
+  [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+  with either Keptn or Kubernetes keys.
 
-  - [Basic annotations](#basic-annotations)
-    or labels
-    are required for all Keptn features except Keptn metrics.
-  - [Pre- and post-deployment checks](#basic-annotations)
-    are required only for the Release lifecycle management feature.
+    - [Basic annotations](#basic-annotations) or labels are required for all Keptn features except Keptn metrics.
+    - [Pre- and post-deployment checks](#basic-annotations) are required only for the Release lifecycle management
+      feature.
 
 Keptn uses these annotations to the Kubernetes workloads to create the
 [KeptnWorkload](../reference/api-reference/lifecycle/v1beta1/index.md#keptnworkload)
@@ -106,18 +104,18 @@ These keys are defined as:
   Keptn takes the image tag as version
   (unless it is "latest").
 - `keptn.sh/app` or `app.kubernetes.io/part-of`: Determines the name
-   of the generated `KeptnApp` representing your Application.
-   All workloads that share the same value for this label
-   are consolidated into the same `KeptnApp` resource
-   that you can generate following the instructions in
-   [Auto app discovery](auto-app-discovery.md).
+  of the generated `KeptnApp` representing your Application.
+  All workloads that share the same value for this label
+  are consolidated into the same `KeptnApp` resource
+  that you can generate following the instructions in
+  [Auto app discovery](auto-app-discovery.md).
 - `keptn.sh/container`: Determines the name of the container in the workload,
-   from which Keptn extracts the version.
-   This applies to single- and multi-container
-   workloads.
-   If the given container name does not match any container in the workload
-   no version can be determined.
-   Note that there is no equivalent `app.kubernetes.io/` annotation/label for this label.
+  from which Keptn extracts the version.
+  This applies to single- and multi-container
+  workloads.
+  If the given container name does not match any container in the workload
+  no version can be determined.
+  Note that there is no equivalent `app.kubernetes.io/` annotation/label for this label.
 
 Keptn automatically generates appropriate
 [KeptnApp](../reference/crd-reference/app.md)
@@ -152,19 +150,19 @@ Both annotations and labels are can be attached to Kubernetes objects.
 Some key differences between the two:
 
 - Annotations
-  - Are not used to identify and select objects
-  - Can contain up to 262144 chars
-  - Metadata in an annotation can be small or large,
-    structured or unstructured,
-    and can include characters not permitted by labels
+    - Are not used to identify and select objects
+    - Can contain up to 262144 chars
+    - Metadata in an annotation can be small or large,
+      structured or unstructured,
+      and can include characters not permitted by labels
 
 - Labels
-  - Can be used to select objects
-    and to find collections of objects that satisfy certain conditions
-  - Can contain up to 63 chars
-  - Are appropriate for identifying attributes of objects
-    that are meaningful and relevant to users
-    but do not directly imply semantics to the core system
+    - Can be used to select objects
+      and to find collections of objects that satisfy certain conditions
+    - Can contain up to 63 chars
+    - Are appropriate for identifying attributes of objects
+      that are meaningful and relevant to users
+      but do not directly imply semantics to the core system
 
 Annotations take precedence over labels,
 and the `keptn.sh` keys take precedence over `app.kubernetes.io` keys.

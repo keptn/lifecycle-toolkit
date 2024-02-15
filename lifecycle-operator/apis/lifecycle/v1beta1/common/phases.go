@@ -23,6 +23,7 @@ var phases = []KeptnPhaseType{
 	PhaseAppPostDeployment,
 	PhaseAppPreEvaluation,
 	PhaseAppPostEvaluation,
+	PhasePromotion,
 	PhaseAppDeployment,
 	PhaseReconcileEvaluation,
 	PhaseReconcileTask,
@@ -65,6 +66,10 @@ func (p KeptnPhaseType) IsPostTask() bool {
 	return strings.Contains(p.ShortName, "PostDeployTasks")
 }
 
+func (p KeptnPhaseType) IsPromotionTask() bool {
+	return strings.Contains(p.ShortName, "PromotionTasks")
+}
+
 func GetShortPhaseName(phase string) string {
 	for _, p := range phases {
 		if phase == p.ShortName {
@@ -91,6 +96,7 @@ var (
 	PhaseAppPostDeployment        = KeptnPhaseType{LongName: "App Post-Deployment Tasks", ShortName: "AppPostDeployTasks"}
 	PhaseAppPreEvaluation         = KeptnPhaseType{LongName: "App Pre-Deployment Evaluations", ShortName: "AppPreDeployEvaluations"}
 	PhaseAppPostEvaluation        = KeptnPhaseType{LongName: "App Post-Deployment Evaluations", ShortName: "AppPostDeployEvaluations"}
+	PhasePromotion                = KeptnPhaseType{LongName: "Promotion Tasks", ShortName: "PromotionTasks"}
 	PhaseAppDeployment            = KeptnPhaseType{LongName: "App Deployment", ShortName: "AppDeploy"}
 	PhaseReconcileEvaluation      = KeptnPhaseType{LongName: "Reconcile Evaluation", ShortName: "ReconcileEvaluation"}
 	PhaseReconcileTask            = KeptnPhaseType{LongName: "Reconcile Task", ShortName: "ReconcileTask"}

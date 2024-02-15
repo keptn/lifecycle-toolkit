@@ -14,8 +14,10 @@ we define a sample provider called `placeholder`.
 The steps to create your own metrics provider are:
 <!-- markdownlint-disable MD007 -->
 
-1. Fork and clone the [Keptn repo](https://github.com/keptn/lifecycle-toolkit)
-  for more information [checkout this link](https://keptn.sh/stable/docs/contribute/general/git/fork-clone/)
+1. **Fork and clone** the
+[Keptn repository](https://github.com/keptn/lifecycle-toolkit).
+ For more information, see
+ [Fork and clone the repository](https://keptn.sh/stable/docs/contribute/general/git/fork-clone/).
 
 2. **Define the Provider Type:** In the `metrics-operator/controllers/common/providers/common.go` file,
  define the constant `KeptnPlaceholderProviderType`.

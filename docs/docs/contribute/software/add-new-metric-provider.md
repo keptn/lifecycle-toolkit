@@ -3,6 +3,7 @@ comments: true
 ---
 
 # Add a metrics provider endpoint
+
 The
 [KeptnMetric](../../../guides/evaluatemetrics.md)
 feature works with almost any data platform
@@ -10,7 +11,7 @@ but Keptn requires that a metrics provider be defined
 for any data platform it uses as a data source.
 This guide gives instructions for creating a new metrics provider.
 For these instructions,
-we define a sample provider called `placeholder`. 
+we define a sample provider called `placeholder`.
 The steps to create your own metrics provider are:
 <!-- markdownlint-disable MD007 -->
 
@@ -29,12 +30,12 @@ The steps to create your own metrics provider are:
 
 3. **Implement the Provider:** Create a new folder inside the
    [metrics-operator/controllers/common/providers](<https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers>).
- Use the provider name as the name of the folder.
- This name defines the string used to identify this provider
- in the `spec.type` field of the
- [KeptnMetricsProvider](../../../reference/crd-reference/metricsprovider.md)
- resource.
- In this example, the folder is named `placeholder`.
+   Use the provider name as the name of the folder.
+   This name defines the string used to identify this provider
+   in the `spec.type` field of the
+   [KeptnMetricsProvider](../../../reference/crd-reference/metricsprovider.md)
+   resource.
+   In this example, the folder is named `placeholder`.
    Create a new Go package for the placeholder provider in that folder.
    This package should contain a `struct` that implements the `KeptnSLIProvider` interface.
    To fully implement the `KeptnSLIProvider` interface, it's necessary to implement the following functions.
@@ -65,13 +66,15 @@ The steps to create your own metrics provider are:
    such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
    as an example.
 
-   **NB:** Each of the three functions expects a string containing a float value in it.
+   Each of the three functions expects a string containing a float value in it.
    But for example purposes we returned some of the data accessible in the function.
    Below is an example of a placeholder provider implementation.
 
-    ```go
-       {% include "./assets/example-code/placeholder-code-example.go" %}
-    ```
+   ## Example provider implementation
+
+      ```go
+        {% include "./assets/example-code/placeholder-code-example.go" %}
+      ```
 
    > **Note** Refer to the documentation of the
    > [KeptnMetric](../../reference/crd-reference/metric.md)
@@ -84,6 +87,8 @@ The steps to create your own metrics provider are:
    in the `metrics-operator/controllers/common/providers/provider.go` file.
    add a case for the `KeptnPlaceholderProviderType`.
    Instantiate the placeholder provider struct and return it.
+
+    ## Example instantiation case
 
     ```go
     // Inside the providers package

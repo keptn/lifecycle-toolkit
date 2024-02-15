@@ -1,7 +1,7 @@
 dario.cat/mergo v1.0.0 h1:AGCNq9Evsj31mOgNPcLyXc+4PNABt905YmuqPYYpBWk=
 dario.cat/mergo v1.0.0/go.mod h1:uNxQE+84aUszobStD9th8a29P2fMDhsBdgRYvZOxGmk=
-github.com/argoproj/argo-rollouts v1.6.5 h1:VDAp9PGboRbzd9tQJ/8IkaI+KrvWIRrpfSV5aeX0GUQ=
-github.com/argoproj/argo-rollouts v1.6.5/go.mod h1:X2kTiBaYCSounmw1kmONdIZTwJNzNQYC0SrXUgSw9UI=
+github.com/argoproj/argo-rollouts v1.6.6 h1:JCJ0cGAwWkh2xCAHZ1OQmrobysRjCatmG9IZaLJpS1g=
+github.com/argoproj/argo-rollouts v1.6.6/go.mod h1:X2kTiBaYCSounmw1kmONdIZTwJNzNQYC0SrXUgSw9UI=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/benbjohnson/clock v1.3.5 h1:VvXlSJBzZpA/zum6Sj74hxwYI2DIxRWuNIoXAzHZz5o=
 github.com/benbjohnson/clock v1.3.5/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
@@ -80,8 +80,6 @@ github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnr
 github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
 github.com/kelseyhightower/envconfig v1.4.0 h1:Im6hONhd3pLkfDFsbRgu68RDNkGF1r3dvMUtDTo2cv8=
 github.com/kelseyhightower/envconfig v1.4.0/go.mod h1:cccZRl6mQpaq41TPp5QxidR+Sa3axMbJDNb//FQX6Gg=
-github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240209083610-2f77ae8867b1 h1:NIwoJ4l+YL1ZIOQat05nhTjz27KjaJNL4Cz9FvE5gZo=
-github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240209083610-2f77ae8867b1/go.mod h1:YlpbtfBoX6hwKrBNDXoWIQQ+JZvKB0vrFoxELdo0pKw=
 github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240214135802-4eeac278ce20 h1:5qgTmsgNhsQLRDcUT2UaHmOH2v5NhwuLXLR/PNeICoE=
 github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240214135802-4eeac278ce20/go.mod h1:3MUcNFFT+l5IC/v9WaT/sCkyQBjYn+bBMzRjVpMLclk=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=

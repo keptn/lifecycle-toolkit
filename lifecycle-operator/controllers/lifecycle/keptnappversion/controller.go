@@ -77,7 +77,7 @@ type KeptnAppVersionReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 //
-//nolint:gocyclo
+//nolint:gocyclo,gocognit
 func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	requestInfo := controllercommon.GetRequestInfo(req)
 	r.Log.Info("Searching for Keptn App Version", "requestInfo", requestInfo)

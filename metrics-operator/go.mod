@@ -8,7 +8,6 @@ require (
 	github.com/go-logr/logr v1.4.1
 	github.com/gorilla/mux v1.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240209083610-2f77ae8867b1
 	github.com/open-feature/go-sdk v1.10.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.18.0

@@ -11,7 +11,7 @@ for any data platform it uses as a data source.
 This guide gives instructions for creating a new metrics provider.
 For these instructions,
 we define a sample provider called `placeholder`. 
-The following steps are a starting point to create your own custom provider:
+The steps to create your own metrics provider are:
 <!-- markdownlint-disable MD007 -->
 
 1. Fork and clone the [Keptn repo](https://github.com/keptn/lifecycle-toolkit)

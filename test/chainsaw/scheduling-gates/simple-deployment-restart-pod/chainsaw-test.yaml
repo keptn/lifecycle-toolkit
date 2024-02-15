@@ -5,11 +5,13 @@ metadata:
   creationTimestamp: null
   name: simple-deployment-restart-pod
 spec:
+  namespaceTemplate:
+    metadata:
+      annotations:
+        keptn.sh/lifecycle-toolkit: enabled
   steps:
     - name: step-00
       try:
-        - script:
-            content: kubectl annotate ns $NAMESPACE keptn.sh/lifecycle-toolkit='enabled'
         - apply:
             file: 00-install.yaml
         - assert:
@@ -17,10 +19,10 @@ spec:
       catch:
         - podLogs:
             selector: app=test
-        - script:
-            content: kubectl describe keptnworkloadversion -n $NAMESPACE
-        - script:
-            content: kubectl describe keptnappversion -n $NAMESPACE
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
         - podLogs:
             namespace: keptn-system
             selector: control-plane=lifecycle-operator
@@ -31,10 +33,10 @@ spec:
       catch:
         - podLogs:
             selector: app=test
-        - script:
-            content: kubectl describe keptnworkloadversion -n $NAMESPACE
-        - script:
-            content: kubectl describe keptnappversion -n $NAMESPACE
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
         - podLogs:
             namespace: keptn-system
             selector: control-plane=lifecycle-operator
@@ -47,10 +49,10 @@ spec:
       catch:
         - podLogs:
             selector: app=test
-        - script:
-            content: kubectl describe keptnworkloadversion -n $NAMESPACE
-        - script:
-            content: kubectl describe keptnappversion -n $NAMESPACE
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
         - podLogs:
             namespace: keptn-system
             selector: control-plane=lifecycle-operator

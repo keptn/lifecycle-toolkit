@@ -7,18 +7,17 @@ spec:
   steps:
     - name: step-00
       try:
-        - script:
-            content: |
-              envsubst < mock-server.yaml  | kubectl apply -f -
-        - script:
-            content: |
-              envsubst < install.yaml | kubectl apply -f - -n $NAMESPACE
+        - apply:
+            file: mock-server.yaml
+        - apply:
+            file: install.yaml
     - name: step-01
       try:
         - assert:
             file: assert-1.yaml
       catch:
-        - script:
-            content: kubectl logs -l control-plane=metrics-operator -n keptn-system
-        - script:
-            content: kubectl describe Analysis -n $NAMESPACE
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=metrics-operator
+        - describe:
+            resource: Analysis

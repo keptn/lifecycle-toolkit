@@ -259,6 +259,16 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 		"workloadVersion":     "version",
 		"workloadVersionName": "workload",
 	}, workload.GetEventAnnotations())
+
+	require.Equal(t,
+		[]string{},
+		workload.GetPromotionTasks(),
+	)
+
+	require.Equal(t,
+		[]ItemStatus{},
+		workload.GetPromotionTaskStatus(),
+	)
 }
 
 //nolint:dupl
@@ -444,18 +454,4 @@ func TestKeptnWorkloadVersionList(t *testing.T) {
 	require.Len(t, got, 2)
 	require.Equal(t, "obj1", got[0].GetName())
 	require.Equal(t, "obj2", got[1].GetName())
-}
-
-func TestKeptnWorkloadVersion_GetPromotionTasks(t *testing.T) {
-	w := KeptnWorkloadVersion{}
-
-	got := w.GetPromotionTasks()
-	require.Empty(t, got)
-}
-
-func TestKeptnWorkloadVersion_GetPromotionTaskStatus(t *testing.T) {
-	w := KeptnWorkloadVersion{}
-
-	got := w.GetPromotionTaskStatus()
-	require.Empty(t, got)
 }

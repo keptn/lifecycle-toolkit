@@ -81,6 +81,8 @@ spec:
               value: "0"
             - name: SCHEDULING_GATES_ENABLED
               value: "false"
+            - name: PROMOTION_TASKS_ENABLED
+              value: "false"
             - name: CERT_MANAGER_ENABLED
               value: "true"
           securityContext:

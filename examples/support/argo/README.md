@@ -9,7 +9,7 @@ using Keptn and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/).
 * Install argo CLI according to the instructions [here](https://argo-cd.readthedocs.io/en/stable/cli_installation/)
 * Afterward, you can fetch the secret for the ArgoCD CLI using: `make argo-get-password`
 * Then you can port-forward the ArgoUI using: `make port-forward-argocd`
-  * Alternatively, you can access Argo using the CLI, configure it using `make argo-configure-cli`
+    * Alternatively, you can access Argo using the CLI, configure it using `make argo-configure-cli`
 * Deploy the PodTatoHead Demo Application: `make argo-install-podtatohead`
 * Watch the progress on your ArgoUI: `http://localhost:8080`.
   Use the `admin` user and the password

@@ -70,14 +70,14 @@ Let us know if we missed yours, for now here's a collection from 2023:
 
 - Dec 2023: [GitOpsCon Europe (Virtual): Working Your Way Through GitOps with Keptn - Rakshit Gondwal, Cloud Native Computing Foundation & Shivang Shandilya, Open Source](https://youtu.be/CQhXfzYVAwY?feature=shared)
 - Nov 2023: KubeCon CloudNativeCon North America (Chicago):
-  - [Lightning Talk: From Novice to Keptn Contributor: Empowering My Journey in Cloud Native Communities by Yash Pimple](https://youtu.be/TyZS5mH6vM0?feature=shared)
-  - [Keptn Lifecycle Toolkit Updates and Deep Dive by Anna Reale](https://youtu.be/H3UxOwS06iI?feature=shared)
+    - [Lightning Talk: From Novice to Keptn Contributor: Empowering My Journey in Cloud Native Communities by Yash Pimple](https://youtu.be/TyZS5mH6vM0?feature=shared)
+    - [Keptn Lifecycle Toolkit Updates and Deep Dive by Anna Reale](https://youtu.be/H3UxOwS06iI?feature=shared)
 - Oct 2023: [Keptn Metrics Operator by Rakshit Gondwal](https://youtu.be/K9O2Xi8P6Y0?feature=shared&t=549)
 - Jul 2023: [Keptn Demo: Python & Container Functions Runtime by Florian Bacher](https://youtu.be/fkuo6CAJ1l8?feature=shared)
 - Jun 2023: [How GitHub Codespaces Makes Contributing to Keptn & Keptn Docs Much Easier! By Adam Gardner](https://youtu.be/sFNzOhZw7Eg)
 - May 2023: cdCon + GitOpsCon (Vancouver):
-  - Comparisons of Open Source GitOps Tooling - Akshay Yadav, Orange Business Services & Monika Yadav, NorthCap University (not recorded)
-  - Extending Observability to the Application Lifecycle with ArgoCD, Flux, and Keptn by Ana Margarita Medina & Adam Gardner (not recorded)
+    - Comparisons of Open Source GitOps Tooling - Akshay Yadav, Orange Business Services & Monika Yadav, NorthCap University (not recorded)
+    - Extending Observability to the Application Lifecycle with ArgoCD, Flux, and Keptn by Ana Margarita Medina & Adam Gardner (not recorded)
 - Apr 2023: [Introducing Keptn Lifecycle Toolkit by Andi Grabner](https://youtu.be/449HAFYkUlY?feature=shared)
 - Apr 2023: KubeCon CloudNativeCon Europe (Amsterdam): [Navigating the Delivery Lifecycle with Keptn by Giovanni Liva, Ana Medina, Brad McCoy, Meha Bhalodiya](https://youtu.be/Ezd6hGnRL84?feature=shared)
 - Mar 2023: [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes by Adam Gardner](https://youtu.be/Hh01bBwZ_qM?feature=shared)

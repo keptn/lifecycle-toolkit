@@ -54,22 +54,22 @@ these manifests and restart the Keptn deployment process.
 
 1. Completely remove your Keptn installation with the following command sequence:
 
-```shell
-your-keptn-version=<your-keptn-version>
-kubectl delete -f \
-     https://github.com/keptn/lifecycle-toolkit/releases/download/$your-keptn-version/manifest.yaml
-```
+    ```shell
+    your-keptn-version=<your-keptn-version>
+    kubectl delete -f \
+         https://github.com/keptn/lifecycle-toolkit/releases/download/$your-keptn-version/manifest.yaml
+    ```
 
 1. Use Helm to install a clean version of Keptn:
 
-```shell
-helm repo add keptn https://charts.lifecycle.keptn.sh
-helm repo update
-helm upgrade --install keptn keptn/keptn -n keptn-system --create-namespace --wait
-```
+    ```shell
+    helm repo add keptn https://charts.lifecycle.keptn.sh
+    helm repo update
+    helm upgrade --install keptn keptn/keptn -n keptn-system --create-namespace --wait
+    ```
 
-For information about  advanced installation options, refer to
-[Modify Helm configuration options](./index.md).
+    For information about  advanced installation options, refer to
+    [Modify Helm configuration options](./index.md).
 
 1. After the installation finishes, restore the manifests from you backup
 

@@ -4,7 +4,9 @@ comments: true
 
 # Add a metrics provider endpoint
 
-In this guide, we will create a placeholder provider.
+This guide gives instructions for creating a new metrics provider.
+For these instructions,
+we define a sample provider called `placeholder`. 
 The following steps are a starting point to create your own custom provider:
 <!-- markdownlint-disable MD007 -->
 

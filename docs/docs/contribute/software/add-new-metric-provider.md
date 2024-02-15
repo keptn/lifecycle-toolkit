@@ -27,7 +27,7 @@ The steps to create your own metrics provider are:
     const KeptnPlaceholderProviderType = "placeholder"
     ```
 
-3. **Implement the Provider:** Create your own new folder inside the
+3. **Implement the Provider:** Create a new folder inside the
    [metrics-operator/controllers/common/providers](<https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator/controllers/common/providers>),
    matching the new provider name (`placeholder` in our example).
    Create a new Go package for the placeholder provider in that folder.

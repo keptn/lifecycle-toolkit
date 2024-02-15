@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Adding a New Metrics Provider for Placeholder Endpoint
+# Add a metrics provider endpoint
 
 In this guide, we will create a placeholder provider.
 The following steps are a starting point to create your own custom provider:

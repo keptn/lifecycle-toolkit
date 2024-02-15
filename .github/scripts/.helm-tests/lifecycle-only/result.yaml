@@ -8887,6 +8887,8 @@ spec:
           value: "0"
         - name: SCHEDULING_GATES_ENABLED
           value: "false"
+        - name: PROMOTION_TASKS_ENABLED
+          value: "true"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
         - name: CERT_MANAGER_ENABLED

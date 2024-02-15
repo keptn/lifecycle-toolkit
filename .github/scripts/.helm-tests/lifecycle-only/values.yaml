@@ -8,6 +8,7 @@ global:
 
 lifecycleOperator:
   enabled: true
+  promotionTasksEnabled: true
   lifecycleOperator:
     image:
       repository: myrep

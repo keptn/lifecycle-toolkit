@@ -104,6 +104,7 @@ type envConfig struct {
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
 	SchedulingGatesEnabled bool `envconfig:"SCHEDULING_GATES_ENABLED" default:"false"`
+	PromotionTasksEnabled  bool `envconfig:"PROMOTION_TASKS_ENABLED" default:"false"`
 
 	CertManagerEnabled bool `envconfig:"CERT_MANAGER_ENABLED" default:"true"`
 }

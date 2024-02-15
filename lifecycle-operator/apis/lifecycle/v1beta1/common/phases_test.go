@@ -36,6 +36,10 @@ func TestKeptnPhaseType_IsEvaluation(t *testing.T) {
 			State: PhaseAppPreDeployment,
 			Want:  false,
 		},
+		{
+			State: PhasePromotion,
+			Want:  false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
@@ -110,6 +114,10 @@ func TestKeptnPhaseType_IsPostEvaluation(t *testing.T) {
 			State: PhaseAppPreDeployment,
 			Want:  false,
 		},
+		{
+			State: PhasePromotion,
+			Want:  false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
@@ -145,6 +153,10 @@ func TestKeptnPhaseType_IsTask(t *testing.T) {
 		},
 		{
 			State: PhaseAppPreEvaluation,
+			Want:  false,
+		},
+		{
+			State: PhasePromotion,
 			Want:  false,
 		},
 	}
@@ -184,6 +196,10 @@ func TestKeptnPhaseType_IsPreTask(t *testing.T) {
 			State: PhaseAppPreEvaluation,
 			Want:  false,
 		},
+		{
+			State: PhasePromotion,
+			Want:  false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
@@ -221,10 +237,55 @@ func TestKeptnPhaseType_IsPostTask(t *testing.T) {
 			State: PhaseAppPreEvaluation,
 			Want:  false,
 		},
+		{
+			State: PhasePromotion,
+			Want:  false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
 			require.Equal(t, tt.State.IsPostTask(), tt.Want)
+		})
+	}
+}
+
+func TestKeptnPhaseType_IsPromotionTask(t *testing.T) {
+	tests := []struct {
+		State KeptnPhaseType
+		Want  bool
+	}{
+		{
+			State: PhaseWorkloadDeployment,
+			Want:  false,
+		},
+		{
+			State: PhaseWorkloadPostDeployment,
+			Want:  false,
+		},
+		{
+			State: PhaseWorkloadPreDeployment,
+			Want:  false,
+		},
+		{
+			State: PhaseAppPostDeployment,
+			Want:  false,
+		},
+		{
+			State: PhaseAppPreDeployment,
+			Want:  false,
+		},
+		{
+			State: PhaseAppPreEvaluation,
+			Want:  false,
+		},
+		{
+			State: PhasePromotion,
+			Want:  true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			require.Equal(t, tt.State.IsPromotionTask(), tt.Want)
 		})
 	}
 }

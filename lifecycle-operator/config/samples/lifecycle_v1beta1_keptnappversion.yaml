@@ -12,6 +12,8 @@ spec:
     - post-deployment-task
   postDeploymentEvaluations:
     - post-deployment-evaluation
+  promotionTasks:
+    - promotion-task
   metadata:
     - key: abc123
   spanLinks:

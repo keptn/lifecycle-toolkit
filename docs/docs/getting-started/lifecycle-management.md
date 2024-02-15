@@ -197,7 +197,7 @@ In this case it needs to be `keptndemoapp`.
 
 Additionally `promotionTasks` are present in the `KeptnAppContext`.
 These are aimed to be executed after the Deployment and all pre/post-deployment
-tasks and evaluation are executed successfully.
+tasks and evaluations are executed successfully.
 They should serve one purpose - to promote the application to another stage
 (for example from `dev` to `prod`).
 A promotion task is defined as a `KeptnTaskDefinition`:

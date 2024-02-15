@@ -1,0 +1,5 @@
+labels:
+  app.kubernetes.io/part-of: keptndemoapp
+  app.kubernetes.io/name: nginx
+  app.kubernetes.io/version: 0.0.2
+  keptn.sh/post-deployment-tasks: "send-event"

@@ -34,7 +34,8 @@ the `keptn.sh/version` or `app.kubernetes.io/version` labels/annotations
 in their [workloads](https://kubernetes.io/docs/concepts/workloads/).
 
 When this changes, Keptn interprets a change as a new version
-and thus re-runs the pre- and post-tasks and evaluations for the application.
+and thus re-runs the pre- and post-tasks and evaluations for the application
+also together with promotion tasks if the previous phases succeeded.
 
 If the version label/annotation does not change, Keptn does not consider
 a change of a [workload](https://kubernetes.io/docs/concepts/workloads/) configuration to be an update,

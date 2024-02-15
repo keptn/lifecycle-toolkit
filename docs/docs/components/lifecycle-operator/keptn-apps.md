@@ -51,6 +51,8 @@ Implementing Keptn applications provides the following benefits:
   before the scheduler creates the pods for any of the workloads.
 * You can define post-deployment evaluations and tasks
   that run only after all the workloads have completed successfully.
+* You can define promotion tasks that run only after all the post-deployment
+  tasks and evaluations have completed successfully.
 
 You control the content of a `KeptnApp` resource
 with annotations or labels that are applied to each

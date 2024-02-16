@@ -62,20 +62,20 @@ The steps to create your own metrics provider are:
           resource that contains a `query` and a
           [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md) resource.
 
-   You can follow other existing implementations,
-   such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
-   as an example.
+     You can follow other existing implementations,
+     such as [prometheus.go](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go),
+     as an example.
 
-   Each of the three functions expects a string containing a float value in it.
-   But for example purposes we returned some of the data accessible in the function.
-   Below is an example of a placeholder provider implementation.
+     Each of the three functions expects a string containing a float value in it.
+     But for example purposes we returned some of the data accessible in the function.
+     Below is an example of a placeholder provider implementation.
 
-   > **Note** Refer to the documentation of the
-   > [KeptnMetric](../../reference/crd-reference/metric.md)
-   > and
-   > [Analysis](../../reference/crd-reference/analysis.md)
-   > resources
-   > to understand what data should be retrieved from the methods inputs to compute accurate results.
+      > **Note** Refer to the documentation of the
+      > [KeptnMetric](../../reference/crd-reference/metric.md)
+      > and
+      > [Analysis](../../reference/crd-reference/analysis.md)
+      > resources
+      > to understand what data should be retrieved from the methods inputs to compute accurate results.
 
 4. **Instantiate the Provider** in the `providers.NewProvider` function
    in the `metrics-operator/controllers/common/providers/provider.go` file.

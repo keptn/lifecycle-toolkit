@@ -68,6 +68,7 @@ The steps to create your own metrics provider are:
 
      Each of the three functions expects a string containing a float value in it.
      But for example purposes we returned some of the data accessible in the function.
+     
      Below is an example of a placeholder provider implementation.
 
       ```go
@@ -135,9 +136,3 @@ The steps to create your own metrics provider are:
         > For more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics)
 
 <!-- markdownlint-enable MD007 -->
-
-## Example provider implementation
-
-```go
-  {% include "./assets/example-code/placeholder-code-example.go" %}
-```

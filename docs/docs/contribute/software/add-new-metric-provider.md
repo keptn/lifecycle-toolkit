@@ -70,12 +70,6 @@ The steps to create your own metrics provider are:
    But for example purposes we returned some of the data accessible in the function.
    Below is an example of a placeholder provider implementation.
 
-## Example provider implementation
-
-      ```go
-        {% include "./assets/example-code/placeholder-code-example.go" %}
-      ```
-
    > **Note** Refer to the documentation of the
    > [KeptnMetric](../../reference/crd-reference/metric.md)
    > and
@@ -87,8 +81,6 @@ The steps to create your own metrics provider are:
    in the `metrics-operator/controllers/common/providers/provider.go` file.
    add a case for the `KeptnPlaceholderProviderType`.
    Instantiate the placeholder provider struct and return it.
-
-## Example instantiation case
 
     ```go
     // Inside the providers package
@@ -139,3 +131,9 @@ The steps to create your own metrics provider are:
         > For more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics)
 
 <!-- markdownlint-enable MD007 -->
+
+## Example provider implementation
+
+```go
+  {% include "./assets/example-code/placeholder-code-example.go" %}
+```

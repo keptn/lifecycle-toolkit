@@ -17,6 +17,7 @@ The steps to create your own metrics provider are:
 
 1. **Fork and clone** the
 [Keptn repository](https://github.com/keptn/lifecycle-toolkit).
+
  For more information, see
  [Fork and clone the repository](https://keptn.sh/stable/docs/contribute/general/git/fork-clone/).
 

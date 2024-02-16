@@ -68,7 +68,7 @@ The steps to create your own metrics provider are:
 
      Each of the three functions expects a string containing a float value in it.
      But for example purposes we returned some of the data accessible in the function.
-     
+
      Below is an example of a placeholder provider implementation.
 
       ```go

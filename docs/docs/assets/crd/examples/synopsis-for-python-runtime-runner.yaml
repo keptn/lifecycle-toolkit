@@ -3,9 +3,9 @@ kind: KeptnTaskDefinition
 metadata:
   name: <task-name>
 spec:
-  python:
+  python: |
     inline | httpRef | functionRef | ConfigMapRef
-    parameters:
+    parameters: |
       map:
         textMessage: "This is my configuration"
     secureParameters:

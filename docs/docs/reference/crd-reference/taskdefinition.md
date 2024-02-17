@@ -34,10 +34,9 @@ differentiated by the `spec` section:
   [Examples for a container-runtime runner](#examples-for-a-container-runtime-runner).
 
 <!-- markdownlint-disable MD046 -->
-<!-- markdownlint-disable MD051 -->
-* Pre-defined containers
+- Pre-defined containers
 
-  * Use the pre-defined `deno-runtime` runner
+  - Use the pre-defined `deno-runtime` runner
     to define tasks using
     [Deno](https://deno.com/)
     scripts,
@@ -46,14 +45,14 @@ differentiated by the `spec` section:
     You can use this to specify simple actions
     without having to define a full container.
     See
-    [Synopsis for Deno-runtime container](#deno-runtime)
+    <a href="#deno-runtime">Synopsis for Deno-runtime container</a>
     and
     [Deno-runtime examples](#examples-for-deno-runtime-runner).
-  * Use the pre-defined `python-runtime` runner
+  - Use the pre-defined `python-runtime` runner
     to define your task using
     [Python 3](https://www.python.org/).
     See
-    [Synopsis for python-runtime runner](#python-runtime)
+    <a href="#python-runtime">Synopsis for python-runtime runner</a>
     and
     [Examples for a python-runtime runner](#examples-for-a-python-runtime-runner).
 
@@ -99,11 +98,11 @@ spec:
           and code the functionality in Deno script,
           which is similar to JavaScript and Typescript.
           See
-          [Synopsis for deno-runtime container](#deno-runtime)
+          <a href="#deno-runtime">Synopsis for deno-runtime container</a>
         - **python** -- Use a `python-runtime` function
           and code the functionality in Python 3.
           See
-          [Synopsis for python-runtime runner](#python-runtime)
+          <a href="#python-runtime">Synopsis for python-runtime runner</a>
         - **container** -- Use the runner defined
           for the `container-runtime` container.
           This is a standard Kubernetes container
@@ -222,10 +221,10 @@ and Keptn sets up the container and runs the script as part of the task.
                   such as Jenkins, Argo Workflows, Flux, and Tekton.
 
                     - **deno example:**
-                      [Example 1: inline script for a Deno script](#example-1-inline-script-for-a-deno-script)
+                      <a href="#example-1-inline-script-for-a-deno-script">Example 1: inline script for a Deno script</a>
 
                     - **python example:**
-                      [Example 1: inline code for a python-runtime runner](#example-1-inline-code-for-a-python-runtime-runner)
+                      <a href="#example-1-inline-code-for-a-python-runtime-runner">Example 1: inline code for a python-runtime runner</a>
 
                     - **httpRef** - Specify a script to be executed at runtime
                       from the remote webserver that is specified.
@@ -241,10 +240,9 @@ and Keptn sets up the container and runs the script as part of the task.
                     Any other scripts listed here are silently ignored.
 
                     - **deno example:**
-                      [Example 2: httpRef script for a Deno script](#example-2-httpref-script-for-a-deno-script)
+                      <a href="#example-2-httpref-script-for-a-deno-script">Example 2: httpRef script for a Deno script</a>
                     - **python example:**
-                      [Example 2: httpRef for a python-runtime runner](#example-2-httpref-for-a-python-runtime-runner)
-
+                      <a href="#example-2-httpref-for-a-python-runtime-runner">Example 2: httpRef for a python-runtime runner</a>
                 - **functionRef** -- Execute another `KeptnTaskDefinition` resources.
                   Populate this field with the value(s) of the `metadata.name` field
                   for each `KeptnDefinitionTask` to be called.
@@ -271,18 +269,17 @@ and Keptn sets up the container and runs the script as part of the task.
                     are silently ignored.
 
                     - **deno example:**
-                      [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
+                      <a href="#example-3-functionref-for-a-deno-script">Example 3: functionRef for a Deno script</a>
                     - **python example:**
-                      [Example 3: functionRef for a python-runtime runner](#example-3-functionref-for-a-python-runtime-runner)
-
+                      <a href="#example-3-functionref-for-a-python-runtime-runner">Example 3: functionRef for a python-runtime runner</a>
                 - **ConfigMapRef** - Specify the name of a
                   [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
                   resource that contains the function to be executed.
 
                     - **deno example:**
-                      [Example 5: ConfigMap for a Deno script](#example-5-configmap-for-a-deno-script)
+                      <a href="#example-5-configmap-for-a-deno-script">Example 5: ConfigMap for a Deno script</a>
                     - **python example:**
-                      [Example 4: ConfigMapRef for a python-runtime runner](#example-4-configmapref-for-a-python-runtime-runner)
+                      <a href="#example-4-configmapref-for-a-python-runtime-runner">Example 4: ConfigMapRef for a python-runtime runner</a>
 
             - **parameters** - An optional field
               to supply input parameters to a function.
@@ -295,9 +292,9 @@ and Keptn sets up the container and runs the script as part of the task.
               for more information.
 
                 - **deno example:**
-                  [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
+                  <a href="#example-3-functionref-for-a-deno-script">Example 3: functionRef for a Deno script</a>
                 - **python example:**
-                  [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
+                  <a href="#example-3-functionref-for-a-python-runtime-runner">Example 3: functionRef for a python-runner runner</a>
 
             - **secureParameters** -- An optional field
               used to pass a Kubernetes secret.
@@ -312,9 +309,9 @@ and Keptn sets up the container and runs the script as part of the task.
                 for details.
 
                 - **deno example:**
-                  [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
+                  <a href="#example-3-functionref-for-a-deno-script">Example 3: functionRef for a Deno script</a>
                 - **python example:**
-                  [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
+                  <a href="#example-3-functionref-for-a-python-runtime-runner">Example 3: functionRef for a python-runner runner</a>
 
 ## Usage
 
@@ -482,7 +479,6 @@ file.
     ```yaml
     {% include "../../assets/crd/python-configmap.yaml" %}
     ```
-<!-- markdownlint-enable MD051 -->
 <!-- markdownlint-enable MD046 -->
 ### Allowed libraries for the python-runtime runner
 

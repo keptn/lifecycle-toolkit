@@ -99,7 +99,6 @@ For detailed information please look at the [Examples section](#examples).
 
 ## Examples
 
-
 <!-- markdownlint-disable MD046 -->
 
 === "Prometheus"
@@ -143,7 +142,6 @@ For detailed information please look at the [Examples section](#examples).
     define the key name of your DT token stored in a secret,
     which is not possible for Datadog or Prometheus.
     For this example `myCustomTokenKey` was used.
-
 
 <!-- markdownlint-enable MD046 -->
 

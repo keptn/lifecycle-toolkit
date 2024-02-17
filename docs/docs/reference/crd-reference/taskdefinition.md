@@ -33,7 +33,6 @@ differentiated by the `spec` section:
   and
   [Examples for a container-runtime runner](#examples-for-a-container-runtime-runner).
 
-<!-- markdownlint-disable MD046 -->
 - Pre-defined containers
 
   - Use the pre-defined `deno-runtime` runner
@@ -149,6 +148,7 @@ almost anything that you implemented with JES for Keptn v1.
           [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
           spec documentation.
 
+<!-- markdownlint-disable MD046 -->
 ## Synopsis for predefined containers
 
 The predefined containers allow you to easily define a task
@@ -181,6 +181,7 @@ and Keptn sets up the container and runs the script as part of the task.
     ```yaml
     {% include "../../assets/crd/examples/synopsis-for-python-runtime-runner.yaml" %}
     ```
+<!-- markdownlint-enable MD046 -->
 
 ### Fields for predefined containers
 
@@ -358,6 +359,7 @@ This task is then referenced in the
 [appcontext.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-2/appcontext.yaml)
 file.
 
+<!-- markdownlint-disable MD046 -->
 ## Examples for deno-runtime runner
 
 === "Example 1: inline script for a Deno script"

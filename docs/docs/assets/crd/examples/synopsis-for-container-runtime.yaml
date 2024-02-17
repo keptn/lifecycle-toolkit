@@ -1,0 +1,9 @@
+apiVersion: lifecycle.keptn.sh/v?alpha?
+kind: KeptnTaskDefinition
+metadata:
+  name: <task-name>
+spec:
+  container: |
+    name: <container-name>
+    image: <image-name>
+    <other fields>

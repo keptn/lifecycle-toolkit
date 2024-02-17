@@ -63,15 +63,7 @@ include the same lines at the top.
 These are described here.
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
-kind: KeptnTaskDefinition
-metadata:
-  name: <task-name>
-spec:
-  deno | python | container
-  ...
-  retries: <integer>
-  timeout: <duration>
+{% include "../../assets/crd/examples/synopsis-for-all-runners.yaml"  %}
 ```
 
 ### Fields used for all containers
@@ -136,15 +128,7 @@ you can use a `container-runtime` to execute
 almost anything that you implemented with JES for Keptn v1.
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
-kind: KeptnTaskDefinition
-metadata:
-  name: <task-name>
-spec:
-  container:
-    name: <container-name>
-    image: <image-name>
-    <other fields>
+{% include "../../assets/crd/examples/synopsis-for-container-runtime.yaml"  %}
 ```
 
 ### Fields used only for container-runtime

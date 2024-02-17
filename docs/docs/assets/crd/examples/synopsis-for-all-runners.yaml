@@ -1,0 +1,9 @@
+apiVersion: lifecycle.keptn.sh/v?alpha?
+kind: KeptnTaskDefinition
+metadata:
+  name: <task-name>
+spec: |
+  deno | python | container
+  ...
+  retries: <integer>
+  timeout: <duration>

@@ -4,25 +4,21 @@ kind: Test
 metadata:
   name: simple-daemonset-annotated
 spec:
+  namespaceTemplate:
+    metadata:
+      annotations:
+        keptn.sh/lifecycle-toolkit: enabled
   steps:
     - name: step-00
       try:
-        - script:
-            content: kubectl annotate ns $NAMESPACE keptn.sh/lifecycle-toolkit='enabled'
         - apply:
             file: 00-install.yaml
         - assert:
-            file: assert-1.yaml
+            file: 01-assert.yaml
       catch:
         - podLogs:
             selector: app=daemonset
-        - script:
-            content: kubectl logs -l app=daemonset -n $NAMESPACE
     - name: step-01
-      try:
-        - assert:
-            file: 01-assert.yaml
-    - name: step-02
       try:
         - apply:
             file: 02-install.yaml

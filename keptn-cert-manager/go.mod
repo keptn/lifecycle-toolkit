@@ -1,6 +1,6 @@
 module github.com/keptn/lifecycle-toolkit/keptn-cert-manager
 
-go 1.20
+go 1.21
 
 require (
 	github.com/go-logr/logr v1.4.1
@@ -12,7 +12,7 @@ require (
 	k8s.io/apiextensions-apiserver v0.28.6
 	k8s.io/apimachinery v0.28.6
 	k8s.io/client-go v0.28.6
-	sigs.k8s.io/controller-runtime v0.16.3
+	sigs.k8s.io/controller-runtime v0.16.4
 )
 
 require (

@@ -21,15 +21,16 @@ To prepare to contribute to the Keptn project, we recommend that you:
   Keptn software and documentation.
   In particular, study the sections for the four main Keptn components:
   
-  * [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator)
-  * [metrics-operator](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator)
-  * [scheduler](https://github.com/keptn/lifecycle-toolkit/tree/main/scheduler)
-  * [keptn-cert-manager](https://github.com/keptn/lifecycle-toolkit/tree/main/keptn-cert-manager)
+    * [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator)
+    * [metrics-operator](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator)
+    * [scheduler](https://github.com/keptn/lifecycle-toolkit/tree/main/scheduler)
+    * [keptn-cert-manager](https://github.com/keptn/lifecycle-toolkit/tree/main/keptn-cert-manager)
 
-  Each of these is described in the
-  [Components](../../components/index.md)
-  section of the documentation
-  and most include a *README* file with more information.
+    Each of these is described in the
+    [Components](../../components/index.md)
+    section of the documentation
+    and most include a *README* file with more information.
+
 * Study the material in
   [Technologies and concepts you should know](../general/technologies.md).
 * Create an account for yourself on
@@ -47,9 +48,9 @@ each of which is discussed in the Architecture
 documentation:
 
 * Three Kubernetes operators
-  * `metrics-operator`
-  * `lifecycle-operatory`
-  * `cert-manager`
+    * `metrics-operator`
+    * `lifecycle-operatory`
+    * `cert-manager`
 * Keptn `scheduler`
 
 At the top level of the repository,
@@ -142,7 +143,7 @@ before you create a PR with your changes.
 
 If your change introduces a new feature,
 you may need to update the test suites to cover your changes.
-These tests use basic go-library, Ginkgo or KUTTL tests.
+These tests use basic go-library, Ginkgo or chainsaw tests.
 You can ask the maintainers to tell you where to put your additional test data.
 
 Tests are run on your local machine.
@@ -161,10 +162,10 @@ Run the integration tests from the root directory of your clone:
   make integration-test-local
   ```
 
-This runs a series of Kuttl
-([KUbernetes Test TooL](https://kuttl.dev/))
+This runs a series of chainsaw
+([chainsaw](https://kyverno.github.io/chainsaw))
 tests locally and then cleans up your local environment.
-You can run individual tests with the `kubectl kuttl` command;
+You can run individual tests with the `chainsaw test` command;
 see the *Makefile* for the specific syntax of each test.
 
 ### Component test

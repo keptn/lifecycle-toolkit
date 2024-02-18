@@ -102,6 +102,9 @@ spec:
         - name: SCHEDULING_GATES_ENABLED
           value: {{ .Values.schedulingGatesEnabled | quote
             }}
+        - name: PROMOTION_TASKS_ENABLED
+          value: {{ .Values.promotionTasksEnabled | quote
+            }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
         - name: CERT_MANAGER_ENABLED

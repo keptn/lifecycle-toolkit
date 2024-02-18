@@ -1,7 +1,7 @@
 apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
-  name: podtato-head1
+  name: podtato-head
 spec:
   provider:
     name: "prometheus"
@@ -9,4 +9,6 @@ spec:
   fetchIntervalSeconds: 5
   range:
     interval: "5m"
-    step: "1mins"
+    step: "1m"
+    aggregation: "p90"
+    storedResults: 5

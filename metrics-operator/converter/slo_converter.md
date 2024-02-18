@@ -5,17 +5,17 @@
 <!-- toc -->
 
 - [SLO Converter](#slo-converter)
-  - [Description](#description)
-  - [Usage](#usage)
-  - [Conversion details](#conversion-details)
-    - [Unsupported use-cases](#unsupported-use-cases)
-      - [Criteria with 3 and more rules](#criteria-with-3-and-more-rules)
-      - [Criteria with intervals without intersection](#criteria-with-intervals-without-intersection)
-    - [Supported use-cases](#supported-use-cases)
-      - [Single rule criteria](#single-rule-criteria)
-      - [Criteria combined with logical OR operator](#criteria-combined-with-logical-or-operator)
-      - [Criteria with intervals with intersection](#criteria-with-intervals-with-intersection)
-  - [Example](#example)
+    - [Description](#description)
+    - [Usage](#usage)
+    - [Conversion details](#conversion-details)
+        - [Unsupported use-cases](#unsupported-use-cases)
+            - [Criteria with 3 and more rules](#criteria-with-3-and-more-rules)
+            - [Criteria with intervals without intersection](#criteria-with-intervals-without-intersection)
+        - [Supported use-cases](#supported-use-cases)
+            - [Single rule criteria](#single-rule-criteria)
+            - [Criteria combined with logical OR operator](#criteria-combined-with-logical-or-operator)
+            - [Criteria with intervals with intersection](#criteria-with-intervals-with-intersection)
+    - [Example](#example)
 
 <!-- tocstop -->
 </details>

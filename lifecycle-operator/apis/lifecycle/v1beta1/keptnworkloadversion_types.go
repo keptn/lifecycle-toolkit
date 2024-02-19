@@ -337,6 +337,16 @@ func (w KeptnWorkloadVersion) GetPostDeploymentEvaluationTaskStatus() []ItemStat
 	return w.Status.PostDeploymentEvaluationTaskStatus
 }
 
+func (w KeptnWorkloadVersion) GetPromotionTasks() []string {
+	// promotion tasks are not included in Workloads, but we need the implementation of this method to fulfil the PhaseItem interface
+	return []string{}
+}
+
+func (w KeptnWorkloadVersion) GetPromotionTaskStatus() []ItemStatus {
+	// promotion tasks are not included in Workloads, but we need the implementation of this method to fulfil the PhaseItem interface
+	return []ItemStatus{}
+}
+
 func (w KeptnWorkloadVersion) GetAppName() string {
 	return w.Spec.AppName
 }

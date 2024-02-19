@@ -144,6 +144,7 @@ type CheckType string
 
 const PreDeploymentCheckType CheckType = "pre"
 const PostDeploymentCheckType CheckType = "post"
+const PromotionCheckType CheckType = "promotion"
 const PreDeploymentEvaluationCheckType CheckType = "pre-eval"
 const PostDeploymentEvaluationCheckType CheckType = "post-eval"
 

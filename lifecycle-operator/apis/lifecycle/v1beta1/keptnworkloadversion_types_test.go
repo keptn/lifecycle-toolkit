@@ -259,6 +259,16 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 		"workloadVersion":     "version",
 		"workloadVersionName": "workload",
 	}, workload.GetEventAnnotations())
+
+	require.Equal(t,
+		[]string{},
+		workload.GetPromotionTasks(),
+	)
+
+	require.Equal(t,
+		[]ItemStatus{},
+		workload.GetPromotionTaskStatus(),
+	)
 }
 
 //nolint:dupl

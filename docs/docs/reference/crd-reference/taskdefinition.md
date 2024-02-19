@@ -373,6 +373,7 @@ file.
 ## Examples for deno-runtime and python-runtime runners
 
 ### Examples for inline script
+
 === "Example 1: inline script for a Deno script"
 
     This example defines a full-fledged Deno script
@@ -390,7 +391,7 @@ file.
     {% include "../../assets/crd/python-inline.yaml" %}
     ```
 
-### Examples for httpRef script 
+### Examples for httpRef script
 
 === "Example 2: httpRef script for a Deno script"
 

@@ -219,7 +219,7 @@ are in a `Running` state.
 After the `send-event` task succeeds, `promotion` task are executed.
 
 A detailed description of all the available fields of the `KeptnAppContext` resource can be found in the
-[KeptnAppContext API reference page](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappcontext).
+[KeptnAppContext CRD reference page](../reference/crd-reference/appcontext.md).
 
 > **Note**
 You must have the `promotion` feature enabled in order to execute promotion tasks.

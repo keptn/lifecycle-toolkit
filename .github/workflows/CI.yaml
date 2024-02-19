@@ -103,7 +103,7 @@ jobs:
         run: make unit-test
 
       - name: Report code coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           flags: ${{ matrix.config.name }}
 
@@ -151,7 +151,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.config.folder }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           target: production
           tags: |
             ${{ env.RELEASE_REGISTRY }}/${{ matrix.config.name }}:dev-${{ env.DATETIME }}
@@ -165,7 +165,7 @@ jobs:
           push: false
           cache-from: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
           cache-to: type=gha,scope=${{ github.ref_name }}-${{ matrix.config.name }}
-          outputs: type=docker,dest=/tmp/${{ matrix.config.name }}-image.tar
+          outputs: type=oci,dest=/tmp/${{ matrix.config.name }}-image.tar
 
       - name: Upload image as artifact
         uses: actions/upload-artifact@v3
@@ -266,7 +266,7 @@ jobs:
         run: rsync -av --delete --exclude='charts/*.tgz' ./${{ matrix.config.path }}/ ./helm-charts-repository/charts/${{ matrix.config.name }}/
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
           path: ./helm-charts-repository

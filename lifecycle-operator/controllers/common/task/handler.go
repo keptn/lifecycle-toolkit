@@ -179,6 +179,9 @@ func (r Handler) setupTasks(taskCreateAttributes CreateTaskAttributes, piWrapper
 	case apicommon.PostDeploymentCheckType:
 		tasks = piWrapper.GetPostDeploymentTasks()
 		statuses = piWrapper.GetPostDeploymentTaskStatus()
+	case apicommon.PromotionCheckType:
+		tasks = piWrapper.GetPromotionTasks()
+		statuses = piWrapper.GetPromotionTaskStatus()
 	}
 	return tasks, statuses
 }

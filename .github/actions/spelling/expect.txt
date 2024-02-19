@@ -235,7 +235,6 @@ htmltest
 httpref
 httpreference
 HUGOx
-iak
 IAnalysis
 ICertificate
 IConfig
@@ -260,7 +259,6 @@ iobjective
 IOperator
 IProviders
 IRound
-IScheduling
 Isitobservable
 ISpan
 ITarget
@@ -274,7 +272,6 @@ Jhb
 jsonschema
 jwt
 kacr
-kauz
 kav
 kebabcase
 keda
@@ -364,11 +361,9 @@ kubeflow
 kubescape
 kubescheduler
 kubeutils
-kudobuilder
 kustomization
 kustomize
 kustomizeconfig
-kuttl
 kwi
 kwv
 kyverno
@@ -381,7 +376,6 @@ linenums
 linkedin
 linkedtrace
 livenessprobe
-loadtests
 LOCALBIN
 logf
 logr
@@ -425,7 +419,6 @@ mysecret
 myservice
 myuser
 myversion
-namespacedelete
 netlify
 nifi
 nilnil
@@ -442,6 +435,7 @@ objectmeta
 objectreference
 objref
 objs
+oci
 ocimage
 odubaj
 odubajdt
@@ -515,6 +509,7 @@ readyz
 Reale
 realpath
 redis
+refcache
 remediations
 replicasets
 replicationcontrollers
@@ -534,8 +529,7 @@ runtimes
 runtimespec
 Sambhav
 sbom
-schedulinggate
-schedulinggateshandler
+schedulinggates
 sclient
 screenshot
 sdkmetric
@@ -568,6 +562,7 @@ spanhandler
 spanid
 spanitem
 spdx
+spdxjson
 spf
 squidfunk
 sre
@@ -605,7 +600,6 @@ testcertificate
 testcommon
 testmetrics
 testreg
-teststep
 tgz
 thisthatdc
 thschue
@@ -621,10 +615,10 @@ tokenreviews
 toml
 totalscore
 tplvalues
+traceid
 traceparent
 tracerfactory
 tracetest
-traceid
 trivy
 trivyignore
 trunc
@@ -672,6 +666,7 @@ WORKLOADOVERALLSTATUS
 workloadsstate
 workloadstatus
 workloadversion
+xbhj
 xxxx
 XXXXXXXXXXXXXXXXXXXXXXXX
 Yadav

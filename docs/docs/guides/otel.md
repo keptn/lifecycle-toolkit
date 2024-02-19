@@ -49,11 +49,11 @@ you must have the following on your cluster:
 - A Prometheus Operator.
   See [Prometheus Operator Setup](https://github.com/prometheus-operator/kube-prometheus/blob/main/docs/customizing.md).
 
-  - The Prometheus Operator must have the required permissions
-    to watch resources of your Keptn namespace
-    (default is `keptn-system`).
-    See
-    [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/).
+    - The Prometheus Operator must have the required permissions
+      to watch resources of your Keptn namespace
+      (default is `keptn-system`).
+      See
+      [Setup for Monitoring other Namespaces](https://prometheus-operator.dev/docs/kube/monitoring-other-namespaces/).
 
 - To install Prometheus into the `monitoring` namespace
   using the example configuration included with Keptn,
@@ -61,34 +61,34 @@ you must have the following on your cluster:
   You can modify these commands to define a different configuration:
 
     > **Note**
-  You must clone the `lifecycle-toolkit` repository
-  and `cd` into the correct directory
-  (`examples/support/observability`) before running the following commands.
+    You must clone the `lifecycle-toolkit` repository
+    and `cd` into the correct directory
+    (`examples/support/observability`) before running the following commands.
 
-```shell
-kubectl create namespace monitoring
-kubectl apply --server-side -f config/prometheus/setup/
-kubectl apply -f config/prometheus/
-```
+    ```shell
+    kubectl create namespace monitoring
+    kubectl apply --server-side -f config/prometheus/setup/
+    kubectl apply -f config/prometheus/
+    ```
 
 - If you want a dashboard for reviewing metrics and traces:
 
-  - Install
-    [Grafana](https://grafana.com/grafana/)
-    or the visualization tool of your choice, following the instructions in
-    [Grafana Setup](https://grafana.com/docs/grafana/latest/setup-grafana/).
-  - Install
-    [Jaeger](https://www.jaegertracing.io/)
-    or a similar tool for traces following the instructions in
-    [Jaeger Setup](https://www.jaegertracing.io/docs/1.50/getting-started/).
+    - Install
+      [Grafana](https://grafana.com/grafana/)
+      or the visualization tool of your choice, following the instructions in
+      [Grafana Setup](https://grafana.com/docs/grafana/latest/setup-grafana/).
+    - Install
+      [Jaeger](https://www.jaegertracing.io/)
+      or a similar tool for traces following the instructions in
+      [Jaeger Setup](https://www.jaegertracing.io/docs/1.50/getting-started/).
 
-  - Follow the instructions in the Grafana
-    [README](https://github.com/keptn/lifecycle-toolkit/blob/main/dashboards/grafana/README.md)
-    file to configure the Grafana dashboard(s) for Keptn.
+    - Follow the instructions in the Grafana
+      [README](https://github.com/keptn/lifecycle-toolkit/blob/main/dashboards/grafana/README.md)
+      file to configure the Grafana dashboard(s) for Keptn.
 
-    Metrics can also be retrieved without a dashboard.
-    See
-    [Accessing Metrics via the Kubernetes Custom Metrics API](evaluatemetrics.md/#accessing-metrics-via-the-kubernetes-custom-metrics-api)
+Metrics can also be retrieved without a dashboard.
+See
+[Accessing Metrics via the Kubernetes Custom Metrics API](evaluatemetrics.md/#accessing-metrics-via-the-kubernetes-custom-metrics-api)
 
 ## Integrate OpenTelemetry into Keptn
 
@@ -166,7 +166,8 @@ You can access the metrics from your browser at: `http://localhost:9999`
 In Keptn you can connect multiple traces, for instance to connect deployments
 of the same application through different stages.
 To create connections between the traces of versions of your application, you can enrich the
-`KeptnAppContext` resource with
+[KeptnAppContext](../reference/crd-reference/appcontext.md)
+resource with
 [OpenTelemetry span links](https://opentelemetry.io/docs/concepts/signals/traces/#span-links).
 You can retrieve the span link from the JSON representation of the trace in Jaeger, where
 it has the following structure:
@@ -184,8 +185,9 @@ to connect traces of different versions of the application.
 ```
 
 > **Note**
-> Please be aware that the span link is just an example, and you need to retrieve the traceID and spanID
-> of the application trace stored in the `KeptnAppVersion` resource you want to link.
+> The span link used above is just an example.
+> You need to replace it with the traceID and spanID
+> that you retrieve from the `KeptnAppVersion` resource you want to link.
 
 To store this new information in the traces, you need to increment the version
 of your application and apply the`KeptnAppContext`.

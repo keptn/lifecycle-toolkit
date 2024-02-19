@@ -24,6 +24,7 @@ func TestKeptnAppVersion(t *testing.T) {
 			PostDeploymentStatus:           common.StateFailed,
 			PostDeploymentEvaluationStatus: common.StateFailed,
 			WorkloadOverallStatus:          common.StateFailed,
+			PromotionStatus:                common.StateFailed,
 			Status:                         common.StateFailed,
 			PreDeploymentTaskStatus: []ItemStatus{
 				{
@@ -53,6 +54,13 @@ func TestKeptnAppVersion(t *testing.T) {
 					Name:           "taskname4",
 				},
 			},
+			PromotionTaskStatus: []ItemStatus{
+				{
+					DefinitionName: "defname5",
+					Status:         common.StateFailed,
+					Name:           "taskname5",
+				},
+			},
 			CurrentPhase: common.PhaseAppDeployment.ShortName,
 		},
 		Spec: KeptnAppVersionSpec{
@@ -65,6 +73,7 @@ func TestKeptnAppVersion(t *testing.T) {
 					PostDeploymentTasks:       []string{"task3", "task4"},
 					PreDeploymentEvaluations:  []string{"task5", "task6"},
 					PostDeploymentEvaluations: []string{"task7", "task8"},
+					PromotionTasks:            []string{"task9", "task10"},
 				},
 			},
 			PreviousVersion: "prev",
@@ -88,6 +97,10 @@ func TestKeptnAppVersion(t *testing.T) {
 	require.True(t, app.IsPostDeploymentEvaluationCompleted())
 	require.False(t, app.IsPostDeploymentEvaluationSucceeded())
 	require.True(t, app.IsPostDeploymentEvaluationFailed())
+
+	require.True(t, app.IsPromotionCompleted())
+	require.False(t, app.IsPromotionSucceeded())
+	require.True(t, app.IsPromotionFailed())
 
 	require.True(t, app.AreWorkloadsCompleted())
 	require.False(t, app.AreWorkloadsSucceeded())
@@ -127,6 +140,7 @@ func TestKeptnAppVersion(t *testing.T) {
 	require.Equal(t, []string{"task3", "task4"}, app.GetPostDeploymentTasks())
 	require.Equal(t, []string{"task5", "task6"}, app.GetPreDeploymentEvaluations())
 	require.Equal(t, []string{"task7", "task8"}, app.GetPostDeploymentEvaluations())
+	require.Equal(t, []string{"task9", "task10"}, app.GetPromotionTasks())
 
 	require.Equal(t, []ItemStatus{
 		{
@@ -159,6 +173,14 @@ func TestKeptnAppVersion(t *testing.T) {
 			Name:           "taskname4",
 		},
 	}, app.GetPostDeploymentEvaluationTaskStatus())
+
+	require.Equal(t, []ItemStatus{
+		{
+			DefinitionName: "defname5",
+			Status:         common.StateFailed,
+			Name:           "taskname5",
+		},
+	}, app.GetPromotionTaskStatus())
 
 	require.Equal(t, "appname", app.GetAppName())
 	require.Equal(t, "prev", app.GetPreviousVersion())
@@ -299,6 +321,7 @@ func TestKeptnAppVersion_DeprecateRemainingPhases(t *testing.T) {
 			PreDeploymentEvaluationStatus:  common.StatePending,
 			PostDeploymentStatus:           common.StatePending,
 			PostDeploymentEvaluationStatus: common.StatePending,
+			PromotionStatus:                common.StatePending,
 			WorkloadOverallStatus:          common.StatePending,
 			Status:                         common.StatePending,
 		},
@@ -311,6 +334,21 @@ func TestKeptnAppVersion_DeprecateRemainingPhases(t *testing.T) {
 	}{
 		{
 			app:   app,
+			phase: common.PhasePromotion,
+			want: KeptnAppVersion{
+				Status: KeptnAppVersionStatus{
+					PreDeploymentStatus:            common.StatePending,
+					PreDeploymentEvaluationStatus:  common.StatePending,
+					PostDeploymentStatus:           common.StatePending,
+					PostDeploymentEvaluationStatus: common.StatePending,
+					PromotionStatus:                common.StatePending,
+					WorkloadOverallStatus:          common.StatePending,
+					Status:                         common.StatePending,
+				},
+			},
+		},
+		{
+			app:   app,
 			phase: common.PhaseAppPostEvaluation,
 			want: KeptnAppVersion{
 				Status: KeptnAppVersionStatus{
@@ -318,8 +356,9 @@ func TestKeptnAppVersion_DeprecateRemainingPhases(t *testing.T) {
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StatePending,
 					PostDeploymentEvaluationStatus: common.StatePending,
+					PromotionStatus:                common.StateDeprecated,
 					WorkloadOverallStatus:          common.StatePending,
-					Status:                         common.StatePending,
+					Status:                         common.StateFailed,
 				},
 			},
 		},
@@ -332,6 +371,7 @@ func TestKeptnAppVersion_DeprecateRemainingPhases(t *testing.T) {
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StatePending,
 					PostDeploymentEvaluationStatus: common.StateDeprecated,
+					PromotionStatus:                common.StateDeprecated,
 					WorkloadOverallStatus:          common.StatePending,
 					Status:                         common.StateFailed,
 				},
@@ -346,6 +386,7 @@ func TestKeptnAppVersion_DeprecateRemainingPhases(t *testing.T) {
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StateDeprecated,
 					PostDeploymentEvaluationStatus: common.StateDeprecated,
+					PromotionStatus:                common.StateDeprecated,
 					WorkloadOverallStatus:          common.StatePending,
 					Status:                         common.StateFailed,
 				},
@@ -360,6 +401,7 @@ func TestKeptnAppVersion_DeprecateRemainingPhases(t *testing.T) {
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StateDeprecated,
 					PostDeploymentEvaluationStatus: common.StateDeprecated,
+					PromotionStatus:                common.StateDeprecated,
 					WorkloadOverallStatus:          common.StateDeprecated,
 					Status:                         common.StateFailed,
 				},
@@ -374,6 +416,7 @@ func TestKeptnAppVersion_DeprecateRemainingPhases(t *testing.T) {
 					PreDeploymentEvaluationStatus:  common.StateDeprecated,
 					PostDeploymentStatus:           common.StateDeprecated,
 					PostDeploymentEvaluationStatus: common.StateDeprecated,
+					PromotionStatus:                common.StateDeprecated,
 					WorkloadOverallStatus:          common.StateDeprecated,
 					Status:                         common.StateFailed,
 				},
@@ -388,6 +431,7 @@ func TestKeptnAppVersion_DeprecateRemainingPhases(t *testing.T) {
 					PreDeploymentEvaluationStatus:  common.StateDeprecated,
 					PostDeploymentStatus:           common.StateDeprecated,
 					PostDeploymentEvaluationStatus: common.StateDeprecated,
+					PromotionStatus:                common.StateDeprecated,
 					WorkloadOverallStatus:          common.StateDeprecated,
 					Status:                         common.StateDeprecated,
 				},
@@ -402,6 +446,7 @@ func TestKeptnAppVersion_DeprecateRemainingPhases(t *testing.T) {
 					PreDeploymentEvaluationStatus:  common.StatePending,
 					PostDeploymentStatus:           common.StatePending,
 					PostDeploymentEvaluationStatus: common.StatePending,
+					PromotionStatus:                common.StatePending,
 					WorkloadOverallStatus:          common.StatePending,
 					Status:                         common.StateFailed,
 				},

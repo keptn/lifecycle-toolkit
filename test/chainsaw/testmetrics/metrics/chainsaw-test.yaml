@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kyverno/chainsaw/main/.schemas/json/test-chainsaw-v1alpha1.json
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  creationTimestamp: null
+  name: metrics
+spec:
+  steps:
+    - name: step-00
+      try:
+        - apply:
+            file: 00-install.yaml
+    - name: step-01
+      try:
+        - apply:
+            file: badmetric1.yaml
+            expect:
+              - check:
+                  ($error != null): true
+        - apply:
+            file: badmetric2.yaml
+            expect:
+              - check:
+                  ($error != null): true
+        - apply:
+            file: badmetric3.yaml
+            expect:
+              - check:
+                  ($error != null): true
+        - apply:
+            file: goodmetric.yaml
+    - name: step-02
+      try:
+        - assert:
+            file: goodmetric.yaml
+        - error:
+            file: badmetric1.yaml
+        - error:
+            file: badmetric2.yaml
+        - error:
+            file: badmetric3.yaml
+    - name: step-03
+      try:
+        - script:
+            # yamllint disable rule:line-length
+            content: |
+              METRIC_VALUE=$(kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/${NAMESPACE}/keptnmetrics.metrics.sh/podtato-head/podtato-head")
+              echo $METRIC_VALUE | jq '.items | length'
+            # yamllint enable rule:line-length
+            check:
+              (contains($stdout, '1')): true
+    - name: step-04
+      try:
+        - script:
+            content: |
+              kubectl port-forward svc/lifecycle-operator-metrics-service -n keptn-system 2222 > /dev/null 2>&1 &
+              port_forward_pid=$!
+              # trap to kill the port-forward process on script exit
+              trap 'kill $port_forward_pid' EXIT
+              # Wait for the port-forward process to complete
+              sleep 10
+              curl -s "http://localhost:2222/metrics" | grep "keptn_lifecycle_active_total"
+            timeout: 40s
+            check:
+              # This checks that Keptn returns active metrics
+              (contains($stdout, 'keptn_lifecycle_active_total')): true

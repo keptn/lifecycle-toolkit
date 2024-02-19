@@ -42,7 +42,7 @@ and application health checks
 | `lifecycleOperator.containerSecurityContext.runAsNonRoot`             |                                                                                | `true`                                |
 | `lifecycleOperator.containerSecurityContext.runAsUser`                |                                                                                | `65532`                               |
 | `lifecycleOperator.containerSecurityContext.seccompProfile.type`      |                                                                                | `RuntimeDefault`                      |
-| `lifecycleOperator.env.functionRunnerImage`                           | specify image for deno task runtime                                            | `ghcr.io/keptn/deno-runtime:v1.0.2`   |
+| `lifecycleOperator.env.functionRunnerImage`                           | specify image for deno task runtime                                            | `ghcr.io/keptn/deno-runtime:v2.0.1`   |
 | `lifecycleOperator.env.keptnAppControllerLogLevel`                    | sets the log level of Keptn App Controller                                     | `0`                                   |
 | `lifecycleOperator.env.keptnAppCreationRequestControllerLogLevel`     | sets the log level of Keptn App Creation Request Controller                    | `0`                                   |
 | `lifecycleOperator.env.keptnAppVersionControllerLogLevel`             | sets the log level of Keptn AppVersion Controller                              | `0`                                   |
@@ -53,10 +53,10 @@ and application health checks
 | `lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel`        | sets the log level of Keptn WorkloadVersion Controller                         | `0`                                   |
 | `lifecycleOperator.env.keptnDoraMetricsPort`                          | sets the port for accessing lifecycle metrics in prometheus format             | `2222`                                |
 | `lifecycleOperator.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller                                 | `0`                                   |
-| `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                          | `ghcr.io/keptn/python-runtime:v1.0.1` |
+| `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                          | `ghcr.io/keptn/python-runtime:v1.0.2` |
 | `lifecycleOperator.image.registry`                                    | specify the container registry for the lifecycle-operator image                | `ghcr.io`                             |
 | `lifecycleOperator.image.repository`                                  | specify registry for manager image                                             | `keptn/lifecycle-operator`            |
-| `lifecycleOperator.image.tag`                                         | select tag for manager image                                                   | `v0.8.3`                              |
+| `lifecycleOperator.image.tag`                                         | select tag for manager image                                                   | `v0.9.0`                              |
 | `lifecycleOperator.imagePullPolicy`                                   | specify pull policy for manager image                                          | `Always`                              |
 | `lifecycleOperator.livenessProbe`                                     | custom livenessprobe for manager container                                     |                                       |
 | `lifecycleOperator.readinessProbe`                                    | custom readinessprobe for manager container                                    |                                       |
@@ -75,6 +75,7 @@ and application health checks
 | `annotations`             | add deployment level annotations                                                                                                                | `{}`                                                           |
 | `podAnnotations`          | adds pod level annotations                                                                                                                      | `{}`                                                           |
 | `schedulingGatesEnabled`  | enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version | `false`                                                        |
+| `promotionTasksEnabled`   | enables the promotion task feature in the lifecycle-operator.                                                                                   | `false`                                                        |
 | `allowedNamespaces`       | specifies the allowed namespaces for the lifecycle orchestration functionality                                                                  | `[]`                                                           |
 | `deniedNamespaces`        | specifies a list of namespaces where the lifecycle orchestration functionality is disabled, ignored if `allowedNamespaces` is set               | `["cert-manager","keptn-system","observability","monitoring"]` |
 
@@ -88,7 +89,7 @@ and application health checks
 | `scheduler.env.otelCollectorUrl`                             | sets url for open telemetry collector                          | `otel-collector:4317` |
 | `scheduler.image.registry`                                   | specify the container registry for the scheduler image         | `ghcr.io`             |
 | `scheduler.image.repository`                                 | set image repository for scheduler                             | `keptn/scheduler`     |
-| `scheduler.image.tag`                                        | set image tag for scheduler                                    | `v0.8.3`              |
+| `scheduler.image.tag`                                        | set image tag for scheduler                                    | `v0.9.0`              |
 | `scheduler.imagePullPolicy`                                  | set image pull policy for scheduler                            | `Always`              |
 | `scheduler.livenessProbe`                                    | customizable liveness probe for the scheduler                  |                       |
 | `scheduler.readinessProbe`                                   | customizable readiness probe for the scheduler                 |                       |

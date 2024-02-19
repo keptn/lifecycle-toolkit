@@ -70,6 +70,7 @@ plugins:
   - git-revision-date-localized:
       fallback_to_build_date: true
   - blog:
+      post_excerpt: required
       blog_dir: blog
       draft_if_future_date: true
 markdown_extensions:
@@ -120,7 +121,7 @@ nav:
           - Evaluations: docs/guides/evaluations.md
           - DORA metrics: docs/guides/dora.md
           - OpenTelemetry observability: docs/guides/otel.md
-          - Metadata: docs/guides/metadata.md
+          - Context metadata: docs/guides/metadata.md
       - Use Cases:
           - docs/use-cases/index.md
           - Day 2 Operations: docs/use-cases/day-2-operations.md
@@ -161,6 +162,7 @@ nav:
               - AnalysisDefinition: docs/reference/crd-reference/analysisdefinition.md
               - AnalysisValueTemplate: docs/reference/crd-reference/analysisvaluetemplate.md
               - KeptnApp: docs/reference/crd-reference/app.md
+              - KeptnAppContext: docs/reference/crd-reference/appcontext.md
               - KeptnConfig: docs/reference/crd-reference/config.md
               - KeptnEvaluationDefinition: docs/reference/crd-reference/evaluationdefinition.md
               - KeptnMetric: docs/reference/crd-reference/metric.md
@@ -189,6 +191,7 @@ nav:
               - PR review process: docs/contribute/general/git/review.md
           - Contribution Guidelines: docs/contribute/general/contrib-guidelines-gen.md
           - Refinement Process: docs/contribute/general/refinement-guide.md
+          - Release Checklist: docs/contribute/general/release-checklist.md
       - Software contributions:
           - docs/contribute/software/index.md
           - Software development environment: docs/contribute/software/dev-environ.md

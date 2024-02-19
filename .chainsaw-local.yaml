@@ -4,6 +4,7 @@ kind: Configuration
 metadata:
   name: configuration-local
 spec:
+  template: true
   timeouts:
     assert: 5m
     cleanup: 5m

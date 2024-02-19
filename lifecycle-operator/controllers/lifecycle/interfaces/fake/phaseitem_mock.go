@@ -72,6 +72,12 @@ import (
 //			GetPreviousVersionFunc: func() string {
 //				panic("mock out the GetPreviousVersion method")
 //			},
+//			GetPromotionTaskStatusFunc: func() []klcv1beta1.ItemStatus {
+//				panic("mock out the GetPromotionTaskStatus method")
+//			},
+//			GetPromotionTasksFunc: func() []string {
+//				panic("mock out the GetPromotionTasks method")
+//			},
 //			GetSpanAttributesFunc: func() []attribute.KeyValue {
 //				panic("mock out the GetSpanAttributes method")
 //			},
@@ -156,6 +162,12 @@ type PhaseItemMock struct {
 
 	// GetPreviousVersionFunc mocks the GetPreviousVersion method.
 	GetPreviousVersionFunc func() string
+
+	// GetPromotionTaskStatusFunc mocks the GetPromotionTaskStatus method.
+	GetPromotionTaskStatusFunc func() []klcv1beta1.ItemStatus
+
+	// GetPromotionTasksFunc mocks the GetPromotionTasks method.
+	GetPromotionTasksFunc func() []string
 
 	// GetSpanAttributesFunc mocks the GetSpanAttributes method.
 	GetSpanAttributesFunc func() []attribute.KeyValue
@@ -247,6 +259,12 @@ type PhaseItemMock struct {
 		// GetPreviousVersion holds details about calls to the GetPreviousVersion method.
 		GetPreviousVersion []struct {
 		}
+		// GetPromotionTaskStatus holds details about calls to the GetPromotionTaskStatus method.
+		GetPromotionTaskStatus []struct {
+		}
+		// GetPromotionTasks holds details about calls to the GetPromotionTasks method.
+		GetPromotionTasks []struct {
+		}
 		// GetSpanAttributes holds details about calls to the GetSpanAttributes method.
 		GetSpanAttributes []struct {
 		}
@@ -296,6 +314,8 @@ type PhaseItemMock struct {
 	lockGetPreDeploymentTaskStatus            sync.RWMutex
 	lockGetPreDeploymentTasks                 sync.RWMutex
 	lockGetPreviousVersion                    sync.RWMutex
+	lockGetPromotionTaskStatus                sync.RWMutex
+	lockGetPromotionTasks                     sync.RWMutex
 	lockGetSpanAttributes                     sync.RWMutex
 	lockGetStartTime                          sync.RWMutex
 	lockGetState                              sync.RWMutex
@@ -812,6 +832,60 @@ func (mock *PhaseItemMock) GetPreviousVersionCalls() []struct {
 	mock.lockGetPreviousVersion.RLock()
 	calls = mock.calls.GetPreviousVersion
 	mock.lockGetPreviousVersion.RUnlock()
+	return calls
+}
+
+// GetPromotionTaskStatus calls GetPromotionTaskStatusFunc.
+func (mock *PhaseItemMock) GetPromotionTaskStatus() []klcv1beta1.ItemStatus {
+	if mock.GetPromotionTaskStatusFunc == nil {
+		panic("PhaseItemMock.GetPromotionTaskStatusFunc: method is nil but PhaseItem.GetPromotionTaskStatus was just called")
+	}
+	callInfo := struct {
+	}{}
+	mock.lockGetPromotionTaskStatus.Lock()
+	mock.calls.GetPromotionTaskStatus = append(mock.calls.GetPromotionTaskStatus, callInfo)
+	mock.lockGetPromotionTaskStatus.Unlock()
+	return mock.GetPromotionTaskStatusFunc()
+}
+
+// GetPromotionTaskStatusCalls gets all the calls that were made to GetPromotionTaskStatus.
+// Check the length with:
+//
+//	len(mockedPhaseItem.GetPromotionTaskStatusCalls())
+func (mock *PhaseItemMock) GetPromotionTaskStatusCalls() []struct {
+} {
+	var calls []struct {
+	}
+	mock.lockGetPromotionTaskStatus.RLock()
+	calls = mock.calls.GetPromotionTaskStatus
+	mock.lockGetPromotionTaskStatus.RUnlock()
+	return calls
+}
+
+// GetPromotionTasks calls GetPromotionTasksFunc.
+func (mock *PhaseItemMock) GetPromotionTasks() []string {
+	if mock.GetPromotionTasksFunc == nil {
+		panic("PhaseItemMock.GetPromotionTasksFunc: method is nil but PhaseItem.GetPromotionTasks was just called")
+	}
+	callInfo := struct {
+	}{}
+	mock.lockGetPromotionTasks.Lock()
+	mock.calls.GetPromotionTasks = append(mock.calls.GetPromotionTasks, callInfo)
+	mock.lockGetPromotionTasks.Unlock()
+	return mock.GetPromotionTasksFunc()
+}
+
+// GetPromotionTasksCalls gets all the calls that were made to GetPromotionTasks.
+// Check the length with:
+//
+//	len(mockedPhaseItem.GetPromotionTasksCalls())
+func (mock *PhaseItemMock) GetPromotionTasksCalls() []struct {
+} {
+	var calls []struct {
+	}
+	mock.lockGetPromotionTasks.RLock()
+	calls = mock.calls.GetPromotionTasks
+	mock.lockGetPromotionTasks.RUnlock()
 	return calls
 }
 

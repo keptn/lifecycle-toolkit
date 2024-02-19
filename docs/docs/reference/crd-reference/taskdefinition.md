@@ -35,25 +35,25 @@ differentiated by the `spec` section:
 
 - Pre-defined containers
 
-  - Use the pre-defined `deno-runtime` runner
-    to define tasks using
-    [Deno](https://deno.com/)
-    scripts,
-    which use a syntax similar to JavaScript and Typescript,
-    with a few limitations.
-    You can use this to specify simple actions
-    without having to define a full container.
-    See
-    <a href="#deno-runtime">Synopsis for Deno-runtime container</a>
-    and
-    [Deno-runtime examples](#examples-for-deno-runtime-runner).
-  - Use the pre-defined `python-runtime` runner
-    to define your task using
-    [Python 3](https://www.python.org/).
-    See
-    <a href="#python-runtime">Synopsis for python-runtime runner</a>
-    and
-    [Examples for a python-runtime runner](#examples-for-a-python-runtime-runner).
+    - Use the pre-defined `deno-runtime` runner
+      to define tasks using
+      [Deno](https://deno.com/)
+      scripts,
+      which use a syntax similar to JavaScript and Typescript,
+      with a few limitations.
+      You can use this to specify simple actions
+      without having to define a full container.
+      See
+      <a href="#deno-runtime">Synopsis for Deno-runtime container</a>
+      and
+      [Deno-runtime examples](#examples-for-deno-runtime-runner).
+    - Use the pre-defined `python-runtime` runner
+      to define your task using
+      [Python 3](https://www.python.org/).
+      See
+      <a href="#python-runtime">Synopsis for python-runtime runner</a>
+      and
+      [Examples for a python-runtime runner](#examples-for-a-python-runtime-runner).
 
 ## Synopsis for all runners
 

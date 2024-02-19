@@ -6,6 +6,7 @@ resources:
   - metric.yaml
   - container-task.yaml
   - python-task.yaml
+  - promotion-task.yaml
 
 patchesStrategicMerge:
   - manifest.yaml

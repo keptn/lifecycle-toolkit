@@ -229,7 +229,9 @@ and Keptn sets up the container and runs the script as part of the task.
                     - **deno example:**
                       <a href="#example-2-httpref-script-for-a-deno-script">Example 2: httpRef script for a Deno script</a>
                     - **python example:**
+                      <!-- markdownlint-disable MD033 -->
                       <!-- <a href="#"></a> --><br>
+                      <!-- markdownlint-enable MD033 -->
                 - **functionRef** -- Execute another `KeptnTaskDefinition` resources.
                   Populate this field with the value(s) of the `metadata.name` field
                   for each `KeptnDefinitionTask` to be called.

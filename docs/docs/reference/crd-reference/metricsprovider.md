@@ -21,18 +21,7 @@ for each metric definition by its name.
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetricsProvider
-metadata:
-  name: <data-source-instance-name>
-  namespace: <namespace>
-spec:
-  type: prometheus | dynatrace | dql | datadog
-  targetServer: "<data-source-url>"
-  secretKeyRef:
-    name: <secret-name>
-    key: <secret-key-that-holds-token>
-    optional: true | false
+{% include "../../assets/crd/examples/yaml-synopsis.yaml"  %}
 ```
 
 ## Fields
@@ -166,16 +155,7 @@ only specified the `metadata.name` field
 that identified the data provider (`prometheus`, `dynatrace`, or `dql`):
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha2
-kind: KeptnMetricsProvider
-metadata:
-  name: prometheus | dynatrace |dql
-  namespace: <namespace>
-spec:
-  targetServer: "<data-provider-url>"
-  secretKeyRef:
-    name: dt-api-token
-    key: DT_TOKEN
+{% include "../../assets/crd/examples/old-version-synopsis.yaml"  %}
 ```
 
 Also note that, for the v1alpha1 and v1alpha2 API versions,

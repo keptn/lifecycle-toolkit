@@ -229,7 +229,7 @@ and Keptn sets up the container and runs the script as part of the task.
                     - **deno example:**
                       <a href="#example-2-httpref-script-for-a-deno-script">Example 2: httpRef script for a Deno script</a>
                     - **python example:**
-                      <a href="#example-2-httpref-for-a-python-runtime-runner">Example 2: httpRef for a python-runtime runner</a>
+                      <!-- <a href="#"></a> --><br>
                 - **functionRef** -- Execute another `KeptnTaskDefinition` resources.
                   Populate this field with the value(s) of the `metadata.name` field
                   for each `KeptnDefinitionTask` to be called.
@@ -414,12 +414,6 @@ file.
     For example, we have a few examples available in the
     [python-runtime samples](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/python-runtime/samples)
     tree.
-
-    Consider the following:
-
-    ```yaml
-    {% include "../../assets/crd/python-configmap.yaml" %}
-    ```
 
 ### Examples for functionRef
 

@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - '[0-9]+.[0-9]+.x'
+      - "[0-9]+.[0-9]+.x"
   workflow_dispatch:
 
 defaults:
@@ -30,9 +30,24 @@ jobs:
       metrics-operator-tag-name: ${{ steps.release.outputs.metrics-operator--tag_name }}
       releases-created: ${{ steps.release.outputs.releases_created }}
       build-matrix: ${{ steps.build-matrix.outputs.result }}
+      GIT_SHA: ${{ steps.extract_branch.outputs.GIT_SHA }}
+      DATETIME: ${{ steps.get_datetime.outputs.DATETIME }}
+      BUILD_TIME: ${{ steps.get_datetime.outputs.BUILD_TIME }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Extract branch name
+        id: extract_branch
+        uses: keptn/gh-action-extract-branch-name@main
+
+      - name: Get current date and time
+        id: get_datetime
+        run: |
+          DATETIME=$(date +'%Y%m%d%H%M')
+          BUILD_TIME=$(date -u "+%F_%T")
+          echo "DATETIME=$DATETIME" >> "$GITHUB_OUTPUT"
+          echo "BUILD_TIME=$BUILD_TIME" >> "$GITHUB_OUTPUT"
 
       - name: Run release please
         uses: google-github-actions/release-please-action@v3
@@ -126,6 +141,9 @@ jobs:
       id-token: write
     env:
       IMAGE_NAME: ghcr.io/keptn/${{ matrix.config.name }}
+      DATETIME: ${{ needs.release-please.outputs.DATETIME }}
+      BUILD_TIME: ${{ needs.release-please.outputs.BUILD_TIME }}
+      GIT_SHA: ${{ needs.release-please.outputs.GIT_SHA }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

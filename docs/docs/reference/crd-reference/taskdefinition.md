@@ -209,8 +209,10 @@ and Keptn sets up the container and runs the script as part of the task.
                       <a href="#example-1-inline-script-for-a-deno-script">Example 1: inline script for a Deno script</a>
 
                     - **python example:**
+                      <!-- markdownlint-disable MD013 -->
                       <a href="#example-1-inline-code-for-a-python-runtime-runner">Example 1: inline code for a python-runtime runner</a>
 
+                      <!-- markdownlint-enable MD013 -->
                     - **httpRef** - Specify a script to be executed at runtime
                       from the remote webserver that is specified.
 
@@ -256,7 +258,9 @@ and Keptn sets up the container and runs the script as part of the task.
                     - **deno example:**
                       <a href="#example-3-functionref-for-a-deno-script">Example 3: functionRef for a Deno script</a>
                     - **python example:**
+                      <!-- markdownlint-disable MD013 -->
                       <a href="#example-3-functionref-for-a-python-runtime-runner">Example 3: functionRef for a python-runtime runner</a>
+                      <!-- markdownlint-enable MD013 -->
                 - **ConfigMapRef** - Specify the name of a
                   [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
                   resource that contains the function to be executed.
@@ -264,7 +268,9 @@ and Keptn sets up the container and runs the script as part of the task.
                     - **deno example:**
                       <a href="#example-5-configmap-for-a-deno-script">Example 5: ConfigMap for a Deno script</a>
                     - **python example:**
+                      <!-- markdownlint-disable MD013 -->
                       <a href="#example-4-configmapref-for-a-python-runtime-runner">Example 4: ConfigMapRef for a python-runtime runner</a>
+                      <!-- markdownlint-enable MD013 -->
 
             - **parameters** - An optional field
               to supply input parameters to a function.
@@ -279,7 +285,9 @@ and Keptn sets up the container and runs the script as part of the task.
                 - **deno example:**
                   <a href="#example-3-functionref-for-a-deno-script">Example 3: functionRef for a Deno script</a>
                 - **python example:**
+                  <!-- markdownlint-disable MD013 -->
                   <a href="#example-3-functionref-for-a-python-runtime-runner">Example 3: functionRef for a python-runner runner</a>
+                  <!-- markdownlint-enable MD013 -->
 
             - **secureParameters** -- An optional field
               used to pass a Kubernetes secret.
@@ -296,7 +304,9 @@ and Keptn sets up the container and runs the script as part of the task.
                 - **deno example:**
                   <a href="#example-3-functionref-for-a-deno-script">Example 3: functionRef for a Deno script</a>
                 - **python example:**
+                  <!-- markdownlint-disable MD013 -->
                   <a href="#example-3-functionref-for-a-python-runtime-runner">Example 3: functionRef for a python-runner runner</a>
+                  <!-- markdownlint-enable MD013 -->
 
 ## Usage
 

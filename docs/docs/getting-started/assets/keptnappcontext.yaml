@@ -6,3 +6,5 @@ metadata:
 spec:
   postDeploymentTasks:
     - send-event
+  promotionTasks:
+    - promotion

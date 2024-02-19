@@ -6,7 +6,7 @@ lifecycleOperator:
   lifecycleOperator:
     image:
       tag: v0.0.0
-    imagePullPolicy: Never
+      imagePullPolicy: Never
   scheduler:
     image:
       tag: v0.0.0
@@ -21,4 +21,3 @@ global:
   imagePullPolicy: IfNotPresent
   caInjectionAnnotations:
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
-  imagePullPolicy: IfNotPresent

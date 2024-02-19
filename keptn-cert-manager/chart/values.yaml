@@ -6,7 +6,8 @@
 global:
   ## @param global.imageRegistry Global container image registry
   imageRegistry: ""
-
+  ## @param     global.imagePullPolicy select global image pull policy
+  imagePullPolicy: ""
   ## @param global.imagePullSecrets Global Docker registry secret names as an array
   ## E.g.
   ## imagePullSecrets:
@@ -69,9 +70,8 @@ image:
   repository: keptn/certificate-operator
 ## @param     image.tag select tag for manager container
   tag: v2.0.0 # x-release-please-version
-## @param     imagePullPolicy select image pull policy for manager container
-imagePullPolicy: Always
-
+## @param     image.imagePullPolicy select image pull policy for manager container
+  imagePullPolicy: ""
 ## @extra     livenessProbe custom RBAC proxy liveness probe
 ## @skip     livenessProbe.httpGet.path
 ## @skip     livenessProbe.httpGet.port

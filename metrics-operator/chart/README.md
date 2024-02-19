@@ -13,14 +13,15 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 
 ### Global parameters
 
-| Name                            | Description                                                               | Value  |
-| ------------------------------- | ------------------------------------------------------------------------- | ------ |
-| `global.certManagerEnabled`     | Enable this value to install Keptn Certificate Manager                    | `true` |
-| `global.imageRegistry`          | Global container image registry                                           | `""`   |
-| `global.imagePullSecrets`       | Global Docker registry secret names as an array                           | `[]`   |
-| `global.commonLabels`           | Common labels to add to all Keptn resources. Evaluated as a template      | `{}`   |
-| `global.commonAnnotations`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`   |
-| `global.caInjectionAnnotations` | CA injection annotations for cert-manager.io configuration                | `{}`   |
+| Name                            | Description                                                               | Value    |
+| ------------------------------- | ------------------------------------------------------------------------- | -------- |
+| `global.certManagerEnabled`     | Enable this value to install Keptn Certificate Manager                    | `true`   |
+| `global.imageRegistry`          | Global container image registry                                           | `""`     |
+| `global.imagePullSecrets`       | Global Docker registry secret names as an array                           | `[]`     |
+| `global.imagePullPolicy`        | specify global pull policy                                                | `Always` |
+| `global.commonLabels`           | Common labels to add to all Keptn resources. Evaluated as a template      | `{}`     |
+| `global.commonAnnotations`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`     |
+| `global.caInjectionAnnotations` | CA injection annotations for cert-manager.io configuration                | `{}`     |
 
 ### Keptn Metrics Operator common
 
@@ -78,7 +79,7 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 | `image.registry`                                    | specify the container registry for the metrics-operator image | `ghcr.io`                |
 | `image.repository`                                  | specify registry for manager image                            | `keptn/metrics-operator` |
 | `image.tag`                                         | select tag for manager image                                  | `v0.9.1`                 |
-| `imagePullPolicy`                                   | specify pull policy for manager image                         | `Always`                 |
+| `image.imagePullPolicy`                             | specify pull policy for manager image                         | `Always`                 |
 | `livenessProbe`                                     | custom livenessprobe for manager container                    |                          |
 | `readinessProbe`                                    | custom readinessprobe for manager container                   |                          |
 | `resources`                                         | specify limits and requests for manager container             |                          |

@@ -11485,7 +11485,7 @@ spec:
         - name: CERT_MANAGER_ENABLED
           value: "true"
         image: ghcr.io/keptn/lifecycle-operator:v0.0.0
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Never
         name: lifecycle-operator
         ports:
         - containerPort: 9443

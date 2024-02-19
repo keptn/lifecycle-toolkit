@@ -15,4 +15,3 @@ global:
   imagePullPolicy: Never
   caInjectionAnnotations:
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
-  imagePullPolicy: Never

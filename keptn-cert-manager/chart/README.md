@@ -39,7 +39,7 @@ resource.
 | `image.registry`           | specify the container registry for the certificate-operator image         | `ghcr.io`                    |
 | `image.repository`         | specify repo for manager image                                            | `keptn/certificate-operator` |
 | `image.tag`                | select tag for manager container                                          | `v2.0.0`                     |
-| `image.imagePullPolicy`    | select image pull policy for manager container                            | `Always`                     |
+| `image.imagePullPolicy`    | select image pull policy for manager container                            | `""`                         |
 | `livenessProbe`            | custom RBAC proxy liveness probe                                          |                              |
 | `readinessProbe`           | custom manager readiness probe                                            |                              |
 | `resources`                | custom limits and requests for manager container                          |                              |

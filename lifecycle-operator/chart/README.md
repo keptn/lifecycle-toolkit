@@ -58,7 +58,7 @@ and application health checks
 | `lifecycleOperator.image.registry`                                    | specify the container registry for the lifecycle-operator image                | `ghcr.io`                             |
 | `lifecycleOperator.image.repository`                                  | specify registry for manager image                                             | `keptn/lifecycle-operator`            |
 | `lifecycleOperator.image.tag`                                         | select tag for manager image                                                   | `v0.9.0`                              |
-| `lifecycleOperator.image.imagePullPolicy`                             | specify pull policy for manager image                                          | `Always`                              |
+| `lifecycleOperator.image.imagePullPolicy`                             | specify pull policy for manager image                                          | `""`                                  |
 | `lifecycleOperator.livenessProbe`                                     | custom liveness probe for manager container                                    |                                       |
 | `lifecycleOperator.readinessProbe`                                    | custom readinessprobe for manager container                                    |                                       |
 | `lifecycleOperator.resources`                                         | specify limits and requests for manager container                              |                                       |
@@ -91,7 +91,7 @@ and application health checks
 | `scheduler.image.registry`                                   | specify the container registry for the scheduler image         | `ghcr.io`             |
 | `scheduler.image.repository`                                 | set image repository for scheduler                             | `keptn/scheduler`     |
 | `scheduler.image.tag`                                        | set image tag for scheduler                                    | `v0.9.0`              |
-| `scheduler.image.imagePullPolicy`                            | set image pull policy for scheduler                            | `Always`              |
+| `scheduler.image.imagePullPolicy`                            | set image pull policy for scheduler                            | `""`                  |
 | `scheduler.livenessProbe`                                    | customizable liveness probe for the scheduler                  |                       |
 | `scheduler.readinessProbe`                                   | customizable readiness probe for the scheduler                 |                       |
 | `scheduler.resources`                                        | sets cpu and memory resources/limits for scheduler             |                       |

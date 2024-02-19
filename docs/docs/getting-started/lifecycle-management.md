@@ -225,7 +225,7 @@ A detailed description of all the available fields of the `KeptnAppContext` reso
 You must have the `promotion` feature enabled in order to execute promotion tasks.
 You can enable it via `lifecycleOperator.promotionTasksEnabled` helm value during installation of Keptn.
 More information can be found
-[here](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/chart#global).
+[here](https://github.com/keptn/lifecycle-toolkit-charts/tree/main/charts/keptn-lifecycle-operator#global).
 
 ## Further Information
 

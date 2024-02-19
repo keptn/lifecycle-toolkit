@@ -195,12 +195,12 @@ created `KeptnApp` and the value present in the `keptn.sh/app` or `app.kubernete
 annotations.
 In this case it needs to be `keptndemoapp`.
 
-Additionally `promotionTasks` are present in the `KeptnAppContext`.
-These are aimed to be executed after the Deployment and all pre/post-deployment
+The `KeptnAppContext` also includes `promotionTasks`.
+These are executed after the Deployment and all pre/post-deployment
 tasks and evaluations are executed successfully.
-They should serve one purpose - to promote the application to another stage
+They should serve only one purpose - to promote the application to another stage
 (for example from `dev` to `prod`).
-A promotion task is defined as a `KeptnTaskDefinition`:
+A promotion task is defined in a `KeptnTaskDefinition` resource:
 
 ```yaml
 {% include "./assets/promotion-task.yaml" %}
@@ -216,13 +216,13 @@ promotion task `promotion`:
 This way, the `send-event` task is executed after the deployment of the whole application;
 in other words, after all of the workloads present in the `KeptnApp`
 are in a `Running` state.
-After the `send-event` task succeeds, `promotion` task will be executed.
+After the `send-event` task succeeds, `promotion` task are executed.
 
 A detailed description of all the available fields of the `KeptnAppContext` resource can be found in the
 [KeptnAppContext API reference page](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappcontext).
 
 > **Note**
-Please note, that to be able to execute promotion tasks, you need to have the promotion feature enabled.
+You must have the `promotion` feature enabled in order to execute promotion tasks.
 You can enable it via `lifecycleOperator.promotionTasksEnabled` helm value during installation of Keptn.
 More information can be found
 [here](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/chart#global).

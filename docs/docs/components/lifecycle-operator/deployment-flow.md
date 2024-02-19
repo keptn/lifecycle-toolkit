@@ -24,7 +24,7 @@ They are not affected by the order
 in which evaluations and tasks are listed in the
 [KeptnAppContext](../../reference/crd-reference/appcontext.md)
 resource
-or in the order of the pre/post-tasks, pre/post-evaluations and promotion tasks
+or in the order of the pre/post-tasks, pre/post-evaluations, and promotion tasks
 that are listed in the Workflow manifests.
 
 ## Kubernetes and Cloud Events
@@ -165,8 +165,9 @@ AppPostDeployEvaluations
 ### Promotion phase
 
 The promotion phase is typically used
-to run promotion tasks on the freshly deployed application,
-such as promoting the application to another stage.
+to run promotion tasks
+(such as promoting the application to another stage)
+on the freshly deployed application.
 
 ```shell
 PromotionTasks

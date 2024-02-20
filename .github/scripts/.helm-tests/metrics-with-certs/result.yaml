@@ -2553,7 +2553,7 @@ spec:
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
           image: ghcr.io/keptn/certificate-operator:v0.0.0
-          imagePullPolicy: Always
+          imagePullPolicy: Never
           name: certificate-operator
           resources:
             limits:

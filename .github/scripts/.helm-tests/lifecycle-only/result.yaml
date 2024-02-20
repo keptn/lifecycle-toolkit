@@ -8976,7 +8976,7 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
         image: testreg/keptn/scheduler:v0.0.0
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: scheduler
         resources:
           limits:

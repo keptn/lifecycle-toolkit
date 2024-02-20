@@ -47,7 +47,7 @@ spec:
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: {{ .Values.kubernetesClusterDomain }}
           image: {{- include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) | indent 1}}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.image.imagePullPolicy | default (.Values.global.imagePullPolicy | default "IfNotPresent") }}
           name: certificate-operator
           resources: {{- toYaml .Values.resources | nindent 12 }}
           securityContext:

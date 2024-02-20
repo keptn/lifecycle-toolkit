@@ -1,0 +1,3 @@
+serviceVersion: v0.3.0
+# The commitID will be automatically set by Argo CD
+commitID: ""

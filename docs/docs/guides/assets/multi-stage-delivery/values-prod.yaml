@@ -1,0 +1,5 @@
+serviceVersion: v0.3.0
+# The commitID will be automatically set by Argo CD
+commitID: ""
+# The traceParent will be automatically set by the GitHub action triggered by the promotion task
+traceParent: ""

@@ -3,6 +3,6 @@ kind: KeptnTaskDefinition
 metadata:
   name: slack-notification
 spec:
-  function:
+  deno:
     httpRef:
       url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/slack.ts

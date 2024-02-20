@@ -178,6 +178,12 @@ and Keptn sets up the container and runs the script as part of the task.
 
 === "python-runtime"
 
+    When using the `python-runtime` runner to define a task,
+    the executables are coded in python3.
+    The runner enables the following packages: requests, json, git, yaml.
+    Note that other libraries may not function out of the box 
+    in the `python-runtime` runner.
+
     ```yaml
     {% include "../../assets/crd/examples/synopsis-for-python-runtime-runner.yaml" %}
     ```
@@ -412,10 +418,9 @@ file.
 
 === "Example 2: httpRef for a python-runtime runner"
 
-    You can refer to code stored online.
-    For example, we have a few examples available in the
-    [python-runtime samples](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/python-runtime/samples)
-    tree.
+     ```yaml
+    {% include "https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/python-runtime/samples/python_execution/taskdefinition_pyfunction_upstream_hellopy.yaml" %}
+    ```
 
 ### Examples for functionRef
 
@@ -441,7 +446,7 @@ file.
     {% include "../../assets/crd/python-recursive.yaml" %}
     ```
 
-### Examples for ConfigMapRef
+### Examples for ConfigMap and ConfigMapRef
 
 === "Example 4: ConfigMapRef for a Deno script"
 
@@ -454,23 +459,16 @@ file.
 
 === "Example 4: ConfigMapRef for a python-runtime runner"
 
+    In this example the python runner refers to an existing configMap 
+    called `python-test-cm`
+
     ```yaml
     {% include "../../assets/crd/python-configmap.yaml" %}
     ```
 
-### Examples for ConfigMap
-
-=== "Example 5: ConfigMap for a Deno script"
-
-    This example illustrates the use of both a `ConfigMapRef` and a `ConfigMap`:
-
-    ```yaml
-    {% include "../../assets/crd/examples/configmap-for-deno-script.yaml" %} 
-    ```
-
 ### Example for Accessing KEPTN_CONTEXT environment variable
 
-=== "Example 6: Accessing KEPTN_CONTEXT environment variable in a Deno task"
+=== "Example 5: Accessing KEPTN_CONTEXT environment variable in a Deno task"
 
     For Tasks triggered as pre- and post- deployment of applications
     on Kubernetes, Keptn populates an environment variable called `KEPTN_CONTEXT`.
@@ -480,8 +478,24 @@ file.
     ```javascript
     let context = Deno.env.get("KEPTN_CONTEXT");
     ```
+=== "Example 5: Accessing KEPTN_CONTEXT environment variable in a Python task"
+
+    For Tasks triggered as pre- and post- deployment of applications
+    on Kubernetes, Keptn populates an environment variable called `KEPTN_CONTEXT`.
+    As all environment variables, this can be accessed using language specific methods.
+    An example in Python would be the following:
+
+    ```python
+    import os
+    import yaml
+    data = os.getenv('KEPTN_CONTEXT')
+    dct = yaml.safe_load(data)
+    meta= dct['metadata']
+    print(meta)
+    ```
 
 <!-- markdownlint-enable MD046 -->
+
 ### Allowed libraries for the python-runtime runner
 
 The following example shows how to use some of the allowed packages, namely:

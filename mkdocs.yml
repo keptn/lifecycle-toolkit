@@ -23,6 +23,8 @@ theme:
     - navigation.tracking
     - navigation.indexes
     - navigation.top
+    - navigation.tabs
+    - navigation.tabs.sticky
     - search.suggest
     - search.highlight
     - content.action.edit

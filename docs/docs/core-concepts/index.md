@@ -116,8 +116,11 @@ These tools run checks and tasks before or after deployment initiation.
   or confirm software health against SLOs
   like performance and user experience.
 
+* Promotion tasks such as promoting the application
+  to another stage.
+
 All `KeptnTask` resources that are defined by `KeptnTaskDefinition` resources
-at the same level (either pre-deployment or post-deployment) run in parallel.
+at the same level (pre-deployment, post-deployment, or promotion) run in parallel.
 Task sequences that are not part of the lifecycle workflow
 should be handled by the pipeline engine tools rather than Keptn.
 A `KeptnTask` resource can be defined to run multiple executables

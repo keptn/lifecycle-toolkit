@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: keptndemo
+  labels:
+    app.kubernetes.io/name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nginx
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/part-of: keptndemoapp
+        app.kubernetes.io/name: nginx
+        app.kubernetes.io/version: 0.0.2
+        keptn.sh/post-deployment-tasks: "send-event"
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80

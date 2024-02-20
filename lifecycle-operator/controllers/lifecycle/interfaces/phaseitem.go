@@ -30,8 +30,10 @@ type PhaseItem interface {
 	GetAppName() string
 	GetPreDeploymentTasks() []string
 	GetPostDeploymentTasks() []string
+	GetPromotionTasks() []string
 	GetPreDeploymentTaskStatus() []klcv1beta1.ItemStatus
 	GetPostDeploymentTaskStatus() []klcv1beta1.ItemStatus
+	GetPromotionTaskStatus() []klcv1beta1.ItemStatus
 	GetPreDeploymentEvaluations() []string
 	GetPostDeploymentEvaluations() []string
 	GetPreDeploymentEvaluationTaskStatus() []klcv1beta1.ItemStatus
@@ -157,4 +159,12 @@ func (pw PhaseItemWrapper) GetSpanAttributes() []attribute.KeyValue {
 
 func (pw PhaseItemWrapper) DeprecateRemainingPhases(phase apicommon.KeptnPhaseType) {
 	pw.Obj.DeprecateRemainingPhases(phase)
+}
+
+func (pw PhaseItemWrapper) GetPromotionTasks() []string {
+	return pw.Obj.GetPromotionTasks()
+}
+
+func (pw PhaseItemWrapper) GetPromotionTaskStatus() []klcv1beta1.ItemStatus {
+	return pw.Obj.GetPromotionTaskStatus()
 }

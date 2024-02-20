@@ -13,6 +13,8 @@ spec:
     - post-deployment-hello
   postDeploymentEvaluations:
     - available-cpus
+  promotionTasks:
+    - post-deployment-hello
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -11,6 +11,7 @@ metricsOperator:
     tag: $TAG
 
 lifecycleOperator:
+  promotionTasksEnabled: true
   lifecycleOperator:
     imagePullPolicy: Never
     image:

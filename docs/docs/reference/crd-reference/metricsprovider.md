@@ -21,18 +21,7 @@ for each metric definition by its name.
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
-kind: KeptnMetricsProvider
-metadata:
-  name: <data-source-instance-name>
-  namespace: <namespace>
-spec:
-  type: prometheus | dynatrace | dql | datadog
-  targetServer: "<data-source-url>"
-  secretKeyRef:
-    name: <secret-name>
-    key: <secret-key-that-holds-token>
-    optional: true | false
+{% include "../../assets/crd/examples/yaml-synopsis.yaml"  %}
 ```
 
 ## Fields
@@ -99,49 +88,51 @@ For detailed information please look at the [Examples section](#examples).
 
 ## Examples
 
-### Prometheus
+<!-- markdownlint-disable MD046 -->
 
-An example of Prometheus as a metrics provider with a Secret holding
-the authentication data looks like the following:
+=== "Prometheus"
 
-```yaml
-{% include "./assets/keptnmetricsprovider-prometheus.yaml" %}
-```
+    An example of Prometheus as a metrics provider with a Secret holding
+    the authentication data looks like the following:
 
-> **Note**
-> Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
-> as `user` and `password` key names are required to be present in the linked Secret.
-> Setting this field won't have any effect.
+    ```yaml
+    {% include "./assets/keptnmetricsprovider-prometheus.yaml" %}
+    ```
+    > **Note**
+    Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
+    as `user` and `password` key names are required to be present in the linked Secret.
+    Setting this field won't have any effect.
 
-### Datadog
+=== "Datadog"
 
-An example of Datadog as a metrics provider with a Secret holding
-the authentication data looks like the following:
+    An example of Datadog as a metrics provider with a Secret holding
+    the authentication data looks like the following:
+ 
+    ```yaml
+    {% include "./assets/keptnmetricsprovider-datadog.yaml" %}
+    ```
+    > **Note**
+    Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
+    as `DD_CLIENT_API_KEY` and `DD_CLIENT_API_KEY` key names must be
+    present in the linked Secret.
+    Setting this field has no effect.
 
-```yaml
-{% include "./assets/keptnmetricsprovider-datadog.yaml" %}
-```
+=== "Dynatrace and DQL"
 
-> **Note**
-> Setting the `.spec.secretKeyRef.key` field in `KeptnMetricsProvider` is not necessary,
-> as `DD_CLIENT_API_KEY` and `DD_CLIENT_API_KEY` key names must be
-> present in the linked Secret.
-> Setting this field has no effect.
+    An example of Dynatrace as a metrics provider with a Secret holding
+    the authentication data looks like the following:
 
-### Dynatrace and DQL
+    ```yaml
+    {% include "./assets/keptnmetricsprovider-dynatrace.yaml" %}
+    ```
 
-An example of Dynatrace as a metrics provider with a Secret holding
-the authentication data looks like the following:
+    > **Note**
+    When using Dynatrace as metrics provider you can
+    define the key name of your DT token stored in a secret,
+    which is not possible for Datadog or Prometheus.
+    For this example `myCustomTokenKey` was used.
 
-```yaml
-{% include "./assets/keptnmetricsprovider-dynatrace.yaml" %}
-```
-
-> **Note**
-> When using Dynatrace as metrics provider you can
-> define the key name of your DT token stored in a secret,
-> which is not possible for Datadog or Prometheus.
-> For this example `myCustomTokenKey` was used.
+<!-- markdownlint-enable MD046 -->
 
 ## Files
 
@@ -164,16 +155,7 @@ only specified the `metadata.name` field
 that identified the data provider (`prometheus`, `dynatrace`, or `dql`):
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1alpha2
-kind: KeptnMetricsProvider
-metadata:
-  name: prometheus | dynatrace |dql
-  namespace: <namespace>
-spec:
-  targetServer: "<data-provider-url>"
-  secretKeyRef:
-    name: dt-api-token
-    key: DT_TOKEN
+{% include "../../assets/crd/examples/old-version-synopsis.yaml"  %}
 ```
 
 Also note that, for the v1alpha1 and v1alpha2 API versions,

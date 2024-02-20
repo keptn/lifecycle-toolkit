@@ -16,6 +16,10 @@ status:
   postDeploymentStatus: Succeeded
   preDeploymentEvaluationStatus: Succeeded
   preDeploymentStatus: Succeeded
+  promotionStatus: Succeeded
+  promotionTaskStatus:
+    - status: Succeeded
+      definitionName: post-deployment-hello
   status: Succeeded
   workloadOverallStatus: Succeeded
 ---

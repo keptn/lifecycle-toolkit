@@ -1,10 +1,10 @@
-bases:
-  - ../base
-
 resources:
   - app-pre-deploy.yaml
   - app-pre-deploy-eval.yaml
+  - ../base
 
-patchesStrategicMerge:
-  - appcontext.yaml
-  - manifest.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+patches:
+  - path: appcontext.yaml
+  - path: manifest.yaml

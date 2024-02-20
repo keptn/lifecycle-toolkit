@@ -327,15 +327,16 @@ func main() {
 		spanHandler,
 	)
 	appVersionReconciler := &keptnappversion.KeptnAppVersionReconciler{
-		Client:            mgr.GetClient(),
-		Scheme:            mgr.GetScheme(),
-		Log:               appVersionLogger,
-		EventSender:       appVersionEventSender,
-		TracerFactory:     telemetry.GetOtelInstance(),
-		Meters:            keptnMeters,
-		SpanHandler:       spanHandler,
-		EvaluationHandler: appVersionEvaluationHandler,
-		PhaseHandler:      appVersionPhaseHandler,
+		Client:                mgr.GetClient(),
+		Scheme:                mgr.GetScheme(),
+		Log:                   appVersionLogger,
+		EventSender:           appVersionEventSender,
+		TracerFactory:         telemetry.GetOtelInstance(),
+		Meters:                keptnMeters,
+		SpanHandler:           spanHandler,
+		EvaluationHandler:     appVersionEvaluationHandler,
+		PhaseHandler:          appVersionPhaseHandler,
+		PromotionTasksEnabled: env.PromotionTasksEnabled,
 	}
 	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")

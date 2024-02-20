@@ -10,7 +10,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/task"
 )
 
-func (r *KeptnAppVersionReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, appVersion *klcv1beta1.KeptnAppVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
+func (r *KeptnAppVersionReconciler) reconcilePhase(ctx context.Context, phaseCtx context.Context, appVersion *klcv1beta1.KeptnAppVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 	taskHandler := task.Handler{
 		Client:      r.Client,
 		EventSender: r.EventSender,
@@ -38,6 +38,9 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostDeployment(ctx context.Conte
 	case apicommon.PostDeploymentCheckType:
 		appVersion.Status.PostDeploymentStatus = overallState
 		appVersion.Status.PostDeploymentTaskStatus = newStatus
+	case apicommon.PromotionCheckType:
+		appVersion.Status.PromotionStatus = overallState
+		appVersion.Status.PromotionTaskStatus = newStatus
 	}
 
 	// Write Status Field

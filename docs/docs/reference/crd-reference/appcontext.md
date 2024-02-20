@@ -38,6 +38,8 @@ spec:
     - <list of evaluations>
   postDeploymentEvaluations:
     - <list of evaluations>
+  promotionTasks:
+    - <list of tasks>
 ```
 
 ## Fields
@@ -112,6 +114,10 @@ If used, these fields must be populated manually:
       Evaluation names must match the value of the `metadata.name` field
       for the associated [KeptnEvaluationDefinition](evaluationdefinition.md)
       resource.
+    - **promotionTasks** -- list each task
+      to be run as part of the promotion stage.
+      Task names must match the value of the `metadata.name` field
+      for the associated [KeptnTaskDefinition](taskdefinition.md) resource.
 
 ## Usage
 

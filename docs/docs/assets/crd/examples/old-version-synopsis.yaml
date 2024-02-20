@@ -1,0 +1,10 @@
+apiVersion: metrics.keptn.sh/v1alpha2
+kind: KeptnMetricsProvider
+metadata:
+  name: prometheus | dynatrace |dql
+  namespace: <namespace>
+spec:
+  targetServer: "<data-provider-url>"
+  secretKeyRef:
+    name: dt-api-token
+    key: DT_TOKEN

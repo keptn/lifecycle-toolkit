@@ -1,0 +1,9 @@
+
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetric
+metadata:
+  name: podtato-head-entry
+  labels:
+    app: podtato-head
+data: 
+  status_code: 400    

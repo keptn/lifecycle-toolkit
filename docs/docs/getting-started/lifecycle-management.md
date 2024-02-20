@@ -5,7 +5,8 @@ comments: true
 # Release Lifecycle Management
 
 The Release Lifecycle Management tools run
-pre/post-deployment tasks and checks
+pre/post-deployment tasks and evaluations
+as well as promotion tasks
 for your existing cloud-native deployments
 to make them more robust.
 For more information, see
@@ -99,27 +100,7 @@ Change `UUID` to whatever value you have.
 Apply this manifest:
 
 ```yaml
----
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnTaskDefinition
-metadata:
-  name: send-event
-  namespace: keptndemo
-spec:
-  retries: 0
-  timeout: 5s
-  container:
-    name: curlcontainer
-    image: curlimages/curl:latest
-    args: [
-        '-X',
-        'POST',
-        'http://webhook.webhook.svc.cluster.local:8084/YOUR-UUID-HERE',
-        '-H',
-        'Content-Type: application/json',
-        '-d',
-        '{ "from": "keptn send-event" }'
-    ] 
+{% include "./assets/lifecycle-management-send-event-taskdefinition.yaml" %}
 ```
 
 ### Verify it works
@@ -134,21 +115,7 @@ In the following steps we have Keptn orchestrate this for us automatically.
 Apply this manifest:
 
 ```yaml
----
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnTask
-metadata:
-  name: runsendevent1
-  namespace: keptndemo
-spec:
-  taskDefinition: send-event
-  context:
-    appName: "my-test-app"
-    appVersion: "1.0.0"
-    objectType: ""
-    taskType: ""
-    workloadName: "my-test-workload"
-    workloadVersion: "1.0.0"
+{% include "./assets/lifecycle-management-send-event-task.yaml" %}
 ```
 
 If it works, `kubectl -n keptndemo get jobs` should show:
@@ -188,45 +155,15 @@ Getting started guide.
 Add a new label so the `labels` section looks like this:
 
 ```yaml
-...
-labels:
-    app.kubernetes.io/part-of: keptndemoapp
-    app.kubernetes.io/name: nginx
-    app.kubernetes.io/version: 0.0.2
-    keptn.sh/post-deployment-tasks: "send-event"
-...
+{% include "./assets/lifecycle-management-labels.yaml" %}
+```
 
 Increase the version number to `0.0.2` and re-apply the manifest.
 
 Here is a full version of the new YAML:
 
 ```yaml
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  namespace: keptndemo
-  labels:
-    app.kubernetes.io/name: nginx
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: nginx
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/part-of: keptndemoapp
-        app.kubernetes.io/name: nginx
-        app.kubernetes.io/version: 0.0.2
-        keptn.sh/post-deployment-tasks: "send-event"
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.14.2
-        ports:
-        - containerPort: 80
+{% include "./assets/lifecycle-management-deployment.yaml" %}
 ```
 
 > Best Practice: Start with post deployment tasks.
@@ -252,12 +189,25 @@ Do this by using the `keptn.sh/pre-deployment-tasks` label or annotation.
 ## More control over the application
 
 To customize checks associated with the application, we can create a `KeptnAppContext` resource and define
-a set of pre/post deployment tasks or evaluations for the whole application.
+a set of pre/post deployment tasks or evaluations as well as promotion tasks for the whole application.
 Note that the name of the `KeptnAppContext` resource needs to match the name of the automatically
 created `KeptnApp` and the value present in the `keptn.sh/app` or `app.kubernetes.io/part-of`
 annotations.
 In this case it needs to be `keptndemoapp`.
-An example of `KeptnAppContext`:
+
+The `KeptnAppContext` also includes `promotionTasks`.
+These are executed after the Deployment and all pre/post-deployment
+tasks and evaluations are executed successfully.
+They should serve only one purpose - to promote the application to another stage
+(for example from `dev` to `prod`).
+A promotion task is defined in a `KeptnTaskDefinition` resource:
+
+```yaml
+{% include "./assets/promotion-task.yaml" %}
+```
+
+An example of `KeptnAppContext` executing post-deployment task `send-event` and
+promotion task `promotion`:
 
 ```yaml
 {% include "./assets/keptnappcontext.yaml" %}
@@ -266,9 +216,16 @@ An example of `KeptnAppContext`:
 This way, the `send-event` task is executed after the deployment of the whole application;
 in other words, after all of the workloads present in the `KeptnApp`
 are in a `Running` state.
+After the `send-event` task succeeds, `promotion` task are executed.
 
 A detailed description of all the available fields of the `KeptnAppContext` resource can be found in the
-[KeptnAppContext API reference page](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappcontext).
+[KeptnAppContext CRD reference page](../reference/crd-reference/appcontext.md).
+
+> **Note**
+You must have the `promotion` feature enabled in order to execute promotion tasks.
+You can enable it via `lifecycleOperator.promotionTasksEnabled` helm value during installation of Keptn.
+More information can be found
+[here](https://github.com/keptn/lifecycle-toolkit-charts/tree/main/charts/keptn-lifecycle-operator#global).
 
 ## Further Information
 

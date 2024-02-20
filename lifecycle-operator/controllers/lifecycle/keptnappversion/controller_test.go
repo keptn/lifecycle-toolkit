@@ -2,6 +2,7 @@ package keptnappversion
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"reflect"
 	"strings"
@@ -181,6 +182,8 @@ func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 
 	app := testcommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0", nil, createFinishedAppVersionStatus())
 	r, eventChannel, _ := setupReconciler(app)
+
+	r.PromotionTasksEnabled = true
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
 			Namespace: "default",
@@ -219,6 +222,151 @@ func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 	require.False(t, result.Requeue)
 }
 
+func TestKeptnAppVersionReconciler_ReconcilePromotionPhase(t *testing.T) {
+
+	appVersionStatus := lfcv1beta1.KeptnAppVersionStatus{
+		CurrentPhase:                       apicommon.PhaseCompleted.ShortName,
+		PreDeploymentStatus:                apicommon.StateSucceeded,
+		PostDeploymentStatus:               apicommon.StateSucceeded,
+		PreDeploymentEvaluationStatus:      apicommon.StateSucceeded,
+		PostDeploymentEvaluationStatus:     apicommon.StateSucceeded,
+		PromotionStatus:                    apicommon.StatePending,
+		PreDeploymentTaskStatus:            []lfcv1beta1.ItemStatus{{Status: apicommon.StateSucceeded}},
+		PostDeploymentTaskStatus:           []lfcv1beta1.ItemStatus{{Status: apicommon.StateSucceeded}},
+		PreDeploymentEvaluationTaskStatus:  []lfcv1beta1.ItemStatus{{Status: apicommon.StateSucceeded}},
+		PostDeploymentEvaluationTaskStatus: []lfcv1beta1.ItemStatus{{Status: apicommon.StateSucceeded}},
+		WorkloadOverallStatus:              apicommon.StateSucceeded,
+		WorkloadStatus:                     []lfcv1beta1.WorkloadStatus{{Status: apicommon.StateSucceeded}},
+		Status:                             apicommon.StateSucceeded,
+	}
+
+	appVersionName := fmt.Sprintf("%s-%s", "myapp", "1.0.0")
+	appVersion := &lfcv1beta1.KeptnAppVersion{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:       appVersionName,
+			Namespace:  "default",
+			Generation: 1,
+		},
+		Spec: lfcv1beta1.KeptnAppVersionSpec{
+			KeptnAppSpec: lfcv1beta1.KeptnAppSpec{
+				Version: "1.0.0",
+			},
+			KeptnAppContextSpec: lfcv1beta1.KeptnAppContextSpec{
+				DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
+					PromotionTasks: []string{"my-promotion-task"},
+				},
+			},
+			AppName: "myapp",
+		},
+		Status: appVersionStatus,
+	}
+
+	r, eventChannel, _ := setupReconciler(appVersion)
+
+	mockPhaseHandler := &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		return phase.PhaseResult{Continue: true, Result: ctrl.Result{}}, nil
+	}}
+	r.PhaseHandler = mockPhaseHandler
+
+	r.PromotionTasksEnabled = true
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: "default",
+			Name:      "myapp-1.0.0",
+		},
+	}
+
+	result, err := r.Reconcile(context.WithValue(context.TODO(), CONTEXTID, req.Name), req)
+	require.Nil(t, err)
+
+	expectedEvents := []string{
+		"CompletedFinished",
+	}
+
+	for _, e := range expectedEvents {
+		event := <-eventChannel
+		require.Equal(t, strings.Contains(event, req.Name), true, "wrong appversion")
+		require.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
+		require.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+	}
+
+	require.Nil(t, err)
+
+	// do not requeue since we reached completion
+	require.False(t, result.Requeue)
+
+	// verify that the phase handler was invoked for the promotion phase
+	require.Len(t, mockPhaseHandler.HandlePhaseCalls(), 1)
+	require.Equal(t, apicommon.PhasePromotion, mockPhaseHandler.HandlePhaseCalls()[0].PhaseMoqParam)
+}
+
+func TestKeptnAppVersionReconciler_ReconcilePromotionPhaseFails(t *testing.T) {
+
+	appVersionStatus := lfcv1beta1.KeptnAppVersionStatus{
+		CurrentPhase:                       apicommon.PhaseCompleted.ShortName,
+		PreDeploymentStatus:                apicommon.StateSucceeded,
+		PostDeploymentStatus:               apicommon.StateSucceeded,
+		PreDeploymentEvaluationStatus:      apicommon.StateSucceeded,
+		PostDeploymentEvaluationStatus:     apicommon.StateSucceeded,
+		PromotionStatus:                    apicommon.StatePending,
+		PreDeploymentTaskStatus:            []lfcv1beta1.ItemStatus{{Status: apicommon.StateSucceeded}},
+		PostDeploymentTaskStatus:           []lfcv1beta1.ItemStatus{{Status: apicommon.StateSucceeded}},
+		PreDeploymentEvaluationTaskStatus:  []lfcv1beta1.ItemStatus{{Status: apicommon.StateSucceeded}},
+		PostDeploymentEvaluationTaskStatus: []lfcv1beta1.ItemStatus{{Status: apicommon.StateSucceeded}},
+		WorkloadOverallStatus:              apicommon.StateSucceeded,
+		WorkloadStatus:                     []lfcv1beta1.WorkloadStatus{{Status: apicommon.StateSucceeded}},
+		Status:                             apicommon.StateSucceeded,
+	}
+
+	appVersionName := fmt.Sprintf("%s-%s", "myapp", "1.0.0")
+	appVersion := &lfcv1beta1.KeptnAppVersion{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:       appVersionName,
+			Namespace:  "default",
+			Generation: 1,
+		},
+		Spec: lfcv1beta1.KeptnAppVersionSpec{
+			KeptnAppSpec: lfcv1beta1.KeptnAppSpec{
+				Version: "1.0.0",
+			},
+			KeptnAppContextSpec: lfcv1beta1.KeptnAppContextSpec{
+				DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
+					PromotionTasks: []string{"my-promotion-task"},
+				},
+			},
+			AppName: "myapp",
+		},
+		Status: appVersionStatus,
+	}
+
+	r, _, _ := setupReconciler(appVersion)
+
+	mockPhaseHandler := &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		return phase.PhaseResult{Continue: false, Result: ctrl.Result{Requeue: true}}, errors.New("unexpected error")
+	}}
+	r.PhaseHandler = mockPhaseHandler
+
+	r.PromotionTasksEnabled = true
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: "default",
+			Name:      "myapp-1.0.0",
+		},
+	}
+
+	result, err := r.Reconcile(context.WithValue(context.TODO(), CONTEXTID, req.Name), req)
+	require.NotNil(t, err)
+
+	// requeue since we could not finish the promotion phase
+	require.True(t, result.Requeue)
+
+	// verify that the phase handler was invoked for the promotion phase
+	require.Len(t, mockPhaseHandler.HandlePhaseCalls(), 1)
+	require.Equal(t, apicommon.PhasePromotion, mockPhaseHandler.HandlePhaseCalls()[0].PhaseMoqParam)
+}
+
 func createFinishedAppVersionStatus() lfcv1beta1.KeptnAppVersionStatus {
 	return lfcv1beta1.KeptnAppVersionStatus{
 		CurrentPhase:                       apicommon.PhaseCompleted.ShortName,
@@ -226,6 +374,7 @@ func createFinishedAppVersionStatus() lfcv1beta1.KeptnAppVersionStatus {
 		PostDeploymentStatus:               apicommon.StateSucceeded,
 		PreDeploymentEvaluationStatus:      apicommon.StateSucceeded,
 		PostDeploymentEvaluationStatus:     apicommon.StateSucceeded,
+		PromotionStatus:                    apicommon.StateSucceeded,
 		PreDeploymentTaskStatus:            []lfcv1beta1.ItemStatus{{Status: apicommon.StateSucceeded}},
 		PostDeploymentTaskStatus:           []lfcv1beta1.ItemStatus{{Status: apicommon.StateSucceeded}},
 		PreDeploymentEvaluationTaskStatus:  []lfcv1beta1.ItemStatus{{Status: apicommon.StateSucceeded}},

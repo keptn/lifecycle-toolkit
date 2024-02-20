@@ -32,6 +32,7 @@ differentiated by the `spec` section:
   [Synopsis for container-runtime](#synopsis-for-container-runtime)
   and
   [Examples for a container-runtime runner](#examples-for-a-container-runtime-runner).
+
 - Pre-defined containers
 
     - Use the pre-defined `deno-runtime` runner
@@ -43,16 +44,16 @@ differentiated by the `spec` section:
       You can use this to specify simple actions
       without having to define a full container.
       See
-      [Synopsis for Deno-runtime container](#deno-runtime)
+      <a href="#deno-runtime">Synopsis for Deno-runtime container</a>
       and
-      [Deno-runtime examples](#examples-for-deno-runtime-runner).
+      [Deno-runtime examples](#examples-for-deno-runtime-and-python-runtime-runners).
     - Use the pre-defined `python-runtime` runner
       to define your task using
       [Python 3](https://www.python.org/).
       See
-      [Synopsis for python-runtime runner](#python-runtime)
+      <a href="#python-runtime">Synopsis for python-runtime runner</a>
       and
-      [Examples for a python-runtime runner](#examples-for-a-python-runtime-runner).
+      [Examples for a python-runtime runner](#examples-for-deno-runtime-and-python-runtime-runners).
 
 ## Synopsis for all runners
 
@@ -61,15 +62,7 @@ include the same lines at the top.
 These are described here.
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
-kind: KeptnTaskDefinition
-metadata:
-  name: <task-name>
-spec:
-  deno | python | container
-  ...
-  retries: <integer>
-  timeout: <duration>
+{% include "../../assets/crd/examples/synopsis-for-all-runners.yaml"  %}
 ```
 
 ### Fields used for all containers
@@ -96,11 +89,11 @@ spec:
           and code the functionality in Deno script,
           which is similar to JavaScript and Typescript.
           See
-          [Synopsis for deno-runtime container](#deno-runtime)
+          <a href="#deno-runtime">Synopsis for deno-runtime container</a>
         - **python** -- Use a `python-runtime` function
           and code the functionality in Python 3.
           See
-          [Synopsis for python-runtime runner](#python-runtime)
+          <a href="#python-runtime">Synopsis for python-runtime runner</a>
         - **container** -- Use the runner defined
           for the `container-runtime` container.
           This is a standard Kubernetes container
@@ -134,15 +127,7 @@ you can use a `container-runtime` to execute
 almost anything that you implemented with JES for Keptn v1.
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
-kind: KeptnTaskDefinition
-metadata:
-  name: <task-name>
-spec:
-  container:
-    name: <container-name>
-    image: <image-name>
-    <other fields>
+{% include "../../assets/crd/examples/synopsis-for-container-runtime.yaml"  %}
 ```
 
 ### Fields used only for container-runtime
@@ -163,6 +148,7 @@ spec:
           [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
           spec documentation.
 
+<!-- markdownlint-disable MD046 -->
 ## Synopsis for predefined containers
 
 The predefined containers allow you to easily define a task
@@ -171,52 +157,31 @@ You do not need to specify the image, volumes, and so forth.
 Instead, just provide either a Deno or Python script
 and Keptn sets up the container and runs the script as part of the task.
 
-### deno-runtime
+=== "deno-runtime"
 
-When using the `deno-runtime` runner to define a task,
-the executables are coded in
-[Deno-script](https://deno.com/manual),
-(which is mostly the same as JavaScript and TypeScript)
-and executed in the
-`deno-runtime` runner,
-which is a lightweight runtime environment
-that executes in your namespace.
-Note that Deno has tighter restrictions
-for permissions and importing data
-so a script that works properly elsewhere
-may not function out of the box when run in the `deno-runtime` runner.
+    When using the `deno-runtime` runner to define a task,
+    the executables are coded in
+    [Deno-script](https://deno.com/manual),
+    (which is mostly the same as JavaScript and TypeScript)
+    and executed in the
+    `deno-runtime` runner,
+    which is a lightweight runtime environment
+    that executes in your namespace.
+    Note that Deno has tighter restrictions
+    for permissions and importing data
+    so a script that works properly elsewhere
+    may not function out of the box when run in the `deno-runtime` runner.
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
-kind: KeptnTaskDefinition
-metadata:
-  name: <task-name>
-spec:
-  deno:
-    inline | httpRef | functionRef | ConfigMapRef
-    parameters:
-      map:
-        textMessage: "This is my configuration"
-    secureParameters:
-      secret: <secret-name>
-```
+    ```yaml
+    {% include "../../assets/crd/examples/synopsis-for-deno-runtime-container.yaml" %}
+    ```
 
-### python-runtime
+=== "python-runtime"
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v?alpha?
-kind: KeptnTaskDefinition
-metadata:
-  name: <task-name>
-spec:
-  python:
-    inline | httpRef | functionRef | ConfigMapRef
-    parameters:
-      map:
-        textMessage: "This is my configuration"
-    secureParameters:
-      secret: <secret-name>
-```
+    ```yaml
+    {% include "../../assets/crd/examples/synopsis-for-python-runtime-runner.yaml" %}
+    ```
+<!-- markdownlint-enable MD046 -->
 
 ### Fields for predefined containers
 
@@ -241,11 +206,13 @@ spec:
                   such as Jenkins, Argo Workflows, Flux, and Tekton.
 
                     - **deno example:**
-                      [Example 1: inline script for a Deno script](#example-1-inline-script-for-a-deno-script)
+                      <a href="#example-1-inline-script-for-a-deno-script">Example 1: inline script for a Deno script</a>
 
                     - **python example:**
-                      [Example 1: inline code for a python-runtime runner](#example-1-inline-code-for-a-python-runtime-runner)
+                      <!-- markdownlint-disable MD013 -->
+                      <a href="#example-1-inline-code-for-a-python-runtime-runner">Example 1: inline code for a python-runtime runner</a>
 
+                      <!-- markdownlint-enable MD013 -->
                     - **httpRef** - Specify a script to be executed at runtime
                       from the remote webserver that is specified.
 
@@ -260,10 +227,11 @@ spec:
                     Any other scripts listed here are silently ignored.
 
                     - **deno example:**
-                      [Example 2: httpRef script for a Deno script](#example-2-httpref-script-for-a-deno-script)
+                      <a href="#example-2-httpref-script-for-a-deno-script">Example 2: httpRef script for a Deno script</a>
                     - **python example:**
-                      [Example 2: httpRef for a python-runtime runner](#example-2-httpref-for-a-python-runtime-runner)
-
+                      <!-- markdownlint-disable MD033 -->
+                      <!-- <a href="#"></a> --><br>
+                      <!-- markdownlint-enable MD033 -->
                 - **functionRef** -- Execute another `KeptnTaskDefinition` resources.
                   Populate this field with the value(s) of the `metadata.name` field
                   for each `KeptnDefinitionTask` to be called.
@@ -290,18 +258,21 @@ spec:
                     are silently ignored.
 
                     - **deno example:**
-                      [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
+                      <a href="#example-3-functionref-for-a-deno-script">Example 3: functionRef for a Deno script</a>
                     - **python example:**
-                      [Example 3: functionRef for a python-runtime runner](#example-3-functionref-for-a-python-runtime-runner)
-
+                      <!-- markdownlint-disable MD013 -->
+                      <a href="#example-3-functionref-for-a-python-runtime-runner">Example 3: functionRef for a python-runtime runner</a>
+                      <!-- markdownlint-enable MD013 -->
                 - **ConfigMapRef** - Specify the name of a
                   [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
                   resource that contains the function to be executed.
 
                     - **deno example:**
-                      [Example 5: ConfigMap for a Deno script](#example-5-configmap-for-a-deno-script)
+                      <a href="#example-5-configmap-for-a-deno-script">Example 5: ConfigMap for a Deno script</a>
                     - **python example:**
-                      [Example 4: ConfigMapRef for a python-runtime runner](#example-4-configmapref-for-a-python-runtime-runner)
+                      <!-- markdownlint-disable MD013 -->
+                      <a href="#example-4-configmapref-for-a-python-runtime-runner">Example 4: ConfigMapRef for a python-runtime runner</a>
+                      <!-- markdownlint-enable MD013 -->
 
             - **parameters** - An optional field
               to supply input parameters to a function.
@@ -314,9 +285,11 @@ spec:
               for more information.
 
                 - **deno example:**
-                  [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
+                  <a href="#example-3-functionref-for-a-deno-script">Example 3: functionRef for a Deno script</a>
                 - **python example:**
-                  [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
+                  <!-- markdownlint-disable MD013 -->
+                  <a href="#example-3-functionref-for-a-python-runtime-runner">Example 3: functionRef for a python-runner runner</a>
+                  <!-- markdownlint-enable MD013 -->
 
             - **secureParameters** -- An optional field
               used to pass a Kubernetes secret.
@@ -331,9 +304,11 @@ spec:
                 for details.
 
                 - **deno example:**
-                  [Example 3: functionRef for a Deno script](#example-3-functionref-for-a-deno-script)
+                  <a href="#example-3-functionref-for-a-deno-script">Example 3: functionRef for a Deno script</a>
                 - **python example:**
-                  [Example 3: functionRef for a python-runner runner](#example-3-functionref-for-a-python-runtime-runner)
+                  <!-- markdownlint-disable MD013 -->
+                  <a href="#example-3-functionref-for-a-python-runtime-runner">Example 3: functionRef for a python-runner runner</a>
+                  <!-- markdownlint-enable MD013 -->
 
 ## Usage
 
@@ -396,181 +371,117 @@ This task is then referenced in the
 [appcontext.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-2/appcontext.yaml)
 file.
 
-## Examples for deno-runtime runner
+<!-- markdownlint-disable MD046 -->
+## Examples for deno-runtime and python-runtime runners
 
-### Example 1: inline script for a Deno script
+### Examples for inline script
 
-This example defines a full-fledged Deno script
-within the `KeptnTaskDefinition` YAML file:
+=== "Example 1: inline script for a Deno script"
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnTaskDefinition
-metadata:
-  name: hello-keptn-inline
-spec:
-  deno:
-    inline:
-      code: |
-        let text = Deno.env.get("DATA");
-        let data;
-        let name;
-        data = JSON.parse(text);
+    This example defines a full-fledged Deno script
+    within the `KeptnTaskDefinition` YAML file:
 
-        name = data.name
-        console.log("Hello, " + name + " new");
-```
+    ```yaml
+    {% include "../../assets/crd/examples/inline-script-for-deno-script.yaml" %} 
+    ```
+=== "Example 1: inline code for a python-runtime runner"
 
-### Example 2: httpRef script for a Deno script
+    You can embed python code directly in the task definition.
+    This example prints data stored in the parameters map:
 
-This example fetches the Deno script from a remote webserver at runtime:
+    ```yaml
+    {% include "../../assets/crd/python-inline.yaml" %}
+    ```
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnTaskDefinition
-metadata:
-  name: hello-keptn-http
-spec:
-  deno:
-    httpRef:
-      url: "https://www.example.com/yourscript.js"
-```
+### Examples for httpRef script
 
-For another example, see the
-[sample-app](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
+=== "Example 2: httpRef script for a Deno script"
 
-See the
-[sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml)
-PodtatoHead example for a more complete example.
+    This example fetches the Deno script from a remote webserver at runtime:
 
-### Example 3: functionRef for a Deno script
+    ```yaml
+    {% include "../../assets/crd/examples/httpref-script-for-deno-script.yaml" %}
+    ```
 
-This example calls another defined task,
-illustrating how one `KeptnTaskDefinition` can build
-on top of other `KeptnTaskDefinition`s.
-In this case, it calls `slack-notification-dev`,
-passing `parameters` and `secureParameters` to that other task:
+    For another example, see the
+    [sample-app](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnTaskDefinition
-metadata:
-  name: slack-notification-dev
-spec:
-  deno:
-    functionRef:
-      name: slack-notification
-    parameters:
-      map:
-        textMessage: "This is my configuration"
-    secureParameters:
-      secret: slack-token
-```
+    See the
+    [sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml)
+    PodtatoHead example for a more complete example.
 
-### Example 4: ConfigMapRef for a Deno script
+=== "Example 2: httpRef for a python-runtime runner"
 
-This example references a `ConfigMap` by the name of `dev-configmap`
-that contains the code for the function to be executed.
+    You can refer to code stored online.
+    For example, we have a few examples available in the
+    [python-runtime samples](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/python-runtime/samples)
+    tree.
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnTaskDefinition
-metadata:
-  name: keptntaskdefinition-sample
-spec:
-  deno:
-    configMapRef:
-      name: dev-configmap
-```
+### Examples for functionRef
 
-### Example 5: ConfigMap for a Deno script
+=== "Example 3: functionRef for a Deno script"
 
-This example illustrates the use of both a `ConfigMapRef` and a `ConfigMap`:
+    This example calls another defined task,
+    illustrating how one `KeptnTaskDefinition` can build
+    on top of other `KeptnTaskDefinition`s.
+    In this case, it calls `slack-notification-dev`,
+    passing `parameters` and `secureParameters` to that other task:
 
-```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnTaskDefinition
-metadata:
-  name: scheduled-deployment
-spec:
-  function:
-    configMapRef:
-      name: scheduled-deployment-cm-1
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: scheduled-deployment-1
-data:
-  code: |
-    let text = Deno.env.get("DATA");
-    let data;
-    if (text != "") {
-        data = JSON.parse(text);
-    }
-    let targetDate = new Date(data.targetDate)
-    let dateTime = new Date();
-    if(targetDate < dateTime) {
-        console.log("Date has passed - ok");
-        Deno.exit(0);
-    } else {
-        console.log("It's too early - failing");
-        Deno.exit(1);
-    }
-    console.log(targetDate);
-```
+    ```yaml
+    {% include "../../assets/crd/examples/functionref-for-deno-script.yaml" %} 
+    ```
 
-### Example 6: Accessing KEPTN_CONTEXT environment variable in a Deno task
+=== "Example 3: functionRef for a python-runtime runner"
 
-For Tasks triggered as pre- and post- deployment of applications
-on Kubernetes, Keptn populates an environment variable called `KEPTN_CONTEXT`.
-As all environment variables, this can be accessed using language specific methods.
-An example in Deno would be the following:
+    You can refer to an existing `KeptnTaskDefinition`.
+    this example calls the inline example
+    but overrides the data printed with what is specified in the task:
 
-```javascript
-let context = Deno.env.get("KEPTN_CONTEXT");
-```
+    ```yaml
+    {% include "../../assets/crd/python-recursive.yaml" %}
+    ```
 
-## Examples for a python-runtime runner
+### Examples for ConfigMapRef
 
-### Example 1: inline code for a python-runtime runner
+=== "Example 4: ConfigMapRef for a Deno script"
 
-You can embed python code directly in the task definition.
-This example prints data stored in the parameters map:
+    This example references a `ConfigMap` by the name of `dev-configmap`
+    that contains the code for the function to be executed.
 
-```yaml
-{% include "../../assets/crd/python-inline.yaml" %}
-```
+    ```yaml
+    {% include "../../assets/crd/examples/configmapref-for-deno-script.yaml" %} 
+    ```
 
-### Example 2: httpRef for a python-runtime runner
+=== "Example 4: ConfigMapRef for a python-runtime runner"
 
-You can refer to code stored online.
-For example, we have a few examples available in the
-[python-runtime samples](https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/python-runtime/samples)
-tree.
+    ```yaml
+    {% include "../../assets/crd/python-configmap.yaml" %}
+    ```
 
-Consider the following:
+### Examples for ConfigMap
 
-```yaml
-{% include "../../assets/crd/python-configmap.yaml" %}
-```
+=== "Example 5: ConfigMap for a Deno script"
 
-### Example 3: functionRef for a python-runtime runner
+    This example illustrates the use of both a `ConfigMapRef` and a `ConfigMap`:
 
-You can refer to an existing `KeptnTaskDefinition`.
-This example calls the inline example
-but overrides the data printed with what is specified in the task:
+    ```yaml
+    {% include "../../assets/crd/examples/configmap-for-deno-script.yaml" %} 
+    ```
 
-```yaml
-{% include "../../assets/crd/python-recursive.yaml" %}
-```
+### Example for Accessing KEPTN_CONTEXT environment variable
 
-### Example 4: ConfigMapRef for a python-runtime runner
+=== "Example 6: Accessing KEPTN_CONTEXT environment variable in a Deno task"
 
-```yaml
-{% include "../../assets/crd/python-configmap.yaml" %}
-```
+    For Tasks triggered as pre- and post- deployment of applications
+    on Kubernetes, Keptn populates an environment variable called `KEPTN_CONTEXT`.
+    As all environment variables, this can be accessed using language specific methods.
+    An example in Deno would be the following:
 
+    ```javascript
+    let context = Deno.env.get("KEPTN_CONTEXT");
+    ```
+
+<!-- markdownlint-enable MD046 -->
 ### Allowed libraries for the python-runtime runner
 
 The following example shows how to use some of the allowed packages, namely:

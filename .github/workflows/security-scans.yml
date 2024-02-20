@@ -50,7 +50,7 @@ jobs:
           echo "RUN_ID=$RUN_ID" >> $GITHUB_OUTPUT
 
       - name: Download all artifacts from last successful build of target branch
-        uses: dawidd6/action-download-artifact@v3.0.0
+        uses: dawidd6/action-download-artifact@v3.1.1
         id: download_artifacts_push
         with:
           # Download last successful artifact from a CI build
@@ -238,7 +238,7 @@ jobs:
 
       - name: Trivy image scan scheduler
         if: matrix.image == 'scheduler'
-        uses: aquasecurity/trivy-action@22d2755f774d925b191a185b74e782a4b0638a41 # 0.15.0
+        uses: aquasecurity/trivy-action@84384bd6e777ef152729993b8145ea352e9dd3ef # 0.17.0
         with:
           input: "images/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
@@ -247,7 +247,7 @@ jobs:
 
       - name: Trivy image scan
         if: matrix.image != 'scheduler'
-        uses: aquasecurity/trivy-action@22d2755f774d925b191a185b74e782a4b0638a41 # 0.15.0
+        uses: aquasecurity/trivy-action@84384bd6e777ef152729993b8145ea352e9dd3ef # 0.17.0
         with:
           input: "images/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
@@ -307,7 +307,7 @@ jobs:
           echo "Note: This issue was auto-generated from [security-scan.yml](.github/workflows/security-scan.yml)" >> security-scan-failure.md
 
       - name: Create issue if versions differ
-        uses: JasonEtco/create-an-issue@v2.9.1
+        uses: JasonEtco/create-an-issue@v2.9.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

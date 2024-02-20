@@ -371,5 +371,27 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 				require.Equal(t, "true", resultingPod.Annotations[apicommon.SchedulingGateRemoved])
 			}
 		})
+
+		t.Run("hasKeptnSchedulingGate", func(t *testing.T) {
+			pod := &v1.Pod{
+				Spec: v1.PodSpec{
+					SchedulingGates: []v1.PodSchedulingGate{
+						{
+							Name: apicommon.KeptnGate,
+						},
+					},
+				},
+			}
+
+			hasGate := hasKeptnSchedulingGate(pod)
+
+			require.True(t, hasGate)
+
+			podNoGate := &v1.Pod{}
+
+			hasGate = hasKeptnSchedulingGate(podNoGate)
+
+			require.False(t, hasGate)
+		})
 	}
 }

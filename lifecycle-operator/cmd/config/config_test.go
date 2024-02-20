@@ -7,16 +7,11 @@ import (
 )
 
 func TestConfigProvider(t *testing.T) {
-	t.Run("NewKubeConfigProvider", func(t *testing.T) {
-		provider := NewKubeConfigProvider()
-		assert.NotNil(t, provider)
-	})
+	provider := NewKubeConfigProvider()
 
-	t.Run("GetConfigSuccess", func(t *testing.T) {
-		provider := NewKubeConfigProvider()
+	assert.NotNil(t, provider)
 
-		config, _ := provider.GetConfig()
-		//	assert.NoError(t, err)
-		assert.NotNil(t, config)
-	})
+	config, err := provider.GetConfig()
+	assert.NoError(t, err)
+	assert.NotNil(t, config)
 }

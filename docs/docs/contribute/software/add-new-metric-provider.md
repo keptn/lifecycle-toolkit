@@ -129,7 +129,7 @@ The steps to create your own metrics provider are:
         * In the directory `test/chainsaw/testmetrics`, create a folder `keptn-metrics-validation` in our case.
         * Within the `keptn-metrics-validation` folder, create YAML file `00-install.yaml`.
           * `00-install.yaml` contains a sample configuration that installs a valid `KeptnMetricsProvider`
-              in our case `placeholder` and it also defines a sample `KeptnMetric` configuration 
+              in our case `placeholder` and it also defines a sample `KeptnMetric` configuration
               representing a valid use case, while.
         * Create a file named `chainsaw-test.yaml` and define the steps for the integration test in chainsaw-test.yaml.
 

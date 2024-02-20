@@ -72,7 +72,7 @@ The steps to create your own metrics provider are:
      Below is an example of a placeholder provider implementation.
 
       ```go
-        {% include "./assets/example-code/placeholder-code-example.go" %}
+      {% include "./assets/example-code/placeholder-code-example.go" %}
       ```
 
       > **Note** Refer to the documentation of the
@@ -88,7 +88,7 @@ The steps to create your own metrics provider are:
    Instantiate the placeholder provider struct and return it.
 
     ```go
-      {% include "./assets/example-code/new-provider-function.go" %}
+    {% include "./assets/example-code/new-provider-function.go" %}
     ```
 
 5. **Update the validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.

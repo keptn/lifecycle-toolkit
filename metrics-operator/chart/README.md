@@ -63,23 +63,23 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 
 ### Keptn Metrics Operator controller
 
-| Name                                                | Description                                                        | Value                    |
-| --------------------------------------------------- | ------------------------------------------------------------------ | ------------------------ |
-| `containerSecurityContext`                          | Sets security context privileges                                   |                          |
-| `containerSecurityContext.allowPrivilegeEscalation` |                                                                    | `false`                  |
-| `containerSecurityContext.capabilities.drop`        |                                                                    | `["ALL"]`                |
-| `containerSecurityContext.privileged`               |                                                                    | `false`                  |
-| `containerSecurityContext.runAsGroup`               |                                                                    | `65532`                  |
-| `containerSecurityContext.runAsNonRoot`             |                                                                    | `true`                   |
-| `containerSecurityContext.runAsUser`                |                                                                    | `65532`                  |
-| `containerSecurityContext.seccompProfile.type`      |                                                                    | `RuntimeDefault`         |
-| `env.exposeKeptnMetrics`                            | enable metrics exporter                                            | `true`                   |
-| `env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller                           | `0`                      |
-| `env.analysisControllerLogLevel`                    | sets the log level of Analysis Controller                          | `0`                      |
-| `image.registry`                                    | specify the container registry for the metrics-operator image      | `ghcr.io`                |
-| `image.repository`                                  | specify registry for manager image                                 | `keptn/metrics-operator` |
-| `image.tag`                                         | select tag for manager image                                       | `v0.9.1`                 |
-| `image.imagePullPolicy`                             | specify pull policy for manager image this overrides global values | `""`                     |
-| `livenessProbe`                                     | custom livenessprobe for manager container                         |                          |
-| `readinessProbe`                                    | custom readinessprobe for manager container                        |                          |
-| `resources`                                         | specify limits and requests for manager container                  |                          |
+| Name                                                | Description                                                             | Value                    |
+| --------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------ |
+| `containerSecurityContext`                          | Sets security context privileges                                        |                          |
+| `containerSecurityContext.allowPrivilegeEscalation` |                                                                         | `false`                  |
+| `containerSecurityContext.capabilities.drop`        |                                                                         | `["ALL"]`                |
+| `containerSecurityContext.privileged`               |                                                                         | `false`                  |
+| `containerSecurityContext.runAsGroup`               |                                                                         | `65532`                  |
+| `containerSecurityContext.runAsNonRoot`             |                                                                         | `true`                   |
+| `containerSecurityContext.runAsUser`                |                                                                         | `65532`                  |
+| `containerSecurityContext.seccompProfile.type`      |                                                                         | `RuntimeDefault`         |
+| `env.exposeKeptnMetrics`                            | enable metrics exporter                                                 | `true`                   |
+| `env.metricsControllerLogLevel`                     | sets the log level of Metrics Controller                                | `0`                      |
+| `env.analysisControllerLogLevel`                    | sets the log level of Analysis Controller                               | `0`                      |
+| `image.registry`                                    | specify the container registry for the metrics-operator image           | `ghcr.io`                |
+| `image.repository`                                  | specify registry for manager image                                      | `keptn/metrics-operator` |
+| `image.tag`                                         | select tag for manager image                                            | `v0.9.1`                 |
+| `image.imagePullPolicy`                             | specify pull policy for the manager image. This overrides global values | `""`                     |
+| `livenessProbe`                                     | custom livenessprobe for manager container                              |                          |
+| `readinessProbe`                                    | custom readinessprobe for manager container                             |                          |
+| `resources`                                         | specify limits and requests for manager container                       |                          |

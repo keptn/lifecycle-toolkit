@@ -88,19 +88,7 @@ The steps to create your own metrics provider are:
    Instantiate the placeholder provider struct and return it.
 
     ```go
-    // Inside the providers package
-
-    // NewProvider function
-    func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
-        switch strings.ToLower(providerType) {
-        case KeptnPlaceholderProviderType:
-            return &placeholder.KeptnPlaceholderProvider{
-                Log:        log,
-                HttpClient: http.Client{},
-            }, nil
-        // Other cases...
-        }
-    }
+      {% include "./assets/example-code/new-provider-function.go" %}
     ```
 
 5. **Update the validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.

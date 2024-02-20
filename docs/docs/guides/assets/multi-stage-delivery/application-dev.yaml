@@ -61,8 +61,6 @@ metadata:
   namespace: podtato-head-dev
 spec:
   function:
-    secureParameters:
-      secret: github-token
     inline:
       code: |
         console.log("deployment completed");

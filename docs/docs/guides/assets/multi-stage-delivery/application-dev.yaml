@@ -1,10 +1,3 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  annotations:
-    keptn.sh/lifecycle-toolkit: enabled
-  name: podtato-head
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -64,6 +57,19 @@ spec:
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
+  name: post-deployment
+  namespace: podtato-head-dev
+spec:
+  function:
+    secureParameters:
+      secret: github-token
+    inline:
+      code: |
+        console.log("deployment completed");
+---
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnTaskDefinition
+metadata:
   name: promote
   namespace: podtato-head-dev
 spec:
@@ -72,8 +78,6 @@ spec:
       secret: github-token
     inline:
       code: |
-        import { Octokit, App } from "https://esm.sh/octokit?dts";
-        
         let secureDataText = Deno.env.get("SECURE_DATA");
         let secureData;
         if (secureDataText != "") {
@@ -86,18 +90,16 @@ spec:
           context = JSON.parse(contextText);
         }
         
-        const octokit = new Octokit({ auth: secureData.apiToken });
+        let body = `{"ref":"main","inputs":{"traceParent":"${context.metadata.traceparent}"}}`;
         
-        try {
-          await octokit.rest.actions.createWorkflowDispatch({
-            owner: secureData.githubRepoOwner,
-            repo: secureData.githubRepo,
-            workflow_id: "promote.yml",
-            ref: "main",
-            inputs: {
-              "traceParent": context.metadata.traceParent
-            }
-          });
-        } catch (error) {
-          console.log(error);
-        } 
+        let resp = await fetch("https://api.github.com/repos/" + secureData.githubRepoOwner + "/" + secureData.githubRepo + "/actions/workflows/promote.yaml/dispatches", {
+            method: "POST",
+            body: body,
+            headers: {
+                'Accept': 'application/vnd.github+json',
+                'Authorization': `Bearer ${secureData.apiToken}`,
+                'X-GitHub-Api-Version': '2022-11-28'
+            },
+        });
+        
+        console.log(resp);

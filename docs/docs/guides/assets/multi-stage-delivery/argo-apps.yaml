@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: podtate-head-dev
+  name: podtato-head-dev
   namespace: argocd
 spec:
   project: default
@@ -26,7 +26,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: spodtate-head-prod
+  name: podtato-head-prod
   namespace: argocd
 spec:
   project: default

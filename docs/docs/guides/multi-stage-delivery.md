@@ -44,6 +44,12 @@ with the following permissions for the repository:
   - Read access to metadata
   - Read/Write access to actions
 
+Note that for the prmotion to work properly,
+you need to enable read and write permissions for 
+Github actions in your repository - see the screenshot below:
+
+![Workflow Permissions](./assets/multi-stage-delivery/workflow-permissions.png)
+
 ## Preparing the Application Manifests
 
 In this example, the application will be deployed in
@@ -165,14 +171,18 @@ in the `dev` stage:
 
 ```shell
 $ kubectl get keptnappversion -n podtato-head-dev
-TODO
+
+NAME                           APPNAME        VERSION   PHASE
+podtato-head-v0.3.0-6b86b273   podtato-head   v0.3.0    Completed
 ```
 
 And there will be another `KeptnAppVersion` in the `production` stage.
 
 ```shell
 $ kubectl get keptnappversion -n podtato-head-production
-TODO
+
+NAME                           APPNAME        VERSION   PHASE
+podtato-head-v0.3.0-6b86b273   podtato-head   v0.3.0    Completed
 ```
 
 ## Promoting a workload
@@ -212,3 +222,29 @@ updated values to the helm chart of the `production` stage.
 You will see the PR in the *Pull requests* section of your upstream repository:
 
 ![PR for promoting the new version](./assets/multi-stage-delivery/dev2prod-pr.png)
+
+After approving and merging the pull request into `main`,
+Argo CD eventually synchronizes the application in the
+`production` stage, and the updated version is deployed.
+This is reflected in a new `KeptnAppVersion` being created
+in the `podtato-head-production` namespace:
+
+```shell
+$ kubectl get keptnappversion -n podtato-head-production
+
+NAME                           APPNAME        VERSION   PHASE
+podtato-head-v0.3.0-6b86b273   podtato-head   v0.3.0    Completed
+podtato-head-v0.3.1-d4735e3a   podtato-head   v0.3.1    Completed
+```
+
+## Inspecting the Deployment Traces
+
+To keep track of how a workload version progresses through
+the stages, we passed through the OTel span id of the
+promotion phase in the `dev` stage to the applied
+`KeptnAppContext` in the `production` stage.
+Due to that, the deployment trace of the promoted version
+in the `production` stage contains the reference to the
+promotion phase, which is also visible in the trace visualization in Jaeger:
+
+![Deployment Trace](./assets/multi-stage-delivery/trace.png)

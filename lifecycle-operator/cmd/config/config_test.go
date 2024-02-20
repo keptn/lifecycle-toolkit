@@ -12,11 +12,11 @@ func TestConfigProvider(t *testing.T) {
 		assert.NotNil(t, provider)
 	})
 
-	// t.Run("GetConfigSuccess", func(t *testing.T) {
-	// 	provider := NewKubeConfigProvider()
+	t.Run("GetConfigSuccess", func(t *testing.T) {
+		provider := NewKubeConfigProvider()
 
-	// 	config, err := provider.GetConfig()
-	// 	assert.NoError(t, err)
-	// 	assert.NotNil(t, config)
-	// })
+		config, err := provider.GetConfig()
+		assert.NoError(t, err)
+		assert.NotNil(t, config)
+	})
 }

@@ -8,5 +8,7 @@ resources:
   - python-task.yaml
   - promotion-task.yaml
 
-patchesStrategicMerge:
-  - manifest.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+patches:
+  - path: manifest.yaml

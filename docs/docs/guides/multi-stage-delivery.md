@@ -99,41 +99,41 @@ containing the manifests for the `dev` and `production` stage:
 
 === "dev/templates/application.yaml"
 
-  ```yaml
-  {% include "./assets/multi-stage-delivery/application-dev.yaml" %}
-  ```
+    ```yaml
+    {% include "./assets/multi-stage-delivery/application-dev.yaml" %}
+    ```
 
 === "dev/Chart.yaml"
 
-  ```yaml
-  {% include "./assets/multi-stage-delivery/chart.yaml" %}
-  ```
+    ```yaml
+    {% include "./assets/multi-stage-delivery/chart.yaml" %}
+    ```
 
 === "dev/values.yaml"
 
-  ```yaml
-  {% include "./assets/multi-stage-delivery/values-dev.yaml" %}
-  ```
+    ```yaml
+    {% include "./assets/multi-stage-delivery/values-dev.yaml" %}
+    ```
 
 **Production Stage:**
 
 === "production/templates/application.yaml"
 
-  ```yaml
-  {% include "./assets/multi-stage-delivery/application-production.yaml" %}
-  ```
+    ```yaml
+    {% include "./assets/multi-stage-delivery/application-production.yaml" %}
+    ```
 
 === "production/Chart.yaml"
 
-  ```yaml
-  {% include "./assets/multi-stage-delivery/chart.yaml" %}
-  ```
+    ```yaml
+    {% include "./assets/multi-stage-delivery/chart.yaml" %}
+    ```
 
 === "production/values.yaml"
 
-  ```yaml
-  {% include "./assets/multi-stage-delivery/values-production.yaml" %}
-  ```
+    ```yaml
+    {% include "./assets/multi-stage-delivery/values-production.yaml" %}
+    ```
 
 After creating all the files listed above, do not forget to push
 them to your git repository:

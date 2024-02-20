@@ -98,7 +98,7 @@ The steps to create your own metrics provider are:
 
     `// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql|placeholder`.
 
-     In the metric-operator directory run `make manifests` to update the metrics-operator crd config
+     In the metric-operator directory run `make generate manifests` to update the metrics-operator crd config
      Then modify the helm chart and the helm chart crd validation to match the update in the metrics-operator crd config
   
 6. **Add Test Cases:**

@@ -5,7 +5,7 @@ comments: true
 # Multi-stage Delivery using GitOps
 
 In this guide you will learn how to deploy
-aan application across multiple stages while getting
+an application across multiple stages while getting
 full observability of each of your workload deployments.
 This is shown based on an example where we deploy
 an application into two environments (`dev` and `production`),
@@ -32,6 +32,7 @@ across different stages.
 ## Before you begin
 
 This guide assumes the following:
+
 - Installed Keptn with the
 [promotionTasksEnabled flag](https://github.com/keptn/lifecycle-toolkit/blob/main/lifecycle-operator/chart/README.md#global)
 set to `true`.
@@ -41,11 +42,11 @@ set to `true`.
 - A Personal Access token for your GitHub repository.
 We recommend using a [fine-grained token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#fine-grained-personal-access-tokens)
 with the following permissions for the repository:
-  - Read access to metadata
-  - Read/Write access to actions
+    - Read access to metadata
+    - Read/Write access to actions
 
-Note that for the prmotion to work properly,
-you need to enable read and write permissions for 
+Note that for the promotion to work properly,
+you need to enable read and write permissions for
 Github actions in your repository - see the screenshot below:
 
 ![Workflow Permissions](./assets/multi-stage-delivery/workflow-permissions.png)

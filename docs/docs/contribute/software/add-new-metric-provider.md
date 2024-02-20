@@ -110,8 +110,6 @@ The steps to create your own metrics provider are:
        Chainsaw tests simulate real-world scenarios and interactions within a Kubernetes cluster, ensuring
        the correctness of your Kubernetes configurations and deployments.
 
-         **NB:** For testing the metricsprovider a single KeptnMetric and KeptnMetricsProvider is needed
-
         Below are the steps for adding an integration test.
 
         * In the directory `test/chainsaw/testmetrics`, create a folder `metrics-provider-placeholder` in our case.

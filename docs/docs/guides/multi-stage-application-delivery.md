@@ -188,6 +188,8 @@ containing the manifests for the `dev` and `production` stage:
 
 <!-- markdownlint-enable MD046 -->
 
+## Committing and Applying Argo CD Manifests
+
 After creating all the files listed above, do not forget to push
 them to your git repository:
 

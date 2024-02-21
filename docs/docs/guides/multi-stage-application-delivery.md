@@ -206,6 +206,8 @@ containing the helm charts for the stages within the upstream
 Git repository.
 To create the applications on Argo CD, apply the following manifests:
 
+<!-- markdownlint-disable MD046 -->
+
 === "argo-app-dev.yaml"
 
     ```yaml title="apps.yaml"
@@ -223,6 +225,8 @@ To create the applications on Argo CD, apply the following manifests:
 
     1. This ensures that the `commitID` property is set in the `values.yaml`
     file is set when the helm chart is being applied.
+
+<!-- markdownlint-enable MD046 -->
 
 Once the manifest above has been applied to the cluster,
 Argo CD will eventually synchronize with the upstream repository
@@ -290,7 +294,7 @@ podtato-head-v0.3.1-d4735e3a   podtato-head   v0.3.1    Completed
 ```
 
 After the new version has been deployed, and the post deployment phase
-is completed, the following happens: 
+is completed, the following happens:
 
 1. The `KeptnTask` executed in the promotion phase
 triggers a GitHub action that creates a pull request for applying the

@@ -39,9 +39,9 @@ func setupMockedKubeConfig(t *testing.T) string {
 	err = os.WriteFile(kubeConfigFile, []byte(configContent), 0644)
 	assert.NoError(t, err)
 
-	os.Setenv("HOME", tempDir)
+	t.Setenv("HOME", tempDir)
 
-	os.Setenv("KUBECONFIG", kubeConfigFile)
+	t.Setenv("KUBECONFIG", kubeConfigFile)
 
 	return tempDir
 }

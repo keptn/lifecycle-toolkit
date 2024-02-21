@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: podtato-head-prod
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/<repo-owner>/<repo>'
+    path: production
+    targetRevision: main
+    helm:
+      parameters:
+        - name: "commitID" # (1)!
+          value: "$ARGOCD_APP_REVISION"
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: podtato-head-production
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

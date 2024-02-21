@@ -129,7 +129,7 @@ nav:
           - DORA metrics: docs/guides/dora.md
           - OpenTelemetry observability: docs/guides/otel.md
           - Context metadata: docs/guides/metadata.md
-          - Multi-stage Application delivery: docs/guides/multi-stage-delivery.md
+          - Multi-stage Application delivery: docs/guides/multi-stage-application-delivery.md
       - Use Cases:
           - docs/use-cases/index.md
           - Day 2 Operations: docs/use-cases/day-2-operations.md

@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Multi-stage Delivery using GitOps
+# Multi-stage Application Delivery
 
 In this guide you will learn how to deploy
 an application across multiple stages while getting
@@ -101,6 +101,16 @@ containing the manifests for the `dev` and `production` stage:
 <!-- markdownlint-disable MD046 -->
 
 === "dev/templates/application.yaml"
+  
+    This file contains the manifests for the application in the `dev` stage,
+    including the Kubernetes `Deployment`/`Service` definition,
+    as well as the `KeptnAppContext` that is used to define tasks
+    for the post-deployment and promotion phases, as well as the related
+    `KeptnTaskDefinitions`.
+    In addition to defining tasks, the `KeptnAppContext` also contains
+    a `metadata` section that includes properties that should be added
+    to the OpenTelemetry spans that are generated during the deployment of
+    the application.
 
     ```yaml
     {% include "./assets/multi-stage-delivery/application-dev.yaml" %}
@@ -108,19 +118,42 @@ containing the manifests for the `dev` and `production` stage:
 
 === "dev/Chart.yaml"
 
+    The `Chart.yaml` that is required by helm:
+
     ```yaml
     {% include "./assets/multi-stage-delivery/chart.yaml" %}
     ```
 
 === "dev/values.yaml"
 
+    The `values.yaml` file contains configurable properties
+    for the application, such as the version of the service that should be deployed,
+    and other metadata that is passed to the `KeptnAppContext`, such as the Git
+    commit ID that caused the deployment of a new version (this value for the
+    `commitID` property is set automatically using the `$ARGOCD_APP_REVISION`
+    environment variable provided by Argo CD.
+    During the promotion phase of a new deployment, a pull request to
+    copy the content of this file to the helm chart containing the helm chart for
+    the `production` stage will be created.
+    Therefore, after merging the pull request, the version that has been deployed into
+    `dev` and has passed all checks there, will then be deployed into `production`.
+
     ```yaml
     {% include "./assets/multi-stage-delivery/values-dev.yaml" %}
     ```
 
+    1. The commitID will be automatically set by Argo CD
+
 **Production Stage:**
 
 === "production/templates/application.yaml"
+
+    This file contains the manifests for the application in the `dev` stage,
+    including the Kubernetes `Deployment`/`Service` definition,
+    as well as the `KeptnAppContext` that contains
+    a `metadata` section which includes properties that should be added
+    to the OpenTelemetry spans that are generated during the deployment of
+    the application.
 
     ```yaml
     {% include "./assets/multi-stage-delivery/application-production.yaml" %}
@@ -128,15 +161,30 @@ containing the manifests for the `dev` and `production` stage:
 
 === "production/Chart.yaml"
 
+    The `Chart.yaml` that is required by helm:
+
     ```yaml
     {% include "./assets/multi-stage-delivery/chart.yaml" %}
     ```
 
 === "production/values.yaml"
 
+    The `values.yaml` file contains configurable properties
+    for the application, such as the version of the service that should be deployed,
+    and other metadata that is passed to the `KeptnAppContext`, such as the Git
+    commit ID that caused the deployment of a new version (this value for the
+    `commitID` property is set automatically using the `$ARGOCD_APP_REVISION`
+    environment variable provided by Argo CD.
+    The content of this file is modified by the pull requests created in the
+    promotion phase of the deployment in `dev` in order to promote a new
+    service version into `production`.
+
     ```yaml
     {% include "./assets/multi-stage-delivery/values-production.yaml" %}
     ```
+
+    1. The commitID will be automatically set by Argo CD
+    2.  The traceParent will be automatically set by the GitHub action triggered by the promotion task
 
 <!-- markdownlint-enable MD046 -->
 
@@ -158,9 +206,23 @@ containing the helm charts for the stages within the upstream
 Git repository.
 To create the applications on Argo CD, apply the following manifests:
 
-```yaml title="apps.yaml"
-{% include "./assets/multi-stage-delivery/argo-apps.yaml" %}
-```
+=== "argo-app-dev.yaml"
+
+    ```yaml title="apps.yaml"
+    {% include "./assets/multi-stage-delivery/argo-app-dev.yaml" %}
+    ```
+
+    1. This ensures that the `commitID` property is set in the `values.yaml`
+    file is set when the helm chart is being applied.
+
+=== "argo-app-production.yaml"
+
+    ```yaml title="apps.yaml"
+    {% include "./assets/multi-stage-delivery/argo-app-production.yaml" %}
+    ```
+
+    1. This ensures that the `commitID` property is set in the `values.yaml`
+    file is set when the helm chart is being applied.
 
 Once the manifest above has been applied to the cluster,
 Argo CD will eventually synchronize with the upstream repository
@@ -204,6 +266,8 @@ to `v0.3.1`:
 {% include "./assets/multi-stage-delivery/values-dev-updated.yaml" %}
 ```
 
+1. The traceParent will be automatically set by the GitHub action triggered by the promotion task
+
 After changing the value, commit and push the updated file to
 the upstream repository:
 
@@ -226,14 +290,16 @@ podtato-head-v0.3.1-d4735e3a   podtato-head   v0.3.1    Completed
 ```
 
 After the new version has been deployed, and the post deployment phase
-is completed, the `KeptnTask` executed in the promotion phase
+is completed, the following happens: 
+
+1. The `KeptnTask` executed in the promotion phase
 triggers a GitHub action that creates a pull request for applying the
 updated values to the helm chart of the `production` stage.
 You will see the PR in the *Pull requests* section of your upstream repository:
 
 ![PR for promoting the new version](./assets/multi-stage-delivery/dev2prod-pr.png)
 
-After approving and merging the pull request into `main`,
+1. After approving and merging the pull request into `main`,
 Argo CD eventually synchronizes the application in the
 `production` stage, and the updated version is deployed.
 This is reflected in a new `KeptnAppVersion` being created
@@ -258,3 +324,13 @@ in the `production` stage contains the reference to the
 promotion phase, which is also visible in the trace visualization in Jaeger:
 
 ![Deployment Trace](./assets/multi-stage-delivery/trace.png)
+
+## Conclusion
+
+In this guide, you have seen how Keptn can be used together
+with Argo CD and GitHub Actions to automate the promotion of
+a new application version from one stage to another.
+In addition to that, by linking together the traces across different
+stages and adding important metadata such as the Git commit IDs
+that caused a new deployment, Keptn makes it easy to
+inspect how a specific version is promoted across multiple stages.

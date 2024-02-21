@@ -235,7 +235,7 @@ jobs:
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Upload verification log as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cosign-attest-verification-log
           path: ./cosign-attest-output.json

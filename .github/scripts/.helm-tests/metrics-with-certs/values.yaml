@@ -7,11 +7,11 @@ metricsOperator:
   enabled: true
   image:
     tag: v0.0.0
-  imagePullPolicy: Never
 
 global:
   certManagerEnabled: true
   commonLabels:
     app.kubernetes.io/version: vmyversion
+  imagePullPolicy: Never
   caInjectionAnnotations:
     cert-manager.io/inject-ca-from: helmtests/keptn-certs

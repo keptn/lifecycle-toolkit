@@ -13,7 +13,6 @@ This guide gives instructions for creating a new metrics provider.
 For these instructions,
 we define a sample provider called `placeholder`.
 The steps to create your own metrics provider are:
-<!-- markdownlint-disable MD007 -->
 
 1. **Fork and clone** the
 [Keptn repository](https://github.com/keptn/lifecycle-toolkit).
@@ -120,5 +119,3 @@ The steps to create your own metrics provider are:
         * Create a file named `chainsaw-test.yaml` and define the steps for the integration test in chainsaw-test.yaml.
 
         > For more information checkout [an already existing integration test](https://github.com/keptn/lifecycle-toolkit/tree/main/test/chainsaw/testmetrics/metrics-provider)
-
-<!-- markdownlint-enable MD007 -->

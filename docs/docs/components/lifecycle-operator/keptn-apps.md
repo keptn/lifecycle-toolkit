@@ -60,7 +60,7 @@ with annotations or labels that are applied to each
 ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
 and
-[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/))
 plus specific tasks and evaluations that you define
 for the `KeptnApp` resource itself:
 

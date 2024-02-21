@@ -4,13 +4,13 @@ certManager:
 lifecycleOperator:
   enabled: true
   lifecycleOperator:
-    imagePullPolicy: Never
     image:
       tag: v0.0.0
+      imagePullPolicy: Never
   scheduler:
-    imagePullPolicy: Never
     image:
       tag: v0.0.0
+      imagePullPolicy: Never
 metricsOperator:
   enabled: false
 
@@ -20,5 +20,6 @@ global:
     app.kubernetes.io/version: vmyversion
   commonAnnotations:
     test/jj: test
+  imagePullPolicy: IfNotPresent
   caInjectionAnnotations:
     cert-manager.io/inject-ca-from: helmtests/keptn-certs

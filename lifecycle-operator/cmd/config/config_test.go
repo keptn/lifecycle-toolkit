@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -33,7 +34,9 @@ func setupMockedKubeConfig(t *testing.T) string {
 	kubeConfigFile := filepath.Join(tempDir, ".kube", "config")
 	err := os.MkdirAll(filepath.Dir(kubeConfigFile), 0755)
 	assert.NoError(t, err)
-	err = os.WriteFile(kubeConfigFile, []byte("mocked kubeconfig content"), 0644)
+
+	configContent := genKubeconfig("test-context")
+	err = os.WriteFile(kubeConfigFile, []byte(configContent), 0644)
 	assert.NoError(t, err)
 
 	os.Setenv("HOME", tempDir)
@@ -41,4 +44,39 @@ func setupMockedKubeConfig(t *testing.T) string {
 	os.Setenv("KUBECONFIG", kubeConfigFile)
 
 	return tempDir
+}
+
+func genKubeconfig(contexts ...string) string {
+	var sb strings.Builder
+	sb.WriteString(`---
+apiVersion: v1
+kind: Config
+clusters:
+`)
+	for _, ctx := range contexts {
+		sb.WriteString(`- cluster:
+    server: ` + ctx + `
+  name: ` + ctx + `
+`)
+	}
+	sb.WriteString("contexts:\n")
+	for _, ctx := range contexts {
+		sb.WriteString(`- context:
+    cluster: ` + ctx + `
+    user: ` + ctx + `
+  name: ` + ctx + `
+`)
+	}
+
+	sb.WriteString("users:\n")
+	for _, ctx := range contexts {
+		sb.WriteString(`- name: ` + ctx + `
+`)
+	}
+	sb.WriteString("preferences: {}\n")
+	if len(contexts) > 0 {
+		sb.WriteString("current-context: " + contexts[0] + "\n")
+	}
+
+	return sb.String()
 }

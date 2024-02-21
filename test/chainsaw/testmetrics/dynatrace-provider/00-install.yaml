@@ -1,49 +1,23 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetric
 metadata:
-  name: podtato-head-entry
-  labels:
-    app: podtato-head
+  name: podtatometric
+  namespace: keptn-system
 spec:
-  selector:
-    matchLabels:
-      component: podtato-head-entry
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        component: podtato-head-entry
-    spec:
-      terminationGracePeriodSeconds: 5
-      containers:
-        - name: server
-          image: ghcr.io/podtato-head/entry:0.2.8
-          imagePullPolicy: Always
-          resources:
-            limits:
-              cpu: 10m
-              memory: 128Mi
-            requests:
-              cpu: 5m
-              memory: 64Mi
-          ports:
-            - containerPort: 9000
-          env:
-            - name: PODTATO_PORT
-              value: "9000"
+  provider:
+    name: "dynatrace"
+  query: "query"
+  fetchIntervalSeconds: 5
+
 ---
-apiVersion: v1
-kind: Service
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetricsProvider
 metadata:
-  name: podtato-head-entry
-  labels:
-    app: podtato-head
+  name: dynatrace
+  namespace: keptn-system
 spec:
-  selector:
-    component: podtato-head-entry
-  ports:
-    - name: http
-      port: 9000
-      protocol: TCP
-      targetPort: 9000
-  type: ClusterIP
+  secretKeyRef:
+    key: DT_TOKEN
+    name: dynatrace
+  type: dynatrace
+  targetServer: "http://localhost:8080"  # string

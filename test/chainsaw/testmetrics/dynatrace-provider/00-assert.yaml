@@ -6,4 +6,4 @@ metadata:
   labels:
     app: podtato-head
 data: 
-  status_code: 400    
+  status_code: 401

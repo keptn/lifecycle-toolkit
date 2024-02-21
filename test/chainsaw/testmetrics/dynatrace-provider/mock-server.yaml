@@ -102,16 +102,7 @@ data:
             "status": "error",
             "data": {
               "resultType": "matrix",
-              "result": [
-                {
-                  "metric": {
-                    "__name__": "cpu-throttling",
-                    "job": "",
-                    "instance": ""
-                  },
-                  "values": [[1669714193.275, "4.0"]]
-                }
-              ]
+              "result": []
             }
           },
           "statusCode": 401

@@ -12,12 +12,13 @@ an application into two environments (`dev` and `production`),
 using [Argo CD](https://argo-cd.readthedocs.io/en/stable/).
 
 The promotion from `dev` to `production` is implemented using
-Keptn's `promotionTasks` that can be executed after a successful
+`promotionTasks` that can be executed after a successful
 application deployment.
 In this example, the promotion task creates a pull request
 to deploy the same workload version that has been deployed in the
 `dev` stage into the `production` stage.
-Using Keptn's observability capabilities,
+
+Using the observability capabilities of Keptn,
 we also add contextual metadata to each deployment,
 such as the commit ID which triggered the deployment of a new
 version.
@@ -69,7 +70,7 @@ The promotion task that triggers the action to
 create a pull request for promoting an application version
 from `dev` to `production` will be executed in the `podtato-head-dev` stage.
 Therefore, we need to create a secret containing the GitHub personal
-access token in this namespace, using the following command:
+access token in that namespace, using the following command:
 
 ```shell
 GH_REPO_OWNER=<YOUR_GITHUB_USER>
@@ -92,7 +93,7 @@ the repository to keep it simple.
 This might differ heavily depending on how your organization's
 GitOps repositories and application stages are organized.
 
-Inside your git repository, create the following files
+Inside your Git repository, create the following files
 containing the manifests for the `dev` and `production` stage:
 
 **Dev Stage:**
@@ -154,7 +155,7 @@ one for the `dev` stage, and one for the `production`
 stage.
 These applications will point to the subdirectories
 containing the helm charts for the stages within the upstream
-git repository.
+Git repository.
 To create the applications on Argo CD, apply the following manifests:
 
 ```yaml title="apps.yaml"
@@ -163,11 +164,12 @@ To create the applications on Argo CD, apply the following manifests:
 
 Once the manifest above has been applied to the cluster,
 Argo CD will eventually synchronize with the upstream repository
-and apply the application helm charts located in the upstream repository.
-Note that initially, both the `dev` and `production` stages will be deployed
+and apply the application helm charts located there.
+
+> Note: Initially, both the `dev` and `production` stages will be deployed
 after creating the Argo CD applications.
 Subsequent deployments of a new application version however will
-always be deployed by first updating them in the `dev` stage first, and
+always be deployed by first updating them in the `dev` stage, and
 then only by merging the PRs created by the promotion task will
 they be deployed into `production`.
 
@@ -211,7 +213,7 @@ git commit -m "deploy new version into dev"
 git push
 ```
 
-Eventually, Argo CD will notify these changes and apply the updated helm chart
+Eventually, Argo CD will notice those changes and apply the updated helm chart
 to the cluster.
 This is also reflected in a new `KeptnAppVersion` being created in the `dev` stage:
 
@@ -248,7 +250,7 @@ podtato-head-v0.3.1-d4735e3a   podtato-head   v0.3.1    Completed
 ## Inspecting the Deployment Traces
 
 To keep track of how a workload version progresses through
-the stages, we passed through the OTel span id of the
+the stages, we passed through the OpenTelemetry span id of the
 promotion phase in the `dev` stage to the applied
 `KeptnAppContext` in the `production` stage.
 Due to that, the deployment trace of the promoted version

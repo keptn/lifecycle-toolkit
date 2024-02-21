@@ -58,7 +58,7 @@ Some key points:
   to another stage in a staged environment
   which works with standard deployment tools
   such as ArgoCD, Flux, even `kubectl apply`.
-  Keptn complements these tools by preventing of the
+  Keptn complements these tools by preventing the
   scheduling and deployment of workflows
   if the environment does not meet
   the user-defined requirements.

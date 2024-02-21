@@ -301,7 +301,7 @@ triggers a GitHub action that creates a pull request for applying the
 updated values to the helm chart of the `production` stage.
 You will see the PR in the *Pull requests* section of your upstream repository:
 
-![PR for promoting the new version](./assets/multi-stage-delivery/dev2prod-pr.png)
+    ![PR for promoting the new version](./assets/multi-stage-delivery/dev2prod-pr.png)
 
 1. After approving and merging the pull request into `main`,
 Argo CD eventually synchronizes the application in the
@@ -309,13 +309,13 @@ Argo CD eventually synchronizes the application in the
 This is reflected in a new `KeptnAppVersion` being created
 in the `podtato-head-production` namespace:
 
-```shell
-$ kubectl get keptnappversion -n podtato-head-production
+    ```shell
+    $ kubectl get keptnappversion -n podtato-head-production
 
-NAME                           APPNAME        VERSION   PHASE
-podtato-head-v0.3.0-6b86b273   podtato-head   v0.3.0    Completed
-podtato-head-v0.3.1-d4735e3a   podtato-head   v0.3.1    Completed
-```
+    NAME                           APPNAME        VERSION   PHASE
+    podtato-head-v0.3.0-6b86b273   podtato-head   v0.3.0    Completed
+    podtato-head-v0.3.1-d4735e3a   podtato-head   v0.3.1    Completed
+    ```
 
 ## Inspecting the Deployment Traces
 

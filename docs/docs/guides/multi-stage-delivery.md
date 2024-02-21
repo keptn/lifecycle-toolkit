@@ -217,7 +217,10 @@ This is also reflected in a new `KeptnAppVersion` being created in the `dev` sta
 
 ```shell
 $ kubectl get keptnappversion -n podtato-head-dev
-TODO
+
+NAME                           APPNAME        VERSION   PHASE
+podtato-head-v0.3.0-6b86b273   podtato-head   v0.3.0    Completed
+podtato-head-v0.3.1-d4735e3a   podtato-head   v0.3.1    Completed
 ```
 
 After the new version has been deployed, and the post deployment phase

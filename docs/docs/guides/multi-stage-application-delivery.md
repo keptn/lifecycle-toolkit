@@ -232,7 +232,7 @@ Once the manifest above has been applied to the cluster,
 Argo CD will eventually synchronize with the upstream repository
 and apply the application helm charts located there.
 
-> Note: Initially, both the `dev` and `production` stages will be deployed
+> **Note:** Initially, both the `dev` and `production` stages will be deployed
 after creating the Argo CD applications.
 Subsequent deployments of a new application version however will
 always be deployed by first updating them in the `dev` stage, and

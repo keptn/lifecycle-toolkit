@@ -45,6 +45,7 @@ argocd
 argoproj
 ARMO
 artifacthub
+Artificathub
 asdfg
 authurl
 automerge
@@ -364,9 +365,9 @@ kubeutils
 kustomization
 kustomize
 kustomizeconfig
+kwds
 kwi
 kwv
-kwds
 kyverno
 lastword
 Lato
@@ -447,6 +448,7 @@ onsi
 opencontainers
 openfeature
 Openshift
+openssf
 opentelemetry
 opentracing
 operatorcommon

@@ -131,7 +131,7 @@ containing the manifests for the `dev` and `production` stage:
     and other metadata that is passed to the `KeptnAppContext`, such as the Git
     commit ID that caused the deployment of a new version (this value for the
     `commitID` property is set automatically using the `$ARGOCD_APP_REVISION`
-    environment variable provided by Argo CD.
+    environment variable provided by Argo CD).
     During the promotion phase of a new deployment, a pull request to
     copy the content of this file to the helm chart containing the helm chart for
     the `production` stage will be created.
@@ -174,7 +174,7 @@ containing the manifests for the `dev` and `production` stage:
     and other metadata that is passed to the `KeptnAppContext`, such as the Git
     commit ID that caused the deployment of a new version (this value for the
     `commitID` property is set automatically using the `$ARGOCD_APP_REVISION`
-    environment variable provided by Argo CD.
+    environment variable provided by Argo CD).
     The content of this file is modified by the pull requests created in the
     promotion phase of the deployment in `dev` in order to promote a new
     service version into `production`.

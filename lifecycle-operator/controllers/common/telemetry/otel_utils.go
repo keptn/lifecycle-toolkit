@@ -294,6 +294,10 @@ func SetUpKeptnTaskMeters(meter interfaces.IMeter) common.KeptnMeters {
 	if err != nil {
 		logger.Error(err, "unable to initialize evaluation duration OTel histogram")
 	}
+	promotionCount, err := meter.Int64Counter("keptn.promotion.count", metric.WithDescription("a simple counter for promotions"))
+	if err != nil {
+		logger.Error(err, "unable to initialize promotion OTel counter")
+	}
 
 	meters := common.KeptnMeters{
 		TaskCount:          taskCount,
@@ -304,6 +308,7 @@ func SetUpKeptnTaskMeters(meter interfaces.IMeter) common.KeptnMeters {
 		AppDuration:        appDuration,
 		EvaluationCount:    evaluationCount,
 		EvaluationDuration: evaluationDuration,
+		PromotionCount:     promotionCount,
 	}
 	return meters
 }

@@ -157,6 +157,7 @@ type KeptnMeters struct {
 	AppDuration        metric.Float64Histogram
 	EvaluationCount    metric.Int64Counter
 	EvaluationDuration metric.Float64Histogram
+	PromotionCount     metric.Int64Counter
 }
 
 const (

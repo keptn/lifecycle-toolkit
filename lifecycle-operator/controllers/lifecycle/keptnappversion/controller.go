@@ -199,6 +199,11 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 
 	attrs := appVersion.GetMetricsAttributes()
 
+	// metrics: add promotion count
+	if r.PromotionTasksEnabled && appVersion.IsPromotionCompleted() && len(appVersion.GetPromotionTaskStatus()) > 0 {
+		r.Meters.PromotionCount.Add(ctx, 1, metric.WithAttributes(attrs...))
+	}
+
 	// metrics: add app duration
 	duration := appVersion.Status.EndTime.Time.Sub(appVersion.Status.StartTime.Time)
 	r.Meters.AppDuration.Record(ctx, duration.Seconds(), metric.WithAttributes(attrs...))

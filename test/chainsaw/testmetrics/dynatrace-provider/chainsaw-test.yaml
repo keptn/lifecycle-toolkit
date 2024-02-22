@@ -12,8 +12,8 @@ spec:
     - name: step-00
       try:
         - apply:
-            file: 00-install.yaml
-         - apply:
-            file: mock-server.yaml    
+            file: mock-server.yaml 
+        - apply:
+            file: 00-install.yaml   
         - assert:
             file: 00-assert.yaml

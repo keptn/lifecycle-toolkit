@@ -5,5 +5,5 @@ metadata:
   name: podtato-head-entry
   labels:
     app: podtato-head
-data: 
-  status_code: 401
+status:
+  errMsg: ""

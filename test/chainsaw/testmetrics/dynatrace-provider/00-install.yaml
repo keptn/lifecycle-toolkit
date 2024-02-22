@@ -20,4 +20,4 @@ spec:
     key: DT_TOKEN
     name: dynatrace
   type: dynatrace
-  targetServer: "http://localhost:8080"  # string
+  targetServer:  (join('.', ['http://mockserver', $namespace, 'svc.cluster.local:1080']))

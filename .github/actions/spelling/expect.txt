@@ -222,6 +222,7 @@ graphql
 groupversion
 GSo
 gstatic
+gtm
 GVK
 healthz
 hellopy
@@ -364,9 +365,9 @@ kubeutils
 kustomization
 kustomize
 kustomizeconfig
+kwds
 kwi
 kwv
-kwds
 kyverno
 lastword
 Lato
@@ -465,6 +466,7 @@ overriden
 owide
 oyaml
 PARAMSx
+PDTR
 perc
 persistentvolumeclaims
 persistentvolumes

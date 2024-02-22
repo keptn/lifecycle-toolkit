@@ -64,4 +64,3 @@ spec:
             check:
               # This checks that Keptn returns active metrics
               (contains($stdout, 'keptn_lifecycle_active_total')): true
-

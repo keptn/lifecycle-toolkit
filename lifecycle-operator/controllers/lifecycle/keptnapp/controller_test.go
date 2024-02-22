@@ -2,11 +2,11 @@ package keptnapp
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"reflect"
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	lfcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
@@ -19,6 +19,8 @@ import (
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	k8sfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
+	"sigs.k8s.io/controller-runtime/pkg/client/interceptor"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
@@ -77,7 +79,7 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 	t.Log("Verifying created app")
 	require.Equal(t, appVersion.Namespace, app.Namespace)
 	require.Equal(t, appVersion.Name, fmt.Sprintf("%s-%s-%s", app.Name, app.Spec.Version, apicommon.Hash(app.Generation)))
-	require.Equal(t, v1beta1.KeptnAppVersionSpec{
+	require.Equal(t, lfcv1beta1.KeptnAppVersionSpec{
 		KeptnAppContextSpec: appContext.Spec,
 		KeptnAppSpec:        app.Spec,
 		AppName:             app.Name,
@@ -93,56 +95,66 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 
 func TestKeptnAppReconciler_createAppVersionError(t *testing.T) {
 
-	// app := &lfcv1beta1.KeptnApp{
-	// 	TypeMeta: metav1.TypeMeta{},
-	// 	ObjectMeta: metav1.ObjectMeta{
-	// 		Name:       "my-app",
-	// 		Namespace:  "default",
-	// 		Generation: 1,
-	// 	},
-	// 	Spec: lfcv1beta1.KeptnAppSpec{
-	// 		Version: "1.0.0",
-	// 	},
-	// 	Status: lfcv1beta1.KeptnAppStatus{},
-	// }
-	app := &lfcv1beta1.KeptnApp{}
-	appContext := &lfcv1beta1.KeptnAppContext{}
-	// appContext := &lfcv1beta1.KeptnAppContext{
-	// 	TypeMeta: metav1.TypeMeta{},
-	// 	ObjectMeta: metav1.ObjectMeta{
-	// 		Name:       "my-app-context",
-	// 		Namespace:  "default",
-	// 		Generation: 1,
-	// 	},
-	// 	Spec: lfcv1beta1.KeptnAppContextSpec{
-	// 		DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
-	// 			PreDeploymentTasks: []string{
-	// 				"some-pre-deployment-task1",
-	// 			},
-	// 			PostDeploymentTasks: []string{
-	// 				"some-post-deployment-task2",
-	// 			},
-	// 			PreDeploymentEvaluations: []string{
-	// 				"some-pre-evaluation-task1",
-	// 			},
-	// 			PostDeploymentEvaluations: []string{
-	// 				"some-pre-evaluation-task2",
-	// 			},
-	// 		},
-	// 		Metadata: map[string]string{
-	// 			"test1": "test2",
-	// 		},
-	// 		SpanLinks: []string{
-	// 			"spanlink1",
-	// 		},
-	// 	},
-	// 	Status: lfcv1beta1.KeptnAppContextStatus{},
-	// }
-	r, _ := setupReconciler()
+	app := &lfcv1beta1.KeptnApp{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:       "my-app",
+			Namespace:  "default",
+			Generation: 1,
+		},
+		Spec: lfcv1beta1.KeptnAppSpec{
+			Version: "1.0.0",
+		},
+		Status: lfcv1beta1.KeptnAppStatus{},
+	}
+	appContext := &lfcv1beta1.KeptnAppContext{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:       "my-app-context",
+			Namespace:  "default",
+			Generation: 1,
+		},
+		Spec: lfcv1beta1.KeptnAppContextSpec{
+			DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
+				PreDeploymentTasks: []string{
+					"some-pre-deployment-task1",
+				},
+				PostDeploymentTasks: []string{
+					"some-post-deployment-task2",
+				},
+				PreDeploymentEvaluations: []string{
+					"some-pre-evaluation-task1",
+				},
+				PostDeploymentEvaluations: []string{
+					"some-pre-evaluation-task2",
+				},
+			},
+			Metadata: map[string]string{
+				"test1": "test2",
+			},
+			SpanLinks: []string{
+				"spanlink1",
+			},
+		},
+		Status: lfcv1beta1.KeptnAppContextStatus{},
+	}
+	r, _ := setupReconciler(app, appContext)
 
-	_, err := r.createAppVersion(context.TODO(), app, appContext)
+	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme.Scheme).WithInterceptorFuncs(interceptor.Funcs{
+		Create: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.CreateOption) error {
+			return errors.New("unexpected error")
+		},
+	}).WithObjects(app, appContext).Build()
 
-	require.Error(t, err)
+	r.Client = fakeClient
+
+	_, err := r.Reconcile(context.TODO(), ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: app.Namespace,
+			Name:      app.Name,
+		},
+	})
+	require.NotNil(t, err)
 }
 func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {
 	//nolint:gci
@@ -287,6 +299,40 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 	err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: "myapp-1.0.0-6b86b273"}, keptnappversion)
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateDeprecated, keptnappversion.Status.Status)
+}
+
+func TestKeptnAppReconciler_deprecateAppVersionsError(t *testing.T) {
+
+	app := testcommon.GetApp("myapp")
+	app.Spec.Revision = uint(2)
+	app.Generation = int64(2)
+	appVersion := &lfcv1beta1.KeptnAppVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "myapp-1.0.0-6b86b273",
+			Namespace: "default",
+		},
+	}
+	r, _ := setupReconciler(app, appVersion)
+
+	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme.Scheme).WithInterceptorFuncs(interceptor.Funcs{
+		Get: func(ctx context.Context, client client.WithWatch, key client.ObjectKey, obj client.Object, opts ...client.GetOption) error {
+			if key.Name == "myapp-1.0.0-6b86b273" {
+				return errors.New("unexpected error")
+			}
+			return client.Get(ctx, key, obj, opts...)
+		},
+	}).WithObjects(app, appVersion).Build()
+
+	r.Client = fakeClient
+
+	_, err := r.Reconcile(context.TODO(), ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: "default",
+			Name:      "myapp",
+		},
+	})
+
+	require.NotNil(t, err)
 }
 
 func setupReconciler(objs ...client.Object) (*KeptnAppReconciler, chan string) {

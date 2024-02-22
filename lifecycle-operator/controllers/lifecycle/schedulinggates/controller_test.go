@@ -264,7 +264,6 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 			wantErr:            false,
 			expectGatesRemoved: false,
 		},
-		/////////////////////////////////////////////
 		{
 			name: "related WorkloadVersion is failed",
 			objects: []client.Object{
@@ -301,7 +300,6 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 			wantErr:            false,
 			expectGatesRemoved: true,
 		},
-		////////////////////////////////////////////
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

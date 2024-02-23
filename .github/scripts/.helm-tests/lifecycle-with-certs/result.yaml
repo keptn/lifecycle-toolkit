@@ -2019,7 +2019,7 @@ spec:
                 default: true
                 description: |-
                   BlockDeployment is used to block the deployment of the application until the pre-deployment
-                  tasks and evaluation succeed
+                  tasks and evaluations succeed
                 type: boolean
               cloudEventsEndpoint:
                 description: CloudEventsEndpoint can be used to set the endpoint where

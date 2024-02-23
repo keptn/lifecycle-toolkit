@@ -43,7 +43,7 @@ type KeptnConfigSpec struct {
 	CloudEventsEndpoint string `json:"cloudEventsEndpoint,omitempty"`
 
 	// BlockDeployment is used to block the deployment of the application until the pre-deployment
-	// tasks and evaluation succeed
+	// tasks and evaluations succeed
 	// +kubebuilder:default:=true
 	// +optional
 	BlockDeployment bool `json:"blockDeployment,omitempty"`

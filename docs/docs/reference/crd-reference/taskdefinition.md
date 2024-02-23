@@ -477,7 +477,7 @@ file.
     The following example shows how to pass data inside the parameter map,
     and how to load a secret in your code.
     The deno command does not takes modifiers so filling the `cmdParameters`
-    will do nothig.
+    will do nothing.
 
     ```yaml
     {% include "../../assets/crd/deno-context.yaml" %}

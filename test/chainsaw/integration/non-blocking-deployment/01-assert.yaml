@@ -5,13 +5,13 @@ metadata:
 spec:
   appName: podtato-head
   preDeploymentTasks:
-  - failing-task
+    - failing-task
   previousVersion: 0.1.0
   revision: 1
   version: 0.2.0
   workloads:
-  - name: podtato-head-entry
-    version: 0.2.0
+    - name: podtato-head-entry
+      version: 0.2.0
 status:
   currentPhase: AppPreDeployTasks
   postDeploymentEvaluationStatus: Deprecated
@@ -19,8 +19,8 @@ status:
   preDeploymentEvaluationStatus: Deprecated
   preDeploymentStatus: Failed
   preDeploymentTaskStatus:
-  - definitionName: failing-task
-    status: Failed
+    - definitionName: failing-task
+      status: Failed
   promotionStatus: Deprecated
   status: Failed
   workloadOverallStatus: Deprecated

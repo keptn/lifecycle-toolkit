@@ -354,7 +354,7 @@ file.
 
 ### Examples for inline script
 
-!!! note ""
+??? note ""
 
     === "Example 1: inline script for a Deno script"
 
@@ -476,31 +476,31 @@ file.
         print(meta)
         ```
 
-    ### Passing secrets, environment variables and modifying the runner command
-    !!! note ""
-    
-        === "deno"
-        
-        The following example shows how to pass data inside the parameter map,
-        and how to load a secret in your code.
-        The deno command does not takes modifiers so filling the `cmdParameters`
-        will do nothig.
+### Passing secrets, environment variables and modifying the runner command
+!!! note ""
 
-        ```yaml
-        {% include "../../assets/crd/deno-context.yaml" %}
-        ```
-
-        === "python"
-        
-        The following example shows how to pass data inside the parameter map,
-        how to load a secret in your code,
-        and how to modify the python command.
-        In this case the container runs with the `-h` option,
-        which prints the help message for the python3 interpreter:
+    === "deno"
     
-        ```yaml
-        {% include "../../assets/crd/python-context.yaml" %}
-        ```
+    The following example shows how to pass data inside the parameter map,
+    and how to load a secret in your code.
+    The deno command does not takes modifiers so filling the `cmdParameters`
+    will do nothig.
+
+    ```yaml
+    {% include "../../assets/crd/deno-context.yaml" %}
+    ```
+
+    === "python"
+    
+    The following example shows how to pass data inside the parameter map,
+    how to load a secret in your code,
+    and how to modify the python command.
+    In this case the container runs with the `-h` option,
+    which prints the help message for the python3 interpreter:
+
+    ```yaml
+    {% include "../../assets/crd/python-context.yaml" %}
+    ```
 
 <!-- markdownlint-enable MD046 -->
 

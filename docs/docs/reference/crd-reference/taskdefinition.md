@@ -217,7 +217,8 @@ and Keptn sets up the container and runs the script as part of the task.
                   Task sequences that are not part of the lifecycle workflow
                   should be handled by the pipeline engine tools being used
                   such as Jenkins, Argo Workflows, Flux, and Tekton.
-                  Example of usage in task runners are [here](#examples-for-inline-script)
+                  See examples of usage for [deno](#inline-script-for-deno)
+                  and for [python](#inline-script-for-python)
 
                 - **httpRef** - Specify a script to be executed at runtime
                   from the remote webserver that is specified.
@@ -231,8 +232,9 @@ and Keptn sets up the container and runs the script as part of the task.
 
                   Only one script can be executed.
                   Any other scripts listed here are silently ignored.
-                  Example of usage in task runners are [here](#examples-for-httpref-script)
-
+                  See examples of usage for [deno](#httpref-for-deno)
+                  and for [python](#httpref-for-python)
+                  
                 - **functionRef** -- Execute another `KeptnTaskDefinition` resources.
                   Populate this field with the value(s) of the `metadata.name` field
                   for each `KeptnDefinitionTask` to be called.
@@ -257,22 +259,24 @@ and Keptn sets up the container and runs the script as part of the task.
                   executables (programs, functions, and scripts).
                   Any calls to additional `KeptnTaskDefinition` resources
                   are silently ignored.
-                  Example of usage in task runners are [here](#examples-for-functionref)
+                  See examples of usage for [deno](#functionref-for-deno) 
+                  and [python](#functionref-for-python)
 
                 - **ConfigMapRef** - Specify the name of a
                   [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
                   resource that contains the function to be executed.
-                  Example of usage in task runners are [here](#examples-for-configmap-and-configmapref)
-
+                  See examples of usage for [deno](#configmapref-for-deno)
+                  and for [python](#configmapref-for-python)
+                - 
             - **parameters** - An optional field
               to supply input parameters to a function.
               Keptn passes the values defined inside the `map` field
               as a JSON object.
-              See
-              [Passing secrets, environment variables, and modifying the python command](#passing-secrets-environment-variables-and-modifying-the-python-command)
-              and
-              [Parameterized functions](../../guides/tasks.md#parameterized-functions)
+              See [Parameterized functions](../../guides/tasks.md#parameterized-functions)
               for more information.
+              Also see examples for [deno](#deno)
+              and
+              [python](#python).
 
             - **secureParameters** -- An optional field
               used to pass a Kubernetes secret.
@@ -285,8 +289,8 @@ and Keptn sets up the container and runs the script as part of the task.
 
               See [Create secret text](../../guides/tasks.md#create-secret-text)
               for details.
-              Examples on secret usage in tasks runner
-              are [here](#passing-secrets-environment-variables-and-modifying-the-python-command)
+              Also see examples on secret usage in tasks runner
+              for [deno](#deno) and [python](#python).
 
 ## Usage
 

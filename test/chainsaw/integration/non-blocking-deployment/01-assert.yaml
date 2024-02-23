@@ -39,7 +39,11 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
+  annotations:
+    keptn.sh/app: podtato-head
+    keptn.sh/version: 0.2.0
+    keptn.sh/workload: podtato-head-entry
   labels:
-    app: podtato-head
+    component: podtato-head-entry
 status:
   phase: Pending

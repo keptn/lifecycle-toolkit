@@ -56,7 +56,13 @@ status:
 apiVersion: v1
 kind: Pod
 metadata:
+  annotations:
+    keptn.sh/app: podtato-head
+    keptn.sh/post-deployment-tasks: failing-task
+    keptn.sh/pre-deployment-tasks: failing-task
+    keptn.sh/version: 0.1.0
+    keptn.sh/workload: podtato-head-entry
   labels:
-    app: podtato-head
+    component: podtato-head-entry
 status:
   phase: Running

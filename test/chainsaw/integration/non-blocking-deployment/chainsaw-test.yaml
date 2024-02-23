@@ -17,6 +17,8 @@ spec:
       try:
         - script:
             content: ./verify-keptnconfig.sh
+        - sleep:
+            duration: 30s
     - name: step-02
       try:
         - apply:
@@ -31,6 +33,8 @@ spec:
       try:
         - script:
             content: ./verify-keptnconfig.sh
+        - sleep:
+            duration: 30s
     - name: step-05
       try:
         - apply:

@@ -13,8 +13,6 @@ metadata:
   labels:
     app: podtato-head
 spec:
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       component: podtato-head-entry
@@ -25,7 +23,7 @@ spec:
       annotations:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-entry
-        keptn.sh/version: 0.4.0
+        keptn.sh/version: 0.2.0
     spec:
       terminationGracePeriodSeconds: 5
       containers:

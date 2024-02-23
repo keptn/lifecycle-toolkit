@@ -218,7 +218,7 @@ and Keptn sets up the container and runs the script as part of the task.
                         See examples of usage for [deno](./#inline-script-for-deno)
                         and for [python](./#inline-script-for-python)
 
-                  - **httpRef** - Specify a script to be executed at runtime
+                - **httpRef** - Specify a script to be executed at runtime
                         from the remote webserver that is specified.
                         This syntax allows you to call a general function
                         that is used in multiple places,

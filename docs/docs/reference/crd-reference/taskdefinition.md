@@ -84,11 +84,11 @@ These are described here.
           and code the functionality in Deno script,
           which is similar to JavaScript and Typescript.
           See
-          [Synopsis for predefined-containers](./#deno-runtime-synopsis).
+          [Synopsis for deno](./#deno-runtime-synopsis).
         - **python** -- Use a `python-runtime` function
           and code the functionality in Python 3.
           See
-          [Synopsis for predefined-containers](./#python-runtime-synopsis).
+          [Synopsis for python](./#python-runtime-synopsis).
         - **container** -- Use the runner defined
           for the `container-runtime` container.
           This is a standard Kubernetes container

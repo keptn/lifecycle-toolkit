@@ -153,46 +153,44 @@ and Keptn sets up the container and runs the script as part of the task.
 
 <!-- markdownlint-disable MD046 -->
 
-!!! note "Synopsis"
+=== "Deno-runtime synopsis"
 
-    === "Deno-runtime synopsis"
+    When using the `deno-runtime` runner to define a task,
+    the executables are coded in
+    [Deno-script](https://deno.com/manual),
+    (which is mostly the same as JavaScript and TypeScript)
+    and executed in the
+    `deno-runtime` runner,
+    which is a lightweight runtime environment
+    that executes in your namespace.
+    Note that Deno has tighter restrictions
+    for permissions and importing data
+    so a script that works properly elsewhere
+    may not function out of the box when run in the `deno-runtime` runner.
+    In this case you may want to use a custom container instead. 
+
+    ```yaml
+    {% include "../../assets/crd/examples/synopsis-for-deno-runtime-container.yaml" %}
+    ```
+
+=== "Python-runtime synopsis"
     
-        When using the `deno-runtime` runner to define a task,
-        the executables are coded in
-        [Deno-script](https://deno.com/manual),
-        (which is mostly the same as JavaScript and TypeScript)
-        and executed in the
-        `deno-runtime` runner,
-        which is a lightweight runtime environment
-        that executes in your namespace.
-        Note that Deno has tighter restrictions
-        for permissions and importing data
-        so a script that works properly elsewhere
-        may not function out of the box when run in the `deno-runtime` runner.
-        In this case you may want to use a custom container instead. 
-
+    When using the `python-runtime` runner to define a task,
+    the executables are coded in python3.
+    The runner enables the following packages: requests, json, git, yaml.
+    
+    ??? example 
         ```yaml
-        {% include "../../assets/crd/examples/synopsis-for-deno-runtime-container.yaml" %}
+        {% include "../../assets/crd/python-libs.yaml" %}
         ```
 
-    === "Python-runtime synopsis"
-        
-        When using the `python-runtime` runner to define a task,
-        the executables are coded in python3.
-        The runner enables the following packages: requests, json, git, yaml.
-        
-        ??? example 
-            ```yaml
-            {% include "../../assets/crd/python-libs.yaml" %}
-            ```
+    Note that other libraries may not function out of the box 
+    in the `python-runtime` runner. 
+    In this case you may want to use a custom container instead.
 
-        Note that other libraries may not function out of the box 
-        in the `python-runtime` runner. 
-        In this case you may want to use a custom container instead.
-    
-        ```yaml
-        {% include "../../assets/crd/examples/synopsis-for-python-runtime-runner.yaml" %}
-        ```
+    ```yaml
+    {% include "../../assets/crd/examples/synopsis-for-python-runtime-runner.yaml" %}
+    ```
 
 <!-- markdownlint-enable MD046 -->
 
@@ -217,8 +215,8 @@ and Keptn sets up the container and runs the script as part of the task.
                         Task sequences that are not part of the lifecycle workflow
                         should be handled by the pipeline engine tools being used
                         such as Jenkins, Argo Workflows, Flux, and Tekton.
-                        See examples of usage for [deno](#inline-script-for-deno)
-                        and for [python](#inline-script-for-python)
+                        See examples of usage for [deno](./#inline-script-for-deno)
+                        and for [python](./#inline-script-for-python)
 
                 - **httpRef** - Specify a script to be executed at runtime
                       from the remote webserver that is specified.
@@ -258,14 +256,14 @@ and Keptn sets up the container and runs the script as part of the task.
                     executables (programs, functions, and scripts).
                     Any calls to additional `KeptnTaskDefinition` resources
                     are silently ignored.
-                    See examples of usage for [deno](#functionref-for-deno)
-                    and [python](#functionref-for-python)
+                    See examples of usage for [deno](./#functionref-for-deno)
+                    and [python](./#functionref-for-python)
 
                 - **ConfigMapRef** - Specify the name of a
                   [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
                   resource that contains the function to be executed.
-                  See examples of usage for [deno](#configmapref-for-deno)
-                  and for [python](#configmapref-for-python)
+                  See examples of usage for [deno](./#configmapref-for-deno)
+                  and for [python](./#configmapref-for-python)
                   
             - **parameters** - An optional field
               to supply input parameters to a function.
@@ -273,9 +271,9 @@ and Keptn sets up the container and runs the script as part of the task.
               as a JSON object.
               See [Parameterized functions](../../guides/tasks.md#parameterized-functions)
               for more information.
-              Also see examples for [deno](#deno)
+              Also see examples for [deno](./#deno)
               and
-              [python](#python).
+              [python](./#python).
 
             - **secureParameters** -- An optional field
               used to pass a Kubernetes secret.
@@ -289,7 +287,7 @@ and Keptn sets up the container and runs the script as part of the task.
               See [Create secret text](../../guides/tasks.md#create-secret-text)
               for details.
               Also see examples on secret usage in tasks runner
-              for [deno](#deno) and [python](#python).
+              for [deno](./#deno) and [python](./#python).
 
 ## Usage
 

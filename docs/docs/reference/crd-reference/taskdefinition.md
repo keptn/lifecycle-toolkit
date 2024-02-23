@@ -210,34 +210,22 @@ and Keptn sets up the container and runs the script as part of the task.
                   Task sequences that are not part of the lifecycle workflow
                   should be handled by the pipeline engine tools being used
                   such as Jenkins, Argo Workflows, Flux, and Tekton.
+                  Example of usage in task runners are [here](#examples-for-inline-script)
 
-                    - **deno example:**
-                      <a href="#example-1-inline-script-for-a-deno-script">Example 1: inline script for a Deno script</a>
+                - **httpRef** - Specify a script to be executed at runtime
+                  from the remote webserver that is specified.
 
-                    - **python example:**
-                      <!-- markdownlint-disable MD013 -->
-                      <a href="#example-1-inline-code-for-a-python-runtime-runner">Example 1: inline code for a python-runtime runner</a>
+                  This syntax allows you to call a general function
+                  that is used in multiple places,
+                  possibly with different parameters
+                  that are provided in the calling `KeptnTaskDefinition` resource.
+                  Another `KeptnTaskDefinition` resource could call this same script
+                  but with different parameters.
 
-                      <!-- markdownlint-enable MD013 -->
-                    - **httpRef** - Specify a script to be executed at runtime
-                      from the remote webserver that is specified.
+                  Only one script can be executed.
+                  Any other scripts listed here are silently ignored.
+                  Example of usage in task runners are [here](#examples-for-httpref-script)
 
-                    This syntax allows you to call a general function
-                    that is used in multiple places,
-                    possibly with different parameters
-                    that are provided in the calling `KeptnTaskDefinition` resource.
-                    Another `KeptnTaskDefinition` resource could call this same script
-                    but with different parameters.
-
-                    Only one script can be executed.
-                    Any other scripts listed here are silently ignored.
-
-                    - **deno example:**
-                      <a href="#example-2-httpref-script-for-a-deno-script">Example 2: httpRef script for a Deno script</a>
-                    - **python example:**
-                      <!-- markdownlint-disable MD033 -->
-                      <!-- <a href="#"></a> --><br>
-                      <!-- markdownlint-enable MD033 -->
                 - **functionRef** -- Execute another `KeptnTaskDefinition` resources.
                   Populate this field with the value(s) of the `metadata.name` field
                   for each `KeptnDefinitionTask` to be called.
@@ -258,27 +246,16 @@ and Keptn sets up the container and runs the script as part of the task.
 
                     Only one `KeptnTaskDefinition` resources can be listed
                     with the `functionRef` syntax
-                    although that `KeptnTaskDefinition` can call multipe
+                    although that `KeptnTaskDefinition` can call multiple
                     executables (programs, functions, and scripts).
                     Any calls to additional `KeptnTaskDefinition` resources
                     are silently ignored.
+                    Example of usage in task runners are [here](#examples-for-functionref)
 
-                    - **deno example:**
-                      <a href="#example-3-functionref-for-a-deno-script">Example 3: functionRef for a Deno script</a>
-                    - **python example:**
-                      <!-- markdownlint-disable MD013 -->
-                      <a href="#example-3-functionref-for-a-python-runtime-runner">Example 3: functionRef for a python-runtime runner</a>
-                      <!-- markdownlint-enable MD013 -->
                 - **ConfigMapRef** - Specify the name of a
                   [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
                   resource that contains the function to be executed.
-
-                    - **deno example:**
-                      <a href="#example-5-configmap-for-a-deno-script">Example 5: ConfigMap for a Deno script</a>
-                    - **python example:**
-                      <!-- markdownlint-disable MD013 -->
-                      <a href="#example-4-configmapref-for-a-python-runtime-runner">Example 4: ConfigMapRef for a python-runtime runner</a>
-                      <!-- markdownlint-enable MD013 -->
+                  Example of usage in task runners are [here](#examples-for-configmap-and-configmapref)  
 
             - **parameters** - An optional field
               to supply input parameters to a function.
@@ -290,13 +267,6 @@ and Keptn sets up the container and runs the script as part of the task.
               [Parameterized functions](../../guides/tasks.md#parameterized-functions)
               for more information.
 
-                - **deno example:**
-                  <a href="#example-3-functionref-for-a-deno-script">Example 3: functionRef for a Deno script</a>
-                - **python example:**
-                  <!-- markdownlint-disable MD013 -->
-                  <a href="#example-3-functionref-for-a-python-runtime-runner">Example 3: functionRef for a python-runner runner</a>
-                  <!-- markdownlint-enable MD013 -->
-
             - **secureParameters** -- An optional field
               used to pass a Kubernetes secret.
               The `secret` value is the Kubernetes secret name
@@ -307,14 +277,8 @@ and Keptn sets up the container and runs the script as part of the task.
                 per `KeptnTaskDefinition` resource.
 
                 See [Create secret text](../../guides/tasks.md#create-secret-text)
-                for details.
-
-                - **deno example:**
-                  <a href="#example-3-functionref-for-a-deno-script">Example 3: functionRef for a Deno script</a>
-                - **python example:**
-                  <!-- markdownlint-disable MD013 -->
-                  <a href="#example-3-functionref-for-a-python-runtime-runner">Example 3: functionRef for a python-runner runner</a>
-                  <!-- markdownlint-enable MD013 -->
+                for details. 
+                Examples on secret usage in tasks runner are [here](#passing-secrets-environment-variables-and-modifying-the-python-command)
 
 ## Usage
 

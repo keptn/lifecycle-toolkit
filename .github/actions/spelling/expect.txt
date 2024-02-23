@@ -406,7 +406,6 @@ moq
 mowies
 mpod
 multigroup
-multipe
 mutatingwebhookconfigurations
 mwc
 mwh

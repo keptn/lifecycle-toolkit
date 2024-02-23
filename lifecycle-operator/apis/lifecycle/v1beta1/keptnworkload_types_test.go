@@ -6,13 +6,12 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestKeptnWorkload(t *testing.T) {
 	workload := &KeptnWorkload{
-		ObjectMeta: metav1.ObjectMeta{
+		ObjectMeta: v1.ObjectMeta{
 			Name:      "workload",
 			Namespace: "namespace",
 		},

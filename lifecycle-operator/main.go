@@ -303,6 +303,7 @@ func main() {
 		SpanHandler:       spanHandler,
 		EvaluationHandler: workloadVersionEvaluationHandler,
 		PhaseHandler:      workloadVersionPhaseHandler,
+		Config:            config.Instance(),
 	}
 	if err = (workloadVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadVersion")
@@ -337,6 +338,7 @@ func main() {
 		EvaluationHandler:     appVersionEvaluationHandler,
 		PhaseHandler:          appVersionPhaseHandler,
 		PromotionTasksEnabled: env.PromotionTasksEnabled,
+		Config:                config.Instance(),
 	}
 	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")

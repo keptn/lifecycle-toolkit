@@ -55,11 +55,11 @@ const (
 	StateUnknown     KeptnState = "Unknown"
 	StatePending     KeptnState = "Pending"
 	StateDeprecated  KeptnState = "Deprecated"
-	// Deprecated: Use StateDeprecated instead. Should only be used in checks for backwards compatibility reasons
+	StateWarning     KeptnState = "Warning"
 )
 
 func (k KeptnState) IsCompleted() bool {
-	return k == StateSucceeded || k == StateFailed || k == StateDeprecated
+	return k == StateSucceeded || k == StateFailed || k == StateDeprecated || k == StateWarning
 }
 
 func (k KeptnState) IsSucceeded() bool {
@@ -76,6 +76,10 @@ func (k KeptnState) IsDeprecated() bool {
 
 func (k KeptnState) IsPending() bool {
 	return k == StatePending
+}
+
+func (k KeptnState) IsWarning() bool {
+	return k == StateWarning
 }
 
 type StatusSummary struct {
@@ -124,6 +128,13 @@ func GetOverallState(s StatusSummary) KeptnState {
 		return StateUnknown
 	}
 	return StateSucceeded
+}
+
+func GetOverallStateBlockedDeployment(state KeptnState, blockedDeployment bool) KeptnState {
+	if !blockedDeployment && state == StateFailed {
+		return StateWarning
+	}
+	return state
 }
 
 func TruncateString(s string, max int) string {

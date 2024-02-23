@@ -8,13 +8,12 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestKeptnWorkloadVersion(t *testing.T) {
 	workload := &KeptnWorkloadVersion{
-		ObjectMeta: metav1.ObjectMeta{
+		ObjectMeta: v1.ObjectMeta{
 			Name:      "workload",
 			Namespace: "namespace",
 		},
@@ -71,24 +70,46 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 	}
 
 	require.True(t, workload.IsPreDeploymentCompleted())
-	require.False(t, workload.IsPreDeploymentSucceeded())
+	require.False(t, workload.IsPreDeploymentSucceeded(true))
 	require.True(t, workload.IsPreDeploymentFailed())
 
 	require.True(t, workload.IsPreDeploymentEvaluationCompleted())
-	require.False(t, workload.IsPreDeploymentEvaluationSucceeded())
+	require.False(t, workload.IsPreDeploymentEvaluationSucceeded(true))
 	require.True(t, workload.IsPreDeploymentEvaluationFailed())
 
 	require.True(t, workload.IsPostDeploymentCompleted())
-	require.False(t, workload.IsPostDeploymentSucceeded())
+	require.False(t, workload.IsPostDeploymentSucceeded(true))
 	require.True(t, workload.IsPostDeploymentFailed())
 
 	require.True(t, workload.IsPostDeploymentEvaluationCompleted())
-	require.False(t, workload.IsPostDeploymentEvaluationSucceeded())
+	require.False(t, workload.IsPostDeploymentEvaluationSucceeded(true))
 	require.True(t, workload.IsPostDeploymentEvaluationFailed())
 
 	require.True(t, workload.IsDeploymentCompleted())
 	require.False(t, workload.IsDeploymentSucceeded())
 	require.True(t, workload.IsDeploymentFailed())
+
+	workload.Status.PreDeploymentStatus = common.StateWarning
+	workload.Status.PreDeploymentEvaluationStatus = common.StateWarning
+	workload.Status.PostDeploymentStatus = common.StateWarning
+	workload.Status.PostDeploymentEvaluationStatus = common.StateWarning
+
+	require.False(t, workload.IsPreDeploymentSucceeded(true))
+	require.True(t, workload.IsPreDeploymentSucceeded(false))
+
+	require.False(t, workload.IsPreDeploymentEvaluationSucceeded(true))
+	require.True(t, workload.IsPreDeploymentEvaluationSucceeded(false))
+
+	require.False(t, workload.IsPostDeploymentSucceeded(true))
+	require.True(t, workload.IsPostDeploymentSucceeded(false))
+
+	require.False(t, workload.IsPostDeploymentEvaluationSucceeded(true))
+	require.True(t, workload.IsPostDeploymentEvaluationSucceeded(false))
+
+	workload.Status.PreDeploymentStatus = common.StateFailed
+	workload.Status.PreDeploymentEvaluationStatus = common.StateFailed
+	workload.Status.PostDeploymentStatus = common.StateFailed
+	workload.Status.PostDeploymentEvaluationStatus = common.StateFailed
 
 	require.False(t, workload.IsEndTimeSet())
 	require.False(t, workload.IsStartTimeSet())
@@ -237,7 +258,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 		Workload:             workload.GetParentName(),
 		EvaluationDefinition: "eval-def",
 		Type:                 common.PostDeploymentCheckType,
-		RetryInterval: metav1.Duration{
+		RetryInterval: v1.Duration{
 			Duration: 5 * time.Second,
 		},
 	}, evaluation.Spec)
@@ -438,12 +459,12 @@ func TestKeptnWorkloadVersionList(t *testing.T) {
 	list := KeptnWorkloadVersionList{
 		Items: []KeptnWorkloadVersion{
 			{
-				ObjectMeta: metav1.ObjectMeta{
+				ObjectMeta: v1.ObjectMeta{
 					Name: "obj1",
 				},
 			},
 			{
-				ObjectMeta: metav1.ObjectMeta{
+				ObjectMeta: v1.ObjectMeta{
 					Name: "obj2",
 				},
 			},

@@ -1986,6 +1986,12 @@ spec:
                 description: OTelCollectorUrl can be used to set the Open Telemetry
                   collector that the lifecycle operator should use
                 type: string
+              blockDeployment:
+                default: true
+                description: |-
+                  BlockDeployment is used to block the deployment of the application until the pre-deployment
+                  tasks and evaluation succeed
+                type: boolean
               cloudEventsEndpoint:
                 description: CloudEventsEndpoint can be used to set the endpoint where
                   Cloud Events should be posted by the lifecycle operator

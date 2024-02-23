@@ -14,6 +14,9 @@ import (
 //
 //		// make and configure a mocked config.IConfig
 //		mockedIConfig := &MockConfig{
+//			GetBlockDeploymentFunc: func() bool {
+//				panic("mock out the GetBlockDeployment method")
+//			},
 //			GetCloudEventsEndpointFunc: func() string {
 //				panic("mock out the GetCloudEventsEndpoint method")
 //			},
@@ -22,6 +25,9 @@ import (
 //			},
 //			GetDefaultNamespaceFunc: func() string {
 //				panic("mock out the GetDefaultNamespace method")
+//			},
+//			SetBlockDeploymentFunc: func(value bool)  {
+//				panic("mock out the SetBlockDeployment method")
 //			},
 //			SetCloudEventsEndpointFunc: func(endpoint string)  {
 //				panic("mock out the SetCloudEventsEndpoint method")
@@ -39,6 +45,9 @@ import (
 //
 //	}
 type MockConfig struct {
+	// GetBlockDeploymentFunc mocks the GetBlockDeployment method.
+	GetBlockDeploymentFunc func() bool
+
 	// GetCloudEventsEndpointFunc mocks the GetCloudEventsEndpoint method.
 	GetCloudEventsEndpointFunc func() string
 
@@ -47,6 +56,9 @@ type MockConfig struct {
 
 	// GetDefaultNamespaceFunc mocks the GetDefaultNamespace method.
 	GetDefaultNamespaceFunc func() string
+
+	// SetBlockDeploymentFunc mocks the SetBlockDeployment method.
+	SetBlockDeploymentFunc func(value bool)
 
 	// SetCloudEventsEndpointFunc mocks the SetCloudEventsEndpoint method.
 	SetCloudEventsEndpointFunc func(endpoint string)
@@ -59,6 +71,9 @@ type MockConfig struct {
 
 	// calls tracks calls to the methods.
 	calls struct {
+		// GetBlockDeployment holds details about calls to the GetBlockDeployment method.
+		GetBlockDeployment []struct {
+		}
 		// GetCloudEventsEndpoint holds details about calls to the GetCloudEventsEndpoint method.
 		GetCloudEventsEndpoint []struct {
 		}
@@ -67,6 +82,11 @@ type MockConfig struct {
 		}
 		// GetDefaultNamespace holds details about calls to the GetDefaultNamespace method.
 		GetDefaultNamespace []struct {
+		}
+		// SetBlockDeployment holds details about calls to the SetBlockDeployment method.
+		SetBlockDeployment []struct {
+			// Value is the value argument value.
+			Value bool
 		}
 		// SetCloudEventsEndpoint holds details about calls to the SetCloudEventsEndpoint method.
 		SetCloudEventsEndpoint []struct {
@@ -84,12 +104,41 @@ type MockConfig struct {
 			Namespace string
 		}
 	}
+	lockGetBlockDeployment        sync.RWMutex
 	lockGetCloudEventsEndpoint    sync.RWMutex
 	lockGetCreationRequestTimeout sync.RWMutex
 	lockGetDefaultNamespace       sync.RWMutex
+	lockSetBlockDeployment        sync.RWMutex
 	lockSetCloudEventsEndpoint    sync.RWMutex
 	lockSetCreationRequestTimeout sync.RWMutex
 	lockSetDefaultNamespace       sync.RWMutex
+}
+
+// GetBlockDeployment calls GetBlockDeploymentFunc.
+func (mock *MockConfig) GetBlockDeployment() bool {
+	if mock.GetBlockDeploymentFunc == nil {
+		panic("MockConfig.GetBlockDeploymentFunc: method is nil but IConfig.GetBlockDeployment was just called")
+	}
+	callInfo := struct {
+	}{}
+	mock.lockGetBlockDeployment.Lock()
+	mock.calls.GetBlockDeployment = append(mock.calls.GetBlockDeployment, callInfo)
+	mock.lockGetBlockDeployment.Unlock()
+	return mock.GetBlockDeploymentFunc()
+}
+
+// GetBlockDeploymentCalls gets all the calls that were made to GetBlockDeployment.
+// Check the length with:
+//
+//	len(mockedIConfig.GetBlockDeploymentCalls())
+func (mock *MockConfig) GetBlockDeploymentCalls() []struct {
+} {
+	var calls []struct {
+	}
+	mock.lockGetBlockDeployment.RLock()
+	calls = mock.calls.GetBlockDeployment
+	mock.lockGetBlockDeployment.RUnlock()
+	return calls
 }
 
 // GetCloudEventsEndpoint calls GetCloudEventsEndpointFunc.
@@ -170,6 +219,38 @@ func (mock *MockConfig) GetDefaultNamespaceCalls() []struct {
 	mock.lockGetDefaultNamespace.RLock()
 	calls = mock.calls.GetDefaultNamespace
 	mock.lockGetDefaultNamespace.RUnlock()
+	return calls
+}
+
+// SetBlockDeployment calls SetBlockDeploymentFunc.
+func (mock *MockConfig) SetBlockDeployment(value bool) {
+	if mock.SetBlockDeploymentFunc == nil {
+		panic("MockConfig.SetBlockDeploymentFunc: method is nil but IConfig.SetBlockDeployment was just called")
+	}
+	callInfo := struct {
+		Value bool
+	}{
+		Value: value,
+	}
+	mock.lockSetBlockDeployment.Lock()
+	mock.calls.SetBlockDeployment = append(mock.calls.SetBlockDeployment, callInfo)
+	mock.lockSetBlockDeployment.Unlock()
+	mock.SetBlockDeploymentFunc(value)
+}
+
+// SetBlockDeploymentCalls gets all the calls that were made to SetBlockDeployment.
+// Check the length with:
+//
+//	len(mockedIConfig.SetBlockDeploymentCalls())
+func (mock *MockConfig) SetBlockDeploymentCalls() []struct {
+	Value bool
+} {
+	var calls []struct {
+		Value bool
+	}
+	mock.lockSetBlockDeployment.RLock()
+	calls = mock.calls.SetBlockDeployment
+	mock.lockSetBlockDeployment.RUnlock()
 	return calls
 }
 

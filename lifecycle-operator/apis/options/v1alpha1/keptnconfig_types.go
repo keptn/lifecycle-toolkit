@@ -41,6 +41,12 @@ type KeptnConfigSpec struct {
 	// CloudEventsEndpoint can be used to set the endpoint where Cloud Events should be posted by the lifecycle operator
 	// +optional
 	CloudEventsEndpoint string `json:"cloudEventsEndpoint,omitempty"`
+
+	// BlockDeployment is used to block the deployment of the application until the pre-deployment
+	// tasks and evaluation succeed
+	// +kubebuilder:default:=true
+	// +optional
+	BlockDeployment bool `json:"blockDeployment,omitempty"`
 }
 
 // +kubebuilder:object:root=true

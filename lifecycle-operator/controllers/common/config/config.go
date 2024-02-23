@@ -15,12 +15,15 @@ type IConfig interface {
 	GetCloudEventsEndpoint() string
 	SetDefaultNamespace(namespace string)
 	GetDefaultNamespace() string
+	SetBlockDeployment(value bool)
+	GetBlockDeployment() bool
 }
 
 type ControllerConfig struct {
 	keptnAppCreationRequestTimeout time.Duration
 	cloudEventsEndpoint            string
 	defaultNamespace               string
+	blockDeployment                bool
 }
 
 var instance *ControllerConfig
@@ -28,7 +31,10 @@ var once = sync.Once{}
 
 func Instance() *ControllerConfig {
 	once.Do(func() {
-		instance = &ControllerConfig{keptnAppCreationRequestTimeout: defaultKeptnAppCreationRequestTimeout}
+		instance = &ControllerConfig{
+			keptnAppCreationRequestTimeout: defaultKeptnAppCreationRequestTimeout,
+			blockDeployment:                true,
+		}
 	})
 	return instance
 }
@@ -55,4 +61,12 @@ func (o *ControllerConfig) SetDefaultNamespace(ns string) {
 
 func (o *ControllerConfig) GetDefaultNamespace() string {
 	return o.defaultNamespace
+}
+
+func (o *ControllerConfig) SetBlockDeployment(value bool) {
+	o.blockDeployment = value
+}
+
+func (o *ControllerConfig) GetBlockDeployment() bool {
+	return o.blockDeployment
 }

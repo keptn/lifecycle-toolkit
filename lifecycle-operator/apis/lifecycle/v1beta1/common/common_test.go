@@ -81,6 +81,31 @@ func TestKeptnState_IsFailed(t *testing.T) {
 	}
 }
 
+func TestKeptnState_IsWarning(t *testing.T) {
+	tests := []struct {
+		State KeptnState
+		Want  bool
+	}{
+		{
+			State: StateSucceeded,
+			Want:  false,
+		},
+		{
+			State: StateFailed,
+			Want:  false,
+		},
+		{
+			State: StateWarning,
+			Want:  true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			require.Equal(t, tt.State.IsWarning(), tt.Want)
+		})
+	}
+}
+
 func TestHash(t *testing.T) {
 	tests := []struct {
 		in  int64
@@ -238,6 +263,13 @@ func Test_GeOverallState(t *testing.T) {
 			require.Equal(t, GetOverallState(tt.Summary), tt.Want)
 		})
 	}
+}
+
+func Test_GeOverallStateBlockedDeployment(t *testing.T) {
+	require.Equal(t, StateFailed, GetOverallStateBlockedDeployment(StateFailed, true))
+	require.Equal(t, StateWarning, GetOverallStateBlockedDeployment(StateFailed, false))
+	require.Equal(t, StateSucceeded, GetOverallStateBlockedDeployment(StateSucceeded, true))
+	require.Equal(t, StateSucceeded, GetOverallStateBlockedDeployment(StateSucceeded, false))
 }
 
 func Test_TruncateString(t *testing.T) {

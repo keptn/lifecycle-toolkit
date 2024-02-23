@@ -152,7 +152,7 @@ and Keptn sets up the container and runs the script as part of the task.
 
 <!-- markdownlint-disable MD046 -->
 
-???+ note "Synopsis"
+!!! note "Synopsis"
 
     === "deno-runtime"
     
@@ -348,7 +348,7 @@ file.
 
 ### Examples for inline script
 
-???+ note ""
+!!! note ""
 
     === "Example 1: inline script for a Deno script"
 
@@ -370,7 +370,7 @@ file.
 
 ### Examples for httpRef script
 
-???+ note ""
+!!! note ""
 
     === "Example 2: httpRef script for a Deno script"
     
@@ -380,7 +380,7 @@ file.
         {% include "../../assets/crd/examples/httpref-script-for-deno-script.yaml" %}
         ```
           
-        For other example, see the [sample-app](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
+        For other examples, see the [sample-app](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
         and [sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml)
         PodtatoHead example for a more complete example.
     
@@ -392,7 +392,7 @@ file.
 
 ### Examples for functionRef
 
-???+ note ""
+!!! note ""
 
     === "Example 3: functionRef for a Deno script"
     
@@ -418,7 +418,7 @@ file.
 
 ### Examples for ConfigMap and ConfigMapRef
 
-???+ note ""
+!!! note ""
 
     === "Example 4: ConfigMapRef for a Deno script"
     
@@ -440,7 +440,7 @@ file.
 
 ### Example for Accessing KEPTN_CONTEXT environment variable
 
-???+ note ""
+!!! note ""
 
     === "Example 5: Accessing KEPTN_CONTEXT environment variable in a Deno task"
     

@@ -113,7 +113,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		spanAppTrace.AddEvent("App Version Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 	}
 
-	if !appVersion.IsPreDeploymentSucceeded() {
+	if !appVersion.IsPreDeploymentSucceeded(true) {
 		reconcilePreDep := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePhase(ctx, phaseCtx, appVersion, apicommon.PreDeploymentCheckType)
 		}
@@ -124,7 +124,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	currentPhase = apicommon.PhaseAppPreEvaluation
-	if !appVersion.IsPreDeploymentEvaluationSucceeded() {
+	if !appVersion.IsPreDeploymentEvaluationSucceeded(true) {
 		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, appVersion, apicommon.PreDeploymentEvaluationCheckType)
 		}
@@ -146,7 +146,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	currentPhase = apicommon.PhaseAppPostDeployment
-	if !appVersion.IsPostDeploymentSucceeded() {
+	if !appVersion.IsPostDeploymentSucceeded(true) {
 		reconcilePostDep := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePhase(ctx, phaseCtx, appVersion, apicommon.PostDeploymentCheckType)
 		}

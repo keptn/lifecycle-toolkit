@@ -153,7 +153,7 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 }
 
 func (r *KeptnWorkloadVersionReconciler) doPreDeploymentTaskPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
-	if !workloadVersion.IsPreDeploymentSucceeded() {
+	if !workloadVersion.IsPreDeploymentSucceeded(true) {
 		reconcilePre := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadVersion, apicommon.PreDeploymentCheckType)
 		}
@@ -171,7 +171,7 @@ func (r *KeptnWorkloadVersionReconciler) doPreDeploymentTaskPhase(ctx context.Co
 }
 
 func (r *KeptnWorkloadVersionReconciler) doPreDeploymentEvaluationPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
-	if !workloadVersion.IsPreDeploymentEvaluationSucceeded() {
+	if !workloadVersion.IsPreDeploymentEvaluationSucceeded(true) {
 		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadVersion, apicommon.PreDeploymentEvaluationCheckType)
 		}
@@ -225,7 +225,7 @@ func (r *KeptnWorkloadVersionReconciler) doPostDeploymentTaskPhase(ctx context.C
 }
 
 func (r *KeptnWorkloadVersionReconciler) doPostDeploymentEvaluationPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
-	if !workloadVersion.IsPostDeploymentEvaluationSucceeded() {
+	if !workloadVersion.IsPostDeploymentEvaluationSucceeded(true) {
 		reconcilePostEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadVersion, apicommon.PostDeploymentEvaluationCheckType)
 		}

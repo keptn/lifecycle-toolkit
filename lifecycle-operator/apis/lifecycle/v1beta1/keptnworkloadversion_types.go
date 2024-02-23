@@ -177,16 +177,22 @@ func (w KeptnWorkloadVersion) IsPreDeploymentEvaluationCompleted() bool {
 	return w.Status.PreDeploymentEvaluationStatus.IsCompleted()
 }
 
-func (w KeptnWorkloadVersion) IsPreDeploymentSucceeded() bool {
-	return w.Status.PreDeploymentStatus.IsSucceeded()
+func (w KeptnWorkloadVersion) IsPreDeploymentSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return w.Status.PreDeploymentStatus.IsSucceeded()
+	}
+	return w.Status.PreDeploymentStatus.IsSucceeded() || w.Status.PreDeploymentStatus.IsWarning()
 }
 
 func (w KeptnWorkloadVersion) IsPreDeploymentFailed() bool {
 	return w.Status.PreDeploymentStatus.IsFailed()
 }
 
-func (w KeptnWorkloadVersion) IsPreDeploymentEvaluationSucceeded() bool {
-	return w.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+func (w KeptnWorkloadVersion) IsPreDeploymentEvaluationSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return w.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+	}
+	return w.Status.PreDeploymentEvaluationStatus.IsSucceeded() || w.Status.PreDeploymentEvaluationStatus.IsWarning()
 }
 
 func (w KeptnWorkloadVersion) IsPreDeploymentEvaluationFailed() bool {
@@ -201,16 +207,22 @@ func (w KeptnWorkloadVersion) IsPostDeploymentEvaluationCompleted() bool {
 	return w.Status.PostDeploymentEvaluationStatus.IsCompleted()
 }
 
-func (w KeptnWorkloadVersion) IsPostDeploymentSucceeded() bool {
-	return w.Status.PostDeploymentStatus.IsSucceeded()
+func (w KeptnWorkloadVersion) IsPostDeploymentSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return w.Status.PostDeploymentStatus.IsSucceeded()
+	}
+	return w.Status.PostDeploymentStatus.IsSucceeded() || w.Status.PostDeploymentStatus.IsWarning()
 }
 
 func (w KeptnWorkloadVersion) IsPostDeploymentFailed() bool {
 	return w.Status.PostDeploymentStatus.IsFailed()
 }
 
-func (w KeptnWorkloadVersion) IsPostDeploymentEvaluationSucceeded() bool {
-	return w.Status.PostDeploymentEvaluationStatus.IsSucceeded()
+func (w KeptnWorkloadVersion) IsPostDeploymentEvaluationSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return w.Status.PostDeploymentStatus.IsSucceeded()
+	}
+	return w.Status.PostDeploymentEvaluationStatus.IsSucceeded() || w.Status.PostDeploymentStatus.IsWarning()
 }
 
 func (w KeptnWorkloadVersion) IsPostDeploymentEvaluationFailed() bool {

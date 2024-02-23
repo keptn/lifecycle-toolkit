@@ -10,6 +10,7 @@ import (
 
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	evaluationfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
@@ -1046,6 +1047,7 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, ch
 		Meters:        testcommon.InitAppMeters(),
 		SpanHandler:   spanHandlerMock,
 		TracerFactory: tf,
+		Config:        config.Instance(),
 		EvaluationHandler: &evaluationfake.MockEvaluationHandler{
 			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
 				return []klcv1beta1.ItemStatus{}, apicommon.StatusSummary{}, nil

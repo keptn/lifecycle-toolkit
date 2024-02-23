@@ -153,36 +153,38 @@ and Keptn sets up the container and runs the script as part of the task.
 <!-- markdownlint-disable MD046 -->
 
 ???+ note "Synopsis"
-=== "deno-runtime"
-
-    When using the `deno-runtime` runner to define a task,
-    the executables are coded in
-    [Deno-script](https://deno.com/manual),
-    (which is mostly the same as JavaScript and TypeScript)
-    and executed in the
-    `deno-runtime` runner,
-    which is a lightweight runtime environment
-    that executes in your namespace.
-    Note that Deno has tighter restrictions
-    for permissions and importing data
-    so a script that works properly elsewhere
-    may not function out of the box when run in the `deno-runtime` runner.
-    In this case you may want to use a custom container instead. 
-    ```yaml
-    { % include "../../assets/crd/examples/synopsis-for-deno-runtime-container.yaml" % }
-    ```
-=== "python-runtime"
     
-    When using the `python-runtime` runner to define a task,
-    the executables are coded in python3.
-    The runner enables the following packages: requests, json, git, yaml.
-    Note that other libraries may not function out of the box 
-    in the `python-runtime` runner. 
-    In this case you may want to use a custom container instead.
+    === "deno-runtime"
+    
+        When using the `deno-runtime` runner to define a task,
+        the executables are coded in
+        [Deno-script](https://deno.com/manual),
+        (which is mostly the same as JavaScript and TypeScript)
+        and executed in the
+        `deno-runtime` runner,
+        which is a lightweight runtime environment
+        that executes in your namespace.
+        Note that Deno has tighter restrictions
+        for permissions and importing data
+        so a script that works properly elsewhere
+        may not function out of the box when run in the `deno-runtime` runner.
+        In this case you may want to use a custom container instead. 
+        ```yaml
+        { % include "../../assets/crd/examples/synopsis-for-deno-runtime-container.yaml" % }
+        ```
 
-    ```yaml
-    {% include "../../assets/crd/examples/synopsis-for-python-runtime-runner.yaml" %}
-    ```
+    === "python-runtime"
+        
+        When using the `python-runtime` runner to define a task,
+        the executables are coded in python3.
+        The runner enables the following packages: requests, json, git, yaml.
+        Note that other libraries may not function out of the box 
+        in the `python-runtime` runner. 
+        In this case you may want to use a custom container instead.
+    
+        ```yaml
+        {% include "../../assets/crd/examples/synopsis-for-python-runtime-runner.yaml" %}
+        ```
 
 <!-- markdownlint-enable MD046 -->
 

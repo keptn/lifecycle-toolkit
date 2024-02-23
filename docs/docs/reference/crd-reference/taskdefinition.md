@@ -379,10 +379,10 @@ file.
         ```yaml
         {% include "../../assets/crd/examples/httpref-script-for-deno-script.yaml" %}
         ```
-        !!! note  
-            For other example, see the [sample-app](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
-            and [sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml)
-            PodtatoHead example for a more complete example.
+          
+        For other example, see the [sample-app](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml).
+        and [sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml)
+        PodtatoHead example for a more complete example.
     
     === "Example 2: httpRef for a python-runtime runner"
     

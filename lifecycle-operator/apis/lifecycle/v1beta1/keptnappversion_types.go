@@ -184,10 +184,10 @@ func (a KeptnAppVersion) IsPreDeploymentEvaluationCompleted() bool {
 }
 
 func (a KeptnAppVersion) IsPreDeploymentSucceeded(isBlocking bool) bool {
-	if isBlocking {
-		return a.Status.PreDeploymentStatus.IsSucceeded()
-	}
-	return a.Status.PreDeploymentStatus.IsSucceeded() || a.Status.PreDeploymentStatus.IsWarning()
+	//if isBlocking {
+	return a.Status.PreDeploymentStatus.IsSucceeded()
+	// }
+	// return a.Status.PreDeploymentStatus.IsSucceeded() || a.Status.PreDeploymentStatus.IsWarning()
 }
 
 func (a KeptnAppVersion) IsPreDeploymentFailed() bool {
@@ -195,10 +195,10 @@ func (a KeptnAppVersion) IsPreDeploymentFailed() bool {
 }
 
 func (a KeptnAppVersion) IsPreDeploymentEvaluationSucceeded(isBlocking bool) bool {
-	if isBlocking {
-		return a.Status.PreDeploymentEvaluationStatus.IsSucceeded()
-	}
-	return a.Status.PreDeploymentEvaluationStatus.IsSucceeded() || a.Status.PreDeploymentEvaluationStatus.IsWarning()
+	//if isBlocking {
+	return a.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+	// }
+	// return a.Status.PreDeploymentEvaluationStatus.IsSucceeded() || a.Status.PreDeploymentEvaluationStatus.IsWarning()
 }
 
 func (a KeptnAppVersion) IsPreDeploymentEvaluationFailed() bool {
@@ -226,10 +226,10 @@ func (a KeptnAppVersion) IsPromotionFailed() bool {
 }
 
 func (a KeptnAppVersion) IsPostDeploymentEvaluationSucceeded(isBlocking bool) bool {
-	if isBlocking {
-		return a.Status.PostDeploymentEvaluationStatus.IsSucceeded()
-	}
-	return a.Status.PostDeploymentEvaluationStatus.IsSucceeded() || a.Status.PostDeploymentEvaluationStatus.IsWarning()
+	// if isBlocking {
+	return a.Status.PostDeploymentEvaluationStatus.IsSucceeded()
+	// }
+	// return a.Status.PostDeploymentEvaluationStatus.IsSucceeded() || a.Status.PostDeploymentEvaluationStatus.IsWarning()
 }
 
 func (a KeptnAppVersion) IsPostDeploymentEvaluationFailed() bool {
@@ -237,10 +237,10 @@ func (a KeptnAppVersion) IsPostDeploymentEvaluationFailed() bool {
 }
 
 func (a KeptnAppVersion) IsPostDeploymentSucceeded(isBlocking bool) bool {
-	if isBlocking {
-		return a.Status.PostDeploymentStatus.IsSucceeded()
-	}
-	return a.Status.PostDeploymentStatus.IsSucceeded() || a.Status.PostDeploymentStatus.IsWarning()
+	// if isBlocking {
+	return a.Status.PostDeploymentStatus.IsSucceeded()
+	// }
+	// return a.Status.PostDeploymentStatus.IsSucceeded() || a.Status.PostDeploymentStatus.IsWarning()
 }
 
 func (a KeptnAppVersion) IsPromotionSucceeded() bool {

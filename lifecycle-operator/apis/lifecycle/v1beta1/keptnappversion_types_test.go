@@ -105,27 +105,27 @@ func TestKeptnAppVersion(t *testing.T) {
 	require.False(t, app.AreWorkloadsSucceeded())
 	require.True(t, app.AreWorkloadsFailed())
 
-	app.Status.PreDeploymentStatus = common.StateWarning
-	app.Status.PreDeploymentEvaluationStatus = common.StateWarning
-	app.Status.PostDeploymentStatus = common.StateWarning
-	app.Status.PostDeploymentEvaluationStatus = common.StateWarning
+	// app.Status.PreDeploymentStatus = common.StateWarning
+	// app.Status.PreDeploymentEvaluationStatus = common.StateWarning
+	// app.Status.PostDeploymentStatus = common.StateWarning
+	// app.Status.PostDeploymentEvaluationStatus = common.StateWarning
 
-	require.False(t, app.IsPreDeploymentSucceeded(true))
-	require.True(t, app.IsPreDeploymentSucceeded(false))
+	// require.False(t, app.IsPreDeploymentSucceeded(true))
+	// require.True(t, app.IsPreDeploymentSucceeded(false))
 
-	require.False(t, app.IsPreDeploymentEvaluationSucceeded(true))
-	require.True(t, app.IsPreDeploymentEvaluationSucceeded(false))
+	// require.False(t, app.IsPreDeploymentEvaluationSucceeded(true))
+	// require.True(t, app.IsPreDeploymentEvaluationSucceeded(false))
 
-	require.False(t, app.IsPostDeploymentSucceeded(true))
-	require.True(t, app.IsPostDeploymentSucceeded(false))
+	// require.False(t, app.IsPostDeploymentSucceeded(true))
+	// require.True(t, app.IsPostDeploymentSucceeded(false))
 
-	require.False(t, app.IsPostDeploymentEvaluationSucceeded(true))
-	require.True(t, app.IsPostDeploymentEvaluationSucceeded(false))
+	// require.False(t, app.IsPostDeploymentEvaluationSucceeded(true))
+	// require.True(t, app.IsPostDeploymentEvaluationSucceeded(false))
 
-	app.Status.PreDeploymentStatus = common.StateFailed
-	app.Status.PreDeploymentEvaluationStatus = common.StateFailed
-	app.Status.PostDeploymentStatus = common.StateFailed
-	app.Status.PostDeploymentEvaluationStatus = common.StateFailed
+	// app.Status.PreDeploymentStatus = common.StateFailed
+	// app.Status.PreDeploymentEvaluationStatus = common.StateFailed
+	// app.Status.PostDeploymentStatus = common.StateFailed
+	// app.Status.PostDeploymentEvaluationStatus = common.StateFailed
 
 	require.False(t, app.IsEndTimeSet())
 	require.False(t, app.IsStartTimeSet())

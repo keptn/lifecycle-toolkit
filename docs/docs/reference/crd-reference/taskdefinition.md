@@ -260,28 +260,28 @@ and Keptn sets up the container and runs the script as part of the task.
                   and for [python](./#configmapref-for-python).
 
             - **parameters** -- An optional field
-              to supply input parameters to a function.
-              Keptn passes the values defined inside the `map` field
-              as a JSON object.
-              See [Parameterized functions](../../guides/tasks.md#parameterized-functions)
-              for more information.
-              Also see examples for [deno](./#env-var-in-deno)
-              and
-              [python](./#env-var-in-python).
+                to supply input parameters to a function.
+                Keptn passes the values defined inside the `map` field
+                as a JSON object.
+                See [Parameterized functions](../../guides/tasks.md#parameterized-functions)
+                for more information.
+                Also see examples for [deno](./#env-var-in-deno)
+                and
+                [python](./#env-var-in-python).
 
             - **secureParameters** -- An optional field
-              used to pass a Kubernetes secret.
-              The `secret` value is the Kubernetes secret name
-              that is mounted into the runtime and made available to functions
-              using the `SECURE_DATA` environment variable.
+                used to pass a Kubernetes secret.
+                The `secret` value is the Kubernetes secret name
+                that is mounted into the runtime and made available to functions
+                using the `SECURE_DATA` environment variable.
 
-              Note that, currently, only one secret can be passed
-              per `KeptnTaskDefinition` resource.
+                Note that, currently, only one secret can be passed
+                per `KeptnTaskDefinition` resource.
 
-              See [Create secret text](../../guides/tasks.md#create-secret-text)
-              for details.
-              Also see examples on secret usage in tasks runner
-              for [deno](./#env-var-in-deno) and [python](./#env-var-in-python).
+                  See [Create secret text](../../guides/tasks.md#create-secret-text)
+                for details.
+                Also see examples on secret usage in tasks runner
+                for [deno](./#env-var-in-deno) and [python](./#env-var-in-python).
 
 ## Usage
 

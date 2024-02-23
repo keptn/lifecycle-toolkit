@@ -235,7 +235,7 @@ func (r *KeptnWorkloadVersionReconciler) doPostDeploymentEvaluationPhase(ctx con
 			ctxWorkloadTrace,
 			r.getTracer(),
 			workloadVersion,
-			apicommon.PhaseAppPostEvaluation,
+			apicommon.PhaseWorkloadPostEvaluation,
 			reconcilePostEval,
 		)
 	}

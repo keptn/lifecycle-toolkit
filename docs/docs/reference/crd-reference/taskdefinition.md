@@ -150,21 +150,21 @@ You do not need to specify the image, volumes, and so forth.
 Instead, just provide either a Deno or Python script
 and Keptn sets up the container and runs the script as part of the task.
 
-
+<!-- markdownlint-disable -->
 === "deno-runtime"
-
-When using the `deno-runtime` runner to define a task,
-the executables are coded in
-[Deno-script](https://deno.com/manual),
-(which is mostly the same as JavaScript and TypeScript)
-and executed in the
-`deno-runtime` runner,
-which is a lightweight runtime environment
-that executes in your namespace.
-Note that Deno has tighter restrictions
-for permissions and importing data
-so a script that works properly elsewhere
-may not function out of the box when run in the `deno-runtime` runner.
+    
+    When using the `deno-runtime` runner to define a task,
+    the executables are coded in
+    [Deno-script](https://deno.com/manual),
+    (which is mostly the same as JavaScript and TypeScript)
+    and executed in the
+    `deno-runtime` runner,
+    which is a lightweight runtime environment
+    that executes in your namespace.
+    Note that Deno has tighter restrictions
+    for permissions and importing data
+    so a script that works properly elsewhere
+    may not function out of the box when run in the `deno-runtime` runner.
 
 ```yaml
 {% include "../../assets/crd/examples/synopsis-for-deno-runtime-container.yaml" %}
@@ -181,6 +181,7 @@ may not function out of the box when run in the `deno-runtime` runner.
     ```yaml
     {% include "../../assets/crd/examples/synopsis-for-python-runtime-runner.yaml" %}
     ```
+<!-- markdownlint-enable -->
 
 ### Fields for predefined containers
 
@@ -338,6 +339,7 @@ file.
 
 ### Examples for inline script
 
+<!-- markdownlint-disable -->
 === "Example 1: inline script for a Deno script"
 
     This example defines a full-fledged Deno script
@@ -449,6 +451,7 @@ file.
     meta= dct['metadata']
     print(meta)
     ```
+<!-- markdownlint-enable -->
 
 ### Allowed libraries for the python-runtime runner
 

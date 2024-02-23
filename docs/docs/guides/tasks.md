@@ -244,7 +244,7 @@ To do so, the metadata needs to be specified for the workload or for the applica
 Follow our guide on [Context and Metadata here](./metadata.md).
 
 For an example of how to access the `KEPTN_CONTEXT`, follow our
-[reference page](../reference/crd-reference/taskdefinition.md#example-6-accessing-keptn_context-environment-variable-in-a-deno-task)
+[reference page](../reference/crd-reference/taskdefinition.md#example-for-accessing-keptn_context-environment-variable)
 
 ## Parameterized functions
 

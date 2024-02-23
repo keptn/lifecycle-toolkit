@@ -10,14 +10,14 @@ apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
-  annotations: ##accessible via "KEPTN_CONTEXT"
+  annotations: ## accessible via "KEPTN_CONTEXT"
     my: test
 spec:
   deno:
-    parameters: ##accessible via "DATA"
+    parameters: ## accessible via "DATA"
       map:
         user: "myuser"
-    secureParameters: ##accessible via "SECURE_DATA"
+    secureParameters: ## accessible via "SECURE_DATA"
       secret: mysecret
     inline:
       code: |

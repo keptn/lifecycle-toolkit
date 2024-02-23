@@ -165,6 +165,7 @@ and Keptn sets up the container and runs the script as part of the task.
     for permissions and importing data
     so a script that works properly elsewhere
     may not function out of the box when run in the `deno-runtime` runner.
+    In this case you may want to use a custom container instead.
 
 ```yaml
 {% include "../../assets/crd/examples/synopsis-for-deno-runtime-container.yaml" %}
@@ -176,7 +177,8 @@ and Keptn sets up the container and runs the script as part of the task.
     the executables are coded in python3.
     The runner enables the following packages: requests, json, git, yaml.
     Note that other libraries may not function out of the box 
-    in the `python-runtime` runner.
+    in the `python-runtime` runner. 
+    In this case you may want to use a custom container instead.
 
     ```yaml
     {% include "../../assets/crd/examples/synopsis-for-python-runtime-runner.yaml" %}

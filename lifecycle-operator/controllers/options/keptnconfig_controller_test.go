@@ -39,6 +39,8 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 		wantErr                          bool
 		wantCreationRequestTimeoutConfig time.Duration
 		wantCloudEventsEndpointConfig    string
+		wantBlockDeployment              bool
+		blockDeploymentCalls             int
 	}{
 		{
 			name: "test 1",
@@ -58,11 +60,14 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 				},
 				Spec: optionsv1alpha1.KeptnConfigSpec{
 					OTelCollectorUrl: "",
+					BlockDeployment:  true,
 				},
 			},
-			lastAppliedConfig: &optionsv1alpha1.KeptnConfigSpec{},
-			want:              ctrl.Result{},
-			wantErr:           false,
+			lastAppliedConfig:    &optionsv1alpha1.KeptnConfigSpec{},
+			want:                 ctrl.Result{},
+			wantErr:              false,
+			wantBlockDeployment:  true,
+			blockDeploymentCalls: 1,
 		},
 		{
 			name: "test 2",
@@ -82,10 +87,13 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 				},
 				Spec: optionsv1alpha1.KeptnConfigSpec{
 					OTelCollectorUrl: "",
+					BlockDeployment:  true,
 				},
 			},
-			want:    ctrl.Result{},
-			wantErr: false,
+			want:                 ctrl.Result{},
+			wantErr:              false,
+			wantBlockDeployment:  true,
+			blockDeploymentCalls: 1,
 		},
 		{
 			name: "test 3",
@@ -103,15 +111,47 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 					Name:      "empty-config",
 					Namespace: "keptn-system",
 				},
-				Spec: optionsv1alpha1.KeptnConfigSpec{
-					OTelCollectorUrl: "",
-				},
 			},
-			want:    ctrl.Result{},
-			wantErr: false,
+			want:                 ctrl.Result{},
+			wantErr:              false,
+			blockDeploymentCalls: 0,
 		},
 		{
 			name: "test 4",
+			args: args{
+				ctx: context.TODO(),
+				req: ctrl.Request{
+					NamespacedName: types.NamespacedName{
+						Namespace: "keptn-system",
+						Name:      "config1",
+					},
+				},
+			},
+			lastAppliedConfig: &optionsv1alpha1.KeptnConfigSpec{
+				OTelCollectorUrl: "some-url",
+				BlockDeployment:  true,
+			},
+			reconcileConfig: &optionsv1alpha1.KeptnConfig{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "config1",
+					Namespace: "keptn-system",
+				},
+				Spec: optionsv1alpha1.KeptnConfigSpec{
+					OTelCollectorUrl:                      "url1",
+					KeptnAppCreationRequestTimeoutSeconds: 10,
+					CloudEventsEndpoint:                   "ce-endpoint",
+					BlockDeployment:                       false,
+				},
+			},
+			want:                             ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			wantCloudEventsEndpointConfig:    "ce-endpoint",
+			wantCreationRequestTimeoutConfig: 10 * time.Second,
+			wantErr:                          true,
+			wantBlockDeployment:              false,
+			blockDeploymentCalls:             1,
+		},
+		{
+			name: "test 5",
 			args: args{
 				ctx: context.TODO(),
 				req: ctrl.Request{
@@ -133,12 +173,15 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 					OTelCollectorUrl:                      "url1",
 					KeptnAppCreationRequestTimeoutSeconds: 10,
 					CloudEventsEndpoint:                   "ce-endpoint",
+					BlockDeployment:                       false,
 				},
 			},
 			want:                             ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second},
 			wantCloudEventsEndpointConfig:    "ce-endpoint",
 			wantCreationRequestTimeoutConfig: 10 * time.Second,
 			wantErr:                          true,
+			wantBlockDeployment:              false,
+			blockDeploymentCalls:             1,
 		},
 	}
 	for _, tt := range tests {
@@ -163,6 +206,10 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			if tt.wantCloudEventsEndpointConfig != "" {
 				require.Len(t, mockConfig.SetCloudEventsEndpointCalls(), 1)
 				require.Equal(t, tt.wantCloudEventsEndpointConfig, mockConfig.SetCloudEventsEndpointCalls()[0].Endpoint)
+			}
+			require.Len(t, mockConfig.SetBlockDeploymentCalls(), tt.blockDeploymentCalls)
+			if tt.blockDeploymentCalls > 0 {
+				require.Equal(t, tt.wantBlockDeployment, mockConfig.SetBlockDeploymentCalls()[0].Value)
 			}
 		})
 	}
@@ -305,6 +352,7 @@ func setupReconciler(withConfig *optionsv1alpha1.KeptnConfig) *KeptnConfigReconc
 	r.config = &fakeconfig.MockConfig{
 		SetCloudEventsEndpointFunc:    func(endpoint string) {},
 		SetCreationRequestTimeoutFunc: func(value time.Duration) {},
+		SetBlockDeploymentFunc:        func(value bool) {},
 	}
 	return r
 }

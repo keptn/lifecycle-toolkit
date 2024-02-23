@@ -371,7 +371,7 @@ file.
 ### Examples for httpRef script
 
 ???+ note ""
-    
+
     === "Example 2: httpRef script for a Deno script"
     
         This example fetches the Deno script from a remote webserver at runtime:
@@ -387,8 +387,9 @@ file.
     === "Example 2: httpRef for a python-runtime runner"
     
         ```yaml
-        {% include "https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_upstream_hellopy.yaml" %}
+        {% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_upstream_hellopy.yaml" %}
         ```
+
 ### Examples for functionRef
 
 ???+ note ""
@@ -414,6 +415,7 @@ file.
         ```yaml
         {% include "../../assets/crd/python-recursive.yaml" %}
         ```
+
 ### Examples for ConfigMap and ConfigMapRef
 
 ???+ note ""

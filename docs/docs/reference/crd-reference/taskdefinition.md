@@ -419,7 +419,7 @@ file.
 === "Example 2: httpRef for a python-runtime runner"
 
      ```yaml
-    {% include "https://github.com/keptn/lifecycle-toolkit/tree/main/runtimes/python-runtime/samples/python_execution/taskdefinition_pyfunction_upstream_hellopy.yaml" %}
+    {% include "https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_upstream_hellopy.yaml" %}
     ```
 
 ### Examples for functionRef

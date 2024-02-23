@@ -2,7 +2,6 @@ apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
   name: podtatometric
-  namespace: keptn-system
 spec:
   provider:
     name: "dynatrace"
@@ -14,7 +13,6 @@ apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetricsProvider
 metadata:
   name: dynatrace
-  namespace: keptn-system
 spec:
   secretKeyRef:
     key: DT_TOKEN

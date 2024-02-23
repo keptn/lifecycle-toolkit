@@ -174,7 +174,7 @@ and Keptn sets up the container and runs the script as part of the task.
     ```
 
 === "Python-runtime synopsis"
-    
+
     When using the `python-runtime` runner to define a task,
     the executables are coded in python3.
     The runner enables the following packages: requests, json, git, yaml.
@@ -225,30 +225,26 @@ and Keptn sets up the container and runs the script as part of the task.
                         possibly with different parameters
                         that are provided in the calling `KeptnTaskDefinition` resource.
                         Another `KeptnTaskDefinition` resource could call this same script
-                        but with different parameters. 
+                        but with different parameters.
                         Only one script can be executed.
                         Any other scripts listed here are silently ignored.
-                        See examples of usage for [deno](#httpref-for-deno)
-                        and for [python](#httpref-for-python)
+                        See examples of usage for [deno](./#httpref-for-deno)
+                        and for [python](./#httpref-for-python)
 
                 - **functionRef** -- Execute another `KeptnTaskDefinition` resources.
                     Populate this field with the value(s) of the `metadata.name` field
                     for each `KeptnDefinitionTask` to be called.
-
                     Like the `httpRef` syntax,this is commonly used
                     to call a general function that is used in multiple places,
                     possibly with different parameters
                     that are set in the calling `KeptnTaskDefinition` resource.
-
                     To be able to run the pre-/post-deployment task, you must create
                     the `KeptnAppContext` resource and link the `KeptnTaskDefinition`
                     in the pre-/post-deployment section of `KeptnAppContext`.
-
                     The `KeptnTaskDefinition` called with `functionref`
                     is the `parent task` whose runner is used for the execution
                     even if it is not the same runner defined in the
                     calling `KeptnTaskDefinition`.
-
                     Only one `KeptnTaskDefinition` resources can be listed
                     with the `functionRef` syntax
                     although that `KeptnTaskDefinition` can call multiple
@@ -263,7 +259,7 @@ and Keptn sets up the container and runs the script as part of the task.
                   resource that contains the function to be executed.
                   See examples of usage for [deno](./#configmapref-for-deno)
                   and for [python](./#configmapref-for-python)
-                  
+
             - **parameters** - An optional field
               to supply input parameters to a function.
               Keptn passes the values defined inside the `map` field
@@ -438,7 +434,7 @@ file.
         ```
 
 ??? example "Accessing KEPTN_CONTEXT environment variable"
-    
+
     For Tasks triggered as pre- and post- deployment of applications
     on Kubernetes, Keptn populates an environment variable called `KEPTN_CONTEXT`.
     As all environment variables, this can be accessed using language specific methods.

@@ -454,7 +454,7 @@ file.
     that contains the code for the function to be executed.
 
     ```yaml
-    {% include "../../assets/crd/examples/configmapref-for-deno-script.yaml" %} 
+    {% include "../../assets/crd/examples/configmap-for-deno-script.yaml" %} 
     ```
 
 === "Example 4: ConfigMapRef for a python-runtime runner"

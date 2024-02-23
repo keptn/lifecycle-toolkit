@@ -31,7 +31,7 @@ differentiated by the `spec` section:
   See
   [Synopsis for container-runtime](#synopsis-for-container-runtime)
   and
-  [a container-runtime runner](#examples-for-a-container-runtime-runner).
+  [a container-runtime runner](#example-for-a-container-runtime-runner).
 
 - Pre-defined containers
 
@@ -43,10 +43,11 @@ differentiated by the `spec` section:
       with a few limitations.
       You can use this to specify simple actions
       without having to define a full container.
+      See [runtime examples](./#deno-runtime-synopsis)
     - Use the pre-defined `python-runtime` runner
       to define your task using
       [Python 3](https://www.python.org/).
-      See [runtime examples](#examples-for-deno-runtime-and-python-runtime-runners)
+      See [runtime examples](./#python-runtime-synopsis)
       for practical usage of the pre-defined containers.
 
 ## Synopsis for all runners
@@ -83,7 +84,7 @@ These are described here.
           and code the functionality in Deno script,
           which is similar to JavaScript and Typescript.
           See
-          [Synopsis for predefined-containers](#synopsis-for-predefined-containers).
+          [Synopsis for predefined-containers](#).
         - **python** -- Use a `python-runtime` function
           and code the functionality in Python 3.
           See
@@ -154,7 +155,7 @@ and Keptn sets up the container and runs the script as part of the task.
 
 !!! note "Synopsis"
 
-    === "deno-runtime"
+    === "Deno-runtime synopsis"
     
         When using the `deno-runtime` runner to define a task,
         the executables are coded in
@@ -174,7 +175,7 @@ and Keptn sets up the container and runs the script as part of the task.
         {% include "../../assets/crd/examples/synopsis-for-deno-runtime-container.yaml" %}
         ```
 
-    === "python-runtime"
+    === "Python-runtime synopsis"
         
         When using the `python-runtime` runner to define a task,
         the executables are coded in python3.
@@ -332,7 +333,7 @@ See
 [Executing sequential tasks](../../guides/tasks.md#executing-sequential-tasks)
 for more information.
 
-## a container-runtime runner
+## Example for a container-runtime runner
 
 For an example of a `KeptnTaskDefinition` that defines a custom container.
 see
@@ -348,7 +349,7 @@ This task is then referenced in the
 [appcontext.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-2/appcontext.yaml)
 file.
 
-## deno-runtime and python-runtime runners
+## Examples for deno-runtime and python-runtime runners
 
 <!-- markdownlint-disable MD046 -->
 

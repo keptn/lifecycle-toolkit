@@ -57,7 +57,7 @@ include the same lines at the top.
 These are described here.
 
 ```yaml
-{ % include "../../assets/crd/examples/synopsis-for-all-runners.yaml"  % }
+{% include "../../assets/crd/examples/synopsis-for-all-runners.yaml"  %}
 ```
 
 ### Fields used for all containers
@@ -122,7 +122,7 @@ you can use a `container-runtime` to execute
 almost anything that you implemented with JES for Keptn v1.
 
 ```yaml
-{ % include "../../assets/crd/examples/synopsis-for-container-runtime.yaml"  % }
+{% include "../../assets/crd/examples/synopsis-for-container-runtime.yaml"  %}
 ```
 
 ### Fields used only for container-runtime
@@ -343,7 +343,7 @@ This is a trivial example that just runs `busybox`,
 then spawns a shell and runs the `sleep 30` command:
 
 ```yaml
-{ % include "../../assets/crd/task-definition.yaml" % }
+{% include "../../assets/crd/task-definition.yaml" %}
 ```
 
 This task is then referenced in the
@@ -470,7 +470,7 @@ file.
 
 ??? example "Passing secrets, environment variables and modifying the runner command"
 
-    === "deno"
+    === "Env var in deno"
     
     The following example shows how to pass data inside the parameter map,
     and how to load a secret in your code.
@@ -481,7 +481,7 @@ file.
     {% include "../../assets/crd/deno-context.yaml" %}
     ```
 
-    === "python"
+    === "Env var in python"
     
     The following example shows how to pass data inside the parameter map,
     how to load a secret in your code,

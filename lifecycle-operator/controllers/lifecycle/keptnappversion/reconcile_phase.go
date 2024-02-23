@@ -29,7 +29,7 @@ func (r *KeptnAppVersionReconciler) reconcilePhase(ctx context.Context, phaseCtx
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}
-	overallState := apicommon.GetOverallState(state)
+	overallState := apicommon.GetOverallStateBlockedDeployment(apicommon.GetOverallState(state), r.Config.GetBlockDeployment())
 
 	switch checkType {
 	case apicommon.PreDeploymentCheckType:

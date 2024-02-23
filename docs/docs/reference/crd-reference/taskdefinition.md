@@ -208,7 +208,7 @@ and Keptn sets up the container and runs the script as part of the task.
               used to call the executables.
               Only one of these can be specified per `KeptnTaskDefinition` resource:
 
-                - **inline** - Include the actual executable code to execute.
+                - **inline** -- Include the actual executable code to execute.
                         You can code a sequence of executables here
                         that need to be run in order
                         as long as they are executables that are part of the lifecycle workflow.
@@ -218,7 +218,7 @@ and Keptn sets up the container and runs the script as part of the task.
                         See examples of usage for [deno](./#inline-script-for-deno)
                         and for [python](./#inline-script-for-python).
 
-                - **httpRef** - Specify a script to be executed at runtime
+                - **httpRef** -- Specify a script to be executed at runtime
                         from the remote webserver that is specified.
                         This syntax allows you to call a general function
                         that is used in multiple places,
@@ -253,13 +253,13 @@ and Keptn sets up the container and runs the script as part of the task.
                     are silently ignored.
                     See examples of usage for [deno](./#functionref-for-deno)
                     and [python](./#functionref-for-python).
-                - **ConfigMapRef** - Specify the name of a
+                - **ConfigMapRef** -- Specify the name of a
                   [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
                   resource that contains the function to be executed.
                   See examples of usage for [deno](./#configmapref-for-deno)
                   and for [python](./#configmapref-for-python).
 
-            - **parameters** - An optional field
+            - **parameters** -- An optional field
               to supply input parameters to a function.
               Keptn passes the values defined inside the `map` field
               as a JSON object.

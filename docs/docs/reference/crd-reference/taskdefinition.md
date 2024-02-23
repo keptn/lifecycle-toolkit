@@ -31,7 +31,7 @@ differentiated by the `spec` section:
   See
   [Synopsis for container-runtime](#synopsis-for-container-runtime)
   and
-  [a container-runtime runner](#example-for-a-container-runtime-runner).
+  [Example for a container-runtime runner](#example-for-a-container-runtime-runner).
 
 - Pre-defined containers
 
@@ -43,11 +43,11 @@ differentiated by the `spec` section:
       with a few limitations.
       You can use this to specify simple actions
       without having to define a full container.
-      See [runtime examples](./#deno-runtime-synopsis)
+      See [runtime examples](#examples-for-deno-runtime-and-python-runtime-runners)
     - Use the pre-defined `python-runtime` runner
       to define your task using
       [Python 3](https://www.python.org/).
-      See [runtime examples](./#python-runtime-synopsis)
+      See [runtime examples](#examples-for-deno-runtime-and-python-runtime-runners)
       for practical usage of the pre-defined containers.
 
 ## Synopsis for all runners
@@ -84,11 +84,11 @@ These are described here.
           and code the functionality in Deno script,
           which is similar to JavaScript and Typescript.
           See
-          [Synopsis for predefined-containers](#).
+          [Synopsis for predefined-containers](./#deno-runtime-synopsis).
         - **python** -- Use a `python-runtime` function
           and code the functionality in Python 3.
           See
-          [Synopsis for predefined-containers](#synopsis-for-predefined-containers).
+          [Synopsis for predefined-containers](./#python-runtime-synopsis).
         - **container** -- Use the runner defined
           for the `container-runtime` container.
           This is a standard Kubernetes container
@@ -436,7 +436,6 @@ file.
         ```yaml
         {% include "../../assets/crd/python-configmap.yaml" %}
         ```
-=
 
 ??? example "Accessing KEPTN_CONTEXT environment variable"
 

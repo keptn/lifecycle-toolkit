@@ -142,7 +142,6 @@ almost anything that you implemented with JES for Keptn v1.
           [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
           spec documentation.
 
-<!-- markdownlint-disable MD046 -->
 ## Synopsis for predefined containers
 
 The predefined containers allow you to easily define a task
@@ -181,7 +180,6 @@ and Keptn sets up the container and runs the script as part of the task.
     ```yaml
     {% include "../../assets/crd/examples/synopsis-for-python-runtime-runner.yaml" %}
     ```
-<!-- markdownlint-enable MD046 -->
 
 ### Fields for predefined containers
 
@@ -229,9 +227,9 @@ and Keptn sets up the container and runs the script as part of the task.
                     possibly with different parameters
                     that are set in the calling `KeptnTaskDefinition` resource.
 
-                    To be able to run the pre/post-deployment task, you must create
+                    To be able to run the pre-/post-deployment task, you must create
                     the `KeptnAppContext` resource and link the `KeptnTaskDefinition`
-                    in the pre/post-deployment section of `KeptnAppContext`.
+                    in the pre-/post-deployment section of `KeptnAppContext`.
 
                     The `KeptnTaskDefinition` called with `functionref`
                     is the `parent task` whose runner is used for the execution
@@ -335,7 +333,6 @@ This task is then referenced in the
 [appcontext.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-2/appcontext.yaml)
 file.
 
-<!-- markdownlint-disable MD046 -->
 ## Examples for deno-runtime and python-runtime runners
 
 ### Examples for inline script
@@ -451,8 +448,6 @@ file.
     meta= dct['metadata']
     print(meta)
     ```
-
-<!-- markdownlint-enable MD046 -->
 
 ### Allowed libraries for the python-runtime runner
 

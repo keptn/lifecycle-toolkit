@@ -31,7 +31,7 @@ differentiated by the `spec` section:
   See
   [Synopsis for container-runtime](#synopsis-for-container-runtime)
   and
-  [Examples for a container-runtime runner](#examples-for-a-container-runtime-runner).
+  [a container-runtime runner](#examples-for-a-container-runtime-runner).
 
 - Pre-defined containers
 
@@ -332,7 +332,7 @@ See
 [Executing sequential tasks](../../guides/tasks.md#executing-sequential-tasks)
 for more information.
 
-## Examples for a container-runtime runner
+## a container-runtime runner
 
 For an example of a `KeptnTaskDefinition` that defines a custom container.
 see
@@ -348,11 +348,11 @@ This task is then referenced in the
 [appcontext.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-2/appcontext.yaml)
 file.
 
-## Examples for deno-runtime and python-runtime runners
+## deno-runtime and python-runtime runners
 
 <!-- markdownlint-disable MD046 -->
 
-### Examples for inline script
+### Inline script
 
 ??? example
 
@@ -374,9 +374,9 @@ file.
         {% include "../../assets/crd/python-inline.yaml" %}
         ```
 
-### Examples for httpRef script
+### HttpRef
 
-!!! note ""
+??? example
 
     === "Example 2: httpRef script for a Deno script"
     
@@ -396,9 +396,9 @@ file.
         {% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_upstream_hellopy.yaml" %}
         ```
 
-### Examples for functionRef
+### FunctionRef
 
-!!! note ""
+??? example
 
     === "Example 3: functionRef for a Deno script"
     
@@ -422,9 +422,9 @@ file.
         {% include "../../assets/crd/python-recursive.yaml" %}
         ```
 
-### Examples for ConfigMap and ConfigMapRef
+### ConfigMap and ConfigMapRef
 
-!!! note ""
+??? example
 
     === "Example 4: ConfigMapRef for a Deno script"
     
@@ -446,7 +446,7 @@ file.
 
 ### Example for Accessing KEPTN_CONTEXT environment variable
 
-!!! note ""
+??? example
 
     === "Example 5: Accessing KEPTN_CONTEXT environment variable in a Deno task"
     
@@ -477,7 +477,7 @@ file.
         ```
 
 ### Passing secrets, environment variables and modifying the runner command
-!!! note ""
+??? example
 
     === "deno"
     

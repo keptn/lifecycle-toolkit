@@ -152,8 +152,8 @@ and Keptn sets up the container and runs the script as part of the task.
 
 <!-- markdownlint-disable MD046 -->
 
-!!! example
-    === "deno-runtime"
+!!! note "Synopsis"
+=== "deno-runtime"
     
         When using the `deno-runtime` runner to define a task,
         the executables are coded in
@@ -173,7 +173,7 @@ and Keptn sets up the container and runs the script as part of the task.
     { % include "../../assets/crd/examples/synopsis-for-deno-runtime-container.yaml" % }
     ```
     
-    === "python-runtime"
+=== "python-runtime"
     
         When using the `python-runtime` runner to define a task,
         the executables are coded in python3.

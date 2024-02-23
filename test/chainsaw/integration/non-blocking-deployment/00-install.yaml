@@ -24,6 +24,8 @@ spec:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-entry
         keptn.sh/version: 0.1.0
+        keptn.sh/pre-deployment-tasks: failing-task
+        keptn.sh/post-deployment-tasks: failing-task
     spec:
       terminationGracePeriodSeconds: 5
       containers:

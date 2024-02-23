@@ -42,7 +42,21 @@ status:
   currentPhase: Completed
   deploymentStatus: Succeeded
   postDeploymentEvaluationStatus: Succeeded
-  postDeploymentStatus: Succeeded
+  postDeploymentStatus: Warning
+  postDeploymentTaskStatus:
+    - definitionName: failing-task
+      status: Failed
   preDeploymentEvaluationStatus: Succeeded
-  preDeploymentStatus: Succeeded
+  preDeploymentStatus: Warning
+  preDeploymentTaskStatus:
+    - definitionName: failing-task
+      status: Failed
   status: Succeeded
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: podtato-head
+status:
+  phase: Running

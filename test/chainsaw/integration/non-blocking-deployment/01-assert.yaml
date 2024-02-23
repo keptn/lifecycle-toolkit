@@ -35,3 +35,11 @@ spec:
   previousVersion: 0.1.0
   version: 0.2.0
   workloadName: podtato-head-podtato-head-entry
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: podtato-head
+status:
+  phase: Pending

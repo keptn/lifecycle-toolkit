@@ -43,17 +43,11 @@ differentiated by the `spec` section:
       with a few limitations.
       You can use this to specify simple actions
       without having to define a full container.
-      See
-      <a href="#deno-runtime">Synopsis for Deno-runtime container</a>
-      and
-      [Deno-runtime examples](#examples-for-deno-runtime-and-python-runtime-runners).
     - Use the pre-defined `python-runtime` runner
       to define your task using
       [Python 3](https://www.python.org/).
-      See
-      <a href="#python-runtime">Synopsis for python-runtime runner</a>
-      and
-      [Examples for a python-runtime runner](#examples-for-deno-runtime-and-python-runtime-runners).
+    See [runtime examples](#examples-for-deno-runtime-and-python-runtime-runners)
+    for practical usage of the pre-defined containers.
 
 ## Synopsis for all runners
 
@@ -89,11 +83,11 @@ These are described here.
           and code the functionality in Deno script,
           which is similar to JavaScript and Typescript.
           See
-          <a href="#deno-runtime">Synopsis for deno-runtime container</a>
+          [Synopsis for predefined-containers](#synopsis-for-predefined-containers).
         - **python** -- Use a `python-runtime` function
           and code the functionality in Python 3.
           See
-          <a href="#python-runtime">Synopsis for python-runtime runner</a>
+          [Synopsis for predefined-containers](#synopsis-for-predefined-containers).
         - **container** -- Use the runner defined
           for the `container-runtime` container.
           This is a standard Kubernetes container

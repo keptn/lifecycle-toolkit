@@ -354,7 +354,7 @@ file.
 
 ### Examples for inline script
 
-??? note ""
+??? example
 
     === "Example 1: inline script for a Deno script"
 

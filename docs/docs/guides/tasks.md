@@ -243,7 +243,7 @@ your workloads and tasks in a `KeptnApp` (for instance a commit ID value).
 To do so, the metadata needs to be specified for the workload or for the application.
 Follow our guide on [Context and Metadata here](./metadata.md).
 
-<!-- markdownlint-disable MD046 MD013-->
+<!-- markdownlint-disable MD046 max-one-sentence-per-line-->
 
 !!! note
 
@@ -251,7 +251,7 @@ Follow our guide on [Context and Metadata here](./metadata.md).
     [for deno](../reference/crd-reference/taskdefinition.md#accessing-keptn_context-in-a-deno-task)
     and [for python](../reference/crd-reference/taskdefinition.md#accessing-keptn_context-in-a-python-task).
 
-<!-- markdownlint-enable MD046 MD013-->
+<!-- markdownlint-enable MD046 max-one-sentence-per-line-->
 
 
 ## Parameterized functions

@@ -352,7 +352,7 @@ file.
 
 ## Examples for deno-runtime and python-runtime runners
 
-<!-- markdownlint-disable MD046 MD013 -->
+<!-- markdownlint-disable MD046 max-one-sentence-per-line -->
 
 ??? example "Inline scripts"
 
@@ -487,7 +487,7 @@ file.
     {% include "../../assets/crd/python-context.yaml" %}
     ```
 
-<!-- markdownlint-enable MD046 MD013-->
+<!-- markdownlint-enable MD046 max-one-sentence-per-line-->
 
 ## More examples
 

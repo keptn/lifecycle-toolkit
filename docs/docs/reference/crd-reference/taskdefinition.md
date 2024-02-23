@@ -150,7 +150,7 @@ You do not need to specify the image, volumes, and so forth.
 Instead, just provide either a Deno or Python script
 and Keptn sets up the container and runs the script as part of the task.
 
-<!-- markdownlint-disable MD046-->
+<!-- markdownlint-disable MD046 -->
 === "deno-runtime"
     
     When using the `deno-runtime` runner to define a task,
@@ -183,7 +183,7 @@ and Keptn sets up the container and runs the script as part of the task.
     ```yaml
     {% include "../../assets/crd/examples/synopsis-for-python-runtime-runner.yaml" %}
     ```
-<!-- markdownlint-enable MD046-->
+<!-- markdownlint-enable MD046 -->
 
 ### Fields for predefined containers
 
@@ -341,7 +341,8 @@ file.
 
 ### Examples for inline script
 
-<!-- markdownlint-disable -->
+<!-- markdownlint-disable MD046 -->
+
 === "Example 1: inline script for a Deno script"
 
     This example defines a full-fledged Deno script
@@ -453,7 +454,7 @@ file.
     meta= dct['metadata']
     print(meta)
     ```
-<!-- markdownlint-enable -->
+<!-- markdownlint-enable MD046 -->
 
 ### Allowed libraries for the python-runtime runner
 

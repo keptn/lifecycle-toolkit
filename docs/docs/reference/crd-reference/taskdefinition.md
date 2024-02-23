@@ -349,7 +349,7 @@ file.
 
 <!-- markdownlint-disable MD046 max-one-sentence-per-line -->
 
-??? example "Inline scripts"
+??? abstract "Inline scripts"
 
     === "Inline script for deno"
 
@@ -369,7 +369,7 @@ file.
         {% include "../../assets/crd/python-inline.yaml" %}
         ```
 
-??? example "HttpRef"
+??? abstract "HttpRef"
 
     === "httpRef for deno"
     
@@ -389,7 +389,7 @@ file.
         {% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_upstream_hellopy.yaml" %}
         ```
 
-??? example "FunctionRef"
+??? abstract "FunctionRef"
 
     === "functionRef for deno"
     
@@ -413,7 +413,7 @@ file.
         {% include "../../assets/crd/python-recursive.yaml" %}
         ```
 
-??? example "ConfigMap and ConfigMapRef"
+??? abstract "ConfigMap and ConfigMapRef"
 
     === "ConfigMapRef for deno"
     
@@ -433,7 +433,7 @@ file.
         {% include "../../assets/crd/python-configmap.yaml" %}
         ```
 
-??? example "Accessing KEPTN_CONTEXT environment variable"
+??? abstract "Accessing KEPTN_CONTEXT environment variable"
 
     For Tasks triggered as pre- and post- deployment of applications
     on Kubernetes, Keptn populates an environment variable called `KEPTN_CONTEXT`.
@@ -457,7 +457,7 @@ file.
         print(meta)
         ```
 
-??? example "Passing secrets, environment variables and modifying the runner command"
+??? abstract "Passing secrets, environment variables and modifying the runner command"
 
     === "Env var in deno"
     

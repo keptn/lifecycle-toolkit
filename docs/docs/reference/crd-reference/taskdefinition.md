@@ -346,7 +346,9 @@ file.
 
 <!-- markdownlint-disable MD046 -->
 
-???+ note "Examples for inline script"
+### Examples for inline script
+
+???+ note ""
 
     === "Example 1: inline script for a Deno script"
 
@@ -366,7 +368,9 @@ file.
         {% include "../../assets/crd/python-inline.yaml" %}
         ```
 
-???+ note "Examples for httpRef script"
+### Examples for httpRef script
+
+???+ note ""
     
     === "Example 2: httpRef script for a Deno script"
     
@@ -385,8 +389,9 @@ file.
         ```yaml
         {% include "https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_upstream_hellopy.yaml" %}
         ```
+### Examples for functionRef
 
-???+ note "Examples for functionRef"
+???+ note ""
 
     === "Example 3: functionRef for a Deno script"
     
@@ -409,8 +414,9 @@ file.
         ```yaml
         {% include "../../assets/crd/python-recursive.yaml" %}
         ```
+### Examples for ConfigMap and ConfigMapRef
 
-???+ note "Examples for ConfigMap and ConfigMapRef"
+???+ note ""
 
     === "Example 4: ConfigMapRef for a Deno script"
     
@@ -430,7 +436,9 @@ file.
         {% include "../../assets/crd/python-configmap.yaml" %}
         ```
 
-???+ note "Example for Accessing KEPTN_CONTEXT environment variable"
+### Example for Accessing KEPTN_CONTEXT environment variable
+
+???+ note ""
 
     === "Example 5: Accessing KEPTN_CONTEXT environment variable in a Deno task"
     

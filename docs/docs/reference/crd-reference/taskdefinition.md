@@ -218,19 +218,18 @@ and Keptn sets up the container and runs the script as part of the task.
                         See examples of usage for [deno](./#inline-script-for-deno)
                         and for [python](./#inline-script-for-python)
 
-                - **httpRef** - Specify a script to be executed at runtime
-                      from the remote webserver that is specified.
-                      This syntax allows you to call a general function
-                      that is used in multiple places,
-                      possibly with different parameters
-                      that are provided in the calling `KeptnTaskDefinition` resource.
-                      Another `KeptnTaskDefinition` resource could call this same script
-                      but with different parameters.
-
-                      Only one script can be executed.
-                      Any other scripts listed here are silently ignored.
-                      See examples of usage for [deno](#httpref-for-deno)
-                      and for [python](#httpref-for-python)
+                  - **httpRef** - Specify a script to be executed at runtime
+                        from the remote webserver that is specified.
+                        This syntax allows you to call a general function
+                        that is used in multiple places,
+                        possibly with different parameters
+                        that are provided in the calling `KeptnTaskDefinition` resource.
+                        Another `KeptnTaskDefinition` resource could call this same script
+                        but with different parameters. 
+                        Only one script can be executed.
+                        Any other scripts listed here are silently ignored.
+                        See examples of usage for [deno](#httpref-for-deno)
+                        and for [python](#httpref-for-python)
 
                 - **functionRef** -- Execute another `KeptnTaskDefinition` resources.
                     Populate this field with the value(s) of the `metadata.name` field

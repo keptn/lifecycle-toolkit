@@ -271,7 +271,7 @@ and Keptn sets up the container and runs the script as part of the task.
                 per `KeptnTaskDefinition` resource.
 
                 See [Create secret text](../../guides/tasks.md#create-secret-text)
-                for details. 
+                for details.
                 Examples on secret usage in tasks runner are [here](#passing-secrets-environment-variables-and-modifying-the-python-command)
 
 ## Usage

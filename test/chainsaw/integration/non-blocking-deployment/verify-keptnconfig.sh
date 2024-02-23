@@ -20,3 +20,7 @@ echo "Retried ${RETRY_COUNT} times, but correct log message was not found. Exiti
 kubectl logs -n "$NAMESPACE" -l control-plane=lifecycle-operator --tail=-1 > logs.txt
 cat logs.txt
 exit 1
+
+# sorry for this :/
+# we need to make sure the value from KeptnConfig is updated
+sleep 30

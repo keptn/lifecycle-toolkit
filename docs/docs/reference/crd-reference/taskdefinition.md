@@ -439,13 +439,12 @@ file.
         ```
 
 ??? example "Accessing KEPTN_CONTEXT environment variable"
+    
+    For Tasks triggered as pre- and post- deployment of applications
+    on Kubernetes, Keptn populates an environment variable called `KEPTN_CONTEXT`.
+    As all environment variables, this can be accessed using language specific methods.
 
     === "Accessing KEPTN_CONTEXT in a Deno task"
-    
-        For Tasks triggered as pre- and post- deployment of applications
-        on Kubernetes, Keptn populates an environment variable called `KEPTN_CONTEXT`.
-        As all environment variables, this can be accessed using language specific methods.
-        An example in Deno would be the following:
     
         ```javascript
         let context = Deno.env.get("KEPTN_CONTEXT");
@@ -453,11 +452,6 @@ file.
         ```
     
     === "Accessing KEPTN_CONTEXT in a Python task"
-    
-        For Tasks triggered as pre- and post- deployment of applications
-        on Kubernetes, Keptn populates an environment variable called `KEPTN_CONTEXT`.
-        As all environment variables, this can be accessed using language specific methods.
-        An example in Python would be the following:
     
         ```python
         import os

@@ -179,6 +179,12 @@ and Keptn sets up the container and runs the script as part of the task.
         When using the `python-runtime` runner to define a task,
         the executables are coded in python3.
         The runner enables the following packages: requests, json, git, yaml.
+        
+        ??? example 
+            ```yaml
+            {% include "../../assets/crd/python-libs.yaml" %}
+            ```
+
         Note that other libraries may not function out of the box 
         in the `python-runtime` runner. 
         In this case you may want to use a custom container instead.
@@ -451,6 +457,7 @@ file.
     
         ```javascript
         let context = Deno.env.get("KEPTN_CONTEXT");
+        console.log(context);
         ```
     
     === "Example 5: Accessing KEPTN_CONTEXT environment variable in a Python task"
@@ -469,33 +476,38 @@ file.
         print(meta)
         ```
 
+    ### Passing secrets, environment variables and modifying the runner command
+    !!! note ""
+    
+        === "deno"
+        
+        The following example shows how to pass data inside the parameter map,
+        and how to load a secret in your code.
+        The deno command does not takes modifiers so filling the `cmdParameters`
+        will do nothig.
+
+        ```yaml
+        {% include "../../assets/crd/deno-context.yaml" %}
+        ```
+
+        === "python"
+        
+        The following example shows how to pass data inside the parameter map,
+        how to load a secret in your code,
+        and how to modify the python command.
+        In this case the container runs with the `-h` option,
+        which prints the help message for the python3 interpreter:
+    
+        ```yaml
+        {% include "../../assets/crd/python-context.yaml" %}
+        ```
+
 <!-- markdownlint-enable MD046 -->
-
-### Allowed libraries for the python-runtime runner
-
-The following example shows how to use some of the allowed packages, namely:
-requests, json, git, and yaml:
-
-```yaml
-{% include "../../assets/crd/python-libs.yaml" %}
-```
-
-### Passing secrets, environment variables and modifying the python command
-
-The following examples show how to pass data inside the parameter map,
-how to load a secret in your code,
-and how to modify the python command.
-In this case the container runs with the `-h` option,
-which prints the help message for the python3 interpreter:
-
-```yaml
-{% include "../../assets/crd/python-context.yaml" %}
-```
 
 ## More examples
 
 See
-the [lifecycle-operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/config/samples/function_execution)
+the [lifecycle-operator/config/samples](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator/config/samples)
 directory for more example `KeptnTaskDefinition` YAML files.
 
 ## Files

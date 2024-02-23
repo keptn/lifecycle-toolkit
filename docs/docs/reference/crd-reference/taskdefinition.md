@@ -271,9 +271,9 @@ and Keptn sets up the container and runs the script as part of the task.
               as a JSON object.
               See [Parameterized functions](../../guides/tasks.md#parameterized-functions)
               for more information.
-              Also see examples for [deno](./#deno)
+              Also see examples for [deno](./#env-var-in-deno)
               and
-              [python](./#python).
+              [python](./#env-var-in-python).
 
             - **secureParameters** -- An optional field
               used to pass a Kubernetes secret.
@@ -287,7 +287,7 @@ and Keptn sets up the container and runs the script as part of the task.
               See [Create secret text](../../guides/tasks.md#create-secret-text)
               for details.
               Also see examples on secret usage in tasks runner
-              for [deno](./#deno) and [python](./#python).
+              for [deno](./#env-var-in-deno) and [python](./#env-var-in-python).
 
 ## Usage
 

@@ -56,7 +56,7 @@ include the same lines at the top.
 These are described here.
 
 ```yaml
-{ % include "../../assets/crd/examples/synopsis-for-all-runners.yaml"  % }
+{% include "../../assets/crd/examples/synopsis-for-all-runners.yaml"  %}
 ```
 
 ### Fields used for all containers
@@ -121,7 +121,7 @@ you can use a `container-runtime` to execute
 almost anything that you implemented with JES for Keptn v1.
 
 ```yaml
-{ % include "../../assets/crd/examples/synopsis-for-container-runtime.yaml"  % }
+{% include "../../assets/crd/examples/synopsis-for-container-runtime.yaml"  %}
 ```
 
 ### Fields used only for container-runtime
@@ -335,7 +335,7 @@ This is a trivial example that just runs `busybox`,
 then spawns a shell and runs the `sleep 30` command:
 
 ```yaml
-{ % include "../../assets/crd/task-definition.yaml" % }
+{% include "../../assets/crd/task-definition.yaml" %}
 ```
 
 This task is then referenced in the
@@ -470,7 +470,7 @@ The following example shows how to use some of the allowed packages, namely:
 requests, json, git, and yaml:
 
 ```yaml
-{ % include "../../assets/crd/python-libs.yaml" % }
+{% include "../../assets/crd/python-libs.yaml" %}
 ```
 
 ### Passing secrets, environment variables and modifying the python command
@@ -482,7 +482,7 @@ In this case the container runs with the `-h` option,
 which prints the help message for the python3 interpreter:
 
 ```yaml
-{ % include "../../assets/crd/python-context.yaml" % }
+{% include "../../assets/crd/python-context.yaml" %}
 ```
 
 ## More examples

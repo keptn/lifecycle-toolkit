@@ -253,7 +253,6 @@ and Keptn sets up the container and runs the script as part of the task.
                     are silently ignored.
                     See examples of usage for [deno](./#functionref-for-deno)
                     and [python](./#functionref-for-python).
-
                 - **ConfigMapRef** - Specify the name of a
                   [ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
                   resource that contains the function to be executed.

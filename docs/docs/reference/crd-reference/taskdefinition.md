@@ -352,11 +352,9 @@ file.
 
 <!-- markdownlint-disable MD046 -->
 
-### Inline script
+??? example "Inline scripts"
 
-??? example
-
-    === "Example 1: inline script for a Deno script"
+    === "Inline script for deno"
 
         This example defines a full-fledged Deno script
         within the `KeptnTaskDefinition` YAML file:
@@ -365,7 +363,7 @@ file.
         {% include "../../assets/crd/examples/inline-script-for-deno-script.yaml" %} 
         ```
 
-    === "Example 1: inline code for a python-runtime runner"
+    === "Inline script for python"
     
         You can embed python code directly in the task definition.
         This example prints data stored in the parameters map:
@@ -374,11 +372,9 @@ file.
         {% include "../../assets/crd/python-inline.yaml" %}
         ```
 
-### HttpRef
+??? example "HttpRef"
 
-??? example
-
-    === "Example 2: httpRef script for a Deno script"
+    === "httpRef for deno"
     
         This example fetches the Deno script from a remote webserver at runtime:
     
@@ -390,17 +386,15 @@ file.
         and [sample-app/version-1](https://github.com/keptn-sandbox/lifecycle-toolkit-examples/blob/main/sample-app/version-1/app-pre-deploy.yaml)
         PodtatoHead example for a more complete example.
     
-    === "Example 2: httpRef for a python-runtime runner"
+    === "httpRef for python"
     
         ```yaml
         {% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/lifecycle-operator/config/samples/python_execution/taskdefinition_pyfunction_upstream_hellopy.yaml" %}
         ```
 
-### FunctionRef
+??? example "FunctionRef"
 
-??? example
-
-    === "Example 3: functionRef for a Deno script"
+    === "functionRef for deno"
     
         This example calls another defined task,
         illustrating how one `KeptnTaskDefinition` can build
@@ -412,7 +406,7 @@ file.
         {% include "../../assets/crd/examples/functionref-for-deno-script.yaml" %} 
         ```
 
-    === "Example 3: functionRef for a python-runtime runner"
+    === "functionRef for python"
     
         You can refer to an existing `KeptnTaskDefinition`.
         this example calls the inline example
@@ -422,11 +416,9 @@ file.
         {% include "../../assets/crd/python-recursive.yaml" %}
         ```
 
-### ConfigMap and ConfigMapRef
+??? example "ConfigMap and ConfigMapRef"
 
-??? example
-
-    === "Example 4: ConfigMapRef for a Deno script"
+    === "ConfigMapRef for deno"
     
         This example references a `ConfigMap` by the name of `dev-configmap`
         that contains the code for the function to be executed.
@@ -435,7 +427,7 @@ file.
         {% include "../../assets/crd/examples/configmap-for-deno-script.yaml" %} 
         ```
     
-    === "Example 4: ConfigMapRef for a python-runtime runner"
+    === "ConfigMapRef for python"
     
         In this example the python runner refers to an existing configMap 
         called `python-test-cm`
@@ -443,12 +435,11 @@ file.
         ```yaml
         {% include "../../assets/crd/python-configmap.yaml" %}
         ```
+=
 
-### Example for Accessing KEPTN_CONTEXT environment variable
+??? example "Accessing KEPTN_CONTEXT environment variable"
 
-??? example
-
-    === "Example 5: Accessing KEPTN_CONTEXT environment variable in a Deno task"
+    === "Accessing KEPTN_CONTEXT in a Deno task"
     
         For Tasks triggered as pre- and post- deployment of applications
         on Kubernetes, Keptn populates an environment variable called `KEPTN_CONTEXT`.
@@ -460,7 +451,7 @@ file.
         console.log(context);
         ```
     
-    === "Example 5: Accessing KEPTN_CONTEXT environment variable in a Python task"
+    === "Accessing KEPTN_CONTEXT in a Python task"
     
         For Tasks triggered as pre- and post- deployment of applications
         on Kubernetes, Keptn populates an environment variable called `KEPTN_CONTEXT`.
@@ -476,8 +467,7 @@ file.
         print(meta)
         ```
 
-### Passing secrets, environment variables and modifying the runner command
-??? example
+??? example "Passing secrets, environment variables and modifying the runner command"
 
     === "deno"
     

@@ -352,7 +352,7 @@ file.
 
 ## Examples for deno-runtime and python-runtime runners
 
-<!-- markdownlint-disable MD046 -->
+<!-- markdownlint-disable MD046 MD013 -->
 
 ??? example "Inline scripts"
 
@@ -493,7 +493,7 @@ file.
     {% include "../../assets/crd/python-context.yaml" %}
     ```
 
-<!-- markdownlint-enable MD046 -->
+<!-- markdownlint-enable MD046 MD013-->
 
 ## More examples
 

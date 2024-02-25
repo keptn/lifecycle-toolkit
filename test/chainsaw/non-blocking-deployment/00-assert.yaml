@@ -20,7 +20,7 @@ status:
   preDeploymentTaskStatus:
     - definitionName: failing-task
       status: Failed
-  promotionStatus: Pending
+  promotionStatus: Succeeded
   status: Succeeded
   workloadOverallStatus: Succeeded
   workloadStatus:

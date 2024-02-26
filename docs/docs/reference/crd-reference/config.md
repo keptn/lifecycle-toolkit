@@ -39,6 +39,8 @@ spec:
       to put into the same auto-generated [KeptnApp](app.md).
       The default value is 30 (seconds).
     * **cloudEventsEndpoint** -- Endpoint where the lifecycle operator posts Cloud Events.
+    * **blockDeployment** -- An option used to block the deployment of the application until the
+      pre-deployment tasks and evaluations succeed.
 
 ## Usage
 
@@ -49,7 +51,10 @@ Each cluster should have a single `KeptnConfig` CRD that describes all configura
 ### OTel example
 
 This example specifies the URL of the OpenTelemetry collector
-and that the automatic app discovery should be run every 40 seconds:
+and that the automatic app discovery should be run every 40 seconds.
+Additionally the CloudEvents endpoint URL is specified and the
+blocking of the deployment of the application is disabled in case
+of the pre-deployment task or evaluation failure.
 
 ```yaml
 apiVersion: options.keptn.sh/v1alpha2
@@ -60,6 +65,7 @@ spec:
   OTelCollectorUrl: 'otel-collector:4317'
   keptnAppCreationRequestTimeoutSeconds: 40
   cloudEventsEndpoint: 'http://endpoint.com'
+  blockDeployment: false
 ```
 
 ## Files

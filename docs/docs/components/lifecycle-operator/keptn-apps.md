@@ -50,7 +50,8 @@ Implementing Keptn applications provides the following benefits:
   that must all complete successfully
   before the scheduler binds the pods to the nodes.
   On information about how to disable the blocking
-  functionality please refer to [this section](#keptn-non-blocking-deployment-functionality).
+  functionality please refer to
+  [this section](./keptn-non-blocking.md#keptn-non-blocking-deployment-functionality).
 * You can define post-deployment evaluations and tasks
   that run only after all the workloads have completed successfully.
 * You can define promotion tasks that run only after all the post-deployment
@@ -125,30 +126,3 @@ annotation/label is populated:
   (in other words, neither the `keptn.sh/app`
   or `app.kubernetes.io/part-of` annotation/label is populated),
   one `KeptnApp` resource is created automatically for each workload.
-
-## Keptn non-blocking deployment functionality
-
-Keptn provides an option to disable the default deployment blocking functionality
-when pre-deployment tasks or evaluations (on KeptnApp or KeptnWorkload level) fail.
-By creating a [KeptnConfig](../../reference/crd-reference/config.md) resources and
-setting the `.spec.blockDeployment` parameter of to `false` the blocking
-behavior for Keptn is disabled and therefore all applications will get deployed
-to the cluster whether the pre-deployment tasks or evaluations fail.
-
-This behavior is valuable if you want to execute a dry-run of the
-tasks/evaluations for the application, but still have your application deployed
-to the cluster not depending on the results of the pre-checks.
-
-If the checks of the application fail, the state of the deployment phase
-are marked as `Warning` and you are able to inspect which
-of the checks has failed.
-
-```yaml
-{% include "./assets/non-blocking-deployment.yaml" %}
-```
-
-Additionally, you are still able
-to inspect the traces of your application deployment.
-The failed checks are marked and visible in the traces.
-
-![non-blocking-deployment-trace](./assets/non-blocking-deployment.png)

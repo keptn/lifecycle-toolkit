@@ -3,7 +3,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: scheduled-deployment
 spec:
-  function:
+  deno:
     configMapRef:
       name: scheduled-deployment-cm-1
 ---

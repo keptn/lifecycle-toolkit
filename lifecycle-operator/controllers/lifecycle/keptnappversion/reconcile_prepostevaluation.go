@@ -21,7 +21,7 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Conte
 		return apicommon.StateUnknown, err
 	}
 
-	overallState := apicommon.GetOverallStateBlockedDeployment(apicommon.GetOverallState(state), r.Config.GetBlockDeployment())
+	overallState := apicommon.GetOverallStateBlockedDeployment(state, r.Config.GetBlockDeployment())
 
 	switch checkType {
 	case apicommon.PreDeploymentEvaluationCheckType:

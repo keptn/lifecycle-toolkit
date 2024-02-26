@@ -30,7 +30,7 @@ func (r *KeptnWorkloadVersionReconciler) reconcilePrePostDeployment(ctx context.
 		return apicommon.StateUnknown, err
 	}
 
-	overallState := apicommon.GetOverallStateBlockedDeployment(apicommon.GetOverallState(state), r.Config.GetBlockDeployment())
+	overallState := apicommon.GetOverallStateBlockedDeployment(state, r.Config.GetBlockDeployment())
 
 	switch checkType {
 	case apicommon.PreDeploymentCheckType:

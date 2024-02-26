@@ -130,7 +130,8 @@ func GetOverallState(s StatusSummary) KeptnState {
 	return StateSucceeded
 }
 
-func GetOverallStateBlockedDeployment(state KeptnState, blockedDeployment bool) KeptnState {
+func GetOverallStateBlockedDeployment(s StatusSummary, blockedDeployment bool) KeptnState {
+	state := GetOverallState(s)
 	if !blockedDeployment && state == StateFailed {
 		return StateWarning
 	}

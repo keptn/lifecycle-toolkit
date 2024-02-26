@@ -133,7 +133,7 @@ when pre-deployment tasks or evaluations (on KeptnApp or KeptnWorkload level) fa
 By creating a [KeptnConfig](../../reference/crd-reference/config.md) resources and
 setting the `.spec.blockDeployment` parameter of to `false` the blocking
 behavior for Keptn is disabled and therefore all applications will get deployed
-to the cluster wheather the pre-deployment tasks or evaluations fail.
+to the cluster whether the pre-deployment tasks or evaluations fail.
 
 This behavior is valuable if you want to execute a dry-run of the
 tasks/evaluations for the application, but still have your application deployed

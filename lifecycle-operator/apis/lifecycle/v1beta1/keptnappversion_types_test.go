@@ -8,13 +8,12 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestKeptnAppVersion(t *testing.T) {
 	app := &KeptnAppVersion{
-		ObjectMeta: metav1.ObjectMeta{
+		ObjectMeta: v1.ObjectMeta{
 			Name:      "app",
 			Namespace: "namespace",
 		},
@@ -83,19 +82,19 @@ func TestKeptnAppVersion(t *testing.T) {
 	}
 
 	require.True(t, app.IsPreDeploymentCompleted())
-	require.False(t, app.IsPreDeploymentSucceeded())
+	require.False(t, app.IsPreDeploymentSucceeded(true))
 	require.True(t, app.IsPreDeploymentFailed())
 
 	require.True(t, app.IsPreDeploymentEvaluationCompleted())
-	require.False(t, app.IsPreDeploymentEvaluationSucceeded())
+	require.False(t, app.IsPreDeploymentEvaluationSucceeded(true))
 	require.True(t, app.IsPreDeploymentEvaluationFailed())
 
 	require.True(t, app.IsPostDeploymentCompleted())
-	require.False(t, app.IsPostDeploymentSucceeded())
+	require.False(t, app.IsPostDeploymentSucceeded(true))
 	require.True(t, app.IsPostDeploymentFailed())
 
 	require.True(t, app.IsPostDeploymentEvaluationCompleted())
-	require.False(t, app.IsPostDeploymentEvaluationSucceeded())
+	require.False(t, app.IsPostDeploymentEvaluationSucceeded(true))
 	require.True(t, app.IsPostDeploymentEvaluationFailed())
 
 	require.True(t, app.IsPromotionCompleted())
@@ -105,6 +104,28 @@ func TestKeptnAppVersion(t *testing.T) {
 	require.True(t, app.AreWorkloadsCompleted())
 	require.False(t, app.AreWorkloadsSucceeded())
 	require.True(t, app.AreWorkloadsFailed())
+
+	app.Status.PreDeploymentStatus = common.StateWarning
+	app.Status.PreDeploymentEvaluationStatus = common.StateWarning
+	app.Status.PostDeploymentStatus = common.StateWarning
+	app.Status.PostDeploymentEvaluationStatus = common.StateWarning
+
+	require.False(t, app.IsPreDeploymentSucceeded(true))
+	require.True(t, app.IsPreDeploymentSucceeded(false))
+
+	require.False(t, app.IsPreDeploymentEvaluationSucceeded(true))
+	require.True(t, app.IsPreDeploymentEvaluationSucceeded(false))
+
+	require.False(t, app.IsPostDeploymentSucceeded(true))
+	require.True(t, app.IsPostDeploymentSucceeded(false))
+
+	require.False(t, app.IsPostDeploymentEvaluationSucceeded(true))
+	require.True(t, app.IsPostDeploymentEvaluationSucceeded(false))
+
+	app.Status.PreDeploymentStatus = common.StateFailed
+	app.Status.PreDeploymentEvaluationStatus = common.StateFailed
+	app.Status.PostDeploymentStatus = common.StateFailed
+	app.Status.PostDeploymentEvaluationStatus = common.StateFailed
 
 	require.False(t, app.IsEndTimeSet())
 	require.False(t, app.IsStartTimeSet())
@@ -257,7 +278,7 @@ func TestKeptnAppVersion(t *testing.T) {
 		AppName:              app.GetParentName(),
 		EvaluationDefinition: "eval-def",
 		Type:                 common.PostDeploymentCheckType,
-		RetryInterval: metav1.Duration{
+		RetryInterval: v1.Duration{
 			Duration: 5 * time.Second,
 		},
 	}, evaluation.Spec)
@@ -503,7 +524,7 @@ func TestKeptnAppVersionList(t *testing.T) {
 	list := KeptnAppVersionList{
 		Items: []KeptnAppVersion{
 			{
-				ObjectMeta: metav1.ObjectMeta{
+				ObjectMeta: v1.ObjectMeta{
 					Name: "obj1",
 				},
 				Status: KeptnAppVersionStatus{
@@ -511,7 +532,7 @@ func TestKeptnAppVersionList(t *testing.T) {
 				},
 			},
 			{
-				ObjectMeta: metav1.ObjectMeta{
+				ObjectMeta: v1.ObjectMeta{
 					Name: "obj2",
 				},
 				Status: KeptnAppVersionStatus{

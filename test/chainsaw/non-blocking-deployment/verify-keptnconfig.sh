@@ -8,7 +8,7 @@ for i in $(seq 1 $RETRY_COUNT); do
     VAR=$(kubectl logs -n "$NAMESPACE" -l control-plane=lifecycle-operator --tail=-1 | grep -c "reconciling Keptn Config")
     # shellcheck disable=SC1072
     if [ "$VAR" -ge 1 ]; then
-      echo "Controller could access secret"
+      echo "Controller reconciled KeptnConfig"
       exit 0
     fi
     if [ "$i" -lt "$RETRY_COUNT" ]; then

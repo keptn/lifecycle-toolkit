@@ -55,11 +55,11 @@ const (
 	StateUnknown     KeptnState = "Unknown"
 	StatePending     KeptnState = "Pending"
 	StateDeprecated  KeptnState = "Deprecated"
-	// Deprecated: Use StateDeprecated instead. Should only be used in checks for backwards compatibility reasons
+	StateWarning     KeptnState = "Warning"
 )
 
 func (k KeptnState) IsCompleted() bool {
-	return k == StateSucceeded || k == StateFailed || k == StateDeprecated
+	return k == StateSucceeded || k == StateFailed || k == StateDeprecated || k == StateWarning
 }
 
 func (k KeptnState) IsSucceeded() bool {
@@ -76,6 +76,10 @@ func (k KeptnState) IsDeprecated() bool {
 
 func (k KeptnState) IsPending() bool {
 	return k == StatePending
+}
+
+func (k KeptnState) IsWarning() bool {
+	return k == StateWarning
 }
 
 type StatusSummary struct {
@@ -126,6 +130,14 @@ func GetOverallState(s StatusSummary) KeptnState {
 	return StateSucceeded
 }
 
+func GetOverallStateBlockedDeployment(s StatusSummary, blockedDeployment bool) KeptnState {
+	state := GetOverallState(s)
+	if !blockedDeployment && state == StateFailed {
+		return StateWarning
+	}
+	return state
+}
+
 func TruncateString(s string, max int) string {
 	if len(s) > max {
 		return s[:max]
@@ -157,6 +169,7 @@ type KeptnMeters struct {
 	AppDuration        metric.Float64Histogram
 	EvaluationCount    metric.Int64Counter
 	EvaluationDuration metric.Float64Histogram
+	PromotionCount     metric.Int64Counter
 }
 
 const (

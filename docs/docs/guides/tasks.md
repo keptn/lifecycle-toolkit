@@ -243,8 +243,15 @@ your workloads and tasks in a `KeptnApp` (for instance a commit ID value).
 To do so, the metadata needs to be specified for the workload or for the application.
 Follow our guide on [Context and Metadata here](./metadata.md).
 
-For an example of how to access the `KEPTN_CONTEXT`, follow our
-[reference page](../reference/crd-reference/taskdefinition.md#example-6-accessing-keptn_context-environment-variable-in-a-deno-task)
+<!-- markdownlint-disable MD046 max-one-sentence-per-line-->
+
+!!! note
+
+    For an example of how to access the `KEPTN_CONTEXT`, follow our reference page examples
+    [for deno](../reference/crd-reference/taskdefinition.md#accessing-keptn_context-in-a-deno-task)
+    and [for python](../reference/crd-reference/taskdefinition.md#accessing-keptn_context-in-a-python-task).
+
+<!-- markdownlint-enable MD046 max-one-sentence-per-line-->
 
 ## Parameterized functions
 

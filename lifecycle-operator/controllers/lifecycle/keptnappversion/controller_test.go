@@ -11,6 +11,7 @@ import (
 	"github.com/go-logr/logr"
 	lfcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	evalfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
@@ -453,6 +454,7 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 		TracerFactory: tf,
 		SpanHandler:   spanRecorder,
 		Meters:        testcommon.InitAppMeters(),
+		Config:        config.Instance(),
 		EvaluationHandler: &evalfake.MockEvaluationHandler{
 			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]lfcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
 				return []lfcv1beta1.ItemStatus{}, apicommon.StatusSummary{}, nil

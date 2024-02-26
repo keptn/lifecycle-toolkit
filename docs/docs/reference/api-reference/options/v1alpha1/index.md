@@ -66,5 +66,6 @@ _Appears in:_
 | `OTelCollectorUrl` _string_ | OTelCollectorUrl can be used to set the Open Telemetry collector that the lifecycle operator should use || ✓ |
 | `keptnAppCreationRequestTimeoutSeconds` _integer_ | KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery searches for workload to put into the same auto-generated KeptnApp |30| ✓ |
 | `cloudEventsEndpoint` _string_ | CloudEventsEndpoint can be used to set the endpoint where Cloud Events should be posted by the lifecycle operator || ✓ |
+| `blockDeployment` _boolean_ | BlockDeployment is used to block the deployment of the application until the pre-deployment tasks and evaluations succeed |true| ✓ |
 
 

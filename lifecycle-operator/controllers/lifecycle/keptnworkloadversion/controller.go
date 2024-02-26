@@ -26,6 +26,7 @@ import (
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
@@ -62,6 +63,7 @@ type KeptnWorkloadVersionReconciler struct {
 	TracerFactory     telemetry.TracerFactory
 	EvaluationHandler evaluation.IEvaluationHandler
 	PhaseHandler      phase.IHandler
+	Config            config.IConfig
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnworkloadversions,verbs=get;list;watch;create;update;patch;delete
@@ -153,7 +155,7 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 }
 
 func (r *KeptnWorkloadVersionReconciler) doPreDeploymentTaskPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
-	if !workloadVersion.IsPreDeploymentSucceeded() {
+	if !workloadVersion.IsPreDeploymentSucceeded(r.Config.GetBlockDeployment()) {
 		reconcilePre := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadVersion, apicommon.PreDeploymentCheckType)
 		}
@@ -171,7 +173,7 @@ func (r *KeptnWorkloadVersionReconciler) doPreDeploymentTaskPhase(ctx context.Co
 }
 
 func (r *KeptnWorkloadVersionReconciler) doPreDeploymentEvaluationPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
-	if !workloadVersion.IsPreDeploymentEvaluationSucceeded() {
+	if !workloadVersion.IsPreDeploymentEvaluationSucceeded(r.Config.GetBlockDeployment()) {
 		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadVersion, apicommon.PreDeploymentEvaluationCheckType)
 		}
@@ -207,7 +209,7 @@ func (r *KeptnWorkloadVersionReconciler) doDeploymentPhase(ctx context.Context, 
 }
 
 func (r *KeptnWorkloadVersionReconciler) doPostDeploymentTaskPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
-	if !workloadVersion.IsPostDeploymentCompleted() {
+	if !workloadVersion.IsPostDeploymentSucceeded(r.Config.GetBlockDeployment()) {
 		reconcilePost := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadVersion, apicommon.PostDeploymentCheckType)
 		}
@@ -225,7 +227,7 @@ func (r *KeptnWorkloadVersionReconciler) doPostDeploymentTaskPhase(ctx context.C
 }
 
 func (r *KeptnWorkloadVersionReconciler) doPostDeploymentEvaluationPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
-	if !workloadVersion.IsPostDeploymentEvaluationSucceeded() {
+	if !workloadVersion.IsPostDeploymentEvaluationSucceeded(r.Config.GetBlockDeployment()) {
 		reconcilePostEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadVersion, apicommon.PostDeploymentEvaluationCheckType)
 		}
@@ -233,7 +235,7 @@ func (r *KeptnWorkloadVersionReconciler) doPostDeploymentEvaluationPhase(ctx con
 			ctxWorkloadTrace,
 			r.getTracer(),
 			workloadVersion,
-			apicommon.PhaseAppPostEvaluation,
+			apicommon.PhaseWorkloadPostEvaluation,
 			reconcilePostEval,
 		)
 	}

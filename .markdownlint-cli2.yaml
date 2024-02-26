@@ -9,7 +9,6 @@ config:
     allowed_elements:
       - details
       - summary
-      - a
   github-admonition: true
   max-one-sentence-per-line: true
 

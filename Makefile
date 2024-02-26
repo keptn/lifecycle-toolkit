@@ -33,6 +33,7 @@ integration-test:
 	chainsaw test --test-dir ./test/chainsaw/integration/
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/
 	chainsaw test --test-dir ./test/chainsaw/testcertificate/
+	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
 integration-test-local:
@@ -41,6 +42,7 @@ integration-test-local:
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testcertificate/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/ --config ./.chainsaw-local.yaml
 
 .PHONY: integration-test-scheduling-gates #these tests should run on a real cluster!
 integration-test-scheduling-gates:

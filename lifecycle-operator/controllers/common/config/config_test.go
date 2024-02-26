@@ -55,3 +55,12 @@ func TestConfig_SetAndGetCloudEventEndpoint(t *testing.T) {
 	i.SetCloudEventsEndpoint("mytestendpoint")
 	require.Equal(t, "mytestendpoint", i.GetCloudEventsEndpoint())
 }
+
+func TestConfig_SetAndGetBlockDeployment(t *testing.T) {
+	i := Instance()
+
+	blocked := i.GetBlockDeployment()
+	require.True(t, blocked)
+	i.SetBlockDeployment(false)
+	require.False(t, i.GetBlockDeployment())
+}

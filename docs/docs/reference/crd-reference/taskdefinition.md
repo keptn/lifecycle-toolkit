@@ -278,7 +278,7 @@ and Keptn sets up the container and runs the script as part of the task.
                 Note that, currently, only one secret can be passed
                 per `KeptnTaskDefinition` resource.
 
-                  See [Create secret text](../../guides/tasks.md#create-secret-text)
+                See [Create secret text](../../guides/tasks.md#create-secret-text)
                 for details.
                 Also see examples on secret usage in tasks runner
                 for [deno](./#env-var-in-deno) and [python](./#env-var-in-python).

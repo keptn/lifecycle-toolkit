@@ -72,6 +72,7 @@ var _ = BeforeSuite(func() {
 		TracerFactory:     tracerFactory,
 		EvaluationHandler: evaluationHandler,
 		PhaseHandler:      phaseHandler,
+		Config:            config.Instance(),
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 	close(readyToStart)

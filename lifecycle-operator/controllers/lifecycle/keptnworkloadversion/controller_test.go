@@ -10,6 +10,7 @@ import (
 
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	evaluationfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
@@ -22,7 +23,6 @@ import (
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
-	testrequire "github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	appsv1 "k8s.io/api/apps/v1"
@@ -51,8 +51,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedReplicaSet(t *
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableReplicaSet(t *testing.T) {
@@ -69,8 +69,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableReplicaSe
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.NotNil(t, err)
-	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
+	require.NotNil(t, err)
+	require.Equal(t, apicommon.StateUnknown, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedStatefulSet(t *testing.T) {
@@ -85,8 +85,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedStatefulSet(t 
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableStatefulSet(t *testing.T) {
@@ -103,8 +103,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableStatefulS
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.NotNil(t, err)
-	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
+	require.NotNil(t, err)
+	require.Equal(t, apicommon.StateUnknown, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedDaemonSet(t *testing.T) {
@@ -119,8 +119,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedDaemonSet(t *t
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableDaemonSet(t *testing.T) {
@@ -135,8 +135,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableDaemonSet
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.NotNil(t, err)
-	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
+	require.NotNil(t, err)
+	require.Equal(t, apicommon.StateUnknown, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyReplicaSet(t *testing.T) {
@@ -152,8 +152,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyReplicaSet(t *t
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateSucceeded, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyStatefulSet(t *testing.T) {
@@ -169,8 +169,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyStatefulSet(t *
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateSucceeded, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyDaemonSet(t *testing.T) {
@@ -185,8 +185,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyDaemonSet(t *te
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateSucceeded, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnsupportedReferenceKind(t *testing.T) {
@@ -198,8 +198,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnsupportedReference
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.ErrorIs(t, err, controllererrors.ErrUnsupportedWorkloadVersionResourceReference)
-	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
+	require.ErrorIs(t, err, controllererrors.ErrUnsupportedWorkloadVersionResourceReference)
+	require.Equal(t, apicommon.StateUnknown, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_IsPodRunning(t *testing.T) {
@@ -211,7 +211,7 @@ func TestKeptnWorkloadVersionReconciler_IsPodRunning(t *testing.T) {
 		Client: k8sfake.NewClientBuilder().WithLists(podList).Build(),
 	}
 	isPodRunning, err := r.isPodRunning(context.TODO(), klcv1beta1.ResourceReference{UID: "pod1"}, "node1")
-	testrequire.Nil(t, err)
+	require.Nil(t, err)
 	if !isPodRunning {
 		t.Errorf("Wrong!")
 	}
@@ -220,7 +220,7 @@ func TestKeptnWorkloadVersionReconciler_IsPodRunning(t *testing.T) {
 		Client: k8sfake.NewClientBuilder().WithLists(podList2).Build(),
 	}
 	isPodRunning, err = r2.isPodRunning(context.TODO(), klcv1beta1.ResourceReference{UID: "pod1"}, "node1")
-	testrequire.Nil(t, err)
+	require.Nil(t, err)
 	if isPodRunning {
 		t.Errorf("Wrong!")
 	}
@@ -1047,6 +1047,7 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, ch
 		Meters:        testcommon.InitAppMeters(),
 		SpanHandler:   spanHandlerMock,
 		TracerFactory: tf,
+		Config:        config.Instance(),
 		EvaluationHandler: &evaluationfake.MockEvaluationHandler{
 			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
 				return []klcv1beta1.ItemStatus{}, apicommon.StatusSummary{}, nil

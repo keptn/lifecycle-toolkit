@@ -183,16 +183,22 @@ func (a KeptnAppVersion) IsPreDeploymentEvaluationCompleted() bool {
 	return a.Status.PreDeploymentEvaluationStatus.IsCompleted()
 }
 
-func (a KeptnAppVersion) IsPreDeploymentSucceeded() bool {
-	return a.Status.PreDeploymentStatus.IsSucceeded()
+func (a KeptnAppVersion) IsPreDeploymentSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return a.Status.PreDeploymentStatus.IsSucceeded()
+	}
+	return a.Status.PreDeploymentStatus.IsSucceeded() || a.Status.PreDeploymentStatus.IsWarning()
 }
 
 func (a KeptnAppVersion) IsPreDeploymentFailed() bool {
 	return a.Status.PreDeploymentStatus.IsFailed()
 }
 
-func (a KeptnAppVersion) IsPreDeploymentEvaluationSucceeded() bool {
-	return a.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+func (a KeptnAppVersion) IsPreDeploymentEvaluationSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return a.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+	}
+	return a.Status.PreDeploymentEvaluationStatus.IsSucceeded() || a.Status.PreDeploymentEvaluationStatus.IsWarning()
 }
 
 func (a KeptnAppVersion) IsPreDeploymentEvaluationFailed() bool {
@@ -219,16 +225,22 @@ func (a KeptnAppVersion) IsPromotionFailed() bool {
 	return a.Status.PromotionStatus.IsFailed()
 }
 
-func (a KeptnAppVersion) IsPostDeploymentEvaluationSucceeded() bool {
-	return a.Status.PostDeploymentEvaluationStatus.IsSucceeded()
+func (a KeptnAppVersion) IsPostDeploymentEvaluationSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return a.Status.PostDeploymentEvaluationStatus.IsSucceeded()
+	}
+	return a.Status.PostDeploymentEvaluationStatus.IsSucceeded() || a.Status.PostDeploymentEvaluationStatus.IsWarning()
 }
 
 func (a KeptnAppVersion) IsPostDeploymentEvaluationFailed() bool {
 	return a.Status.PostDeploymentEvaluationStatus.IsFailed()
 }
 
-func (a KeptnAppVersion) IsPostDeploymentSucceeded() bool {
-	return a.Status.PostDeploymentStatus.IsSucceeded()
+func (a KeptnAppVersion) IsPostDeploymentSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return a.Status.PostDeploymentStatus.IsSucceeded()
+	}
+	return a.Status.PostDeploymentStatus.IsSucceeded() || a.Status.PostDeploymentStatus.IsWarning()
 }
 
 func (a KeptnAppVersion) IsPromotionSucceeded() bool {

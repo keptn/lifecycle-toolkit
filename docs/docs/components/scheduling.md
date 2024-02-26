@@ -99,7 +99,7 @@ the Pod is not bound to a node and it remains in a Pending state.
 > **Note**
 The blocking behavior can be changed by enabling the non-blocking
 deployment functionality by populating a
-[KeptnConfig](../../reference/crd-reference/config.md) resource and
+[KeptnConfig](../reference/crd-reference/config.md) resource and
 setting the `.spec.blockDeployment` parameter to `false`.
 More about the non-blocking deployment functionality
 can be found in the

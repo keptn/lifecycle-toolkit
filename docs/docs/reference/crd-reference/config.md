@@ -17,6 +17,7 @@ spec:
   OTelCollectorUrl: '<otelurl:port>'
   keptnAppCreationRequestTimeoutSeconds: <#-seconds>
   cloudEventsEndpoint: <endpoint>
+  blockDeployment: <true|false>
 ```
 
 ## Fields
@@ -41,6 +42,8 @@ spec:
     * **cloudEventsEndpoint** -- Endpoint where the lifecycle operator posts Cloud Events.
     * **blockDeployment** -- An option used to block the deployment of the application until the
       pre-deployment tasks and evaluations succeed.
+      For more information see the
+      [non-blocking deployment section](../../components/lifecycle-operator/keptn-non-blocking.md).
 
 ## Usage
 
@@ -85,3 +88,4 @@ API Reference:
 * [KeptnApp](./app.md)
 * [OpenTelemetry observability](../../guides/otel.md)
 * [Keptn automatic app discovery](../../guides/auto-app-discovery.md)
+* [Keptn non-blocking deployment](../../components/lifecycle-operator/keptn-non-blocking.md)

@@ -253,7 +253,6 @@ Follow our guide on [Context and Metadata here](./metadata.md).
 
 <!-- markdownlint-enable MD046 max-one-sentence-per-line-->
 
-
 ## Parameterized functions
 
 `KeptnTaskDefinition`s can use input parameters.

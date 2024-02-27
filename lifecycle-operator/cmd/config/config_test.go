@@ -27,6 +27,7 @@ users:
     password: test-password
     username: test-username
 `
+
 func TestConfigProvider_NewKubeConfigProvider(t *testing.T) {
 	provider := NewKubeConfigProvider()
 	require.NotNil(t, provider)

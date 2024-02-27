@@ -45,7 +45,7 @@ const (
 	AppTypeMultiService  AppType = "multi-service"
 )
 
-// KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+// KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
 type KeptnState string
 
 const (

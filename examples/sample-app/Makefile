@@ -16,7 +16,7 @@ port-forward-grafana:
 
 .PHONY: deploy-version-1
 deploy-version-1:
-	kubectl apply -k version-1 -o test.yaml
+	kubectl apply -k version-1
 
 .PHONY: deploy-version-2
 deploy-version-2:

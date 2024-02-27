@@ -27,24 +27,20 @@ users:
     password: test-password
     username: test-username
 `
+func TestConfigProvider_NewKubeConfigProvider(t *testing.T) {
+	provider := NewKubeConfigProvider()
+	require.NotNil(t, provider)
+}
 
-func TestConfigProvider(t *testing.T) {
-	t.Run("NewKubeConfigProvider", func(t *testing.T) {
-		provider := NewKubeConfigProvider()
-		require.NotNil(t, provider)
-	})
+func TestConfigProvider_GetConfigSuccess(t *testing.T) {
+	tempDir := setupMockedKubeConfig(t)
+	defer os.RemoveAll(tempDir)
 
-	t.Run("GetConfigSuccess", func(t *testing.T) {
+	provider := NewKubeConfigProvider()
 
-		tempDir := setupMockedKubeConfig(t)
-		defer os.RemoveAll(tempDir)
-
-		provider := NewKubeConfigProvider()
-
-		config, err := provider.GetConfig()
-		require.Nil(t, err)
-		require.NotNil(t, config)
-	})
+	config, err := provider.GetConfig()
+	require.Nil(t, err)
+	require.NotNil(t, config)
 }
 
 func setupMockedKubeConfig(t *testing.T) string {

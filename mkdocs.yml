@@ -33,6 +33,8 @@ theme:
     - search.highlight
     - content.code.copy
     - content.code.annotate
+  icon:
+    annotation: material/arrow-right-circle
 site_url: !ENV READTHEDOCS_CANONICAL_URL
 repo_name: keptn/lifecycle-toolkit
 repo_url: https://github.com/keptn/lifecycle-toolkit
@@ -95,6 +97,8 @@ markdown_extensions:
       slugify: !!python/object/apply:pymdownx.slugs.slugify
         kwds:
           case: lower
+  - attr_list
+  - md_in_html
 
 nav:
   - Home:
@@ -144,6 +148,7 @@ nav:
               - docs/components/lifecycle-operator/index.md
               - Flow of deployment: docs/components/lifecycle-operator/deployment-flow.md
               - Keptn Applications and Keptn Workloads: docs/components/lifecycle-operator/keptn-apps.md
+              - Keptn non-blocking application deployment: docs/components/lifecycle-operator/keptn-non-blocking.md
           - Metrics Operator: docs/components/metrics-operator.md
           - Scheduler and Scheduling Gates: docs/components/scheduling.md
           - Keptn Certificate Manager: docs/components/certificate-operator.md

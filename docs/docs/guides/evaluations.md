@@ -10,7 +10,7 @@ or "Is my remote database accessible?"
 or check for other problems in your infrastructure.
 It can be defined to run before or after your software is deployed.
 
-When an evaluation is run pre-deployment,
+When a pre-deployment evaluation is run, by default,
 the deployment is kept in a pending state
 until the evaluation passes with a successful result.
 

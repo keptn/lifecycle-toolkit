@@ -101,8 +101,8 @@ Note the following:
   that are required for the deployment.
 - The `KeptnMetric` resources that are referenced
   in a `KeptnEvaluationDefinition` resource
-  - can be defined on different namespaces in the cluster
-  - can query different instances of different types of metric providers
+    - can be defined on different namespaces in the cluster
+    - can query different instances of different types of metric providers
 - All objectives within a `KeptnEvaluationDefinition` resource
   are evaluated in order.
   If the evaluation of any objective fails,

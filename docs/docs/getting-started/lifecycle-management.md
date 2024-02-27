@@ -236,7 +236,7 @@ page to find out more.
 
 To learn more about the non-blocking deployment functionality
 please see the
-[Keptn non-blocking deployment section](./keptn-non-blocking.md).
+[Keptn non-blocking deployment section](../components/lifecycle-operator/keptn-non-blocking.md).
 
 ## What's next?
 

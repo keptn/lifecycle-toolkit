@@ -47,7 +47,7 @@ deployment functionality by populating a
 setting the `.spec.blockDeployment` parameter to `false`.
 More about the non-blocking deployment functionality
 can be found in the
-[Keptn non-blocking deployment section](./keptn-non-blocking.md).
+[Keptn non-blocking deployment section](../components/lifecycle-operator/keptn-non-blocking.md).
 
 ## I have pending Pods after Keptn is uninstalled
 

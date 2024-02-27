@@ -57,20 +57,14 @@ Each cluster should have a single `KeptnConfig` CRD that describes all configura
 
 This example specifies:
 
-* the URL of the OpenTelemetry collector (1)
-* automatic app discovery (2) that should be run every 40 seconds
-* CloudEvents endpoint URL (3)
-* blocking functionality of the deployment of the application is disabled (4) in case
+* the URL of the OpenTelemetry collector
+* automatic app discovery that should be run every 40 seconds
+* CloudEvents endpoint URL
+* blocking functionality of the deployment of the application is disabled in case
   of the pre-deployment task or evaluation failure
-{ .annotate }
-
-1. `.spec.OTelCollectorUrl`
-2. `.spec.keptnAppCreationRequestTimeoutSeconds`
-3. `.spec.cloudEventsEndpoint`
-4. `.spec.blockDeployment`
 
 ```yaml
-apiVersion: options.keptn.sh/v1alpha2
+apiVersion: options.keptn.sh/v1alpha1
 kind: KeptnConfig
 metadata:
   name: keptn-config

@@ -234,7 +234,7 @@ See the
 [Deployment tasks](../guides/tasks.md)
 page to find out more.
 
-To learn more about the non-blocking deployment functionality
+To learn more about making pre-task and pre-evaluations non-blocking
 please see the
 [Keptn non-blocking deployment section](../components/lifecycle-operator/keptn-non-blocking.md).
 

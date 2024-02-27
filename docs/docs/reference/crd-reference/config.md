@@ -17,7 +17,7 @@ spec:
   OTelCollectorUrl: '<otelurl:port>'
   keptnAppCreationRequestTimeoutSeconds: <#-seconds>
   cloudEventsEndpoint: <endpoint>
-  blockDeployment: <true|false>
+  blockDeployment: true | false
 ```
 
 ## Fields

@@ -68,6 +68,12 @@ If all evaluations and tasks in a phase are successful,
 the `KeptnApp` issues the appropriate `*Succeeded` event
 and initiates the next phase.
 
+> **Note**
+This behavior can be changed by configuring non-blocking deployment
+functionality.
+More information can be found in the
+[Keptn non-blocking deployment section](./keptn-non-blocking.md).
+
 ## Summary of deployment flow
 
 To view these events on your cluster, execute:

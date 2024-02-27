@@ -1749,7 +1749,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -1782,7 +1782,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -1815,7 +1815,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -1848,7 +1848,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -1881,7 +1881,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -7869,7 +7869,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -7902,7 +7902,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -7935,7 +7935,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -7968,7 +7968,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array

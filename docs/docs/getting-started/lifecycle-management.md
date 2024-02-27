@@ -184,7 +184,7 @@ Here is a full version of the new YAML:
 Keptn Tasks can also be executed pre-deployment (before the Pods are scheduled).
 Do this by using the `keptn.sh/pre-deployment-tasks` label or annotation.
 
-> Note: If a pre-deployment task fails, the `Pod` remains in a Pending state.
+> Note: If a pre-deployment task fails, by default, the `Pod` remains in a Pending state.
 
 ## More control over the application
 
@@ -233,6 +233,10 @@ You can do much more with `KeptnTask` resources.
 See the
 [Deployment tasks](../guides/tasks.md)
 page to find out more.
+
+To learn more about making pre-task and pre-evaluations non-blocking
+please see the
+[Keptn non-blocking deployment section](../components/lifecycle-operator/keptn-non-blocking.md).
 
 ## What's next?
 

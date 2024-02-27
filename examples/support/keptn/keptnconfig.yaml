@@ -4,4 +4,4 @@ metadata:
   name: keptnconfig-sample
 spec:
   OTelCollectorUrl: 'otel-collector:4317'
-  keptnAppCreationRequestTimeoutSeconds: 40
+  keptnAppCreationRequestTimeoutSeconds: 30

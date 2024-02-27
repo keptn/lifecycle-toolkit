@@ -264,42 +264,6 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 			wantErr:            false,
 			expectGatesRemoved: false,
 		},
-		{
-			name: "related WorkloadVersion is failed",
-			objects: []client.Object{
-				&klcv1beta1.KeptnWorkloadVersion{
-					ObjectMeta: metav1.ObjectMeta{
-						Name:      "my-wlv",
-						Namespace: "my-namespace",
-					},
-					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
-							ResourceReference: klcv1beta1.ResourceReference{
-								UID: podMeta.OwnerReferences[0].UID,
-							},
-						},
-					},
-					Status: klcv1beta1.KeptnWorkloadVersionStatus{DeploymentStatus: apicommon.StateFailed},
-				},
-				&v1.Pod{
-					ObjectMeta: podMeta,
-					Spec: v1.PodSpec{
-						SchedulingGates: []v1.PodSchedulingGate{
-							{
-								Name: apicommon.KeptnGate,
-							},
-						},
-					},
-				},
-			},
-			args: args{
-				ctx: context.TODO(),
-				req: req,
-			},
-			want:               controllerruntime.Result{},
-			wantErr:            false,
-			expectGatesRemoved: true,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

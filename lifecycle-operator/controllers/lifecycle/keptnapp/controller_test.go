@@ -155,6 +155,7 @@ func TestKeptnAppReconciler_createAppVersionError(t *testing.T) {
 		},
 	})
 	require.NotNil(t, err)
+	require.EqualError(t, err, "unexpected error")
 }
 func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {
 	//nolint:gci
@@ -333,6 +334,7 @@ func TestKeptnAppReconciler_deprecateAppVersionsError(t *testing.T) {
 	})
 
 	require.NotNil(t, err)
+	require.EqualError(t, err, "unexpected error")
 }
 
 func setupReconciler(objs ...client.Object) (*KeptnAppReconciler, chan string) {

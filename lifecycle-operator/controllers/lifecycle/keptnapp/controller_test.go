@@ -334,7 +334,7 @@ func TestKeptnAppReconciler_deprecateAppVersionsError(t *testing.T) {
 	})
 
 	require.NotNil(t, err)
-	require.EqualError(t, err, "unexpected error")
+	require.EqualError(t, err, "keptnapps.lifecycle.keptn.sh myapp not found")
 }
 
 func setupReconciler(objs ...client.Object) (*KeptnAppReconciler, chan string) {

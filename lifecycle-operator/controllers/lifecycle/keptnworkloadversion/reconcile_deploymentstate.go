@@ -2,6 +2,7 @@ package keptnworkloadversion
 
 import (
 	"context"
+	"time"
 
 	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
@@ -9,6 +10,7 @@ import (
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -16,6 +18,15 @@ import (
 func (r *KeptnWorkloadVersionReconciler) reconcileDeployment(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion) (apicommon.KeptnState, error) {
 	var isRunning bool
 	var err error
+
+	if isDeploymentTimedOut(workloadVersion) {
+		workloadVersion.Status.DeploymentStatus = apicommon.StateFailed
+		err = r.Client.Status().Update(ctx, workloadVersion)
+		if err != nil {
+			return apicommon.StateUnknown, err
+		}
+		return workloadVersion.Status.DeploymentStatus, nil
+	}
 
 	switch workloadVersion.Spec.ResourceReference.Kind {
 	case "Pod":
@@ -33,10 +44,14 @@ func (r *KeptnWorkloadVersionReconciler) reconcileDeployment(ctx context.Context
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}
+
+	if workloadVersion.Status.DeploymentStatus == apicommon.StatePending {
+		workloadVersion.Status.DeploymentStartTime = metav1.NewTime(time.Now().UTC())
+		workloadVersion.Status.DeploymentStatus = apicommon.StateProgressing
+	}
+
 	if isRunning {
 		workloadVersion.Status.DeploymentStatus = apicommon.StateSucceeded
-	} else {
-		workloadVersion.Status.DeploymentStatus = apicommon.StateProgressing
 	}
 
 	err = r.Client.Status().Update(ctx, workloadVersion)
@@ -44,6 +59,16 @@ func (r *KeptnWorkloadVersionReconciler) reconcileDeployment(ctx context.Context
 		return apicommon.StateUnknown, err
 	}
 	return workloadVersion.Status.DeploymentStatus, nil
+}
+
+func isDeploymentTimedOut(workloadVersion *klcv1beta1.KeptnWorkloadVersion) bool {
+	if workloadVersion.Status.DeploymentStatus == apicommon.StatePending {
+		return false
+	}
+
+	startTimePlusTimeout := workloadVersion.Status.DeploymentStartTime.Add(workloadVersion.Spec.DeploymentTimeout.Duration)
+	currentTime := time.Now().UTC()
+	return currentTime.After(startTimePlusTimeout)
 }
 
 func (r *KeptnWorkloadVersionReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1beta1.ResourceReference, namespace string) (bool, error) {

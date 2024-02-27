@@ -61,6 +61,14 @@ type KeptnWorkloadSpec struct {
 	// +optional
 	// Metadata contains additional key-value pairs for contextual information.
 	Metadata map[string]string `json:"metadata,omitempty"`
+	// DeploymentTimeout specifies the maximum time to wait for the deployment to be in Running state.
+	// If the workload does not deploy successfully within this time frame, it will be
+	// considered to be failed.
+	// +kubebuilder:default:="1m"
+	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+	// +kubebuilder:validation:Type:=string
+	// +optional
+	DeploymentTimeout metav1.Duration `json:"deploymentTimeout,omitempty"`
 }
 
 // KeptnWorkloadStatus defines the observed state of KeptnWorkload

@@ -329,6 +329,14 @@ spec:
               app:
                 description: AppName is the name of the KeptnApp containing the KeptnWorkload.
                 type: string
+              deploymentTimeout:
+                default: 1m
+                description: |-
+                  DeploymentTimeout specifies the maximum time to wait for the deployment to be in Running state.
+                  If the workload does not deploy successfully within this time frame, it will be
+                  considered to be failed.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
               metadata:
                 additionalProperties:
                   type: string

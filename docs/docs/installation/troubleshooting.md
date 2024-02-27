@@ -43,7 +43,7 @@ kubectl -n prod logs job/...
 > **Note**
 This blocking behavior can be changed by enabling the non-blocking
 deployment functionality by populating a
-[KeptnConfig](../../reference/crd-reference/config.md) resource and
+[KeptnConfig](../reference/crd-reference/config.md) resource and
 setting the `.spec.blockDeployment` parameter to `false`.
 More about the non-blocking deployment functionality
 can be found in the

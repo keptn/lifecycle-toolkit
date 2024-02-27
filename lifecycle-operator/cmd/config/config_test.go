@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 const configContent = `apiVersion: v1
@@ -31,7 +32,7 @@ users:
 func TestConfigProvider(t *testing.T) {
 	t.Run("NewKubeConfigProvider", func(t *testing.T) {
 		provider := NewKubeConfigProvider()
-		assert.NotNil(t, provider)
+		require.NotNil(t, provider)
 	})
 
 	t.Run("GetConfigSuccess", func(t *testing.T) {
@@ -42,8 +43,8 @@ func TestConfigProvider(t *testing.T) {
 		provider := NewKubeConfigProvider()
 
 		config, err := provider.GetConfig()
-		assert.NoError(t, err)
-		assert.NotNil(t, config)
+		require.Nil(t, err)
+		require.NotNil(t, config)
 	})
 }
 
@@ -52,10 +53,10 @@ func setupMockedKubeConfig(t *testing.T) string {
 
 	kubeConfigFile := filepath.Join(tempDir, ".kube", "config")
 	err := os.MkdirAll(filepath.Dir(kubeConfigFile), 0755)
-	assert.NoError(t, err)
+	require.Nil(t, err)
 
 	err = os.WriteFile(kubeConfigFile, []byte(configContent), 0644)
-	assert.NoError(t, err)
+	require.Nil(t, err)
 
 	t.Setenv("HOME", tempDir)
 

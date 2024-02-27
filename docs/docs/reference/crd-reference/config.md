@@ -55,11 +55,13 @@ Each cluster should have a single `KeptnConfig` CRD that describes all configura
 
 ## Example
 
-This example specifies the URL of the OpenTelemetry collector (1)
-and that the automatic app discovery (2) should be run every 40 seconds.
-Additionally the CloudEvents endpoint URL (3) is specified and the
-blocking of the deployment of the application is disabled (4) in case
-of the pre-deployment task or evaluation failure.
+This example specifies:
+
+* the URL of the OpenTelemetry collector (1)
+* automatic app discovery (2) that should be run every 40 seconds
+* CloudEvents endpoint URL (3)
+* blocking functionality of the deployment of the application is disabled (4) in case
+  of the pre-deployment task or evaluation failure
 { .annotate }
 
 1. `.spec.OTelCollectorUrl`

@@ -17,7 +17,7 @@ spec:
   OTelCollectorUrl: '<otelurl:port>'
   keptnAppCreationRequestTimeoutSeconds: <#-seconds>
   cloudEventsEndpoint: <endpoint>
-  blockDeployment: <bool>
+  blockDeployment: <true|false>
 ```
 
 ## Fields
@@ -40,8 +40,12 @@ spec:
       to put into the same auto-generated [KeptnApp](app.md).
       The default value is 30 (seconds).
     * **cloudEventsEndpoint** -- Endpoint where the lifecycle operator posts Cloud Events.
-    * **blockDeployment** -- An option used to block the deployment of the application until the
+    * **blockDeployment** -- If set to `true` (default), application deployment is blocked until the
       pre-deployment tasks and evaluations succeed.
+      You can set this field to `false` when building up
+      your pre-deployment tasks and evaluations
+      so that your application is deployed
+      even if the pre-deployment tasks and/or evaluations fail.
       For more information see the
       [non-blocking deployment section](../../components/lifecycle-operator/keptn-non-blocking.md).
 

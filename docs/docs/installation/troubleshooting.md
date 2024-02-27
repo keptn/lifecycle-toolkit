@@ -40,6 +40,15 @@ kubectl -n prod get pods
 kubectl -n prod logs job/...
 ```
 
+> **Note**
+This blocking behavior can be changed by enabling the non-blocking
+deployment functionality by populating a
+[KeptnConfig](../../reference/crd-reference/config.md) resource and
+setting the `.spec.blockDeployment` parameter to `false`.
+More about the non-blocking deployment functionality
+can be found in the
+[Keptn non-blocking deployment section](./keptn-non-blocking.md).
+
 ## I have pending Pods after Keptn is uninstalled
 
 > **Note** This section particularly affects clusters managed by ArgoCD.

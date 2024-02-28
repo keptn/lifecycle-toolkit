@@ -5,8 +5,8 @@
 ![goversion](https://img.shields.io/github/go-mod/go-version/keptn/lifecycle-toolkit?filename=lifecycle-operator/go.mod)
 ![version](https://img.shields.io/github/v/release/keptn/lifecycle-toolkit)
 [![GitHub Discussions](https://img.shields.io/github/discussions/keptn/lifecycle-toolkit)](https://github.com/keptn/lifecycle-toolkit/discussions)
-[![Artificathub](https://artifacthub.io/packages/helm/lifecycle-toolkit/keptn)](https://artifacthub.io/packages/helm/lifecycle-toolkit/keptn)
-[![openssf best practices](https://www.bestpractices.dev/en/projects/3588)](https://www.bestpractices.dev/en/projects/3588)
+[![Artifacthub Badge](https://img.shields.io/badge/Keptn-blue?style=flat&logo=artifacthub&label=Artifacthub&link=https%3%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Flifecycle-toolkit%2Fkeptn)](https://artifacthub.io/packages/helm/lifecycle-toolkit/keptn)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/3588/badge)](https://www.bestpractices.dev/projects/3588)
 
 This is the primary repository for
 the Keptn software and documentation.

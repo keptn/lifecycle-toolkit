@@ -77,7 +77,7 @@ func createWorkloadInCluster(name string, namespace string, version string, appl
 		Spec: klcv1beta1.KeptnWorkloadSpec{
 			AppName:           applicationName,
 			Version:           version,
-			ResourceReference: klcv1beta1.ResourceReference{UID: types.UID("uid"), Kind: "Pod", Name: "pod1"},
+			ResourceReference: klcv1beta1.ResourceReference{UID: types.UID("uid"), Kind: "ReplicaSet", Name: "replicaset1"},
 		},
 	}
 	By("Invoking Reconciling for Create")

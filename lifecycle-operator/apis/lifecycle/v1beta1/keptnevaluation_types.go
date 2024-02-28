@@ -58,8 +58,6 @@ type KeptnEvaluationSpec struct {
 	// +kubebuilder:validation:Type:=string
 	// +optional
 	RetryInterval metav1.Duration `json:"retryInterval,omitempty"`
-	// +optional
-	FailAction string `json:"failAction,omitempty"`
 	// Type indicates whether the KeptnEvaluation is part of the pre- or postDeployment phase.
 	// +optional
 	Type common.CheckType `json:"checkType,omitempty"`

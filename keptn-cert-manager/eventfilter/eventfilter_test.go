@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 )
 
 const (
@@ -75,4 +76,33 @@ func Test_matchesName(t *testing.T) {
 	}
 
 	assert.False(t, matchesName(deployment, []string{"my-deployment"}))
+}
+
+func Test_matchesLabels(t *testing.T) {
+	deployment := &v1.Deployment{
+		ObjectMeta: metav1.ObjectMeta{
+			Labels: map[string]string{
+				"app": "test",
+				"env": "dev",
+			},
+		},
+	}
+
+	firstSelector := labels.SelectorFromSet(labels.Set{
+		"app": "test",
+		"env": "dev", // different value for 'env'
+	})
+
+	assert.True(t, matchesLabels(deployment, firstSelector))
+
+	secondSelectors := labels.SelectorFromSet(labels.Set{
+		"app": "test",
+		"env": "prod",
+	})
+
+	assert.False(t, matchesLabels(deployment, secondSelectors))
+
+	deploymentNoLabels := &v1.Deployment{}
+
+	assert.False(t, matchesLabels(deploymentNoLabels, firstSelector))
 }

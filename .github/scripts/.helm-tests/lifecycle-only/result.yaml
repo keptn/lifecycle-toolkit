@@ -2095,8 +2095,6 @@ spec:
                 type: string
               evaluationDefinition:
                 type: string
-              failAction:
-                type: string
               retries:
                 default: 10
                 type: integer

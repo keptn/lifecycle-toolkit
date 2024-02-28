@@ -45,7 +45,6 @@ argocd
 argoproj
 ARMO
 artifacthub
-Artificathub
 asdfg
 authurl
 automerge
@@ -373,6 +372,7 @@ kyverno
 lastword
 Lato
 LFC
+libexpat
 Lifcycle
 lifecyclekeptnsh
 linenums
@@ -448,7 +448,6 @@ onsi
 opencontainers
 openfeature
 Openshift
-openssf
 opentelemetry
 opentracing
 operatorcommon

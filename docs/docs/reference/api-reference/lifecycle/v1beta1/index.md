@@ -110,6 +110,22 @@ _Appears in:_
 | `message` _string_ | Message contains additional information about the evaluation of an objective. This can include explanations about why an evaluation has failed (e.g. due to a missed objective), or if there was any error during the evaluation of the objective. || ✓ |
 
 
+#### FailureConditions
+
+
+
+
+
+_Appears in:_
+- [KeptnEvaluationDefinitionSpec](#keptnevaluationdefinitionspec)
+- [KeptnEvaluationSpec](#keptnevaluationspec)
+
+| Field | Description | Default | Optional |
+| --- | --- | --- | --- |
+| `retries` _integer_ | Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or missed evaluation objective, before considering the KeptnEvaluation to be failed. |10| ✓ |
+| `retryInterval` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ | RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error or a missed objective. |5s| ✓ |
+
+
 #### FunctionReference
 
 
@@ -521,6 +537,8 @@ _Appears in:_
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `objectives` _[Objective](#objective) array_ | Objectives is a list of objectives that have to be met for a KeptnEvaluation referencing this KeptnEvaluationDefinition to be successful. || x |
+| `retries` _integer_ | Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or missed evaluation objective, before considering the KeptnEvaluation to be failed. |10| ✓ |
+| `retryInterval` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ | RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error or a missed objective. |5s| ✓ |
 
 
 #### KeptnEvaluationList
@@ -555,9 +573,9 @@ _Appears in:_
 | `appName` _string_ | AppName defines the KeptnApp for which the KeptnEvaluation is done. || ✓ |
 | `appVersion` _string_ | AppVersion defines the version of the KeptnApp for which the KeptnEvaluation is done. || ✓ |
 | `evaluationDefinition` _string_ | EvaluationDefinition refers to the name of the KeptnEvaluationDefinition which includes the objectives for the KeptnEvaluation. The KeptnEvaluationDefinition can be located in the same namespace as the KeptnEvaluation, or in the Keptn namespace. || x |
+| `checkType` _string_ | Type indicates whether the KeptnEvaluation is part of the pre- or postDeployment phase. || ✓ |
 | `retries` _integer_ | Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or missed evaluation objective, before considering the KeptnEvaluation to be failed. |10| ✓ |
 | `retryInterval` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ | RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error or a missed objective. |5s| ✓ |
-| `checkType` _string_ | Type indicates whether the KeptnEvaluation is part of the pre- or postDeployment phase. || ✓ |
 
 
 #### KeptnEvaluationStatus

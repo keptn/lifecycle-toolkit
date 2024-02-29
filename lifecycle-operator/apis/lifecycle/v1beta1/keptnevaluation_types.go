@@ -45,22 +45,10 @@ type KeptnEvaluationSpec struct {
 	// The KeptnEvaluationDefinition can be
 	// located in the same namespace as the KeptnEvaluation, or in the Keptn namespace.
 	EvaluationDefinition string `json:"evaluationDefinition"`
-	// Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
-	// missed evaluation objective, before considering the KeptnEvaluation to be failed.
-	// +kubebuilder:default:=10
-	// +optional
-	Retries int `json:"retries,omitempty"`
-	// RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error
-	// or a missed objective.
-	// +optional
-	// +kubebuilder:default:="5s"
-	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
-	// +kubebuilder:validation:Type:=string
-	// +optional
-	RetryInterval metav1.Duration `json:"retryInterval,omitempty"`
 	// Type indicates whether the KeptnEvaluation is part of the pre- or postDeployment phase.
 	// +optional
-	Type common.CheckType `json:"checkType,omitempty"`
+	Type              common.CheckType `json:"checkType,omitempty"`
+	FailureConditions `json:",inline"`
 }
 
 // KeptnEvaluationStatus defines the observed state of KeptnEvaluation

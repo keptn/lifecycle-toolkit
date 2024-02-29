@@ -429,8 +429,9 @@ func (w KeptnWorkloadVersion) GenerateEvaluation(evaluationDefinition KeptnEvalu
 			Workload:             w.GetParentName(),
 			EvaluationDefinition: evaluationDefinition.Name,
 			Type:                 checkType,
-			RetryInterval: metav1.Duration{
-				Duration: 5 * time.Second,
+			FailureConditions: FailureConditions{
+				RetryInterval: evaluationDefinition.Spec.RetryInterval,
+				Retries:       evaluationDefinition.Spec.Retries,
 			},
 		},
 	}

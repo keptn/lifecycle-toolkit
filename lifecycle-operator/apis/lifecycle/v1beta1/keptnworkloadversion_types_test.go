@@ -251,6 +251,14 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 		ObjectMeta: v1.ObjectMeta{
 			Name: "eval-def",
 		},
+		Spec: KeptnEvaluationDefinitionSpec{
+			FailureConditions: FailureConditions{
+				RetryInterval: v1.Duration{
+					Duration: 5 * time.Second,
+				},
+				Retries: 5,
+			},
+		},
 	}, common.PostDeploymentCheckType)
 	require.Equal(t, KeptnEvaluationSpec{
 		AppName:              workload.GetAppName(),
@@ -258,8 +266,11 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 		Workload:             workload.GetParentName(),
 		EvaluationDefinition: "eval-def",
 		Type:                 common.PostDeploymentCheckType,
-		RetryInterval: v1.Duration{
-			Duration: 5 * time.Second,
+		FailureConditions: FailureConditions{
+			RetryInterval: v1.Duration{
+				Duration: 5 * time.Second,
+			},
+			Retries: 5,
 		},
 	}, evaluation.Spec)
 

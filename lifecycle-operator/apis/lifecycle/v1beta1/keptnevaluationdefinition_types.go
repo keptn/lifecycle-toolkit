@@ -24,7 +24,23 @@ import (
 type KeptnEvaluationDefinitionSpec struct {
 	// Objectives is a list of objectives that have to be met for a KeptnEvaluation referencing this
 	// KeptnEvaluationDefinition to be successful.
-	Objectives []Objective `json:"objectives"`
+	Objectives        []Objective `json:"objectives"`
+	FailureConditions `json:",inline"`
+}
+
+type FailureConditions struct {
+	// Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
+	// missed evaluation objective, before considering the KeptnEvaluation to be failed.
+	// +kubebuilder:default:=10
+	// +optional
+	Retries int `json:"retries,omitempty"`
+	// RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error
+	// or a missed objective.
+	// +kubebuilder:default:="5s"
+	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+	// +kubebuilder:validation:Type:=string
+	// +optional
+	RetryInterval metav1.Duration `json:"retryInterval,omitempty"`
 }
 
 type Objective struct {

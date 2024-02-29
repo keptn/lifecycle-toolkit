@@ -18,6 +18,8 @@ kind: KeptnEvaluationDefinition
 metadata:
   name: <evaluation-name>
 spec:
+  retries: <number-of-retries>
+  retryInterval: <duration>
   objectives:
     - evaluationTarget: "<value>"
       keptnMetricRef:
@@ -56,6 +58,16 @@ spec:
           This is used to define success or failure criteria for the referenced `KeptnMetric` in order to pass or fail
           the pre- and post-evaluation stages
 
+    * **retries** -- specifies the number of times
+      an `Keptnevaluation` defined by the `KeptnEvaluationDefinition`
+      should be restarted if an attempt is unsuccessful.
+      The default value is `10`.
+    * **retryInterval** -- specifies the time
+      to wait between the retries.
+      The value supplied should specify the unit of measurement;
+      for example, `5s` indicates 5 seconds and `5m` indicates 5 minutes.
+      The default value is `5s`.
+
 ## Usage
 
 A `KeptnEvaluationDefinition` references one or more [KeptnMetric](metric.md) resources.
@@ -78,6 +90,8 @@ metadata:
   name: my-prometheus-evaluation
   namespace: example
 spec:
+  retries: 5
+  retryInterval: 10s
   source: prometheus
   objectives:
     - keptnMetricRef:

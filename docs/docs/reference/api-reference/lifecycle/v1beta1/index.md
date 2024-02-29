@@ -11,6 +11,7 @@ Reference information for lifecycle.keptn.sh/v1beta1
 ## lifecycle.keptn.sh/v1beta1
 
 
+
 ### Resource Types
 - [KeptnApp](#keptnapp)
 - [KeptnAppContext](#keptnappcontext)
@@ -629,26 +630,13 @@ _Appears in:_
 
 
 
-#### KeptnPhaseType
-
-
-
-
-
-_Appears in:_
-- [KeptnPhase](#keptnphase)
-
-| Field | Description | Default | Optional |
-| --- | --- | --- | --- |
-| `LongName` _string_ |  || x |
-| `ShortName` _string_ |  || x |
 
 
 #### KeptnState
 
 _Underlying type:_ _string_
 
-KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
+
 
 _Appears in:_
 - [EvaluationStatusItem](#evaluationstatusitem)

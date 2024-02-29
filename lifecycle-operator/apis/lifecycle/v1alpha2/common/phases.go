@@ -1,4 +1,3 @@
-// +kubebuilder:skip
 package common
 
 import (

@@ -11,7 +11,6 @@ Reference information for lifecycle.keptn.sh/v1alpha1
 ## lifecycle.keptn.sh/v1alpha1
 
 
-
 ### Resource Types
 - [KeptnApp](#keptnapp)
 - [KeptnAppList](#keptnapplist)
@@ -455,13 +454,26 @@ _Appears in:_
 
 
 
+#### KeptnPhaseType
+
+
+
+
+
+_Appears in:_
+- [KeptnPhase](#keptnphase)
+
+| Field | Description | Default | Optional |
+| --- | --- | --- | --- |
+| `LongName` _string_ |  || x |
+| `ShortName` _string_ |  || x |
 
 
 #### KeptnState
 
 _Underlying type:_ _string_
 
-
+KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
 
 _Appears in:_
 - [EvaluationStatus](#evaluationstatus)
@@ -801,7 +813,7 @@ _Appears in:_
 
 _Underlying type:_ _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_
 
-
+PhaseTraceID is a map storing TraceIDs of OpenTelemetry spans in lifecycle phases
 
 _Appears in:_
 - [KeptnAppVersionStatus](#keptnappversionstatus)

@@ -106,6 +106,7 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           flags: ${{ matrix.config.name }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   build_image:
     name: Build Docker Image
@@ -193,6 +194,8 @@ jobs:
     name: Component Tests
     needs: prepare_ci_run
     uses: ./.github/workflows/component-test.yml
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration_tests:
     name: Integration Tests

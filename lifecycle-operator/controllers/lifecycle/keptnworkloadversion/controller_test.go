@@ -26,7 +26,6 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	appsv1 "k8s.io/api/apps/v1"
-	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -200,45 +199,6 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnsupportedReference
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	require.ErrorIs(t, err, controllererrors.ErrUnsupportedWorkloadVersionResourceReference)
 	require.Equal(t, apicommon.StateUnknown, keptnState)
-}
-
-func TestKeptnWorkloadVersionReconciler_IsPodRunning(t *testing.T) {
-	p1 := makeNominatedPod("pod1", "node1", v1.PodRunning)
-	p2 := makeNominatedPod("pod2", "node1", v1.PodPending)
-	podList := &v1.PodList{Items: []v1.Pod{p1, p2}}
-	podList2 := &v1.PodList{Items: []v1.Pod{p2}}
-	r := &KeptnWorkloadVersionReconciler{
-		Client: k8sfake.NewClientBuilder().WithLists(podList).Build(),
-	}
-	isPodRunning, err := r.isPodRunning(context.TODO(), klcv1beta1.ResourceReference{UID: "pod1"}, "node1")
-	require.Nil(t, err)
-	if !isPodRunning {
-		t.Errorf("Wrong!")
-	}
-
-	r2 := &KeptnWorkloadVersionReconciler{
-		Client: k8sfake.NewClientBuilder().WithLists(podList2).Build(),
-	}
-	isPodRunning, err = r2.isPodRunning(context.TODO(), klcv1beta1.ResourceReference{UID: "pod1"}, "node1")
-	require.Nil(t, err)
-	if isPodRunning {
-		t.Errorf("Wrong!")
-	}
-
-}
-
-func makeNominatedPod(podName string, nodeName string, phase v1.PodPhase) v1.Pod {
-	return v1.Pod{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: nodeName,
-			Name:      podName,
-			UID:       types.UID(podName),
-		},
-		Status: v1.PodStatus{
-			Phase:             phase,
-			NominatedNodeName: nodeName,
-		},
-	}
 }
 
 func makeReplicaSet(name string, namespace string, wanted *int32, available int32) *appsv1.ReplicaSet {

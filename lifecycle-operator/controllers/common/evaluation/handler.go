@@ -108,7 +108,21 @@ func (r Handler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Cont
 				&evaluationStatus,
 			)
 			if err != nil {
-				return nil, summary, err
+				if errors.IsNotFound(err) {
+					r.Log.Info("EvaluationDefinition for Evaluation not found",
+						"evaluation", evaluationStatus.Name,
+						"evaluationDefinition", evaluationName,
+						"namespace", piWrapper.GetNamespace(),
+					)
+				} else {
+					// log the error, but continue to proceed with other evaluations that may be created
+					r.Log.Error(err, "Could not create evaluation",
+						"evaluation", evaluationStatus.Name,
+						"evaluationDefinition", evaluationName,
+						"namespace", piWrapper.GetNamespace(),
+					)
+				}
+				continue
 			}
 		} else {
 			r.handleEvaluationExists(
@@ -181,8 +195,12 @@ func (r Handler) setupEvaluations(evaluationCreateAttributes CreateEvaluationAtt
 }
 
 func (r Handler) handleEvaluationNotExists(ctx context.Context, phaseCtx context.Context, evaluationCreateAttributes CreateEvaluationAttributes, evaluationName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, evaluation *klcv1beta1.KeptnEvaluation, evaluationStatus *klcv1beta1.ItemStatus) error {
-	evaluationCreateAttributes.Definition.Name = evaluationName
-	evaluationName, err := r.CreateKeptnEvaluation(ctx, reconcileObject, evaluationCreateAttributes)
+	definition, err := common.GetEvaluationDefinition(r.Client, r.Log, ctx, evaluationName, piWrapper.GetNamespace())
+	if err != nil {
+		return controllererrors.ErrCannotGetKeptnEvaluationDefinition
+	}
+	evaluationCreateAttributes.Definition = *definition
+	evaluationName, err = r.CreateKeptnEvaluation(ctx, reconcileObject, evaluationCreateAttributes)
 	if err != nil {
 		return err
 	}

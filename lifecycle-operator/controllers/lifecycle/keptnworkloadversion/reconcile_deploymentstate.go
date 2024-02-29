@@ -8,9 +8,7 @@ import (
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	appsv1 "k8s.io/api/apps/v1"
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func (r *KeptnWorkloadVersionReconciler) reconcileDeployment(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion) (apicommon.KeptnState, error) {
@@ -18,8 +16,6 @@ func (r *KeptnWorkloadVersionReconciler) reconcileDeployment(ctx context.Context
 	var err error
 
 	switch workloadVersion.Spec.ResourceReference.Kind {
-	case "Pod":
-		isRunning, err = r.isPodRunning(ctx, workloadVersion.Spec.ResourceReference, workloadVersion.Namespace)
 	case "ReplicaSet":
 		isRunning, err = r.isReplicaSetRunning(ctx, workloadVersion.Spec.ResourceReference, workloadVersion.Namespace)
 	case "StatefulSet":
@@ -69,22 +65,6 @@ func (r *KeptnWorkloadVersionReconciler) isDaemonSetRunning(ctx context.Context,
 		return false, err
 	}
 	return daemonSet.Status.DesiredNumberScheduled == daemonSet.Status.NumberReady, nil
-}
-
-func (r *KeptnWorkloadVersionReconciler) isPodRunning(ctx context.Context, resource klcv1beta1.ResourceReference, namespace string) (bool, error) {
-	podList := &corev1.PodList{}
-	if err := r.Client.List(ctx, podList, client.InNamespace(namespace)); err != nil {
-		return false, err
-	}
-	for _, p := range podList.Items {
-		if p.UID == resource.UID {
-			if p.Status.Phase == corev1.PodRunning {
-				return true, nil
-			}
-			return false, nil
-		}
-	}
-	return false, nil
 }
 
 func (r *KeptnWorkloadVersionReconciler) isStatefulSetRunning(ctx context.Context, resource klcv1beta1.ResourceReference, namespace string) (bool, error) {

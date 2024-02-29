@@ -2,7 +2,7 @@
 apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
-  name: podtato-head-entry
+  name: podtatometric
   labels:
     app: podtato-head
 status:

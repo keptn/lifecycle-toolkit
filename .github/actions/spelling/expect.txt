@@ -19,6 +19,7 @@ Analysislog
 analysismetrics
 analysispool
 analysisspec
+analysisstate
 analysisstatus
 analysistypes
 analysisvaluetemplate
@@ -78,6 +79,7 @@ certwebhook
 chainsaw
 Chans
 Checkmarx
+checktype
 clientgoscheme
 cloudevents
 clt
@@ -320,9 +322,11 @@ keptnmetricsprovider
 keptnmetricsproviderlist
 keptnmetricsproviderspec
 keptnmetricstatus
+keptnphase
 keptnprommetrics
 keptnsandbox
 keptnserver
+keptnstate
 keptntask
 keptntaskdefinition
 keptntaskdefinitionlist

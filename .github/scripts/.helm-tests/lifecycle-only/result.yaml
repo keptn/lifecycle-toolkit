@@ -7248,6 +7248,14 @@ spec:
                 description: Metadata contains additional key-value pairs for contextual
                   information.
                 type: object
+              observabilityTimeout:
+                default: 5m
+                description: |-
+                  ObservabilityTimeout specifies the maximum time to observe the deployment phase of KeptnWorkload.
+                  If the workload does not deploy successfully within this time frame, it will be
+                  considered as failed.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
               postDeploymentEvaluations:
                 description: |-
                   PostDeploymentEvaluations is a list of all evaluations to be performed
@@ -7737,6 +7745,14 @@ spec:
                 description: Metadata contains additional key-value pairs for contextual
                   information.
                 type: object
+              observabilityTimeout:
+                default: 5m
+                description: |-
+                  ObservabilityTimeout specifies the maximum time to observe the deployment phase of KeptnWorkload.
+                  If the workload does not deploy successfully within this time frame, it will be
+                  considered as failed.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
               postDeploymentEvaluations:
                 description: |-
                   PostDeploymentEvaluations is a list of all evaluations to be performed
@@ -7829,6 +7845,11 @@ spec:
                   - Deployment
                   - PostDeploymentTasks
                   - PostDeploymentEvaluations
+                type: string
+              deploymentStartTime:
+                description: DeploymentStartTime represents the start time of the
+                  deployment phase
+                format: date-time
                 type: string
               deploymentStatus:
                 default: Pending

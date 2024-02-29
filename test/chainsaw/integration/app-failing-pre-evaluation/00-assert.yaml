@@ -30,5 +30,3 @@ spec:
     - evaluationTarget: ">1000"
       keptnMetricRef:
         name: available-cpus
-  retries: 10
-  retryInterval: 5s

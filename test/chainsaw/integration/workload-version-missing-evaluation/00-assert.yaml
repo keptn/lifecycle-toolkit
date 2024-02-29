@@ -6,7 +6,7 @@ status:
   currentPhase: AppDeploy
   postDeploymentEvaluationStatus: Pending
   postDeploymentStatus: Pending
-  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentEvaluationStatus: Unknown
   preDeploymentStatus: Succeeded
   status: Progressing
   workloadOverallStatus: Progressing

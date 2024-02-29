@@ -2,7 +2,7 @@
 apiVersion: chainsaw.kyverno.io/v1alpha1
 kind: Test
 metadata:
-  name: workload-instance-missing-evaluation
+  name: workload-version-missing-evaluation
 spec:
   namespaceTemplate:
     metadata:

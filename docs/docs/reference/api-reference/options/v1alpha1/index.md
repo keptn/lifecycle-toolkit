@@ -67,5 +67,6 @@ _Appears in:_
 | `keptnAppCreationRequestTimeoutSeconds` _integer_ | KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery searches for workload to put into the same auto-generated KeptnApp |30| ✓ |
 | `cloudEventsEndpoint` _string_ | CloudEventsEndpoint can be used to set the endpoint where Cloud Events should be posted by the lifecycle operator || ✓ |
 | `blockDeployment` _boolean_ | BlockDeployment is used to block the deployment of the application until the pre-deployment tasks and evaluations succeed |true| ✓ |
+| `deploymentTimeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ | DeploymentTimeout specifies the maximum time to wait for the deployment to be in Running state. If the workload does not deploy successfully within this time frame, it will be considered as failed. |5m| ✓ |
 
 

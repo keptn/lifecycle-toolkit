@@ -47,6 +47,15 @@ type KeptnConfigSpec struct {
 	// +kubebuilder:default:=true
 	// +optional
 	BlockDeployment bool `json:"blockDeployment,omitempty"`
+
+	// DeploymentTimeout specifies the maximum time to wait for the deployment to be in Running state.
+	// If the workload does not deploy successfully within this time frame, it will be
+	// considered as failed.
+	// +kubebuilder:default:="5m"
+	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+	// +kubebuilder:validation:Type:=string
+	// +optional
+	DeploymentTimeout metav1.Duration `json:"deploymentTimeout,omitempty"`
 }
 
 // +kubebuilder:object:root=true

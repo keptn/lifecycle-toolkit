@@ -12,7 +12,6 @@ Reference information for lifecycle.keptn.sh/v1beta1
 
 Package v1beta1 contains API Schema definitions for the lifecycle v1beta1 API group
 
-
 ### Resource Types
 - [KeptnApp](#keptnapp)
 - [KeptnAppContext](#keptnappcontext)

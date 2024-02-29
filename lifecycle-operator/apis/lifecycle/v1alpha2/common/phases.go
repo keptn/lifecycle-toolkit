@@ -1,5 +1,3 @@
-// +groupName=lifecycle.keptn.sh
-// +versionName=v1alpha2
 package common
 
 import (

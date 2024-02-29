@@ -11,7 +11,6 @@ Reference information for lifecycle.keptn.sh/v1alpha2
 ## lifecycle.keptn.sh/v1alpha2
 
 
-
 ### Resource Types
 - [KeptnApp](#keptnapp)
 - [KeptnAppList](#keptnapplist)

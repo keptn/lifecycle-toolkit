@@ -1,6 +1,9 @@
 name: Component Tests
 on:
   workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        required: false
 env:
   GO_VERSION: "~1.20"
 defaults:

@@ -194,6 +194,8 @@ jobs:
     name: Component Tests
     needs: prepare_ci_run
     uses: ./.github/workflows/component-test.yml
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration_tests:
     name: Integration Tests

@@ -19,6 +19,7 @@ var ErrCannotMarshalParams = fmt.Errorf("could not marshal parameters")
 var ErrNoTaskDefinitionSpec = fmt.Errorf("the TaskDefinition specs are empty")
 var ErrUnsupportedWorkloadVersionResourceReference = fmt.Errorf("unsupported Resource Reference")
 var ErrCannotGetKeptnTaskDefinition = fmt.Errorf("cannot retrieve KeptnTaskDefinition")
+var ErrCannotGetKeptnEvaluationDefinition = fmt.Errorf("cannot retrieve KeptnEvaluationDefinition")
 var ErrNoMatchingAppVersionFound = fmt.Errorf("no matching KeptnAppVersion found")
 
 var ErrCannotRetrieveConfigMsg = "could not retrieve KeptnConfig: %w"

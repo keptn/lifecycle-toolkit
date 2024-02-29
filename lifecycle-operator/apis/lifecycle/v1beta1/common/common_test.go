@@ -257,6 +257,11 @@ func Test_GeOverallState(t *testing.T) {
 			Summary: StatusSummary{1, 0, 0, 1, 0, 0, 0},
 			Want:    StateSucceeded,
 		},
+		{
+			Name:    "pending total count",
+			Summary: StatusSummary{2, 0, 0, 1, 0, 0, 0},
+			Want:    StatePending,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {

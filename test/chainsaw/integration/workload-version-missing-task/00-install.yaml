@@ -1,15 +1,3 @@
-apiVersion: lifecycle.keptn.sh/v1beta1
-kind: KeptnApp
-metadata:
-  name: podtato-head
-spec:
-  version: "1.3"
-  workloads:
-    - name: podtato-head-entry
-      version: 0.1.0
-  postDeploymentTasks:
-    - post-deployment-hello
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,7 +16,7 @@ spec:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-entry
         keptn.sh/version: 0.1.0
-        keptn.sh/pre-deployment-evaluations: missing-evaluation
+        keptn.sh/pre-deployment-tasks: missing-task
     spec:
       terminationGracePeriodSeconds: 5
       containers:

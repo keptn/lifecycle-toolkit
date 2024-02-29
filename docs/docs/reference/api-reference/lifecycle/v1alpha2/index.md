@@ -10,7 +10,6 @@ Reference information for lifecycle.keptn.sh/v1alpha2
 
 ## lifecycle.keptn.sh/v1alpha2
 
-Package v1alpha2 contains API Schema definitions for the lifecycle v1alpha2 API group
 
 ### Resource Types
 - [KeptnApp](#keptnapp)
@@ -29,6 +28,18 @@ Package v1alpha2 contains API Schema definitions for the lifecycle v1alpha2 API 
 - [KeptnWorkloadInstance](#keptnworkloadinstance)
 - [KeptnWorkloadInstanceList](#keptnworkloadinstancelist)
 - [KeptnWorkloadList](#keptnworkloadlist)
+
+
+
+#### CheckType
+
+_Underlying type:_ _string_
+
+
+
+_Appears in:_
+- [KeptnEvaluationSpec](#keptnevaluationspec)
+- [KeptnTaskSpec](#keptntaskspec)
 
 
 
@@ -437,6 +448,42 @@ _Appears in:_
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |
 
 
+
+
+
+
+#### KeptnPhaseType
+
+
+
+
+
+_Appears in:_
+- [KeptnPhase](#keptnphase)
+
+| Field | Description | Default | Optional |
+| --- | --- | --- | --- |
+| `LongName` _string_ |  || x |
+| `ShortName` _string_ |  || x |
+
+
+#### KeptnState
+
+_Underlying type:_ _string_
+
+KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+
+_Appears in:_
+- [EvaluationStatusItem](#evaluationstatusitem)
+- [ItemStatus](#itemstatus)
+- [KeptnAppVersionStatus](#keptnappversionstatus)
+- [KeptnEvaluationStatus](#keptnevaluationstatus)
+- [KeptnTaskStatus](#keptntaskstatus)
+- [KeptnWorkloadInstanceStatus](#keptnworkloadinstancestatus)
+- [WorkloadStatus](#workloadstatus)
+
+
+
 #### KeptnTask
 
 
@@ -759,6 +806,18 @@ _Appears in:_
 | `evaluationTarget` _string_ |  || x |
 
 
+#### PhaseTraceID
+
+_Underlying type:_ _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_
+
+
+
+_Appears in:_
+- [KeptnAppVersionStatus](#keptnappversionstatus)
+- [KeptnWorkloadInstanceStatus](#keptnworkloadinstancestatus)
+
+
+
 #### ResourceReference
 
 
@@ -789,6 +848,8 @@ _Appears in:_
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `secret` _string_ |  || ✓ |
+
+
 
 
 #### TaskContext

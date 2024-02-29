@@ -106,6 +106,7 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           flags: ${{ matrix.config.name }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   build_image:
     name: Build Docker Image

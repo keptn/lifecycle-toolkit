@@ -30,3 +30,4 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           flags: component-tests
+          token: ${{ secrets.CODECOV_TOKEN }}

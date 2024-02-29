@@ -114,7 +114,8 @@ _Appears in:_
 
 
 
-
+FailureConditions represent the failure conditions (number of retries and retry interval)
+for the evaluation to be considered as failed
 
 _Appears in:_
 - [KeptnEvaluationDefinitionSpec](#keptnevaluationdefinitionspec)

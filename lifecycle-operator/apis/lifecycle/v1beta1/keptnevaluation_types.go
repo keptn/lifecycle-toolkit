@@ -47,7 +47,9 @@ type KeptnEvaluationSpec struct {
 	EvaluationDefinition string `json:"evaluationDefinition"`
 	// Type indicates whether the KeptnEvaluation is part of the pre- or postDeployment phase.
 	// +optional
-	Type              common.CheckType `json:"checkType,omitempty"`
+	Type common.CheckType `json:"checkType,omitempty"`
+	// FailureConditions represent the failure conditions (number of retries and retry interval)
+	// for the evaluation to be considered as failed
 	FailureConditions `json:",inline"`
 }
 

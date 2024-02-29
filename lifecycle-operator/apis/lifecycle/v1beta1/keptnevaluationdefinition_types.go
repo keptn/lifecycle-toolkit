@@ -24,10 +24,14 @@ import (
 type KeptnEvaluationDefinitionSpec struct {
 	// Objectives is a list of objectives that have to be met for a KeptnEvaluation referencing this
 	// KeptnEvaluationDefinition to be successful.
-	Objectives        []Objective `json:"objectives"`
+	Objectives []Objective `json:"objectives"`
+	// FailureConditions represent the failure conditions (number of retries and retry interval)
+	// for the evaluation to be considered as failed
 	FailureConditions `json:",inline"`
 }
 
+// FailureConditions represent the failure conditions (number of retries and retry interval)
+// for the evaluation to be considered as failed
 type FailureConditions struct {
 	// Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
 	// missed evaluation objective, before considering the KeptnEvaluation to be failed.

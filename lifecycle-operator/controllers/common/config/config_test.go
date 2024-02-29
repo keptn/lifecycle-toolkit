@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestConfig_GetDefaultCreationRequestTimeout(t *testing.T) {
@@ -63,4 +64,20 @@ func TestConfig_SetAndGetBlockDeployment(t *testing.T) {
 	require.True(t, blocked)
 	i.SetBlockDeployment(false)
 	require.False(t, i.GetBlockDeployment())
+}
+
+func TestConfig_SetAndGetObservabilityTimeout(t *testing.T) {
+	i := Instance()
+
+	require.Equal(t, metav1.Duration{
+		Duration: time.Duration(5 * time.Minute),
+	}, i.GetObservabilityTimeout())
+
+	i.SetObservabilityTimeout(metav1.Duration{
+		Duration: time.Duration(10 * time.Minute),
+	})
+
+	require.Equal(t, metav1.Duration{
+		Duration: time.Duration(10 * time.Minute),
+	}, i.GetObservabilityTimeout())
 }

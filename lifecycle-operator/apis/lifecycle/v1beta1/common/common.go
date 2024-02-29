@@ -124,8 +124,11 @@ func GetOverallState(s StatusSummary) KeptnState {
 	if s.Pending > 0 {
 		return StatePending
 	}
-	if s.Unknown > 0 || s.GetTotalCount() != s.Total {
+	if s.Unknown > 0 {
 		return StateUnknown
+	}
+	if s.GetTotalCount() != s.Total {
+		return StatePending
 	}
 	return StateSucceeded
 }

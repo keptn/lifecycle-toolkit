@@ -2,6 +2,20 @@ name: Upgrade Helm Chart
 on:
   schedule:
     - cron: '0 1 * * 1-5'
+  workflow_call:
+    inputs:
+      runtime_tag:
+        description: "Tag for the deno and python runner images"
+        type: "string"
+        required: true
+      scheduling-gates:
+        description: "Decides whether to use scheduling gates"
+        type: "string"
+        default: gates_off
+      allowed-namespaces:
+        description: "Decides whether to allow only certain namespaces"
+        type: "string"
+        default: allowed_ns_off
 
 defaults:
   run:
@@ -64,8 +78,8 @@ jobs:
         run: |
           echo "Creating issue..."
           ACCESS_TOKEN="${{ secrets.ACCESS_TOKEN }}"
-          REPO_OWNER="${{ github.repository_owner }}"
-          REPO_NAME="${{ github.event.repository.name }}"
+          REPO_OWNER="keptn"
+          REPO_NAME="lifecycle-toolkit"
           ISSUE_TITLE="${{ needs.upgrade-helm-chart.outputs.upgrade_error_message }}"
           ISSUE_BODY="The Helm upgrade for the keptn chart has failed with the following error message:\n\n\`${{ needs.upgrade-helm-chart.outputs.upgrade_error_message }}\`"
           
@@ -73,3 +87,40 @@ jobs:
                -H "Accept: application/vnd.github.v3+json" \
                https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/issues \
                -d "{\"title\":\"$ISSUE_TITLE\",\"body\":\"$ISSUE_BODY\"}"
+  
+  run-integration-test:
+    name: Run Chainsaw Tests
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Install and expose Prometheus
+        uses: ./.github/actions/deploy-prometheus-on-cluster
+
+      - name: Install Chainsaw
+        uses: kyverno/action-install-chainsaw@v0.1.7
+
+      - name: Run Scheduling Gates Integration Tests
+        if: inputs.scheduling-gates == 'gates_on' && inputs.allowed-namespaces == 'allowed_ns_off'
+        working-directory: .
+        run: make integration-test-scheduling-gates
+
+      - name: Run Allowed namespaces Integration Tests
+        if: inputs.allowed-namespaces == 'allowed_ns_on'
+        working-directory: .
+        run: make integration-test-allowed-namespaces
+
+      - name: Run Integration Tests
+        if: inputs.allowed-namespaces == 'allowed_ns_off'
+        working-directory: .
+        run: make integration-test
+
+      - name: Create reports
+        if: failure()
+        working-directory: ./.github/scripts
+        run: ./create-reports-full.sh
+
+      - name: Upload cluster logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-integration-tests-${{ inputs.scheduling-gates }}-${{ inputs.allowed-namespaces }}
+          path: .github/scripts/logs

@@ -21,7 +21,7 @@ runs:
       with:
         go-version: ${{ env.GO_VERSION }}
         cache: true
-        cache-dependency-path: '**/go.sum'
+        cache-dependency-path: "**/go.sum"
         check-latest: true
 
     - name: Download artifacts
@@ -58,18 +58,5 @@ runs:
         helm repo add keptn "https://charts.lifecycle.keptn.sh"
         helm repo update
 
-        for chart_dir in ./lifecycle-operator/chart \
-                ./metrics-operator/chart \
-                ./keptn-cert-manager/chart \
-                ./chart; do
-            cd "$chart_dir"
-            echo "updating charts for" $chart_dir
-            helm dependency update
-            helm dependency build
-            cd -  # Return to the previous directory
-        done
-
-        cd .github/actions/deploy-keptn-on-cluster
-
         helm install -n keptn-system --create-namespace keptn keptn/keptn \
-          --debug --wait --timeout 10m
+          --debug --wait --timeout 5m

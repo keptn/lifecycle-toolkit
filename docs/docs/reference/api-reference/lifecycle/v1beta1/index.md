@@ -1008,7 +1008,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `uid` _[UID](#uid)_ |  || x |
+| `uid` _[UID](https://pkg.go.dev/k8s.io/apimachinery@v0.29.2/pkg/types#UID)_ |  || x |
 | `kind` _string_ |  || x |
 | `name` _string_ |  || x |
 

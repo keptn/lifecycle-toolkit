@@ -23,3 +23,6 @@ render:
     - name: MapCarrier
       package: "go.opentelemetry.io/otel/propagation"
       link: https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier
+    - name: UID
+      package: "k8s.io/apimachinery/pkg/types"
+      link: https://pkg.go.dev/k8s.io/apimachinery@v0.29.2/pkg/types#UID

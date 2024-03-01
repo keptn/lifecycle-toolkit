@@ -11,6 +11,15 @@ render:
     - name: ItemStatus
       package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3
       link: ../v1alpha3/index.md#itemstatus
+    - name: KeptnState
+      package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common
+      link: ../v1alpha3/index.md#keptnstate
+    - name: PhaseTraceId
+      package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common
+      link: ../v1alpha3/index.md#phasetraceid
+    - name: KeptnPhase
+      package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common
+      link: ../v1alpha3/index.md#keptnphase
     - name: Quantity
       package: "k8s.io/apimachinery/pkg/api/resource"
       link: https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity

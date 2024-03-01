@@ -221,18 +221,6 @@ each representing the results of a specific objective or performance metric.
     - **`value`** -- Indicates the actual value measured for this objective (value: 0).
     - **`score`** -- Indicates the score assigned to this objective (score: 1).
 
-- The second item in the array:
-    - **`result`** -- Similar to the first objective,
-      it checks whether a value is greater than 0 and has not been fulfilled (`fulfilled: false`).
-      There are no warning conditions in this case.
-    - **`objective`** -- Describes the objective related to error rate analysis.
-        - **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`error-rate`).
-        - **`target`** -- Sets the target value for failure (failure occurs if the value is greater than 0).
-        - **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
-        - **`keyObjective`** -- Indicates that this is a key objective (true).
-    - **`value`** -- Indicates the actual value measured for this objective (value: 0).
-    - **`score`** -- Indicates the score assigned to this objective (score: 1).
-
 **`totalScore`** -- Represents the total score achieved based on the objectives evaluated (totalScore: 2).
 
 **`maximumScore`** -- Indicates the maximum possible score (maximumScore: 2).

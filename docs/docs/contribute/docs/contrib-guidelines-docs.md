@@ -53,11 +53,11 @@ that are relevant only to documentation.
   This ensures that, when the sample file is updated,
   your document is also updated.
 
-    For example, to include the `examples/sample-app/version3/app-pre-deploy-eval.yaml` file,
+    For example, to include the `examples/sample-app/version1/app-pre-deploy-eval.yaml` file,
     the syntax is:
 
     ```md
-    {% /* include "examples/sample-app/version-3/app-pre-deploy-eval.yaml" */ %}
+    {% /* include "examples/sample-app/version-1/app-pre-deploy-eval.yaml" */ %}
     ```
 
 * `markdownlint` enforces limits on line length.

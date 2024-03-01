@@ -2,6 +2,7 @@ processor:
   useRawDocstring: true
   ignoreFields:
     - "TypeMeta$"
+    - "KeptnPhase$"
 render:
   kubernetesVersion: 1.28
   knownTypes:
@@ -11,6 +12,12 @@ render:
     - name: ItemStatus
       package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3
       link: ../v1alpha3/index.md#itemstatus
+    - name: KeptnState
+      package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common
+      link: ../v1alpha3/index.md#keptnstate
+    - name: PhaseTraceID
+      package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common
+      link: ../v1alpha3/index.md#phasetraceid
     - name: Quantity
       package: "k8s.io/apimachinery/pkg/api/resource"
       link: https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity
@@ -23,3 +30,6 @@ render:
     - name: MapCarrier
       package: "go.opentelemetry.io/otel/propagation"
       link: https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier
+    - name: UID
+      package: "k8s.io/apimachinery/pkg/types"
+      link: https://pkg.go.dev/k8s.io/apimachinery@v0.29.2/pkg/types#UID

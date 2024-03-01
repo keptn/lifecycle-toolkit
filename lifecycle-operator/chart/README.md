@@ -54,7 +54,7 @@ and application health checks
 | `lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel`        | sets the log level of Keptn WorkloadVersion Controller                         | `0`                                   |
 | `lifecycleOperator.env.keptnDoraMetricsPort`                          | sets the port for accessing lifecycle metrics in prometheus format             | `2222`                                |
 | `lifecycleOperator.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller                                 | `0`                                   |
-| `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                          | `ghcr.io/keptn/python-runtime:v1.0.2` |
+| `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                          | `ghcr.io/keptn/python-runtime:v1.0.3` |
 | `lifecycleOperator.image.registry`                                    | specify the container registry for the lifecycle-operator image                | `ghcr.io`                             |
 | `lifecycleOperator.image.repository`                                  | specify registry for manager image                                             | `keptn/lifecycle-operator`            |
 | `lifecycleOperator.image.tag`                                         | select tag for manager image                                                   | `v0.9.0`                              |

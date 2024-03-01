@@ -25,6 +25,7 @@ import (
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	appcontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
@@ -52,13 +53,15 @@ const traceComponentName = "keptn/lifecycle-operator/appversion"
 type KeptnAppVersionReconciler struct {
 	Scheme *runtime.Scheme
 	client.Client
-	Log               logr.Logger
-	EventSender       eventsender.IEvent
-	TracerFactory     telemetry.TracerFactory
-	Meters            apicommon.KeptnMeters
-	SpanHandler       telemetry.ISpanHandler
-	EvaluationHandler evaluation.IEvaluationHandler
-	PhaseHandler      phase.IHandler
+	Log                   logr.Logger
+	EventSender           eventsender.IEvent
+	TracerFactory         telemetry.TracerFactory
+	Meters                apicommon.KeptnMeters
+	SpanHandler           telemetry.ISpanHandler
+	EvaluationHandler     evaluation.IEvaluationHandler
+	PhaseHandler          phase.IHandler
+	PromotionTasksEnabled bool
+	Config                config.IConfig
 }
 
 // +kubebuilder:rbac:groups=lifecycle.keptn.sh,resources=keptnappversions,verbs=get;list;watch;create;update;patch;delete
@@ -76,7 +79,7 @@ type KeptnAppVersionReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.13.0/pkg/reconcile
 //
-//nolint:gocyclo
+//nolint:gocyclo,gocognit
 func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	requestInfo := controllercommon.GetRequestInfo(req)
 	r.Log.Info("Searching for Keptn App Version", "requestInfo", requestInfo)
@@ -112,9 +115,9 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		spanAppTrace.AddEvent("App Version Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 	}
 
-	if !appVersion.IsPreDeploymentSucceeded() {
+	if !appVersion.IsPreDeploymentSucceeded(r.Config.GetBlockDeployment()) {
 		reconcilePreDep := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
-			return r.reconcilePrePostDeployment(ctx, phaseCtx, appVersion, apicommon.PreDeploymentCheckType)
+			return r.reconcilePhase(ctx, phaseCtx, appVersion, apicommon.PreDeploymentCheckType)
 		}
 		result, err := r.PhaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, currentPhase, reconcilePreDep)
 		if !result.Continue {
@@ -123,7 +126,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	currentPhase = apicommon.PhaseAppPreEvaluation
-	if !appVersion.IsPreDeploymentEvaluationSucceeded() {
+	if !appVersion.IsPreDeploymentEvaluationSucceeded(r.Config.GetBlockDeployment()) {
 		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, appVersion, apicommon.PreDeploymentEvaluationCheckType)
 		}
@@ -145,9 +148,9 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	currentPhase = apicommon.PhaseAppPostDeployment
-	if !appVersion.IsPostDeploymentSucceeded() {
+	if !appVersion.IsPostDeploymentSucceeded(r.Config.GetBlockDeployment()) {
 		reconcilePostDep := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
-			return r.reconcilePrePostDeployment(ctx, phaseCtx, appVersion, apicommon.PostDeploymentCheckType)
+			return r.reconcilePhase(ctx, phaseCtx, appVersion, apicommon.PostDeploymentCheckType)
 		}
 		result, err := r.PhaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, currentPhase, reconcilePostDep)
 		if !result.Continue {
@@ -156,11 +159,22 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	currentPhase = apicommon.PhaseAppPostEvaluation
-	if !appVersion.IsPostDeploymentEvaluationCompleted() {
+	if !appVersion.IsPostDeploymentEvaluationSucceeded(r.Config.GetBlockDeployment()) {
 		reconcilePostEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, appVersion, apicommon.PostDeploymentEvaluationCheckType)
 		}
 		result, err := r.PhaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, currentPhase, reconcilePostEval)
+		if !result.Continue {
+			return result.Result, err
+		}
+	}
+
+	if r.PromotionTasksEnabled && !appVersion.IsPromotionCompleted() {
+		currentPhase = apicommon.PhasePromotion
+		reconcilePromotionFunc := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
+			return r.reconcilePhase(ctx, phaseCtx, appVersion, apicommon.PromotionCheckType)
+		}
+		result, err := r.PhaseHandler.HandlePhase(ctx, ctxAppTrace, r.getTracer(), appVersion, currentPhase, reconcilePromotionFunc)
 		if !result.Continue {
 			return result.Result, err
 		}
@@ -186,6 +200,11 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 	r.EventSender.Emit(apicommon.PhaseAppCompleted, "Normal", appVersion, apicommon.PhaseStateFinished, "has finished", appVersion.GetVersion())
 
 	attrs := appVersion.GetMetricsAttributes()
+
+	// metrics: add promotion count
+	if r.PromotionTasksEnabled && appVersion.IsPromotionCompleted() && len(appVersion.GetPromotionTaskStatus()) > 0 {
+		r.Meters.PromotionCount.Add(ctx, 1, metric.WithAttributes(attrs...))
+	}
 
 	// metrics: add app duration
 	duration := appVersion.Status.EndTime.Time.Sub(appVersion.Status.StartTime.Time)

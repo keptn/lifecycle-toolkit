@@ -1,17 +1,16 @@
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnApp
 metadata:
   name: "some-keptn-app"
   namespace: "my-app-ns"
   labels:
-    my-custom-label: customValue
     app.kubernetes.io/managed-by: keptn # added annotation
 spec:
   version: "1.2.3"
   workloads:
     - name: podtato-head-left-arm
       version: 0.2.7
-  # removed pre/post-deployment tasks and evaluations
+# removed pre/post-deployment tasks and evaluations
 ---
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnAppContext

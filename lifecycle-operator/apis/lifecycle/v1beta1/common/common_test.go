@@ -39,6 +39,31 @@ func TestKeptnState_IsCompleted(t *testing.T) {
 	}
 }
 
+func TestKeptnState_IsWarning(t *testing.T) {
+	tests := []struct {
+		State KeptnState
+		Want  bool
+	}{
+		{
+			State: StateSucceeded,
+			Want:  false,
+		},
+		{
+			State: StateFailed,
+			Want:  false,
+		},
+		{
+			State: StateWarning,
+			Want:  true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			require.Equal(t, tt.State.IsWarning(), tt.Want)
+		})
+	}
+}
+
 func TestKeptnState_IsSucceeded(t *testing.T) {
 	tests := []struct {
 		State KeptnState
@@ -232,10 +257,54 @@ func Test_GeOverallState(t *testing.T) {
 			Summary: StatusSummary{1, 0, 0, 1, 0, 0, 0},
 			Want:    StateSucceeded,
 		},
+		{
+			Name:    "pending total count",
+			Summary: StatusSummary{2, 0, 0, 1, 0, 0, 0},
+			Want:    StatePending,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			require.Equal(t, GetOverallState(tt.Summary), tt.Want)
+		})
+	}
+}
+
+func Test_GeOverallStateBlockedDeployment(t *testing.T) {
+	tests := []struct {
+		Name    string
+		Summary StatusSummary
+		Block   bool
+		Want    KeptnState
+	}{
+		{
+			Name:    "failed blocking",
+			Summary: StatusSummary{0, 0, 1, 0, 0, 0, 0},
+			Block:   true,
+			Want:    StateFailed,
+		},
+		{
+			Name:    "succeeded blocking",
+			Summary: StatusSummary{1, 0, 0, 1, 0, 0, 0},
+			Block:   true,
+			Want:    StateSucceeded,
+		},
+		{
+			Name:    "failed non-blocking",
+			Summary: StatusSummary{0, 0, 1, 0, 0, 0, 0},
+			Block:   false,
+			Want:    StateWarning,
+		},
+		{
+			Name:    "succeeded non-blocking",
+			Summary: StatusSummary{1, 0, 0, 1, 0, 0, 0},
+			Block:   false,
+			Want:    StateSucceeded,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			require.Equal(t, GetOverallStateBlockedDeployment(tt.Summary, tt.Block), tt.Want)
 		})
 	}
 }

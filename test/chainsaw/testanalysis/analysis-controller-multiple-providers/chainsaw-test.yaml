@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kyverno/chainsaw/main/.schemas/json/test-chainsaw-v1alpha1.json
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: analysis-controller-multiple-providers
+spec:
+  steps:
+    - name: step-00
+      try:
+        - apply:
+            file: mock-server.yaml
+        - apply:
+            file: install.yaml
+    - name: step-01
+      try:
+        - assert:
+            file: assert-1.yaml
+      catch:
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=metrics-operator
+        - describe:
+            resource: Analysis

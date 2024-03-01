@@ -1,6 +1,0 @@
-# second scenario: certificate is removed with no restart
-apiVersion: v1
-kind: Secret
-metadata:
-  name: keptn-certs
-  namespace: keptn-system

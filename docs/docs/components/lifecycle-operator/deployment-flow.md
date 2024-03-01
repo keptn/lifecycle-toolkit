@@ -15,15 +15,16 @@ The execution flow goes through six main phases:
 * Deployment
 * Post-deployment-tasks
 * Post-deployment-evaluation
+* Promotion
 * Completed
 
 Within each phase, all tasks and evaluations for each phase
 are executed in parallel.
 They are not affected by the order
 in which evaluations and tasks are listed in the
-[KeptnApp](../../reference/crd-reference/app.md)
+[KeptnAppContext](../../reference/crd-reference/appcontext.md)
 resource
-or in the order of the pre/post-tasks and pre/post-evaluations
+or in the order of the pre/post-tasks, pre/post-evaluations, and promotion tasks
 that are listed in the Workflow manifests.
 
 ## Kubernetes and Cloud Events
@@ -66,6 +67,12 @@ either resolve the problem or terminate the execution.
 If all evaluations and tasks in a phase are successful,
 the `KeptnApp` issues the appropriate `*Succeeded` event
 and initiates the next phase.
+
+> **Note**
+This behavior can be changed by configuring non-blocking deployment
+functionality.
+More information can be found in the
+[Keptn non-blocking deployment section](./keptn-non-blocking.md).
 
 ## Summary of deployment flow
 
@@ -159,6 +166,19 @@ but can be used by other external tools, for instance, to react to a failure.
 AppPostDeployEvaluations
   AppPostDeployEvaluationsStarted
   AppPostDeployEvaluationsSucceeded OR AppPostDeployEvaluationsErrored
+```
+
+### Promotion phase
+
+The promotion phase is typically used
+to run promotion tasks
+(such as promoting the application to another stage)
+on the freshly deployed application.
+
+```shell
+PromotionTasks
+  PromotionTasksStarted
+  PromotionTasksSucceeded OR PromotionTasksErrored
 ```
 
 ### Completed phase

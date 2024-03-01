@@ -89,3 +89,15 @@ func GetRequestInfo(req ctrl.Request) map[string]string {
 		"namespace": req.Namespace,
 	}
 }
+
+func KeptnWorkloadVersionResourceRefUIDIndexFunc(rawObj client.Object) []string {
+	// Extract the ResourceReference UID name from the KeptnWorkloadVersion Spec, if one is provided
+	workloadVersion, ok := rawObj.(*klcv1beta1.KeptnWorkloadVersion)
+	if !ok {
+		return nil
+	}
+	if workloadVersion.Spec.ResourceReference.UID == "" {
+		return nil
+	}
+	return []string{string(workloadVersion.Spec.ResourceReference.UID)}
+}

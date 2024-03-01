@@ -257,7 +257,9 @@ var _ = Describe("WorkloadVersion", Ordered, func() {
 						Workload:             appName + "-wname",
 						WorkloadVersion:      "2.0",
 						Type:                 apicommon.PreDeploymentEvaluationCheckType,
-						Retries:              10,
+						FailureConditions: klcv1beta1.FailureConditions{
+							Retries: 10,
+						},
 					},
 				}
 

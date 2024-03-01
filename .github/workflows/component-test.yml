@@ -1,6 +1,9 @@
 name: Component Tests
 on:
   workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        required: false
 env:
   GO_VERSION: "~1.20"
 defaults:
@@ -27,6 +30,7 @@ jobs:
         run: make component-test
 
       - name: Report code coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           flags: component-tests
+          token: ${{ secrets.CODECOV_TOKEN }}

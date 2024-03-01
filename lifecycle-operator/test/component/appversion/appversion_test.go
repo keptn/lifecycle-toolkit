@@ -50,7 +50,9 @@ var _ = Describe("Appversion", Ordered, func() {
 						AppName:              appName,
 						AppVersion:           version,
 						Type:                 apicommon.PreDeploymentEvaluationCheckType,
-						Retries:              10,
+						FailureConditions: klcv1beta1.FailureConditions{
+							Retries: 10,
+						},
 					},
 				}
 

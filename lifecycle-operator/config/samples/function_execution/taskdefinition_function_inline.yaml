@@ -3,7 +3,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: scheduled-deployment
 spec:
-  function:
+  deno:
     inline:
       code: |
         let text = Deno.env.get("DATA");

@@ -63,7 +63,7 @@ spec:
         - name: CERT_MANAGER_ENABLED
           value: {{ .Values.global.certManagerEnabled | quote }}
         image: {{- include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) | indent 1}}
-        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        imagePullPolicy: {{.Values.image.imagePullPolicy | default (.Values.global.imagePullPolicy | default "IfNotPresent") }}
         name: metrics-operator
         ports:
         - containerPort: 9443

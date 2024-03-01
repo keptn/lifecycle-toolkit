@@ -58,7 +58,7 @@ For example, you might create a `test-task-definition.yaml` file
 with the following content:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTaskDefinition
 metadata:
   name: helloworldtask
@@ -98,7 +98,7 @@ For example, you might create a `test-task.yaml` file
 with the following content:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTask
 metadata:
   name: runhelloworld1
@@ -141,7 +141,7 @@ For example, you could create a `test-task-2.yaml` file
 with the `metadata.name` field set to `runhelloworld2`:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnTask
 metadata:
   name: runhelloworld2
@@ -206,6 +206,6 @@ To implement a Keptn analysis for your deployment:
 See the
 [Analysis](../guides/slo.md)
 guide and the
-[Analyzing Application Performance with Keptn](https://keptn.sh/latest/blog/2023/12/19/analyzing-application-performance-with-keptn/)
+[Analyzing Application Performance with Keptn](https://keptn.sh/stable/blog/2023/12/19/analyzing-application-performance-with-keptn/)
 blog
 for more details and examples for the Keptn analysis feature.

@@ -1,7 +1,7 @@
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # renovate: datasource=docker depName=squidfunk/mkdocs-material
-MKDOCS_DOCKER_IMAGE_VERSION=9.5.4
+MKDOCS_DOCKER_IMAGE_VERSION=9.5.12
 MKDOCS_DOCKER_IMAGE=squidfunk/mkdocs-material
 
 INTERACTIVE:=$(shell [ -t 0 ] && echo 1)
@@ -53,7 +53,7 @@ htmltest: docs-build
 		-v $(PWD)/docs/.htmltest.yml:/.htmltest.yml \
 		-v ${PWD}/site:/site \
 		-v ${PWD}/tmp/.htmltest:/tmp/.htmltest \
-		wjdp/htmltest:$(HTMLTEST_VERSION) -c /.htmltest.yml /site
+		wjdp/htmltest:$(HTMLTEST_VERSION) --log-level 0 -c /.htmltest.yml /site
 
 .PHONY: lint lint-fix
 lint: markdownlint

@@ -1,3 +1,6 @@
+// Package v1beta1 contains API Schema definitions for the lifecycle v1beta1 API group
+// +groupName=lifecycle.keptn.sh
+// +versionName=v1beta1
 package common
 
 import (
@@ -45,7 +48,7 @@ const (
 	AppTypeMultiService  AppType = "multi-service"
 )
 
-// KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+// KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
 type KeptnState string
 
 const (
@@ -55,11 +58,11 @@ const (
 	StateUnknown     KeptnState = "Unknown"
 	StatePending     KeptnState = "Pending"
 	StateDeprecated  KeptnState = "Deprecated"
-	// Deprecated: Use StateDeprecated instead. Should only be used in checks for backwards compatibility reasons
+	StateWarning     KeptnState = "Warning"
 )
 
 func (k KeptnState) IsCompleted() bool {
-	return k == StateSucceeded || k == StateFailed || k == StateDeprecated
+	return k == StateSucceeded || k == StateFailed || k == StateDeprecated || k == StateWarning
 }
 
 func (k KeptnState) IsSucceeded() bool {
@@ -76,6 +79,10 @@ func (k KeptnState) IsDeprecated() bool {
 
 func (k KeptnState) IsPending() bool {
 	return k == StatePending
+}
+
+func (k KeptnState) IsWarning() bool {
+	return k == StateWarning
 }
 
 type StatusSummary struct {
@@ -120,10 +127,21 @@ func GetOverallState(s StatusSummary) KeptnState {
 	if s.Pending > 0 {
 		return StatePending
 	}
-	if s.Unknown > 0 || s.GetTotalCount() != s.Total {
+	if s.Unknown > 0 {
 		return StateUnknown
 	}
+	if s.GetTotalCount() != s.Total {
+		return StatePending
+	}
 	return StateSucceeded
+}
+
+func GetOverallStateBlockedDeployment(s StatusSummary, blockedDeployment bool) KeptnState {
+	state := GetOverallState(s)
+	if !blockedDeployment && state == StateFailed {
+		return StateWarning
+	}
+	return state
 }
 
 func TruncateString(s string, max int) string {
@@ -144,6 +162,7 @@ type CheckType string
 
 const PreDeploymentCheckType CheckType = "pre"
 const PostDeploymentCheckType CheckType = "post"
+const PromotionCheckType CheckType = "promotion"
 const PreDeploymentEvaluationCheckType CheckType = "pre-eval"
 const PostDeploymentEvaluationCheckType CheckType = "post-eval"
 
@@ -156,6 +175,7 @@ type KeptnMeters struct {
 	AppDuration        metric.Float64Histogram
 	EvaluationCount    metric.Int64Counter
 	EvaluationDuration metric.Float64Histogram
+	PromotionCount     metric.Int64Counter
 }
 
 const (

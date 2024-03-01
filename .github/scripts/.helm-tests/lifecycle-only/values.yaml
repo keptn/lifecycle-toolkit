@@ -8,10 +8,12 @@ global:
 
 lifecycleOperator:
   enabled: true
+  promotionTasksEnabled: true
   lifecycleOperator:
     image:
       repository: myrep
       tag: v0.0.1
+      imagePullPolicy: Always
   scheduler:
     image:
       tag: v0.0.0

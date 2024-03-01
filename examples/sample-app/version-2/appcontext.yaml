@@ -8,3 +8,5 @@ spec:
   preDeploymentTasks:
     - container-sleep
     - python-secret
+  promotionTasks:
+    - promotion

@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.2.0
+    helm.sh/chart: cert-manager-0.2.1
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: v1
@@ -25,7 +25,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: v1
@@ -38,7 +38,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 ---
 # Source: keptn/charts/metricsOperator/templates/metrics-operator-service-account.yaml
 apiVersion: v1
@@ -51,7 +51,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 ---
 # Source: keptn/charts/lifecycleOperator/templates/lifecycle-manager-config.yaml
 apiVersion: v1
@@ -64,7 +64,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 data:
   controller_manager_config.yaml: |
     apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
@@ -90,7 +90,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 data:
   scheduler-config.yaml: |
     apiVersion: kubescheduler.config.k8s.io/v1beta3
@@ -115,7 +115,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 data:
   controller_manager_config.yaml: |
     apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
@@ -146,7 +146,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   conversion:
     strategy: Webhook
@@ -500,7 +500,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -575,6 +575,14 @@ spec:
                 items:
                   type: string
                 type: array
+              promotionTasks:
+                description: |-
+                  PromotionTasks is a list of all tasks to be performed during the promotion phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
               spanLinks:
                 description: |-
                   SpanLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
@@ -612,7 +620,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -721,7 +729,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   conversion:
     strategy: Webhook
@@ -1614,6 +1622,10 @@ spec:
       name: PostDeploymentEvaluationStatus
       priority: 1
       type: string
+    - jsonPath: .status.promotionStatus
+      name: PromotionStatus
+      priority: 1
+      type: string
     name: v1beta1
     schema:
       openAPIV3Schema:
@@ -1686,6 +1698,14 @@ spec:
                 description: PreviousVersion is the version of the KeptnApp that has
                   been deployed prior to this version.
                 type: string
+              promotionTasks:
+                description: |-
+                  PromotionTasks is a list of all tasks to be performed during the promotion phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
               revision:
                 default: 1
                 description: |-
@@ -1783,7 +1803,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -1816,7 +1836,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -1849,7 +1869,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -1882,7 +1902,40 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
+                      type: string
+                  type: object
+                type: array
+              promotionStatus:
+                default: Pending
+                description: PromotionStatus indicates the current status of the KeptnAppVersion's
+                  Promotion phase.
+                type: string
+              promotionTaskStatus:
+                description: PromotionTaskStatus indicates the current state of each
+                  promotionTask of the KeptnAppVersion.
+                items:
+                  properties:
+                    definitionName:
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
+                      type: string
+                    endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
+                      format: date-time
+                      type: string
+                    name:
+                      description: Name is the name of the Evaluation/Task
+                      type: string
+                    startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -1948,7 +2001,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   group: options.keptn.sh
   names:
@@ -1987,6 +2040,12 @@ spec:
                 description: OTelCollectorUrl can be used to set the Open Telemetry
                   collector that the lifecycle operator should use
                 type: string
+              blockDeployment:
+                default: true
+                description: |-
+                  BlockDeployment is used to block the deployment of the application until the pre-deployment
+                  tasks and evaluations succeed
+                type: boolean
               cloudEventsEndpoint:
                 description: CloudEventsEndpoint can be used to set the endpoint where
                   Cloud Events should be posted by the lifecycle operator
@@ -1997,6 +2056,14 @@ spec:
                   KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery
                   searches for workload to put into the same auto-generated KeptnApp
                 type: integer
+              observabilityTimeout:
+                default: 5m
+                description: |-
+                  ObservabilityTimeout specifies the maximum time to observe the deployment phase of KeptnWorkload.
+                  If the workload does not deploy successfully within this time frame, it will be
+                  considered as failed.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
             type: object
           status:
             description: unused field
@@ -2023,7 +2090,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -2089,8 +2156,6 @@ spec:
               checkType:
                 type: string
               evaluationDefinition:
-                type: string
-              failAction:
                 type: string
               retries:
                 default: 10
@@ -2586,7 +2651,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -2833,6 +2898,19 @@ spec:
                   - keptnMetricRef
                   type: object
                 type: array
+              retries:
+                default: 10
+                description: |-
+                  Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
+                  missed evaluation objective, before considering the KeptnEvaluation to be failed.
+                type: integer
+              retryInterval:
+                default: 5s
+                description: |-
+                  RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error
+                  or a missed objective.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
             required:
             - objectives
             type: object
@@ -2861,7 +2939,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -3460,7 +3538,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -6901,7 +6979,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -7232,6 +7310,14 @@ spec:
                 description: Metadata contains additional key-value pairs for contextual
                   information.
                 type: object
+              observabilityTimeout:
+                default: 5m
+                description: |-
+                  ObservabilityTimeout specifies the maximum time to observe the deployment phase of KeptnWorkload.
+                  If the workload does not deploy successfully within this time frame, it will be
+                  considered as failed.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
               postDeploymentEvaluations:
                 description: |-
                   PostDeploymentEvaluations is a list of all evaluations to be performed
@@ -7324,7 +7410,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -7721,6 +7807,14 @@ spec:
                 description: Metadata contains additional key-value pairs for contextual
                   information.
                 type: object
+              observabilityTimeout:
+                default: 5m
+                description: |-
+                  ObservabilityTimeout specifies the maximum time to observe the deployment phase of KeptnWorkload.
+                  If the workload does not deploy successfully within this time frame, it will be
+                  considered as failed.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
               postDeploymentEvaluations:
                 description: |-
                   PostDeploymentEvaluations is a list of all evaluations to be performed
@@ -7814,6 +7908,11 @@ spec:
                   - PostDeploymentTasks
                   - PostDeploymentEvaluations
                 type: string
+              deploymentStartTime:
+                description: DeploymentStartTime represents the start time of the
+                  deployment phase
+                format: date-time
+                type: string
               deploymentStatus:
                 default: Pending
                 description: DeploymentStatus indicates the current status of the
@@ -7864,7 +7963,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -7897,7 +7996,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -7930,7 +8029,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -7963,7 +8062,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -8000,7 +8099,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 spec:
   group: metrics.keptn.sh
   names:
@@ -8355,7 +8454,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 spec:
   group: metrics.keptn.sh
   names:
@@ -9052,7 +9151,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 spec:
   group: metrics.keptn.sh
   names:
@@ -9201,7 +9300,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 spec:
   group: metrics.keptn.sh
   names:
@@ -9738,7 +9837,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 spec:
   group: metrics.keptn.sh
   names:
@@ -9955,7 +10054,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.2.0
+    helm.sh/chart: cert-manager-0.2.1
 rules:
 - apiGroups:
   - admissionregistration.k8s.io
@@ -10007,7 +10106,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 rules:
 - apiGroups:
   - ""
@@ -10198,7 +10297,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 rules:
 - apiGroups:
   - apps
@@ -10573,7 +10672,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 rules:
 - apiGroups:
   - custom.metrics.k8s.io
@@ -10593,7 +10692,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 rules:
   - apiGroups:
       - ""
@@ -10701,7 +10800,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 rules:
 - apiGroups:
   - custom.metrics.k8s.io
@@ -10726,7 +10825,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.2.0
+    helm.sh/chart: cert-manager-0.2.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -10747,7 +10846,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -10768,7 +10867,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -10789,7 +10888,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -10810,7 +10909,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -10831,7 +10930,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -10852,7 +10951,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.2.0
+    helm.sh/chart: cert-manager-0.2.1
 rules:
 - apiGroups:
   - ""
@@ -10887,7 +10986,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 rules:
 - apiGroups:
   - ""
@@ -10932,7 +11031,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 rules:
 - apiGroups:
   - ""
@@ -10977,7 +11076,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 rules:
 - apiGroups:
   - ""
@@ -11025,7 +11124,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.2.0
+    helm.sh/chart: cert-manager-0.2.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -11049,7 +11148,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.2.0
+    helm.sh/chart: cert-manager-0.2.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -11070,7 +11169,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -11091,7 +11190,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -11112,7 +11211,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -11133,7 +11232,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -11154,7 +11253,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -11176,7 +11275,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   type: ClusterIP
   selector:
@@ -11200,7 +11299,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   type: ClusterIP
   selector:
@@ -11224,7 +11323,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 spec:
   type: ClusterIP
   selector:
@@ -11255,7 +11354,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 spec:
   type: ClusterIP
   selector:
@@ -11281,7 +11380,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: cert-manager-0.2.0
+    helm.sh/chart: cert-manager-0.2.1
 spec:
   replicas: 1
   selector:
@@ -11315,7 +11414,7 @@ spec:
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
           image: ghcr.io/keptn/certificate-operator:v0.0.0
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           name: certificate-operator
           resources:
             limits:
@@ -11366,7 +11465,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   replicas: 1
   selector:
@@ -11400,9 +11499,9 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: FUNCTION_RUNNER_IMAGE
-          value: "ghcr.io/keptn/deno-runtime:v1.0.2"
+          value: "ghcr.io/keptn/deno-runtime:v2.0.2"
         - name: PYTHON_RUNNER_IMAGE
-          value: "ghcr.io/keptn/python-runtime:v1.0.1"
+          value: "ghcr.io/keptn/python-runtime:v1.0.3"
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL
@@ -11425,12 +11524,14 @@ spec:
           value: "0"
         - name: SCHEDULING_GATES_ENABLED
           value: "false"
+        - name: PROMOTION_TASKS_ENABLED
+          value: "false"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
         - name: CERT_MANAGER_ENABLED
           value: "true"
         image: ghcr.io/keptn/lifecycle-operator:v0.0.0
-        imagePullPolicy: Always
+        imagePullPolicy: Never
         name: lifecycle-operator
         ports:
         - containerPort: 9443
@@ -11487,7 +11588,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 spec:
   replicas: 1
   selector:
@@ -11512,7 +11613,7 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
         image: ghcr.io/keptn/scheduler:v0.0.0
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: scheduler
         resources:
           limits:
@@ -11569,7 +11670,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 spec:
   replicas: 1
   selector:
@@ -11617,7 +11718,7 @@ spec:
         - name: CERT_MANAGER_ENABLED
           value: "true"
         image: ghcr.io/keptn/metrics-operator:v0.0.0
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: metrics-operator
         ports:
         - containerPort: 9443
@@ -11682,7 +11783,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 spec:
   group: custom.metrics.k8s.io
   groupPriorityMinimum: 100
@@ -11704,7 +11805,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 spec:
   group: custom.metrics.k8s.io
   groupPriorityMinimum: 100
@@ -11729,7 +11830,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 webhooks:
 - admissionReviewVersions:
   - v1
@@ -11781,7 +11882,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.1.0
+    helm.sh/chart: lifecycle-operator-0.2.0
 webhooks:
 - admissionReviewVersions:
   - v1
@@ -11817,7 +11918,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: metrics-operator-0.1.0
+    helm.sh/chart: metrics-operator-0.1.1
 webhooks:
 - admissionReviewVersions:
   - v1

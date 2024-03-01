@@ -117,6 +117,9 @@ type KeptnWorkloadVersionStatus struct {
 	// AppContextMetadata contains metadata from the related KeptnAppVersion.
 	// +optional
 	AppContextMetadata map[string]string `json:"appContextMetadata,omitempty"`
+	// DeploymentStartTime represents the start time of the deployment phase
+	// +optional
+	DeploymentStartTime metav1.Time `json:"deploymentStartTime,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -177,16 +180,22 @@ func (w KeptnWorkloadVersion) IsPreDeploymentEvaluationCompleted() bool {
 	return w.Status.PreDeploymentEvaluationStatus.IsCompleted()
 }
 
-func (w KeptnWorkloadVersion) IsPreDeploymentSucceeded() bool {
-	return w.Status.PreDeploymentStatus.IsSucceeded()
+func (w KeptnWorkloadVersion) IsPreDeploymentSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return w.Status.PreDeploymentStatus.IsSucceeded()
+	}
+	return w.Status.PreDeploymentStatus.IsSucceeded() || w.Status.PreDeploymentStatus.IsWarning()
 }
 
 func (w KeptnWorkloadVersion) IsPreDeploymentFailed() bool {
 	return w.Status.PreDeploymentStatus.IsFailed()
 }
 
-func (w KeptnWorkloadVersion) IsPreDeploymentEvaluationSucceeded() bool {
-	return w.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+func (w KeptnWorkloadVersion) IsPreDeploymentEvaluationSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return w.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+	}
+	return w.Status.PreDeploymentEvaluationStatus.IsSucceeded() || w.Status.PreDeploymentEvaluationStatus.IsWarning()
 }
 
 func (w KeptnWorkloadVersion) IsPreDeploymentEvaluationFailed() bool {
@@ -201,16 +210,22 @@ func (w KeptnWorkloadVersion) IsPostDeploymentEvaluationCompleted() bool {
 	return w.Status.PostDeploymentEvaluationStatus.IsCompleted()
 }
 
-func (w KeptnWorkloadVersion) IsPostDeploymentSucceeded() bool {
-	return w.Status.PostDeploymentStatus.IsSucceeded()
+func (w KeptnWorkloadVersion) IsPostDeploymentSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return w.Status.PostDeploymentStatus.IsSucceeded()
+	}
+	return w.Status.PostDeploymentStatus.IsSucceeded() || w.Status.PostDeploymentStatus.IsWarning()
 }
 
 func (w KeptnWorkloadVersion) IsPostDeploymentFailed() bool {
 	return w.Status.PostDeploymentStatus.IsFailed()
 }
 
-func (w KeptnWorkloadVersion) IsPostDeploymentEvaluationSucceeded() bool {
-	return w.Status.PostDeploymentEvaluationStatus.IsSucceeded()
+func (w KeptnWorkloadVersion) IsPostDeploymentEvaluationSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return w.Status.PostDeploymentEvaluationStatus.IsSucceeded()
+	}
+	return w.Status.PostDeploymentEvaluationStatus.IsSucceeded() || w.Status.PostDeploymentEvaluationStatus.IsWarning()
 }
 
 func (w KeptnWorkloadVersion) IsPostDeploymentEvaluationFailed() bool {
@@ -337,6 +352,16 @@ func (w KeptnWorkloadVersion) GetPostDeploymentEvaluationTaskStatus() []ItemStat
 	return w.Status.PostDeploymentEvaluationTaskStatus
 }
 
+func (w KeptnWorkloadVersion) GetPromotionTasks() []string {
+	// promotion tasks are not included in Workloads, but we need the implementation of this method to fulfil the PhaseItem interface
+	return []string{}
+}
+
+func (w KeptnWorkloadVersion) GetPromotionTaskStatus() []ItemStatus {
+	// promotion tasks are not included in Workloads, but we need the implementation of this method to fulfil the PhaseItem interface
+	return []ItemStatus{}
+}
+
 func (w KeptnWorkloadVersion) GetAppName() string {
 	return w.Spec.AppName
 }
@@ -407,8 +432,9 @@ func (w KeptnWorkloadVersion) GenerateEvaluation(evaluationDefinition KeptnEvalu
 			Workload:             w.GetParentName(),
 			EvaluationDefinition: evaluationDefinition.Name,
 			Type:                 checkType,
-			RetryInterval: metav1.Duration{
-				Duration: 5 * time.Second,
+			FailureConditions: FailureConditions{
+				RetryInterval: evaluationDefinition.Spec.RetryInterval,
+				Retries:       evaluationDefinition.Spec.Retries,
 			},
 		},
 	}

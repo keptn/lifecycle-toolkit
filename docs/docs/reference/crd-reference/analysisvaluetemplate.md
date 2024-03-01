@@ -27,46 +27,37 @@ spec:
 
 ## Fields
 
-* **apiVersion** -- API version being used
-* **kind** -- Resource type.
+- **apiVersion** -- API version being used
+- **kind** -- Resource type.
   Must be set to `AnalysisValueTemplate`
-* **metadata**
-  * **labels** -- The Analysis feature uses the
-    `name` and `part-of` labels that are discussed in
-    [Basic annotations](../../guides/integrate.md#basic-annotations)
-    plus the following:
-    * **app.kubernetes.io/instance** analysis-sample
-    * **app.kubernetes.io/managed-by** -- Tool used to manage
-      the operation of the application.
-      Valid values are `helm` and `kustomize`.
-    * **app.kubernetes.io/created-by** metrics-operator
+- **metadata**
 
-      TODO: Need to clarify how to use these annotations
-  * **name** -- Unique name of this template.
-    Names must comply with the
-    [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
-    specification.
-  * **namespace** (optional) -- Namespace where this template lives.
-    `Analysis` resources must specify this namespace
-    when referencing this definition,
-    unless it resides in the same namespace as the `Analysis` resource.
-* **spec**
-  * **provider** (required) -- the KeptnMetricProvider
-    * **name** -- The `spec.name` value of the
-      [KeptnMetricsProvider](metricsprovider.md) resource to use.
-      Note that each `AnalysisValueTemplate` resource
-      can use only one data source.
-      However, an `Analysis` resource
-      can use multiple `AnalysisValueTemplate` resources,
-      each of which uses a different data source.
-  * **query** (required) -- query to be made.
-    This is done in the data provider's query language.
-    It can include variables that use the go templating syntax
-    to insert a placeholder in the query.
-    For example, the query might include `{{.nodename}}'}`;
-    the value to substitute for that variable for this Analysis
-    is defined in the `spec.args` section of the `AnalysisTemplate` resource,
-    which might be set to `nodename: test`.
+    - **name** -- Unique name of this template.
+       Names must comply with the
+       [Kubernetes Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names)
+       specification.
+    - **namespace** (optional) -- Namespace where this template lives.
+       `Analysis` resources must specify this namespace
+       when referencing this definition,
+       unless it resides in the same namespace as the `Analysis` resource.
+
+- **spec**
+    - **provider** (required) -- the KeptnMetricProvider
+        - **name** -- The `spec.name` value of the
+            [KeptnMetricsProvider](metricsprovider.md) resource to use.
+            Note that each `AnalysisValueTemplate` resource
+            can use only one data source.
+            However, an `Analysis` resource
+            can use multiple `AnalysisValueTemplate` resources,
+            each of which uses a different data source.
+    - **query** (required) -- query to be made.
+       This is done in the data provider's query language.
+       It can include variables that use the go templating syntax
+       to insert a placeholder in the query.
+       For example, the query might include `{{.nodename}}'}`;
+       the value to substitute for that variable for this Analysis
+       is defined in the `spec.args` section of the `AnalysisTemplate` resource,
+       which might be set to `nodename: test`.
 
 ## Usage
 
@@ -100,14 +91,13 @@ API reference:
 
 ## Differences between versions
 
-A preliminary release of the Keptn Analysis feature
-is included in Keptn v0.8.3 and v0.9.0 but is hidden behind a feature flag.
-See the
-[Analysis](analysis.md#differences-between-versions)
-reference page for instructions to activate the preview of this feature.
+The Keptn Analysis feature is an official part of Keptn v0.10.0 and later.
+Keptn v0.8.3 included a preliminary release of this feature
+but it was hidden behind a feature flag.
+The behavior of this feature is unchanged since v0.8.3.
 
 ## See also
 
-* [Analysis](analysis.md)
-* [AnalysisDefinition](analysisdefinition.md)
-* [Analysis](../../guides/slo.md) guide
+- [Analysis](analysis.md)
+- [AnalysisDefinition](analysisdefinition.md)
+- [Analysis](../../guides/slo.md) guide

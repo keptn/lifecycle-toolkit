@@ -1,4 +1,4 @@
-FROM python:3.12.1-alpine AS production
+FROM python:3.12.2-alpine AS production
 
 LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolkit" \
     org.opencontainers.image.url="https://keptn.sh" \
@@ -6,8 +6,7 @@ LABEL org.opencontainers.image.source="https://github.com/keptn/lifecycle-toolki
     org.opencontainers.image.vendor="Keptn" \
     org.opencontainers.image.licenses="Apache-2.0"
 
-
-RUN apk --no-cache add curl
+RUN apk --no-cache add curl libexpat==2.6.0-r0
 
 RUN pip install -q --disable-pip-version-check pyyaml GitPython requests
 

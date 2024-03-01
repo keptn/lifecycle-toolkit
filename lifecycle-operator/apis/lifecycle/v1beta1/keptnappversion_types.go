@@ -52,6 +52,10 @@ type KeptnAppVersionStatus struct {
 	// +kubebuilder:default:=Pending
 	// +optional
 	PostDeploymentStatus common.KeptnState `json:"postDeploymentStatus,omitempty"`
+	// PromotionStatus indicates the current status of the KeptnAppVersion's Promotion phase.
+	// +kubebuilder:default:=Pending
+	// +optional
+	PromotionStatus common.KeptnState `json:"promotionStatus,omitempty"`
 	// PreDeploymentEvaluationStatus indicates the current status of the KeptnAppVersion's PreDeploymentEvaluation phase.
 	// +kubebuilder:default:=Pending
 	// +optional
@@ -76,6 +80,9 @@ type KeptnAppVersionStatus struct {
 	// PostDeploymentTaskStatus indicates the current state of each postDeploymentTask of the KeptnAppVersion.
 	// +optional
 	PostDeploymentTaskStatus []ItemStatus `json:"postDeploymentTaskStatus,omitempty"`
+	// PromotionTaskStatus indicates the current state of each promotionTask of the KeptnAppVersion.
+	// +optional
+	PromotionTaskStatus []ItemStatus `json:"promotionTaskStatus,omitempty"`
 	// PreDeploymentEvaluationTaskStatus indicates the current state of each preDeploymentEvaluation of the KeptnAppVersion.
 	// +optional
 	PreDeploymentEvaluationTaskStatus []ItemStatus `json:"preDeploymentEvaluationTaskStatus,omitempty"`
@@ -120,6 +127,7 @@ type WorkloadStatus struct {
 // +kubebuilder:printcolumn:name="WorkloadOverallStatus",priority=1,type=string,JSONPath=`.status.workloadOverallStatus`
 // +kubebuilder:printcolumn:name="PostDeploymentStatus",priority=1,type=string,JSONPath=`.status.postDeploymentStatus`
 // +kubebuilder:printcolumn:name="PostDeploymentEvaluationStatus",priority=1,type=string,JSONPath=`.status.postDeploymentEvaluationStatus`
+// +kubebuilder:printcolumn:name="PromotionStatus",priority=1,type=string,JSONPath=`.status.promotionStatus`
 
 // KeptnAppVersion is the Schema for the keptnappversions API
 type KeptnAppVersion struct {
@@ -175,16 +183,22 @@ func (a KeptnAppVersion) IsPreDeploymentEvaluationCompleted() bool {
 	return a.Status.PreDeploymentEvaluationStatus.IsCompleted()
 }
 
-func (a KeptnAppVersion) IsPreDeploymentSucceeded() bool {
-	return a.Status.PreDeploymentStatus.IsSucceeded()
+func (a KeptnAppVersion) IsPreDeploymentSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return a.Status.PreDeploymentStatus.IsSucceeded()
+	}
+	return a.Status.PreDeploymentStatus.IsSucceeded() || a.Status.PreDeploymentStatus.IsWarning()
 }
 
 func (a KeptnAppVersion) IsPreDeploymentFailed() bool {
 	return a.Status.PreDeploymentStatus.IsFailed()
 }
 
-func (a KeptnAppVersion) IsPreDeploymentEvaluationSucceeded() bool {
-	return a.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+func (a KeptnAppVersion) IsPreDeploymentEvaluationSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return a.Status.PreDeploymentEvaluationStatus.IsSucceeded()
+	}
+	return a.Status.PreDeploymentEvaluationStatus.IsSucceeded() || a.Status.PreDeploymentEvaluationStatus.IsWarning()
 }
 
 func (a KeptnAppVersion) IsPreDeploymentEvaluationFailed() bool {
@@ -195,6 +209,10 @@ func (a KeptnAppVersion) IsPostDeploymentCompleted() bool {
 	return a.Status.PostDeploymentStatus.IsCompleted()
 }
 
+func (a KeptnAppVersion) IsPromotionCompleted() bool {
+	return a.Status.PromotionStatus.IsCompleted()
+}
+
 func (a KeptnAppVersion) IsPostDeploymentEvaluationCompleted() bool {
 	return a.Status.PostDeploymentEvaluationStatus.IsCompleted()
 }
@@ -203,16 +221,30 @@ func (a KeptnAppVersion) IsPostDeploymentFailed() bool {
 	return a.Status.PostDeploymentStatus.IsFailed()
 }
 
-func (a KeptnAppVersion) IsPostDeploymentEvaluationSucceeded() bool {
-	return a.Status.PostDeploymentEvaluationStatus.IsSucceeded()
+func (a KeptnAppVersion) IsPromotionFailed() bool {
+	return a.Status.PromotionStatus.IsFailed()
+}
+
+func (a KeptnAppVersion) IsPostDeploymentEvaluationSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return a.Status.PostDeploymentEvaluationStatus.IsSucceeded()
+	}
+	return a.Status.PostDeploymentEvaluationStatus.IsSucceeded() || a.Status.PostDeploymentEvaluationStatus.IsWarning()
 }
 
 func (a KeptnAppVersion) IsPostDeploymentEvaluationFailed() bool {
 	return a.Status.PostDeploymentEvaluationStatus.IsFailed()
 }
 
-func (a KeptnAppVersion) IsPostDeploymentSucceeded() bool {
-	return a.Status.PostDeploymentStatus.IsSucceeded()
+func (a KeptnAppVersion) IsPostDeploymentSucceeded(isBlocking bool) bool {
+	if isBlocking {
+		return a.Status.PostDeploymentStatus.IsSucceeded()
+	}
+	return a.Status.PostDeploymentStatus.IsSucceeded() || a.Status.PostDeploymentStatus.IsWarning()
+}
+
+func (a KeptnAppVersion) IsPromotionSucceeded() bool {
+	return a.Status.PromotionStatus.IsSucceeded()
 }
 
 func (a KeptnAppVersion) AreWorkloadsCompleted() bool {
@@ -296,6 +328,10 @@ func (a KeptnAppVersion) GetPostDeploymentTasks() []string {
 	return a.Spec.PostDeploymentTasks
 }
 
+func (a KeptnAppVersion) GetPromotionTasks() []string {
+	return a.Spec.PromotionTasks
+}
+
 func (a KeptnAppVersion) GetPreDeploymentTaskStatus() []ItemStatus {
 	return a.Status.PreDeploymentTaskStatus
 }
@@ -318,6 +354,10 @@ func (a KeptnAppVersion) GetPreDeploymentEvaluationTaskStatus() []ItemStatus {
 
 func (a KeptnAppVersion) GetPostDeploymentEvaluationTaskStatus() []ItemStatus {
 	return a.Status.PostDeploymentEvaluationTaskStatus
+}
+
+func (a KeptnAppVersion) GetPromotionTaskStatus() []ItemStatus {
+	return a.Status.PromotionTaskStatus
 }
 
 func (a KeptnAppVersion) GetAppName() string {
@@ -388,8 +428,9 @@ func (a KeptnAppVersion) GenerateEvaluation(evaluationDefinition KeptnEvaluation
 			AppName:              a.Spec.AppName,
 			EvaluationDefinition: evaluationDefinition.Name,
 			Type:                 checkType,
-			RetryInterval: metav1.Duration{
-				Duration: 5 * time.Second,
+			FailureConditions: FailureConditions{
+				RetryInterval: evaluationDefinition.Spec.FailureConditions.RetryInterval,
+				Retries:       evaluationDefinition.Spec.FailureConditions.Retries,
 			},
 		},
 	}
@@ -424,24 +465,31 @@ func (v KeptnAppVersion) GetWorkloadNameOfApp(workloadName string) string {
 
 //nolint:dupl
 func (a *KeptnAppVersion) DeprecateRemainingPhases(phase common.KeptnPhaseType) {
-	// no need to deprecate anything when post-eval tasks fail
-	if phase == common.PhaseAppPostEvaluation {
+	// no need to deprecate anything when promotion tasks fail
+	if phase == common.PhasePromotion {
 		return
+	}
+	// deprecate promotion tasks when post evaluation failed
+	if phase == common.PhaseAppPostEvaluation {
+		a.Status.PromotionStatus = common.StateDeprecated
 	}
 	// deprecate post evaluation when post tasks failed
 	if phase == common.PhaseAppPostDeployment {
 		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
+		a.Status.PromotionStatus = common.StateDeprecated
 	}
 	// deprecate post evaluation and tasks when app deployment failed
 	if phase == common.PhaseAppDeployment {
 		a.Status.PostDeploymentStatus = common.StateDeprecated
 		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
+		a.Status.PromotionStatus = common.StateDeprecated
 	}
 	// deprecate app deployment, post tasks and evaluations if app pre-eval failed
 	if phase == common.PhaseAppPreEvaluation {
 		a.Status.PostDeploymentStatus = common.StateDeprecated
 		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
 		a.Status.WorkloadOverallStatus = common.StateDeprecated
+		a.Status.PromotionStatus = common.StateDeprecated
 	}
 	// deprecate pre evaluations, app deployment and post tasks and evaluations when pre-tasks failed
 	if phase == common.PhaseAppPreDeployment {
@@ -449,6 +497,7 @@ func (a *KeptnAppVersion) DeprecateRemainingPhases(phase common.KeptnPhaseType) 
 		a.Status.PostDeploymentEvaluationStatus = common.StateDeprecated
 		a.Status.WorkloadOverallStatus = common.StateDeprecated
 		a.Status.PreDeploymentEvaluationStatus = common.StateDeprecated
+		a.Status.PromotionStatus = common.StateDeprecated
 	}
 	// deprecate completely everything
 	if phase == common.PhaseDeprecated {
@@ -457,6 +506,7 @@ func (a *KeptnAppVersion) DeprecateRemainingPhases(phase common.KeptnPhaseType) 
 		a.Status.WorkloadOverallStatus = common.StateDeprecated
 		a.Status.PreDeploymentEvaluationStatus = common.StateDeprecated
 		a.Status.PreDeploymentStatus = common.StateDeprecated
+		a.Status.PromotionStatus = common.StateDeprecated
 		a.Status.Status = common.StateDeprecated
 		return
 	}

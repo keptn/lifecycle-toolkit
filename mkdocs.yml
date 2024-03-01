@@ -23,6 +23,8 @@ theme:
     - navigation.tracking
     - navigation.indexes
     - navigation.top
+    - navigation.tabs
+    - navigation.tabs.sticky
     - search.suggest
     - search.highlight
     - content.action.edit
@@ -30,6 +32,9 @@ theme:
     - search.suggest
     - search.highlight
     - content.code.copy
+    - content.code.annotate
+  icon:
+    annotation: material/arrow-right-circle
 site_url: !ENV READTHEDOCS_CANONICAL_URL
 repo_name: keptn/lifecycle-toolkit
 repo_url: https://github.com/keptn/lifecycle-toolkit
@@ -70,9 +75,12 @@ plugins:
   - git-revision-date-localized:
       fallback_to_build_date: true
   - blog:
+      post_excerpt: required
       blog_dir: blog
       draft_if_future_date: true
 markdown_extensions:
+  - admonition
+  - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -84,6 +92,13 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - attr_list
+  - md_in_html
 
 nav:
   - Home:
@@ -120,6 +135,8 @@ nav:
           - Evaluations: docs/guides/evaluations.md
           - DORA metrics: docs/guides/dora.md
           - OpenTelemetry observability: docs/guides/otel.md
+          - Context metadata: docs/guides/metadata.md
+          - Multi-stage Application delivery: docs/guides/multi-stage-application-delivery.md
       - Use Cases:
           - docs/use-cases/index.md
           - Day 2 Operations: docs/use-cases/day-2-operations.md
@@ -131,6 +148,7 @@ nav:
               - docs/components/lifecycle-operator/index.md
               - Flow of deployment: docs/components/lifecycle-operator/deployment-flow.md
               - Keptn Applications and Keptn Workloads: docs/components/lifecycle-operator/keptn-apps.md
+              - Keptn non-blocking application deployment: docs/components/lifecycle-operator/keptn-non-blocking.md
           - Metrics Operator: docs/components/metrics-operator.md
           - Scheduler and Scheduling Gates: docs/components/scheduling.md
           - Keptn Certificate Manager: docs/components/certificate-operator.md
@@ -160,6 +178,7 @@ nav:
               - AnalysisDefinition: docs/reference/crd-reference/analysisdefinition.md
               - AnalysisValueTemplate: docs/reference/crd-reference/analysisvaluetemplate.md
               - KeptnApp: docs/reference/crd-reference/app.md
+              - KeptnAppContext: docs/reference/crd-reference/appcontext.md
               - KeptnConfig: docs/reference/crd-reference/config.md
               - KeptnEvaluationDefinition: docs/reference/crd-reference/evaluationdefinition.md
               - KeptnMetric: docs/reference/crd-reference/metric.md
@@ -188,9 +207,11 @@ nav:
               - PR review process: docs/contribute/general/git/review.md
           - Contribution Guidelines: docs/contribute/general/contrib-guidelines-gen.md
           - Refinement Process: docs/contribute/general/refinement-guide.md
+          - Release Checklist: docs/contribute/general/release-checklist.md
       - Software contributions:
           - docs/contribute/software/index.md
           - Software development environment: docs/contribute/software/dev-environ.md
+          - Add a metrics provider: docs/contribute/software/add-new-metric-provider.md
       - Documentation contributions:
           - docs/contribute/docs/index.md
           - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs.md

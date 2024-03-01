@@ -905,6 +905,10 @@ spec:
       name: PostDeploymentEvaluationStatus
       priority: 1
       type: string
+    - jsonPath: .status.promotionStatus
+      name: PromotionStatus
+      priority: 1
+      type: string
     name: v1beta1
     schema:
       openAPIV3Schema:
@@ -977,6 +981,14 @@ spec:
                 description: PreviousVersion is the version of the KeptnApp that has
                   been deployed prior to this version.
                 type: string
+              promotionTasks:
+                description: |-
+                  PromotionTasks is a list of all tasks to be performed during the promotion phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
               revision:
                 default: 1
                 description: |-
@@ -1074,7 +1086,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -1107,7 +1119,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -1140,7 +1152,7 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array
@@ -1173,7 +1185,40 @@ spec:
                     status:
                       default: Pending
                       description: KeptnState  is a string containing current Phase
-                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
+                      type: string
+                  type: object
+                type: array
+              promotionStatus:
+                default: Pending
+                description: PromotionStatus indicates the current status of the KeptnAppVersion's
+                  Promotion phase.
+                type: string
+              promotionTaskStatus:
+                description: PromotionTaskStatus indicates the current state of each
+                  promotionTask of the KeptnAppVersion.
+                items:
+                  properties:
+                    definitionName:
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
+                      type: string
+                    endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
+                      format: date-time
+                      type: string
+                    name:
+                      description: Name is the name of the Evaluation/Task
+                      type: string
+                    startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
                       type: string
                   type: object
                 type: array

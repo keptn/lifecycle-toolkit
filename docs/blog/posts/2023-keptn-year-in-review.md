@@ -10,8 +10,7 @@ comments: true
 
 Hello and Happy New Year from the entire Keptn Team.
 We hope you had a wonderful holiday season and that you’re all having a wonderful 2024 so far!
-We’d like to take a moment to reflect back on what a great year 2023 was for Keptn and all the
-road ahead for this year.
+We’d like to take a moment to reflect back on what a great year 2023 was for Keptn and what we're looking forward to in 2024!
 
 The biggest news for the project in 2023 was probably the maturing of the cloud native Keptn,
 with the former subproject named Keptn Lifecycle Toolkit officially becoming Keptn in August 2023,
@@ -21,6 +20,7 @@ opinionated way of delivering Kubernetes apps and it was important for us to imp
 “big pillars” of Keptn v1: supporting the metrics component of the Keptn v1 quality gates feature,
 observability (new), and deployments by defining KeptnTasks & Evaluations to execute any container
 the user provides and extending deployments (job executor service in Keptn v1).
+<!-- more -->
 
 We’re happy to report that Keptn has now reached a general level of maturity and stabilization that
 we now have beta APIs.
@@ -29,7 +29,7 @@ of Keptn, or migrating, we recommend the following articles:
 
 - [September 2023: Keptn Lifecycle Toolkit is now Keptn!](https://medium.com/keptn/keptn-lifecycle-toolkit-is-now-keptn-e0812217bf46)
 - [July 2022: Keptn reaches incubating status in CNCF!](https://medium.com/keptn/keptn-reaches-the-incubating-status-in-the-cncf-67291e2dda7)
-- [Migrating to Keptn](https://keptn.sh/latest/docs/migrate/keptn/)
+- [Migrating to Keptn](https://keptn.sh/stable/docs/migrate/keptn/)
 
 ## Latest Release
 
@@ -70,14 +70,14 @@ Let us know if we missed yours, for now here's a collection from 2023:
 
 - Dec 2023: [GitOpsCon Europe (Virtual): Working Your Way Through GitOps with Keptn - Rakshit Gondwal, Cloud Native Computing Foundation & Shivang Shandilya, Open Source](https://youtu.be/CQhXfzYVAwY?feature=shared)
 - Nov 2023: KubeCon CloudNativeCon North America (Chicago):
-  - [Lightning Talk: From Novice to Keptn Contributor: Empowering My Journey in Cloud Native Communities by Yash Pimple](https://youtu.be/TyZS5mH6vM0?feature=shared)
-  - [Keptn Lifecycle Toolkit Updates and Deep Dive by Anna Reale](https://youtu.be/H3UxOwS06iI?feature=shared)
+    - [Lightning Talk: From Novice to Keptn Contributor: Empowering My Journey in Cloud Native Communities by Yash Pimple](https://youtu.be/TyZS5mH6vM0?feature=shared)
+    - [Keptn Lifecycle Toolkit Updates and Deep Dive by Anna Reale](https://youtu.be/H3UxOwS06iI?feature=shared)
 - Oct 2023: [Keptn Metrics Operator by Rakshit Gondwal](https://youtu.be/K9O2Xi8P6Y0?feature=shared&t=549)
 - Jul 2023: [Keptn Demo: Python & Container Functions Runtime by Florian Bacher](https://youtu.be/fkuo6CAJ1l8?feature=shared)
 - Jun 2023: [How GitHub Codespaces Makes Contributing to Keptn & Keptn Docs Much Easier! By Adam Gardner](https://youtu.be/sFNzOhZw7Eg)
 - May 2023: cdCon + GitOpsCon (Vancouver):
-  - Comparisons of Open Source GitOps Tooling - Akshay Yadav, Orange Business Services & Monika Yadav, NorthCap University (not recorded)
-  - Extending Observability to the Application Lifecycle with ArgoCD, Flux, and Keptn by Ana Margarita Medina & Adam Gardner (not recorded)
+    - Comparisons of Open Source GitOps Tooling - Akshay Yadav, Orange Business Services & Monika Yadav, NorthCap University (not recorded)
+    - Extending Observability to the Application Lifecycle with ArgoCD, Flux, and Keptn by Ana Margarita Medina & Adam Gardner (not recorded)
 - Apr 2023: [Introducing Keptn Lifecycle Toolkit by Andi Grabner](https://youtu.be/449HAFYkUlY?feature=shared)
 - Apr 2023: KubeCon CloudNativeCon Europe (Amsterdam): [Navigating the Delivery Lifecycle with Keptn by Giovanni Liva, Ana Medina, Brad McCoy, Meha Bhalodiya](https://youtu.be/Ezd6hGnRL84?feature=shared)
 - Mar 2023: [Keptn Lifecycle Toolkit: Installation and KeptnTask Creation in Minutes by Adam Gardner](https://youtu.be/Hh01bBwZ_qM?feature=shared)
@@ -92,7 +92,7 @@ At the end of 2023 we transitioned away from our own Keptn Slack workspace to
 [CNCF Slack](http://cloud-native.slack.com/)
 utilizing the [#keptn channel](https://cloud-native.slack.com/messages/keptn/) to
 better align with the Cloud Native ecosystem & other CNCF projects.
-We also saw a [new website](https://keptn.sh/) and [docs](https://keptn.sh/latest/docs/)
+We also saw a [new website](https://keptn.sh/) and [docs](https://keptn.sh/stable/docs/)
 (the new [docs folder in GitHub](https://github.com/keptn/lifecycle-toolkit/tree/main/docs)
 has been updated as well) and look forward to major improvements to both in 2024.
 

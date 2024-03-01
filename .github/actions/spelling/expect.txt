@@ -19,6 +19,7 @@ Analysislog
 analysismetrics
 analysispool
 analysisspec
+analysisstate
 analysisstatus
 analysistypes
 analysisvaluetemplate
@@ -75,8 +76,10 @@ carryforward
 certificatehandler
 certmanager
 certwebhook
+chainsaw
 Chans
 Checkmarx
+checktype
 clientgoscheme
 cloudevents
 clt
@@ -221,6 +224,7 @@ graphql
 groupversion
 GSo
 gstatic
+gtm
 GVK
 healthz
 hellopy
@@ -234,7 +238,6 @@ htmltest
 httpref
 httpreference
 HUGOx
-iak
 IAnalysis
 ICertificate
 IConfig
@@ -259,7 +262,6 @@ iobjective
 IOperator
 IProviders
 IRound
-IScheduling
 Isitobservable
 ISpan
 ITarget
@@ -273,7 +275,6 @@ Jhb
 jsonschema
 jwt
 kacr
-kauz
 kav
 kebabcase
 keda
@@ -321,9 +322,11 @@ keptnmetricsprovider
 keptnmetricsproviderlist
 keptnmetricsproviderspec
 keptnmetricstatus
+keptnphase
 keptnprommetrics
 keptnsandbox
 keptnserver
+keptnstate
 keptntask
 keptntaskdefinition
 keptntaskdefinitionlist
@@ -363,22 +366,23 @@ kubeflow
 kubescape
 kubescheduler
 kubeutils
-kudobuilder
 kustomization
 kustomize
 kustomizeconfig
-kuttl
+kwds
 kwi
 kwv
+kyverno
 lastword
 Lato
 LFC
+libexpat
 Lifcycle
 lifecyclekeptnsh
 linenums
 linkedin
+linkedtrace
 livenessprobe
-loadtests
 LOCALBIN
 logf
 logr
@@ -407,7 +411,6 @@ moq
 mowies
 mpod
 multigroup
-multipe
 mutatingwebhookconfigurations
 mwc
 mwh
@@ -422,7 +425,6 @@ mysecret
 myservice
 myuser
 myversion
-namespacedelete
 netlify
 nifi
 nilnil
@@ -439,6 +441,7 @@ objectmeta
 objectreference
 objref
 objs
+oci
 ocimage
 odubaj
 odubajdt
@@ -467,10 +470,12 @@ overriden
 owide
 oyaml
 PARAMSx
+PDTR
 perc
 persistentvolumeclaims
 persistentvolumes
 phaseitem
+phasetraceid
 pid
 pipefail
 poc
@@ -512,6 +517,7 @@ readyz
 Reale
 realpath
 redis
+refcache
 remediations
 replicasets
 replicationcontrollers
@@ -531,8 +537,7 @@ runtimes
 runtimespec
 Sambhav
 sbom
-schedulinggate
-schedulinggateshandler
+schedulinggates
 sclient
 screenshot
 sdkmetric
@@ -562,8 +567,10 @@ slo
 softprops
 sonarcloud
 spanhandler
+spanid
 spanitem
 spdx
+spdxjson
 spf
 squidfunk
 sre
@@ -601,7 +608,6 @@ testcertificate
 testcommon
 testmetrics
 testreg
-teststep
 tgz
 thisthatdc
 thschue
@@ -617,6 +623,7 @@ tokenreviews
 toml
 totalscore
 tplvalues
+traceid
 traceparent
 tracerfactory
 tracetest
@@ -667,6 +674,7 @@ WORKLOADOVERALLSTATUS
 workloadsstate
 workloadstatus
 workloadversion
+xbhj
 xxxx
 XXXXXXXXXXXXXXXXXXXXXXXX
 Yadav

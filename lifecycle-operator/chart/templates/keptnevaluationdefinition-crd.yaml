@@ -259,6 +259,19 @@ spec:
                   - keptnMetricRef
                   type: object
                 type: array
+              retries:
+                default: 10
+                description: |-
+                  Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
+                  missed evaluation objective, before considering the KeptnEvaluation to be failed.
+                type: integer
+              retryInterval:
+                default: 5s
+                description: |-
+                  RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error
+                  or a missed objective.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
             required:
             - objectives
             type: object

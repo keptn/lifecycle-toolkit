@@ -46,30 +46,30 @@ then reinstall Keptn from a Helm chart and re-apply your manifests.
 
 To start the upgrade process, follow the steps below:
 
-1. To not loose all of your data, we encourage you to do a backup of the manifests,
-which you applied to the cluster (`Pods`, `Deployments`,
+1. To not lose all of your data, we encourage you to do a backup of the manifests,
+which you applied to the cluster (`Deployments`,
 `StatefulSets`, `DaemonSets`, `KeptnApps`,... ).
 After the re-installation of Keptn with Helm, you can re-apply
 these manifests and restart the Keptn deployment process.
 
 1. Completely remove your Keptn installation with the following command sequence:
 
-```shell
-your-keptn-version=<your-keptn-version>
-kubectl delete -f \
-     https://github.com/keptn/lifecycle-toolkit/releases/download/$your-keptn-version/manifest.yaml
-```
+    ```shell
+    your-keptn-version=<your-keptn-version>
+    kubectl delete -f \
+         https://github.com/keptn/lifecycle-toolkit/releases/download/$your-keptn-version/manifest.yaml
+    ```
 
 1. Use Helm to install a clean version of Keptn:
 
-```shell
-helm repo add keptn https://charts.lifecycle.keptn.sh
-helm repo update
-helm upgrade --install keptn keptn/keptn -n keptn-system --create-namespace --wait
-```
+    ```shell
+    helm repo add keptn https://charts.lifecycle.keptn.sh
+    helm repo update
+    helm upgrade --install keptn keptn/keptn -n keptn-system --create-namespace --wait
+    ```
 
-For information about  advanced installation options, refer to
-[Modify Helm configuration options](./index.md).
+    For information about  advanced installation options, refer to
+    [Modify Helm configuration options](./index.md).
 
 1. After the installation finishes, restore the manifests from you backup
 

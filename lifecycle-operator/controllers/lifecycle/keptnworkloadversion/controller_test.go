@@ -10,24 +10,22 @@ import (
 
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	evaluationfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
 	phasefake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase/fake"
-	schedulinggatesfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
-	testrequire "github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	appsv1 "k8s.io/api/apps/v1"
-	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -52,8 +50,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedReplicaSet(t *
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableReplicaSet(t *testing.T) {
@@ -70,8 +68,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableReplicaSe
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.NotNil(t, err)
-	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
+	require.NotNil(t, err)
+	require.Equal(t, apicommon.StateUnknown, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedStatefulSet(t *testing.T) {
@@ -86,8 +84,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedStatefulSet(t 
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableStatefulSet(t *testing.T) {
@@ -104,8 +102,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableStatefulS
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.NotNil(t, err)
-	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
+	require.NotNil(t, err)
+	require.Equal(t, apicommon.StateUnknown, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedDaemonSet(t *testing.T) {
@@ -120,8 +118,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedDaemonSet(t *t
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateProgressing, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableDaemonSet(t *testing.T) {
@@ -136,8 +134,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableDaemonSet
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.NotNil(t, err)
-	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
+	require.NotNil(t, err)
+	require.Equal(t, apicommon.StateUnknown, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyReplicaSet(t *testing.T) {
@@ -153,8 +151,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyReplicaSet(t *t
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateSucceeded, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyStatefulSet(t *testing.T) {
@@ -170,8 +168,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyStatefulSet(t *
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateSucceeded, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyDaemonSet(t *testing.T) {
@@ -186,8 +184,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyDaemonSet(t *te
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateSucceeded, keptnState)
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnsupportedReferenceKind(t *testing.T) {
@@ -199,47 +197,8 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnsupportedReference
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.ErrorIs(t, err, controllererrors.ErrUnsupportedWorkloadVersionResourceReference)
-	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
-}
-
-func TestKeptnWorkloadVersionReconciler_IsPodRunning(t *testing.T) {
-	p1 := makeNominatedPod("pod1", "node1", v1.PodRunning)
-	p2 := makeNominatedPod("pod2", "node1", v1.PodPending)
-	podList := &v1.PodList{Items: []v1.Pod{p1, p2}}
-	podList2 := &v1.PodList{Items: []v1.Pod{p2}}
-	r := &KeptnWorkloadVersionReconciler{
-		Client: k8sfake.NewClientBuilder().WithLists(podList).Build(),
-	}
-	isPodRunning, err := r.isPodRunning(context.TODO(), klcv1beta1.ResourceReference{UID: "pod1"}, "node1")
-	testrequire.Nil(t, err)
-	if !isPodRunning {
-		t.Errorf("Wrong!")
-	}
-
-	r2 := &KeptnWorkloadVersionReconciler{
-		Client: k8sfake.NewClientBuilder().WithLists(podList2).Build(),
-	}
-	isPodRunning, err = r2.isPodRunning(context.TODO(), klcv1beta1.ResourceReference{UID: "pod1"}, "node1")
-	testrequire.Nil(t, err)
-	if isPodRunning {
-		t.Errorf("Wrong!")
-	}
-
-}
-
-func makeNominatedPod(podName string, nodeName string, phase v1.PodPhase) v1.Pod {
-	return v1.Pod{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: nodeName,
-			Name:      podName,
-			UID:       types.UID(podName),
-		},
-		Status: v1.PodStatus{
-			Phase:             phase,
-			NominatedNodeName: nodeName,
-		},
-	}
+	require.ErrorIs(t, err, controllererrors.ErrUnsupportedWorkloadVersionResourceReference)
+	require.Equal(t, apicommon.StateUnknown, keptnState)
 }
 
 func makeReplicaSet(name string, namespace string, wanted *int32, available int32) *appsv1.ReplicaSet {
@@ -794,11 +753,6 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 		},
 	)
 	r, eventChannel, _ := setupReconciler(wi, app)
-	r.SchedulingGatesHandler = &schedulinggatesfake.ISchedulingGatesHandlerMock{
-		EnabledFunc: func() bool {
-			return false
-		},
-	}
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -838,168 +792,6 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 	require.True(t, b)
 	require.Equal(t, "bar", metadata["foo"])
 	require.Equal(t, "test", metadata["testy"])
-}
-
-func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion_SchedulingGates(t *testing.T) {
-
-	testNamespace := "some-ns"
-
-	wi := &klcv1beta1.KeptnWorkloadVersion{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "some-wi",
-			Namespace: testNamespace,
-		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
-				AppName: "some-app",
-				Version: "1.0.0",
-			},
-			WorkloadName:    "some-app-some-workload",
-			PreviousVersion: "",
-			TraceId:         nil,
-		},
-		Status: klcv1beta1.KeptnWorkloadVersionStatus{
-			DeploymentStatus:               apicommon.StateSucceeded,
-			PreDeploymentStatus:            apicommon.StateSucceeded,
-			PostDeploymentStatus:           apicommon.StateSucceeded,
-			PreDeploymentEvaluationStatus:  apicommon.StateSucceeded,
-			PostDeploymentEvaluationStatus: apicommon.StateSucceeded,
-			CurrentPhase:                   apicommon.PhaseWorkloadPostEvaluation.ShortName,
-			Status:                         apicommon.StateSucceeded,
-			StartTime:                      metav1.Time{},
-			EndTime:                        metav1.Time{},
-		},
-	}
-
-	app := testcommon.ReturnAppVersion(
-		testNamespace,
-		"some-app",
-		"1.0.0",
-		[]klcv1beta1.KeptnWorkloadRef{
-			{
-				Name:    "some-workload",
-				Version: "1.0.0",
-			},
-		},
-		klcv1beta1.KeptnAppVersionStatus{
-			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
-		},
-	)
-
-	schedulingGatesMock := &schedulinggatesfake.ISchedulingGatesHandlerMock{
-		RemoveGatesFunc: func(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion) error {
-			return nil
-		},
-		EnabledFunc: func() bool {
-			return true
-		},
-	}
-	r, eventChannel, _ := setupReconciler(wi, app)
-	r.SchedulingGatesHandler = schedulingGatesMock
-
-	req := ctrl.Request{
-		NamespacedName: types.NamespacedName{
-			Namespace: testNamespace,
-			Name:      "some-wi",
-		},
-	}
-
-	result, err := r.Reconcile(context.TODO(), req)
-
-	require.Len(t, schedulingGatesMock.RemoveGatesCalls(), 1)
-	require.Nil(t, err)
-
-	// do not requeue since we reached completion
-	require.False(t, result.Requeue)
-
-	// here we do not expect an event about the application preEvaluation being finished since that  will have been sent in
-	// one of the previous reconciliation loops that lead to the first phase being reached
-	expectedEvents := []string{
-		"CompletedFinished",
-	}
-
-	for _, e := range expectedEvents {
-		select {
-		case event := <-eventChannel:
-			assert.Equal(t, strings.Contains(event, req.Name), true, "wrong workloadVersion")
-			assert.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
-			assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
-		case <-time.After(5 * time.Second):
-			t.Error("Didn't receive the cloud event")
-		}
-	}
-}
-
-func TestKeptnWorkloadVersionReconciler_RemoveGates_fail(t *testing.T) {
-
-	testNamespace := "some-ns"
-
-	wi := &klcv1beta1.KeptnWorkloadVersion{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "some-wi",
-			Namespace: testNamespace,
-		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
-				AppName: "some-app",
-				Version: "1.0.0",
-			},
-			WorkloadName:    "some-app-some-workload",
-			PreviousVersion: "",
-			TraceId:         nil,
-		},
-		Status: klcv1beta1.KeptnWorkloadVersionStatus{
-			DeploymentStatus:               apicommon.StateSucceeded,
-			PreDeploymentStatus:            apicommon.StateSucceeded,
-			PostDeploymentStatus:           apicommon.StateSucceeded,
-			PreDeploymentEvaluationStatus:  apicommon.StateSucceeded,
-			PostDeploymentEvaluationStatus: apicommon.StateSucceeded,
-			CurrentPhase:                   apicommon.PhaseWorkloadPostEvaluation.ShortName,
-			Status:                         apicommon.StateSucceeded,
-			StartTime:                      metav1.Time{},
-			EndTime:                        metav1.Time{},
-		},
-	}
-
-	app := testcommon.ReturnAppVersion(
-		testNamespace,
-		"some-app",
-		"1.0.0",
-		[]klcv1beta1.KeptnWorkloadRef{
-			{
-				Name:    "some-workload",
-				Version: "1.0.0",
-			},
-		},
-		klcv1beta1.KeptnAppVersionStatus{
-			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
-		},
-	)
-	r, _, _ := setupReconciler(wi, app)
-	r.SchedulingGatesHandler = &schedulinggatesfake.ISchedulingGatesHandlerMock{
-		RemoveGatesFunc: func(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion) error {
-			return fmt.Errorf("err")
-		},
-		EnabledFunc: func() bool {
-			return true
-		},
-	}
-
-	req := ctrl.Request{
-		NamespacedName: types.NamespacedName{
-			Namespace: testNamespace,
-			Name:      "some-wi",
-		},
-	}
-
-	result, err := r.Reconcile(context.TODO(), req)
-
-	require.NotNil(t, err)
-
-	// do not requeue since we reached completion
-	require.True(t, result.Requeue)
 }
 
 func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
@@ -1215,6 +1007,7 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, ch
 		Meters:        testcommon.InitAppMeters(),
 		SpanHandler:   spanHandlerMock,
 		TracerFactory: tf,
+		Config:        config.Instance(),
 		EvaluationHandler: &evaluationfake.MockEvaluationHandler{
 			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
 				return []klcv1beta1.ItemStatus{}, apicommon.StatusSummary{}, nil

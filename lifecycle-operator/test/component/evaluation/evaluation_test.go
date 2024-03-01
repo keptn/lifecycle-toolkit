@@ -273,6 +273,9 @@ func makeEvaluationDefinition(name string, namespaceName string, objectiveName s
 					EvaluationTarget: "<10",
 				},
 			},
+			FailureConditions: klcv1beta1.FailureConditions{
+				Retries: 3,
+			},
 		},
 	}
 
@@ -314,7 +317,6 @@ func makeEvaluation(name string, namespaceName string, evaluationDefinition stri
 			AppName:              "app",
 			EvaluationDefinition: evaluationDefinition,
 			Type:                 apicommon.PreDeploymentEvaluationCheckType,
-			Retries:              3,
 		},
 	}
 

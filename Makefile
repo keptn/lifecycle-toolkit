@@ -2,7 +2,7 @@
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION?=v5.3.0
-CHART_APPVERSION ?= v0.9.0 # x-release-please-version
+CHART_APPVERSION ?= v0.10.0 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine
@@ -22,35 +22,43 @@ $(LOCALBIN):
 ## Tool Binaries
 KUSTOMIZE ?= $(LOCALBIN)/kustomize
 
+############
+# CHAINSAW #
+############
+
 .PHONY: integration-test #these tests should run on a real cluster!
-integration-test:	# to run a single test by name use --test eg. --test=expose-keptn-metric
-	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test.yaml
-	kubectl kuttl test --start-kind=false ./test/testmetrics/ --config=kuttl-test.yaml
-	kubectl kuttl test --start-kind=false ./test/testanalysis/ --config=kuttl-test.yaml
-	kubectl kuttl test --start-kind=false ./test/testcertificate/ --config=kuttl-test.yaml
+integration-test:
+	kubectl apply -f ./lifecycle-operator/config/crd/bases
+	chainsaw test --test-dir ./test/chainsaw/testmetrics/
+	chainsaw test --test-dir ./test/chainsaw/integration/
+	chainsaw test --test-dir ./test/chainsaw/testanalysis/
+	chainsaw test --test-dir ./test/chainsaw/testcertificate/
+	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
-integration-test-local: install-prometheus
-	kubectl kuttl test --start-kind=false ./test/integration/ --config=kuttl-test-local.yaml
-	kubectl kuttl test --start-kind=false ./test/testmetrics/ --config=kuttl-test-local.yaml
-	kubectl kuttl test --start-kind=false ./test/testanalysis/ --config=kuttl-test-local.yaml
-	kubectl kuttl test --start-kind=false ./test/testcertificate/ --config=kuttl-test-local.yaml
+integration-test-local:
+	kubectl apply -f ./lifecycle-operator/config/crd/bases
+	chainsaw test --test-dir ./test/chainsaw/integration/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/testmetrics/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/testanalysis/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/testcertificate/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/ --config ./.chainsaw-local.yaml
 
 .PHONY: integration-test-scheduling-gates #these tests should run on a real cluster!
-integration-test-scheduling-gates:	# to run a single test by name use --test eg. --test=expose-keptn-metric
-	kubectl kuttl test --start-kind=false ./test/scheduling-gates/ --config=kuttl-test.yaml
+integration-test-scheduling-gates:
+	chainsaw test --test-dir ./test/chainsaw/scheduling-gates/
 
 .PHONY: integration-test-scheduling-gates-local #these tests should run on a real cluster!
 integration-test-scheduling-gates-local: install-prometheus
-	kubectl kuttl test --start-kind=false ./test/scheduling-gates/ --config=kuttl-test-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/scheduling-gates/ --config ./.chainsaw-local.yaml
 
 .PHONY: integration-test-allowed-namespaces #these tests should run on a real cluster!
-integration-test-allowed-namespaces:	# to run a single test by name use --test eg. --test=expose-keptn-metric
-	kubectl kuttl test --start-kind=false ./test/allowed-namespaces/ --config=kuttl-test.yaml
+integration-test-allowed-namespaces:
+	chainsaw test --test-dir ./test/chainsaw/allowed-namespaces/
 
 .PHONY: integration-test-allowed-namespaces-local #these tests should run on a real cluster!
 integration-test-allowed-namespaces-local: install-prometheus
-	kubectl kuttl test --start-kind=false ./test/allowed-namespaces/ --config=kuttl-test-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/allowed-namespaces/ --config ./.chainsaw-local.yaml
 
 .PHONY: load-test
 load-test:
@@ -140,23 +148,28 @@ yamllint:
 	@docker run --rm -t -v $(PWD):/data cytopia/yamllint:$(YAMLLINT_VERSION) .
 
 ##Run lint for the subfiles
+.PHONY: install-golangci-lint
+install-golangci-lint:
+	@go install -v github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
 .PHONY: metrics-operator-lint
-metrics-operator-lint:
+metrics-operator-lint: install-golangci-lint
 	$(MAKE) -C metrics-operator lint
 
 .PHONY: certmanager-lint
-certmanager-lint:
+certmanager-lint: install-golangci-lint
 	$(MAKE) -C keptn-cert-manager lint
 
 .PHONY: operator-lint
-operator-lint:
+operator-lint: install-golangci-lint
 	$(MAKE) -C lifecycle-operator lint
 
 .PHONY: scheduler-lint
-scheduler-lint:
+scheduler-lint: install-golangci-lint
 	$(MAKE) -C scheduler lint
 
 .PHONY: lint
-lint: 
-	go install -v github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-	metrics-operator-lint certmanager-lint operator-lint scheduler-lint
+lint: metrics-operator-lint
+lint: certmanager-lint
+lint: operator-lint
+lint: scheduler-lint

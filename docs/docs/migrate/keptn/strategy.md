@@ -42,23 +42,25 @@ Some key points:
   rather than using its own Git repo and its
   [shipyard.yaml](https://v1.keptn.sh/docs/1.0.x/reference/files/shipyard/)
   file as Keptn v1 does.
-  * See the
+    * See the
     [Lifecycle CRD Reference](../../reference/crd-reference/index.md)
     and
     [Metrics CRD Reference](../../reference/crd-reference/index.md)
     section for pages that describe the Keptn manifests
     that you populate manually for Keptn.
-  * See the
+    * See the
     [API Reference](../../reference/api-reference/index.md)
     for a comprehensive reference to all resources
     defined for Keptn.
 
 * Keptn is not a delivery tool
-  because it does not provide promotion.
-  Instead, it works with standard deployment tools
-  such as ArgoCD, Flux, even `kubectl -- apply`.
-  Keptn then prevents the scheduling and deployment
-  of workflows if the environment does not meet
+  but it does provide a possibility to promote software
+  to another stage in a staged environment
+  which works with standard deployment tools
+  such as ArgoCD, Flux, even `kubectl apply`.
+  Keptn complements these tools by preventing the
+  scheduling and deployment of workflows
+  if the environment does not meet
   the user-defined requirements.
 
 * Keptn operates on a

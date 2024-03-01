@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kyverno/chainsaw/main/.schemas/json/test-chainsaw-v1alpha1.json
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  creationTimestamp: null
+  name: simple-deployment
+spec:
+  namespaceTemplate:
+    metadata:
+      annotations:
+        keptn.sh/lifecycle-toolkit: enabled
+  steps:
+    - name: step-00
+      try:
+        - apply:
+            file: 00-install.yaml
+        - assert:
+            file: 00-assert.yaml
+      catch:
+        - podLogs:
+            selector: app=test
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
+        - podLogs:
+            selector: control-plane=lifecycle-operator
+            namespace: keptn-system
+    - name: step-01
+      try:
+        - assert:
+            file: 01-assert.yaml
+      catch:
+        - podLogs:
+            selector: app=test
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
+        - podLogs:
+            selector: control-plane=lifecycle-operator
+            namespace: keptn-system

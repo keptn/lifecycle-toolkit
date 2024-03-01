@@ -39,7 +39,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `Analysis` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[AnalysisSpec](#analysisspec)_ |  || ✓ |
 | `status` _[AnalysisStatus](#analysisstatus)_ |  || ✓ |
 
@@ -57,7 +57,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `AnalysisDefinition` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[AnalysisDefinitionSpec](#analysisdefinitionspec)_ |  || ✓ |
 | `status` _string_ | unused field || ✓ |
 
@@ -74,7 +74,7 @@ AnalysisDefinitionList contains a list of AnalysisDefinition resources
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `AnalysisDefinitionList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[AnalysisDefinition](#analysisdefinition) array_ |  || x |
 
 
@@ -105,7 +105,7 @@ AnalysisList contains a list of Analysis resources
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `AnalysisList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[Analysis](#analysis) array_ |  || x |
 
 
@@ -151,7 +151,7 @@ _Appears in:_
 | `raw` _string_ | Raw contains the raw result of the SLO computation || ✓ |
 | `pass` _boolean_ | Pass returns whether the SLO is satisfied || ✓ |
 | `warning` _boolean_ | Warning returns whether the analysis returned a warning || ✓ |
-| `state` _string_ | State describes the current state of the Analysis (Pending/Progressing/Completed) || x |
+| `state` _[AnalysisState](#analysisstate)_ | State describes the current state of the Analysis (Pending/Progressing/Completed) || x |
 | `storedValues` _object (keys:string, values:[ProviderResult](#providerresult))_ | StoredValues contains all analysis values that have already been retrieved successfully || ✓ |
 
 
@@ -168,7 +168,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `AnalysisValueTemplate` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[AnalysisValueTemplateSpec](#analysisvaluetemplatespec)_ | Spec contains the specification for the AnalysisValueTemplate || ✓ |
 | `status` _string_ | unused field || ✓ |
 
@@ -185,7 +185,7 @@ AnalysisValueTemplateList contains a list of AnalysisValueTemplate resources
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `AnalysisValueTemplateList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[AnalysisValueTemplate](#analysisvaluetemplate) array_ |  || x |
 
 
@@ -234,7 +234,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnMetric` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnMetricSpec](#keptnmetricspec)_ |  || ✓ |
 | `status` _[KeptnMetricStatus](#keptnmetricstatus)_ |  || ✓ |
 
@@ -251,7 +251,7 @@ KeptnMetricList contains a list of KeptnMetric resources
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnMetricList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnMetric](#keptnmetric) array_ |  || x |
 
 
@@ -303,7 +303,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnMetricsProvider` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |
 | `spec` _[KeptnMetricsProviderSpec](#keptnmetricsproviderspec)_ |  || ✓ |
 | `status` _string_ | unused field || ✓ |
 
@@ -320,7 +320,7 @@ KeptnMetricsProviderList contains a list of KeptnMetricsProvider resources
 | --- | --- | --- | --- |
 | `apiVersion` _string_ | `metrics.keptn.sh/v1beta1` | | |
 | `kind` _string_ | `KeptnMetricsProviderList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |
 | `items` _[KeptnMetricsProvider](#keptnmetricsprovider) array_ |  || x |
 
 

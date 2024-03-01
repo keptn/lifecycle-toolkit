@@ -53,20 +53,20 @@ that are relevant only to documentation.
   This ensures that, when the sample file is updated,
   your document is also updated.
 
-    For example, to include the `examples/sample-app/version3/app-pre-deploy-eval.yaml` file,
+    For example, to include the `examples/sample-app/version1/app-pre-deploy-eval.yaml` file,
     the syntax is:
 
     ```md
-    {% /* include "examples/sample-app/version-3/app-pre-deploy-eval.yaml" */ %}
+    {% /* include "examples/sample-app/version-1/app-pre-deploy-eval.yaml" */ %}
     ```
 
-  * `markdownlint` enforces limits on line length.
-    Links to other documents are exempted from this limit
-    but, if a line has words before and after the long string,
-    `markdownlint` fails.
-    A good practice is to just put all links on their own line.
-    So, instead of coding:
-  
+* `markdownlint` enforces limits on line length.
+  Links to other documents are exempted from this limit
+  but, if a line has words before and after the long string,
+  `markdownlint` fails.
+  A good practice is to just put all links on their own line.
+  So, instead of coding:
+
     ```md
     The [Other section](long-link-to-section) page
     ```
@@ -81,17 +81,17 @@ that are relevant only to documentation.
     page
     ```
 
-  * Always build the documentation locally to check the formatting
-    and verify that all links are working properly.
-    See [Build Documentation Locally](./local-building.md)
-    for details.
+* Always build the documentation locally to check the formatting
+  and verify that all links are working properly.
+  See [Build Documentation Locally](./local-building.md)
+  for details.
 
-  * Always run the following to fix most markdown issues in your PR
-    and identify issues that can not be fixed automatically:
+* Always run the following to fix most markdown issues in your PR
+  and identify issues that can not be fixed automatically:
 
     ```shell
     make markdownlint-fix
     ```
 
-    See [Markdownlint](./linter-requirements.md#markdownlint)
-    for details.
+  See [Markdownlint](./linter-requirements.md#markdownlint)
+  for details.

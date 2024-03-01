@@ -1,3 +1,6 @@
+// Package v1alpha3 contains API Schema definitions for the lifecycle v1alpha3 API group
+// +groupName=lifecycle.keptn.sh
+// +versionName=v1alpha3
 package common
 
 import (

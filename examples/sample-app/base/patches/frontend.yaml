@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-frontend
+  namespace: podtato-kubectl
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: podtato-head-frontend
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/version: 0.1.0
+    spec:
+      containers:
+        - name: podtato-head-frontend
+          env:
+            - name: PODTATO_COMPONENT
+              value: "frontend"
+            - name: PODTATO_STARTUP_DELAY
+              value: "20s"
+            - name: PODTATO_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['app.kubernetes.io/version']

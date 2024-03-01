@@ -16,15 +16,13 @@ on:
         default: allowed_ns_off
 env:
   GO_VERSION: "~1.20"
-  # renovate: datasource=github-tags depName=kudobuilder/kuttl
-  KUTTL_VERSION: "v0.15.0"
 defaults:
   run:
     shell: bash
 
 jobs:
   run-integration-test:
-    name: Run Integration Tests
+    name: Run Chainsaw Tests
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
@@ -40,13 +38,8 @@ jobs:
       - name: Install and expose Prometheus
         uses: ./.github/actions/deploy-prometheus-on-cluster
 
-      - name: Download KUTTL
-        env:
-          BASE_URL: "https://github.com/kudobuilder/kuttl/releases"
-        run: |
-          curl -fL "${BASE_URL}/download/${{ env.KUTTL_VERSION }}/kubectl-kuttl_${KUTTL_VERSION#v}_linux_x86_64" -o kubectl-kuttl
-          chmod +x kubectl-kuttl
-          mv kubectl-kuttl /usr/local/bin
+      - name: Install Chainsaw
+        uses: kyverno/action-install-chainsaw@v0.1.7
 
       - name: Run Scheduling Gates Integration Tests
         if: inputs.scheduling-gates == 'gates_on' && inputs.allowed-namespaces == 'allowed_ns_off'
@@ -70,7 +63,7 @@ jobs:
 
       - name: Upload cluster logs
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: logs-integration-tests-${{ inputs.scheduling-gates }}-${{ inputs.allowed-namespaces }}
           path: .github/scripts/logs

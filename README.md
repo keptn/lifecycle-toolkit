@@ -5,6 +5,8 @@
 ![goversion](https://img.shields.io/github/go-mod/go-version/keptn/lifecycle-toolkit?filename=lifecycle-operator/go.mod)
 ![version](https://img.shields.io/github/v/release/keptn/lifecycle-toolkit)
 [![GitHub Discussions](https://img.shields.io/github/discussions/keptn/lifecycle-toolkit)](https://github.com/keptn/lifecycle-toolkit/discussions)
+[![Artifacthub Badge](https://img.shields.io/badge/Keptn-blue?style=flat&logo=artifacthub&label=Artifacthub&link=https%3%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Flifecycle-toolkit%2Fkeptn)](https://artifacthub.io/packages/helm/lifecycle-toolkit/keptn)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/3588/badge)](https://www.bestpractices.dev/projects/3588)
 
 This is the primary repository for
 the Keptn software and documentation.
@@ -61,6 +63,21 @@ stable ![status](https://img.shields.io/badge/status-stable-brightgreen) )
 -->
 The status follows the
 [Kubernetes API versioning schema](https://kubernetes.io/docs/reference/using-api/#api-versioning).
+
+## Community
+
+Find details on regular hosted community events in the [keptn/community repo](https://github.com/keptn/community)
+and our Slack channel(s) in the [CNCF Slack workspace.](https://cloud-native.slack.com/messages/keptn/)
+
+## Governance
+
+- [Community Membership](https://github.com/keptn/community/blob/main/community-membership.md):
+  Guidelines for community engagement, contribution expectations,
+  and the process for becoming a community member at different levels.
+
+- [Members and Charter](https://github.com/keptn/community/blob/main/governance/members-and-charter.md):
+  Describes the formation and responsibilities of the Keptn Governance Committee,
+  including its scope, members, and core responsibilities.
 
 ## Installation
 

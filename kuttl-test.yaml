@@ -1,7 +1,0 @@
-apiVersion: kuttl.dev/v1
-kind: TestSuite
-crdDir: ./lifecycle-operator/config/crd/bases
-testDirs:
-  - ./test/integration/
-timeout: 400
-skipDelete: true

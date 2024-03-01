@@ -1,3 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
 resources:
   - https://github.com/podtato-head/podtato-head-app/releases/download/v0.3.1/manifest.yaml
   - app-post-deploy.yaml
@@ -6,6 +9,13 @@ resources:
   - metric.yaml
   - container-task.yaml
   - python-task.yaml
+  - promotion-task.yaml
 
-patchesStrategicMerge:
-  - manifest.yaml
+patches:
+  - path: patches/namespace.yaml
+  - path: patches/frontend.yaml
+  - path: patches/left-leg.yaml
+  - path: patches/right-leg.yaml
+  - path: patches/left-arm.yaml
+  - path: patches/right-arm.yaml
+  - path: patches/podtato-head-hat.yaml

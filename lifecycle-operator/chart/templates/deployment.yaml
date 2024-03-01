@@ -102,12 +102,15 @@ spec:
         - name: SCHEDULING_GATES_ENABLED
           value: {{ .Values.schedulingGatesEnabled | quote
             }}
+        - name: PROMOTION_TASKS_ENABLED
+          value: {{ .Values.promotionTasksEnabled | quote
+            }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
         - name: CERT_MANAGER_ENABLED
           value: {{ .Values.global.certManagerEnabled | quote }}
         image: {{ include "common.images.image" ( dict "imageRoot" .Values.lifecycleOperator.image "global" .Values.global ) }}
-        imagePullPolicy: {{ .Values.lifecycleOperator.imagePullPolicy }}
+        imagePullPolicy: {{ .Values.lifecycleOperator.image.imagePullPolicy | default (.Values.global.imagePullPolicy | default "IfNotPresent") }}
         name: lifecycle-operator
         ports:
         - containerPort: 9443
@@ -200,7 +203,7 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
         image: {{ include "common.images.image" ( dict "imageRoot" .Values.scheduler.image "global" .Values.global ) }}
-        imagePullPolicy: {{ .Values.scheduler.imagePullPolicy }}
+        imagePullPolicy: {{.Values.scheduler.image.imagePullPolicy | default (.Values.global.imagePullPolicy | default "IfNotPresent") }}
         name: scheduler
         resources: {{- toYaml .Values.scheduler.resources | nindent 10 }}
         securityContext:

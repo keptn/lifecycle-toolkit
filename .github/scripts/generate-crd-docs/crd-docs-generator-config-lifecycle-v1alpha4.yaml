@@ -15,7 +15,7 @@ render:
     - name: KeptnState
       package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common
       link: ../v1alpha3/index.md#keptnstate
-    - name: PhaseTraceId
+    - name: PhaseTraceID
       package: github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common
       link: ../v1alpha3/index.md#phasetraceid
     - name: Quantity

@@ -1,3 +1,4 @@
+// Package v1beta1 contains API Schema definitions for the lifecycle v1beta1 API group
 // +groupName=lifecycle.keptn.sh
 // +versionName=v1beta1
 package common

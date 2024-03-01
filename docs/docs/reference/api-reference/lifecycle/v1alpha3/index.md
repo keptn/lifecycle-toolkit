@@ -10,6 +10,7 @@ Reference information for lifecycle.keptn.sh/v1alpha3
 
 ## lifecycle.keptn.sh/v1alpha3
 
+Package v1alpha3 contains API Schema definitions for the lifecycle v1alpha3 API group
 
 ### Resource Types
 - [KeptnApp](#keptnapp)

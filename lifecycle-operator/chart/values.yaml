@@ -99,7 +99,7 @@ lifecycleOperator:
 ## @param   lifecycleOperator.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
     optionsControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.pythonRunnerImage specify image for python task runtime
-    pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.2
+    pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.3
   image:
 ## @param    lifecycleOperator.image.registry specify the container registry for the lifecycle-operator image
     registry: ghcr.io

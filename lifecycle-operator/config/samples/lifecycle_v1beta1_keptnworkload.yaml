@@ -3,6 +3,7 @@ kind: KeptnWorkload
 metadata:
   name: keptnworkload-sample
 spec:
+  observabilityTimeout: 5m
   app: "some-keptn-app2"
   version: "0.2.7"
   preDeploymentTasks:

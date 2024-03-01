@@ -117,6 +117,9 @@ type KeptnWorkloadVersionStatus struct {
 	// AppContextMetadata contains metadata from the related KeptnAppVersion.
 	// +optional
 	AppContextMetadata map[string]string `json:"appContextMetadata,omitempty"`
+	// DeploymentStartTime represents the start time of the deployment phase
+	// +optional
+	DeploymentStartTime metav1.Time `json:"deploymentStartTime,omitempty"`
 }
 
 // +kubebuilder:object:root=true

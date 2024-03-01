@@ -5,6 +5,7 @@ metadata:
     traceparent: my-trace-parent
   name: some-keptn-workload-version
 spec:
+  observabilityTimeout: 5m
   app: podtato-head
   resourceReference:
     kind: ReplicaSet

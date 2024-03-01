@@ -61,6 +61,14 @@ type KeptnWorkloadSpec struct {
 	// +optional
 	// Metadata contains additional key-value pairs for contextual information.
 	Metadata map[string]string `json:"metadata,omitempty"`
+	// ObservabilityTimeout specifies the maximum time to observe the deployment phase of KeptnWorkload.
+	// If the workload does not deploy successfully within this time frame, it will be
+	// considered as failed.
+	// +kubebuilder:default:="5m"
+	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+	// +kubebuilder:validation:Type:=string
+	// +optional
+	ObservabilityTimeout metav1.Duration `json:"observabilityTimeout,omitempty"`
 }
 
 // KeptnWorkloadStatus defines the observed state of KeptnWorkload

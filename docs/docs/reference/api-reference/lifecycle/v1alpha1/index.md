@@ -454,21 +454,6 @@ _Appears in:_
 
 
 
-#### KeptnPhaseType
-
-
-
-
-
-_Appears in:_
-- [KeptnPhase](#keptnphase)
-
-| Field | Description | Default | Optional |
-| --- | --- | --- | --- |
-| `LongName` _string_ |  || x |
-| `ShortName` _string_ |  || x |
-
-
 #### KeptnState
 
 _Underlying type:_ _string_

@@ -4,9 +4,11 @@ processor:
     - "EmptyStatus$"
     - "KeptnEvaluationProvider$"
     - "KeptnEvaluationProviderList$"
+    - "KeptnPhase$"
   ignoreFields:
     - "TypeMeta$"
     - "EmptyStatus$"
+    - "KeptnPhase$"
 render:
   kubernetesVersion: 1.28
   knownTypes:

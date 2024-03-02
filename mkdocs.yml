@@ -1,6 +1,8 @@
 site_name: Keptn - Supercharge Your Deployments
 theme:
   name: material
+  icon:
+    annotation: material/arrow-right-circle
   custom_dir: docs/overrides
   palette:
     # Palette toggle for light mode
@@ -79,6 +81,8 @@ plugins:
       blog_dir: blog
       draft_if_future_date: true
 markdown_extensions:
+  - attr_list
+  - md_in_html
   - admonition
   - pymdownx.details
   - pymdownx.highlight:

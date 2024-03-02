@@ -184,50 +184,114 @@ The overall evaluation has passed, and no warnings have been issued.
 
 The meaning of each of these properties is as follows:
 
-**`objectiveResults`**: This is an array containing one or more objects,
+**`objectiveResults`** (1) 
+{ .annotate }
+
+1.  This is an array containing one or more objects,
 each representing the results of a specific objective or performance metric.
 
-- The first item in the array:
-    - **`result`** -- This object contains information about whether the objective has passed or failed.
+
+The first item in the array:
+
+**`result`** (1) 
+{ .annotate }
+
+1.  This object contains information about whether the objective has passed or failed.
+
     It has two sub-objects:
-        - **`failResult`** -- Indicates whether the objective has failed.
+
+    - **`failResult`** -- Indicates whether the objective has failed.
           In this case, it checks if a value is greater than 500 milliseconds
           and it has not been fulfilled (`fulfilled: false`).
-        - **`warnResult`** -- Indicates whether the objective has issued a warning.
+
+     - **`warnResult`** -- Indicates whether the objective has issued a warning.
           It checks if a value is greater than 300 milliseconds
           and it has not been fulfilled (`fulfilled: false`).
-    - **`warning`** (false in this case).
-        - **`pass`** -- Indicates whether the objective has passed (true in this case).
-    - **`objective`** -- Describes the objective being evaluated.
+
+**`warning`** (1) 
+{ .annotate }
+
+1.  (false in this case).
+
+    It has two sub-objects:
+
+    - **`pass`** -- Indicates whether the objective has passed (true in this case).
+
+
+**`objective`** (1) 
+{ .annotate }
+
+1.  Describes the objective being evaluated.
+
       It includes:
-        - **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`response-time-p95`).
-        - **`target`** -- Sets the target values for failure and warning conditions.
+
+    - **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`response-time-p95`).
+    - **`target`** -- Sets the target values for failure and warning conditions.
           In this case, failure occurs
           if the value is greater than 500 milliseconds
           and warning occurs if it's greater than 300 milliseconds.
-        - **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
-    - **`value`** -- Indicates the actual value measured for this objective (value: 0.00475).
-    - **`score`** -- Indicates the score assigned to this objective (score: 1).
+    - **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
 
-- The second item in the array:
-    - **`result`** -- Similar to the first objective,
+**`value`** (1) 
+{ .annotate }
+
+1.  Indicates the actual value measured for this objective (value: 0.00475).
+
+**`score`** (1) 
+{ .annotate }
+
+1.  Indicates the score assigned to this objective (score: 1).
+
+
+The second item in the array:
+
+**`result`** (1) 
+{ .annotate }
+
+1.  Similar to the first objective,
       it checks whether a value is greater than 0 and has not been fulfilled (`fulfilled: false`).
       There are no warning conditions in this case.
-    - **`objective`** -- Describes the objective related to error rate analysis.
-        - **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`error-rate`).
-        - **`target`** -- Sets the target value for failure (failure occurs if the value is greater than 0).
-        - **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
-        - **`keyObjective`** -- Indicates that this is a key objective (true).
-    - **`value`** -- Indicates the actual value measured for this objective (value: 0).
-    - **`score`** -- Indicates the score assigned to this objective (score: 1).
 
-**`totalScore`** -- Represents the total score achieved based on the objectives evaluated (totalScore: 2).
+**`objective`** (1) 
+{ .annotate }
 
-**`maximumScore`** -- Indicates the maximum possible score (maximumScore: 2).
+1. Describes the objective related to error rate analysis.
 
-**`pass`** -- Indicates whether the overall evaluation has passed (true in this case).
+     - **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`error-rate`).
+     - **`target`** -- Sets the target value for failure (failure occurs if the value is greater than 0).
+     - **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
+     - **`keyObjective`** -- Indicates that this is a key objective (true). 
 
-**`warning`** -- Indicates whether any warnings have been issued during the evaluation (false in this case).
+**`value`** (1) 
+{ .annotate }
+
+1.  Indicates the actual value measured for this objective (value: 0).
+
+**`score`** (1) 
+{ .annotate }
+
+1.  Indicates the score assigned to this objective (score: 1).
+
+**`totalScore`** (1) 
+{ .annotate }
+
+1.  Represents the total score achieved based on the objectives evaluated (totalScore: 2).
+
+**`maximumScore`** (1) 
+{ .annotate }
+
+1.  Indicates the maximum possible score (maximumScore: 2).
+
+**`pass`** (1) 
+{ .annotate }
+
+1.  Indicates whether the overall evaluation has passed (true in this case).
+
+**`warning`** (1) 
+{ .annotate }
+
+1.  Indicates whether any warnings have been issued during the evaluation (false in this case).
+
 
 ## Usage
 

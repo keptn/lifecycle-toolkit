@@ -1,8 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: $NAME-job1
-  namespace: $NAMESPACE
+  name: (join('-', [$namespace, 'job1']))
   labels:
     kind: no-metric
 spec:
@@ -12,6 +11,11 @@ spec:
       containers:
         - name: test-prometheus
           image: curlimages/curl:8.6.0
+          env:
+            - name: NAME
+              value: (replace_all($namespace, '-', ''))
+            - name: SVCNAME
+              value: ($service.metadata.name)
           args:
             - /bin/sh
             - -ec
@@ -23,6 +27,13 @@ spec:
               fi
         - name: test-api-endpoint
           image: curlimages/curl:8.6.0
+          env:
+            - name: NAME
+              value: (replace_all($namespace, '-', ''))
+            - name: SVCNAME
+              value: ($service.metadata.name)
+            - name: NAMESPACE
+              value: ($namespace)
           args:
             - /bin/sh
             - -ec

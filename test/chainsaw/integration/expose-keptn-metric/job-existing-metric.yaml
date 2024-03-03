@@ -1,8 +1,7 @@
 apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
-  name: $NAME
-  namespace: $NAMESPACE
+  name: (replace_all($namespace, '-', ''))
 spec:
   provider:
     name: "provider"
@@ -12,8 +11,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: $NAME-job2
-  namespace: $NAMESPACE
+  name: (join('-', [$namespace, 'job2']))
   labels:
     kind: existing-metric
 spec:
@@ -23,6 +21,11 @@ spec:
       containers:
         - name: test-prometheus
           image: curlimages/curl:8.6.0
+          env:
+            - name: NAME
+              value: (replace_all($namespace, '-', ''))
+            - name: SVCNAME
+              value: ($service.metadata.name)
           args:
             - /bin/sh
             - -ec
@@ -36,6 +39,13 @@ spec:
               exit 1
         - name: test-api-endpoint
           image: curlimages/curl:8.6.0
+          env:
+            - name: NAME
+              value: (replace_all($namespace, '-', ''))
+            - name: SVCNAME
+              value: ($service.metadata.name)
+            - name: NAMESPACE
+              value: ($namespace)
           # yamllint disable rule:line-length
           args:
             - /bin/sh

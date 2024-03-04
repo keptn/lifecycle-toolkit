@@ -122,6 +122,17 @@ If any of these activities fail,
 the `KeptnApp` issues the `AppDeployErrored` event
 and terminates the deployment.
 
+> **Note**
+By default Keptn observes the state of the Kubernetes workloads
+for 5 minutes.
+After this timeout is exceeded, the deployment phase (from Keptn
+viewpoint) is considered as `Failed` and Keptn does not proceed
+with post-deployment phases (tasks, evaluations or promotion phase).
+This timeout can be modified for the cluster by changing the value
+of the `observabilityTimeout` field in the
+[KeptnConfig](../../reference/crd-reference/config.md)
+resource.
+
 ```shell
 AppDeploy
   AppDeployStarted

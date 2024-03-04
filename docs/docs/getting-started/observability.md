@@ -74,6 +74,7 @@ metadata:
 spec:
   OTelCollectorUrl: 'jaeger-collector.keptn-system.svc.cluster.local:4317'
   keptnAppCreationRequestTimeoutSeconds: 30
+  observabilityTimeout: 5m
 ```
 
 Apply the file and wait for Keptn to pick up the new configuration:

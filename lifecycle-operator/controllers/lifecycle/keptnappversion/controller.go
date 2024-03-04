@@ -110,6 +110,10 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		r.Log.Error(err, "could not get span")
 	}
 
+	defer func(appVersion *klcv1beta1.KeptnAppVersion, spanAppTrace trace.Span) {
+		r.closeFailedAppVersionSpan(appVersion, spanAppTrace)
+	}(appVersion, spanAppTrace)
+
 	if appVersion.Status.CurrentPhase == "" {
 		appVersion.SetSpanAttributes(spanAppTrace)
 		spanAppTrace.AddEvent("App Version Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
@@ -182,6 +186,20 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 
 	// AppVersion is completed at this place
 	return r.finishKeptnAppVersionReconcile(ctx, appVersion, spanAppTrace)
+}
+
+func (r *KeptnAppVersionReconciler) closeFailedAppVersionSpan(appVersion *klcv1beta1.KeptnAppVersion, spanAppTrace trace.Span) {
+	// make sure we close and unbind the span of a failed AppVersion
+	if appVersion.Status.Status != apicommon.StateFailed {
+		return
+	}
+	spanAppTrace.AddEvent(appVersion.Name + " has failed")
+	spanAppTrace.SetStatus(codes.Error, "Failed")
+	spanAppTrace.End()
+	if err := r.SpanHandler.UnbindSpan(appVersion, ""); err != nil {
+		r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, appVersion.Name)
+	}
+	r.EventSender.Emit(apicommon.PhaseAppCompleted, "Warning", appVersion, apicommon.PhaseStateFailed, "has failed", appVersion.GetVersion())
 }
 
 func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.Context, appVersion *klcv1beta1.KeptnAppVersion, spanAppTrace trace.Span) (ctrl.Result, error) {

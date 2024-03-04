@@ -96,6 +96,7 @@ spec:
               previousVersion:
                 type: string
               resourceReference:
+                description: ResourceReference represents the parent resource of Workload
                 properties:
                   kind:
                     type: string
@@ -339,6 +340,7 @@ spec:
               previousVersion:
                 type: string
               resourceReference:
+                description: ResourceReference represents the parent resource of Workload
                 properties:
                   kind:
                     type: string

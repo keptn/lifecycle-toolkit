@@ -21,6 +21,7 @@ import (
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/propagation"
@@ -850,9 +851,11 @@ func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 		},
 	)
 
-	r, _, _ := setupReconciler(app, wi)
+	r, eventChannel, _ := setupReconciler(app, wi)
 
 	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		piWrapper, _ := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
+		piWrapper.SetState(apicommon.StateFailed)
 		return phase.PhaseResult{Continue: false, Result: ctrl.Result{Requeue: false}}, nil
 	}}
 
@@ -866,6 +869,24 @@ func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 	result, err := r.Reconcile(context.TODO(), req)
 
 	require.Nil(t, err)
+
+	// here we do not expect an event about the application preEvaluation being finished since that  will have been sent in
+	// one of the previous reconciliation loops that lead to the first phase being reached
+	expectedEvents := []string{
+		"CompletedFailed",
+	}
+
+	for _, e := range expectedEvents {
+		event := <-eventChannel
+		assert.Equal(t, strings.Contains(event, req.Name), true, "wrong workloadVersion")
+		assert.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
+		assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+	}
+
+	spanHandlerMock := r.SpanHandler.(*telemetryfake.ISpanHandlerMock)
+
+	require.Len(t, spanHandlerMock.GetSpanCalls(), 1)
+	require.Len(t, spanHandlerMock.UnbindSpanCalls(), 1)
 
 	// do not requeue since we reached completion
 	require.False(t, result.Requeue)

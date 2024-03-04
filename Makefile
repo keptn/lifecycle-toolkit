@@ -34,6 +34,7 @@ integration-test:
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/
 	chainsaw test --test-dir ./test/chainsaw/testcertificate/
 	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/
+	chainsaw test --test-dir ./test/chainsaw/timeout-failure-deployment/
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
 integration-test-local:

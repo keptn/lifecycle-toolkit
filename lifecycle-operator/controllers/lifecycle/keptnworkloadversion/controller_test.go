@@ -21,6 +21,7 @@ import (
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/propagation"
@@ -52,6 +53,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedReplicaSet(t *
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateProgressing, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableReplicaSet(t *testing.T) {
@@ -70,6 +72,51 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableReplicaSe
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	require.NotNil(t, err)
 	require.Equal(t, apicommon.StateUnknown, keptnState)
+	require.True(t, workloadVersion.Status.DeploymentStartTime.IsZero())
+}
+
+func TestKeptnWorkloadVersionReconciler_reconcileDeployment_WorkloadDeploymentTimedOut(t *testing.T) {
+
+	rep := int32(1)
+	replicaset := makeReplicaSet("myrep", "default", &rep, 0)
+	workloadVersion := makeWorkloadVersionWithRef(replicaset.ObjectMeta, "ReplicaSet")
+
+	fakeClient := testcommon.NewTestClient(replicaset, workloadVersion)
+
+	fakeRecorder := record.NewFakeRecorder(100)
+
+	r := &KeptnWorkloadVersionReconciler{
+		Client:      fakeClient,
+		Config:      config.Instance(),
+		EventSender: eventsender.NewK8sSender(fakeRecorder),
+	}
+
+	r.Config.SetObservabilityTimeout(metav1.Duration{
+		Duration: 5 * time.Second,
+	})
+
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateProgressing, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
+
+	//revert the start time parameter backwards to check the timer
+	workloadVersion.Status.DeploymentStartTime = metav1.Time{
+		Time: workloadVersion.Status.DeploymentStartTime.Add(-10 * time.Second),
+	}
+
+	err = r.Client.Status().Update(context.TODO(), workloadVersion)
+	require.Nil(t, err)
+
+	keptnState, err = r.reconcileDeployment(context.TODO(), workloadVersion)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateFailed, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
+
+	event := <-fakeRecorder.Events
+	require.Equal(t, strings.Contains(event, workloadVersion.GetName()), true, "wrong workloadVersion")
+	require.Equal(t, strings.Contains(event, workloadVersion.GetNamespace()), true, "wrong namespace")
+	require.Equal(t, strings.Contains(event, "has reached timeout"), true, "wrong message")
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedStatefulSet(t *testing.T) {
@@ -86,6 +133,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedStatefulSet(t 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateProgressing, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableStatefulSet(t *testing.T) {
@@ -104,6 +152,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableStatefulS
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	require.NotNil(t, err)
 	require.Equal(t, apicommon.StateUnknown, keptnState)
+	require.True(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedDaemonSet(t *testing.T) {
@@ -120,6 +169,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedDaemonSet(t *t
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateProgressing, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableDaemonSet(t *testing.T) {
@@ -136,6 +186,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableDaemonSet
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	require.NotNil(t, err)
 	require.Equal(t, apicommon.StateUnknown, keptnState)
+	require.True(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyReplicaSet(t *testing.T) {
@@ -153,6 +204,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyReplicaSet(t *t
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyStatefulSet(t *testing.T) {
@@ -170,6 +222,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyStatefulSet(t *
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyDaemonSet(t *testing.T) {
@@ -186,6 +239,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyDaemonSet(t *te
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnsupportedReferenceKind(t *testing.T) {
@@ -199,6 +253,7 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnsupportedReference
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
 	require.ErrorIs(t, err, controllererrors.ErrUnsupportedWorkloadVersionResourceReference)
 	require.Equal(t, apicommon.StateUnknown, keptnState)
+	require.True(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func makeReplicaSet(name string, namespace string, wanted *int32, available int32) *appsv1.ReplicaSet {
@@ -850,9 +905,11 @@ func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 		},
 	)
 
-	r, _, _ := setupReconciler(app, wi)
+	r, eventChannel, _ := setupReconciler(app, wi)
 
 	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		piWrapper, _ := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
+		piWrapper.SetState(apicommon.StateFailed)
 		return phase.PhaseResult{Continue: false, Result: ctrl.Result{Requeue: false}}, nil
 	}}
 
@@ -866,6 +923,24 @@ func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 	result, err := r.Reconcile(context.TODO(), req)
 
 	require.Nil(t, err)
+
+	// here we do not expect an event about the application preEvaluation being finished since that  will have been sent in
+	// one of the previous reconciliation loops that lead to the first phase being reached
+	expectedEvents := []string{
+		"CompletedFailed",
+	}
+
+	for _, e := range expectedEvents {
+		event := <-eventChannel
+		assert.Equal(t, strings.Contains(event, req.Name), true, "wrong workloadVersion")
+		assert.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
+		assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+	}
+
+	spanHandlerMock := r.SpanHandler.(*telemetryfake.ISpanHandlerMock)
+
+	require.Len(t, spanHandlerMock.GetSpanCalls(), 1)
+	require.Len(t, spanHandlerMock.UnbindSpanCalls(), 1)
 
 	// do not requeue since we reached completion
 	require.False(t, result.Requeue)

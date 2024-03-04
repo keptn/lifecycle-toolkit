@@ -113,12 +113,15 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 
 	require.False(t, workload.IsEndTimeSet())
 	require.False(t, workload.IsStartTimeSet())
+	require.False(t, workload.IsDeploymentStartTimeSet())
 
 	workload.SetStartTime()
 	workload.SetEndTime()
+	workload.SetDeploymentStartTime()
 
 	require.True(t, workload.IsEndTimeSet())
 	require.True(t, workload.IsStartTimeSet())
+	require.True(t, workload.IsDeploymentStartTimeSet())
 
 	require.Equal(t, []attribute.KeyValue{
 		common.AppName.String("appname"),

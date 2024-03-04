@@ -121,6 +121,10 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 		r.Log.Error(err, "could not get span")
 	}
 
+	defer func(workloadVersion *klcv1beta1.KeptnWorkloadVersion, spanWorkloadTrace trace.Span) {
+		r.closeFailedWorkloadVersionSpan(workloadVersion, spanWorkloadTrace)
+	}(workloadVersion, spanWorkloadTrace)
+
 	if workloadVersion.Status.CurrentPhase == "" {
 		spanWorkloadTrace.AddEvent("WorkloadVersion Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
 	}
@@ -242,6 +246,20 @@ func (r *KeptnWorkloadVersionReconciler) doPostDeploymentEvaluationPhase(ctx con
 	return phase.PhaseResult{
 		Continue: true,
 	}, nil
+}
+
+func (r *KeptnWorkloadVersionReconciler) closeFailedWorkloadVersionSpan(workloadVersion *klcv1beta1.KeptnWorkloadVersion, spanWorkloadTrace trace.Span) {
+	// make sure we close and unbind the span of a failed AppVersion
+	if workloadVersion.Status.Status != apicommon.StateFailed {
+		return
+	}
+	spanWorkloadTrace.AddEvent(workloadVersion.Name + " has failed")
+	spanWorkloadTrace.SetStatus(codes.Error, "Failed")
+	spanWorkloadTrace.End()
+	if err := r.SpanHandler.UnbindSpan(workloadVersion, ""); err != nil {
+		r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, workloadVersion.Name)
+	}
+	r.EventSender.Emit(apicommon.PhaseWorkloadCompleted, "Warning", workloadVersion, apicommon.PhaseStateFailed, "has failed", workloadVersion.GetVersion())
 }
 
 func (r *KeptnWorkloadVersionReconciler) finishKeptnWorkloadVersionReconcile(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, spanWorkloadTrace trace.Span) (ctrl.Result, error) {

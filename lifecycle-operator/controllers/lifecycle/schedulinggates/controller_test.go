@@ -335,3 +335,66 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 		})
 	}
 }
+
+func TestHasKeptnSchedulingGate(t *testing.T) {
+	tests := []struct {
+		name    string
+		pod     *v1.Pod
+		hasGate bool
+	}{
+		{
+			name: "PodWithKeptnSchedulingGate",
+			pod: &v1.Pod{
+				Spec: v1.PodSpec{
+					SchedulingGates: []v1.PodSchedulingGate{
+						{
+							Name: apicommon.KeptnGate,
+						},
+					},
+				},
+			},
+			hasGate: true,
+		},
+		{
+			name:    "PodWithoutSchedulingGate",
+			pod:     &v1.Pod{},
+			hasGate: false,
+		},
+		{
+			name: "PodWithOtherSchedulingGates",
+			pod: &v1.Pod{
+				Spec: v1.PodSpec{
+					SchedulingGates: []v1.PodSchedulingGate{
+						{
+							Name: "other-gate",
+						},
+					},
+				},
+			},
+			hasGate: false,
+		},
+		{
+			name: "PodWithKeptnAndOtherSchedulingGates",
+			pod: &v1.Pod{
+				Spec: v1.PodSpec{
+					SchedulingGates: []v1.PodSchedulingGate{
+						{
+							Name: apicommon.KeptnGate,
+						},
+						{
+							Name: "other-gate",
+						},
+					},
+				},
+			},
+			hasGate: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			hasGate := hasKeptnSchedulingGate(tt.pod)
+			require.Equal(t, tt.hasGate, hasGate)
+		})
+	}
+}

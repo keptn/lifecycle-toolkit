@@ -2,6 +2,7 @@ package keptnworkloadversion
 
 import (
 	"context"
+	"time"
 
 	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
@@ -14,6 +15,16 @@ import (
 func (r *KeptnWorkloadVersionReconciler) reconcileDeployment(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion) (apicommon.KeptnState, error) {
 	var isRunning bool
 	var err error
+
+	if r.isDeploymentTimedOut(workloadVersion) {
+		workloadVersion.Status.DeploymentStatus = apicommon.StateFailed
+		err = r.Client.Status().Update(ctx, workloadVersion)
+		if err != nil {
+			return apicommon.StateUnknown, err
+		}
+		r.EventSender.Emit(apicommon.PhaseWorkloadDeployment, "Warning", workloadVersion, apicommon.PhaseStateFinished, "has reached timeout", workloadVersion.GetVersion())
+		return workloadVersion.Status.DeploymentStatus, nil
+	}
 
 	switch workloadVersion.Spec.ResourceReference.Kind {
 	case "ReplicaSet":
@@ -29,10 +40,14 @@ func (r *KeptnWorkloadVersionReconciler) reconcileDeployment(ctx context.Context
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}
+
+	if !workloadVersion.IsDeploymentStartTimeSet() {
+		workloadVersion.SetDeploymentStartTime()
+		workloadVersion.Status.DeploymentStatus = apicommon.StateProgressing
+	}
+
 	if isRunning {
 		workloadVersion.Status.DeploymentStatus = apicommon.StateSucceeded
-	} else {
-		workloadVersion.Status.DeploymentStatus = apicommon.StateProgressing
 	}
 
 	err = r.Client.Status().Update(ctx, workloadVersion)
@@ -40,6 +55,16 @@ func (r *KeptnWorkloadVersionReconciler) reconcileDeployment(ctx context.Context
 		return apicommon.StateUnknown, err
 	}
 	return workloadVersion.Status.DeploymentStatus, nil
+}
+
+func (r *KeptnWorkloadVersionReconciler) isDeploymentTimedOut(workloadVersion *klcv1beta1.KeptnWorkloadVersion) bool {
+	if !workloadVersion.IsDeploymentStartTimeSet() {
+		return false
+	}
+
+	deploymentDeadline := workloadVersion.Status.DeploymentStartTime.Add(r.Config.GetObservabilityTimeout().Duration)
+	currentTime := time.Now().UTC()
+	return currentTime.After(deploymentDeadline)
 }
 
 func (r *KeptnWorkloadVersionReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1beta1.ResourceReference, namespace string) (bool, error) {

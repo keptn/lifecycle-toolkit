@@ -172,7 +172,7 @@ viewpoint) is considered as `Failed` and Keptn does not proceed
 with post-deployment phases (tasks, evaluations or promotion phase).
 This timeout can be modified for the cluster by changing the value
 of the `observabilityTimeout` field in the
-[KeptnConfig](../../reference/crd-reference/config.md)
+[KeptnConfig](../reference/crd-reference/config.md)
 resource.
 
 ## Advanced tracing configurations in Keptn: Linking traces

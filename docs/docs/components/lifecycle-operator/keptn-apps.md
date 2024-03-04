@@ -32,7 +32,7 @@ as soon as the workload manifest is applied.
 By default Keptn observes the state of the Kubernetes workloads
 for 5 minutes.
 After this timeout is exceeded, the deployment phase (from Keptn
-wiewpoint) is considered as failed and Keptn does not proceed
+wiewpoint) is considered as `Failed` and Keptn does not proceed
 with post-deployment phases (tasks, evaluations or promotion phase).
 This timeout can be modified for the cluster by changing the value
 of the `observabilityTimeout` field in the

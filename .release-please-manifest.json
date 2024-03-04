@@ -1,6 +1,6 @@
 {
   ".": "0.10.0",
-  "keptn-cert-manager": "2.0.0",
+  "keptn-cert-manager": "2.1.0",
   "runtimes/python-runtime": "1.0.3",
   "runtimes/deno-runtime": "2.0.2",
   "lifecycle-operator": "0.9.0",

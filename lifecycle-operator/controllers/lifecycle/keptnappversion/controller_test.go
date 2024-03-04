@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	"reflect"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"strings"
 	"testing"
 
@@ -220,6 +222,56 @@ func TestKeptnAppVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 	require.Equal(t, "test", metadata["testy"])
 
 	// do not requeue since we reached completion
+	require.False(t, result.Requeue)
+}
+
+func TestKeptnAppVersionReconciler_ReconcileFailedAppVersion(t *testing.T) {
+
+	app := testcommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0", nil, lfcv1beta1.KeptnAppVersionStatus{})
+	app.Spec.PreDeploymentTasks = []string{"my-task"}
+	r, eventChannel, _ := setupReconciler(app)
+
+	r.PhaseHandler = &phasefake.MockHandler{
+		HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+			piWrapper, _ := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
+			piWrapper.SetState(apicommon.StateFailed)
+			return phase.PhaseResult{
+				Continue: false,
+				Result:   reconcile.Result{Requeue: false},
+			}, nil
+		},
+	}
+
+	r.PromotionTasksEnabled = true
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: "default",
+			Name:      "myfinishedapp-1.0.0",
+		},
+	}
+
+	result, err := r.Reconcile(context.WithValue(context.TODO(), CONTEXTID, req.Name), req)
+	require.Nil(t, err)
+
+	expectedEvents := []string{
+		"CompletedFailed",
+	}
+
+	for _, e := range expectedEvents {
+		event := <-eventChannel
+		require.Contains(t, event, req.Name, "wrong appversion")
+		require.Contains(t, event, req.Namespace, "wrong namespace")
+		require.Contains(t, event, e, fmt.Sprintf("no %s found in %s", e, event))
+	}
+
+	require.Nil(t, err)
+
+	spanHandlerMock := r.SpanHandler.(*telemetryfake.ISpanHandlerMock)
+
+	require.Len(t, spanHandlerMock.GetSpanCalls(), 1)
+	require.Len(t, spanHandlerMock.UnbindSpanCalls(), 1)
+
+	// do not requeue since we reached failure
 	require.False(t, result.Requeue)
 }
 

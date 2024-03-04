@@ -1,7 +1,7 @@
 name: Upgrade Helm Chart
 on:
   schedule:
-    - cron: '0 1 * * 1-5'
+    - cron: "0 1 * * 1-5"
   workflow_call:
     inputs:
       runtime_tag:
@@ -81,13 +81,14 @@ jobs:
           REPO_OWNER="keptn"
           REPO_NAME="lifecycle-toolkit"
           ISSUE_TITLE="${{ needs.upgrade-helm-chart.outputs.upgrade_error_message }}"
-          ISSUE_BODY="The Helm upgrade for the keptn chart has failed with the following error message:\n\n\`${{ needs.upgrade-helm-chart.outputs.upgrade_error_message }}\`"
-          
+          ISSUE_BODY="The Helm upgrade for the keptn chart has failed with the following error message:\n\n\
+          `${{ needs.upgrade-helm-chart.outputs.upgrade_error_message }}\`"
+
           curl -X POST -H "Authorization: token $ACCESS_TOKEN" \
                -H "Accept: application/vnd.github.v3+json" \
                https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/issues \
                -d "{\"title\":\"$ISSUE_TITLE\",\"body\":\"$ISSUE_BODY\"}"
-  
+
   run-integration-test:
     name: Run Chainsaw Tests
     runs-on: ubuntu-22.04

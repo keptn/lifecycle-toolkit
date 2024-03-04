@@ -117,6 +117,9 @@ type KeptnWorkloadVersionStatus struct {
 	// AppContextMetadata contains metadata from the related KeptnAppVersion.
 	// +optional
 	AppContextMetadata map[string]string `json:"appContextMetadata,omitempty"`
+	// DeploymentStartTime represents the start time of the deployment phase
+	// +optional
+	DeploymentStartTime metav1.Time `json:"deploymentStartTime,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -429,8 +432,9 @@ func (w KeptnWorkloadVersion) GenerateEvaluation(evaluationDefinition KeptnEvalu
 			Workload:             w.GetParentName(),
 			EvaluationDefinition: evaluationDefinition.Name,
 			Type:                 checkType,
-			RetryInterval: metav1.Duration{
-				Duration: 5 * time.Second,
+			FailureConditions: FailureConditions{
+				RetryInterval: evaluationDefinition.Spec.RetryInterval,
+				Retries:       evaluationDefinition.Spec.Retries,
 			},
 		},
 	}

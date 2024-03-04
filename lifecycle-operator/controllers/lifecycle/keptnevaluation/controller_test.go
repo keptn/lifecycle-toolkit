@@ -52,6 +52,9 @@ func TestKeptnEvaluationReconciler_Reconcile_FailEvaluation(t *testing.T) {
 					EvaluationTarget: "<5",
 				},
 			},
+			FailureConditions: klcv1beta1.FailureConditions{
+				Retries: 1,
+			},
 		},
 	}
 
@@ -62,7 +65,9 @@ func TestKeptnEvaluationReconciler_Reconcile_FailEvaluation(t *testing.T) {
 		},
 		Spec: klcv1beta1.KeptnEvaluationSpec{
 			EvaluationDefinition: evaluationDefinition.Name,
-			Retries:              1,
+			FailureConditions: klcv1beta1.FailureConditions{
+				Retries: 1,
+			},
 		},
 	}
 
@@ -121,6 +126,9 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation(t *testing.T) {
 					EvaluationTarget: "<11",
 				},
 			},
+			FailureConditions: klcv1beta1.FailureConditions{
+				Retries: 1,
+			},
 		},
 	}
 
@@ -131,7 +139,9 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation(t *testing.T) {
 		},
 		Spec: klcv1beta1.KeptnEvaluationSpec{
 			EvaluationDefinition: evaluationDefinition.Name,
-			Retries:              1,
+			FailureConditions: klcv1beta1.FailureConditions{
+				Retries: 1,
+			},
 		},
 	}
 
@@ -190,6 +200,9 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation_withDefinitionInD
 					EvaluationTarget: "<11",
 				},
 			},
+			FailureConditions: klcv1beta1.FailureConditions{
+				Retries: 1,
+			},
 		},
 	}
 
@@ -200,7 +213,9 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation_withDefinitionInD
 		},
 		Spec: klcv1beta1.KeptnEvaluationSpec{
 			EvaluationDefinition: evaluationDefinition.Name,
-			Retries:              1,
+			FailureConditions: klcv1beta1.FailureConditions{
+				Retries: 1,
+			},
 		},
 	}
 

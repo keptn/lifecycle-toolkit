@@ -3,6 +3,8 @@ kind: Job
 metadata:
   name: $NAME-job1
   namespace: $NAMESPACE
+  labels:
+    kind: no-metric
 spec:
   backoffLimit: 0
   template:

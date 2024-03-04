@@ -72,17 +72,17 @@ status:
             If the namespace is not specified,
             the analysis controller looks for the `AnalysisDefinition` resource
             in the same namespace as the `Analysis` resource.
-    - **status** -- results of this Analysis run,
-       added to the resource by Keptn,
-       based on criteria defined in the `AnalysisDefinition` resource.
+- **status** -- results of this Analysis run,
+   added to the resource by Keptn,
+   based on criteria defined in the `AnalysisDefinition` resource.
 
-        - **warning** -- Whether the analysis returned a warning.
-        - **raw** --  String-encoded JSON object that reports the results
-            of evaluating one or more objectives or metrics.
-            See
-            [Interpreting Analysis results](#interpreting-analysis-results)
-            for details.
-        - **state** -- Set to `Completed` or `Progressing` as appropriate.
+    - **warning** -- Whether the analysis returned a warning.
+    - **raw** --  String-encoded JSON object that reports the results
+        of evaluating one or more objectives or metrics.
+        See
+        [Interpreting Analysis results](#interpreting-analysis-results)
+        for details.
+    - **state** -- Set to `Completed` or `Progressing` as appropriate.
 
 ## Interpreting Analysis results
 
@@ -207,18 +207,6 @@ each representing the results of a specific objective or performance metric.
           and warning occurs if it's greater than 300 milliseconds.
         - **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
     - **`value`** -- Indicates the actual value measured for this objective (value: 0.00475).
-    - **`score`** -- Indicates the score assigned to this objective (score: 1).
-
-- The second item in the array:
-    - **`result`** -- Similar to the first objective,
-      it checks whether a value is greater than 0 and has not been fulfilled (`fulfilled: false`).
-      There are no warning conditions in this case.
-    - **`objective`** -- Describes the objective related to error rate analysis.
-        - **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`error-rate`).
-        - **`target`** -- Sets the target value for failure (failure occurs if the value is greater than 0).
-        - **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
-        - **`keyObjective`** -- Indicates that this is a key objective (true).
-    - **`value`** -- Indicates the actual value measured for this objective (value: 0).
     - **`score`** -- Indicates the score assigned to this objective (score: 1).
 
 - The second item in the array:

@@ -41,11 +41,6 @@ deploy-version-2:
 	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -k sample-app/version-2
 
-.PHONY: deploy-version-3
-deploy-version-3:
-	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
-	kubectl apply -k sample-app/version-3
-
 .PHONY: cleanup
 cleanup:
 	kubectl delete ns "$(PODTATO_NAMESPACE)" --ignore-not-found=true

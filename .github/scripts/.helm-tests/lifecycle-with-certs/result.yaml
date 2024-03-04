@@ -2031,6 +2031,14 @@ spec:
                   KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery
                   searches for workload to put into the same auto-generated KeptnApp
                 type: integer
+              observabilityTimeout:
+                default: 5m
+                description: |-
+                  ObservabilityTimeout specifies the maximum time to observe the deployment phase of KeptnWorkload.
+                  If the workload does not deploy successfully within this time frame, it will be
+                  considered as failed.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
             type: object
           status:
             description: unused field
@@ -2124,8 +2132,6 @@ spec:
               checkType:
                 type: string
               evaluationDefinition:
-                type: string
-              failAction:
                 type: string
               retries:
                 default: 10
@@ -2869,6 +2875,19 @@ spec:
                   - keptnMetricRef
                   type: object
                 type: array
+              retries:
+                default: 10
+                description: |-
+                  Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
+                  missed evaluation objective, before considering the KeptnEvaluation to be failed.
+                type: integer
+              retryInterval:
+                default: 5s
+                description: |-
+                  RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error
+                  or a missed objective.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
             required:
             - objectives
             type: object
@@ -7271,6 +7290,14 @@ spec:
                 description: Metadata contains additional key-value pairs for contextual
                   information.
                 type: object
+              observabilityTimeout:
+                default: 5m
+                description: |-
+                  ObservabilityTimeout specifies the maximum time to observe the deployment phase of KeptnWorkload.
+                  If the workload does not deploy successfully within this time frame, it will be
+                  considered as failed.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
               postDeploymentEvaluations:
                 description: |-
                   PostDeploymentEvaluations is a list of all evaluations to be performed
@@ -7761,6 +7788,14 @@ spec:
                 description: Metadata contains additional key-value pairs for contextual
                   information.
                 type: object
+              observabilityTimeout:
+                default: 5m
+                description: |-
+                  ObservabilityTimeout specifies the maximum time to observe the deployment phase of KeptnWorkload.
+                  If the workload does not deploy successfully within this time frame, it will be
+                  considered as failed.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
               postDeploymentEvaluations:
                 description: |-
                   PostDeploymentEvaluations is a list of all evaluations to be performed
@@ -7853,6 +7888,11 @@ spec:
                   - Deployment
                   - PostDeploymentTasks
                   - PostDeploymentEvaluations
+                type: string
+              deploymentStartTime:
+                description: DeploymentStartTime represents the start time of the
+                  deployment phase
+                format: date-time
                 type: string
               deploymentStatus:
                 default: Pending
@@ -9182,9 +9222,9 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: FUNCTION_RUNNER_IMAGE
-          value: "ghcr.io/keptn/deno-runtime:v2.0.1"
+          value: "ghcr.io/keptn/deno-runtime:v2.0.2"
         - name: PYTHON_RUNNER_IMAGE
-          value: "ghcr.io/keptn/python-runtime:v1.0.2"
+          value: "ghcr.io/keptn/python-runtime:v1.0.3"
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL

@@ -1,3 +1,6 @@
+// Package v1beta1 contains API Schema definitions for the lifecycle v1beta1 API group
+// +groupName=lifecycle.keptn.sh
+// +versionName=v1beta1
 package common
 
 import (
@@ -124,8 +127,11 @@ func GetOverallState(s StatusSummary) KeptnState {
 	if s.Pending > 0 {
 		return StatePending
 	}
-	if s.Unknown > 0 || s.GetTotalCount() != s.Total {
+	if s.Unknown > 0 {
 		return StateUnknown
+	}
+	if s.GetTotalCount() != s.Total {
+		return StatePending
 	}
 	return StateSucceeded
 }

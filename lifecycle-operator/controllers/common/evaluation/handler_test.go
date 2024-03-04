@@ -8,9 +8,11 @@ import (
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/trace"
@@ -32,6 +34,7 @@ func TestEvaluationHandler(t *testing.T) {
 		wantStatus      []v1beta1.ItemStatus
 		wantSummary     apicommon.StatusSummary
 		evalObj         v1beta1.KeptnEvaluation
+		evalDef         *v1beta1.KeptnEvaluationDefinition
 		wantErr         error
 		getSpanCalls    int
 		unbindSpanCalls int
@@ -68,14 +71,137 @@ func TestEvaluationHandler(t *testing.T) {
 			unbindSpanCalls: 0,
 		},
 		{
-			name: "evaluation not started",
+			name: "evaluation not started - could not find evaluationDefinition",
 			object: &v1beta1.KeptnAppVersion{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+				},
 				Spec: v1beta1.KeptnAppVersionSpec{
 					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
 						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
 							PreDeploymentEvaluations: []string{"eval-def"},
 						},
 					},
+				},
+			},
+			evalObj: v1beta1.KeptnEvaluation{},
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1beta1.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
+			},
+			wantStatus:      nil,
+			wantSummary:     apicommon.StatusSummary{Total: 1, Pending: 0},
+			wantErr:         nil,
+			getSpanCalls:    0,
+			unbindSpanCalls: 0,
+		},
+		{
+			name: "evaluations not started - could not find evaluationDefinition of one evaluation",
+			object: &v1beta1.KeptnAppVersion{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+				},
+				Spec: v1beta1.KeptnAppVersionSpec{
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentEvaluations: []string{"eval-def", "other-eval-def"},
+						},
+					},
+				},
+			},
+			evalDef: &v1beta1.KeptnEvaluationDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: testcommon.KeptnNamespace,
+					Name:      "eval-def",
+				},
+			},
+			evalObj: v1beta1.KeptnEvaluation{},
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1beta1.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
+			},
+			wantStatus: []v1beta1.ItemStatus{
+				{
+					DefinitionName: "eval-def",
+					Status:         apicommon.StatePending,
+					Name:           "pre-eval-eval-def-",
+				},
+			},
+			wantSummary:     apicommon.StatusSummary{Total: 2, Pending: 1},
+			wantErr:         nil,
+			getSpanCalls:    1,
+			unbindSpanCalls: 0,
+		},
+		{
+			name: "evaluation not started - evaluationDefinition in default Keptn namespace",
+			object: &v1beta1.KeptnAppVersion{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+				},
+				Spec: v1beta1.KeptnAppVersionSpec{
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentEvaluations: []string{"eval-def"},
+						},
+					},
+				},
+			},
+			evalDef: &v1beta1.KeptnEvaluationDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: testcommon.KeptnNamespace,
+					Name:      "eval-def",
+				},
+			},
+			evalObj: v1beta1.KeptnEvaluation{},
+			createAttr: CreateEvaluationAttributes{
+				SpanName: "",
+				Definition: v1beta1.KeptnEvaluationDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "eval-def",
+					},
+				},
+				CheckType: apicommon.PreDeploymentEvaluationCheckType,
+			},
+			wantStatus: []v1beta1.ItemStatus{
+				{
+					DefinitionName: "eval-def",
+					Status:         apicommon.StatePending,
+					Name:           "pre-eval-eval-def-",
+				},
+			},
+			wantSummary:     apicommon.StatusSummary{Total: 1, Pending: 1},
+			wantErr:         nil,
+			getSpanCalls:    1,
+			unbindSpanCalls: 0,
+		},
+		{
+			name: "evaluation not started",
+			object: &v1beta1.KeptnAppVersion{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+				},
+				Spec: v1beta1.KeptnAppVersionSpec{
+					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
+						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+							PreDeploymentEvaluations: []string{"eval-def"},
+						},
+					},
+				},
+			},
+			evalDef: &v1beta1.KeptnEvaluationDefinition{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+					Name:      "eval-def",
 				},
 			},
 			evalObj: v1beta1.KeptnEvaluation{},
@@ -263,6 +389,8 @@ func TestEvaluationHandler(t *testing.T) {
 		},
 	}
 
+	config.Instance().SetDefaultNamespace(testcommon.KeptnNamespace)
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := v1beta1.AddToScheme(scheme.Scheme)
@@ -275,9 +403,13 @@ func TestEvaluationHandler(t *testing.T) {
 					return nil
 				},
 			}
+			initObjs := []client.Object{&tt.evalObj}
+			if tt.evalDef != nil {
+				initObjs = append(initObjs, tt.evalDef)
+			}
 			fakeRecorder := record.NewFakeRecorder(100)
 			handler := NewHandler(
-				fake.NewClientBuilder().WithObjects(&tt.evalObj).Build(),
+				fake.NewClientBuilder().WithObjects(initObjs...).Build(),
 				eventsender.NewK8sSender(fakeRecorder),
 				ctrl.Log.WithName("controller"),
 				noop.NewTracerProvider().Tracer("tracer"),

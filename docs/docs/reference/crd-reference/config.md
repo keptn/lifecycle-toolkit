@@ -18,6 +18,7 @@ spec:
   keptnAppCreationRequestTimeoutSeconds: <#-seconds>
   cloudEventsEndpoint: <endpoint>
   blockDeployment: true | false
+  observabilityTimeout: <duration>
 ```
 
 ## Fields
@@ -48,6 +49,13 @@ spec:
       even if the pre-deployment tasks and/or evaluations fail.
       For more information see the
       [non-blocking deployment section](../../components/lifecycle-operator/keptn-non-blocking.md).
+    * **observabilityTimeout** -- specifies the maximum time
+      to observe the deployment phase of
+      [KeptnWorkload](../api-reference/lifecycle/v1beta1/index.md).
+      The value supplied should specify the unit of measurement;
+      for example, `5m` indicates 5 minutes and `1h` indicates 1 hour.
+      If the workload is not deployed successfully within this time frame,
+      it is considered to be failed.
 
 ## Usage
 
@@ -73,6 +81,7 @@ spec:
   keptnAppCreationRequestTimeoutSeconds: 40
   cloudEventsEndpoint: 'http://endpoint.com'
   blockDeployment: false
+  observabilityTimeout: 10m
 ```
 
 ## Files

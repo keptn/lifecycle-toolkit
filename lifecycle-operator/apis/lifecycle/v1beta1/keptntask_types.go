@@ -55,7 +55,6 @@ type KeptnTaskSpec struct {
 	// Timeout specifies the maximum time to wait for the task to be completed successfully.
 	// If the task does not complete successfully within this time frame, it will be
 	// considered to be failed.
-	// +optional
 	// +kubebuilder:default:="5m"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string

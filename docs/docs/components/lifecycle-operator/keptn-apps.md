@@ -14,8 +14,8 @@ with the ability to handle extra phases.
 It can execute the pre-/post-deployment evaluations of a workload
 and run pre-/post-deployment tasks.
 
-In its state, it tracks the currently active `Workload Instances`
-(`Pod`, `DaemonSet`, `StatefulSet`, and `ReplicaSet` resources),
+In its state, it tracks the currently active workloads
+(`DaemonSet`, `StatefulSet`, or `ReplicaSet` resources),
 as well as the overall state of the Pre Deployment phase,
 which Keptn can use to determine
 whether the pods belonging to a workload

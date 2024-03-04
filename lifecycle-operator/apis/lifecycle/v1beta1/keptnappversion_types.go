@@ -428,8 +428,9 @@ func (a KeptnAppVersion) GenerateEvaluation(evaluationDefinition KeptnEvaluation
 			AppName:              a.Spec.AppName,
 			EvaluationDefinition: evaluationDefinition.Name,
 			Type:                 checkType,
-			RetryInterval: metav1.Duration{
-				Duration: 5 * time.Second,
+			FailureConditions: FailureConditions{
+				RetryInterval: evaluationDefinition.Spec.FailureConditions.RetryInterval,
+				Retries:       evaluationDefinition.Spec.FailureConditions.Retries,
 			},
 		},
 	}

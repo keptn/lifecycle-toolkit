@@ -70,7 +70,7 @@ resource contains a list of `objectives`,
 each of which checks whether a defined `KeptnMetric` resource
 meets a defined target value.
 The example
-[app-pre-deploy-eval.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-2/app-pre-deploy-eval.yaml)
+[app-pre-deploy-eval.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-1/app-pre-deploy-eval.yaml)
 file specifies the `app-pre-deploy-eval-2` evaluation as follows:
 
 ```yaml

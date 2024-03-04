@@ -14,12 +14,13 @@ spec:
               export SVCNAME=$( kubectl get svc -n keptn-system -l control-plane=metrics-operator -ojsonpath="{ .items[0].metadata.name }" )
               echo "installing first job pointing to ${SVCNAME}"
               envsubst < job-no-metric.yaml | kubectl apply -f -
-        - script:
+        - wait:
             timeout: 5m
-            content: |
-              export NAME=$( echo $NAMESPACE | tr -d -)
-              echo "asserting first job: ${NAME}"
-              kubectl wait --for=condition=complete job $NAME-job1 -n $NAMESPACE
+            resource: job
+            selector: kind=no-metric
+            for:
+              condition:
+                name: complete
     - name: step-01
       try:
         - script:
@@ -29,9 +30,10 @@ spec:
               export SVCNAME=$( kubectl get svc -n keptn-system -l control-plane=metrics-operator -ojsonpath="{ .items[0].metadata.name }" )
               echo "installing second job pointing to ${SVCNAME}"
               envsubst < job-existing-metric.yaml  | kubectl apply -f -
-        - script:
+        - wait:
             timeout: 5m
-            content: |
-              export NAME=$( echo $NAMESPACE | tr -d -)
-              echo "asserting second job: $NAME"
-              kubectl wait --for=condition=complete job $NAME-job2 -n $NAMESPACE
+            resource: job
+            selector: kind=existing-metric
+            for:
+              condition:
+                name: complete

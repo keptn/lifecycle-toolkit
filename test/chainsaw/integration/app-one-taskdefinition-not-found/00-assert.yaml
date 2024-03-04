@@ -7,7 +7,7 @@ status:
   postDeploymentEvaluationStatus: Pending
   postDeploymentStatus: Pending
   preDeploymentEvaluationStatus: Pending
-  preDeploymentStatus: Unknown
+  preDeploymentStatus: Pending
   status: Progressing
   workloadOverallStatus: Pending
 ---

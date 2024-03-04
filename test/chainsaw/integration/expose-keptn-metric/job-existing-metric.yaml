@@ -14,6 +14,8 @@ kind: Job
 metadata:
   name: $NAME-job2
   namespace: $NAMESPACE
+  labels:
+    kind: existing-metric
 spec:
   backoffLimit: 5
   template:

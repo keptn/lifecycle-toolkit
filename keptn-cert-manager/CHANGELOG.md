@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.1.0](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.0.0...cert-manager-v2.1.0) (2024-03-04)
+
+
+### Features
+
+* add global value for imagePullPolicy ([#2807](https://github.com/keptn/lifecycle-toolkit/issues/2807)) ([5596d12](https://github.com/keptn/lifecycle-toolkit/commit/5596d1252b164e469aa122c0ebda8526ccbca888))
+
+
+### Other
+
+* bump go version to 1.21 ([#3006](https://github.com/keptn/lifecycle-toolkit/issues/3006)) ([8236c25](https://github.com/keptn/lifecycle-toolkit/commit/8236c25da7ec3768e76d12eb2e8f5765a005ecfa))
+* bump helm chart dependencies ([#2991](https://github.com/keptn/lifecycle-toolkit/issues/2991)) ([49ee351](https://github.com/keptn/lifecycle-toolkit/commit/49ee3511fd6e425ac095bd7f16ecd1dae6258eb0))
+
+
+### Dependency Updates
+
+* update helm release common to v0.1.4 ([#3114](https://github.com/keptn/lifecycle-toolkit/issues/3114)) ([12b2e58](https://github.com/keptn/lifecycle-toolkit/commit/12b2e58e085fd40cf5c04ca0e5eb071823777701))
+* update kubernetes packages to v0.28.7 (patch) ([#3062](https://github.com/keptn/lifecycle-toolkit/issues/3062)) ([8698803](https://github.com/keptn/lifecycle-toolkit/commit/8698803ff60b71d658d60bfc0c6b8b3d4282798d))
+* update module github.com/stretchr/testify to v1.9.0 ([#3171](https://github.com/keptn/lifecycle-toolkit/issues/3171)) ([d334790](https://github.com/keptn/lifecycle-toolkit/commit/d3347903ad91c33ba4bf664277c53024eb02825a))
+* update module golang.org/x/net to v0.21.0 ([#3091](https://github.com/keptn/lifecycle-toolkit/issues/3091)) ([44489ea](https://github.com/keptn/lifecycle-toolkit/commit/44489ea8909c5c81a2115b952bba9e3416ddd85e))
+* update module sigs.k8s.io/controller-runtime to v0.16.4 ([#3033](https://github.com/keptn/lifecycle-toolkit/issues/3033)) ([f576707](https://github.com/keptn/lifecycle-toolkit/commit/f57670729a18cfdb391c3af5ffdd92de6a330ee5))
+* update module sigs.k8s.io/controller-runtime to v0.16.5 ([#3073](https://github.com/keptn/lifecycle-toolkit/issues/3073)) ([599e2d8](https://github.com/keptn/lifecycle-toolkit/commit/599e2d8712ed7d7b614026a0038d238ed0833b37))
+
 ## [2.0.0](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v1.2.0...cert-manager-v2.0.0) (2024-02-06)
 
 

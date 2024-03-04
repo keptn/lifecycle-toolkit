@@ -523,9 +523,7 @@ func (w KeptnWorkloadVersion) GetEventAnnotations() map[string]string {
 }
 
 func (w *KeptnWorkloadVersion) SetDeploymentStartTime() {
-	if w.Status.DeploymentStartTime.IsZero() {
-		w.Status.DeploymentStartTime = metav1.NewTime(time.Now().UTC())
-	}
+	w.Status.DeploymentStartTime = metav1.NewTime(time.Now().UTC())
 }
 
 func (w *KeptnWorkloadVersion) IsDeploymentStartTimeSet() bool {

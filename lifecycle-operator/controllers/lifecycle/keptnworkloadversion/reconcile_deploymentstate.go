@@ -62,9 +62,9 @@ func (r *KeptnWorkloadVersionReconciler) isDeploymentTimedOut(workloadVersion *k
 		return false
 	}
 
-	deploymentStartTimePlusTimeout := workloadVersion.Status.DeploymentStartTime.Add(r.Config.GetObservabilityTimeout().Duration)
+	deploymentDeadline := workloadVersion.Status.DeploymentStartTime.Add(r.Config.GetObservabilityTimeout().Duration)
 	currentTime := time.Now().UTC()
-	return currentTime.After(deploymentStartTimePlusTimeout)
+	return currentTime.After(deploymentDeadline)
 }
 
 func (r *KeptnWorkloadVersionReconciler) isReplicaSetRunning(ctx context.Context, resource klcv1beta1.ResourceReference, namespace string) (bool, error) {

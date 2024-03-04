@@ -121,8 +121,8 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 		r.Log.Error(err, "could not get span")
 	}
 
-	defer func(workloadVersion *klcv1beta1.KeptnWorkloadVersion, spanAppTrace trace.Span) {
-		r.closeFailedWorkloadVersionSpan(workloadVersion, spanAppTrace)
+	defer func(workloadVersion *klcv1beta1.KeptnWorkloadVersion, spanWorkloadTrace trace.Span) {
+		r.closeFailedWorkloadVersionSpan(workloadVersion, spanWorkloadTrace)
 	}(workloadVersion, spanWorkloadTrace)
 
 	if workloadVersion.Status.CurrentPhase == "" {

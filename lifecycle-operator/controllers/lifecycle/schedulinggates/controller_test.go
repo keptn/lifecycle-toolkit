@@ -338,9 +338,9 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 
 func TestHasKeptnSchedulingGate(t *testing.T) {
 	tests := []struct {
-		name     string
-		pod      *v1.Pod
-		hasGate  bool
+		name    string
+		pod     *v1.Pod
+		hasGate bool
 	}{
 		{
 			name: "PodWithKeptnSchedulingGate",
@@ -356,8 +356,8 @@ func TestHasKeptnSchedulingGate(t *testing.T) {
 			hasGate: true,
 		},
 		{
-			name: "PodWithoutSchedulingGate",
-			pod: &v1.Pod{},
+			name:    "PodWithoutSchedulingGate",
+			pod:     &v1.Pod{},
 			hasGate: false,
 		},
 		{

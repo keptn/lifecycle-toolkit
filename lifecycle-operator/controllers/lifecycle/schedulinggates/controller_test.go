@@ -373,6 +373,22 @@ func TestHasKeptnSchedulingGate(t *testing.T) {
 			},
 			hasGate: false,
 		},
+		{
+			name: "PodWithKeptnAndOtherSchedulingGates",
+			pod: &v1.Pod{
+				Spec: v1.PodSpec{
+					SchedulingGates: []v1.PodSchedulingGate{
+						{
+							Name: apicommon.KeptnGate,
+						},
+						{
+							Name: "other-gate",
+						},
+					},
+				},
+			},
+			hasGate: true,
+		},
 	}
 
 	for _, tt := range tests {

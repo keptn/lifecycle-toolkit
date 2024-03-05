@@ -32,9 +32,9 @@ nav:
    ...
 ```
 
-* The `Home` item specifies the file for the `keptn.sh` landing page.
-* The `Documentation` item is the beginning of the specification
-  for what files are are included and the order they will be listed.
+* The first level of the `nav:` section defines the tabs in the header bar of the page.
+* All nested items define sub-pages and their child pages inside the tabs.
+* The `Documentation` item defines the "Documentation" tab.
 * Each subitem to `Documentation` is a section of the docs
   as displayed in the left frame.
 * Under each section are the individual pages,

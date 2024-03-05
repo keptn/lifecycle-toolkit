@@ -38,6 +38,8 @@ The elements are:
 
 * The `comments` block.
   This allows readers to post comments to the published page.
+  More configuration can be put here depending on the requirements
+  for the page.
 
 * A level 1 header (`# title`)  with the title of the page
   as it is displayed in the main canvas of the docs..

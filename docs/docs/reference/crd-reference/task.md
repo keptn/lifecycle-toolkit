@@ -150,4 +150,3 @@ in Keptn v0.8.0.
 
 * [KeptnTaskDefinition](taskdefinition.md)
 * [Keptn for Non-Kubernetes Applications](../../use-cases/non-k8s.md)
-* [Keptn for Non-Kubernetes Applications](../../use-cases/non-k8s.md)

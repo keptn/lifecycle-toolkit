@@ -131,6 +131,8 @@ you must update the value of the `metadata.name` field.
 A common practice is to just increment the value incrementally,
 so `helloworldtask-1` becomes `helloworldtask-2`, etc.
 
+## Example
+
 For a full example of how to create a `KeptnTask` resource
 to use for a deployment being done outside of Kubernetes, see
 [Keptn for Non-Kubernetes Applications](../../use-cases/non-k8s.md).
@@ -147,4 +149,5 @@ in Keptn v0.8.0.
 ## See also
 
 * [KeptnTaskDefinition](taskdefinition.md)
+* [Keptn for Non-Kubernetes Applications](../../use-cases/non-k8s.md)
 * [Keptn for Non-Kubernetes Applications](../../use-cases/non-k8s.md)

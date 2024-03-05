@@ -88,6 +88,8 @@ For example, the formatting of the bullet list in the preceding section is:
   immediately following the level 1 header.
 ```
 
+Code blocks must be indented in the same way.
+
 ## External links and internal cross-references
 
 Use the standard Markdown conventions for links:

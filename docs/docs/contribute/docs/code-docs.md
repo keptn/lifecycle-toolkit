@@ -55,8 +55,10 @@ The elements are:
 
 ## Comments
 
-To comment a line in the documentation,
-prepend the `<!--` string at the beginning of the line,
+To comment a line in the documentation, you can use
+standard HTML comments.
+Prepend the `<!--` string at the beginning of the line,
+and end the line with `-->`
 as in:
 
 ```markdown

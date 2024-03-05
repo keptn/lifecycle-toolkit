@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# How to structure your namespaces
+# Namespaces and resources
 
 You have significant flexibility to decide how many namespaces to use
 and how to set them up.

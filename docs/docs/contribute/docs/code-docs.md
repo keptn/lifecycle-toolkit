@@ -62,7 +62,7 @@ and end the line with `-->`
 as in:
 
 ```markdown
-<!-- This is a comment
+<!-- This is a comment -->
 ```
 
 ## Indentation of nested lists and code blocks

@@ -76,20 +76,15 @@ and ordered lists do not increment the list item number correctly.
 For example, the formatting of the bullet list in the preceding section is:
 
 ```markdown
-* The `comments` block.
-  This allows readers to post comments to the published page.
+* This is the first list item.
+  With a second sentence in the same paragraph.
 
-* A level 1 header (`# title`)  with the title of the page
-  as it is displayed in the main canvas of the docs..
-  This must be preceded and followed by a single blank line.
+* This is the second list item.
 
-    The title displayed in the left frame
-    is determined by the title in the `mkdocs.yml` file.
-    Be sure that these two titles match.
+    With a second paragraph that is still part of the
+    same list item.
 
-* Text that introduces the information for the page.
-  Do not use stacked headers, with a level 2 header (`## title`)
-  immediately following the level 1 header.
+* This is the third list item.
 ```
 
 Code blocks must be indented in the same way.

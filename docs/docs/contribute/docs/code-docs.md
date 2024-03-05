@@ -117,7 +117,7 @@ for the page for the `target-link`.
 This syntax is used for:
 
 * Links from a documentation page to an external page
-* Links **to** files in the same repository as the docmentation source
+* Links **to** files in the same repository as the documentation source
   but outside the documentation `NAV` path
 * Links **from** files in the same repository as the documentation source
   but outside the documentation `NAV` path,

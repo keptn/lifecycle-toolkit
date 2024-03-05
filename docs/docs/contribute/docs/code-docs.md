@@ -157,7 +157,7 @@ You must then make the following modifications:
   remove the `/` character between the page tag
   and the `#` character that tags the referenced subsection.
 * When referencing a section of the docs,
-  add the `index.md` or `_index.md` filename to the path
+  add the `index.md` filename to the path
 
 Some examples may clarify this.
 

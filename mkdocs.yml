@@ -200,6 +200,7 @@ nav:
           - Build Documentation Locally: docs/contribute/docs/local-building.md
           - Linter Requirements: docs/contribute/docs/linter-requirements.md
           - Source File Structure: docs/contribute/docs/source-file-structure.md
+          - Coding the docs: docs/contribute/docs/code-docs.md
           - Spell Checker: docs/contribute/docs/spell-check.md
           - Published Doc Structure: docs/contribute/docs/publish.md
           - Word list: docs/contribute/docs/word-list.md

@@ -13,8 +13,7 @@ This page explains how the documentation source files are organized.
 The documentation builds are controlled by the
 [mkdocs.yml](https://github.com/keptn/lifecycle-toolkit/blob/main/mkdocs.yml)
 file in the root directory of the Keptn repository.
-The documentation structure is defined under the `nav` section
-that is roughly the second half of the file.
+The documentation structure is defined under the `nav` section.
 The following snippet illustrates how this is structured:
 
 ```yaml

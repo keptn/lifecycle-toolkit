@@ -43,11 +43,11 @@ nav:
   that will be displayed in the left frame
   and the path to the source file.
 
-  Note that the page title displayed in the main canvas
-  is defined by the value of the H1 header in the page source file.
-  When creating a new page or modifying the title,
-  it is important to ensure that the title in the page source
-  and the title in the `mkdocs.yml` file match.
+    Note that the page title displayed in the main canvas
+    is defined by the value of the H1 header in the page source file.
+    When creating a new page or modifying the title,
+    it is important to ensure that the title in the page source
+    and the title in the `mkdocs.yml` file match.
 
 > **Note** After adding a new page to the `mkdocs.yaml` file,
 > you must stop and restart your local doc build

@@ -10,7 +10,7 @@ The following documents document the language:
 
 * [Markdown Guide](https://www.markdownguide.org/getting-started/#flavors-of-markdown)
   discusses Markdown structure and background.
-* [Basic Syntax](https://www.markdownguide.org/basic-syntax/#links)
+* [Basic Syntax](https://www.markdownguide.org/basic-syntax/)
   summarizes the standard Markdown syntax
   that is support by almost all Markdown variants.
 * [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)

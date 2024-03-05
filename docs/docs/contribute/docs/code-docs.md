@@ -45,7 +45,7 @@ The elements are:
   as it is displayed in the main canvas of the docs..
   This must be preceded and followed by a single blank line.
 
-    The title displayed in the left frame
+    The title displayed in the left sidebar
     is determined by the title in the `mkdocs.yml` file.
     Be sure that these two titles match.
 

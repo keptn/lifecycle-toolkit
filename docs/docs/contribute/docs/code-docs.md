@@ -201,7 +201,7 @@ https://keptn.sh/stable/docs/reference/crd-reference/analysis/#examples
 
 To link to that sub-section, the code is:
 
-```shell
+```markdown
 See
 [Examples](../reference/crd-reference/analysis.md#examples)
 ```

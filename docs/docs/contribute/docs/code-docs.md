@@ -19,7 +19,7 @@ The following documents document the language:
 Markdown supports many variants and the build tools we use
 impose a few special requirements that are discussed here.
 
-## Top of source requirements
+## Frontmatter requirements
 
 The top of each documentation source file should look like:
 

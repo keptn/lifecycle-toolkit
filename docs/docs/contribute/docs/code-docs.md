@@ -12,7 +12,7 @@ The following documents document the language:
   discusses Markdown structure and background.
 * [Basic Syntax](https://www.markdownguide.org/basic-syntax/)
   summarizes the standard Markdown syntax
-  that is support by almost all Markdown variants.
+  that is supported by almost all Markdown variants.
 * [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)
   is a handy reference for the most commonly used Markdown elements.
 

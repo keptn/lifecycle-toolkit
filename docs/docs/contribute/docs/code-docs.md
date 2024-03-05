@@ -165,7 +165,7 @@ Some examples may clarify this.
 
 The full URL for the `Analysis` CRD reference page is:
 
-```shell
+```markdown
 https://keptn.sh/stable/docs/reference/crd-reference/analysis/
 ```
 

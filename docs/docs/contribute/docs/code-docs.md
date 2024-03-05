@@ -214,7 +214,7 @@ Another CRD reference page (which is in the same directory)
 can reference the `Analysis` reference page
 like this:
 
-```shell
+```markdown
 [Analysis](analysis.md)
 ```
 

@@ -231,7 +231,7 @@ To cross-reference this section from a file in the `guides` section
 use the relative file to the directory
 and specify the `index.md` file for the section:
 
-```shell
+```markdown
 Follow the instructions in the
 [Installation](installation/index.md)
 section.

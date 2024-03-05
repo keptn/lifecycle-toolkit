@@ -222,7 +222,7 @@ like this:
 
 The URL of the `Installation` section is:
 
-```shell
+```markdown
 https://keptn.sh/stable/docs/installation/
 ```
 

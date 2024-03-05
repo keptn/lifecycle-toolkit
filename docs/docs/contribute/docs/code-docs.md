@@ -195,7 +195,7 @@ view the page in your browser and select `Examples`
 from the contents listing in the right frame.
 This gives you the following URL:
 
-```shell
+```markdown
 https://keptn.sh/stable/docs/reference/crd-reference/analysis/#examples
 ```
 

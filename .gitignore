@@ -23,7 +23,6 @@ kubeconfig
 # vendor/
 
 .idea/
-
 .dccache*
 
 manifests/

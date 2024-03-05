@@ -17,7 +17,7 @@ The documentation structure is defined under the `nav` section
 that is roughly the second half of the file.
 The following snippet illustrates how this is structured:
 
-```markdown
+```yaml
 ...
 nav:
   - Home:

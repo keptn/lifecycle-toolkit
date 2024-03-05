@@ -112,7 +112,6 @@ but this convention prevents problems.
 Links to and from the documentation set
 from outside the `NAV` path defined in the `mkdocs.yml` file
 use the full URL as displayed in the browser address bar
-(including the trailing `/` character)
 for the page for the `target-link`.
 
 This syntax is used for:

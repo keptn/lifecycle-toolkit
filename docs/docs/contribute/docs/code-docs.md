@@ -204,7 +204,7 @@ To link to that sub-section, the code is:
 
 ```shell
 See
-[Examples](../reference/crd-reference/analysis.md#examples
+[Examples](../reference/crd-reference/analysis.md#examples)
 ```
 
 You see that the `/` in the URL before `#examples` has been removed.

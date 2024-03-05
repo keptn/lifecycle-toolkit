@@ -173,7 +173,7 @@ To cross-reference this page
 from any page in the `docs/guide` directory
 (or other pages at that level), the code is:
 
-```shell
+```markdown
 See the
 [Analysis](../reference/crd-reference/analysis.md)
 CRD reference page.

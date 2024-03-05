@@ -49,7 +49,7 @@ nav:
     it is important to ensure that the title in the page source
     and the title in the `mkdocs.yml` file match.
 
-> **Note** After adding a new page to the `mkdocs.yaml` file,
+> **Note** After adding a new page to the `mkdocs.yml` file,
 > you must stop and restart your local doc build
 > (make docs-serve)
 > before the new page shows in your local build.

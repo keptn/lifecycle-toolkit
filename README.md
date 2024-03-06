@@ -72,6 +72,8 @@ The status follows the
 Find details on regular hosted community events in the [keptn/community repo](https://github.com/keptn/community)
 and our Slack channel(s) in the [CNCF Slack workspace.](https://cloud-native.slack.com/messages/keptn/)
 
+## Roadmap
+
 You can find our roadmap [here](https://github.com/orgs/keptn/projects/10).
 
 ## Governance

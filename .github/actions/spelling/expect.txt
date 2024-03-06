@@ -86,8 +86,9 @@ clt
 clusterrole
 clusterrolebinding
 cmp
-CNCF
+cncf
 codecov
+codeql
 codespace
 commonannotation
 COMMONENVVAR
@@ -322,7 +323,6 @@ keptnmetricsprovider
 keptnmetricsproviderlist
 keptnmetricsproviderspec
 keptnmetricstatus
-keptnphase
 keptnprommetrics
 keptnsandbox
 keptnserver
@@ -457,6 +457,7 @@ opentracing
 operatorcommon
 operatorvalue
 optionskeptnsh
+ossf
 otel
 otelprom
 otelsdk
@@ -525,6 +526,7 @@ resourcereference
 Rexed
 rgb
 RLock
+roadmap
 rolebinding
 rollme
 roundtripper

@@ -6,7 +6,7 @@ comments: true
 
 This page discusses how to restrict the namespaces
 where Keptn and the
-[lifecycle-operator](../../../components/lifecycle-operator.md)
+[lifecycle-operator](../../../components/lifecycle-operator/index.md)
 run.
 
 For information about how to allocate Keptn resources
@@ -33,24 +33,12 @@ for all namespaces except the followings:
 
 ## Custom namespace restriction
 
-If your cluster has other namespaces
-that the Keptn lifecycle orchestration should ignore,
-you must:
+If you want to restrict Keptn to only some namespaces, you should:
 
-- Annotate the namespaces where Keptn lifecycle orchestration is allowed
-- Modify the Helm chart to specify the namespaces
-  that Keptn lifecycle orchestration is allowed.
+- Allow those namespaces during installation
+- Annotate those namespaces
 
 To implement this:
-
-1. Annotate the namespaces where Keptn lifecycle orchestration is allowed
-   by issuing the following command
-   for each namespace:
-
-      ```shell
-      kubectl annotate ns <your-allowed-namespace> \
-            keptn.sh/lifecycle-toolkit='enabled'
-      ```
 
 1. Create a `values.yaml` file
    that lists the namespaces Keptn lifecycle orchestration should monitor:
@@ -69,6 +57,15 @@ To implement this:
       helm repo update
       helm upgrade --install keptn keptn/keptn -n keptn-system \
            --values values.yaml --create-namespace --wait
+      ```
+
+1. Annotate the namespaces where Keptn lifecycle orchestration is allowed
+   by issuing the following command
+   for each namespace:
+
+      ```shell
+      kubectl annotate ns <your-allowed-namespace> \
+            keptn.sh/lifecycle-toolkit='enabled'
       ```
 
 > **Note**

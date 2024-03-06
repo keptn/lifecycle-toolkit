@@ -4,12 +4,10 @@ inputs:
   kind-version:
     required: false
     description: "Version of kind that should be used"
-    # renovate: datasource=github-releases depName=kubernetes-sigs/kind
     default: "v0.18.0"
   k8s-version:
     required: false
     description: "Kubernetes version that should be used"
-    # renovate: datasource=github-releases depName=kubernetes/kubernetes
     default: "v1.27.3"
   runtime_tag:
     description: "Tag for the runner image"
@@ -49,16 +47,6 @@ runs:
         version: ${{ inputs.kind-version }}
         node_image: "kindest/node:${{ inputs.k8s-version }}"
         kubectl_version: ${{ inputs.k8s-version }}
-
-    - name: Import images in k3d
-      shell: bash
-      run: |
-        cd ~/download/artifacts
-        for image in $(ls | grep image.tar);
-        do
-          echo "Importing image: $image"
-          kind load image-archive $image/$image -n ${{ inputs.cluster-name }}
-        done
 
     - name: Install lifecycle-toolkit with helm
       env:

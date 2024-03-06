@@ -9,6 +9,8 @@
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/3588/badge)](https://www.bestpractices.dev/projects/3588)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/keptn/lifecycle-toolkit/badge)](https://securityscorecards.dev/viewer/?uri=github.com/keptn/lifecycle-toolkit)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkeptn%2Flifecycle-toolkit.svg?type=shield&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkeptn%2Flifecycle-toolkit?ref=badge_shield&issueType=license)
+[![CLOMonitor](https://img.shields.io/endpoint?url=https://clomonitor.io/api/projects/cncf/keptn/badge)](https://clomonitor.io/projects/cncf/keptn)
+
 
 This is the primary repository for
 the Keptn software and documentation.

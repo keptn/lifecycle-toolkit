@@ -26,7 +26,6 @@ for all namespaces except the followings:
 - `kube-public`
 - `kube-node-lease`
 - `cert-manager`
-- `keptn-system`
 - `observability`
 - `monitoring`
 - `<Keptn installation namespace>`

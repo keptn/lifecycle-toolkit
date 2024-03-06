@@ -8,6 +8,12 @@ Keptn must be installed onto each Kubernetes cluster you want to monitor.
 Additionally, Keptn needs to be enabled on your namespaces.
 This gives you flexibility in how and where you want to use Keptn.
 
+> **Note** By default, Keptn monitors all namespaces in the cluster
+> except for those reserved for major components.
+> See
+> [Namespaces and Keptn](configuration/namespace-keptn.md)
+> to learn how to limit the namespaces that Keptn monitors.
+
 Keptn v0.9.0 and later is installed using [Helm](https://helm.sh/).
 
 > **Note** Earlier releases could also be installed using the manifest.

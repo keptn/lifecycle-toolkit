@@ -16,6 +16,9 @@ on:
       - "mkdocs.yml"
       - ".github/actions/spelling/*"
 
+# Declare default permissions as read only.
+permissions: read-all
+
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools

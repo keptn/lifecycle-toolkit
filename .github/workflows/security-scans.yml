@@ -8,6 +8,10 @@ on:
         description: 'Take CI build artifacts from branch (e.g., master, release-x.y.z)'
         required: true
         default: 'main'
+
+# Declare default permissions as read only.
+permissions: read-all
+
 defaults:
   run:
     shell: bash

@@ -19,6 +19,10 @@ on:
       - '**.yaml'
       - '**.yml'
       - '.yamllint'
+
+# Declare default permissions as read only.
+permissions: read-all
+
 jobs:
   yamllint:
     runs-on: ubuntu-22.04

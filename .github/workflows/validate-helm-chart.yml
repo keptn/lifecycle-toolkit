@@ -13,6 +13,10 @@ on:
     paths:
       - "**/chart/**"
 
+# Declare default permissions as read only.
+permissions: read-all
+
+
 defaults:
   run:
     shell: bash

@@ -9,6 +9,10 @@ on:
       - 'reopened'
       - 'synchronize'
 
+# Declare default permissions as read only.
+permissions: read-all
+
+
 jobs:
   spelling:
     name: Check Spelling

@@ -6,6 +6,10 @@ on:
         description: "Tag for the runner image"
         type: "string"
         required: true
+
+# Declare default permissions as read only.
+permissions: read-all
+
 env:
   GO_VERSION: "~1.20"
 defaults:

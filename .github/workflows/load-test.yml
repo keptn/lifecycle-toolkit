@@ -6,6 +6,10 @@ on:
         description: "Tag for the runner images"
         type: "string"
         required: true
+
+# Declare default permissions as read only.
+permissions: read-all
+
 env:
   GO_VERSION: "~1.20"
   # renovate: datasource=github-tags depName=cloud-bulldozer/kube-burner

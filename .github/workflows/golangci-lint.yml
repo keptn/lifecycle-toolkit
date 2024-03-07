@@ -15,6 +15,10 @@ on:
       - ".golangci.yml"
       - ".github/workflows/golangci-lint.yml"
       - "!docs/**"
+
+# Declare default permissions as read only.
+permissions: read-all
+
 env:
   # renovate: datasource=github-releases depName=golangci/golangci-lint
   GOLANGCI_LINT_VERSION: "v1.55.2"

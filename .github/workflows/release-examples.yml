@@ -18,6 +18,10 @@ on:
         default: false
         required: false
 
+# Declare default permissions as read only.
+permissions: read-all
+
+
 jobs:
   release-examples:
     runs-on: ubuntu-22.04

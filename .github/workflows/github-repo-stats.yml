@@ -7,6 +7,9 @@ on:
     - cron: "0 23 * * *"
   workflow_dispatch: # Allow for running this manually.
 
+# Declare default permissions as read only.
+permissions: read-all
+
 jobs:
   snapshot:
     name: github-repo-stats

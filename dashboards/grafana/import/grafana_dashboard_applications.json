@@ -1,5 +1,6 @@
 {
-  "dashboard": {
+  "dashboard":
+  {
     "annotations": {
       "list": [
         {
@@ -25,14 +26,13 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": null,
     "links": [],
     "liveNow": false,
     "panels": [
       {
         "datasource": {
-          "type": "prometheus"
-
+          "type": "prometheus",
+          "uid": "prometheus"
         },
         "fieldConfig": {
           "defaults": {
@@ -81,8 +81,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus"
-
+              "type": "prometheus",
+              "uid": "prometheus"
             },
             "editorMode": "builder",
             "expr": "keptn_app_count_total{keptn_deployment_app_status=\"Succeeded\", keptn_deployment_app_name=\"$Application\"}",
@@ -116,8 +116,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus"
-
+          "type": "prometheus",
+          "uid": "prometheus"
         },
         "fieldConfig": {
           "defaults": {
@@ -165,8 +165,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus"
-
+              "type": "prometheus",
+              "uid": "prometheus"
             },
             "editorMode": "builder",
             "expr": "max(keptn_app_active{keptn_deployment_app_name=\"$Application\"})",
@@ -180,8 +180,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus"
-
+          "type": "prometheus",
+          "uid": "prometheus"
         },
         "fieldConfig": {
           "defaults": {
@@ -230,8 +230,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus"
-
+              "type": "prometheus",
+              "uid": "prometheus"
             },
             "editorMode": "builder",
             "expr": "keptn_app_count_total{keptn_deployment_app_status=\"Failed\", keptn_deployment_app_name=\"$Application\"}",
@@ -267,8 +267,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus"
-
+          "type": "prometheus",
+          "uid": "prometheus"
         },
         "fieldConfig": {
           "defaults": {
@@ -318,8 +318,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus"
-
+              "type": "prometheus",
+              "uid": "prometheus"
             },
             "editorMode": "builder",
             "expr": "avg by(keptn_deployment_app_previousversion, keptn_deployment_app_version) (keptn_app_deploymentinterval{keptn_deployment_app_name=\"$Application\"})",
@@ -334,8 +334,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus"
-
+          "type": "prometheus",
+          "uid": "prometheus"
         },
         "fieldConfig": {
           "defaults": {
@@ -388,8 +388,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus"
-
+              "type": "prometheus",
+              "uid": "prometheus"
             },
             "editorMode": "builder",
             "expr": "avg by(keptn_deployment_workload_previousversion) (keptn_app_deploymentinterval{keptn_deployment_app_name=\"$Application\"})",
@@ -404,8 +404,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus"
-
+          "type": "prometheus",
+          "uid": "prometheus"
         },
         "fieldConfig": {
           "defaults": {
@@ -454,8 +454,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus"
-
+              "type": "prometheus",
+              "uid": "prometheus"
             },
             "editorMode": "builder",
             "expr": "max by(keptn_deployment_app_version) (keptn_app_deploymentduration{keptn_deployment_app_name=\"$Application\"})",
@@ -470,8 +470,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus"
-
+          "type": "prometheus",
+          "uid": "prometheus"
         },
         "fieldConfig": {
           "defaults": {
@@ -526,8 +526,8 @@
           "overrides": []
         },
         "gridPos": {
-          "h": 8,
-          "w": 12,
+          "h": 9,
+          "w": 9,
           "x": 0,
           "y": 12
         },
@@ -547,8 +547,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus"
-
+              "type": "prometheus",
+              "uid": "prometheus"
             },
             "editorMode": "builder",
             "expr": "max(keptn_app_active{keptn_deployment_app_name=\"$Application\"})",
@@ -561,6 +561,70 @@
         ],
         "title": "Deployments Active",
         "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P1809F7CD0C75ACF3"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "orange",
+                  "value": 70
+                },
+                {
+                  "color": "red",
+                  "value": 85
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 9,
+          "w": 3,
+          "x": 9,
+          "y": 12
+        },
+        "id": 23,
+        "options": {
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true
+        },
+        "pluginVersion": "9.2.1",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "editorMode": "builder",
+            "expr": "max(keptn_promotion_count_total{keptn_deployment_app_name=\"$Application\"})",
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Successful promotions",
+        "type": "gauge"
       },
       {
         "datasource": {
@@ -598,7 +662,7 @@
           "h": 7,
           "w": 9,
           "x": 0,
-          "y": 20
+          "y": 21
         },
         "id": 8,
         "options": {
@@ -630,8 +694,8 @@
       },
       {
         "datasource": {
-          "type": "prometheus"
-
+          "type": "prometheus",
+          "uid": "prometheus"
         },
         "fieldConfig": {
           "defaults": {
@@ -677,7 +741,7 @@
           "h": 7,
           "w": 3,
           "x": 9,
-          "y": 20
+          "y": 21
         },
         "id": 21,
         "options": {
@@ -694,8 +758,8 @@
         "targets": [
           {
             "datasource": {
-              "type": "prometheus"
-
+              "type": "prometheus",
+              "uid": "prometheus"
             },
             "editorMode": "builder",
             "expr": "keptn_deployment_deploymentduration{keptn_deployment_app_name=\"$Application\"}",
@@ -749,13 +813,13 @@
       "list": [
         {
           "current": {
-            "selected": false,
+            "selected": true,
             "text": "podtato-head",
             "value": "podtato-head"
           },
           "datasource": {
-            "type": "prometheus"
-
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "definition": "label_values(keptn_deployment_app_name)",
           "hide": 0,
@@ -775,8 +839,8 @@
         },
         {
           "datasource": {
-            "type": "prometheus"
-
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "filters": [],
           "hide": 0,
@@ -787,13 +851,13 @@
       ]
     },
     "time": {
-      "from": "now-24h",
+      "from": "now-2d",
       "to": "now"
     },
     "timepicker": {},
     "timezone": "",
     "title": "Keptn Applications",
-    "uid": null,
+    "uid": "nbiPNgN4z",
     "version": 1,
     "weekStart": ""
   }

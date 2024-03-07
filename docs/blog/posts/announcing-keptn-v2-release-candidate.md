@@ -99,7 +99,7 @@ guide.
 
 Usually, Keptn does not act in isolation during a deployment.
 In the logical timeline of events, there will be tools acting prior to
-Keptn (such as GitOps tools like [ArgoCD](https://argo-cd.readthedocs.io/en/stable/)) and tools that act after
+Keptn (such as GitOps tools like [ArgoCD](https://argoproj.github.io/cd/)) and tools that act after
 Keptn (such as security scanning tools or post-deployment checks).
 
 If the tools prior to Keptn begin generating OpenTelemetry data (e.g. Spans and traces),

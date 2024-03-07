@@ -184,6 +184,7 @@ fieldpath
 fieldref
 flyout
 fontawesome
+Frontmatter
 ftp
 fullname
 functionref

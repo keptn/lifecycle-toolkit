@@ -109,7 +109,7 @@ Similarly, anything that happens after Keptn (but still in the same logical "dep
 should be included in the end-to-end trace / timing view.
 To achieve this, Keptn now accepts tools to pass w3c trace IDs into Keptn
 and Keptn will pass W3C trace IDs out of Keptn
-(thanks to all contributors working on this for providing this functionality!)
+(thanks to all contributors working on this functionality!)
 Now, you can see a true end-to-end picture of everything in the logical operation,
 potentially from "PR merged" all the way to "deployment complete".
 
@@ -128,7 +128,7 @@ deployments by adding pre- and post-deployment tasks to ensure you deploy into a
 This shows you how to use Keptn to evaluate metrics relevant for an application as part of
 the pre- and post-deployment checks.
 - [OpenTelemetry Observability](https://keptn.sh/stable/docs/guides/otel/):
-This shows how to configure Keptn for making use of its observability features so you
+This shows how to configure Keptn for making use of its observability features, so you
 have a holistic overview of your application deployments and any issues that arise during deployment.
 - [Multi-stage Application Delivery](https://keptn.sh/stable/docs/guides/multi-stage-application-delivery/):
 This guide serves as an example of how you can integrate Keptn with ArgoCD and GitHub to
@@ -142,4 +142,4 @@ so feel free to keep an eye on it to see if there is something new added that yo
 potentially also apply to your workflow.
 
 [Keptn v2 Release Candidate 1](https://github.com/keptn/lifecycle-toolkit/releases) is available now on GitHub.
-Please provide any feedback via the #keptn Slack channel in the [CNCF Slack workspace](https://communityinviter.com/apps/cloud-native/cncf).
+Please provide any feedback via the [#keptn Slack channel](https://cloud-native.slack.com/messages/keptn/) in the [CNCF Slack workspace](https://communityinviter.com/apps/cloud-native/cncf).

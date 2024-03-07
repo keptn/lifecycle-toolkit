@@ -1,5 +1,5 @@
 ---
-date: 2024-03-07
+date: 2024-03-13
 authors: [agardnerit,bacherfl]
 description: >
   Announcing the Official Release Candidate for Keptn v2
@@ -112,6 +112,8 @@ and Keptn will pass W3C trace IDs out of Keptn
 (thanks to all contributors working on this functionality!)
 Now, you can see a true end-to-end picture of everything in the logical order,
 potentially from "PR merged" all the way to "deployment complete".
+
+![dev-to-proc](./announcing-keptn-v2-release-candidate/dev-to-prod.png)
 
 ## How to get started
 

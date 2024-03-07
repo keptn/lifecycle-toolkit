@@ -38,7 +38,25 @@ jobs:
           post_comment: 0
           use_magic_file: 1
           report-timing: 1
-          warnings: bad-regex binary-file deprecated-feature large-file limited-references no-newline-at-eof noisy-file non-alpha-in-dictionary token-is-substring unexpected-line-ending whitespace-in-dictionary minified-file unsupported-configuration no-files-to-check
+          warnings:
+            bad-regex
+            binary-file
+            deprecated-feature
+            large-file
+            limited-references
+            no-newline-at-eof
+            noisy-file
+            non-alpha-in-dictionary
+            token-is-substring
+            unexpected-line-ending
+            whitespace-in-dictionary
+            minified-file
+            unsupported-configuration
+            no-files-to-check
           use_sarif: false
           extra_dictionary_limit: 20
-          extra_dictionaries: cspell:software-terms/dict/softwareTerms.txt cspell:k8s/dict/k8s.txt cspell:golang/dict/go.txt cspell:html/dict/html.txt
+          extra_dictionaries:
+            cspell:software-terms/dict/softwareTerms.txt
+            cspell:k8s/dict/k8s.txt
+            cspell:golang/dict/go.txt
+            cspell:html/dict/html.txt

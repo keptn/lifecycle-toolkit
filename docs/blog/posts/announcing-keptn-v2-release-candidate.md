@@ -142,4 +142,5 @@ so feel free to keep an eye on it to see if there is something new added that yo
 potentially also apply to your workflow.
 
 [Keptn v2 Release Candidate 1](https://github.com/keptn/lifecycle-toolkit/releases) is available now on GitHub.
-Please provide any feedback via the [#keptn Slack channel](https://cloud-native.slack.com/messages/keptn/) in the [CNCF Slack workspace](https://communityinviter.com/apps/cloud-native/cncf).
+Please provide any feedback via the [#keptn Slack channel](https://cloud-native.slack.com/messages/keptn/) 
+in the [CNCF Slack workspace](https://communityinviter.com/apps/cloud-native/cncf).

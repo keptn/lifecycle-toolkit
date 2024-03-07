@@ -12,7 +12,6 @@ on:
 # Declare default permissions as read only.
 permissions: read-all
 
-
 jobs:
   spelling:
     name: Check Spelling
@@ -30,7 +29,7 @@ jobs:
     steps:
       - name: check-spelling
         id: spelling
-        uses: check-spelling/check-spelling@v0.0.22
+        uses: check-spelling/check-spelling@00c989c97749eb0cb2d256bdc55ac61b0096c6d3 # pin@v0.0.22
         with:
           suppress_push_for_open_pull_request: ${{ github.actor != 'dependabot[bot]' && github.actor != 'renovate[bot]' && 1 }}
           checkout: true
@@ -39,25 +38,7 @@ jobs:
           post_comment: 0
           use_magic_file: 1
           report-timing: 1
-          warnings:
-            bad-regex
-            binary-file
-            deprecated-feature
-            large-file
-            limited-references
-            no-newline-at-eof
-            noisy-file
-            non-alpha-in-dictionary
-            token-is-substring
-            unexpected-line-ending
-            whitespace-in-dictionary
-            minified-file
-            unsupported-configuration
-            no-files-to-check
+          warnings: bad-regex binary-file deprecated-feature large-file limited-references no-newline-at-eof noisy-file non-alpha-in-dictionary token-is-substring unexpected-line-ending whitespace-in-dictionary minified-file unsupported-configuration no-files-to-check
           use_sarif: false
           extra_dictionary_limit: 20
-          extra_dictionaries:
-            cspell:software-terms/dict/softwareTerms.txt
-            cspell:k8s/dict/k8s.txt
-            cspell:golang/dict/go.txt
-            cspell:html/dict/html.txt
+          extra_dictionaries: cspell:software-terms/dict/softwareTerms.txt cspell:k8s/dict/k8s.txt cspell:golang/dict/go.txt cspell:html/dict/html.txt

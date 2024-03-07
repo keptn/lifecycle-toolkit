@@ -5,15 +5,14 @@ on:
     - cron: "0 3 * * *"
   workflow_dispatch:
 
-# Declare default permissions as read only.
+    # Declare default permissions as read only.
 permissions: read-all
-
 
 jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/stale@v9
+      - uses: actions/stale@28ca1036281a5e5922ead5184a1bbf96e5fc984e # pin@v9
         with:
           days-before-stale: 60
           days-before-close: 7
@@ -30,7 +29,7 @@ jobs:
   stale-good-first-issues:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/stale@v9
+      - uses: actions/stale@28ca1036281a5e5922ead5184a1bbf96e5fc984e # pin@v9
         with:
           days-before-stale: 21
           stale-issue-message: |
@@ -42,7 +41,7 @@ jobs:
           only-issue-labels: 'good first issue'
           stale-issue-label: 'update-requested'
 
-      - uses: actions/stale@v9
+      - uses: actions/stale@28ca1036281a5e5922ead5184a1bbf96e5fc984e # pin@v9
         with:
           days-before-stale: 28
           stale-issue-message: |

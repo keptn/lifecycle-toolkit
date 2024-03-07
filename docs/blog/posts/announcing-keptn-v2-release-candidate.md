@@ -61,7 +61,7 @@ before promoting it into the next stage.
 User feedback to the Keptn project has been clear, and we have listened.
 Keptn v2 brings 3 key new features:
 
-- Non-Blocking Tasks 
+- Non-Blocking Tasks
 - A new "promotion" stage
 - Ability to pass OpenTelemetry contextual information into, and out of, Keptn
 
@@ -141,4 +141,5 @@ Also, the list of guides is being updated actively by the maintainers,
 so feel free to keep an eye on it to see if there is something new added that you could
 potentially also apply to your workflow.
 
-[Keptn v2 Release Candidate 1](https://github.com/keptn/lifecycle-toolkit/releases) is available now on GitHub. Please provide any feedback via the #keptn Slack channel in the [CNCF Slack workspace](https://communityinviter.com/apps/cloud-native/cncf).
+[Keptn v2 Release Candidate 1](https://github.com/keptn/lifecycle-toolkit/releases) is available now on GitHub.
+Please provide any feedback via the #keptn Slack channel in the [CNCF Slack workspace](https://communityinviter.com/apps/cloud-native/cncf).

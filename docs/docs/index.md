@@ -7,8 +7,8 @@ comments: true
 This is the documentation homepage.
 If you are new to Keptn, please check out the following sections:
 
-- [Core Concepts](./core-concepts/index.md) will help you understand what Keptn is all about
-- [Get Started](./getting-started/index.md) helps you get going with your first use cases for Keptn
+- [Core Concepts](./core-concepts/index.md) will help you understand what Keptn is all about.
+- [Get Started](./getting-started/index.md) helps you get going with your first use cases for Keptn.
 - [Installation](./installation/index.md) guides you through
 the installation procedure for Keptn
 and provides information about special configuration options

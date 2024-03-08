@@ -9,8 +9,9 @@ comments: true
 # Announcing the Official Release Candidate for Keptn v2
 
 The Keptn project is proud to announce a release candidate for what will become Keptn v2.
-This release candidate will provide the project with enough end-user validation and bug-finding
-so that we can release Keptn v2.
+We are sharing this release candidate
+so that the community and end users can participate in the testing
+to ensure that the actual release is as robust as possible.
 We anticipate (as long as no release blockers are identified)
 that Keptn v2 will be released approximately 1 month after this announcement.
 
@@ -41,7 +42,7 @@ Often, this is the behaviour you want – if a downstream dependency is unavaila
 you probably don’t want to complete the deployment.
 However, for new Keptn users, this behaviour can appear drastic and cause deployments to be
 “pending” without an obvious cause.
-In Keptn v2 this blocking behaviour for pre tasks and evaluationis now configurable.
+In Keptn v2 this blocking behaviour for pre tasks and evaluations is now configurable.
 When creating the KeptnConfig resource, set `spec.blockDeployment: [true|false]`.
 The default behaviour is for Keptn to block deployments (i.e. `spec.blockDeployment: true`)
 

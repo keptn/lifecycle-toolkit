@@ -10,9 +10,9 @@ who may not have `make` installed.
 It is also useful for Linux and MacOS users
 who may not wish to download tools just to contribute to docs.
 
-Review [this video](https://www.youtube.com/watch?v=sFNzOhZw7Eg) to see how this works.
+Review [this video](https://www.youtube.com/watch?v=HdiXPgvfgQw) to see how this works.
 
-[![Keptn + GitHub codespaces video](https://img.youtube.com/vi/sFNzOhZw7Eg/0.jpg)](https://www.youtube.com/watch?v=sFNzOhZw7Eg)
+[![Keptn + GitHub codespaces video](https://i.ytimg.com/vi/HdiXPgvfgQw/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG\u0026rs=AOn4CLAonq0o6A9-aB9DVS4YPhMg5ZuPAA)](https://www.youtube.com/watch?v=HdiXPgvfgQw)
 
 As shown in the video, the steps to set up a new Codespace are:
 

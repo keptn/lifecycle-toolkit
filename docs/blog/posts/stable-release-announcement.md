@@ -19,10 +19,12 @@ that Keptn v2 will be released approximately 1 month after this announcement.
 
 Deploying software using Kubernetes is, on the surface, easy.
 Just use kubectl or a GitOps solution like ArgoCD to deploy a YAML file and that’s it, right?
-Well, no. Not normally.
+Well, no.
+Not normally.
 There is a lot more to ensuring a healthy deployment.
 The pod(s) may be running, but that doesn’t automatically mean that the application is healthy.
-This is the problem domain that Keptn acts upon. By using Keptn, in combination with your standard
+This is the problem domain that Keptn acts upon.
+By using Keptn, in combination with your standard
 deployment tooling or practices, you can move from “I guess it’s OK” to “I know it’s OK”.
 Keptn allows you to wrap governance and automated checks around the deployment process to ensure that
 the end-to-end process of deploying is healthy and your application is meeting the SLOs you’ve defined.
@@ -30,9 +32,9 @@ the end-to-end process of deploying is healthy and your application is meeting t
 ## What’s New in Keptn v2?
 
 User feedback to the Keptn project has been clear, and we’ve listened.
-Keptn v2 will bring 3 key new features:
-1.	Non-Blocking Tasks
-2.	A new “promotion” stage
+Keptn v2 will bring the following new features:
+- Non-Blocking Tasks
+- A new “promotion” stage
 
 ### Non-Blocking Tests
 
@@ -58,7 +60,7 @@ The upcoming stable release will be shipped with this feature enabled out of the
 Further information can be found in
 [the official documentation](https://keptn.sh/stable/docs/guides/multi-stage-application-delivery/).
 
-## Try it out!
+## Try it out
 
 Now, you will see a true end-to-end picture of everything in the logical operation,
 potentially from “PR merged” all the way to “deployment complete”.

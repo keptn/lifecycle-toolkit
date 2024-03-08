@@ -48,7 +48,7 @@ However, for new Keptn users, this behaviour can appear drastic and cause deploy
 In Keptn v2 this blocking behaviour for pre tasks and evaluations can be temporarily disabled for the cluster
 until you are sure that your tasks and evaluations
 are performing appropriately.
-When creating the KeptnConfig resource, set `spec.blockDeployment: [true|false]`.
+When creating the [KeptnConfig](../../docs/reference/crd-reference/config.md) resource, set `spec.blockDeployment: [true|false]`.
 The default behaviour is for Keptn to block deployments (i.e. `spec.blockDeployment: true`)
 
 ### The Promotion Stage

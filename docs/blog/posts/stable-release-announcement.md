@@ -33,6 +33,7 @@ the end-to-end process of deploying is healthy and your application is meeting t
 
 User feedback to the Keptn project has been clear, and we’ve listened.
 Keptn v2 will bring the following new features:
+
 - Non-Blocking Tasks
 - A new “promotion” stage
 

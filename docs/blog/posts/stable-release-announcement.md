@@ -2,7 +2,7 @@
 date: 2024-03-10
 authors: [agardnerIT]
 description: >
-  In this blog post you will learn how to configure Keptn via the new Helm umbrella chart.
+  In this blog post, the release candidate for Keptn v2 is announced.
 comments: true
 ---
 
@@ -29,10 +29,10 @@ deployment tooling or practices, you can move from “I guess it’s OK” to �
 Keptn allows you to wrap governance and automated checks around the deployment process to ensure that
 the end-to-end process of deploying is healthy and your application is meeting the SLOs you’ve defined.
 
-## What’s New in Keptn v2?
+## What’s New in Keptn v2-rc?
 
 User feedback to the Keptn project has been clear, and we’ve listened.
-Keptn v2 will bring the following new features:
+Keptn v2-rc will bring the following new features:
 
 - Non-Blocking Tasks
 - A new “promotion” stage

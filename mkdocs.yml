@@ -212,11 +212,12 @@ nav:
           - docs/contribute/software/index.md
           - Software development environment: docs/contribute/software/dev-environ.md
           - Add a metrics provider: docs/contribute/software/add-new-metric-provider.md
+          - Add Golangci-lint: docs/contribute/software/golangci-lint.md
       - Documentation contributions:
           - docs/contribute/docs/index.md
           - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs.md
           - Build Documentation Locally: docs/contribute/docs/local-building.md
-          - Linter Requirements: docs/contribute/docs/linter-requirements.md
+          - Markdown Linting: docs/contribute/docs/markdownlint.md
           - Source File Structure: docs/contribute/docs/source-file-structure.md
           - Coding the docs: docs/contribute/docs/code-docs.md
           - Spell Checker: docs/contribute/docs/spell-check.md

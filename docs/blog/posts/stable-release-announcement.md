@@ -63,7 +63,7 @@ The upcoming stable release will be shipped with this feature enabled out of the
 
 Further information can be found in
 The
-[Multi-stage application delvery](https://keptn.sh/stable/docs/guides/multi-stage-application-delivery/)
+[Multi-stage application delivery](../../docs/guides/multi-stage-application-delivery.md)
 guide.
 
 ## Try it out

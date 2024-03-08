@@ -17,14 +17,12 @@ spec:
         app.kubernetes.io/version: 0.0.1
     spec:
       containers:
-      - name: nginx
-        image: nginx:latest
-        ports:
-        - containerPort: 80
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
 ---
 apiVersion: apps/v1
-kind: Service
-apiVersion: v1
 kind: Service
 metadata:
   name: nginx

@@ -1,4 +1,3 @@
-
 apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:

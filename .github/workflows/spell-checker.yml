@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: check-spelling
         id: spelling
-        uses: check-spelling/check-spelling@00c989c97749eb0cb2d256bdc55ac61b0096c6d3 # pin@v0.0.22
+        uses: check-spelling/check-spelling@00c989c97749eb0cb2d256bdc55ac61b0096c6d3 # v0.0.22
         with:
           suppress_push_for_open_pull_request: ${{ github.actor != 'dependabot[bot]' && github.actor != 'renovate[bot]' && 1 }}
           checkout: true

@@ -18,9 +18,32 @@ spec:
       catch:
         - podLogs:
             selector: app=daemonset
+        - describe:
+          resource: keptnworkloadversion
+        - describe:
+          resource: keptnappversion
+        - podLogs:
+          namespace: keptn-system
+          selector: control-plane=lifecycle-operator
+        - podLogs:
+          namespace: keptn-system
+          selector: control-plane=metrics-operator
     - name: step-01
       try:
         - apply:
             file: 02-install.yaml
         - assert:
             file: 02-assert.yaml
+      catch:
+        - podLogs:
+            selector: app=daemonset
+        - describe:
+          resource: keptnworkloadversion
+        - describe:
+          resource: keptnappversion
+        - podLogs:
+          namespace: keptn-system
+          selector: control-plane=lifecycle-operator
+        - podLogs:
+          namespace: keptn-system
+          selector: control-plane=metrics-operator

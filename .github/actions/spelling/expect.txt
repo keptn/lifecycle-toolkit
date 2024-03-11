@@ -686,3 +686,6 @@ Yash
 yml
 YOURNAME
 yourregistry
+GOGC
+otelcol
+serviceapp

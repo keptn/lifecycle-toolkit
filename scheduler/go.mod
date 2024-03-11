@@ -125,6 +125,7 @@ require (
 replace (
 	github.com/keptn/lifecycle-toolkit/scheduler/pkg/klcpermit => /pkg/klcpermit
 	golang.org/x/net => golang.org/x/net v0.21.0
+	google.golang.org/protobuf => google.golang.org/protobuf v1.33.0
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.25.16
 	k8s.io/cli-runtime => k8s.io/cli-runtime v0.25.16
 	k8s.io/cloud-provider => k8s.io/cloud-provider v0.25.16

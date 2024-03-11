@@ -19,12 +19,12 @@ spec:
         - podLogs:
             selector: app=test
         - describe:
-          resource: keptnworkloadversion
+            resource: keptnworkloadversion
         - describe:
-          resource: keptnappversion
+            resource: keptnappversion
         - podLogs:
-          namespace: keptn-system
-          selector: control-plane=lifecycle-operator
+            namespace: keptn-system
+            selector: control-plane=lifecycle-operator
         - podLogs:
-          namespace: keptn-system
-          selector: control-plane=metrics-operator
+            namespace: keptn-system
+            selector: control-plane=metrics-operator

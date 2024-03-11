@@ -19,15 +19,15 @@ spec:
         - podLogs:
             selector: app=statefultest
         - describe:
-          resource: keptnworkloadversion
+            resource: keptnworkloadversion
         - describe:
-          resource: keptnappversion
+            resource: keptnappversion
         - podLogs:
-          namespace: keptn-system
-          selector: control-plane=lifecycle-operator
+            namespace: keptn-system
+            selector: control-plane=lifecycle-operator
         - podLogs:
-          namespace: keptn-system
-          selector: control-plane=metrics-operator
+            namespace: keptn-system
+            selector: control-plane=metrics-operator
     - name: step-01
       try:
         - apply:
@@ -38,12 +38,12 @@ spec:
         - podLogs:
             selector: app=statefultest
         - describe:
-          resource: keptnworkloadversion
+            resource: keptnworkloadversion
         - describe:
-          resource: keptnappversion
+            resource: keptnappversion
         - podLogs:
-          namespace: keptn-system
-          selector: control-plane=lifecycle-operator
+            namespace: keptn-system
+            selector: control-plane=lifecycle-operator
         - podLogs:
-          namespace: keptn-system
-          selector: control-plane=metrics-operator
+            namespace: keptn-system
+            selector: control-plane=metrics-operator

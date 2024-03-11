@@ -99,7 +99,7 @@ you need to install the following on your system:
    You identify your private repository with the `RELEASE_REGISTRY=` argument
    and can add any `TAG` arguments you like.
    For example, the following command builds the environment
-   and pushes the image to the `docker.io/exampleuser` GitHub repository:
+   and pushes the image to the `docker.io/exampleuser` DockerHub repository:
 
 ```shell
 make build-deploy-dev-environment RELEASE_REGISTRY=docker.io/exampleuser TAG=main

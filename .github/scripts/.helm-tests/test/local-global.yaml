@@ -1,0 +1,49 @@
+//global values
+
+global:
+  imageRegistry: ""
+  imagePullPolicy: ""
+  imagePullSecrets: []
+  commonLabels: {}
+  commonAnnotations: {}
+  caInjectionAnnotations: {}
+  certManagerEnabled: true
+  imageRegistry: ""
+  imagePullSecrets: []
+  imagePullPolicy: ""
+  commonLabels: {}
+  commonAnnotations: {}
+  caInjectionAnnotations: {}
+
+lifecycleOperatorConfig:
+  health:
+    healthProbeBindAddress: ":8081"
+  leaderElection:
+    leaderElect:  true
+    resourceName: 6b866dd9.keptn.sh
+  metrics:
+    bindAddress: "127.0.0.1:8080"
+    webhook: "9443"
+
+lifecycleWebhookService:
+
+lifecycleWebhookService:
+  ports[0]:
+    port: "443"
+    protocol:  "TCP"
+    targetPort: "9443"
+  type: ClusterIP
+
+//local values
+lifecycleOperator.enabled:  true
+metricsOperator.enabled: true
+image.imagePullPolicy: ""
+lifecycleOperator.image.imagePullPolicy: ""
+scheduler.image.imagePullPolicy: ""
+schedulerConfig.leaderElection.leaderElect: false
+lifecycleOperator.env.keptnDoraMetricsPort: "2222"
+
+lifecycleOperator:
+  containerSecurityContext:
+    seccompProfile:
+      type: "RuntimeDefault"

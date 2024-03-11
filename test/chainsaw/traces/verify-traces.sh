@@ -17,11 +17,13 @@ EXPECTED_SUBSTRINGS=(
     Name : keptnapp-nginx/WorkloadPostDeployEvaluations
     Name : AppPostDeployTasks
     Name : AppPostDeployEvaluations
+    keptn.deployment.app.namespace: keptndemo
 )
 
 check_variable_contains_substrings() {
     # remove unneeded whitespaces
-    local variable=$(echo "$1" | sed 's/\s\+/ /g')
+    local variable2=$(echo "$1" | sed 's/\s\+/ /g')
+    local variable=$(echo "$variable2" | sed 's/Str(keptndemo)/keptndemo/g')
     local -a substrings=("${@:2}")
 
     local contains_all=true

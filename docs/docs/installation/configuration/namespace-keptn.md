@@ -26,9 +26,9 @@ for all namespaces except the followings:
 - `kube-public`
 - `kube-node-lease`
 - `cert-manager`
+- `keptn-system` (Keptn installation namespace)
 - `observability`
 - `monitoring`
-- `<Keptn installation namespace>`
 
 ## Custom namespace restriction
 
@@ -68,7 +68,9 @@ To implement this:
       ```
 
 > **Note**
-When this option is set, you must update the Helm installation
-by adding the names of additional namespaces you create
+If you restrict the namespaces where Keptn runs
+and later add additional namespaces to your cluster
+for which Keptn is allowed,
+you must add the names of new namespaces
 to your `values.yaml` file
-and rerunning the `helm upgrade` command.
+and rerun the `helm upgrade` command.

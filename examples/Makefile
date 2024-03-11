@@ -11,7 +11,7 @@ install: install-observability
 	@echo "-----------------------------------"
 	helm repo add keptn https://charts.lifecycle.keptn.sh
 	helm repo update
-	helm upgrade --install keptn keptn/keptn -n $(TOOLKIT_NAMESPACE) --set 'lifecycleOperator.promotionTasksEnabled="true"'  --create-namespace --wait
+	helm upgrade --install keptn keptn/keptn -n $(TOOLKIT_NAMESPACE) --set 'lifecycleOperator.promotionTasksEnabled=true'  --create-namespace --wait
 	kubectl apply -f support/keptn/keptnconfig.yaml -n $(TOOLKIT_NAMESPACE)
 
 .PHONY: install-observability

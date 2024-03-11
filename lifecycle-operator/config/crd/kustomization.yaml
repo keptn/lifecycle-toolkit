@@ -28,9 +28,19 @@ labels:
       app.kubernetes.io/part-of: keptn
       crdGroup: lifecycle.keptn.sh
       keptn.sh/inject-cert: "true"
+commonAnnotations:
+  putAnnotation: operator
+commonLabels:
+  putLabels: newLabel
 patches:
   - path: patches/webhook_in_lifecycle_keptnapps.yaml
   - path: patches/webhook_in_lifecycle_keptnappversions.yaml
+  - target:
+      group: apiextensions.k8s.io
+      version: v1
+      name: keptnappcontexts.lifecycle.keptn.sh
+      kind: CustomResourceDefinition
+    path: patches/keptnappcontextsPatch.yaml
 # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix.
 # patches here are for enabling the conversion webhook for each CRD
 # - path: patches/webhook_in_lifecycle_keptnworkloadinstances.yaml

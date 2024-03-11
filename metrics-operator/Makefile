@@ -214,3 +214,12 @@ push-local:
 .PHONY: lint
 lint:
 	${GOPATH}/bin/golangci-lint run --config ../.golangci.yml -v
+
+##command to update chart/templates and docs
+.PHONY: update-helmcharts
+update-helmcharts: generate manifests
+	kustomize build config/crd > chart/templates/metricsOperator-crd.yaml
+	awk '/putAnnotation: metrics-operator/{print "    {{- with .Values.global.caInjectionAnnotations  }}"; print "    {{- toYaml . | nindent 4 }}"; print "    {{- end }}"; print "  {{- include \"common.annotations\" ( dict \"context\" . ) }}"; next} 1' chart/templates/metricsOperator-crd.yaml > temp_file && mv temp_file chart/templates/metricsOperator-crd.yaml
+	awk '/env: fake/ {print "    cert-manager.io/inject-ca-from: '\''{{ .Release.Namespace }}/keptn-certs'\''"; next} 1' chart/templates/metricsOperator-crd.yaml > temp_file && mv temp_file chart/templates/metricsOperator-crd.yaml
+	awk '/putLabels: newLabel/ {print "{{- include \"common.labels.standard\" (dict \"context\" .) | nindent 4 }}"; next} 1' chart/templates/metricsOperator-crd.yaml > temp_file && mv temp_file chart/templates/metricsOperator-crd.yaml
+

@@ -177,3 +177,15 @@ lint: metrics-operator-lint
 lint: certmanager-lint
 lint: operator-lint
 lint: scheduler-lint
+
+.PHONY: update-operator-helmcharts-docs
+update-operator-helmcharts-docs:
+	$(MAKE) -C lifecycle-operator update-helmcharts
+	./.github/scripts/generate-crd-docs/generate-crd-docs.sh
+	./.github/scripts/generate-helm-docs.sh
+
+.PHONY: update-metrics-operator-helmcharts-docs
+update-metrics-operator-helmcharts-docs:
+	$(MAKE) -C metrics-operator update-helmcharts
+	./.github/scripts/generate-crd-docs/generate-crd-docs.sh
+	./.github/scripts/generate-helm-docs.sh

@@ -21,7 +21,17 @@ labels:
       app.kubernetes.io/part-of: keptn
       crdGroup: metrics.keptn.sh
       keptn.sh/inject-cert: "true"
+commonAnnotations:
+  putAnnotation: metrics-operator
+commonLabels:
+  putLabels: newLabel
 patches:
+  - target:
+      group: apiextensions.k8s.io
+      version: v1
+      name: analyses.metrics.keptn.sh
+      kind: CustomResourceDefinition
+    path: patches/analysesMetricsPatch.yaml
 # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix.
 # patches here are for enabling the conversion webhook for each CRD
 # - path: patches/webhook_in_keptnmetricsproviders.yaml

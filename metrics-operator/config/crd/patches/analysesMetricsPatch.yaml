@@ -1,0 +1,3 @@
+- op: add # action
+  path: "/metadata/annotations/env" # adding a fake annotation and to be replaced with another one in helm templates
+  value: fake

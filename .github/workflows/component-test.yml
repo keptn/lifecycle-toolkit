@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v4
 
       - name: Set up Go 1.x
-        uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # pin@v5
+        uses: actions/setup-go@6c1fd22b67f7a7c42ad9a45c0f4197434035e429 # pin@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true

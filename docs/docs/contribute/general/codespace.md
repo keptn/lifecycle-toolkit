@@ -12,7 +12,7 @@ who may not wish to download tools just to contribute to docs.
 
 Review [this video](https://www.youtube.com/watch?v=HdiXPgvfgQw) to see how this works.
 
-[![Keptn + GitHub codespaces video](https://i.ytimg.com/vi/HdiXPgvfgQw/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG\u0026rs=AOn4CLAonq0o6A9-aB9DVS4YPhMg5ZuPAA)](https://www.youtube.com/watch?v=HdiXPgvfgQw)
+[![Keptn + GitHub codespaces video](https://i.ytimg.com/vi/HdiXPgvfgQw/hqdefault.jpg)](https://www.youtube.com/watch?v=HdiXPgvfgQw)
 
 As shown in the video, the steps to set up a new Codespace are:
 

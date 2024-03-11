@@ -61,7 +61,6 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh

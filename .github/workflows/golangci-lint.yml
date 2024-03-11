@@ -15,6 +15,10 @@ on:
       - ".golangci.yml"
       - ".github/workflows/golangci-lint.yml"
       - "!docs/**"
+
+# Declare default permissions as read only.
+permissions: read-all
+
 env:
   # renovate: datasource=github-releases depName=golangci/golangci-lint
   GOLANGCI_LINT_VERSION: "v1.55.2"
@@ -37,15 +41,15 @@ jobs:
             folder: "keptn-cert-manager/"
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v4
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # pin@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v4
+        uses: golangci/golangci-lint-action@3cfe3a4abbb849e10058ce4af15d205b6da42804 # pin@v4
         with:
           working-directory: ${{ matrix.config.folder }}
           version: ${{ env.GOLANGCI_LINT_VERSION }}

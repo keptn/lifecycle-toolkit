@@ -15,10 +15,12 @@ to ensure that the actual release is as robust as possible.
 We anticipate (as long as no release blockers are identified)
 that Keptn v2 will be released approximately 1 month after this announcement.
 
-## What Problem Does Keptn Solve?
+<!-- more -->
+
+## What problem does Keptn solve?
 
 Deploying software using Kubernetes is, on the surface, easy.
-Just use kubectl or a GitOps solution like ArgoCD to deploy a YAML file and that’s it, right?
+Just use `kubectl` or a GitOps solution like [ArgoCD](https://argoproj.github.io/cd/) to deploy a YAML file and that’s it, right?
 Well, no.
 Not normally.
 There is a lot more to ensuring a healthy deployment.
@@ -29,7 +31,7 @@ deployment tooling or practices, you can move from “I guess it’s OK” to �
 Keptn allows you to wrap governance and automated checks around the deployment process to ensure that
 the end-to-end process of deploying is healthy and your application is meeting the SLOs you’ve defined.
 
-## What’s New in Keptn v2-rc?
+## What’s New in the Keptn v2 release candidate?
 
 User feedback to the Keptn project has been clear, and we’ve listened.
 Keptn v2-rc will bring the following new features:
@@ -53,7 +55,7 @@ The default behaviour is for Keptn to block deployments (i.e. `spec.blockDeploym
 
 ### The Promotion Stage
 
-Keptn v2 introduces a new “promotion” stage
+Keptn v2 introduces a new “promotion” phase
 to support multi-stage application delivery.
 Keptn is commonly used alongside [GitOps practices](https://opengitops.dev/) and thus,
 users want to have a dedicated way to promote an application to the next stage in my environment.
@@ -68,7 +70,7 @@ guide.
 
 ## Try it out
 
-Now, you can see a true end-to-end picture of everything in the logical operation,
+Now, you can see a true end-to-end picture of everything in the logical order,
 potentially from “PR merged” all the way to “deployment complete”.
 [Download Keptn v2 RC1 Now!](https://artifacthub.io/packages/helm/lifecycle-toolkit/keptn)
 

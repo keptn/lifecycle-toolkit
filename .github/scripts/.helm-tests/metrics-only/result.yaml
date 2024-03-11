@@ -5,6 +5,8 @@ kind: ServiceAccount
 metadata:
   name: metrics-operator
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -18,6 +20,8 @@ kind: ConfigMap
 metadata:
   name: metrics-operator-config
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -46,6 +50,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -401,6 +406,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -1098,6 +1104,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -1247,6 +1254,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -1784,6 +1792,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -2004,6 +2013,8 @@ kind: ClusterRole
 metadata:
   name: metrics-operator-role
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -2112,6 +2123,8 @@ kind: ClusterRole
 metadata:
   name: metrics-operator-server-resources
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -2134,6 +2147,8 @@ kind: ClusterRoleBinding
 metadata:
   name: metrics-operator-hpa-controller
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -2155,6 +2170,8 @@ kind: ClusterRoleBinding
 metadata:
   name: metrics-operator-rolebinding
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -2176,6 +2193,8 @@ kind: ClusterRoleBinding
 metadata:
   name: system-auth-delegator
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -2197,6 +2216,8 @@ kind: Role
 metadata:
   name: metrics-operator-leader-election-role
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -2242,6 +2263,8 @@ kind: RoleBinding
 metadata:
   name: metrics-operator-leader-election-rolebinding
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -2263,6 +2286,8 @@ kind: RoleBinding
 metadata:
   name: metrics-operator-rolebinding
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -2284,6 +2309,8 @@ kind: Service
 metadata:
   name: metrics-operator-service
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     control-plane: metrics-operator
     app.kubernetes.io/instance: keptn-test
@@ -2316,6 +2343,8 @@ kind: Service
 metadata:
   name: metrics-webhook-service
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -2339,6 +2368,8 @@ kind: Deployment
 metadata:
   name: metrics-operator
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/part-of: keptn
     app.kubernetes.io/component: metrics-operator
@@ -2456,6 +2487,8 @@ kind: APIService
 metadata:
   name: v1beta1.custom.metrics.k8s.io
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -2478,6 +2511,8 @@ kind: APIService
 metadata:
   name: v1beta2.custom.metrics.k8s.io
   namespace: "helmtests"
+  annotations:
+    test/jj: test
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -2500,6 +2535,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: metrics-validating-webhook-configuration
   annotations:
+    test/jj: test
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
   labels:
     keptn.sh/inject-cert: "true"

@@ -296,8 +296,12 @@ Only when that is successful is the pod bound to a node.
 ## Contributing
 
 For more information about contributing to Keptn, please
-refer to the [Contributing guide](https://keptn.sh/stable/docs/contribute/)
+refer to the [Contribution guide](https://keptn.sh/stable/docs/contribute/)
 section of the documentation.
+
+To be able to setup your local Keptn development environment, please follow
+[these steps](https://keptn.sh/stable/docs/contribute/software/dev-environ/#first-steps)
+for new contributors.
 
 ## License
 

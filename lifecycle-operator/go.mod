@@ -6,7 +6,7 @@ require (
 	dario.cat/mergo v1.0.0
 	github.com/argoproj/argo-rollouts v1.6.6
 	github.com/benbjohnson/clock v1.3.5
-	github.com/cloudevents/sdk-go/v2 v2.15.1
+	github.com/cloudevents/sdk-go/v2 v2.15.2
 	github.com/go-logr/logr v1.4.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240229140237-65f73275d9b6

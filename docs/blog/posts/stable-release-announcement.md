@@ -61,11 +61,12 @@ The default behaviour is for Keptn to block deployments (i.e. `spec.blockDeploym
 
 Keptn v2 introduces a new “promotion” phase
 to support multi-stage application delivery.
-Keptn is commonly used alongside [GitOps practices](https://opengitops.dev/) and thus,
-users want to have a dedicated way to promote an application to the next stage in my environment.
-The new stage is disabled by default and can be controlled via the Helm flag:
+Keptn is commonly used as part of [GitOps practices](https://opengitops.dev/) and thus,
+users want a dedicated way to promote an application to the next stage in my environment.
+In this release candidate,
+the new stage is disabled by default and can be controlled via the Helm flag:
 `lifecycleOperator.promotionTasksEnabled: [true|false]`.
-The upcoming stable release will be shipped with this feature enabled out of the box.
+We expect that the upcoming stable release will be shipped with this feature enabled out of the box.
 
 Further information can be found in
 The
@@ -74,7 +75,7 @@ guide.
 
 ## Try it out
 
-Now, you can see a true end-to-end picture of everything in the logical order,
+With this release of Keptn, you can see a true end-to-end picture of everything in the logical order,
 potentially from “PR merged” all the way to “deployment complete”.
 
 To try it out, download Keptn v2 RC1 now:

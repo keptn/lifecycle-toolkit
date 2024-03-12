@@ -46,15 +46,16 @@ Keptn v2-rc will bring the following new features:
 
 Keptn offers the ability to perform arbitrary tasks and SLO evaluations both before a deployment and after a deployment.
 By design, any pre-deployment task or SLO evaluation that fails will block the deployment.
-Often, this is the behaviour you want – if a downstream dependency is unavailable or unhealthy,
+Often, this is the behaviour you want –- if a downstream dependency is unavailable or unhealthy,
 you probably don’t want to complete the deployment.
-However, for new Keptn users, this behaviour can appear drastic and cause deployments to be
-“pending” without an obvious cause.
+However, when first testing and implementing Keptn in your development environment,
+this may cause deployments to be “pending” without an obvious cause.
+
 In Keptn v2 this blocking behaviour for pre tasks and evaluations can be temporarily disabled for the cluster
-until you are sure that your tasks and evaluations
-are performing appropriately.
-When creating the [KeptnConfig](../../docs/reference/crd-reference/config.md) resource, set `spec.blockDeployment: [true|false]`.
-The default behaviour is for Keptn to block deployments (i.e. `spec.blockDeployment: true`)
+until you are sure that your tasks and evaluations are performing appropriately.
+To implement this feature, set `spec.blockDeployment: [true|false]` in the
+[KeptnConfig](../../docs/reference/crd-reference/config.md) resource.
+The default behaviour is for Keptn to block deployments (i.e. `spec.blockDeployment: true`).
 
 ### The Promotion Stage
 

@@ -89,7 +89,7 @@ To implement this:
    For example:
 
       ```md
-      {% include "../../assets/crd/python-libs.yaml" %}
+      {% /* include "../../assets/crd/python-libs.yaml" %}
       ```
 
 ## Indentation of nested lists and code blocks

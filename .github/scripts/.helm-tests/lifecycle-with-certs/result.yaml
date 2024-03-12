@@ -9267,6 +9267,9 @@ spec:
           runAsUser: 65532
           seccompProfile:
             type: RuntimeDefault
+        volumeMounts:
+        - name: keptn-certs
+          mountPath: /tmp/webhook/certs/
         livenessProbe:
           httpGet:
             path: /healthz
@@ -9284,6 +9287,10 @@ spec:
         runAsNonRoot: true
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10
+      volumes:
+      - name: keptn-certs
+        secret:
+          secretName: keptn-certs
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: apps/v1

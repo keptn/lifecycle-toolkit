@@ -37,7 +37,7 @@ the end-to-end process of deploying is healthy and your application is meeting t
 
 ## What’s New in the Keptn v2 release candidate?
 
-Keptn v2-rc will bring the following new features:
+Keptn v2-rc introduces the following new features to the previous Keptn release:
 
 - Non-Blocking Tasks
 - A new “promotion” stage
@@ -76,9 +76,15 @@ guide.
 
 Now, you can see a true end-to-end picture of everything in the logical order,
 potentially from “PR merged” all the way to “deployment complete”.
-[Download Keptn v2 RC1 Now!](https://artifacthub.io/packages/helm/lifecycle-toolkit/keptn)
 
-[Keptn v2 Release Candidate 1](https://github.com/keptn/lifecycle-toolkit/releases) is available now on GitHub.
-Please provide any feedback via the #keptn Slack channel in the
-[CNCF Slack workspace](https://communityinviter.com/apps/cloud-native/cncf) or raising issues in our
+To try it out, download Keptn v2 RC1 now:
+
+* From
+[ArtifactHub](https://artifacthub.io/packages/helm/lifecycle-toolkit/keptn)
+* From
+[GitHub](https://github.com/keptn/lifecycle-toolkit/releases)
+
+Please provide any feedback -- good and bad -- by posting in the
+[CNCF Slack workspace](https://communityinviter.com/apps/cloud-native/cncf)
+or by raising issues in our
 [GitHub repository](https://github.com/keptn/lifecycle-toolkit/issues).

@@ -9,6 +9,10 @@ comments: true
 # Announcing the Official Release Candidate for Keptn v2
 
 The Keptn project is proud to announce a release candidate for what will become Keptn v2.
+User feedback to the Keptn project has been clear, and we’ve listened.
+We thank the users who have given us feedback
+and all the community members who have contributed to this project.
+
 We are sharing this release candidate
 so that the community and end users can participate in the testing
 to ensure that the actual release is as robust as possible.
@@ -33,7 +37,6 @@ the end-to-end process of deploying is healthy and your application is meeting t
 
 ## What’s New in the Keptn v2 release candidate?
 
-User feedback to the Keptn project has been clear, and we’ve listened.
 Keptn v2-rc will bring the following new features:
 
 - Non-Blocking Tasks

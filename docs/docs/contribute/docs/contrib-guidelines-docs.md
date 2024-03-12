@@ -51,7 +51,7 @@ that are relevant only to documentation.
   (which automatically pulls the current version of the file into your document)
   rather than copying the text.
   See
-  [Displaying sample files](code-docs/#comments)
+  [Displaying sample files](code-docs.md/#comments)
   for details.
 
 * `markdownlint` enforces limits on line length.

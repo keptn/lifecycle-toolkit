@@ -19,7 +19,7 @@ The following documents document the language:
 Markdown supports many variants and the build tools we use
 impose a few special requirements that are discussed here.
 
-## Frontmatter requirements
+## Front matter requirements
 
 The top of each documentation source file should look like:
 
@@ -64,6 +64,33 @@ as in:
 ```markdown
 <!-- This is a comment -->
 ```
+
+## Displaying sample files
+
+Most Keptn configuration is implemented as YAML files
+that define a resource
+so displaying an example file is very useful.
+However, the file content should not be put directly into your doc source.
+Instead, the sample file is put into an `assets` directory
+and then "included" in your file.
+This keeps the documentation source cleaner
+and enables us to run tests to ensure that the YAML file is valid
+as Keptn evolves.
+
+To implement this:
+
+1. Either identify the file you want to include
+   in the `doc/docs/assets/crd/examples` directory
+   or create your sample YAML file in that tree,
+   giving it an appropriate name, including the `.yaml` suffix.
+
+2. Use the `include <file-path>` shortcode
+   to include this file in your documentation source inside a code block.
+   For example:
+
+      ```md
+      {% include "../../assets/crd/python-libs.yaml" %}
+      ```
 
 ## Indentation of nested lists and code blocks
 

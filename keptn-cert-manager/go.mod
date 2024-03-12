@@ -72,4 +72,7 @@ require (
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
-replace golang.org/x/net => golang.org/x/net v0.21.0
+replace (
+	golang.org/x/net => golang.org/x/net v0.21.0
+	google.golang.org/protobuf => google.golang.org/protobuf v1.33.0
+)

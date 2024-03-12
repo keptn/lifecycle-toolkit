@@ -97,8 +97,8 @@ spec:
               drop:
                 - "ALL"
           volumeMounts:
-          - name: keptn-certs
-            mountPath: /tmp/webhook/certs/
+            - name: keptn-certs
+              mountPath: /tmp/webhook/certs/
           livenessProbe:
             httpGet:
               path: /healthz
@@ -123,6 +123,6 @@ spec:
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10
       volumes:
-      - name: keptn-certs
-        secret:
-          secretName: keptn-certs
+        - name: keptn-certs
+          secret:
+            secretName: keptn-certs

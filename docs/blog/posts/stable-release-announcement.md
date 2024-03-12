@@ -44,7 +44,7 @@ Keptn v2-rc will bring the following new features:
 
 ### Non-blocking tasks and evaluations
 
-Keptn offers the ability to perform arbitrary tasks and SLO evaluations both before a deployment and after a deployment.
+Keptn offers the ability to define tasks and SLO evaluations that run either before or after a deployment.
 By design, any pre-deployment task or SLO evaluation that fails will block the deployment.
 Often, this is the behaviour you want –- if a downstream dependency is unavailable or unhealthy,
 you probably don’t want to complete the deployment.

@@ -8925,7 +8925,7 @@ spec:
           value: cluster.local
         - name: CERT_MANAGER_ENABLED
           value: "false"
-        image: testreg/myrep:v0.0.1
+        image: testreg/busybox:1.35
         imagePullPolicy: Always
         name: lifecycle-operator
         ports:

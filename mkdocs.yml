@@ -121,6 +121,7 @@ nav:
               - How to structure your namespaces: docs/installation/configuration/namespace.md
               - vCluster installation: docs/installation/configuration/vcluster.md
               - Keptn + cert-manager.io: docs/installation/configuration/cert-manager.md
+              - Deploy Keptn via ArgoCD: docs/installation/configuration/argo.md
           - Installation Tips and Tricks: docs/installation/tips-tricks.md
           - Troubleshooting Guide: docs/installation/troubleshooting.md
           - Kubernetes cluster: docs/installation/k8s.md

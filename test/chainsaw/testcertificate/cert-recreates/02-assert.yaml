@@ -24,3 +24,21 @@ metadata:
   namespace: keptn-system
 status:
   readyReplicas: 1
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: keptn-system
+  labels:
+    control-plane: lifecycle-operator
+status:
+  phase: Running
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: keptn-system
+  labels:
+    control-plane: metrics-operator
+status:
+  phase: Running

@@ -22,7 +22,7 @@ on:
 permissions: read-all
 
 env:
-  GO_VERSION: "~1.20"
+  GO_VERSION: "~1.21"
 
 defaults:
   run:
@@ -32,8 +32,8 @@ jobs:
   markdown-link-check:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v4
-      - uses: gaurav-nelson/github-action-markdown-link-check@5c5dfc0ac2e225883c0e5f03a85311ec2830d368 # pin@v1
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: gaurav-nelson/github-action-markdown-link-check@5c5dfc0ac2e225883c0e5f03a85311ec2830d368 # v1
         with:
           config-file: '.github/mlc_config.json'
           use-verbose-mode: true
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - name: Run TOC generation
         run: |
@@ -72,10 +72,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - name: Set up Go 1.x
-        uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # pin@v5
+        uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true

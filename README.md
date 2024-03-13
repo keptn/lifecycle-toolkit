@@ -152,33 +152,6 @@ kubectl annotate ns <your-allowed-namespace> keptn.sh/lifecycle-toolkit='enabled
 Please be aware that, if this option is set, adding any additional namespace
 requires the helm installation to be updated by adding the name of the new namespace to the list.
 
-### Installation without scheduler
-
-Keptn installed on Kubernetes cluster running Kubernetes >= 1.26
-does not need scheduler for a proper functionality.
-With introduction
-of [Pod scheduling gates](https://kubernetes.io/blog/2022/12/26/pod-scheduling-readiness-alpha/)
-Keptn can use this feature to substitute the functionality of Keptn scheduler.
-
-As this functionality is still disabled by default, it can be enabled by setting up
-the correct helm values.
-This will lead to a Keptn installation without a scheduler and
-with scheduling gates feature enabled.
-
-Use the following command sequence
-to install Keptn with scheduling gates enabled:
-
-```shell
-helm repo add keptn https://charts.lifecycle.keptn.sh
-helm repo update
-helm upgrade --install keptn keptn/keptn -n keptn-system --set schedulingGatesEnabled=true --create-namespace --wait
-```
-
-> **Note**
-Please be aware that scheduling gates functionality in Kubernetes is enabled by default
-in Kubernetes >= 1.27.
-To use it with Kubernetes 1.26, you need to enable it on your cluster.
-
 ## More information
 
 For more info about Keptn, please see our
@@ -320,28 +293,15 @@ the plugin verifies that the pre deployment checks have terminated
 by retrieving the current status of the WorkloadInstance.
 Only when that is successful is the pod bound to a node.
 
-## Install a dev build
+## Contributing
 
-The [GitHub CLI](https://cli.github.com/) can be used to download the manifests of the latest CI build.
+For more information about contributing to Keptn, please
+refer to the [Contribution guide](https://keptn.sh/stable/docs/contribute/)
+section of the documentation.
 
-```bash
-gh run list --repo keptn/lifecycle-toolkit # find the id of a run
-gh run download 3152895000 --repo keptn/lifecycle-toolkit # download the artifacts
-kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the lifecycle-operator
-kubectl apply -f ./scheduler-manifest/release.yaml # install the scheduler
-```
-
-Instead, if you want to build and deploy the operator into your cluster
-directly from the code, you can type:
-
-```bash
-RELEASE_REGISTRY=<YOUR_DOCKER_REGISTRY>
-# (optional)ARCH=<amd64(default)|arm64v8>
-# (optional)CHART_APPVERSION=<YOUR_PREFERRED_TAG (defaulting to current time)>
-
-# Build and deploy the dev images to the current kubernetes cluster
-make build-deploy-dev-environment
-```
+To set up your local Keptn development environment, please follow
+[these steps](https://keptn.sh/stable/docs/contribute/software/dev-environ/#first-steps)
+for new contributors.
 
 ## License
 

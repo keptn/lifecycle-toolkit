@@ -30,7 +30,7 @@ runs:
   using: "composite"
   steps:
     - name: Set up Go 1.x
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5
       with:
         go-version: ${{ env.GO_VERSION }}
         cache: true
@@ -38,12 +38,12 @@ runs:
         check-latest: true
 
     - name: Download artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4
       with:
         path: ~/download/artifacts
 
     - name: "Create single kind Cluster"
-      uses: helm/kind-action@v1.9.0
+      uses: helm/kind-action@99576bfa6ddf9a8e612d83b513da5a75875caced # v1.9.0
       with:
         cluster_name: ${{ inputs.cluster-name }}
         version: ${{ inputs.kind-version }}

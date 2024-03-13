@@ -11,8 +11,8 @@ lifecycleOperator:
   promotionTasksEnabled: true
   lifecycleOperator:
     image:
-      repository: myrep
-      tag: v0.0.1
+      repository: busybox
+      tag: 1.35
       imagePullPolicy: Always
   scheduler:
     image:

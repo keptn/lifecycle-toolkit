@@ -13,8 +13,8 @@ spec:
     targetRevision: HEAD
     helm:
       parameters:
-      - name: "commitID"
-        value: "$ARGOCD_APP_REVISION"
+        - name: "commitID"
+          value: "$ARGOCD_APP_REVISION"
   destination:
     server: 'https://kubernetes.default.svc' # server where Keptn will be deployed
     namespace: keptn-system # namespace where Keptn will be deployed

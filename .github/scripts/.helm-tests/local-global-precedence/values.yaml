@@ -1,0 +1,17 @@
+lifecycleOperator:
+  lifecycleOperator:
+    image:
+      registry: "local-registry.io"
+metricsOperator:
+  image:
+    registry: "local-registry.io"
+certManager:
+  image:
+    registry: "local-registry.io"
+global:
+  imageRegistry: "global-registry.io"
+  imagePullSecrets: []
+  imagePullPolicy: IfNotPresent
+  commonLabels: {}
+  commonAnnotations: {}
+  caInjectionAnnotations: {}

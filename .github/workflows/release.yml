@@ -38,7 +38,7 @@ jobs:
       BUILD_TIME: ${{ steps.get_datetime.outputs.BUILD_TIME }}
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Extract branch name
         id: extract_branch
@@ -149,7 +149,7 @@ jobs:
       GIT_SHA: ${{ needs.release-please.outputs.GIT_SHA }}
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: recursive
 
@@ -183,7 +183,7 @@ jobs:
 
       - name: Build Docker Image
         id: docker_build_image
-        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5
+        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.1
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64,linux/arm64

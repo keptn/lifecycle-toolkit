@@ -16,6 +16,19 @@ spec:
             file: 00-install.yaml
         - assert:
             file: 00-assert.yaml
+      catch:
+        - podLogs:
+            selector: app=podtato-head
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=lifecycle-operator
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=metrics-operator
     - name: step-01
       try:
         - script:
@@ -31,3 +44,16 @@ spec:
             check:
               # This checks that Keptn returns active metrics
               (contains($stdout, 'keptn_promotion_count_total')): true
+      catch:
+        - podLogs:
+            selector: app=podtato-head
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=lifecycle-operator
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=metrics-operator

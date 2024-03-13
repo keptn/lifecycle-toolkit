@@ -9,4 +9,4 @@ status:
   preDeploymentEvaluationStatus: Deprecated
   preDeploymentStatus: Failed
   status: Failed
-  workloadOverallStatus: Deprecated
+  workloadOverallStatus: Deprecate

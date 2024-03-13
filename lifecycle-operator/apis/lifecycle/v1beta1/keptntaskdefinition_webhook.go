@@ -100,9 +100,6 @@ func (r *KeptnTaskDefinition) validateFields() *field.Error {
 
 func countSpec(r *KeptnTaskDefinition) int {
 	count := 0
-	if r.Spec.Function != nil {
-		count++
-	}
 	if r.Spec.Container != nil {
 		count++
 	}

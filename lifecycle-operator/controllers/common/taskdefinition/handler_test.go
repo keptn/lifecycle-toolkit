@@ -43,27 +43,9 @@ func TestGetRuntimeImage(t *testing.T) {
 			},
 			want: FunctionScriptKey,
 		}, {
-			name: "default function",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
-				},
-			},
-			want: FunctionScriptKey,
-		},
-		{
 			name: "default and python defined, default wins",
 			def: &klcv1beta1.KeptnTaskDefinition{
 				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
 					Python: &klcv1beta1.RuntimeSpec{
 						HttpReference: klcv1beta1.HttpReference{
 							Url: "testy.com",
@@ -140,33 +122,10 @@ func TestGetRuntimeSpec(t *testing.T) {
 					Url: "testy.com",
 				},
 			},
-		},
-		{
-			name: "default function",
+		}, {
+			name: "python exist",
 			def: &klcv1beta1.KeptnTaskDefinition{
 				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
-				},
-			},
-			want: &klcv1beta1.RuntimeSpec{
-				HttpReference: klcv1beta1.HttpReference{
-					Url: "testy.com",
-				},
-			},
-		},
-		{
-			name: "default function & python exist",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
 					Python: &klcv1beta1.RuntimeSpec{
 						HttpReference: klcv1beta1.HttpReference{
 							Url: "nottesty.com",
@@ -179,30 +138,7 @@ func TestGetRuntimeSpec(t *testing.T) {
 					Url: "testy.com",
 				},
 			},
-		},
-		{
-			name: "default function empty & python exists ",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "",
-						},
-					},
-					Python: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
-				},
-			},
-			want: &klcv1beta1.RuntimeSpec{
-				HttpReference: klcv1beta1.HttpReference{
-					Url: "testy.com",
-				},
-			},
-		},
-		{
+		}, {
 			name: "only container spec exists ",
 			def: &klcv1beta1.KeptnTaskDefinition{
 				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
@@ -233,17 +169,6 @@ func TestGetRuntimeMountPath(t *testing.T) {
 		want string
 	}{
 		{
-			name: "default function",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						CmdParameters: "hi",
-					},
-				},
-			},
-			want: FunctionScriptMountPath,
-		},
-		{
 			name: "deno",
 			def: &klcv1beta1.KeptnTaskDefinition{
 				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
@@ -264,24 +189,6 @@ func TestGetRuntimeMountPath(t *testing.T) {
 				},
 			},
 			want: PythonScriptMountPath,
-		},
-		{
-			name: "default and python defined, default wins",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
-					Python: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
-				},
-			},
-			want: FunctionScriptMountPath,
 		},
 		{
 			name: "deno and python defined, deno wins",

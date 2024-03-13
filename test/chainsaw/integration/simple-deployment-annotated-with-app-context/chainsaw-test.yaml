@@ -16,6 +16,11 @@ spec:
         - assert:
             file: 00-assert.yaml
       catch:
+<<<<<<< HEAD
+=======
+        - podLogs:
+            selector: app=test
+>>>>>>> fe852d239edf728d16212a79560ab49f22ee8d61
         - describe:
             resource: keptnworkloadversion
         - describe:

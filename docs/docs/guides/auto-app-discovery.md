@@ -26,8 +26,6 @@ that names this `KeptnApp` and identifies the Namespace where it resides.
 It also includes a `spec.workloads` list
 that defines the workloads to be included.
 
-This is a test paragraph that should be marked by the docdiff addon.
-
 As an example, consider the following application,
 consisting of multiple deployments,
 which is going to be deployed into a Keptn-enabled namespace.

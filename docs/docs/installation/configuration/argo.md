@@ -13,7 +13,7 @@ You can find the
 in the ArgoCD documentation.
 
 After successfully installing ArgoCD, you need to create
-an Argo Application custom resource and define the
+an Argo Application and define the
 repository containing Keptn helm charts:
 
 ```yaml

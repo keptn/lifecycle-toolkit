@@ -90,6 +90,6 @@ To try it out, download Keptn v2 RC1 now:
 [GitHub](https://github.com/keptn/lifecycle-toolkit/releases)
 
 Please provide any feedback -- good and bad -- by posting in the
-[CNCF Slack workspace](https://communityinviter.com/apps/cloud-native/cncf)
+[#Keptn CNCF Slack channel](https://cloud-native.slack.com/archives/C017GAX90GM)
 or by raising issues in our
 [GitHub repository](https://github.com/keptn/lifecycle-toolkit/issues).

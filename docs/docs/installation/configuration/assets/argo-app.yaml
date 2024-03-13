@@ -8,9 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/keptn/lifecycle-toolkit-charts' # repository containing helm charts
-    path: charts/keptn # path to helm charts inside repository
-    targetRevision: HEAD
+    repoURL: 'https://charts.lifecycle.keptn.sh'
+    chart: keptn
+    targetRevision: 0.5.1
     helm:
       parameters:
         - name: "commitID"

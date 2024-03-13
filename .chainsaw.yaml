@@ -10,3 +10,4 @@ spec:
     assert: 6m40s
     cleanup: 6m40s
     error: 6m40s
+    exec: 6m40s

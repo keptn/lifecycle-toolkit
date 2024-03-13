@@ -39,6 +39,9 @@ spec:
       volumes:
         - emptyDir: {}
           name: adapter-certs-dir
+        - name: keptn-certs
+          secret:
+            secretName: keptn-certs
       containers:
         - command:
             - /manager
@@ -116,5 +119,7 @@ spec:
           volumeMounts:
             - name: adapter-certs-dir
               mountPath: /tmp/metrics-adapter/serving-certs
+            - name: keptn-certs
+              mountPath: /tmp/webhook/certs/
       serviceAccountName: metrics-operator
       terminationGracePeriodSeconds: 10

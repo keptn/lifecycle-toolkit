@@ -3,6 +3,8 @@ date: 2024-03-15
 authors: [agardnerIT]
 description: >
   This blog post announces the release candidate for Keptn v2.
+categories:
+  - Announcement
 comments: true
 ---
 

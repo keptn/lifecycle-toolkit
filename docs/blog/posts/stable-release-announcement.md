@@ -24,7 +24,9 @@ that Keptn v2 will be released approximately 1 month after this announcement.
 ## What problem does Keptn solve?
 
 Deploying software using Kubernetes is, on the surface, easy.
-Just use `kubectl` or a GitOps solution like [ArgoCD](https://argoproj.github.io/cd/) to deploy a YAML file and that’s it, right?
+Just use `kubectl` or a GitOps solution like
+[ArgoCD](https://argoproj.github.io/cd/)
+to deploy a YAML file and that’s it, right?
 Well, no.
 Not normally.
 There is a lot more to ensuring a healthy deployment.
@@ -80,9 +82,9 @@ potentially from “PR merged” all the way to “deployment complete”.
 
 To try it out, download Keptn v2 RC1 now:
 
-* From
+- From
 [ArtifactHub](https://artifacthub.io/packages/helm/lifecycle-toolkit/keptn)
-* From
+- From
 [GitHub](https://github.com/keptn/lifecycle-toolkit/releases)
 
 Please provide any feedback -- good and bad -- by posting in the

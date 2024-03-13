@@ -9,7 +9,7 @@ via [ArgoCD](https://argoproj.github.io/cd/).
 
 ## Before you begin
 
-To successfully deply Keptn via ArgoCD, you need to
+To successfully deploy Keptn via ArgoCD, you need to
 have ArgoCD installed on your cluster.
 You can find the
 [installation instructions](https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/)

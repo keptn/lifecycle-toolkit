@@ -55,7 +55,7 @@ See
 for more information.
 
 If you want to deploy Keptn via [ArgoCD](https://argoproj.github.io/cd/),
-refer to the [Deploying Keptn via ArgoCD](./configuration/argo.md) section
+refer to the [Deploying Keptn via ArgoCD](./configuration/argocd.md) section
 for more information.
 
 ## Basic installation

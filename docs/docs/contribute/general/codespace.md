@@ -30,6 +30,21 @@ to develop software or documentation for Keptn.
 The interface is similar to that of
 [Visual Studio Code](https://code.visualstudio.com/).
 
+The only tool you would require for software development is [Kustomize](https://kustomize.io/),
+which is a Kubernetes configuration transformation tool.
+Installation is very easy: simply change your directory to the workspace
+ as shown in the video and copy and paste the below-mentioned two commands.
+The first one will download the precompiled binary of Kustomize,
+ and the second command will grant the necessary permissions to the tool and set the path.
+You can always download the latest binaries from the official [Kustomize GitHub repository](https://github.com/kubernetes-sigs/kustomize/releases).
+
+```bash
+
+1) curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+
+2) sudo install -o root -g root -m 0755 kustomize /usr/local/bin/kustomize
+```
+
 To develop or modify software or documentation, the steps are:
 
 1. Make your modifications and test those modifications

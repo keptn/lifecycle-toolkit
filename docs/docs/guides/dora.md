@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# DORA metrics
+# DORA Metrics
 
 DORA metrics are an industry-standard set of measurements
 that are included in Keptn;

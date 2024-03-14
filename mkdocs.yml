@@ -131,7 +131,7 @@ nav:
           - Keptn Metrics: docs/guides/evaluatemetrics.md
           - Analysis with Keptn: docs/guides/slo.md
           - Deployment Tasks with Keptn: docs/guides/tasks.md
-          - Application Redeployment/Restart: docs/guides/restart-application-deployment.md
+          - Redeploy/Restart an Application: docs/guides/restart-application-deployment.md
           - Evaluations in Keptn: docs/guides/evaluations.md
           - DORA Metrics: docs/guides/dora.md
           - OpenTelemetry Observability: docs/guides/otel.md

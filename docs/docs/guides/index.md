@@ -22,7 +22,7 @@ awareness by adding metadata to applications, workloads, and tasks.
 
 ## Deployment Tasks
 
-- [Deployment Tasks](tasks.md) - Understand Deployment Tasks in Keptn, including pre and
+- [Deployment Tasks with Keptn](tasks.md) - Understand Deployment Tasks in Keptn, including pre and
 post-deployment tasks, to automate and streamline your deployment processes.
 - [Redeploy/Restart an Application](restart-application-deployment.md) - Learn how to redeploy
 or restart applications using Keptn.
@@ -30,7 +30,7 @@ or restart applications using Keptn.
 ## Analysis
 
 - [Analysis](slo.md) - Validate your deployments with Keptn Analysis using SLIs and SLOs.
-- [Evaluations](evaluations.md) - Discover how Keptn conducts evaluations to assess the
+- [Evaluations in Keptn](evaluations.md) - Discover how Keptn conducts evaluations to assess the
 performance and quality of your deployments.
 
 ## Auto App Discovery

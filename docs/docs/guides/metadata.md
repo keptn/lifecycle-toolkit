@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Context metadata
+# Context Metadata
 
 This guide walks you through the usage of context metadata in Keptn.
 

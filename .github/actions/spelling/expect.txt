@@ -690,3 +690,4 @@ yourregistry
 GOGC
 otelcol
 serviceapp
+finalizer

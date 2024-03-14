@@ -58,7 +58,7 @@ you probably didn't enable
 of the application during installation, which is disabled by default in ArgoCD.
 
 To fix this problem, you need to install Keptn via ArgoCD again, with the use
-of`finalizers` in your Argo Application.
+of `finalizers` in your Argo Application.
 For more information see the
 [Deploy Keptn via ArgoCD](./configuration/argocd.md) section for more information.
 

@@ -88,7 +88,7 @@ To implement this:
    to include this file in your documentation source inside a code block.
    For example:
 
-      ```md
+      ```yaml
       {% /* include "../../assets/crd/python-libs.yaml" %}
       ```
 

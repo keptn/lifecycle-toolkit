@@ -100,7 +100,7 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `value` _string_ | Value represents the value of the KeptnMetric being evaluated. || x |
 | `status` _[KeptnState](#keptnstate)_ | Status indicates the status of the objective being evaluated. || x |
-| `message` _string_ | Message contains additional information about the evaluation of an objective. This can include explanations about why an evaluation has failed (e.g. due to a missed objective), or if there was any error during the evaluation of the objective. || ✓ |
+| `message` _string_ | Message contains additional information about the evaluation of an objective.<br />This can include explanations about why an evaluation has failed (e.g. due to a missed objective),<br />or if there was any error during the evaluation of the objective. || ✓ |
 
 
 #### FunctionReference
@@ -272,13 +272,13 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `version` _string_ | Version defines the version of the application. For automatically created KeptnApps, the version is a function of all KeptnWorkloads that are part of the KeptnApp. || x |
-| `revision` _integer_ | Revision can be modified to trigger another deployment of a KeptnApp of the same version. This can be used for restarting a KeptnApp which failed to deploy, e.g. due to a failed preDeploymentEvaluation/preDeploymentTask. |1| ✓ |
+| `version` _string_ | Version defines the version of the application. For automatically created KeptnApps,<br />the version is a function of all KeptnWorkloads that are part of the KeptnApp. || x |
+| `revision` _integer_ | Revision can be modified to trigger another deployment of a KeptnApp of the same version.<br />This can be used for restarting a KeptnApp which failed to deploy,<br />e.g. due to a failed preDeploymentEvaluation/preDeploymentTask. |1| ✓ |
 | `workloads` _[KeptnWorkloadRef](#keptnworkloadref) array_ | Workloads is a list of all KeptnWorkloads that are part of the KeptnApp. || ✓ |
-| `preDeploymentTasks` _string array_ | PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
-| `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
-| `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed during the pre-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
-| `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed during the post-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
+| `preDeploymentTasks` _string array_ | PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp.<br />The items of this list refer to the names of KeptnTaskDefinitions<br />located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
+| `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp.<br />The items of this list refer to the names of KeptnTaskDefinitions<br />located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
+| `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed<br />during the pre-deployment phase of the KeptnApp.<br />The items of this list refer to the names of KeptnEvaluationDefinitions<br />located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
+| `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed<br />during the post-deployment phase of the KeptnApp.<br />The items of this list refer to the names of KeptnEvaluationDefinitions<br />located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
 
 
 #### KeptnAppStatus
@@ -340,13 +340,13 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `version` _string_ | Version defines the version of the application. For automatically created KeptnApps, the version is a function of all KeptnWorkloads that are part of the KeptnApp. || x |
-| `revision` _integer_ | Revision can be modified to trigger another deployment of a KeptnApp of the same version. This can be used for restarting a KeptnApp which failed to deploy, e.g. due to a failed preDeploymentEvaluation/preDeploymentTask. |1| ✓ |
+| `version` _string_ | Version defines the version of the application. For automatically created KeptnApps,<br />the version is a function of all KeptnWorkloads that are part of the KeptnApp. || x |
+| `revision` _integer_ | Revision can be modified to trigger another deployment of a KeptnApp of the same version.<br />This can be used for restarting a KeptnApp which failed to deploy,<br />e.g. due to a failed preDeploymentEvaluation/preDeploymentTask. |1| ✓ |
 | `workloads` _[KeptnWorkloadRef](#keptnworkloadref) array_ | Workloads is a list of all KeptnWorkloads that are part of the KeptnApp. || ✓ |
-| `preDeploymentTasks` _string array_ | PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
-| `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
-| `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed during the pre-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
-| `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed during the post-deployment phase of the KeptnApp. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
+| `preDeploymentTasks` _string array_ | PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp.<br />The items of this list refer to the names of KeptnTaskDefinitions<br />located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
+| `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp.<br />The items of this list refer to the names of KeptnTaskDefinitions<br />located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
+| `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed<br />during the pre-deployment phase of the KeptnApp.<br />The items of this list refer to the names of KeptnEvaluationDefinitions<br />located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
+| `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed<br />during the post-deployment phase of the KeptnApp.<br />The items of this list refer to the names of KeptnEvaluationDefinitions<br />located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
 | `appName` _string_ | AppName is the name of the KeptnApp. || x |
 | `previousVersion` _string_ | PreviousVersion is the version of the KeptnApp that has been deployed prior to this version. || ✓ |
 | `traceId` _object (keys:string, values:string)_ | TraceId contains the OpenTelemetry trace ID. || ✓ |
@@ -443,7 +443,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `objectives` _[Objective](#objective) array_ | Objectives is a list of objectives that have to be met for a KeptnEvaluation referencing this KeptnEvaluationDefinition to be successful. || x |
+| `objectives` _[Objective](#objective) array_ | Objectives is a list of objectives that have to be met for a KeptnEvaluation referencing this<br />KeptnEvaluationDefinition to be successful. || x |
 
 
 #### KeptnEvaluationList
@@ -479,9 +479,9 @@ _Appears in:_
 | `workloadVersion` _string_ | WorkloadVersion defines the version of the KeptnWorkload for which the KeptnEvaluation is done. || x |
 | `appName` _string_ | AppName defines the KeptnApp for which the KeptnEvaluation is done. || ✓ |
 | `appVersion` _string_ | AppVersion defines the version of the KeptnApp for which the KeptnEvaluation is done. || ✓ |
-| `evaluationDefinition` _string_ | EvaluationDefinition refers to the name of the KeptnEvaluationDefinition which includes the objectives for the KeptnEvaluation. The KeptnEvaluationDefinition can be located in the same namespace as the KeptnEvaluation, or in the Keptn namespace. || x |
-| `retries` _integer_ | Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or missed evaluation objective, before considering the KeptnEvaluation to be failed. |10| ✓ |
-| `retryInterval` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ | RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error or a missed objective. |5s| ✓ |
+| `evaluationDefinition` _string_ | EvaluationDefinition refers to the name of the KeptnEvaluationDefinition<br />which includes the objectives for the KeptnEvaluation.<br />The KeptnEvaluationDefinition can be<br />located in the same namespace as the KeptnEvaluation, or in the Keptn namespace. || x |
+| `retries` _integer_ | Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or<br />missed evaluation objective, before considering the KeptnEvaluation to be failed. |10| ✓ |
+| `retryInterval` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ | RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error<br />or a missed objective. |5s| ✓ |
 | `failAction` _string_ |  || ✓ |
 | `checkType` _[CheckType](#checktype)_ | Type indicates whether the KeptnEvaluation is part of the pre- or postDeployment phase. || ✓ |
 
@@ -498,8 +498,8 @@ _Appears in:_
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `retryCount` _integer_ | RetryCount indicates how many times the KeptnEvaluation has been attempted already. |0| x |
-| `evaluationStatus` _object (keys:string, values:[EvaluationStatusItem](#evaluationstatusitem))_ | EvaluationStatus describes the status of each objective of the KeptnEvaluationDefinition referenced by the KeptnEvaluation. || x |
-| `overallStatus` _[KeptnState](#keptnstate)_ | OverallStatus describes the overall status of the KeptnEvaluation. The Overall status is derived from the status of the individual objectives of the KeptnEvaluationDefinition referenced by the KeptnEvaluation. |Pending| x |
+| `evaluationStatus` _object (keys:string, values:[EvaluationStatusItem](#evaluationstatusitem))_ | EvaluationStatus describes the status of each objective of the KeptnEvaluationDefinition<br />referenced by the KeptnEvaluation. || x |
+| `overallStatus` _[KeptnState](#keptnstate)_ | OverallStatus describes the overall status of the KeptnEvaluation. The Overall status is derived<br />from the status of the individual objectives of the KeptnEvaluationDefinition<br />referenced by the KeptnEvaluation. |Pending| x |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | StartTime represents the time at which the KeptnEvaluation started. || ✓ |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | EndTime represents the time at which the KeptnEvaluation finished. || ✓ |
 
@@ -603,15 +603,15 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `function` _[RuntimeSpec](#runtimespec)_ | Deprecated Function contains the definition for the function that is to be executed in KeptnTasks. || ✓ |
+| `function` _[RuntimeSpec](#runtimespec)_ | Deprecated<br />Function contains the definition for the function that is to be executed in KeptnTasks. || ✓ |
 | `python` _[RuntimeSpec](#runtimespec)_ | Python contains the definition for the python function that is to be executed in KeptnTasks. || ✓ |
 | `deno` _[RuntimeSpec](#runtimespec)_ | Deno contains the definition for the Deno function that is to be executed in KeptnTasks. || ✓ |
 | `container` _[ContainerSpec](#containerspec)_ | Container contains the definition for the container that is to be used in Job. || ✓ |
-| `retries` _integer_ | Retries specifies how many times a job executing the KeptnTaskDefinition should be restarted in the case of an unsuccessful attempt. |10| ✓ |
-| `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ | Timeout specifies the maximum time to wait for the task to be completed successfully. If the task does not complete successfully within this time frame, it will be considered to be failed. |5m| ✓ |
+| `retries` _integer_ | Retries specifies how many times a job executing the KeptnTaskDefinition should be restarted in the case<br />of an unsuccessful attempt. |10| ✓ |
+| `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ | Timeout specifies the maximum time to wait for the task to be completed successfully.<br />If the task does not complete successfully within this time frame, it will be<br />considered to be failed. |5m| ✓ |
 | `serviceAccount` _[ServiceAccountSpec](#serviceaccountspec)_ | ServiceAccount specifies the service account to be used in jobs to authenticate with the Kubernetes API and access cluster resources. || ✓ |
-| `automountServiceAccountToken` _[AutomountServiceAccountTokenSpec](#automountserviceaccounttokenspec)_ | AutomountServiceAccountToken allows to enable K8s to assign cluster API credentials to a pod, if set to false the pod will decline the service account || ✓ |
-| `ttlSecondsAfterFinished` _integer_ | TTLSecondsAfterFinished controller makes a job eligible to be cleaned up after it is finished. The timer starts when the status shows up to be Complete or Failed. |300| ✓ |
+| `automountServiceAccountToken` _[AutomountServiceAccountTokenSpec](#automountserviceaccounttokenspec)_ | AutomountServiceAccountToken allows to enable K8s to assign cluster API credentials to a pod, if set to false<br />the pod will decline the service account || ✓ |
+| `ttlSecondsAfterFinished` _integer_ | TTLSecondsAfterFinished controller makes a job eligible to be cleaned up after it is finished.<br />The timer starts when the status shows up to be Complete or Failed. |300| ✓ |
 | `imagePullSecrets` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#localobjectreference-v1-core) array_ | ImagePullSecrets is an optional field to specify the names of secrets to use for pulling container images || ✓ |
 
 
@@ -656,13 +656,13 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `taskDefinition` _string_ | TaskDefinition refers to the name of the KeptnTaskDefinition which includes the specification for the task to be performed. The KeptnTaskDefinition can be located in the same namespace as the KeptnTask, or in the Keptn namespace. || x |
+| `taskDefinition` _string_ | TaskDefinition refers to the name of the KeptnTaskDefinition<br />which includes the specification for the task to be performed.<br />The KeptnTaskDefinition can be<br />located in the same namespace as the KeptnTask, or in the Keptn namespace. || x |
 | `context` _[TaskContext](#taskcontext)_ | Context contains contextual information about the task execution. || ✓ |
 | `parameters` _[TaskParameters](#taskparameters)_ | Parameters contains parameters that will be passed to the job that executes the task. || ✓ |
-| `secureParameters` _[SecureParameters](#secureparameters)_ | SecureParameters contains secure parameters that will be passed to the job that executes the task. These will be stored and accessed as secrets in the cluster. || ✓ |
+| `secureParameters` _[SecureParameters](#secureparameters)_ | SecureParameters contains secure parameters that will be passed to the job that executes the task.<br />These will be stored and accessed as secrets in the cluster. || ✓ |
 | `checkType` _[CheckType](#checktype)_ | Type indicates whether the KeptnTask is part of the pre- or postDeployment phase. || ✓ |
-| `retries` _integer_ | Retries indicates how many times the KeptnTask can be attempted in the case of an error before considering the KeptnTask to be failed. |10| ✓ |
-| `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ | Timeout specifies the maximum time to wait for the task to be completed successfully. If the task does not complete successfully within this time frame, it will be considered to be failed. |5m| ✓ |
+| `retries` _integer_ | Retries indicates how many times the KeptnTask can be attempted in the case of an error<br />before considering the KeptnTask to be failed. |10| ✓ |
+| `timeout` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ | Timeout specifies the maximum time to wait for the task to be completed successfully.<br />If the task does not complete successfully within this time frame, it will be<br />considered to be failed. |5m| ✓ |
 
 
 #### KeptnTaskStatus
@@ -749,11 +749,11 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `app` _string_ | AppName is the name of the KeptnApp containing the KeptnWorkload. || x |
 | `version` _string_ | Version defines the version of the KeptnWorkload. || x |
-| `preDeploymentTasks` _string array_ | PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
-| `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
-| `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed during the pre-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
-| `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed during the post-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
-| `resourceReference` _[ResourceReference](#resourcereference)_ | ResourceReference is a reference to the Kubernetes resource (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing. || x |
+| `preDeploymentTasks` _string array_ | PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnWorkload.<br />The items of this list refer to the names of KeptnTaskDefinitions<br />located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
+| `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnWorkload.<br />The items of this list refer to the names of KeptnTaskDefinitions<br />located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
+| `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed<br />during the pre-deployment phase of the KeptnWorkload.<br />The items of this list refer to the names of KeptnEvaluationDefinitions<br />located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
+| `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed<br />during the post-deployment phase of the KeptnWorkload.<br />The items of this list refer to the names of KeptnEvaluationDefinitions<br />located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
+| `resourceReference` _[ResourceReference](#resourcereference)_ | ResourceReference is a reference to the Kubernetes resource<br />(Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing. || x |
 | `workloadName` _string_ | WorkloadName is the name of the KeptnWorkload. || x |
 | `previousVersion` _string_ | PreviousVersion is the version of the KeptnWorkload that has been deployed prior to this version. || ✓ |
 | `traceId` _object (keys:string, values:string)_ | TraceId contains the OpenTelemetry trace ID. || ✓ |
@@ -781,7 +781,7 @@ _Appears in:_
 | `postDeploymentEvaluationTaskStatus` _[ItemStatus](#itemstatus) array_ | PostDeploymentEvaluationTaskStatus indicates the current state of each postDeploymentEvaluation of the KeptnWorkloadInstance. || ✓ |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | StartTime represents the time at which the deployment of the KeptnWorkloadInstance started. || ✓ |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | EndTime represents the time at which the deployment of the KeptnWorkloadInstance finished. || ✓ |
-| `currentPhase` _string_ | CurrentPhase indicates the current phase of the KeptnWorkloadInstance. This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment - PostDeploymentTasks - PostDeploymentEvaluations || ✓ |
+| `currentPhase` _string_ | CurrentPhase indicates the current phase of the KeptnWorkloadInstance. This can be:<br />- PreDeploymentTasks<br />- PreDeploymentEvaluations<br />- Deployment<br />- PostDeploymentTasks<br />- PostDeploymentEvaluations || ✓ |
 | `phaseTraceIDs` _[PhaseTraceID](#phasetraceid)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadInstance || ✓ |
 | `status` _[KeptnState](#keptnstate)_ | Status represents the overall status of the KeptnWorkloadInstance. |Pending| ✓ |
 
@@ -833,11 +833,11 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `app` _string_ | AppName is the name of the KeptnApp containing the KeptnWorkload. || x |
 | `version` _string_ | Version defines the version of the KeptnWorkload. || x |
-| `preDeploymentTasks` _string array_ | PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
-| `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
-| `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed during the pre-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
-| `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed during the post-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
-| `resourceReference` _[ResourceReference](#resourcereference)_ | ResourceReference is a reference to the Kubernetes resource (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing. || x |
+| `preDeploymentTasks` _string array_ | PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnWorkload.<br />The items of this list refer to the names of KeptnTaskDefinitions<br />located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
+| `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnWorkload.<br />The items of this list refer to the names of KeptnTaskDefinitions<br />located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
+| `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed<br />during the pre-deployment phase of the KeptnWorkload.<br />The items of this list refer to the names of KeptnEvaluationDefinitions<br />located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
+| `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed<br />during the post-deployment phase of the KeptnWorkload.<br />The items of this list refer to the names of KeptnEvaluationDefinitions<br />located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
+| `resourceReference` _[ResourceReference](#resourcereference)_ | ResourceReference is a reference to the Kubernetes resource<br />(Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing. || x |
 
 
 #### KeptnWorkloadStatus
@@ -866,7 +866,7 @@ _Appears in:_
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
 | `keptnMetricRef` _[KeptnMetricReference](#keptnmetricreference)_ | KeptnMetricRef references the KeptnMetric that should be evaluated. || x |
-| `evaluationTarget` _string_ | EvaluationTarget specifies the target value for the references KeptnMetric. Needs to start with either '<' or '>', followed by the target value (e.g. '<10'). || x |
+| `evaluationTarget` _string_ | EvaluationTarget specifies the target value for the references KeptnMetric.<br />Needs to start with either '<' or '>', followed by the target value (e.g. '<10'). || x |
 
 
 #### PhaseTraceID
@@ -909,12 +909,12 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `functionRef` _[FunctionReference](#functionreference)_ | FunctionReference allows to reference another KeptnTaskDefinition which contains the source code of the function to be executes for KeptnTasks based on this KeptnTaskDefinition. This can be useful when you have multiple KeptnTaskDefinitions that should execute the same logic, but each with different parameters. || ✓ |
-| `inline` _[Inline](#inline)_ | Inline allows to specify the code that should be executed directly in the KeptnTaskDefinition, as a multi-line string. || ✓ |
+| `functionRef` _[FunctionReference](#functionreference)_ | FunctionReference allows to reference another KeptnTaskDefinition which contains the source code of the<br />function to be executes for KeptnTasks based on this KeptnTaskDefinition. This can be useful when you have<br />multiple KeptnTaskDefinitions that should execute the same logic, but each with different parameters. || ✓ |
+| `inline` _[Inline](#inline)_ | Inline allows to specify the code that should be executed directly in the KeptnTaskDefinition, as a multi-line<br />string. || ✓ |
 | `httpRef` _[HttpReference](#httpreference)_ | HttpReference allows to point to an HTTP URL containing the code of the function. || ✓ |
-| `configMapRef` _[ConfigMapReference](#configmapreference)_ | ConfigMapReference allows to reference a ConfigMap containing the code of the function. When referencing a ConfigMap, the code of the function must be available as a value of the 'code' key of the referenced ConfigMap. || ✓ |
+| `configMapRef` _[ConfigMapReference](#configmapreference)_ | ConfigMapReference allows to reference a ConfigMap containing the code of the function.<br />When referencing a ConfigMap, the code of the function must be available as a value of the 'code' key<br />of the referenced ConfigMap. || ✓ |
 | `parameters` _[TaskParameters](#taskparameters)_ | Parameters contains parameters that will be passed to the job that executes the task as env variables. || ✓ |
-| `secureParameters` _[SecureParameters](#secureparameters)_ | SecureParameters contains secure parameters that will be passed to the job that executes the task. These will be stored and accessed as secrets in the cluster. || ✓ |
+| `secureParameters` _[SecureParameters](#secureparameters)_ | SecureParameters contains secure parameters that will be passed to the job that executes the task.<br />These will be stored and accessed as secrets in the cluster. || ✓ |
 | `cmdParameters` _string_ | CmdParameters contains parameters that will be passed to the command || ✓ |
 
 
@@ -930,7 +930,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `secret` _string_ | Secret contains the parameters that will be made available to the job executing the KeptnTask via the 'SECRET_DATA' environment variable. The 'SECRET_DATA'  environment variable's content will the same as value of the 'SECRET_DATA' key of the referenced secret. || ✓ |
+| `secret` _string_ | Secret contains the parameters that will be made available to the job<br />executing the KeptnTask via the 'SECRET_DATA' environment variable.<br />The 'SECRET_DATA'  environment variable's content will the same as value of the 'SECRET_DATA'<br />key of the referenced secret. || ✓ |
 
 
 #### ServiceAccountSpec
@@ -980,7 +980,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |
 | --- | --- | --- | --- |
-| `map` _object (keys:string, values:string)_ | Inline contains the parameters that will be made available to the job executing the KeptnTask via the 'DATA' environment variable. The 'DATA'  environment variable's content will be a json encoded string containing all properties of the map provided. || ✓ |
+| `map` _object (keys:string, values:string)_ | Inline contains the parameters that will be made available to the job<br />executing the KeptnTask via the 'DATA' environment variable.<br />The 'DATA'  environment variable's content will be a json<br />encoded string containing all properties of the map provided. || ✓ |
 
 
 #### WorkloadStatus

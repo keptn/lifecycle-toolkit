@@ -65,11 +65,11 @@ _Appears in:_
 | --- | --- | --- | --- |
 | `app` _string_ | AppName is the name of the KeptnApp containing the KeptnWorkload. || x |
 | `version` _string_ | Version defines the version of the KeptnWorkload. || x |
-| `preDeploymentTasks` _string array_ | PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
-| `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnTaskDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
-| `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed during the pre-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
-| `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed during the post-deployment phase of the KeptnWorkload. The items of this list refer to the names of KeptnEvaluationDefinitions located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
-| `resourceReference` _[ResourceReference](../v1alpha3/index.md#resourcereference)_ | ResourceReference is a reference to the Kubernetes resource (Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing. || x |
+| `preDeploymentTasks` _string array_ | PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnWorkload.<br />The items of this list refer to the names of KeptnTaskDefinitions<br />located in the same namespace as the KeptnApp, or in the Keptn namespace. || ✓ |
+| `postDeploymentTasks` _string array_ | PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnWorkload.<br />The items of this list refer to the names of KeptnTaskDefinitions<br />located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
+| `preDeploymentEvaluations` _string array_ | PreDeploymentEvaluations is a list of all evaluations to be performed<br />during the pre-deployment phase of the KeptnWorkload.<br />The items of this list refer to the names of KeptnEvaluationDefinitions<br />located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
+| `postDeploymentEvaluations` _string array_ | PostDeploymentEvaluations is a list of all evaluations to be performed<br />during the post-deployment phase of the KeptnWorkload.<br />The items of this list refer to the names of KeptnEvaluationDefinitions<br />located in the same namespace as the KeptnWorkload, or in the Keptn namespace. || ✓ |
+| `resourceReference` _[ResourceReference](../v1alpha3/index.md#resourcereference)_ | ResourceReference is a reference to the Kubernetes resource<br />(Deployment, DaemonSet, StatefulSet or ReplicaSet) the KeptnWorkload is representing. || x |
 | `workloadName` _string_ | WorkloadName is the name of the KeptnWorkload. || x |
 | `previousVersion` _string_ | PreviousVersion is the version of the KeptnWorkload that has been deployed prior to this version. || ✓ |
 | `traceId` _object (keys:string, values:string)_ | TraceId contains the OpenTelemetry trace ID. || ✓ |
@@ -97,7 +97,7 @@ _Appears in:_
 | `postDeploymentEvaluationTaskStatus` _[ItemStatus](../v1alpha3/index.md#itemstatus) array_ | PostDeploymentEvaluationTaskStatus indicates the current state of each postDeploymentEvaluation of the KeptnWorkloadVersion. || ✓ |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | StartTime represents the time at which the deployment of the KeptnWorkloadVersion started. || ✓ |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | EndTime represents the time at which the deployment of the KeptnWorkloadVersion finished. || ✓ |
-| `currentPhase` _string_ | CurrentPhase indicates the current phase of the KeptnWorkloadVersion. This can be: - PreDeploymentTasks - PreDeploymentEvaluations - Deployment - PostDeploymentTasks - PostDeploymentEvaluations || ✓ |
+| `currentPhase` _string_ | CurrentPhase indicates the current phase of the KeptnWorkloadVersion. This can be:<br />- PreDeploymentTasks<br />- PreDeploymentEvaluations<br />- Deployment<br />- PostDeploymentTasks<br />- PostDeploymentEvaluations || ✓ |
 | `phaseTraceIDs` _[PhaseTraceID](../v1alpha3/index.md#phasetraceid)_ | PhaseTraceIDs contains the trace IDs of the OpenTelemetry spans of each phase of the KeptnWorkloadVersion || ✓ |
 | `status` _[KeptnState](../v1alpha3/index.md#keptnstate)_ | Status represents the overall status of the KeptnWorkloadVersion. |Pending| ✓ |
 

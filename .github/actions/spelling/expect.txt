@@ -146,6 +146,7 @@ deploymentstate
 deploymenttrace
 dflags
 distroless
+dnf
 Dockerfiles
 docsy
 donath
@@ -207,11 +208,13 @@ ginkgotypes
 giscus
 Gitlab
 gke
+glasskube
 gms
 GOBIN
 gocognit
 gocyclo
 gofmt
+GOGC
 golangci
 gomega
 gomod
@@ -404,6 +407,7 @@ metricsobject
 metricsprovider
 metricsserver
 metricstypes
+Miglinci
 mindepth
 minio
 mkdocs
@@ -461,6 +465,7 @@ operatorvalue
 optionskeptnsh
 ossf
 otel
+otelcol
 otelprom
 otelsdk
 otelurl
@@ -481,6 +486,7 @@ phaseitem
 phasetraceid
 pid
 pipefail
+pmig
 poc
 poddisruptionbudgets
 podgroups
@@ -554,6 +560,7 @@ sendserviceaccount
 serrors
 serviceaccount
 serviceaccountspec
+serviceapp
 serviceport
 setuptools
 Shandilya
@@ -661,6 +668,7 @@ vmyversion
 vnd
 vwc
 vwh
+webbrowser
 webhookcainjection
 webhookmanager
 webhooknamespaces
@@ -687,6 +695,3 @@ Yash
 yml
 YOURNAME
 yourregistry
-GOGC
-otelcol
-serviceapp

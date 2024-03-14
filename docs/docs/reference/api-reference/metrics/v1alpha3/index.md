@@ -130,11 +130,19 @@ AnalysisSpec defines the desired state of Analysis
 _Appears in:_
 - [Analysis](#analysis)
 
+<<<<<<< HEAD
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
 | `timeframe` _[Timeframe](#timeframe)_ | Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate. Please note that either<br />a combination of 'from' and 'to' or the 'recent' property may be set. If neither is set, the Analysis can<br />not be added to the cluster. || x |  |
 | `args` _object (keys:string, values:string)_ | Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})". || ✓ |  |
 | `analysisDefinition` _[ObjectReference](#objectreference)_ | AnalysisDefinition refers to the AnalysisDefinition, a CRD that stores the AnalysisValuesTemplates || x |  |
+=======
+| Field | Description | Default | Optional |
+| --- | --- | --- | --- |
+| `timeframe` _[Timeframe](#timeframe)_ | Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate. Please note that either<br />a combination of 'from' and 'to' or the 'recent' property may be set. If neither is set, the Analysis can<br />not be added to the cluster. || x |
+| `args` _object (keys:string, values:string)_ | Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})". || ✓ |
+| `analysisDefinition` _[ObjectReference](#objectreference)_ | AnalysisDefinition refers to the AnalysisDefinition, a CRD that stores the AnalysisValuesTemplates || x |
+>>>>>>> 74fd89bb (feat(metrics-operator): introduce v1 API version)
 
 
 #### AnalysisState
@@ -220,10 +228,17 @@ AnalysisValueTemplateSpec defines the desired state of AnalysisValueTemplate
 _Appears in:_
 - [AnalysisValueTemplate](#analysisvaluetemplate)
 
+<<<<<<< HEAD
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
 | `provider` _[ObjectReference](#objectreference)_ | Provider refers to the KeptnMetricsProvider which should be used to retrieve the data || x |  |
 | `query` _string_ | Query represents the query to be run. It can include placeholders that are defined using the go template<br />syntax. More info on go templating - https://pkg.go.dev/text/template || x |  |
+=======
+| Field | Description | Default | Optional |
+| --- | --- | --- | --- |
+| `provider` _[ObjectReference](#objectreference)_ | Provider refers to the KeptnMetricsProvider which should be used to retrieve the data || x |
+| `query` _string_ | Query represents the query to be run. It can include placeholders that are defined using the go template<br />syntax. More info on go templating - https://pkg.go.dev/text/template || x |
+>>>>>>> 74fd89bb (feat(metrics-operator): introduce v1 API version)
 
 
 #### IntervalResult
@@ -556,11 +571,19 @@ _Appears in:_
 - [AnalysisSpec](#analysisspec)
 - [AnalysisStatus](#analysisstatus)
 
+<<<<<<< HEAD
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
 | `from` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | From is the time of start for the query. This field follows RFC3339 time format || ✓ |  |
 | `to` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | To is the time of end for the query. This field follows RFC3339 time format || ✓ |  |
 | `recent` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ | Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' provides an Analysis<br />for the last five minutes || ✓ | Pattern: `^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$` <br />Type: string <br /> |
+=======
+| Field | Description | Default | Optional |
+| --- | --- | --- | --- |
+| `from` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | From is the time of start for the query. This field follows RFC3339 time format || ✓ |
+| `to` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | To is the time of end for the query. This field follows RFC3339 time format || ✓ |
+| `recent` _[Duration](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#duration-v1-meta)_ | Recent describes a recent timeframe using a duration string. E.g. Setting this to '5m' provides an Analysis<br />for the last five minutes || ✓ |
+>>>>>>> 74fd89bb (feat(metrics-operator): introduce v1 API version)
 
 
 #### TotalScore

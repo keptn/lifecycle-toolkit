@@ -67,6 +67,10 @@ Reason: Argo doesn't remove the CRDs and global objects (mutating webhooks) and 
 
 to get further information refer to this [issue](https://github.com/keptn/lifecycle-toolkit/issues/1828).
 
+> **Note:**
+If you installed Keptn via ArgoCD, see the
+[Deploy Keptn via ArgoCD](./configuration/argocd.md) section for more information.
+
 ## I cannot see DORA metrics or OpenTelemetry traces
 
 Keptn will automatically generate DORA metrics and OTel traces for every deployment, but

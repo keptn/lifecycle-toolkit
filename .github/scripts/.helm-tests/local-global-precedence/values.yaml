@@ -1,17 +1,30 @@
 lifecycleOperator:
   lifecycleOperator:
     image:
-      registry: "local-registry.io"
+      registry: "local-registry.io" # will not be used
+      imagePullPolicy: Never # will be used
+  scheduler:
+    image:
+      registry: "local-registry.io" # will not be used
+      imagePullPolicy: Never # will be used
 metricsOperator:
   image:
-    registry: "local-registry.io"
+    registry: "local-registry.io" # will not be used
+    imagePullPolicy: Never # will be used
 certManager:
   image:
-    registry: "local-registry.io"
+    registry: "local-registry.io" # will not be used
+    imagePullPolicy: Never # will be used
 global:
-  imageRegistry: "global-registry.io"
-  imagePullSecrets: []
-  imagePullPolicy: IfNotPresent
-  commonLabels: {}
-  commonAnnotations: {}
-  caInjectionAnnotations: {}
+  imageRegistry: "global-registry.io" # will be used
+  imagePullSecrets:
+    - name: registry-secret
+  imagePullPolicy: Always # will not be used
+  commonLabels:
+    globalLabel1: test1 # will be used
+    globalLabel2: test2 # will be used
+  commonAnnotations:
+    globalAnnotation1: test1 # will be used
+    globalAnnotation2: test2 # will be used
+  caInjectionAnnotations:
+    caAnnotation1: bla # will be used

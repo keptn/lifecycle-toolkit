@@ -3,7 +3,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
     {{- with .Values.global.caInjectionAnnotations  }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

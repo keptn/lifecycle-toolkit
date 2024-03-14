@@ -260,3 +260,6 @@ update-helmcharts: generate manifests
 	awk '/putAnnotation: operator/ && !found { found=1; next } 1' chart/templates/operator-crd.yaml > chart/templates/temp && mv chart/templates/temp chart/templates/operator-crd.yaml
 	awk '/putAnnotation: operator/{print "    {{- with .Values.global.caInjectionAnnotations  }}"; print "    {{- toYaml . | nindent 4 }}"; print "    {{- end }}"; print "  {{- include \"common.annotations\" ( dict \"context\" . ) }}"; next} 1' chart/templates/operator-crd.yaml > temp_file && mv temp_file chart/templates/operator-crd.yaml
 	awk '/putLabels: newLabel/{print "{{- include \"common.labels.standard\" (dict \"context\" .) | nindent 4 }}"; next} 1' chart/templates/operator-crd.yaml > temp_file && mv temp_file chart/templates/operator-crd.yaml
+	awk '{gsub("name: lifecycle-webhook-service", "name: '\''lifecycle-webhook-service'\''")}1' chart/templates/operator-crd.yaml > tmp_file && mv tmp_file chart/templates/operator-crd.yaml
+	awk '{gsub(/namespace: system/, "namespace: '\''{{ .Release.Namespace }}'\''")}1' chart/templates/operator-crd.yaml > tmp_file && mv tmp_file chart/templates/operator-crd.yaml
+

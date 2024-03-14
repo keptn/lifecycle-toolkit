@@ -42,11 +42,10 @@ data:
     webhook:
       port: 9443
 ---
-# Source: keptn/charts/metricsOperator/templates/analysis-crd.yaml
+# Source: keptn/charts/metricsOperator/templates/metricsOperator-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: analyses.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
@@ -60,6 +59,7 @@ metadata:
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: metrics-operator-0.1.2
+  name: analyses.metrics.keptn.sh
 spec:
   group: metrics.keptn.sh
   names:
@@ -398,11 +398,10 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/metricsOperator/templates/analysisdefinition-crd.yaml
+# Source: keptn/charts/metricsOperator/templates/metricsOperator-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: analysisdefinitions.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
@@ -416,6 +415,7 @@ metadata:
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: metrics-operator-0.1.2
+  name: analysisdefinitions.metrics.keptn.sh
 spec:
   group: metrics.keptn.sh
   names:
@@ -1096,11 +1096,10 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/metricsOperator/templates/analysisvaluetemplate-crd.yaml
+# Source: keptn/charts/metricsOperator/templates/metricsOperator-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: analysisvaluetemplates.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
@@ -1114,6 +1113,7 @@ metadata:
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: metrics-operator-0.1.2
+  name: analysisvaluetemplates.metrics.keptn.sh
 spec:
   group: metrics.keptn.sh
   names:
@@ -1246,11 +1246,10 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/metricsOperator/templates/keptnmetric-crd.yaml
+# Source: keptn/charts/metricsOperator/templates/metricsOperator-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: keptnmetrics.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
@@ -1264,6 +1263,7 @@ metadata:
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: metrics-operator-0.1.2
+  name: keptnmetrics.metrics.keptn.sh
 spec:
   group: metrics.keptn.sh
   names:
@@ -1784,11 +1784,10 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/metricsOperator/templates/keptnmetricsprovider-crd.yaml
+# Source: keptn/charts/metricsOperator/templates/metricsOperator-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: keptnmetricsproviders.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
@@ -1802,6 +1801,7 @@ metadata:
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: metrics-operator-0.1.2
+  name: keptnmetricsproviders.metrics.keptn.sh
 spec:
   group: metrics.keptn.sh
   names:

@@ -76,11 +76,130 @@ data:
             - name: KLCPermit
         schedulerName: keptn-scheduler
 ---
-# Source: keptn/charts/lifecycleOperator/templates/keptnapp-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/operator-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: keptnapps.lifecycle.keptn.sh
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
+  labels:
+    app.kubernetes.io/part-of: keptn
+    crdGroup: lifecycle.keptn.sh
+    keptn.sh/inject-cert: "true"
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/version: vmyversion
+    helm.sh/chart: lifecycle-operator-0.2.1
+  name: keptnappcontexts.lifecycle.keptn.sh
+spec:
+  group: lifecycle.keptn.sh
+  names:
+    kind: KeptnAppContext
+    listKind: KeptnAppContextList
+    plural: keptnappcontexts
+    singular: keptnappcontext
+  scope: Namespaced
+  versions:
+  - name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: KeptnAppContext is the Schema for the keptnappcontexts API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnAppContextSpec defines the desired state of KeptnAppContext
+            properties:
+              metadata:
+                additionalProperties:
+                  type: string
+                description: Metadata contains additional key-value pairs for contextual
+                  information.
+                type: object
+              postDeploymentEvaluations:
+                description: |-
+                  PostDeploymentEvaluations is a list of all evaluations to be performed
+                  during the post-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              postDeploymentTasks:
+                description: |-
+                  PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              preDeploymentEvaluations:
+                description: |-
+                  PreDeploymentEvaluations is a list of all evaluations to be performed
+                  during the pre-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              preDeploymentTasks:
+                description: |-
+                  PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              promotionTasks:
+                description: |-
+                  PromotionTasks is a list of all tasks to be performed during the promotion phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              spanLinks:
+                description: |-
+                  SpanLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
+                  For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links
+                items:
+                  type: string
+                type: array
+            type: object
+          status:
+            description: KeptnAppContextStatus defines the observed state of KeptnAppContext
+            properties:
+              status:
+                description: unused field
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+# Source: keptn/charts/lifecycleOperator/templates/operator-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
@@ -93,6 +212,116 @@ metadata:
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.2.1
+  name: keptnappcreationrequests.lifecycle.keptn.sh
+spec:
+  group: lifecycle.keptn.sh
+  names:
+    kind: KeptnAppCreationRequest
+    listKind: KeptnAppCreationRequestList
+    plural: keptnappcreationrequests
+    singular: keptnappcreationrequest
+  scope: Namespaced
+  versions:
+  - name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: KeptnAppCreationRequest is the Schema for the keptnappcreationrequests
+          API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec describes the desired state of the KeptnAppCreationRequest.
+            properties:
+              appName:
+                description: AppName is the name of the KeptnApp the KeptnAppCreationRequest
+                  should create if no user-defined object with that name is found.
+                type: string
+            required:
+            - appName
+            type: object
+          status:
+            description: Status describes the current state of the KeptnAppCreationRequest.
+            type: string
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: KeptnAppCreationRequest is the Schema for the keptnappcreationrequests
+          API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec describes the desired state of the KeptnAppCreationRequest.
+            properties:
+              appName:
+                description: AppName is the name of the KeptnApp the KeptnAppCreationRequest
+                  should create if no user-defined object with that name is found.
+                type: string
+            required:
+            - appName
+            type: object
+          status:
+            description: Status describes the current state of the KeptnAppCreationRequest.
+            type: string
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+# Source: keptn/charts/lifecycleOperator/templates/operator-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
+  labels:
+    app.kubernetes.io/part-of: keptn
+    crdGroup: lifecycle.keptn.sh
+    keptn.sh/inject-cert: "true"
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/version: vmyversion
+    helm.sh/chart: lifecycle-operator-0.2.1
+  name: keptnapps.lifecycle.keptn.sh
 spec:
   conversion:
     strategy: Webhook
@@ -430,131 +659,10 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/lifecycleOperator/templates/keptnappcontext-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/operator-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: keptnappcontexts.lifecycle.keptn.sh
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
-    cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
-  labels:
-    app.kubernetes.io/part-of: keptn
-    crdGroup: lifecycle.keptn.sh
-    keptn.sh/inject-cert: "true"
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.2.1
-spec:
-  group: lifecycle.keptn.sh
-  names:
-    kind: KeptnAppContext
-    listKind: KeptnAppContextList
-    plural: keptnappcontexts
-    singular: keptnappcontext
-  scope: Namespaced
-  versions:
-  - name: v1beta1
-    schema:
-      openAPIV3Schema:
-        description: KeptnAppContext is the Schema for the keptnappcontexts API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnAppContextSpec defines the desired state of KeptnAppContext
-            properties:
-              metadata:
-                additionalProperties:
-                  type: string
-                description: Metadata contains additional key-value pairs for contextual
-                  information.
-                type: object
-              postDeploymentEvaluations:
-                description: |-
-                  PostDeploymentEvaluations is a list of all evaluations to be performed
-                  during the post-deployment phase of the KeptnApp.
-                  The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
-                items:
-                  type: string
-                type: array
-              postDeploymentTasks:
-                description: |-
-                  PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp.
-                  The items of this list refer to the names of KeptnTaskDefinitions
-                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
-                items:
-                  type: string
-                type: array
-              preDeploymentEvaluations:
-                description: |-
-                  PreDeploymentEvaluations is a list of all evaluations to be performed
-                  during the pre-deployment phase of the KeptnApp.
-                  The items of this list refer to the names of KeptnEvaluationDefinitions
-                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
-                items:
-                  type: string
-                type: array
-              preDeploymentTasks:
-                description: |-
-                  PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp.
-                  The items of this list refer to the names of KeptnTaskDefinitions
-                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
-                items:
-                  type: string
-                type: array
-              promotionTasks:
-                description: |-
-                  PromotionTasks is a list of all tasks to be performed during the promotion phase of the KeptnApp.
-                  The items of this list refer to the names of KeptnTaskDefinitions
-                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
-                items:
-                  type: string
-                type: array
-              spanLinks:
-                description: |-
-                  SpanLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
-                  For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links
-                items:
-                  type: string
-                type: array
-            type: object
-          status:
-            description: KeptnAppContextStatus defines the observed state of KeptnAppContext
-            properties:
-              status:
-                description: unused field
-                type: string
-            type: object
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
----
-# Source: keptn/charts/lifecycleOperator/templates/keptnappcreationrequest-crd.yaml
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: keptnappcreationrequests.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
@@ -567,115 +675,7 @@ metadata:
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.2.1
-spec:
-  group: lifecycle.keptn.sh
-  names:
-    kind: KeptnAppCreationRequest
-    listKind: KeptnAppCreationRequestList
-    plural: keptnappcreationrequests
-    singular: keptnappcreationrequest
-  scope: Namespaced
-  versions:
-  - name: v1alpha3
-    schema:
-      openAPIV3Schema:
-        description: KeptnAppCreationRequest is the Schema for the keptnappcreationrequests
-          API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: Spec describes the desired state of the KeptnAppCreationRequest.
-            properties:
-              appName:
-                description: AppName is the name of the KeptnApp the KeptnAppCreationRequest
-                  should create if no user-defined object with that name is found.
-                type: string
-            required:
-            - appName
-            type: object
-          status:
-            description: Status describes the current state of the KeptnAppCreationRequest.
-            type: string
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - name: v1beta1
-    schema:
-      openAPIV3Schema:
-        description: KeptnAppCreationRequest is the Schema for the keptnappcreationrequests
-          API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: Spec describes the desired state of the KeptnAppCreationRequest.
-            properties:
-              appName:
-                description: AppName is the name of the KeptnApp the KeptnAppCreationRequest
-                  should create if no user-defined object with that name is found.
-                type: string
-            required:
-            - appName
-            type: object
-          status:
-            description: Status describes the current state of the KeptnAppCreationRequest.
-            type: string
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
----
-# Source: keptn/charts/lifecycleOperator/templates/keptnappversion-crd.yaml
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
   name: keptnappversions.lifecycle.keptn.sh
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
-    cert-manager.io/inject-ca-from: helmtests/keptn-certs
-  labels:
-    app.kubernetes.io/part-of: keptn
-    crdGroup: lifecycle.keptn.sh
-    keptn.sh/inject-cert: "true"
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.2.1
 spec:
   conversion:
     strategy: Webhook
@@ -1931,11 +1931,10 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/lifecycleOperator/templates/keptnconfig-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/operator-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: keptnconfigs.options.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
@@ -1948,6 +1947,7 @@ metadata:
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.2.1
+  name: keptnconfigs.options.keptn.sh
 spec:
   group: options.keptn.sh
   names:
@@ -2020,11 +2020,10 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/lifecycleOperator/templates/keptnevaluation-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/operator-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: keptnevaluations.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
@@ -2037,6 +2036,295 @@ metadata:
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.2.1
+  name: keptnevaluationdefinitions.lifecycle.keptn.sh
+spec:
+  group: lifecycle.keptn.sh
+  names:
+    kind: KeptnEvaluationDefinition
+    listKind: KeptnEvaluationDefinitionList
+    plural: keptnevaluationdefinitions
+    shortNames:
+    - ked
+    singular: keptnevaluationdefinition
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions
+          API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnEvaluationDefinitionSpec defines the desired state of
+              KeptnEvaluationDefinition
+            properties:
+              objectives:
+                items:
+                  properties:
+                    evaluationTarget:
+                      type: string
+                    name:
+                      type: string
+                    query:
+                      type: string
+                  required:
+                  - evaluationTarget
+                  - name
+                  - query
+                  type: object
+                type: array
+              source:
+                type: string
+            required:
+            - objectives
+            - source
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - name: v1alpha2
+    schema:
+      openAPIV3Schema:
+        description: KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions
+          API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnEvaluationDefinitionSpec defines the desired state of
+              KeptnEvaluationDefinition
+            properties:
+              objectives:
+                items:
+                  properties:
+                    evaluationTarget:
+                      type: string
+                    name:
+                      type: string
+                    query:
+                      type: string
+                  required:
+                  - evaluationTarget
+                  - name
+                  - query
+                  type: object
+                type: array
+              source:
+                type: string
+            required:
+            - objectives
+            - source
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions
+          API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec describes the desired state of the KeptnEvaluationDefinition.
+            properties:
+              objectives:
+                description: |-
+                  Objectives is a list of objectives that have to be met for a KeptnEvaluation referencing this
+                  KeptnEvaluationDefinition to be successful.
+                items:
+                  properties:
+                    evaluationTarget:
+                      description: |-
+                        EvaluationTarget specifies the target value for the references KeptnMetric.
+                        Needs to start with either '<' or '>', followed by the target value (e.g. '<10').
+                      type: string
+                    keptnMetricRef:
+                      description: KeptnMetricRef references the KeptnMetric that
+                        should be evaluated.
+                      properties:
+                        name:
+                          description: Name is the name of the referenced KeptnMetric.
+                          type: string
+                        namespace:
+                          description: Namespace is the namespace where the referenced
+                            KeptnMetric is located.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                  required:
+                  - evaluationTarget
+                  - keptnMetricRef
+                  type: object
+                type: array
+            required:
+            - objectives
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions
+          API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec describes the desired state of the KeptnEvaluationDefinition.
+            properties:
+              objectives:
+                description: |-
+                  Objectives is a list of objectives that have to be met for a KeptnEvaluation referencing this
+                  KeptnEvaluationDefinition to be successful.
+                items:
+                  properties:
+                    evaluationTarget:
+                      description: |-
+                        EvaluationTarget specifies the target value for the references KeptnMetric.
+                        Needs to start with either '<' or '>', followed by the target value (e.g. '<10').
+                      type: string
+                    keptnMetricRef:
+                      description: KeptnMetricRef references the KeptnMetric that
+                        should be evaluated.
+                      properties:
+                        name:
+                          description: Name is the name of the referenced KeptnMetric.
+                          type: string
+                        namespace:
+                          description: Namespace is the namespace where the referenced
+                            KeptnMetric is located.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                  required:
+                  - evaluationTarget
+                  - keptnMetricRef
+                  type: object
+                type: array
+              retries:
+                default: 10
+                description: |-
+                  Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
+                  missed evaluation objective, before considering the KeptnEvaluation to be failed.
+                type: integer
+              retryInterval:
+                default: 5s
+                description: |-
+                  RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error
+                  or a missed objective.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
+            required:
+            - objectives
+            type: object
+          status:
+            description: unused field
+            type: string
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+# Source: keptn/charts/lifecycleOperator/templates/operator-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
+  labels:
+    app.kubernetes.io/part-of: keptn
+    crdGroup: lifecycle.keptn.sh
+    keptn.sh/inject-cert: "true"
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/version: vmyversion
+    helm.sh/chart: lifecycle-operator-0.2.1
+  name: keptnevaluations.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -2581,11 +2869,10 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/lifecycleOperator/templates/keptnevaluationdefinition-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/operator-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: keptnevaluationdefinitions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
@@ -2598,893 +2885,7 @@ metadata:
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.2.1
-spec:
-  group: lifecycle.keptn.sh
-  names:
-    kind: KeptnEvaluationDefinition
-    listKind: KeptnEvaluationDefinitionList
-    plural: keptnevaluationdefinitions
-    shortNames:
-    - ked
-    singular: keptnevaluationdefinition
-  scope: Namespaced
-  versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions
-          API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnEvaluationDefinitionSpec defines the desired state of
-              KeptnEvaluationDefinition
-            properties:
-              objectives:
-                items:
-                  properties:
-                    evaluationTarget:
-                      type: string
-                    name:
-                      type: string
-                    query:
-                      type: string
-                  required:
-                  - evaluationTarget
-                  - name
-                  - query
-                  type: object
-                type: array
-              source:
-                type: string
-            required:
-            - objectives
-            - source
-            type: object
-          status:
-            description: unused field
-            type: string
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - name: v1alpha2
-    schema:
-      openAPIV3Schema:
-        description: KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions
-          API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnEvaluationDefinitionSpec defines the desired state of
-              KeptnEvaluationDefinition
-            properties:
-              objectives:
-                items:
-                  properties:
-                    evaluationTarget:
-                      type: string
-                    name:
-                      type: string
-                    query:
-                      type: string
-                  required:
-                  - evaluationTarget
-                  - name
-                  - query
-                  type: object
-                type: array
-              source:
-                type: string
-            required:
-            - objectives
-            - source
-            type: object
-          status:
-            description: unused field
-            type: string
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - name: v1alpha3
-    schema:
-      openAPIV3Schema:
-        description: KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions
-          API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: Spec describes the desired state of the KeptnEvaluationDefinition.
-            properties:
-              objectives:
-                description: |-
-                  Objectives is a list of objectives that have to be met for a KeptnEvaluation referencing this
-                  KeptnEvaluationDefinition to be successful.
-                items:
-                  properties:
-                    evaluationTarget:
-                      description: |-
-                        EvaluationTarget specifies the target value for the references KeptnMetric.
-                        Needs to start with either '<' or '>', followed by the target value (e.g. '<10').
-                      type: string
-                    keptnMetricRef:
-                      description: KeptnMetricRef references the KeptnMetric that
-                        should be evaluated.
-                      properties:
-                        name:
-                          description: Name is the name of the referenced KeptnMetric.
-                          type: string
-                        namespace:
-                          description: Namespace is the namespace where the referenced
-                            KeptnMetric is located.
-                          type: string
-                      required:
-                      - name
-                      type: object
-                  required:
-                  - evaluationTarget
-                  - keptnMetricRef
-                  type: object
-                type: array
-            required:
-            - objectives
-            type: object
-          status:
-            description: unused field
-            type: string
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - name: v1beta1
-    schema:
-      openAPIV3Schema:
-        description: KeptnEvaluationDefinition is the Schema for the keptnevaluationdefinitions
-          API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: Spec describes the desired state of the KeptnEvaluationDefinition.
-            properties:
-              objectives:
-                description: |-
-                  Objectives is a list of objectives that have to be met for a KeptnEvaluation referencing this
-                  KeptnEvaluationDefinition to be successful.
-                items:
-                  properties:
-                    evaluationTarget:
-                      description: |-
-                        EvaluationTarget specifies the target value for the references KeptnMetric.
-                        Needs to start with either '<' or '>', followed by the target value (e.g. '<10').
-                      type: string
-                    keptnMetricRef:
-                      description: KeptnMetricRef references the KeptnMetric that
-                        should be evaluated.
-                      properties:
-                        name:
-                          description: Name is the name of the referenced KeptnMetric.
-                          type: string
-                        namespace:
-                          description: Namespace is the namespace where the referenced
-                            KeptnMetric is located.
-                          type: string
-                      required:
-                      - name
-                      type: object
-                  required:
-                  - evaluationTarget
-                  - keptnMetricRef
-                  type: object
-                type: array
-              retries:
-                default: 10
-                description: |-
-                  Retries indicates how many times the KeptnEvaluation can be attempted in the case of an error or
-                  missed evaluation objective, before considering the KeptnEvaluation to be failed.
-                type: integer
-              retryInterval:
-                default: 5s
-                description: |-
-                  RetryInterval specifies the interval at which the KeptnEvaluation is retried in the case of an error
-                  or a missed objective.
-                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-                type: string
-            required:
-            - objectives
-            type: object
-          status:
-            description: unused field
-            type: string
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
----
-# Source: keptn/charts/lifecycleOperator/templates/keptntask-crd.yaml
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  name: keptntasks.lifecycle.keptn.sh
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
-    cert-manager.io/inject-ca-from: helmtests/keptn-certs
-  labels:
-    app.kubernetes.io/part-of: keptn
-    crdGroup: lifecycle.keptn.sh
-    keptn.sh/inject-cert: "true"
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.2.1
-spec:
-  group: lifecycle.keptn.sh
-  names:
-    kind: KeptnTask
-    listKind: KeptnTaskList
-    plural: keptntasks
-    singular: keptntask
-  scope: Namespaced
-  versions:
-  - additionalPrinterColumns:
-    - jsonPath: .spec.app
-      name: AppName
-      type: string
-    - jsonPath: .spec.appVersion
-      name: AppVersion
-      type: string
-    - jsonPath: .spec.workload
-      name: WorkloadName
-      type: string
-    - jsonPath: .spec.workloadVersion
-      name: WorkloadVersion
-      type: string
-    - jsonPath: .status.jobName
-      name: Job Name
-      type: string
-    - jsonPath: .status.status
-      name: Status
-      type: string
-    name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: KeptnTask is the Schema for the keptntasks API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnTaskSpec defines the desired state of KeptnTask
-            properties:
-              app:
-                type: string
-              appVersion:
-                type: string
-              checkType:
-                type: string
-              context:
-                properties:
-                  appName:
-                    type: string
-                  appVersion:
-                    type: string
-                  objectType:
-                    type: string
-                  taskType:
-                    type: string
-                  workloadName:
-                    type: string
-                  workloadVersion:
-                    type: string
-                required:
-                - appName
-                - appVersion
-                - objectType
-                - taskType
-                - workloadName
-                - workloadVersion
-                type: object
-              parameters:
-                properties:
-                  map:
-                    additionalProperties:
-                      type: string
-                    type: object
-                type: object
-              secureParameters:
-                properties:
-                  secret:
-                    type: string
-                type: object
-              taskDefinition:
-                type: string
-              workload:
-                type: string
-              workloadVersion:
-                type: string
-            required:
-            - app
-            - appVersion
-            - context
-            - taskDefinition
-            - workload
-            - workloadVersion
-            type: object
-          status:
-            description: KeptnTaskStatus defines the observed state of KeptnTask
-            properties:
-              endTime:
-                format: date-time
-                type: string
-              jobName:
-                type: string
-              message:
-                type: string
-              startTime:
-                format: date-time
-                type: string
-              status:
-                default: Pending
-                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
-                type: string
-            type: object
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - additionalPrinterColumns:
-    - jsonPath: .spec.app
-      name: AppName
-      type: string
-    - jsonPath: .spec.appVersion
-      name: AppVersion
-      type: string
-    - jsonPath: .spec.workload
-      name: WorkloadName
-      type: string
-    - jsonPath: .spec.workloadVersion
-      name: WorkloadVersion
-      type: string
-    - jsonPath: .status.jobName
-      name: Job Name
-      type: string
-    - jsonPath: .status.status
-      name: Status
-      type: string
-    name: v1alpha2
-    schema:
-      openAPIV3Schema:
-        description: KeptnTask is the Schema for the keptntasks API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: KeptnTaskSpec defines the desired state of KeptnTask
-            properties:
-              app:
-                type: string
-              appVersion:
-                type: string
-              checkType:
-                type: string
-              context:
-                properties:
-                  appName:
-                    type: string
-                  appVersion:
-                    type: string
-                  objectType:
-                    type: string
-                  taskType:
-                    type: string
-                  workloadName:
-                    type: string
-                  workloadVersion:
-                    type: string
-                required:
-                - appName
-                - appVersion
-                - objectType
-                - taskType
-                - workloadName
-                - workloadVersion
-                type: object
-              parameters:
-                properties:
-                  map:
-                    additionalProperties:
-                      type: string
-                    type: object
-                type: object
-              secureParameters:
-                properties:
-                  secret:
-                    type: string
-                type: object
-              taskDefinition:
-                type: string
-              workload:
-                type: string
-              workloadVersion:
-                type: string
-            required:
-            - app
-            - appVersion
-            - context
-            - taskDefinition
-            - workload
-            - workloadVersion
-            type: object
-          status:
-            description: KeptnTaskStatus defines the observed state of KeptnTask
-            properties:
-              endTime:
-                format: date-time
-                type: string
-              jobName:
-                type: string
-              message:
-                type: string
-              startTime:
-                format: date-time
-                type: string
-              status:
-                default: Pending
-                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
-                type: string
-            type: object
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - additionalPrinterColumns:
-    - jsonPath: .spec.app
-      name: AppName
-      type: string
-    - jsonPath: .spec.appVersion
-      name: AppVersion
-      type: string
-    - jsonPath: .spec.workload
-      name: WorkloadName
-      type: string
-    - jsonPath: .spec.workloadVersion
-      name: WorkloadVersion
-      type: string
-    - jsonPath: .status.jobName
-      name: Job Name
-      type: string
-    - jsonPath: .status.status
-      name: Status
-      type: string
-    name: v1alpha3
-    schema:
-      openAPIV3Schema:
-        description: KeptnTask is the Schema for the keptntasks API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: Spec describes the desired state of the KeptnTask.
-            properties:
-              checkType:
-                description: Type indicates whether the KeptnTask is part of the pre-
-                  or postDeployment phase.
-                type: string
-              context:
-                description: Context contains contextual information about the task
-                  execution.
-                properties:
-                  appName:
-                    description: AppName the name of the KeptnApp the KeptnTask is
-                      being executed for.
-                    type: string
-                  appVersion:
-                    description: AppVersion the version of the KeptnApp the KeptnTask
-                      is being executed for.
-                    type: string
-                  objectType:
-                    description: ObjectType indicates whether the KeptnTask is being
-                      executed for a KeptnApp or KeptnWorkload.
-                    type: string
-                  taskType:
-                    description: TaskType indicates whether the KeptnTask is part
-                      of the pre- or postDeployment phase.
-                    type: string
-                  workloadName:
-                    description: WorkloadName the name of the KeptnWorkload the KeptnTask
-                      is being executed for.
-                    type: string
-                  workloadVersion:
-                    description: WorkloadVersion the version of the KeptnWorkload
-                      the KeptnTask is being executed for.
-                    type: string
-                type: object
-              parameters:
-                description: Parameters contains parameters that will be passed to
-                  the job that executes the task.
-                properties:
-                  map:
-                    additionalProperties:
-                      type: string
-                    description: |-
-                      Inline contains the parameters that will be made available to the job
-                      executing the KeptnTask via the 'DATA' environment variable.
-                      The 'DATA'  environment variable's content will be a json
-                      encoded string containing all properties of the map provided.
-                    type: object
-                type: object
-              retries:
-                default: 10
-                description: |-
-                  Retries indicates how many times the KeptnTask can be attempted in the case of an error
-                  before considering the KeptnTask to be failed.
-                format: int32
-                type: integer
-              secureParameters:
-                description: |-
-                  SecureParameters contains secure parameters that will be passed to the job that executes the task.
-                  These will be stored and accessed as secrets in the cluster.
-                properties:
-                  secret:
-                    description: |-
-                      Secret contains the parameters that will be made available to the job
-                      executing the KeptnTask via the 'SECRET_DATA' environment variable.
-                      The 'SECRET_DATA'  environment variable's content will the same as value of the 'SECRET_DATA'
-                      key of the referenced secret.
-                    type: string
-                type: object
-              taskDefinition:
-                description: |-
-                  TaskDefinition refers to the name of the KeptnTaskDefinition
-                  which includes the specification for the task to be performed.
-                  The KeptnTaskDefinition can be
-                  located in the same namespace as the KeptnTask, or in the Keptn namespace.
-                type: string
-              timeout:
-                default: 5m
-                description: |-
-                  Timeout specifies the maximum time to wait for the task to be completed successfully.
-                  If the task does not complete successfully within this time frame, it will be
-                  considered to be failed.
-                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-                type: string
-            required:
-            - taskDefinition
-            type: object
-          status:
-            description: Status describes the current state of the KeptnTask.
-            properties:
-              endTime:
-                description: EndTime represents the time at which the KeptnTask finished.
-                format: date-time
-                type: string
-              jobName:
-                description: JobName is the name of the Job executing the Task.
-                type: string
-              message:
-                description: Message contains information about unexpected errors
-                  encountered during the execution of the KeptnTask.
-                type: string
-              reason:
-                description: Reason contains more information about the reason for
-                  the last transition of the Job executing the KeptnTask.
-                type: string
-              startTime:
-                description: StartTime represents the time at which the KeptnTask
-                  started.
-                format: date-time
-                type: string
-              status:
-                default: Pending
-                description: Status represents the overall state of the KeptnTask.
-                type: string
-            type: object
-        type: object
-    served: true
-    storage: false
-    subresources:
-      status: {}
-  - additionalPrinterColumns:
-    - jsonPath: .spec.app
-      name: AppName
-      type: string
-    - jsonPath: .spec.appVersion
-      name: AppVersion
-      type: string
-    - jsonPath: .spec.workload
-      name: WorkloadName
-      type: string
-    - jsonPath: .spec.workloadVersion
-      name: WorkloadVersion
-      type: string
-    - jsonPath: .status.jobName
-      name: Job Name
-      type: string
-    - jsonPath: .status.status
-      name: Status
-      type: string
-    name: v1beta1
-    schema:
-      openAPIV3Schema:
-        description: KeptnTask is the Schema for the keptntasks API
-        properties:
-          apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-            type: string
-          kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: Spec describes the desired state of the KeptnTask.
-            properties:
-              checkType:
-                description: Type indicates whether the KeptnTask is part of the pre-
-                  or postDeployment phase.
-                type: string
-              context:
-                description: Context contains contextual information about the task
-                  execution.
-                properties:
-                  appName:
-                    description: AppName the name of the KeptnApp the KeptnTask is
-                      being executed for.
-                    type: string
-                  appVersion:
-                    description: AppVersion the version of the KeptnApp the KeptnTask
-                      is being executed for.
-                    type: string
-                  metadata:
-                    additionalProperties:
-                      type: string
-                    description: Metadata contains additional key-value pairs for
-                      contextual information.
-                    type: object
-                  objectType:
-                    description: ObjectType indicates whether the KeptnTask is being
-                      executed for a KeptnApp or KeptnWorkload.
-                    type: string
-                  taskType:
-                    description: TaskType indicates whether the KeptnTask is part
-                      of the pre- or postDeployment phase.
-                    type: string
-                  workloadName:
-                    description: WorkloadName the name of the KeptnWorkload the KeptnTask
-                      is being executed for.
-                    type: string
-                  workloadVersion:
-                    description: WorkloadVersion the version of the KeptnWorkload
-                      the KeptnTask is being executed for.
-                    type: string
-                type: object
-              parameters:
-                description: Parameters contains parameters that will be passed to
-                  the job that executes the task.
-                properties:
-                  map:
-                    additionalProperties:
-                      type: string
-                    description: |-
-                      Inline contains the parameters that will be made available to the job
-                      executing the KeptnTask via the 'DATA' environment variable.
-                      The 'DATA'  environment variable's content will be a json
-                      encoded string containing all properties of the map provided.
-                    type: object
-                type: object
-              retries:
-                default: 10
-                description: |-
-                  Retries indicates how many times the KeptnTask can be attempted in the case of an error
-                  before considering the KeptnTask to be failed.
-                format: int32
-                type: integer
-              secureParameters:
-                description: |-
-                  SecureParameters contains secure parameters that will be passed to the job that executes the task.
-                  These will be stored and accessed as secrets in the cluster.
-                properties:
-                  secret:
-                    description: |-
-                      Secret contains the parameters that will be made available to the job
-                      executing the KeptnTask via the 'SECRET_DATA' environment variable.
-                      The 'SECRET_DATA'  environment variable's content will the same as value of the 'SECRET_DATA'
-                      key of the referenced secret.
-                    type: string
-                type: object
-              taskDefinition:
-                description: |-
-                  TaskDefinition refers to the name of the KeptnTaskDefinition
-                  which includes the specification for the task to be performed.
-                  The KeptnTaskDefinition can be
-                  located in the same namespace as the KeptnTask, or in the Keptn namespace.
-                type: string
-              timeout:
-                default: 5m
-                description: |-
-                  Timeout specifies the maximum time to wait for the task to be completed successfully.
-                  If the task does not complete successfully within this time frame, it will be
-                  considered to be failed.
-                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-                type: string
-            required:
-            - taskDefinition
-            type: object
-          status:
-            description: Status describes the current state of the KeptnTask.
-            properties:
-              endTime:
-                description: EndTime represents the time at which the KeptnTask finished.
-                format: date-time
-                type: string
-              jobName:
-                description: JobName is the name of the Job executing the Task.
-                type: string
-              message:
-                description: Message contains information about unexpected errors
-                  encountered during the execution of the KeptnTask.
-                type: string
-              reason:
-                description: Reason contains more information about the reason for
-                  the last transition of the Job executing the KeptnTask.
-                type: string
-              startTime:
-                description: StartTime represents the time at which the KeptnTask
-                  started.
-                format: date-time
-                type: string
-              status:
-                default: Pending
-                description: Status represents the overall state of the KeptnTask.
-                type: string
-            type: object
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
----
-# Source: keptn/charts/lifecycleOperator/templates/keptntaskdefinition-crd.yaml
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
   name: keptntaskdefinitions.lifecycle.keptn.sh
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
-    cert-manager.io/inject-ca-from: helmtests/keptn-certs
-  labels:
-    app.kubernetes.io/part-of: keptn
-    crdGroup: lifecycle.keptn.sh
-    keptn.sh/inject-cert: "true"
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.2.1
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -6909,11 +6310,10 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/lifecycleOperator/templates/keptnworkload-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/operator-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: keptnworkloads.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
@@ -6926,6 +6326,606 @@ metadata:
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.2.1
+  name: keptntasks.lifecycle.keptn.sh
+spec:
+  group: lifecycle.keptn.sh
+  names:
+    kind: KeptnTask
+    listKind: KeptnTaskList
+    plural: keptntasks
+    singular: keptntask
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.app
+      name: AppName
+      type: string
+    - jsonPath: .spec.appVersion
+      name: AppVersion
+      type: string
+    - jsonPath: .spec.workload
+      name: WorkloadName
+      type: string
+    - jsonPath: .spec.workloadVersion
+      name: WorkloadVersion
+      type: string
+    - jsonPath: .status.jobName
+      name: Job Name
+      type: string
+    - jsonPath: .status.status
+      name: Status
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: KeptnTask is the Schema for the keptntasks API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnTaskSpec defines the desired state of KeptnTask
+            properties:
+              app:
+                type: string
+              appVersion:
+                type: string
+              checkType:
+                type: string
+              context:
+                properties:
+                  appName:
+                    type: string
+                  appVersion:
+                    type: string
+                  objectType:
+                    type: string
+                  taskType:
+                    type: string
+                  workloadName:
+                    type: string
+                  workloadVersion:
+                    type: string
+                required:
+                - appName
+                - appVersion
+                - objectType
+                - taskType
+                - workloadName
+                - workloadVersion
+                type: object
+              parameters:
+                properties:
+                  map:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
+              secureParameters:
+                properties:
+                  secret:
+                    type: string
+                type: object
+              taskDefinition:
+                type: string
+              workload:
+                type: string
+              workloadVersion:
+                type: string
+            required:
+            - app
+            - appVersion
+            - context
+            - taskDefinition
+            - workload
+            - workloadVersion
+            type: object
+          status:
+            description: KeptnTaskStatus defines the observed state of KeptnTask
+            properties:
+              endTime:
+                format: date-time
+                type: string
+              jobName:
+                type: string
+              message:
+                type: string
+              startTime:
+                format: date-time
+                type: string
+              status:
+                default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - additionalPrinterColumns:
+    - jsonPath: .spec.app
+      name: AppName
+      type: string
+    - jsonPath: .spec.appVersion
+      name: AppVersion
+      type: string
+    - jsonPath: .spec.workload
+      name: WorkloadName
+      type: string
+    - jsonPath: .spec.workloadVersion
+      name: WorkloadVersion
+      type: string
+    - jsonPath: .status.jobName
+      name: Job Name
+      type: string
+    - jsonPath: .status.status
+      name: Status
+      type: string
+    name: v1alpha2
+    schema:
+      openAPIV3Schema:
+        description: KeptnTask is the Schema for the keptntasks API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnTaskSpec defines the desired state of KeptnTask
+            properties:
+              app:
+                type: string
+              appVersion:
+                type: string
+              checkType:
+                type: string
+              context:
+                properties:
+                  appName:
+                    type: string
+                  appVersion:
+                    type: string
+                  objectType:
+                    type: string
+                  taskType:
+                    type: string
+                  workloadName:
+                    type: string
+                  workloadVersion:
+                    type: string
+                required:
+                - appName
+                - appVersion
+                - objectType
+                - taskType
+                - workloadName
+                - workloadVersion
+                type: object
+              parameters:
+                properties:
+                  map:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
+              secureParameters:
+                properties:
+                  secret:
+                    type: string
+                type: object
+              taskDefinition:
+                type: string
+              workload:
+                type: string
+              workloadVersion:
+                type: string
+            required:
+            - app
+            - appVersion
+            - context
+            - taskDefinition
+            - workload
+            - workloadVersion
+            type: object
+          status:
+            description: KeptnTaskStatus defines the observed state of KeptnTask
+            properties:
+              endTime:
+                format: date-time
+                type: string
+              jobName:
+                type: string
+              message:
+                type: string
+              startTime:
+                format: date-time
+                type: string
+              status:
+                default: Pending
+                description: KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Cancelled)
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - additionalPrinterColumns:
+    - jsonPath: .spec.app
+      name: AppName
+      type: string
+    - jsonPath: .spec.appVersion
+      name: AppVersion
+      type: string
+    - jsonPath: .spec.workload
+      name: WorkloadName
+      type: string
+    - jsonPath: .spec.workloadVersion
+      name: WorkloadVersion
+      type: string
+    - jsonPath: .status.jobName
+      name: Job Name
+      type: string
+    - jsonPath: .status.status
+      name: Status
+      type: string
+    name: v1alpha3
+    schema:
+      openAPIV3Schema:
+        description: KeptnTask is the Schema for the keptntasks API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec describes the desired state of the KeptnTask.
+            properties:
+              checkType:
+                description: Type indicates whether the KeptnTask is part of the pre-
+                  or postDeployment phase.
+                type: string
+              context:
+                description: Context contains contextual information about the task
+                  execution.
+                properties:
+                  appName:
+                    description: AppName the name of the KeptnApp the KeptnTask is
+                      being executed for.
+                    type: string
+                  appVersion:
+                    description: AppVersion the version of the KeptnApp the KeptnTask
+                      is being executed for.
+                    type: string
+                  objectType:
+                    description: ObjectType indicates whether the KeptnTask is being
+                      executed for a KeptnApp or KeptnWorkload.
+                    type: string
+                  taskType:
+                    description: TaskType indicates whether the KeptnTask is part
+                      of the pre- or postDeployment phase.
+                    type: string
+                  workloadName:
+                    description: WorkloadName the name of the KeptnWorkload the KeptnTask
+                      is being executed for.
+                    type: string
+                  workloadVersion:
+                    description: WorkloadVersion the version of the KeptnWorkload
+                      the KeptnTask is being executed for.
+                    type: string
+                type: object
+              parameters:
+                description: Parameters contains parameters that will be passed to
+                  the job that executes the task.
+                properties:
+                  map:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Inline contains the parameters that will be made available to the job
+                      executing the KeptnTask via the 'DATA' environment variable.
+                      The 'DATA'  environment variable's content will be a json
+                      encoded string containing all properties of the map provided.
+                    type: object
+                type: object
+              retries:
+                default: 10
+                description: |-
+                  Retries indicates how many times the KeptnTask can be attempted in the case of an error
+                  before considering the KeptnTask to be failed.
+                format: int32
+                type: integer
+              secureParameters:
+                description: |-
+                  SecureParameters contains secure parameters that will be passed to the job that executes the task.
+                  These will be stored and accessed as secrets in the cluster.
+                properties:
+                  secret:
+                    description: |-
+                      Secret contains the parameters that will be made available to the job
+                      executing the KeptnTask via the 'SECRET_DATA' environment variable.
+                      The 'SECRET_DATA'  environment variable's content will the same as value of the 'SECRET_DATA'
+                      key of the referenced secret.
+                    type: string
+                type: object
+              taskDefinition:
+                description: |-
+                  TaskDefinition refers to the name of the KeptnTaskDefinition
+                  which includes the specification for the task to be performed.
+                  The KeptnTaskDefinition can be
+                  located in the same namespace as the KeptnTask, or in the Keptn namespace.
+                type: string
+              timeout:
+                default: 5m
+                description: |-
+                  Timeout specifies the maximum time to wait for the task to be completed successfully.
+                  If the task does not complete successfully within this time frame, it will be
+                  considered to be failed.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
+            required:
+            - taskDefinition
+            type: object
+          status:
+            description: Status describes the current state of the KeptnTask.
+            properties:
+              endTime:
+                description: EndTime represents the time at which the KeptnTask finished.
+                format: date-time
+                type: string
+              jobName:
+                description: JobName is the name of the Job executing the Task.
+                type: string
+              message:
+                description: Message contains information about unexpected errors
+                  encountered during the execution of the KeptnTask.
+                type: string
+              reason:
+                description: Reason contains more information about the reason for
+                  the last transition of the Job executing the KeptnTask.
+                type: string
+              startTime:
+                description: StartTime represents the time at which the KeptnTask
+                  started.
+                format: date-time
+                type: string
+              status:
+                default: Pending
+                description: Status represents the overall state of the KeptnTask.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - additionalPrinterColumns:
+    - jsonPath: .spec.app
+      name: AppName
+      type: string
+    - jsonPath: .spec.appVersion
+      name: AppVersion
+      type: string
+    - jsonPath: .spec.workload
+      name: WorkloadName
+      type: string
+    - jsonPath: .spec.workloadVersion
+      name: WorkloadVersion
+      type: string
+    - jsonPath: .status.jobName
+      name: Job Name
+      type: string
+    - jsonPath: .status.status
+      name: Status
+      type: string
+    name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: KeptnTask is the Schema for the keptntasks API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec describes the desired state of the KeptnTask.
+            properties:
+              checkType:
+                description: Type indicates whether the KeptnTask is part of the pre-
+                  or postDeployment phase.
+                type: string
+              context:
+                description: Context contains contextual information about the task
+                  execution.
+                properties:
+                  appName:
+                    description: AppName the name of the KeptnApp the KeptnTask is
+                      being executed for.
+                    type: string
+                  appVersion:
+                    description: AppVersion the version of the KeptnApp the KeptnTask
+                      is being executed for.
+                    type: string
+                  metadata:
+                    additionalProperties:
+                      type: string
+                    description: Metadata contains additional key-value pairs for
+                      contextual information.
+                    type: object
+                  objectType:
+                    description: ObjectType indicates whether the KeptnTask is being
+                      executed for a KeptnApp or KeptnWorkload.
+                    type: string
+                  taskType:
+                    description: TaskType indicates whether the KeptnTask is part
+                      of the pre- or postDeployment phase.
+                    type: string
+                  workloadName:
+                    description: WorkloadName the name of the KeptnWorkload the KeptnTask
+                      is being executed for.
+                    type: string
+                  workloadVersion:
+                    description: WorkloadVersion the version of the KeptnWorkload
+                      the KeptnTask is being executed for.
+                    type: string
+                type: object
+              parameters:
+                description: Parameters contains parameters that will be passed to
+                  the job that executes the task.
+                properties:
+                  map:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Inline contains the parameters that will be made available to the job
+                      executing the KeptnTask via the 'DATA' environment variable.
+                      The 'DATA'  environment variable's content will be a json
+                      encoded string containing all properties of the map provided.
+                    type: object
+                type: object
+              retries:
+                default: 10
+                description: |-
+                  Retries indicates how many times the KeptnTask can be attempted in the case of an error
+                  before considering the KeptnTask to be failed.
+                format: int32
+                type: integer
+              secureParameters:
+                description: |-
+                  SecureParameters contains secure parameters that will be passed to the job that executes the task.
+                  These will be stored and accessed as secrets in the cluster.
+                properties:
+                  secret:
+                    description: |-
+                      Secret contains the parameters that will be made available to the job
+                      executing the KeptnTask via the 'SECRET_DATA' environment variable.
+                      The 'SECRET_DATA'  environment variable's content will the same as value of the 'SECRET_DATA'
+                      key of the referenced secret.
+                    type: string
+                type: object
+              taskDefinition:
+                description: |-
+                  TaskDefinition refers to the name of the KeptnTaskDefinition
+                  which includes the specification for the task to be performed.
+                  The KeptnTaskDefinition can be
+                  located in the same namespace as the KeptnTask, or in the Keptn namespace.
+                type: string
+              timeout:
+                default: 5m
+                description: |-
+                  Timeout specifies the maximum time to wait for the task to be completed successfully.
+                  If the task does not complete successfully within this time frame, it will be
+                  considered to be failed.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
+            required:
+            - taskDefinition
+            type: object
+          status:
+            description: Status describes the current state of the KeptnTask.
+            properties:
+              endTime:
+                description: EndTime represents the time at which the KeptnTask finished.
+                format: date-time
+                type: string
+              jobName:
+                description: JobName is the name of the Job executing the Task.
+                type: string
+              message:
+                description: Message contains information about unexpected errors
+                  encountered during the execution of the KeptnTask.
+                type: string
+              reason:
+                description: Reason contains more information about the reason for
+                  the last transition of the Job executing the KeptnTask.
+                type: string
+              startTime:
+                description: StartTime represents the time at which the KeptnTask
+                  started.
+                format: date-time
+                type: string
+              status:
+                default: Pending
+                description: Status represents the overall state of the KeptnTask.
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+# Source: keptn/charts/lifecycleOperator/templates/operator-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+    cert-manager.io/inject-ca-from: helmtests/keptn-certs
+  labels:
+    app.kubernetes.io/part-of: keptn
+    crdGroup: lifecycle.keptn.sh
+    keptn.sh/inject-cert: "true"
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/version: vmyversion
+    helm.sh/chart: lifecycle-operator-0.2.1
+  name: keptnworkloads.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -7334,11 +7334,10 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/lifecycleOperator/templates/keptnworkloadversion-crd.yaml
+# Source: keptn/charts/lifecycleOperator/templates/operator-crd.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: keptnworkloadversions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
     cert-manager.io/inject-ca-from: helmtests/keptn-certs
@@ -7351,6 +7350,7 @@ metadata:
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
     helm.sh/chart: lifecycle-operator-0.2.1
+  name: keptnworkloadversions.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh
   names:

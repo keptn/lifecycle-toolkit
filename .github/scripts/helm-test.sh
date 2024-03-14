@@ -22,8 +22,8 @@ echo "running Helm tests"
         # shellcheck disable=SC2164
         cd "$chart_dir"
         echo "updating charts for" $chart_dir
-#        helm dependency update
-#        helm dependency build
+        helm dependency update
+        helm dependency build
         # shellcheck disable=SC2164
         cd -  # Return to the previous directory
     done

@@ -690,3 +690,6 @@ yourregistry
 GOGC
 otelcol
 serviceapp
+gsub
+helmcharts
+

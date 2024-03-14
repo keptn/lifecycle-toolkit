@@ -4,9 +4,9 @@ dependencies:
   version: 0.2.2
 - name: keptn-lifecycle-operator
   repository: file://../lifecycle-operator/chart
-  version: 0.2.1
+  version: 0.2.2
 - name: keptn-metrics-operator
   repository: file://../metrics-operator/chart
-  version: 0.1.2
-digest: sha256:de35be46be5a56422bec488ce49a4bd85a6d1b37ba15c42b325efa33e9d379f6
-generated: "2024-03-05T07:38:37.048301+01:00"
+  version: 0.1.3
+digest: sha256:2e62bb980d6f07d9337e1b5e163231184db7116a007d4a9f474d69f141136108
+generated: "2024-03-11T15:38:26.858074+01:00"

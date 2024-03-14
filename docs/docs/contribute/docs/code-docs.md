@@ -80,7 +80,7 @@ as Keptn evolves.
 To implement this:
 
 1. Either identify the file you want to include
-   in the `doc/docs/assets/crd/examples` directory
+   in the `assets` directory next to your documentation file
    or create your sample YAML file in that tree,
    giving it an appropriate name, including the `.yaml` suffix.
 

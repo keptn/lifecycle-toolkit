@@ -172,6 +172,7 @@ nav:
                   - v1alpha2: docs/reference/api-reference/metrics/v1alpha2/index.md
                   - v1alpha3: docs/reference/api-reference/metrics/v1alpha3/index.md
                   - v1beta1: docs/reference/api-reference/metrics/v1beta1/index.md
+                  - v1: docs/reference/api-reference/metrics/v1/index.md
               - Options API:
                   - docs/reference/api-reference/options/index.md
                   - v1alpha1: docs/reference/api-reference/options/v1alpha1/index.md

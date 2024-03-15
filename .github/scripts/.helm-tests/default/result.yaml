@@ -2549,8 +2549,6 @@ spec:
                   The KeptnEvaluationDefinition can be
                   located in the same namespace as the KeptnEvaluation, or in the Keptn namespace.
                 type: string
-              failAction:
-                type: string
               retries:
                 default: 10
                 description: |-

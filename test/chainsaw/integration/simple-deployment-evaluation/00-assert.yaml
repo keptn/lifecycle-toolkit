@@ -16,7 +16,6 @@ spec:
     commit-id: "1234"
     stage: dev
 ---
-
 apiVersion: lifecycle.keptn.sh/v1beta1
 kind: KeptnWorkloadVersion
 metadata:

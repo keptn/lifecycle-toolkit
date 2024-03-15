@@ -35,8 +35,6 @@ spec:
         - assert:
             file: 01-assert.yaml
       catch:
-        - podLogs:
-            selector: app=podtato-head
         - describe:
             resource: keptnworkloadversion
         - describe:
@@ -54,8 +52,6 @@ spec:
         - assert:
             file: 02-assert.yaml
       catch:
-        - podLogs:
-            selector: app=podtato-head
         - describe:
             resource: keptnworkloadversion
         - describe:

@@ -12,8 +12,6 @@ spec:
         - assert:
             file: 00-assert.yaml
       catch:
-        - podLogs:
-            selector: app=podtato-head
         - describe:
             resource: keptnworkloadversion
         - describe:
@@ -29,8 +27,6 @@ spec:
         - script:
             content: ../../common-scripts/verify-number-of-resources.sh "job" "1" $NAMESPACE
       catch:
-        - podLogs:
-            selector: app=podtato-head
         - describe:
             resource: keptnworkloadversion
         - describe:

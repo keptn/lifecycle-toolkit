@@ -23,7 +23,7 @@ func TestSecretQuery(t *testing.T) {
 	t.Run(`Update secret when data has changed`, testUpdateSecretWhenDataChanged)
 	t.Run(`Update secret when labels have changed`, testUpdateSecretWhenLabelsChanged)
 	t.Run(`Create secret in target namespace`, testCreateSecretInTargetNamespace)
-	t.Run(`New Secret`, TestNewSecret)
+	t.Run(`New Secret`, testNewSecretwithmutiplekeys)
 }
 
 func testGetSecret(t *testing.T) {
@@ -261,7 +261,7 @@ func createTestSecret(labels map[string]string, data map[string][]byte) *corev1.
 	return secret
 }
 
-func TestNewSecret(t *testing.T) {
+func testNewSecretwithmutiplekeys(t *testing.T) {
 
 	testCases := []struct {
 		name      string

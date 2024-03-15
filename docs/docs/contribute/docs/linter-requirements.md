@@ -11,7 +11,7 @@ the following configuration is required.
 ## Golangci-lint
 
 Further information can also be found in
-the [`golangci-lint` documentation](https://golangci-lint.run/usage/integrations/).
+the [`golangci-lint` documentation](https://golangci-lint.run/welcome/integrations/).
 
 ### Visual Studio Code
 

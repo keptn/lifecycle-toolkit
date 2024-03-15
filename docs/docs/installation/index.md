@@ -54,6 +54,10 @@ See
 [Running Keptn with vCluster](./configuration/vcluster.md)
 for more information.
 
+If you want to deploy Keptn via [ArgoCD](https://argoproj.github.io/cd/),
+refer to the [Deploying Keptn via ArgoCD](./configuration/argocd.md) section
+for more information.
+
 ## Basic installation
 
 Keptn is installed onto an existing Kubernetes cluster

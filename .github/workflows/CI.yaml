@@ -149,7 +149,7 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@0d103c3126aa41d772a8362f6aa67afac040f80c # v3
+        uses: docker/setup-buildx-action@2b51285047da1547ffb1b2203d8be4c0af6b1f20 # v3
 
       - name: Build Docker Image
         uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.1
@@ -272,7 +272,7 @@ jobs:
         run: rsync -av --delete --exclude='charts/*.tgz' ./${{ matrix.config.path }}/ ./helm-charts-repository/charts/${{ matrix.config.name }}/
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@a4f52f8033a6168103c2538976c07b467e8163bc # v6
+        uses: peter-evans/create-pull-request@70a41aba780001da0a30141984ae2a0c95d8704e # v6.0.2
         with:
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
           path: ./helm-charts-repository

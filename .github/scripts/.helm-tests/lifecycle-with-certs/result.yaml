@@ -116,7 +116,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.2.1
+    helm.sh/chart: lifecycle-operator-0.2.2
   name: keptnappcontexts.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh
@@ -237,7 +237,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.2.1
+    helm.sh/chart: lifecycle-operator-0.2.2
   name: keptnappcreationrequests.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh
@@ -2354,7 +2354,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.2.1
+    helm.sh/chart: lifecycle-operator-0.2.2
   name: keptnevaluations.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh
@@ -2421,6 +2421,8 @@ spec:
               checkType:
                 type: string
               evaluationDefinition:
+                type: string
+              failAction:
                 type: string
               retries:
                 default: 10
@@ -2811,8 +2813,6 @@ spec:
                   which includes the objectives for the KeptnEvaluation.
                   The KeptnEvaluationDefinition can be
                   located in the same namespace as the KeptnEvaluation, or in the Keptn namespace.
-                type: string
-              failAction:
                 type: string
               retries:
                 default: 10
@@ -6358,7 +6358,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: vmyversion
-    helm.sh/chart: lifecycle-operator-0.2.1
+    helm.sh/chart: lifecycle-operator-0.2.2
   name: keptntasks.lifecycle.keptn.sh
 spec:
   group: lifecycle.keptn.sh

@@ -694,3 +694,5 @@ Yash
 yml
 YOURNAME
 yourregistry
+gsub
+helmcharts

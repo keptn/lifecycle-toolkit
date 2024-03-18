@@ -14,6 +14,10 @@ on:
         description: "Decides whether to allow only certain namespaces"
         type: "string"
         default: allowed_ns_off
+      cert-manager-io-enabled:
+        description: "Decides whether to use cert-manager.io"
+        type: "string"
+        default: "cert_manager_io_off"
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -38,6 +42,7 @@ jobs:
           runtime_tag: ${{ inputs.runtime_tag }}
           scheduling-gates: ${{ inputs.scheduling-gates }}
           allowed-namespaces: ${{ inputs.allowed-namespaces }}
+          cert-manager-io-enabled: ${{ inputs.cert-manager-io-enabled }}
 
       - name: Install and expose Prometheus
         uses: ./.github/actions/deploy-prometheus-on-cluster
@@ -60,6 +65,11 @@ jobs:
         working-directory: .
         run: make integration-test
 
+      - name: Run Keptn Cert Manager Integration Tests
+        if: inputs.cert-manager-io-enabled == 'cert_manager_io_off'
+        working-directory: .
+        run: make integration-test-cert-manager
+
       - name: Create reports
         if: failure()
         working-directory: ./.github/scripts
@@ -69,5 +79,5 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         with:
-          name: logs-integration-tests-${{ inputs.scheduling-gates }}-${{ inputs.allowed-namespaces }}
+          name: logs-integration-tests-${{ inputs.scheduling-gates }}-${{ inputs.allowed-namespaces }}-${{ inputs.cert-manager-io-enabled }}
           path: .github/scripts/logs

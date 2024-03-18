@@ -1,22 +1,22 @@
 lifecycleOperator:
   lifecycleOperator:
     image:
-      registry: "local-registry.io" # will not be used
+      registry: "local-registry.io" # will be used
       imagePullPolicy: Never # will be used
   scheduler:
     image:
-      registry: "local-registry.io" # will not be used
+      registry: "local-registry.io" # will be used
       imagePullPolicy: Never # will be used
 metricsOperator:
   image:
-    registry: "local-registry.io" # will not be used
+    registry: "local-registry.io" # will be used
     imagePullPolicy: Never # will be used
 certManager:
   image:
-    registry: "local-registry.io" # will not be used
+    registry: "local-registry.io" # will be used
     imagePullPolicy: Never # will be used
 global:
-  imageRegistry: "global-registry.io" # will be used
+  imageRegistry: "global-registry.io" # will not be used
   imagePullSecrets:
     - name: registry-secret
   imagePullPolicy: Always # will not be used

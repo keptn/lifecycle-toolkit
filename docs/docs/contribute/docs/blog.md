@@ -98,7 +98,7 @@ page.
 
 Your blog should be developed using the standard Git
 flow documented in
-[Working with Git](../../general/git.md).
+[Working with Git](../../general/git/index.md).
 When you have created a local branch:
 
 * Create a .md file in the `docs/blog/posts` directory.
@@ -135,7 +135,7 @@ Other coding notes for blogs:
     for your blog.
   * You can use a local build to render your blog locally as you write.
     See
-    [Build documentation locally](/local-building.md)
+    [Build documentation locally](local-building.md)
     for details.
   * The `readthedocs.build` preview associated with your PR
     contains the rendered version of your blog

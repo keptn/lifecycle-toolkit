@@ -26,7 +26,7 @@ you must also do the following:
   so that the spell checker knows about it.
 
 * Blog source is added to the `docs/blog/posts` directory.
-  Individul blogs are not listed in the `mkdocs.yaml` file
+  Individual blogs are not listed in the `mkdocs.yaml` file
   like other documentation.
   Instead, the blog plugin manages integration of all blogs
   with source in the `blogs` directory.
@@ -38,7 +38,7 @@ Each of these requirements is discussed on this page.
 ## Populate docs/blog/.authors.yml file
 
 The value of the `authors:` field in the blog's front matter
-links to an entry in the `blogs/uthors.yml` file.
+links to an entry in the `blogs/authors.yml` file.
 The blog plugin uses this information to render author information
 on the blog page.
 
@@ -71,7 +71,7 @@ authors:
       open the image in a new tab and use the URL displayed in the address bar.
     * **url:** -- URL for your record on GitHub.
 
-### Example
+### authors.yml example
 
 ```yaml
 authors:
@@ -130,16 +130,16 @@ Other coding notes for blogs:
 * Blog posts are considered part of the MkDocs NAV path.
   This means that:
 
-  - Use the practices documented in
-    [External links and internal cross-references](code-docs.md/#external-links-and-internal-cross-references)
-    for your blog.
-  - You can use a local build to render your blog locally as you write.
-    See
-    [Build documentation locally](/local-building.md)
-    for details.
-  - The `readthedocs.build` preview associated with your PR
-    contains the rendered version of your blog
-    so that you and your reviewers can see it.
+      * Use the practices documented in
+        [External links and internal cross-references](code-docs.md/#external-links-and-internal-cross-references)
+        for your blog.
+      * You can use a local build to render your blog locally as you write.
+        See
+        [Build documentation locally](/local-building.md)
+        for details.
+      * The `readthedocs.build` preview associated with your PR
+        contains the rendered version of your blog
+        so that you and your reviewers can see it.
 
 ## Blog front matter
 
@@ -186,7 +186,7 @@ comments: true
 * **blog-title** -- The title that is displayed for your blog,
   coded as a level 1 (`#`) header.
 
-### Example
+### Front matter example
 
 ```md
 ---

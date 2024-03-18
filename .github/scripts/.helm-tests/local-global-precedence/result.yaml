@@ -8,6 +8,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/part-of: keptn
@@ -28,6 +29,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -53,6 +55,7 @@ metadata:
     helm.sh/chart: lifecycle-operator-0.2.2
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
 ---
 # Source: keptn/charts/metricsOperator/templates/metrics-operator-service-account.yaml
 apiVersion: v1
@@ -63,6 +66,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -81,6 +85,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -112,6 +117,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -142,6 +148,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -174,6 +181,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -532,6 +540,7 @@ metadata:
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -656,6 +665,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -769,6 +779,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -2045,6 +2056,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -2138,6 +2150,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -2703,6 +2716,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -2995,6 +3009,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -3598,6 +3613,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -7043,6 +7059,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -7472,6 +7489,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: lifecycle.keptn.sh
@@ -8156,6 +8174,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -8515,6 +8534,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -9216,6 +9236,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -9369,6 +9390,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -9910,6 +9932,7 @@ metadata:
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -10135,6 +10158,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -10192,6 +10216,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -10388,6 +10413,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -10768,6 +10794,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -10793,6 +10820,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -10906,6 +10934,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -10933,6 +10962,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -10962,6 +10992,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -10988,6 +11019,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11014,6 +11046,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11040,6 +11073,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11066,6 +11100,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11092,6 +11127,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11129,6 +11165,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -11182,6 +11219,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11232,6 +11270,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11282,6 +11321,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -11295,6 +11335,7 @@ metadata:
     helm.sh/chart: cert-manager-0.2.2
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -11313,6 +11354,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
@@ -11342,6 +11384,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11368,6 +11411,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11394,6 +11438,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11420,6 +11465,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11446,6 +11492,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11472,6 +11519,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     control-plane: lifecycle-operator
     app.kubernetes.io/instance: keptn-test
@@ -11502,6 +11550,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11530,6 +11579,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     control-plane: metrics-operator
     app.kubernetes.io/instance: keptn-test
@@ -11567,6 +11617,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -11595,6 +11646,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/part-of: keptn
@@ -11697,6 +11749,7 @@ metadata:
     helm.sh/chart: lifecycle-operator-0.2.2
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
 spec:
   replicas: 1
   selector:
@@ -11833,6 +11886,7 @@ metadata:
     helm.sh/chart: lifecycle-operator-0.2.2
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
 spec:
   replicas: 1
   selector:
@@ -11910,6 +11964,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/part-of: keptn
     app.kubernetes.io/component: metrics-operator
@@ -12039,6 +12094,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -12066,6 +12122,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -12092,6 +12149,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
     caAnnotation1: hi
   labels:
     keptn.sh/inject-cert: "true"
@@ -12149,6 +12207,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
     caAnnotation1: hi
   labels:
     keptn.sh/inject-cert: "true"
@@ -12189,6 +12248,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
+    test-annotation: local
     caAnnotation1: hi
   labels:
     keptn.sh/inject-cert: "true"

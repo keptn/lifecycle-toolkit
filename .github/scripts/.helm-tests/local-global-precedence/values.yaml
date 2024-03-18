@@ -1,4 +1,6 @@
 lifecycleOperator:
+  annotations:
+    test-annotation: "local" # will be used
   lifecycleOperator:
     image:
       registry: "local-registry.io" # will be used
@@ -8,10 +10,14 @@ lifecycleOperator:
       registry: "local-registry.io" # will be used
       imagePullPolicy: Never # will be used
 metricsOperator:
+  annotations:
+    test-annotation: "local" # will be used
   image:
     registry: "local-registry.io" # will be used
     imagePullPolicy: Never # will be used
 certManager:
+  annotations:
+    test-annotation: "local" # will be used
   image:
     registry: "local-registry.io" # will be used
 global:
@@ -26,5 +32,6 @@ global:
   commonAnnotations:
     globalAnnotation1: test1 # will be used
     globalAnnotation2: test2 # will be used
+    test-annotation: "global" # will not be used
   caInjectionAnnotations:
     caAnnotation1: hi # will be used

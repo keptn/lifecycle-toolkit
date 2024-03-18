@@ -98,7 +98,7 @@ page.
 
 Your blog should be developed using the standard Git
 flow documented in
-[Working with Git](../../general/git/index.md).
+[Working with Git](../general/git/index.md).
 When you have created a local branch:
 
 * Create a .md file in the `docs/blog/posts` directory.

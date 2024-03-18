@@ -211,6 +211,7 @@ GOBIN
 gocognit
 gocyclo
 gofmt
+GOGC
 golangci
 gomega
 gomod
@@ -415,6 +416,7 @@ multigroup
 mutatingwebhookconfigurations
 mwc
 mwh
+myblog
 mycert
 mydata
 myhost
@@ -460,6 +462,7 @@ operatorvalue
 optionskeptnsh
 ossf
 otel
+otelcol
 otelprom
 otelsdk
 otelurl
@@ -539,6 +542,7 @@ runsendevent
 runtimes
 runtimespec
 Sambhav
+sampleuser
 sbom
 schedulinggates
 sclient
@@ -553,6 +557,7 @@ sendserviceaccount
 serrors
 serviceaccount
 serviceaccountspec
+serviceapp
 serviceport
 setuptools
 Shandilya
@@ -686,6 +691,3 @@ Yash
 yml
 YOURNAME
 yourregistry
-GOGC
-otelcol
-serviceapp

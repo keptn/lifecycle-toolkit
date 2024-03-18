@@ -11639,7 +11639,7 @@ spec:
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
           image: local-registry.io/keptn/certificate-operator:v2.1.0
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           name: certificate-operator
           resources:
             limits:
@@ -11672,6 +11672,7 @@ spec:
             periodSeconds: 10
       imagePullSecrets:
         - name: registry-secret
+        - name: second-secret
       securityContext:
         runAsNonRoot: true
       serviceAccountName: certificate-operator
@@ -11805,6 +11806,7 @@ spec:
           periodSeconds: 10
       imagePullSecrets:
         - name: registry-secret
+        - name: second-secret
       securityContext:
         runAsNonRoot: true
       serviceAccountName: lifecycle-operator
@@ -11892,6 +11894,7 @@ spec:
             scheme: HTTPS
       imagePullSecrets:
         - name: registry-secret
+        - name: second-secret
       serviceAccountName: keptn-scheduler
       volumes:
       - configMap:
@@ -12015,6 +12018,7 @@ spec:
           periodSeconds: 10
       imagePullSecrets:
         - name: registry-secret
+        - name: second-secret
       securityContext:
         runAsNonRoot: true
       serviceAccountName: metrics-operator

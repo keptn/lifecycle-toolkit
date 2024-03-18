@@ -14,11 +14,11 @@ metricsOperator:
 certManager:
   image:
     registry: "local-registry.io" # will be used
-    imagePullPolicy: Never # will be used
 global:
   imageRegistry: "global-registry.io" # will not be used
   imagePullSecrets:
     - name: registry-secret
+    - second-secret
   imagePullPolicy: Always # will not be used
   commonLabels:
     globalLabel1: test1 # will be used

@@ -29,7 +29,7 @@ inputs:
   cert-manager-io-enabled:
     required: false
     description: "Decides whether to use cert-manager.io"
-    default: "cert-manager-io-off"
+    default: "cert_manager_io_off"
 runs:
   using: "composite"
   steps:
@@ -64,8 +64,8 @@ runs:
           kind load image-archive $image/$image -n ${{ inputs.cluster-name }}
         done
 
-    - name: Install lifecycle-toolkit with helm
-      if: inputs.cert-manager-io-enabled == 'cert-manager-io-off'
+    - name: Install Keptn with helm
+      if: inputs.cert-manager-io-enabled == 'cert_manager_io_off'
       env:
         RELEASE_REGISTRY: "localhost:5000/keptn"
       shell: bash
@@ -108,7 +108,7 @@ runs:
           --debug --wait --timeout 1m
 
     - name: Install cert-manager.io
-      if: inputs.cert-manager-io-enabled == 'cert-manager-io-on'
+      if: inputs.cert-manager-io-enabled == 'cert_manager_io_on'
       env:
         # renovate: datasource=github-releases depName=cert-manager/cert-manager
         CERT_MANAGER_IO_VERSION: "v1.14.4"
@@ -119,7 +119,7 @@ runs:
         kubectl wait --for=condition=ready pod -l app=webhook -n cert-manager --timeout=60s
 
     - name: Install Keptn using cert-manager.io with helm
-      if: inputs.cert-manager-io-enabled == 'cert-manager-io-on'
+      if: inputs.cert-manager-io-enabled == 'cert_manager_io_on'
       env:
         RELEASE_REGISTRY: "localhost:5000/keptn"
       shell: bash

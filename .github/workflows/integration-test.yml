@@ -17,7 +17,7 @@ on:
       cert-manager-io-enabled:
         description: "Decides whether to use cert-manager.io"
         type: "string"
-        default: "cert-manager-io-off"
+        default: "cert_manager_io_off"
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -66,7 +66,7 @@ jobs:
         run: make integration-test
 
       - name: Run Keptn Cert Manager Integration Tests
-        if: inputs.cert-manager-io-enabled == 'cert-manager-io-off'
+        if: inputs.cert-manager-io-enabled == 'cert_manager_io_off'
         working-directory: .
         run: make integration-test-cert-manager
 

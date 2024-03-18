@@ -209,7 +209,7 @@ jobs:
       matrix:
         scheduling-gates: [gates_on, gates_off]
         allowed-namespaces: [allowed_ns_on, allowed_ns_off]
-        cert-manager-io-enabled: [cert-manager-io-on, cert-manager-io-off]
+        cert-manager-io-enabled: [cert_manager_io_on, cert_manager_io_off]
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       scheduling-gates: ${{ matrix.scheduling-gates }}

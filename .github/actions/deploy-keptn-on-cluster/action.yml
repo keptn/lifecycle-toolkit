@@ -115,7 +115,8 @@ runs:
       shell: bash
       run: |
         kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$CERT_MANAGER_IO_VERSION/cert-manager.yaml
-        kubectl wait --for=condition=ready pod -l app=webhook --timeout=60s
+        kubectl wait --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=120s
+        kubectl wait --for=condition=ready pod -l app=webhook -n cert-manager --timeout=60s
 
     - name: Install lifecycle-toolkit with cert-manager.io with helm
       if: inputs.cert-manager-io-enabled == 'cert-manager-io-on'

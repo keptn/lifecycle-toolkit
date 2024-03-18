@@ -27,4 +27,4 @@ global:
     globalAnnotation1: test1 # will be used
     globalAnnotation2: test2 # will be used
   caInjectionAnnotations:
-    caAnnotation1: bla # will be used
+    caAnnotation1: hi # will be used

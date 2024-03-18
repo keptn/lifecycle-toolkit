@@ -2583,7 +2583,7 @@ spec:
               port: 8081
             initialDelaySeconds: 5
             periodSeconds: 10
-      imagePullSecrets: []
+
       securityContext:
         runAsNonRoot: true
       serviceAccountName: certificate-operator
@@ -2699,7 +2699,7 @@ spec:
             port: 8081
           initialDelaySeconds: 5
           periodSeconds: 10
-      imagePullSecrets: []
+
       securityContext:
         runAsNonRoot: true
       serviceAccountName: metrics-operator

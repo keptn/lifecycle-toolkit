@@ -171,7 +171,7 @@ metadata:
   name: keptnapps.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -653,7 +653,7 @@ metadata:
   name: keptnappcreationrequests.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -766,7 +766,7 @@ metadata:
   name: keptnappversions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -2042,7 +2042,7 @@ metadata:
   name: keptnconfigs.options.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -2135,7 +2135,7 @@ metadata:
   name: keptnevaluations.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -2700,7 +2700,7 @@ metadata:
   name: keptnevaluationdefinitions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -2992,7 +2992,7 @@ metadata:
   name: keptntasks.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -3595,7 +3595,7 @@ metadata:
   name: keptntaskdefinitions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -7040,7 +7040,7 @@ metadata:
   name: keptnworkloads.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -7469,7 +7469,7 @@ metadata:
   name: keptnworkloadversions.lifecycle.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -8153,7 +8153,7 @@ metadata:
   name: analyses.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -8512,7 +8512,7 @@ metadata:
   name: analysisdefinitions.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -9213,7 +9213,7 @@ metadata:
   name: analysisvaluetemplates.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -9366,7 +9366,7 @@ metadata:
   name: keptnmetrics.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -9907,7 +9907,7 @@ metadata:
   name: keptnmetricsproviders.metrics.keptn.sh
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-    caAnnotation1: bla
+    caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
   labels:
@@ -12088,7 +12088,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
-    caAnnotation1: bla
+    caAnnotation1: hi
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/part-of: "keptn"
@@ -12145,7 +12145,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
-    caAnnotation1: bla
+    caAnnotation1: hi
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test
@@ -12185,7 +12185,7 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
-    caAnnotation1: bla
+    caAnnotation1: hi
   labels:
     keptn.sh/inject-cert: "true"
     app.kubernetes.io/instance: keptn-test

@@ -50,4 +50,4 @@ spec:
   metadata:
     commitID: {{.Values.commitID}}
   spanLinks:
-    - {{ .Values.traceParent }} # (1)!
+    - {{.Values.traceParent}} # (1)!

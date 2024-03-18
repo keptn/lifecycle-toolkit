@@ -158,7 +158,7 @@ spec:
          initialDelaySeconds: 5
          periodSeconds: 10
         {{- end }}
-      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
+      {{- include "lifecycleOperator.imagePullSecrets" . | nindent 6 }}
       securityContext:
         runAsNonRoot: true
       serviceAccountName: lifecycle-operator
@@ -250,7 +250,7 @@ spec:
            port: 10259
            scheme: HTTPS
         {{- end }}
-      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
+      {{- include "scheduler.imagePullSecrets" . | nindent 6 }}
       serviceAccountName: keptn-scheduler
       volumes:
       - configMap:

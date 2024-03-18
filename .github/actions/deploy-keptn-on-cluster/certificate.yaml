@@ -5,10 +5,10 @@ metadata:
   namespace: keptn-system
 spec:
   dnsNames:
-  - lifecycle-webhook-service.keptn-system.svc
-  - lifecycle-webhook-service.keptn-system.svc.cluster.local
-  - metrics-webhook-service.keptn-system.svc
-  - metrics-webhook-service.keptn-system.svc.cluster.local
+    - lifecycle-webhook-service.keptn-system.svc
+    - lifecycle-webhook-service.keptn-system.svc.cluster.local
+    - metrics-webhook-service.keptn-system.svc
+    - metrics-webhook-service.keptn-system.svc.cluster.local
   issuerRef:
     kind: Issuer
     name: keptn-selfsigned-issuer

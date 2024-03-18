@@ -1,0 +1,134 @@
+name: Upgrade Helm Chart
+on:
+  schedule:
+    - cron: "0 1 * * 1-5"
+  workflow_call:
+    inputs:
+      scheduling-gates:
+        description: "Decides whether to use scheduling gates"
+        type: "string"
+        default: gates_off
+      allowed-namespaces:
+        description: "Decides whether to allow only certain namespaces"
+        type: "string"
+        default: allowed_ns_off
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  upgrade-helm-chart:
+    name: Upgrade Helm Chart
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        config:
+          - name: keptn
+            path: chart
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+
+      - name: Install Helm Chart
+        uses: ./.github/actions/install-helm-chart
+
+      - name: Upgrade Helm Chart
+        id: check-upgrades
+        run: |
+          export HELM_OLDER=$(helm list -A | grep keptn | awk '{print $9}')
+          HELM_UPGRADE_OUTPUT=$(helm upgrade keptn ./chart --install --namespace keptn --create-namespace)
+          export HELM_NEWER=$(helm list -A | grep keptn | awk '{print $9}')
+          if [ $? -ne 0 ]; then
+            echo "Helm upgrade failed. Opening issue..."
+            export UPGRADE_ERROR_MESSAGE=$(echo "$HELM_UPGRADE_OUTPUT" | tail -n 1)
+            echo "::set-output name=upgrade_failed::true"
+            echo "::set-output name=upgrade_error_message::$UPGRADE_ERROR_MESSAGE"
+            echo "::set-output name=helm_newer::$HELM_NEWER"
+            echo "::set-output name=helm_older::$HELM_OLDER"
+          fi
+
+      - name: Compare Helm Versions
+        id: compare-versions
+        run: |
+          if [ "$HELM_NEWER" != "$HELM_OLDER" ]; then
+            echo "New version available: $HELM_NEWER"
+            echo "::set-output name=new_version::true"
+          else
+            echo "No new version available"
+            echo "::set-output name=new_version::false"
+          fi
+
+  create-issue:
+    name: Create Issue on Upgrade Failure
+    needs: upgrade-helm-chart
+    runs-on: ubuntu-22.04
+    if: needs.upgrade-helm-chart.outputs.upgrade_failed == 'true'
+    steps:
+      - name: Create Issue
+        run: |
+          echo "Creating issue..."
+          ACCESS_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          REPO_OWNER="keptn"
+          REPO_NAME="lifecycle-toolkit"
+          ISSUE_TITLE="${{ needs.upgrade-helm-chart.outputs.upgrade_error_message }}"
+          ISSUE_BODY="The Helm upgrade for the keptn chart has failed with the following error message:\n\n\
+          `${{ needs.upgrade-helm-chart.outputs.upgrade_error_message }}\`"
+
+          curl -X POST -H "Authorization: token $ACCESS_TOKEN" \
+               -H "Accept: application/vnd.github.v3+json" \
+               https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/issues \
+               -d "{\"title\":\"$ISSUE_TITLE\",\"body\":\"$ISSUE_BODY\"}"
+
+  run-integration-test:
+    needs: upgrade-helm-chart
+    name: Run Chainsaw Tests
+    runs-on: ubuntu-22.04
+    if: needs.upgrade-helm-chart.outputs.new_version == 'true'
+    strategy:
+      matrix:
+        helm-chart-version:
+          [
+            "${{ needs.upgrade-helm-chart.outputs.helm_newer }}",
+            "${{ needs.upgrade-helm-chart.outputs.helm_older }}",
+          ]
+    steps:
+      - name: Install and expose Prometheus
+        uses: ./.github/actions/deploy-prometheus-on-cluster
+
+      - name: Install Chainsaw
+        uses: kyverno/action-install-chainsaw@v0.1.7
+
+      - name: Run Scheduling Gates Integration Tests
+        if: inputs.scheduling-gates == 'gates_on' && inputs.allowed-namespaces == 'allowed_ns_off'
+        working-directory: .
+        run: make integration-test-scheduling-gates
+
+      - name: Run Allowed namespaces Integration Tests
+        if: inputs.allowed-namespaces == 'allowed_ns_on'
+        working-directory: .
+        run: make integration-test-allowed-namespaces
+
+      - name: Run Integration Tests
+        if: inputs.allowed-namespaces == 'allowed_ns_off'
+        working-directory: .
+        run: make integration-test
+
+      - name: Create reports
+        if: failure()
+        working-directory: ./.github/scripts
+        run: ./create-reports-full.sh
+
+      - name: Upload cluster logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: helm-upgrade-logs-int-tests-${{ inputs.scheduling-gates }}-${{ inputs.allowed-namespaces }}
+          path: .github/scripts/logs

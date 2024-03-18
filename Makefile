@@ -32,7 +32,6 @@ integration-test:
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/
 	chainsaw test --test-dir ./test/chainsaw/integration/
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/
-	chainsaw test --test-dir ./test/chainsaw/testcertificate/
 	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/
 	chainsaw test --test-dir ./test/chainsaw/timeout-failure-deployment/
 	chainsaw test --test-dir ./test/chainsaw/traces/
@@ -43,7 +42,6 @@ integration-test-local:
 	chainsaw test --test-dir ./test/chainsaw/integration/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/ --config ./.chainsaw-local.yaml
-	chainsaw test --test-dir ./test/chainsaw/testcertificate/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/timeout-failure-deployment/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/traces/ --config ./.chainsaw-local.yaml
@@ -55,6 +53,14 @@ integration-test-scheduling-gates:
 .PHONY: integration-test-scheduling-gates-local #these tests should run on a real cluster!
 integration-test-scheduling-gates-local: install-prometheus
 	chainsaw test --test-dir ./test/chainsaw/scheduling-gates/ --config ./.chainsaw-local.yaml
+
+.PHONY: integration-test-cert-manager #these tests should run on a real cluster!
+integration-test-cert-manager:
+	chainsaw test --test-dir ./test/chainsaw/testcertificate/
+
+.PHONY: integration-test-cert-manager-local #these tests should run on a real cluster!
+integration-test-cert-manager-local: install-prometheus
+	chainsaw test --test-dir ./test/chainsaw/testcertificate/ --config ./.chainsaw-local.yaml
 
 .PHONY: integration-test-allowed-namespaces #these tests should run on a real cluster!
 integration-test-allowed-namespaces:

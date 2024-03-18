@@ -26,6 +26,10 @@ inputs:
     required: false
     description: "Decides whether to allow only certain namespaces"
     default: "allowed_ns_off"
+  cert-manager-io-enabled:
+    required: false
+    description: "Decides whether to use cert-manager.io"
+    default: "cert-manager-io-off"
 runs:
   using: "composite"
   steps:
@@ -61,6 +65,7 @@ runs:
         done
 
     - name: Install lifecycle-toolkit with helm
+      if: inputs.cert-manager-io-enabled == 'cert-manager-io-off'
       env:
         RELEASE_REGISTRY: "localhost:5000/keptn"
       shell: bash
@@ -96,6 +101,48 @@ runs:
         envsubst < values.yaml > tmp.yaml
 
         echo "installing with values.yaml file:"
+        cat tmp.yaml
+
+        helm install -n keptn-system --create-namespace keptn ../../../chart \
+          --values ./tmp.yaml \
+          --debug --wait --timeout 1m
+    
+    - name: Install lifecycle-toolkit with cert-manager.io with helm
+      if: inputs.cert-manager-io-enabled == 'cert-manager-io-on'
+      env:
+        RELEASE_REGISTRY: "localhost:5000/keptn"
+      shell: bash
+      run: |
+        echo "Installing Keptn using helm"
+        helm version
+
+        helm repo add keptn "https://charts.lifecycle.keptn.sh"
+        helm repo update
+
+        for chart_dir in ./lifecycle-operator/chart \
+                ./metrics-operator/chart \
+                ./chart; do
+            cd "$chart_dir"
+            echo "updating charts for" $chart_dir
+            helm dependency update
+            helm dependency build
+            cd -  # Return to the previous directory
+        done
+
+        cd .github/actions/deploy-keptn-on-cluster
+
+        if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_on" ]; then
+          echo "  allowedNamespaces: [allowed-ns-test]" >> values-cert-manager-io.yaml
+        fi
+
+        if [ "${{ inputs.scheduling-gates }}" == "gates_on" ]; then
+          echo "  schedulingGatesEnabled: true" >> values-cert-manager-io.yaml
+        fi
+
+        export TAG=${{ inputs.runtime_tag }}
+        envsubst < values-cert-manager-io.yaml > tmp.yaml
+
+        echo "installing with values-cert-manager-io.yaml file:"
         cat tmp.yaml
 
         helm install -n keptn-system --create-namespace keptn ../../../chart \

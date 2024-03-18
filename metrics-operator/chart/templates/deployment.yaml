@@ -98,7 +98,7 @@ spec:
           mountPath: /tmp/webhook/certs/ 
         {{- if .Values.livenessProbe }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.livenessProbe "context" $) | nindent 10 }}
-         {{- else }}
+        {{- else }}
         livenessProbe:
          httpGet:
            path: /healthz
@@ -108,7 +108,7 @@ spec:
         {{- end }}
         {{- if .Values.readinessProbe }}
         readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.readinessProbe "context" $) | nindent 10 }}
-         {{- else }}
+        {{- else }}
         readinessProbe:
          httpGet:
            path: /readyz
@@ -116,7 +116,7 @@ spec:
          initialDelaySeconds: 5
          periodSeconds: 10
         {{- end }}
-      {{- include "metricsOperator.imagePullSecrets" . | indent 6 }}
+        {{- include "metricsOperator.imagePullSecrets" . | nindent 6 }}
       securityContext:
         runAsNonRoot: true
       serviceAccountName: metrics-operator

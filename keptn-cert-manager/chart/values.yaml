@@ -5,7 +5,7 @@
 ##
 global:
   ## @param global.imageRegistry Global container image registry
-  imageRegistry: ""
+  imageRegistry: "ghcr.io"
   ## @param     global.imagePullPolicy select global image pull policy
   imagePullPolicy: ""
   ## @param global.imagePullSecrets Global Docker registry secret names as an array
@@ -65,7 +65,7 @@ env:
   labelSelectorValue: "true"
 image:
 ## @param     image.registry specify the container registry for the certificate-operator image
-  registry: ghcr.io
+  registry: ""
 ## @param     image.repository specify repo for manager image
   repository: keptn/certificate-operator
 ## @param     image.tag select tag for manager container

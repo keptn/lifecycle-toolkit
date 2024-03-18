@@ -112,6 +112,7 @@ runs:
       env:
         # renovate: datasource=github-releases depName=cert-manager/cert-manager
         CERT_MANAGER_IO_VERSION: "v1.14.4"
+      shell: bash
       run: |
         kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$CERT_MANAGER_IO_VERSION/cert-manager.yaml
 

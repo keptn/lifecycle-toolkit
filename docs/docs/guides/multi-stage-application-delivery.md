@@ -159,6 +159,8 @@ containing the manifests for the `dev` and `production` stage:
     {% include "./assets/multi-stage-delivery/application-production.yaml" %}
     ```
 
+    1. Setting the spanLink here connects deployment traces of this stage with the traces of the dev stage
+
 === "production/Chart.yaml"
 
     The `Chart.yaml` that is required by helm:

@@ -56,7 +56,7 @@ authors:
     url: <Github-URL-for-user>
 ```
 
-### Fields
+### author.yml fields
 
 * **GitHub-UserID** -- This is the user ID used to log into GitHub.
   it serves as a key for the record.
@@ -98,7 +98,7 @@ page.
 
 Your blog should be developed using the standard Git
 flow documented in
-[Working with Git](../../general/git).
+[Working with Git](../../general/git.md).
 When you have created a local branch:
 
 * Create a .md file in the `docs/blog/posts` directory.
@@ -130,16 +130,16 @@ Other coding notes for blogs:
 * Blog posts are considered part of the MkDocs NAV path.
   This means that:
 
-      * Use the practices documented in
-        [External links and internal cross-references](code-docs.md/#external-links-and-internal-cross-references)
-        for your blog.
-      * You can use a local build to render your blog locally as you write.
-        See
-        [Build documentation locally](/local-building.md)
-        for details.
-      * The `readthedocs.build` preview associated with your PR
-        contains the rendered version of your blog
-        so that you and your reviewers can see it.
+  * Use the practices documented in
+    [External links and internal cross-references](code-docs.md/#external-links-and-internal-cross-references)
+    for your blog.
+  * You can use a local build to render your blog locally as you write.
+    See
+    [Build documentation locally](/local-building.md)
+    for details.
+  * The `readthedocs.build` preview associated with your PR
+    contains the rendered version of your blog
+    so that you and your reviewers can see it.
 
 ## Blog front matter
 
@@ -166,7 +166,7 @@ comments: true
 # <blog title>
 ```
 
-### Fields
+### Blog front matter fields
 
 * **date** -- Date when blog was most recently posted
 * **authors** -- Author of this blog,
@@ -174,7 +174,7 @@ comments: true
   in the `docs/blog/.authors.yml` file.
   This is used to generate the author information
   that is displayed.
-* **description: >** -- Brief description 
+* **description: >** -- Brief description
 * **categories:** -- Keywords used to generate entries in the "Categories"
   section of the "Blogs" landing page.
   Set as many categories as appropriate and use reasonable terminology.

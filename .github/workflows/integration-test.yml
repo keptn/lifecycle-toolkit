@@ -64,7 +64,7 @@ jobs:
         if: inputs.allowed-namespaces == 'allowed_ns_off'
         working-directory: .
         run: make integration-test
-      
+
       - name: Run Keptn Cert Manager Integration Tests
         if: inputs.cert-manager-io-enabled == 'cert-manager-io-off'
         working-directory: .

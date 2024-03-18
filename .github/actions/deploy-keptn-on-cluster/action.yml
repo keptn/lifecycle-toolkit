@@ -106,7 +106,7 @@ runs:
         helm install -n keptn-system --create-namespace keptn ../../../chart \
           --values ./tmp.yaml \
           --debug --wait --timeout 1m
-    
+
     - name: Install lifecycle-toolkit with cert-manager.io with helm
       if: inputs.cert-manager-io-enabled == 'cert-manager-io-on'
       env:

@@ -57,13 +57,14 @@ To enrich workload traces with custom metadata, use the
 `keptn.sh/metadata` annotation in your
 [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment)
 resource.
-The values specified in the annotation
-are added as key-value attributes to the workload trace.
+The comma-separated list of key-value pairs specified in the annotation
+is added as key-value attributes to the workload trace.
 
 Modify your workload (for example your YAML file containing a Deployment)
-adding an annotation with any metadata you prefer,
-for instance, to add information about a stage, you could add:
-`keptn.sh/metadata: "stage=dev"`.
+adding an annotation with any metadata you prefer.
+If you want to add multiple key-value pairs, separate them with commas.
+For instance, to add information about a stage and owning team, you could add:
+`keptn.sh/metadata: "stage=dev,team=my-team"`.
 
 To see the changes Keptn must redeploy: increment the `app.kubernetes.io/version` value
 (ex. if you are following our getting started guide, change the version

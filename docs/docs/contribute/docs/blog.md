@@ -130,16 +130,16 @@ Other coding notes for blogs:
 * Blog posts are considered part of the MkDocs NAV path.
   This means that:
 
-  * Use the practices documented in
-    [External links and internal cross-references](code-docs.md/#external-links-and-internal-cross-references)
-    for your blog.
-  * You can use a local build to render your blog locally as you write.
-    See
-    [Build documentation locally](local-building.md)
-    for details.
-  * The `readthedocs.build` preview associated with your PR
-    contains the rendered version of your blog
-    so that you and your reviewers can see it.
+     * Use the practices documented in
+       [External links and internal cross-references](code-docs.md/#external-links-and-internal-cross-references)
+       for your blog.
+     * You can use a local build to render your blog locally as you write.
+       See
+       [Build documentation locally](local-building.md)
+       for details.
+     * The `readthedocs.build` preview associated with your PR
+       contains the rendered version of your blog
+       so that you and your reviewers can see it.
 
 ## Blog front matter
 

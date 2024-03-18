@@ -154,6 +154,9 @@ runs:
         echo "installing with values-cert-manager-io.yaml file:"
         cat tmp.yaml
 
-        helm install -n keptn-system --create-namespace keptn ../../../chart \
+        kubectl create ns keptn-system
+        kubectl apply -f certificate.yaml
+
+        helm install -n keptn-system keptn ../../../chart \
           --values ./tmp.yaml \
           --debug --wait --timeout 1m

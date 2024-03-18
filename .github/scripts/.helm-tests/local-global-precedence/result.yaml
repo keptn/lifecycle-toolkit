@@ -11638,7 +11638,7 @@ spec:
               value: "true"
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
-          image: global-registry.io/keptn/certificate-operator:v2.1.0
+          image: local-registry.io/keptn/certificate-operator:v2.1.0
           imagePullPolicy: Never
           name: certificate-operator
           resources:
@@ -11759,7 +11759,7 @@ spec:
           value: cluster.local
         - name: CERT_MANAGER_ENABLED
           value: "true"
-        image: global-registry.io/keptn/lifecycle-operator:v0.9.1
+        image: local-registry.io/keptn/lifecycle-operator:v0.9.1
         imagePullPolicy: Never
         name: lifecycle-operator
         ports:
@@ -11852,7 +11852,7 @@ spec:
           value: "otel-collector:4317"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
-        image: global-registry.io/keptn/scheduler:v0.9.1
+        image: local-registry.io/keptn/scheduler:v0.9.1
         imagePullPolicy: Never
         name: scheduler
         resources:
@@ -11962,7 +11962,7 @@ spec:
           value: cluster.local
         - name: CERT_MANAGER_ENABLED
           value: "true"
-        image: global-registry.io/keptn/metrics-operator:v0.9.2
+        image: local-registry.io/keptn/metrics-operator:v0.9.2
         imagePullPolicy: Never
         name: metrics-operator
         ports:

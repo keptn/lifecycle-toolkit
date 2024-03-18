@@ -107,7 +107,7 @@ runs:
           --values ./tmp.yaml \
           --debug --wait --timeout 1m
 
-    - name: Install lifecycle-toolkit with cert-manager.io with helm
+    - name: Install cert-manager.io
       if: inputs.cert-manager-io-enabled == 'cert-manager-io-on'
       env:
         # renovate: datasource=github-releases depName=cert-manager/cert-manager
@@ -118,7 +118,7 @@ runs:
         kubectl wait --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=120s
         kubectl wait --for=condition=ready pod -l app=webhook -n cert-manager --timeout=60s
 
-    - name: Install lifecycle-toolkit with cert-manager.io with helm
+    - name: Install Keptn using cert-manager.io with helm
       if: inputs.cert-manager-io-enabled == 'cert-manager-io-on'
       env:
         RELEASE_REGISTRY: "localhost:5000/keptn"

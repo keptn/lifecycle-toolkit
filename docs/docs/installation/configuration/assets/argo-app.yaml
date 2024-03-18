@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keptn
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io # enabling cascading deletion
+spec:
+  project: default
+  source:
+    repoURL: 'https://charts.lifecycle.keptn.sh' # helm chart repository
+    chart: keptn # helm chart name
+    targetRevision: 0.5.1 # helm chart version - use latest available here
+    helm:
+      parameters:
+        - name: "commitID"
+          value: "$ARGOCD_APP_REVISION"
+  destination:
+    server: 'https://kubernetes.default.svc' # server where Keptn will be deployed
+    namespace: keptn-system # namespace where Keptn will be deployed
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -3,7 +3,7 @@ module github.com/keptn/lifecycle-toolkit/metrics-operator
 go 1.21
 
 require (
-	github.com/DataDog/datadog-api-client-go/v2 v2.22.0
+	github.com/DataDog/datadog-api-client-go/v2 v2.23.0
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.4.1
 	github.com/gorilla/mux v1.8.1
@@ -14,8 +14,8 @@ require (
 	github.com/prometheus/client_golang v1.18.0
 	github.com/prometheus/client_model v0.6.0
 	github.com/prometheus/common v0.47.0
-	github.com/stretchr/testify v1.8.4
-	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225
+	github.com/stretchr/testify v1.9.0
+	golang.org/x/exp v0.0.0-20240314144324-c7f7c6466f7f
 	golang.org/x/net v0.21.0
 	gopkg.in/inf.v0 v0.9.1
 	k8s.io/api v0.28.7
@@ -107,7 +107,7 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20240102182953-50ed04b92917 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240102182953-50ed04b92917 // indirect
 	google.golang.org/grpc v1.61.1 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
@@ -120,7 +120,9 @@ require (
 )
 
 replace (
+	github.com/golang/protobuf => github.com/golang/protobuf v1.5.4
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc => go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.49.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp => go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.49.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc => go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.24.0
+	google.golang.org/protobuf => google.golang.org/protobuf v1.33.0
 )

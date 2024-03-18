@@ -7,6 +7,9 @@
 [![GitHub Discussions](https://img.shields.io/github/discussions/keptn/lifecycle-toolkit)](https://github.com/keptn/lifecycle-toolkit/discussions)
 [![Artifacthub Badge](https://img.shields.io/badge/Keptn-blue?style=flat&logo=artifacthub&label=Artifacthub&link=https%3%2F%2Fartifacthub.io%2Fpackages%2Fhelm%2Flifecycle-toolkit%2Fkeptn)](https://artifacthub.io/packages/helm/lifecycle-toolkit/keptn)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/3588/badge)](https://www.bestpractices.dev/projects/3588)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/keptn/lifecycle-toolkit/badge)](https://securityscorecards.dev/viewer/?uri=github.com/keptn/lifecycle-toolkit)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkeptn%2Flifecycle-toolkit.svg?type=shield&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkeptn%2Flifecycle-toolkit?ref=badge_shield&issueType=license)
+[![CLOMonitor](https://img.shields.io/endpoint?url=https://clomonitor.io/api/projects/cncf/keptn/badge)](https://clomonitor.io/projects/cncf/keptn)
 
 This is the primary repository for
 the Keptn software and documentation.
@@ -68,6 +71,10 @@ The status follows the
 
 Find details on regular hosted community events in the [keptn/community repo](https://github.com/keptn/community)
 and our Slack channel(s) in the [CNCF Slack workspace.](https://cloud-native.slack.com/messages/keptn/)
+
+## Roadmap
+
+You can find our roadmap [here](https://github.com/orgs/keptn/projects/10).
 
 ## Governance
 
@@ -144,33 +151,6 @@ kubectl annotate ns <your-allowed-namespace> keptn.sh/lifecycle-toolkit='enabled
 > **Note**
 Please be aware that, if this option is set, adding any additional namespace
 requires the helm installation to be updated by adding the name of the new namespace to the list.
-
-### Installation without scheduler
-
-Keptn installed on Kubernetes cluster running Kubernetes >= 1.26
-does not need scheduler for a proper functionality.
-With introduction
-of [Pod scheduling gates](https://kubernetes.io/blog/2022/12/26/pod-scheduling-readiness-alpha/)
-Keptn can use this feature to substitute the functionality of Keptn scheduler.
-
-As this functionality is still disabled by default, it can be enabled by setting up
-the correct helm values.
-This will lead to a Keptn installation without a scheduler and
-with scheduling gates feature enabled.
-
-Use the following command sequence
-to install Keptn with scheduling gates enabled:
-
-```shell
-helm repo add keptn https://charts.lifecycle.keptn.sh
-helm repo update
-helm upgrade --install keptn keptn/keptn -n keptn-system --set schedulingGatesEnabled=true --create-namespace --wait
-```
-
-> **Note**
-Please be aware that scheduling gates functionality in Kubernetes is enabled by default
-in Kubernetes >= 1.27.
-To use it with Kubernetes 1.26, you need to enable it on your cluster.
 
 ## More information
 
@@ -313,28 +293,15 @@ the plugin verifies that the pre deployment checks have terminated
 by retrieving the current status of the WorkloadInstance.
 Only when that is successful is the pod bound to a node.
 
-## Install a dev build
+## Contributing
 
-The [GitHub CLI](https://cli.github.com/) can be used to download the manifests of the latest CI build.
+For more information about contributing to Keptn, please
+refer to the [Contribution guide](https://keptn.sh/stable/docs/contribute/)
+section of the documentation.
 
-```bash
-gh run list --repo keptn/lifecycle-toolkit # find the id of a run
-gh run download 3152895000 --repo keptn/lifecycle-toolkit # download the artifacts
-kubectl apply -f ./keptn-lifecycle-operator-manifest/release.yaml # install the lifecycle-operator
-kubectl apply -f ./scheduler-manifest/release.yaml # install the scheduler
-```
-
-Instead, if you want to build and deploy the operator into your cluster
-directly from the code, you can type:
-
-```bash
-RELEASE_REGISTRY=<YOUR_DOCKER_REGISTRY>
-# (optional)ARCH=<amd64(default)|arm64v8>
-# (optional)CHART_APPVERSION=<YOUR_PREFERRED_TAG (defaulting to current time)>
-
-# Build and deploy the dev images to the current kubernetes cluster
-make build-deploy-dev-environment
-```
+To set up your local Keptn development environment, please follow
+[these steps](https://keptn.sh/stable/docs/contribute/software/dev-environ/#first-steps)
+for new contributors.
 
 ## License
 

@@ -72,17 +72,17 @@ status:
             If the namespace is not specified,
             the analysis controller looks for the `AnalysisDefinition` resource
             in the same namespace as the `Analysis` resource.
-    - **status** -- results of this Analysis run,
-       added to the resource by Keptn,
-       based on criteria defined in the `AnalysisDefinition` resource.
+- **status** -- results of this Analysis run,
+   added to the resource by Keptn,
+   based on criteria defined in the `AnalysisDefinition` resource.
 
-        - **warning** -- Whether the analysis returned a warning.
-        - **raw** --  String-encoded JSON object that reports the results
-            of evaluating one or more objectives or metrics.
-            See
-            [Interpreting Analysis results](#interpreting-analysis-results)
-            for details.
-        - **state** -- Set to `Completed` or `Progressing` as appropriate.
+    - **warning** -- Whether the analysis returned a warning.
+    - **raw** --  String-encoded JSON object that reports the results
+        of evaluating one or more objectives or metrics.
+        See
+        [Interpreting Analysis results](#interpreting-analysis-results)
+        for details.
+    - **state** -- Set to `Completed` or `Progressing` as appropriate.
 
 ## Interpreting Analysis results
 

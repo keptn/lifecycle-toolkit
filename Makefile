@@ -2,7 +2,7 @@
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION?=v5.3.0
-CHART_APPVERSION ?= v0.10.0 # x-release-please-version
+CHART_APPVERSION ?= v2.0.0-rc.1 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine
@@ -34,6 +34,8 @@ integration-test:
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/
 	chainsaw test --test-dir ./test/chainsaw/testcertificate/
 	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/
+	chainsaw test --test-dir ./test/chainsaw/timeout-failure-deployment/
+	chainsaw test --test-dir ./test/chainsaw/traces/
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
 integration-test-local:
@@ -43,6 +45,8 @@ integration-test-local:
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testcertificate/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/timeout-failure-deployment/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/traces/ --config ./.chainsaw-local.yaml
 
 .PHONY: integration-test-scheduling-gates #these tests should run on a real cluster!
 integration-test-scheduling-gates:

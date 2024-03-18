@@ -6,8 +6,12 @@ on:
         description: "Tag for the runner images"
         type: "string"
         required: true
+
+# Declare default permissions as read only.
+permissions: read-all
+
 env:
-  GO_VERSION: "~1.20"
+  GO_VERSION: "~1.21"
   # renovate: datasource=github-tags depName=cloud-bulldozer/kube-burner
   KUBE_BURNER_VERSION: "v1.7.11"
 defaults:
@@ -20,11 +24,11 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Cache build tools
         id: cache-build-tools
-        uses: actions/cache@v4
+        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4
         with:
           path: /usr/local/bin/kube-burner
           key: kube-burner-${{ env.KUBE_BURNER_VERSION }}
@@ -53,7 +57,7 @@ jobs:
 
       - name: Upload results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         with:
           name: load-tests-results
           path: ./collected-metrics
@@ -65,7 +69,7 @@ jobs:
 
       - name: Upload cluster logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         with:
           name: logs-load-tests
           path: .github/scripts/logs

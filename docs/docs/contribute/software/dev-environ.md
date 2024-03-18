@@ -98,11 +98,13 @@ you need to install the following on your system:
    on your Kubernetes cluster and pushes the built image to your private repository.
    You identify your private repository with the `RELEASE_REGISTRY=` argument
    and can add any `TAG` arguments you like.
+   You can also specify the architecture by setting the `ARCH` argument,
+   which is set to `amd64` by default.
    For example, the following command builds the environment
-   and pushes the image to the `docker.io/exampleuser` GitHub repository:
+   and pushes the image to the `docker.io/exampleuser` DockerHub repository:
 
 ```shell
-make build-deploy-dev-environment RELEASE_REGISTRY=docker.io/exampleuser TAG=main
+make build-deploy-dev-environment RELEASE_REGISTRY=docker.io/exampleuser TAG=main ARCH=arm64
 ```
 
    The build commands are defined in the

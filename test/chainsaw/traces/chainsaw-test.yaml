@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kyverno/chainsaw/main/.schemas/json/test-chainsaw-v1alpha1.json
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: traces
+spec:
+  namespaceTemplate:
+    metadata:
+      annotations:
+        keptn.sh/lifecycle-toolkit: enabled
+  steps:
+    - name: step-00
+      try:
+        - apply:
+            file: keptnconfig.yaml
+    - name: step-01
+      try:
+        - apply:
+            file: collector.yaml
+    - name: step-02
+      try:
+        - script:
+            content: ./../common/verify-keptnconfig.sh
+        - sleep:
+            duration: 30s
+    - name: step-03
+      try:
+        - apply:
+            file: 00-install.yaml
+        - assert:
+            file: 00-assert.yaml
+    - name: step-04
+      try:
+        - sleep:
+            duration: 30s
+    - name: step-05
+      try:
+        - script:
+            content: ./verify-traces.sh

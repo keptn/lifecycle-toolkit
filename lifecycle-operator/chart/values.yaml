@@ -106,7 +106,7 @@ lifecycleOperator:
 ## @param   lifecycleOperator.image.repository specify registry for manager image
     repository: keptn/lifecycle-operator
 ## @param   lifecycleOperator.image.tag  select tag for manager image
-    tag: v0.9.0 # x-release-please-version
+    tag: v0.9.1 # x-release-please-version
 ## @param   lifecycleOperator.image.imagePullPolicy specify pull policy for the manager image. This overrides global values
     imagePullPolicy: ""
 ## @extra  lifecycleOperator.livenessProbe custom liveness probe for manager container
@@ -221,7 +221,7 @@ scheduler:
 ## @param scheduler.image.repository set image repository for scheduler
     repository: keptn/scheduler
 ## @param scheduler.image.tag set image tag for scheduler
-    tag: v0.9.0
+    tag: v0.9.1
 ## @param   scheduler.image.imagePullPolicy specify pull policy for the manager image. This overrides global values
     imagePullPolicy: ""
 ## @extra scheduler.livenessProbe customizable liveness probe for the scheduler

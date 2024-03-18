@@ -74,6 +74,7 @@ metadata:
 spec:
   OTelCollectorUrl: 'jaeger-collector.keptn-system.svc.cluster.local:4317'
   keptnAppCreationRequestTimeoutSeconds: 30
+  observabilityTimeout: 5m
 ```
 
 Apply the file and wait for Keptn to pick up the new configuration:
@@ -332,10 +333,10 @@ Create some Keptn Grafana dashboards that will be available when Grafana is inst
 <!---x-release-please-start-version-->
 ```shell
 kubectl create ns monitoring
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v0.10.0/examples/support/observability/config/prometheus/grafana-config.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v0.10.0/examples/support/observability/config/prometheus/grafana-dashboard-keptn-applications.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v0.10.0/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v0.10.0/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.0.0-rc.1/examples/support/observability/config/prometheus/grafana-config.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.0.0-rc.1/examples/support/observability/config/prometheus/grafana-dashboard-keptn-applications.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.0.0-rc.1/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.0.0-rc.1/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
 ```
 <!---x-release-please-end-->
 

@@ -1,6 +1,7 @@
 activemetricsobject
 addprefix
 afero
+agardner
 agg
 Akshay
 alices
@@ -19,7 +20,6 @@ Analysislog
 analysismetrics
 analysispool
 analysisspec
-analysisstate
 analysisstatus
 analysistypes
 analysisvaluetemplate
@@ -79,15 +79,15 @@ certwebhook
 chainsaw
 Chans
 Checkmarx
-checktype
 clientgoscheme
 cloudevents
 clt
 clusterrole
 clusterrolebinding
 cmp
-CNCF
+cncf
 codecov
+codeql
 codespace
 commonannotation
 COMMONENVVAR
@@ -144,6 +144,7 @@ deploymentstate
 deploymenttrace
 dflags
 distroless
+dnf
 Dockerfiles
 docsy
 donath
@@ -181,8 +182,10 @@ fakeclient
 fetchintervalseconds
 fieldpath
 fieldref
+finalizer
 flyout
 fontawesome
+Frontmatter
 ftp
 fullname
 functionref
@@ -204,11 +207,13 @@ ginkgotypes
 giscus
 Gitlab
 gke
+glasskube
 gms
 GOBIN
 gocognit
 gocyclo
 gofmt
+GOGC
 golangci
 gomega
 gomod
@@ -322,7 +327,6 @@ keptnmetricsprovider
 keptnmetricsproviderlist
 keptnmetricsproviderspec
 keptnmetricstatus
-keptnphase
 keptnprommetrics
 keptnsandbox
 keptnserver
@@ -402,6 +406,7 @@ metricsobject
 metricsprovider
 metricsserver
 metricstypes
+Miglinci
 mindepth
 minio
 mkdocs
@@ -457,7 +462,9 @@ opentracing
 operatorcommon
 operatorvalue
 optionskeptnsh
+ossf
 otel
+otelcol
 otelprom
 otelsdk
 otelurl
@@ -478,6 +485,7 @@ phaseitem
 phasetraceid
 pid
 pipefail
+pmig
 poc
 poddisruptionbudgets
 podgroups
@@ -525,6 +533,7 @@ resourcereference
 Rexed
 rgb
 RLock
+roadmap
 rolebinding
 rollme
 roundtripper
@@ -550,6 +559,7 @@ sendserviceaccount
 serrors
 serviceaccount
 serviceaccountspec
+serviceapp
 serviceport
 setuptools
 Shandilya
@@ -657,6 +667,7 @@ vmyversion
 vnd
 vwc
 vwh
+webbrowser
 webhookcainjection
 webhookmanager
 webhooknamespaces

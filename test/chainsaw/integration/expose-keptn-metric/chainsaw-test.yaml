@@ -4,16 +4,15 @@ kind: Test
 metadata:
   name: expose-keptn-metric
 spec:
+  bindings:
+    - name: service
+      value: (x_k8s_list($client, 'v1', 'Service', 'keptn-system') | items[?metadata.labels."control-plane" == 'metrics-operator'] | [0])
   steps:
     - name: step-00
       try:
-        - script:
-            timeout: 5m
-            content: |
-              export NAME=$( echo $NAMESPACE | tr -d -)
-              export SVCNAME=$( kubectl get svc -n keptn-system -l control-plane=metrics-operator -ojsonpath="{ .items[0].metadata.name }" )
-              echo "installing first job pointing to ${SVCNAME}"
-              envsubst < job-no-metric.yaml | kubectl apply -f -
+        - apply:
+            template: true
+            file: job-no-metric.yaml
         - wait:
             timeout: 5m
             resource: job
@@ -23,13 +22,9 @@ spec:
                 name: complete
     - name: step-01
       try:
-        - script:
-            timeout: 5m
-            content: |
-              export NAME=$( echo $NAMESPACE | tr -d -)
-              export SVCNAME=$( kubectl get svc -n keptn-system -l control-plane=metrics-operator -ojsonpath="{ .items[0].metadata.name }" )
-              echo "installing second job pointing to ${SVCNAME}"
-              envsubst < job-existing-metric.yaml  | kubectl apply -f -
+        - apply:
+            template: true
+            file: job-existing-metric.yaml
         - wait:
             timeout: 5m
             resource: job

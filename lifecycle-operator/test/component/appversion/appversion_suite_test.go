@@ -48,7 +48,6 @@ var _ = BeforeSuite(func() {
 		k8sManager.GetClient(),
 		eventsender.NewK8sSender(k8sManager.GetEventRecorderFor("test-appversion-controller")),
 		GinkgoLogr,
-		tracerFactory.GetTracer(traceComponentName),
 		k8sManager.GetScheme(),
 		&telemetry.Handler{})
 

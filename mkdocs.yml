@@ -69,7 +69,9 @@ extra_css:
   - assets/stylesheets/mermaid.css
 plugins:
   - search
-  - social
+  - social:
+      cards_layout_options:
+        background_color: "#006bba"
   - include-markdown:
       trailing_newlines: false
   - git-revision-date-localized:

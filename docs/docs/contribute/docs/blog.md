@@ -6,7 +6,7 @@ comments: true
 
 Blog posts are authored in markdown,
 submitted and reviewed as PRs,
-published as part of the "Documentation" web site,
+published as part of the web site,
 and built using the same tools and GitHub practices
 as other documentation.
 However, you must take a few additional steps when writing a blog.

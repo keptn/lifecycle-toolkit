@@ -49,7 +49,7 @@ For information about additional fields that are available, see the mkdocs-mater
 ```yaml
 authors:
   ...
-  <GitHub-UserID>:
+  <author-identiefier>:
     name: <Fullname>
     description: <Role>
     avatar: <avatar-for-picture>

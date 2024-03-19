@@ -40,7 +40,7 @@ Each of these requirements is discussed on this page.
 The value of the `authors:` field in the blog post's front matter
 links to an entry in the `blogs/authors.yml` file.
 The blog plugin uses this information to render author information
-on the blog page.
+on the blog pages.
 
 The basic fields that we require are documented here.
 For information about additional fields that are available, see the mkdocs

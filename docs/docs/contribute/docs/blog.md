@@ -9,7 +9,7 @@ submitted and reviewed as PRs,
 published as part of the web site,
 and built using the same tools and GitHub practices
 as other documentation.
-However, you must take a few additional steps when writing a blog.
+However, you must take a few additional steps when writing a blog post.
 
 Keptn uses the
 [blog plugin from mkdocs-material](https://squidfunk.github.io/mkdocs-material/setup/setting-up-a-blog/)

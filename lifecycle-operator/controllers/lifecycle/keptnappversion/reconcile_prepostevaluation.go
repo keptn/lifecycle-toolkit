@@ -16,7 +16,7 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Conte
 		CheckType: checkType,
 	}
 
-	newStatus, state, err := r.EvaluationHandler.ReconcileEvaluations(ctx, phaseCtx, appVersion, evaluationCreateAttributes)
+	newStatus, state, err := r.EvaluationHandler.ReconcileEvaluations(ctx, phaseCtx, r.getTracer(), appVersion, evaluationCreateAttributes)
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}

@@ -24,14 +24,13 @@ import (
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/evaluationhandler_mock.go . IEvaluationHandler:MockEvaluationHandler
 type IEvaluationHandler interface {
-	ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error)
+	ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error)
 }
 
 type Handler struct {
 	client.Client
 	EventSender eventsender.IEvent
 	Log         logr.Logger
-	Tracer      telemetry.ITracer
 	Scheme      *runtime.Scheme
 	SpanHandler telemetry.ISpanHandler
 }
@@ -43,19 +42,18 @@ type CreateEvaluationAttributes struct {
 }
 
 // NewHandler creates a new instance of the Handler.
-func NewHandler(client client.Client, eventSender eventsender.IEvent, log logr.Logger, tracer telemetry.ITracer, scheme *runtime.Scheme, spanHandler telemetry.ISpanHandler) Handler {
+func NewHandler(client client.Client, eventSender eventsender.IEvent, log logr.Logger, scheme *runtime.Scheme, spanHandler telemetry.ISpanHandler) Handler {
 	return Handler{
 		Client:      client,
 		EventSender: eventSender,
 		Log:         log,
-		Tracer:      tracer,
 		Scheme:      scheme,
 		SpanHandler: spanHandler,
 	}
 }
 
 //nolint:gocognit,gocyclo
-func (r Handler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
+func (r Handler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
@@ -100,6 +98,7 @@ func (r Handler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Cont
 			err := r.handleEvaluationNotExists(
 				ctx,
 				phaseCtx,
+				tracer,
 				evaluationCreateAttributes,
 				evaluationName,
 				piWrapper,
@@ -128,6 +127,7 @@ func (r Handler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Cont
 			r.handleEvaluationExists(
 				phaseCtx,
 				piWrapper,
+				tracer,
 				evaluation,
 				&evaluationStatus,
 			)
@@ -194,7 +194,7 @@ func (r Handler) setupEvaluations(evaluationCreateAttributes CreateEvaluationAtt
 	return evaluations, statuses
 }
 
-func (r Handler) handleEvaluationNotExists(ctx context.Context, phaseCtx context.Context, evaluationCreateAttributes CreateEvaluationAttributes, evaluationName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, evaluation *klcv1beta1.KeptnEvaluation, evaluationStatus *klcv1beta1.ItemStatus) error {
+func (r Handler) handleEvaluationNotExists(ctx context.Context, phaseCtx context.Context, tracer telemetry.ITracer, evaluationCreateAttributes CreateEvaluationAttributes, evaluationName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, evaluation *klcv1beta1.KeptnEvaluation, evaluationStatus *klcv1beta1.ItemStatus) error {
 	definition, err := common.GetEvaluationDefinition(r.Client, r.Log, ctx, evaluationName, piWrapper.GetNamespace())
 	if err != nil {
 		return controllererrors.ErrCannotGetKeptnEvaluationDefinition
@@ -206,7 +206,7 @@ func (r Handler) handleEvaluationNotExists(ctx context.Context, phaseCtx context
 	}
 	evaluationStatus.Name = evaluationName
 	evaluationStatus.SetStartTime()
-	_, _, err = r.SpanHandler.GetSpan(phaseCtx, r.Tracer, evaluation, "")
+	_, _, err = r.SpanHandler.GetSpan(phaseCtx, tracer, evaluation, "")
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}
@@ -214,8 +214,8 @@ func (r Handler) handleEvaluationNotExists(ctx context.Context, phaseCtx context
 	return nil
 }
 
-func (r Handler) handleEvaluationExists(phaseCtx context.Context, piWrapper *interfaces.PhaseItemWrapper, evaluation *klcv1beta1.KeptnEvaluation, evaluationStatus *klcv1beta1.ItemStatus) {
-	_, spanEvaluationTrace, err := r.SpanHandler.GetSpan(phaseCtx, r.Tracer, evaluation, "")
+func (r Handler) handleEvaluationExists(phaseCtx context.Context, piWrapper *interfaces.PhaseItemWrapper, tracer telemetry.ITracer, evaluation *klcv1beta1.KeptnEvaluation, evaluationStatus *klcv1beta1.ItemStatus) {
+	_, spanEvaluationTrace, err := r.SpanHandler.GetSpan(phaseCtx, tracer, evaluation, "")
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}

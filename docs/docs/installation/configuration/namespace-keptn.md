@@ -68,9 +68,7 @@ To implement this:
       ```
 
 > **Note**
-If you restrict the namespaces where Keptn runs
-and later add additional namespaces to your cluster
-for which Keptn is allowed,
-you must add the names of new namespaces
-to your `values.yaml` file
+Restricted allowed namespaces are configured at installation time.
+To add or remove Keptn allowed namespaces,
+you must modify the list of namespaces in your `values.yaml` file
 and rerun the `helm upgrade` command.

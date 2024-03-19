@@ -43,7 +43,7 @@ The blog plugin uses this information to render author information
 on the blog pages.
 
 The basic fields that we require are documented here.
-For information about additional fields that are available, see the mkdocs
+For information about additional fields that are available, see the mkdocs-material
 [authors_file](https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.authors_file).
 
 ```yaml

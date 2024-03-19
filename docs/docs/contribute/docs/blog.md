@@ -191,7 +191,7 @@ comments: true
 
 ### Front matter example
 
-```md
+```markdown
 ---
 date: 2024-02-01
 authors: [sampleuser]

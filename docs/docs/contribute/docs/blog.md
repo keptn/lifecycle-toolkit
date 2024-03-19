@@ -155,7 +155,7 @@ for more information.
 ```markdown
 ---
 date: YYYY-MM-DD
-authors: [<GitHub-UserID>]
+authors: [<author-identiefier>, ...]
 description: >
   <Brief description of this blog, all in one source line>
 categories:

@@ -178,6 +178,14 @@ operator-lint: install-golangci-lint
 scheduler-lint: install-golangci-lint
 	$(MAKE) -C scheduler lint
 
+.PHONY: helm-test
+helm-test:
+	./.github/scripts/helm-test.sh
+
+.PHONY: generate-helm-test-results
+generate-helm-test-results:
+	./.github/scripts/generate-helm-results.sh
+
 .PHONY: lint
 lint: metrics-operator-lint
 lint: certmanager-lint

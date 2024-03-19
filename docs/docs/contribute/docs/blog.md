@@ -96,7 +96,7 @@ page.
 
 ## Blog source code
 
-Your blog should be developed using the standard Git
+Your blog post should be developed using the standard Git
 flow documented in
 [Working with Git](../general/git/index.md).
 When you have created a local branch:

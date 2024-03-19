@@ -110,12 +110,14 @@ When you have created a local branch:
 
 * If your blog has graphics, screen shots, YAML files, etc.
   that will be included,
-  create an `assets` subdirectory for those files
-  in a subdirectory that has the same name
-  as the root name of your .md file.
+  create a subdirectory that has the same name
+  as the name of your .md file.
   For example, if your source file is named `myblog.md`
   (which is not actually detailed enough to be a good file name),
-  you need to create a myblog/assets subdirectory.
+  you need to create a myblog subdirectory.
+  Then create an `assets` subdirectory to that sub-directory
+ and put any assets you want to reference in that newly
+  created subdirectory.
 
 * Follow the instructions in
   [Blog front matter](#blog-front-matter)

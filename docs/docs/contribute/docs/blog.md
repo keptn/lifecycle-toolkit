@@ -173,7 +173,8 @@ It can be multiple paragraphs.
 ### Blog front matter fields
 
 * **date** -- Date when blog was most recently posted.
-  This can also be in the future. Then, the blog post will be hidden until the date is reached.
+  This can also be in the future.
+  Then, the blog post will be hidden until the date is reached.
 * **authors** -- Author(s) of this blog,
   identified by the author identifier that is used as the key
   in the `docs/blog/.authors.yml` file.

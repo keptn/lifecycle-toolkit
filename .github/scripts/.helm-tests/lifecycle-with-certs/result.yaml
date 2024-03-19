@@ -9140,9 +9140,9 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: FUNCTION_RUNNER_IMAGE
-          value: "ghcr.io/keptn/deno-runtime:v2.0.2"
+          value: "ghcr.io/keptn/deno-runtime:v2.0.3"
         - name: PYTHON_RUNNER_IMAGE
-          value: "ghcr.io/keptn/python-runtime:v1.0.3"
+          value: "ghcr.io/keptn/python-runtime:v1.0.4"
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL

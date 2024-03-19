@@ -49,7 +49,7 @@ For information about additional fields that are available, see the mkdocs-mater
 ```yaml
 authors:
   ...
-  <author-identiefier>:
+  <author-identifier>:
     name: <Fullname>
     description: <Role>
     avatar: <avatar-for-picture>

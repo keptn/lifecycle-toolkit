@@ -5,9 +5,9 @@ comments: true
 # Namespaces and Keptn
 
 This page discusses how to restrict the namespaces
-where Keptn and the
+where the Keptn
 [lifecycle-operator](../../components/lifecycle-operator/index.md)
-run.
+runs.
 
 For information about how to allocate Keptn resources
 across namespaces, see

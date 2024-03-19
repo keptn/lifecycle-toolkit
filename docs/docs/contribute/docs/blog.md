@@ -58,18 +58,18 @@ authors:
 
 ### authors.yml fields
 
-* **GitHub-UserID** -- This is the user ID used to log into GitHub.
-  it serves as a key for the record.
+* **author-identifier** -- This is some unique string used to reference the author in blog posts.
+  It serves as a key for the record.
     * **name:** -- Your first and last name
-      as it should appear in the posted blog
-    * **description:** Your role as it should appear in the posted blog.
+      as it should appear in the blog post
+    * **description:** Your role as it should appear in the blog post.
       For example, "Keptn Maintainer", "Keptn Contributor", "Keptn User",
       your role in another project or title at a company
-      with the name of the project or company..
+      with the name of the project or company.
     * **avatar:** URL for the picture to use in blog posts.
       To use the same picture you use on GitHub,
       open the image in a new tab and use the URL displayed in the address bar.
-    * **url:** -- URL for your record on GitHub.
+    * **url:** -- URL to your page or GitHub profile.
 
 ### authors.yml example
 

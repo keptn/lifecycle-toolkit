@@ -9,7 +9,7 @@ require (
 	github.com/cloudevents/sdk-go/v2 v2.15.2
 	github.com/go-logr/logr v1.4.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.8.0
+	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240319133656-ce8192f64000
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.15.0
 	github.com/onsi/gomega v1.31.1

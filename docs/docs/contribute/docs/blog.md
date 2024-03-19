@@ -26,7 +26,7 @@ you must also do the following:
   so that the spell checker knows about it.
 
 * Blog source is added to the `docs/blog/posts` directory.
-  Individual blogs are not listed in the `mkdocs.yaml` file
+  Individual blog posts are not listed in the `mkdocs.yml` file
   like other documentation.
   Instead, the blog plugin manages integration of all blogs
   with source in the `blogs` directory.

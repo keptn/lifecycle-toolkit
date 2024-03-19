@@ -411,8 +411,8 @@ func TestEvaluationHandler(t *testing.T) {
 			handler := NewHandler(
 				fake.NewClientBuilder().WithObjects(initObjs...).Build(),
 				eventsender.NewK8sSender(fakeRecorder),
-				noop.NewTracerProvider().Tracer("tracer"),
 				ctrl.Log.WithName("controller"),
+				noop.NewTracerProvider().Tracer("tracer"),
 				scheme.Scheme,
 				&spanHandlerMock)
 			status, summary, err := handler.ReconcileEvaluations(context.TODO(), context.TODO(), tt.object, tt.createAttr)
@@ -494,8 +494,8 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 			handler := NewHandler(
 				fake.NewClientBuilder().Build(),
 				eventsender.NewK8sSender(record.NewFakeRecorder(100)),
-				noop.NewTracerProvider().Tracer("tracer"),
 				ctrl.Log.WithName("controller"),
+				noop.NewTracerProvider().Tracer("tracer"),
 				scheme.Scheme,
 				&telemetryfake.ISpanHandlerMock{})
 

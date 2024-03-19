@@ -18,8 +18,8 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Conte
 	evaluationHandler := evaluation.NewHandler(
 		r.Client,
 		r.EventSender,
-		r.getTracer(),
 		r.Log,
+		r.getTracer(),
 		r.Client.Scheme(),
 		r.SpanHandler,
 	)

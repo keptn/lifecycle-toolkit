@@ -19,8 +19,8 @@ func (r *KeptnWorkloadVersionReconciler) reconcilePrePostEvaluation(ctx context.
 	evaluationHandler := evaluation.NewHandler(
 		r.Client,
 		r.EventSender,
-		r.getTracer(),
 		r.Log,
+		r.getTracer(),
 		r.Client.Scheme(),
 		r.SpanHandler,
 	)

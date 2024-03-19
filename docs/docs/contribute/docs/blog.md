@@ -53,7 +53,7 @@ authors:
     name: <Fullname>
     description: <Role>
     avatar: <avatar-for-picture>
-    url: <Github-URL-for-user>
+    url: <URL-to-your-page-or-github-profile>
 ```
 
 ### author.yml fields

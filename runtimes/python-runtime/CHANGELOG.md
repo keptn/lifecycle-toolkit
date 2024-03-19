@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/keptn/lifecycle-toolkit/compare/python-runtime-v1.0.3...python-runtime-v1.0.4) (2024-03-19)
+
+
+### Bug Fixes
+
+* **python-runtime:** bump libexpat to v2.6.2 ([#3276](https://github.com/keptn/lifecycle-toolkit/issues/3276)) ([8ceae7e](https://github.com/keptn/lifecycle-toolkit/commit/8ceae7ef11443aea87d8c87e5643a987d3479f32))
+
 ## [1.0.3](https://github.com/keptn/lifecycle-toolkit/compare/python-runtime-v1.0.2...python-runtime-v1.0.3) (2024-02-29)
 
 

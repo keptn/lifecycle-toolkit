@@ -37,7 +37,7 @@ Each of these requirements is discussed on this page.
 
 ## Populate docs/blog/.authors.yml file
 
-The value of the `authors:` field in the blog's front matter
+The value of the `authors:` field in the blog post's front matter
 links to an entry in the `blogs/authors.yml` file.
 The blog plugin uses this information to render author information
 on the blog page.

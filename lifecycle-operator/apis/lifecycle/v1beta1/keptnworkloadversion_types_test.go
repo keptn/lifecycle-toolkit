@@ -141,6 +141,7 @@ func TestKeptnWorkloadVersion(t *testing.T) {
 	require.Equal(t, []attribute.KeyValue{
 		common.AppName.String("appname"),
 		common.WorkloadName.String("workloadname"),
+		common.WorkloadNamespace.String("namespace"),
 		common.WorkloadVersion.String("version"),
 		common.WorkloadPreviousVersion.String("prev"),
 	}, workload.GetDurationMetricsAttributes())

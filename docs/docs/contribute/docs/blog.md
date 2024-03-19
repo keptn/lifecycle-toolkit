@@ -28,8 +28,8 @@ you must also do the following:
 * Blog source is added to the `docs/blog/posts` directory.
   Individual blog posts are not listed in the `mkdocs.yml` file
   like other documentation.
-  Instead, the blog plugin manages integration of all blogs
-  with source in the `blogs` directory.
+  Instead, the blog plugin manages integration of all blog posts
+  in the `blogs` directory.
 
 * Additional metadata is required as part of the blog post file's front matter.
 

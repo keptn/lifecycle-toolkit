@@ -181,7 +181,7 @@ comments: true
 * **categories:** -- Keywords used to generate entries in the "Categories"
   section of the "Blogs" landing page.
   Set as many categories as appropriate and use reasonable terminology.
-  If an existing category matches a category you want for your blog,
+  If an existing category matches a category you want for your blog post,
   be sure to match that terminology exactly.
   For example, "Installation" is an existing category
   so it would be inappropriate to define "Installing" as a category.

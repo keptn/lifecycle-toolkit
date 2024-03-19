@@ -37,7 +37,6 @@ import (
 	lifecyclev1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
@@ -56,7 +55,6 @@ import (
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	metricsapi "go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/sdk/metric"
-	"go.opentelemetry.io/otel/trace/noop"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -279,14 +277,7 @@ func main() {
 	workloadVersionLogger := ctrl.Log.WithName("KeptnWorkloadVersion Controller").V(env.KeptnWorkloadVersionControllerLogLevel)
 	workloadVersionRecorder := mgr.GetEventRecorderFor("keptnworkloadversion-controller")
 	workloadVersionEventSender := eventsender.NewEventMultiplexer(workloadVersionLogger, workloadVersionRecorder, ceClient)
-	workloadVersionEvaluationHandler := evaluation.NewHandler(
-		mgr.GetClient(),
-		workloadVersionEventSender,
-		workloadVersionLogger,
-		noop.NewTracerProvider().Tracer("keptn/lifecycle-operator/workloadversion"),
-		mgr.GetScheme(),
-		spanHandler,
-	)
+
 	workloadVersionPhaseHandler := phase.NewHandler(
 		mgr.GetClient(),
 		workloadVersionEventSender,
@@ -294,16 +285,15 @@ func main() {
 		spanHandler,
 	)
 	workloadVersionReconciler := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
-		Client:            mgr.GetClient(),
-		Scheme:            mgr.GetScheme(),
-		Log:               workloadVersionLogger,
-		EventSender:       workloadVersionEventSender,
-		Meters:            keptnMeters,
-		TracerFactory:     telemetry.GetOtelInstance(),
-		SpanHandler:       spanHandler,
-		EvaluationHandler: workloadVersionEvaluationHandler,
-		PhaseHandler:      workloadVersionPhaseHandler,
-		Config:            config.Instance(),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		Log:           workloadVersionLogger,
+		EventSender:   workloadVersionEventSender,
+		Meters:        keptnMeters,
+		TracerFactory: telemetry.GetOtelInstance(),
+		SpanHandler:   spanHandler,
+		PhaseHandler:  workloadVersionPhaseHandler,
+		Config:        config.Instance(),
 	}
 	if err = (workloadVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadVersion")
@@ -313,14 +303,7 @@ func main() {
 	appVersionLogger := ctrl.Log.WithName("KeptnAppVersion Controller").V(env.KeptnAppVersionControllerLogLevel)
 	appVersionRecorder := mgr.GetEventRecorderFor("keptnappversion-controller")
 	appVersionEventSender := eventsender.NewEventMultiplexer(appVersionLogger, appVersionRecorder, ceClient)
-	appVersionEvaluationHandler := evaluation.NewHandler(
-		mgr.GetClient(),
-		appVersionEventSender,
-		appVersionLogger,
-		noop.NewTracerProvider().Tracer("keptn/lifecycle-operator/appversion"),
-		mgr.GetScheme(),
-		spanHandler,
-	)
+
 	appVersionPhaseHandler := phase.NewHandler(
 		mgr.GetClient(),
 		appVersionEventSender,
@@ -335,7 +318,6 @@ func main() {
 		TracerFactory:         telemetry.GetOtelInstance(),
 		Meters:                keptnMeters,
 		SpanHandler:           spanHandler,
-		EvaluationHandler:     appVersionEvaluationHandler,
 		PhaseHandler:          appVersionPhaseHandler,
 		PromotionTasksEnabled: env.PromotionTasksEnabled,
 		Config:                config.Instance(),

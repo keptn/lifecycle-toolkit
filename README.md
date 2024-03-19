@@ -182,41 +182,6 @@ about Keptn on the
 Videos that refer to the "Keptn Lifecycle Controller"
 are relevant for the Keptn project.
 
-## Architecture
-
-Keptn is composed of the following components:
-
-- Keptn Lifecycle Operator
-- Keptn Scheduler
-
-The Keptn Lifecycle Operator contains several controllers for Keptn CRDs
-and a Mutating Webhook.
-The Keptn Scheduler ensures that Pods are started
-only after the pre-deployment checks have finished successfully.
-
-A Kubernetes
-[Manifest](https://monokle.io/learn/kubernetes-manifest-files-explained#:~:text=Kubernetes%20Manifest%20files!-,What%20is%20a%20Kubernetes%20Manifest%20File%3F,you%20want%20in%20your%20cluster).
-which is annotated with Keptn specific annotations,
-is applied to the Kubernetes Cluster.
-Afterward, the Keptn Scheduler is injected (via Mutating Webhook),
-and Kubernetes Events for Pre-Deployment are sent to the event stream.
-The Event Controller watches for events
-and triggers a Kubernetes Job to fullfil the Pre-Deployment.
-After the Pre-Deployment has finished,
-the Keptn Scheduler schedules the Pod to be deployed.
-The KeptnApp and KeptnWorkload Controllers
-watch for the workload resources to finish
-and then generate a Post-Deployment Event.
-After the Post-Deployment checks,
-SLOs can be validated using an interface
-for retrieving SLI data from a provider
-e.g, [Prometheus](https://prometheus.io/).
-Finally, Keptn exposes Metrics and Traces
-of the entire Deployment cycle with
-[OpenTelemetry](https://opentelemetry.io/).
-
-![Keptn Architecture](./assets/architecture.png)
-
 ### Webhook
 
 Annotating a namespace subjects it to the effects of the mutating webhook:

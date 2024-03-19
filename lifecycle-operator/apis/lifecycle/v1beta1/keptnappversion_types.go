@@ -311,6 +311,7 @@ func (a KeptnAppVersion) GetMetricsAttributes() []attribute.KeyValue {
 func (a KeptnAppVersion) GetDurationMetricsAttributes() []attribute.KeyValue {
 	return []attribute.KeyValue{
 		common.AppName.String(a.Spec.AppName),
+		common.AppNamespace.String(a.Namespace),
 		common.AppVersion.String(a.Spec.Version),
 		common.AppPreviousVersion.String(a.Spec.PreviousVersion),
 	}

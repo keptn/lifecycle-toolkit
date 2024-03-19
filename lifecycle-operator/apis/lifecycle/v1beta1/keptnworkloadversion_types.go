@@ -311,6 +311,7 @@ func (w KeptnWorkloadVersion) GetDurationMetricsAttributes() []attribute.KeyValu
 	return []attribute.KeyValue{
 		common.AppName.String(w.Spec.AppName),
 		common.WorkloadName.String(w.Spec.WorkloadName),
+		common.WorkloadNamespace.String(w.Namespace),
 		common.WorkloadVersion.String(w.Spec.Version),
 		common.WorkloadPreviousVersion.String(w.Spec.PreviousVersion),
 	}

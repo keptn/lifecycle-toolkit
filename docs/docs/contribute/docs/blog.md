@@ -56,7 +56,7 @@ authors:
     url: <URL-to-your-page-or-github-profile>
 ```
 
-### author.yml fields
+### authors.yml fields
 
 * **GitHub-UserID** -- This is the user ID used to log into GitHub.
   it serves as a key for the record.

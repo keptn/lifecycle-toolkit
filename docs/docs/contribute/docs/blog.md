@@ -17,8 +17,8 @@ to manage the blog infrastructure.
 To integrate your post with the blog plugin,
 you must also do the following:
 
-* Create an entry in the `docs/blog/.authors.yml` file
-  for each author of the blog.
+* Create an entry in the `docs/blog/.authors.yml` file if
+  you're not in it already.
 
 * The GitHub user ID used to identify yourself
   in the `docs/.authors.yml` file

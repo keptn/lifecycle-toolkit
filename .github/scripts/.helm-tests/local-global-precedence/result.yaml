@@ -15,7 +15,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: cert-manager-0.2.2
@@ -10163,7 +10163,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: cert-manager-0.2.2
@@ -10970,7 +10970,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: cert-manager-0.2.2
@@ -11132,7 +11132,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: cert-manager-0.2.2
@@ -11329,7 +11329,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: cert-manager-0.2.2
@@ -11362,7 +11362,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: cert-manager-0.2.2
@@ -11654,7 +11654,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: cert-manager-0.2.2
@@ -11690,7 +11690,7 @@ spec:
               value: "true"
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
-          image: local-registry.io/keptn/certificate-operator:v2.1.0
+          image: local-registry.io/keptn/certificate-operator:v2.1.1
           imagePullPolicy: Always
           name: certificate-operator
           resources:

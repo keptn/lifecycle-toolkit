@@ -152,7 +152,7 @@ Additional fields can be added; see the
 [blog plugin documentation](https://squidfunk.github.io/mkdocs-material/setup/setting-up-a-blog/#writing-your-first-post)
 for more information.
 
-```md
+```markdown
 ---
 date: YYYY-MM-DD
 authors: [<GitHub-UserID>]

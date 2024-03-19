@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     helm.sh/chart: cert-manager-0.2.2
 ---
 # Source: keptn/charts/metricsOperator/templates/metrics-operator-service-account.yaml
@@ -2018,7 +2018,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     helm.sh/chart: cert-manager-0.2.2
 rules:
 - apiGroups:
@@ -2203,7 +2203,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     helm.sh/chart: cert-manager-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -2287,7 +2287,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     helm.sh/chart: cert-manager-0.2.2
 rules:
 - apiGroups:
@@ -2367,7 +2367,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     helm.sh/chart: cert-manager-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -2391,7 +2391,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     helm.sh/chart: cert-manager-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -2512,7 +2512,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.0
+    app.kubernetes.io/version: v2.1.1
     helm.sh/chart: cert-manager-0.2.2
 spec:
   replicas: 1

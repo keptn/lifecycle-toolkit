@@ -14,7 +14,7 @@ However, you must take a few additional steps when writing a blog post.
 Keptn uses the
 [blog plugin from mkdocs-material](https://squidfunk.github.io/mkdocs-material/setup/setting-up-a-blog/)
 to manage the blog infrastructure.
-To integrate your blog with the blog plugin,
+To integrate your post with the blog plugin,
 you must also do the following:
 
 * Create an entry in the `docs/blog/.authors.yml` file

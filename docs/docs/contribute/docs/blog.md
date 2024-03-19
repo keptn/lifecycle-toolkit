@@ -85,7 +85,7 @@ authors:
 
 ## Update spelling/expect.txt file with your ID
 
-The spell checker will flag your user ID as an unrecognized word.
+The spell checker will probably flag your author identifier as an unrecognized word.
 You can manually add this string to the
 `.github/actions/spelling/expect.txt` file
 as part of your PR,

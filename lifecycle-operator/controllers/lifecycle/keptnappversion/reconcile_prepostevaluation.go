@@ -15,8 +15,16 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Conte
 		SpanName:  fmt.Sprintf(apicommon.CreateAppEvalSpanName, checkType),
 		CheckType: checkType,
 	}
+	evaluationHandler := evaluation.NewHandler(
+		r.Client,
+		r.EventSender,
+		r.getTracer(),
+		r.Log,
+		r.Client.Scheme(),
+		r.SpanHandler,
+	)
 
-	newStatus, state, err := r.EvaluationHandler.ReconcileEvaluations(ctx, phaseCtx, r.getTracer(), appVersion, evaluationCreateAttributes)
+	newStatus, state, err := evaluationHandler.ReconcileEvaluations(ctx, phaseCtx, appVersion, evaluationCreateAttributes)
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}

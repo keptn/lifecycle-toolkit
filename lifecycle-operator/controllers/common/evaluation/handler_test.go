@@ -411,10 +411,11 @@ func TestEvaluationHandler(t *testing.T) {
 			handler := NewHandler(
 				fake.NewClientBuilder().WithObjects(initObjs...).Build(),
 				eventsender.NewK8sSender(fakeRecorder),
+				noop.NewTracerProvider().Tracer("tracer"),
 				ctrl.Log.WithName("controller"),
 				scheme.Scheme,
 				&spanHandlerMock)
-			status, summary, err := handler.ReconcileEvaluations(context.TODO(), context.TODO(), noop.NewTracerProvider().Tracer("tracer"), tt.object, tt.createAttr)
+			status, summary, err := handler.ReconcileEvaluations(context.TODO(), context.TODO(), tt.object, tt.createAttr)
 			if len(tt.wantStatus) == len(status) {
 				for j, item := range status {
 					require.Equal(t, tt.wantStatus[j].DefinitionName, item.DefinitionName)
@@ -493,6 +494,7 @@ func TestEvaluationHandler_createEvaluation(t *testing.T) {
 			handler := NewHandler(
 				fake.NewClientBuilder().Build(),
 				eventsender.NewK8sSender(record.NewFakeRecorder(100)),
+				noop.NewTracerProvider().Tracer("tracer"),
 				ctrl.Log.WithName("controller"),
 				scheme.Scheme,
 				&telemetryfake.ISpanHandlerMock{})

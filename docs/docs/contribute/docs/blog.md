@@ -123,8 +123,7 @@ When you have created a local branch:
   [Blog front matter](#blog-front-matter)
   to provide the metadata required by the blog plugin.
 
-* The text that follows the `#` line until the first `##` line
-  is the introduction to your article
+* All text before the `<!-- more -->` comment is the introduction to your article
   and also the abstract that is displayed on the "Blogs" landing page.
 
 Other coding notes for blogs:

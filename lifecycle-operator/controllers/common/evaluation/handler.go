@@ -24,7 +24,7 @@ import (
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/evaluationhandler_mock.go . IEvaluationHandler:MockEvaluationHandler
 type IEvaluationHandler interface {
-	ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error)
+	ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error)
 }
 
 type Handler struct {

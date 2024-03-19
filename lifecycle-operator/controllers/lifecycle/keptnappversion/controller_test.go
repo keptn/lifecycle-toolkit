@@ -508,7 +508,7 @@ func setupReconciler(objs ...client.Object) (*KeptnAppVersionReconciler, chan st
 		Meters:        testcommon.InitAppMeters(),
 		Config:        config.Instance(),
 		EvaluationHandler: &evalfake.MockEvaluationHandler{
-			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]lfcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
+			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]lfcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
 				return []lfcv1beta1.ItemStatus{}, apicommon.StatusSummary{}, nil
 			},
 		},

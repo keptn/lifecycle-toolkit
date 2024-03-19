@@ -1019,7 +1019,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcilePreDeploymentEvaluationUnexpect
 
 	mockEvaluationHandler := r.EvaluationHandler.(*evaluationfake.MockEvaluationHandler)
 
-	mockEvaluationHandler.ReconcileEvaluationsFunc = func(ctx context.Context, phaseCtx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
+	mockEvaluationHandler.ReconcileEvaluationsFunc = func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
 		return nil, apicommon.StatusSummary{}, errors.New("unexpected error")
 	}
 
@@ -1084,7 +1084,7 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, ch
 		TracerFactory: tf,
 		Config:        config.Instance(),
 		EvaluationHandler: &evaluationfake.MockEvaluationHandler{
-			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
+			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
 				return []klcv1beta1.ItemStatus{}, apicommon.StatusSummary{}, nil
 			},
 		},

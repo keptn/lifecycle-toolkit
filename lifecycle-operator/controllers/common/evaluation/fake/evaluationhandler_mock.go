@@ -8,7 +8,6 @@ import (
 	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sync"
 )
@@ -19,7 +18,7 @@ import (
 //
 //		// make and configure a mocked evaluation.IEvaluationHandler
 //		mockedIEvaluationHandler := &MockEvaluationHandler{
-//			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
+//			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
 //				panic("mock out the ReconcileEvaluations method")
 //			},
 //		}
@@ -30,7 +29,7 @@ import (
 //	}
 type MockEvaluationHandler struct {
 	// ReconcileEvaluationsFunc mocks the ReconcileEvaluations method.
-	ReconcileEvaluationsFunc func(ctx context.Context, phaseCtx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error)
+	ReconcileEvaluationsFunc func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -40,8 +39,6 @@ type MockEvaluationHandler struct {
 			Ctx context.Context
 			// PhaseCtx is the phaseCtx argument value.
 			PhaseCtx context.Context
-			// Tracer is the tracer argument value.
-			Tracer telemetry.ITracer
 			// ReconcileObject is the reconcileObject argument value.
 			ReconcileObject client.Object
 			// EvaluationCreateAttributes is the evaluationCreateAttributes argument value.
@@ -52,27 +49,25 @@ type MockEvaluationHandler struct {
 }
 
 // ReconcileEvaluations calls ReconcileEvaluationsFunc.
-func (mock *MockEvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
+func (mock *MockEvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
 	if mock.ReconcileEvaluationsFunc == nil {
 		panic("MockEvaluationHandler.ReconcileEvaluationsFunc: method is nil but IEvaluationHandler.ReconcileEvaluations was just called")
 	}
 	callInfo := struct {
 		Ctx                        context.Context
 		PhaseCtx                   context.Context
-		Tracer                     telemetry.ITracer
 		ReconcileObject            client.Object
 		EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
 	}{
 		Ctx:                        ctx,
 		PhaseCtx:                   phaseCtx,
-		Tracer:                     tracer,
 		ReconcileObject:            reconcileObject,
 		EvaluationCreateAttributes: evaluationCreateAttributes,
 	}
 	mock.lockReconcileEvaluations.Lock()
 	mock.calls.ReconcileEvaluations = append(mock.calls.ReconcileEvaluations, callInfo)
 	mock.lockReconcileEvaluations.Unlock()
-	return mock.ReconcileEvaluationsFunc(ctx, phaseCtx, tracer, reconcileObject, evaluationCreateAttributes)
+	return mock.ReconcileEvaluationsFunc(ctx, phaseCtx, reconcileObject, evaluationCreateAttributes)
 }
 
 // ReconcileEvaluationsCalls gets all the calls that were made to ReconcileEvaluations.
@@ -82,14 +77,12 @@ func (mock *MockEvaluationHandler) ReconcileEvaluations(ctx context.Context, pha
 func (mock *MockEvaluationHandler) ReconcileEvaluationsCalls() []struct {
 	Ctx                        context.Context
 	PhaseCtx                   context.Context
-	Tracer                     telemetry.ITracer
 	ReconcileObject            client.Object
 	EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
 } {
 	var calls []struct {
 		Ctx                        context.Context
 		PhaseCtx                   context.Context
-		Tracer                     telemetry.ITracer
 		ReconcileObject            client.Object
 		EvaluationCreateAttributes evaluation.CreateEvaluationAttributes
 	}

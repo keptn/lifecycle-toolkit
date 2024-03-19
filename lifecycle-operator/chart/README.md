@@ -43,7 +43,7 @@ and application health checks
 | `lifecycleOperator.containerSecurityContext.runAsNonRoot`             |                                                                                | `true`                                |
 | `lifecycleOperator.containerSecurityContext.runAsUser`                |                                                                                | `65532`                               |
 | `lifecycleOperator.containerSecurityContext.seccompProfile.type`      |                                                                                | `RuntimeDefault`                      |
-| `lifecycleOperator.env.functionRunnerImage`                           | specify image for deno task runtime                                            | `ghcr.io/keptn/deno-runtime:v2.0.2`   |
+| `lifecycleOperator.env.functionRunnerImage`                           | specify image for deno task runtime                                            | `ghcr.io/keptn/deno-runtime:v2.0.3`   |
 | `lifecycleOperator.env.keptnAppControllerLogLevel`                    | sets the log level of Keptn App Controller                                     | `0`                                   |
 | `lifecycleOperator.env.keptnAppCreationRequestControllerLogLevel`     | sets the log level of Keptn App Creation Request Controller                    | `0`                                   |
 | `lifecycleOperator.env.keptnAppVersionControllerLogLevel`             | sets the log level of Keptn AppVersion Controller                              | `0`                                   |
@@ -54,7 +54,7 @@ and application health checks
 | `lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel`        | sets the log level of Keptn WorkloadVersion Controller                         | `0`                                   |
 | `lifecycleOperator.env.keptnDoraMetricsPort`                          | sets the port for accessing lifecycle metrics in prometheus format             | `2222`                                |
 | `lifecycleOperator.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller                                 | `0`                                   |
-| `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                          | `ghcr.io/keptn/python-runtime:v1.0.3` |
+| `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                          | `ghcr.io/keptn/python-runtime:v1.0.4` |
 | `lifecycleOperator.image.registry`                                    | specify the container registry for the lifecycle-operator image                | `""`                                  |
 | `lifecycleOperator.image.repository`                                  | specify registry for manager image                                             | `keptn/lifecycle-operator`            |
 | `lifecycleOperator.image.tag`                                         | select tag for manager image                                                   | `v0.9.1`                              |

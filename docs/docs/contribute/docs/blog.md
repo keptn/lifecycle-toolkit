@@ -166,6 +166,9 @@ comments: true
 ---
 
 # <blog title>
+Text that serves as abstract and introduction to your article.
+It can be multiple paragraphs.
+<!-- more -->
 ```
 
 ### Blog front matter fields

@@ -94,7 +94,7 @@ then resolve the error as discussed on the
 [Spell Checker](spell-check.md)
 page.
 
-## Blog source code
+## Blog post source code
 
 Your blog post should be developed using the standard Git
 flow documented in

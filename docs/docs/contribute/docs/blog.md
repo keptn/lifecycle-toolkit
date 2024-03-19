@@ -170,7 +170,8 @@ comments: true
 
 ### Blog front matter fields
 
-* **date** -- Date when blog was most recently posted
+* **date** -- Date when blog was most recently posted.
+  This can also be in the future. Then, the blog post will be hidden until the date is reached.
 * **authors** -- Author of this blog,
   identified by the Github User ID that is used as the key
   in the `docs/blog/.authors.yml` file.

@@ -6,6 +6,7 @@ description: >
 categories:
   - Announcement
 comments: true
+slug: announcing-the-official-release-candidate-for-keptn-v2
 ---
 
 # Announcing the Release Candidate for Keptn v2

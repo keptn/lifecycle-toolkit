@@ -6,9 +6,10 @@ description: >
 categories:
   - Announcement
 comments: true
+slug: announcing-the-official-release-candidate-for-keptn-v2
 ---
 
-# Announcing the Official Release Candidate for Keptn v2
+# Announcing the Release Candidate for Keptn v2
 
 The Keptn project is proud to announce a release candidate for what will become Keptn v2.
 User feedback to the Keptn project has been clear, and we’ve listened.

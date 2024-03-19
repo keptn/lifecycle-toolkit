@@ -31,7 +31,7 @@ you must also do the following:
   Instead, the blog plugin manages integration of all blogs
   with source in the `blogs` directory.
 
-* Additional metadata is required as part of the source files's front matter.
+* Additional metadata is required as part of the blog post file's front matter.
 
 Each of these requirements is discussed on this page.
 

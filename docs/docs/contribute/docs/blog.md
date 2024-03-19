@@ -21,7 +21,7 @@ you must also do the following:
   you're not in it already.
 
 * You can use any identifier for yourself
-  in the `docs/.authors.yml` file, but it
+  in the `docs/blog/.authors.yml` file, but it
   must be added to the `.github/actions/spelling/expect.txt` file
   so that the spell checker knows about it.
 

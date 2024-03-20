@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 ---
 # Source: keptn/charts/metricsOperator/templates/metrics-manager-config.yaml
 apiVersion: v1
@@ -23,7 +23,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 data:
   controller_manager_config.yaml: |
     apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
@@ -53,7 +53,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 spec:
   group: metrics.keptn.sh
   names:
@@ -407,7 +407,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 spec:
   group: metrics.keptn.sh
   names:
@@ -1103,7 +1103,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 spec:
   group: metrics.keptn.sh
   names:
@@ -1251,7 +1251,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 spec:
   group: metrics.keptn.sh
   names:
@@ -1787,7 +1787,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 spec:
   group: metrics.keptn.sh
   names:
@@ -2004,7 +2004,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 rules:
   - apiGroups:
       - ""
@@ -2112,7 +2112,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 rules:
 - apiGroups:
   - custom.metrics.k8s.io
@@ -2134,7 +2134,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -2155,7 +2155,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -2176,7 +2176,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 rules:
 - apiGroups:
   - ""
@@ -2221,7 +2221,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -2242,7 +2242,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -2264,7 +2264,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 spec:
   type: ClusterIP
   selector:
@@ -2295,7 +2295,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 spec:
   type: ClusterIP
   selector:
@@ -2322,7 +2322,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 spec:
   replicas: 1
   selector:
@@ -2440,7 +2440,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v0.9.3
-    helm.sh/chart: metrics-operator-0.1.3
+    helm.sh/chart: metrics-operator-0.1.4
 webhooks:
 - admissionReviewVersions:
   - v1

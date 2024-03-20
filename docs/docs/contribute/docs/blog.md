@@ -189,8 +189,9 @@ It can be multiple paragraphs.
   For example, "Installation" is an existing category
   so it would be inappropriate to define "Installing" as a category.
 * **comments: true**
-* **blog-title** -- The title that is displayed for your blog,
-  coded as a level 1 (`#`) header.
+
+Use a Level 1 header (`#`) for the title that is displayed
+for your blog post.
 
 ### Front matter example
 
@@ -208,4 +209,8 @@ comments: true
 ---
 
 # Using Keptn with MyTool
+Keptn can be used with MyTool to make life better.
+In this post, we describe how to implement this
+and give guidelines for how to get the best results.
+<!-- more -->
 ```

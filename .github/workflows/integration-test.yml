@@ -48,7 +48,7 @@ jobs:
         uses: ./.github/actions/deploy-prometheus-on-cluster
 
       - name: Install Chainsaw
-        uses: kyverno/action-install-chainsaw@4932dd3a67eedf380e704f5c294851a2f83c638f # v0.1.8
+        uses: kyverno/action-install-chainsaw@995cddaee7702e849270b84fa44cdcebe7462da8 # v0.1.9
 
       - name: Run Scheduling Gates Integration Tests
         if: inputs.scheduling-gates == 'gates_on' && inputs.allowed-namespaces == 'allowed_ns_off'

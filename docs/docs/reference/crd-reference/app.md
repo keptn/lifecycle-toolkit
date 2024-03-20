@@ -117,9 +117,9 @@ The synopsis of the `KeptnApp` resource is changed in the `v1beta1` API version:
 - If you want to use a `KeptnAppContext` resource with your application, the `name` and `namespace` fields
   are taken from the annotations of the deployed Kubernetes workloads.
   The corresponding `KeptnAppContext` resource (if any), must have identical values for these fields.
-- The `metadata.version` field is now completely managed by Keptn.
+- The `metadata.version` field is now completely managed by Keptn and is computed as the hash of all workloads versions.
   You do not increment this value to cause a new execution of tasks and evaluations;
-  the only way to trigger a new execution is to increment the `spec.version` field for the `KeptnApp` resource.
+  the only way to trigger a new execution is to increment the `spec.revision` field for the `KeptnApp` resource.
 - The pre/post-deployment tasks and evaluations are now defined in the [KeptnAppContext](appcontext.md)
   resource rather than in the `KeptnApp` resource.
 

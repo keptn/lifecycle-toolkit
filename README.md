@@ -29,10 +29,10 @@ It is an incubating project, under the umbrella of the
 Keptn provides Cloud Native teams with the following capabilities:
 
 - Pre-requisite evaluation before deploying workloads and applications
-- Finding out when an application (not just a workload) is ready and working
 - Checking the Application Health in a declarative (cloud-native) way
 - Standardized way to run pre- and post-deployment tasks
-- Provide out-of-the-box Observability of the deployment cycle
+- Provide out-of-the-box Observability
+- Deployment lifecycle management
 
 ![Operator Maturity Model with third level circled in](./assets/operator-maturity.jpg)
 
@@ -41,6 +41,10 @@ Keptn can be seen as a general purpose and declarative
 for your Application.
 For this reason, Keptn is agnostic to deployment tools
 that are used and works with any GitOps solution.
+
+For more information about the core concepts of Keptn, see
+our core concepts
+[documentation section](https://keptn.sh/stable/docs/core-concepts/).
 
 ## Status
 

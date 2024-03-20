@@ -24,7 +24,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
@@ -37,7 +37,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 ---
 # Source: keptn/charts/metricsOperator/templates/metrics-operator-service-account.yaml
@@ -63,7 +63,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 data:
   controller_manager_config.yaml: |
@@ -89,7 +89,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 data:
   scheduler-config.yaml: |
@@ -144,7 +144,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   conversion:
@@ -498,7 +498,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   group: lifecycle.keptn.sh
@@ -617,7 +617,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   group: lifecycle.keptn.sh
@@ -725,7 +725,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   conversion:
@@ -1996,7 +1996,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   group: options.keptn.sh
@@ -2084,7 +2084,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   group: lifecycle.keptn.sh
@@ -2644,7 +2644,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   group: lifecycle.keptn.sh
@@ -2931,7 +2931,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   group: lifecycle.keptn.sh
@@ -3529,7 +3529,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   group: lifecycle.keptn.sh
@@ -6969,7 +6969,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   group: lifecycle.keptn.sh
@@ -7393,7 +7393,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   group: lifecycle.keptn.sh
@@ -10075,7 +10075,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 rules:
 - apiGroups:
@@ -10266,7 +10266,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 rules:
 - apiGroups:
@@ -10641,7 +10641,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 rules:
 - apiGroups:
@@ -10815,7 +10815,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -10836,7 +10836,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -10955,7 +10955,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 rules:
 - apiGroups:
@@ -11000,7 +11000,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 rules:
 - apiGroups:
@@ -11138,7 +11138,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -11159,7 +11159,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -11180,7 +11180,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -11244,7 +11244,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   type: ClusterIP
@@ -11268,7 +11268,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   type: ClusterIP
@@ -11434,7 +11434,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   replicas: 1
@@ -11564,7 +11564,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 spec:
   replicas: 1
@@ -11809,7 +11809,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 webhooks:
 - admissionReviewVersions:
@@ -11859,7 +11859,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v0.9.1
+    app.kubernetes.io/version: v0.9.2
     helm.sh/chart: lifecycle-operator-0.2.2
 webhooks:
 - admissionReviewVersions:

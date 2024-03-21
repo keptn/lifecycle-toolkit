@@ -92,7 +92,7 @@ The steps to create your own metrics provider are:
 
 5. **Update the validation webhook and crd config:** To update the validation webhook and crd config of the metrics operator.
    Add the provider name next to last providers on this
-   [line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1beta1/keptnmetricsprovider_types.go#L29)
+   [line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1/keptnmetricsprovider_types.go#L29)
    to look like this
 
     `// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql|placeholder`.

@@ -93,7 +93,6 @@ type AnalysisStatus struct {
 //+kubebuilder:printcolumn:name="State",type=string,JSONPath=`.status.state`
 //+kubebuilder:printcolumn:name="Warning",type=string,JSONPath=`.status.warning`
 //+kubebuilder:printcolumn:name="Pass",type=string,JSONPath=`.status.pass`
-//+kubebuilder:storageversion
 
 // Analysis is the Schema for the analyses API
 type Analysis struct {

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1beta1
+package v1
 
 import (
 	"fmt"
@@ -35,7 +35,7 @@ func (r *AnalysisDefinition) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/validate-metrics-keptn-sh-v1beta1-analysisdefinition,mutating=false,failurePolicy=fail,sideEffects=None,groups=metrics.keptn.sh,resources=analysisdefinitions,verbs=create;update,versions=v1beta1,name=analysisdefinition.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/validate-metrics-keptn-sh-v1-analysisdefinition,mutating=false,failurePolicy=fail,sideEffects=None,groups=metrics.keptn.sh,resources=analysisdefinitions,verbs=create;update,versions=v1,name=analysisdefinition.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &AnalysisDefinition{}
 
@@ -74,7 +74,7 @@ func (r *AnalysisDefinition) ValidateDelete() (admission.Warnings, error) {
 
 func (s *TotalScore) validate() error {
 	if s.WarningPercentage >= s.PassPercentage {
-		return fmt.Errorf("Warn percentage score cannot be higher or equal than Pass percentage score")
+		return fmt.Errorf("warn percentage score cannot be higher or equal than Pass percentage score")
 	}
 	return nil
 }

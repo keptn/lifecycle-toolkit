@@ -46,7 +46,7 @@ spec:
       keptnMetricRef:
         name: available-cpus
 ---
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetric
 metadata:
   name: available-cpus
@@ -57,7 +57,7 @@ spec:
   query: >-
     sum(kube_node_status_capacity{resource='cpu'})
 ---
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetricsProvider
 metadata:
   name: prometheus

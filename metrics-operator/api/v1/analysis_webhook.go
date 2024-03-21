@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1beta1
+package v1
 
 import (
 	"github.com/pkg/errors"
@@ -35,7 +35,7 @@ func (a *Analysis) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/validate-metrics-keptn-sh-v1beta1-analysis,mutating=false,failurePolicy=fail,sideEffects=None,groups=metrics.keptn.sh,resources=analyses,verbs=create;update,versions=v1beta1,name=analysis.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/validate-metrics-keptn-sh-v1-analysis,mutating=false,failurePolicy=fail,sideEffects=None,groups=metrics.keptn.sh,resources=analyses,verbs=create;update,versions=v1,name=analysis.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &Analysis{}
 

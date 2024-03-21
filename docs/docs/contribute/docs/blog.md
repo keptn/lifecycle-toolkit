@@ -114,9 +114,8 @@ When you have created a local branch:
   as the name of your .md file.
   For example, if your source file is named `myblog.md`
   (which is not actually detailed enough to be a good file name),
-  you need to create a myblog subdirectory.
-  Then create an `assets` subdirectory to that sub-directory
- and put any assets you want to reference in that newly
+  you need to create a `myblog` subdirectory.
+  Then put any assets you want to reference in that newly
   created subdirectory.
 
 * Follow the instructions in

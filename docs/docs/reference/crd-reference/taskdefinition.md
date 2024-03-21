@@ -20,11 +20,12 @@ Each `KeptnTaskDefinition` can use exactly one container with one runner.
 which is one of the following,
 differentiated by the `spec` section:
 
-- The `custom-runtime` runner provides
-  a standard Kubernetes application container
-  that is run as part of a Kubernetes job.
-  You define the runner, an application,
-  and its runtime dependencies.
+- The `container-runtime` runner provides
+  functionality to run
+  a standard Kubernetes container inside
+  a Kubernetes job.
+  You define the container image, and
+  the arbitrary application inside it.
   This gives you the flexibility
   to define tasks using the language and facilities of your choice,
   although it is more complicated that using one of the pre-defined runtimes.
@@ -39,8 +40,7 @@ differentiated by the `spec` section:
       to define tasks using
       [Deno](https://deno.com/)
       scripts,
-      which use a syntax similar to JavaScript and Typescript,
-      with a few limitations.
+      which use JavaScript with a few limitations.
       You can use this to specify simple actions
       without having to define a full container.
       See [runtime examples](#examples-for-deno-runtime-and-python-runtime-runners)

@@ -11,7 +11,7 @@ It allows you to
 
 - Add metadata and links to traces for a specific application.
   This enables you to enrich your traces with additional information that
-  you can use to understand and analyze
+  you can use to better understand and analyze
   the performance of your applications.
 
 - Define tasks and evaluations that run

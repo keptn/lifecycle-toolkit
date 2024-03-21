@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Keptn Webhooks
+# Admission Webhooks
 
 Keptn uses
 [Admission Webhooks](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#what-are-admission-webhooks)
@@ -27,8 +27,8 @@ it looks for the workload annotations:
 keptn.sh/workload: "some-workload-name"
 ```
 
-The mutation consists in changing the scheduler used for the deployment
-with the Keptn Scheduler, or adding the
+The mutation either replaces the scheduler
+with the Keptn Scheduler, or adds the
 [Scheduling Gate](https://keptn.sh/stable/docs/components/scheduling/#keptn-scheduling-gates-for-k8s-127-and-above).
 The webhook then creates a workload and app resource for each annotated resource.
 You can also specify a custom app definition with the annotation:
@@ -37,9 +37,7 @@ You can also specify a custom app definition with the annotation:
 keptn.sh/app: "your-app-name"
 ```
 
-In this case the webhook does not generate an app,
-but it expects that the user will provide one.
-Additionally, it computes a version string,
+The webhook computes a version string,
 using a hash function that takes certain properties of the pod as parameters
 (e.g. the images of its containers).
 Next, it looks for an existing instance of a `Workload CRD`

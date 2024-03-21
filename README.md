@@ -186,21 +186,6 @@ about Keptn on the
 Videos that refer to the "Keptn Lifecycle Controller"
 are relevant for the Keptn project.
 
-### Scheduler
-
-Keptn Scheduler handles binding the pods to a node if
-[Scheduling Gates](https://keptn.sh/stable/docs/components/scheduling/#keptn-scheduling-gates-for-k8s-127-and-above)
-are not used.
-The scheduling flow follows the default
-[scheduler](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
-behavior,
-since it implements a scheduler plugin based on the
-[scheduling framework]( https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/).
-For each pod, at the very end of the scheduling cycle,
-the plugin verifies that the pre deployment checks have finished
-by retrieving the current status of the WorkloadInstance.
-Only when that is successful is the pod bound to a node.
-
 ## Contributing
 
 For more information about contributing to Keptn, please

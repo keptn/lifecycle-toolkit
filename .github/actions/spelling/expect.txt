@@ -419,6 +419,7 @@ multigroup
 mutatingwebhookconfigurations
 mwc
 mwh
+myblog
 mycert
 mydata
 myhost
@@ -545,6 +546,7 @@ runsendevent
 runtimes
 runtimespec
 Sambhav
+sampleuser
 sbom
 schedulinggates
 sclient

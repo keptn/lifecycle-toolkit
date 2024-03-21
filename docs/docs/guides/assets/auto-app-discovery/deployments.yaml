@@ -48,7 +48,7 @@ spec:
     spec:
       containers:
         - env:
-          - name: PODTATO_COMPONENT
-            value: hat
+            - name: PODTATO_COMPONENT
+              value: hat
           name: podtato-head-hat
           image: ghcr.io/podtato-head/podtato-server:v0.3.1

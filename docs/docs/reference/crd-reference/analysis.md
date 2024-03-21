@@ -6,7 +6,7 @@ comments: true
 
 An `Analysis` resource is an instance of an
 [AnalysisDefinition](analysisdefinition.md) resource
-which defined specific data like
+which defines specific data like
 the time for which the analysis should be done
 and the appropriate values to use for variables
 that are used in the `AnalysisDefinition` query.

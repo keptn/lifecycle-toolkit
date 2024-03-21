@@ -58,9 +58,9 @@ Status of the different features:
   Release lifecycle: handle pre- and post-checks of your Application deployment.
 - ![status](https://img.shields.io/badge/status-stable-brightgreen)
   Certificate Manager: automatically configure TLS certificates with the
-  [Keptn Certificate Manager](https://lifecycle.keptn.sh/docs/concepts/architecture/cert-manager/).
+  [Keptn Certificate Manager](https://keptn.sh/docs/concepts/architecture/cert-manager/).
   You can instead
-  [configure your own certificate manager](https://lifecycle.keptn.sh/docs/install/cert-manager/) to provide
+  [configure your own certificate manager](https://keptn.sh/docs/install/cert-manager/) to provide
   [secure communication with the Kube API](https://kubernetes.io/docs/concepts/security/controlling-access/#transport-security).
 
 <!---
@@ -98,7 +98,7 @@ running Kubernetes >=1.24.
 For users running [vCluster](https://www.vcluster.com/),
 please note that you may need to modify
 your configuration before installing Keptn; see
-[Running Keptn with vCluster](https://main.lifecycle.keptn.sh/docs/install/install//#running-keptn-with-vcluster)
+[Running Keptn with vCluster](https://keptn.sh/stable/docs/installation/configuration/vcluster/)
 for more information.
 
 Use the following command sequence
@@ -159,28 +159,7 @@ requires the helm installation to be updated by adding the name of the new names
 ## More information
 
 For more info about Keptn, please see our
-[documentation](https://lifecycle.keptn.sh/docs/), specifically:
-
-- [Introduction to Keptn](https://lifecycle.keptn.sh/docs/intro/)
-  gives an overview of the Keptn facilities.
-- [Getting started](https://lifecycle.keptn.sh/docs/getting-started/)
-  includes some short exercises to introduce you to Keptn.
-- [Installation and upgrade](https://lifecycle.keptn.sh/docs/install/)
-  provides information about preparing your Kubernetes cluster
-  then installing and enabling Keptn.
-- [Implementing Keptn applications](https://lifecycle.keptn.sh/docs/implementing/)
-  documents how to integrate Keptn to work with your existing deployment engine
-  and implement its various features.
-- [Architecture](https://lifecycle.keptn.sh/docs/concepts/architecture/) provides detailed technical information
-  about how Keptn works.
-- [Components](https://keptn.sh/stable/docs/components/) provides an overview
-  about Keptn components.
-- [CRD Reference](https://lifecycle.keptn.sh/docs/yaml-crd-ref/) and
-  [API Reference](https://lifecycle.keptn.sh/docs/crd-ref/)
-  provide detailed reference material for the custom resources
-  used to configure Keptn.
-- [Contributing to Keptn](https://lifecycle.keptn.sh/contribute/)
-  provides information about how to contribute to the Keptn project.
+[documentation](https://keptn.sh/docs/).
 
 You can also find a number of video presentations and demos
 about Keptn on the

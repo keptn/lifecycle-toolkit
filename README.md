@@ -173,7 +173,7 @@ For more info about Keptn, please see our
   and implement its various features.
 - [Architecture](https://lifecycle.keptn.sh/docs/concepts/architecture/) provides detailed technical information
   about how Keptn works.
-- [Components](https://keptn.sh/stable/docs/components/) provides an owerview
+- [Components](https://keptn.sh/stable/docs/components/) provides an overview
   about Keptn components.
 - [CRD Reference](https://lifecycle.keptn.sh/docs/yaml-crd-ref/) and
   [API Reference](https://lifecycle.keptn.sh/docs/crd-ref/)

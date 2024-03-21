@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Admission Webhooks
+# Mutating Webhook
 
 Keptn uses
 [Admission Webhooks](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#what-are-admission-webhooks)
@@ -20,41 +20,48 @@ metadata:
 ```
 
 The mutating webhook only modifies specifically annotated resources in the annotated namespace.
-When the webhook receives a request for a new pod,
-it looks for the workload annotations:
+When the webhook receives a request for a new pod, if first either replaces the scheduler
+with the Keptn Scheduler, or adds the
+[Scheduling Gate](https://keptn.sh/stable/docs/components/scheduling/#keptn-scheduling-gates-for-k8s-127-and-above).
+
+In the next step it looks for the workload annotations:
 
 ```yaml
 keptn.sh/workload: "some-workload-name"
+keptn.sh/version: "some-workload-version"
 ```
 
-The mutation either replaces the scheduler
-with the Keptn Scheduler, or adds the
-[Scheduling Gate](https://keptn.sh/stable/docs/components/scheduling/#keptn-scheduling-gates-for-k8s-127-and-above).
-The webhook then creates a workload and app resource for each annotated resource.
-You can also specify a custom app definition with the annotation:
+If the `keptn.sh/version` annotation is missing, webhook computes a version string,
+using a hash function that takes certain properties of the pod as parameters
+(e.g. the images of its containers).
+Next, it looks for an existing instance of a `KeptnWorkload`
+for the specified workload name:
+
+- If it finds the `KeptnWorkload`,
+  it updates its version according to the previously computed version string.
+  In addition, it includes a reference to the ReplicaSet UID of the pod
+  (i.e. the Pods owner).
+- If it does not find a workload instance,
+  it creates one containing the previously computed version string.
+
+Afterwards the webhook looks for the application annotation:
 
 ```yaml
 keptn.sh/app: "your-app-name"
 ```
 
-The webhook computes a version string,
-using a hash function that takes certain properties of the pod as parameters
-(e.g. the images of its containers).
-Next, it looks for an existing instance of a `Workload CRD`
-for the specified workload name:
+The webhook searches for `KeptnAppCreationRequest` resource with the name stored in the `keptn.sh/app`
+annotations.
+If it does not find it, it creates it and the automatic creation of `KeptnApp` is afterwards
+handled by the `KeptnAppCreationRequest Controller`.
 
-- If it finds the `Workload`,
-  it updates its version according to the previously computed version string.
-  In addition, it includes a reference to the ReplicaSet UID of the pod
-  (i.e. the Pods owner),
-  or the pod itself, if it does not have an owner.
-- If it does not find a workload instance,
-  it creates one containing the previously computed version string.
-  In addition, it includes a reference to the ReplicaSet UID of the pod
-  (i.e. the Pods owner), or the pod itself, if it does not have an owner.
+The `keptn.sh/app` annotation is not mandatory for a single-service applications.
+If you have a multi-service application, you need to add it to all workloads
+to define which workloads belong to the application.
 
-It uses the following annotations for the specification
-of the pre/post deployment checks that should be executed for the `Workload`:
+The Pod can contain also information about the definition of pre or
+post-deployment tasks or evaluations for each workload.
+These are specified via these annotations:
 
 - `keptn.sh/pre-deployment-tasks: task1,task2`
 - `keptn.sh/post-deployment-tasks: task1,task2`
@@ -64,5 +71,5 @@ and for the Evaluations:
 - `keptn.sh/pre-deployment-evaluations: my-evaluation-definition`
 - `keptn.sh/post-deployment-evaluations: my-eval-definition`
 
-After either one of those actions has been taken,
-the pod is allowed to be scheduled.
+The lists of tasks or evaluations are parsed and stored in the `KeptnWorkload`
+resource created in the previous steps.

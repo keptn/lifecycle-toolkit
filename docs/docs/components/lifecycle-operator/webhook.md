@@ -20,7 +20,7 @@ metadata:
 ```
 
 The mutating webhook only modifies specifically annotated resources in the annotated namespace.
-When the webhook receives a request for a new pod, if first either replaces the scheduler
+When the webhook receives a request for a new pod, it first either replaces the scheduler
 with the Keptn Scheduler, or adds the
 [Scheduling Gate](https://keptn.sh/stable/docs/components/scheduling/#keptn-scheduling-gates-for-k8s-127-and-above).
 
@@ -31,7 +31,7 @@ keptn.sh/workload: "some-workload-name"
 keptn.sh/version: "some-workload-version"
 ```
 
-If the `keptn.sh/version` annotation is missing, webhook computes a version string,
+If the `keptn.sh/version` annotation is missing, the webhook computes a version string,
 using a hash function that takes certain properties of the pod as parameters
 (e.g. the images of its containers).
 Next, it looks for an existing instance of a `KeptnWorkload`
@@ -50,16 +50,16 @@ Afterwards the webhook looks for the application annotation:
 keptn.sh/app: "your-app-name"
 ```
 
-The webhook searches for `KeptnAppCreationRequest` resource with the name stored in the `keptn.sh/app`
+The webhook searches for the `KeptnAppCreationRequest` resource with the name stored in the `keptn.sh/app`
 annotations.
-If it does not find it, it creates it and the automatic creation of `KeptnApp` is afterwards
+If it doesn't find it, it creates it and the automatic creation of the `KeptnApp` is afterwards
 handled by the `KeptnAppCreationRequest Controller`.
 
-The `keptn.sh/app` annotation is not mandatory for a single-service applications.
-If you have a multi-service application, you need to add it to all workloads
+The `keptn.sh/app` annotation is not mandatory for single-service applications.
+If you have a multi-service application, you must add it to all workloads
 to define which workloads belong to the application.
 
-The Pod can contain also information about the definition of pre or
+The Pod can also contain information about the definition of pre or
 post-deployment tasks or evaluations for each workload.
 These are specified via these annotations:
 

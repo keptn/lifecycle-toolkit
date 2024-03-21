@@ -8,12 +8,7 @@ Keptn must be installed onto each Kubernetes cluster you want to monitor.
 Additionally, Keptn needs to be enabled on your namespaces.
 This gives you flexibility in how and where you want to use Keptn.
 
-Keptn v0.9.0 and later is installed using [Helm](https://helm.sh/).
-
-> **Note** Earlier releases could also be installed using the manifest.
-> See
-[Upgrade to Helm from a manifest installation](upgrade.md/#upgrade-to-helm-from-a-manifest-installation)
-> if you need to upgrade from a manifest installation.
+Keptn is installed using [Helm](https://helm.sh/).
 
 After you install Keptn, you are ready to
 [Integrate Keptn with your applications](../guides/integrate.md).

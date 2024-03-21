@@ -152,6 +152,7 @@ nav:
               - Flow of deployment: docs/components/lifecycle-operator/deployment-flow.md
               - Keptn Applications and Keptn Workloads: docs/components/lifecycle-operator/keptn-apps.md
               - Keptn non-blocking application deployment: docs/components/lifecycle-operator/keptn-non-blocking.md
+              - Webhooks: docs/components/lifecycle-operator/webhook.md
           - Metrics Operator: docs/components/metrics-operator.md
           - Scheduler and Scheduling Gates: docs/components/scheduling.md
           - Keptn Certificate Manager: docs/components/certificate-operator.md

@@ -8,7 +8,7 @@ Keptn uses
 [Admission Webhooks](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#what-are-admission-webhooks)
 to mutate resources.
 To enable the webhook (and therefore Keptn Lifecycle Management)
-for a certain namespace, the namespace needs to be annotated:
+for a certain namespace, the namespace must be annotated:
 
 ```yaml
 apiVersion: v1
@@ -30,7 +30,7 @@ keptn.sh/workload: "some-workload-name"
 The mutation consists in changing the scheduler used for the deployment
 with the Keptn Scheduler, or adding the
 [Scheduling Gate](https://keptn.sh/stable/docs/components/scheduling/#keptn-scheduling-gates-for-k8s-127-and-above).
-The webhook then creates a workload and app resource per annotated resource.
+The webhook then creates a workload and app resource for each annotated resource.
 You can also specify a custom app definition with the annotation:
 
 ```yaml

@@ -94,7 +94,7 @@ A Keptn Analysis is implemented with three resources:
 Consider the following `Analysis` resource:
 
 ```yaml
-{% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/metrics-operator/config/samples/metrics_v1beta1_analysis.yaml" %}
+{% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/metrics-operator/config/samples/metrics_v1_analysis.yaml" %}
 ```
 
 This `Analysis` resource:
@@ -110,7 +110,7 @@ The `AnalysisDefinition` resource references this `Analysis` resource
 by its `name` and `namespace` and can be seen here:
 
 ```yaml
-{% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/metrics-operator/config/samples/metrics_v1beta1_analysisdefinition.yaml" %}
+{% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/metrics-operator/config/samples/metrics_v1_analysisdefinition.yaml" %}
 ```
 
 This simple definition contains a single objective, `response-time-p95`.
@@ -136,7 +136,7 @@ or fails with 0% (slower response time).
 The objective points to the corresponding `AnalysisValueTemplate` resource:
 
 ```yaml
-{% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/metrics-operator/config/samples/metrics_v1beta1_analysisvaluetemplate.yaml" %}
+{% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/metrics-operator/config/samples/metrics_v1_analysisvaluetemplate.yaml" %}
 ```
 
 This template defines a query to a provider called `prometheus`:

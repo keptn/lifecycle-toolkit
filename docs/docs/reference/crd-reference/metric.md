@@ -16,7 +16,7 @@ for different metrics at the same time.
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetric
 metadata:
   name: <metric-name>
@@ -143,7 +143,7 @@ defined as `my-provider` in the `spec.provider.name` field
 of the corresponding `KeptnMetricsProvider` CR.
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetric
 metadata:
   name: keptnmetric-sample
@@ -162,6 +162,8 @@ spec:
 API Reference:
 
 ## Differences between versions
+
+- Versions `v1beta1` and `v1` are fully compatible.
 
 - Beginning with the `v1beta1` API version,
   the metrics controller supports multiple metrics in its `status` field

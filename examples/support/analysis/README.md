@@ -31,7 +31,7 @@ kubectl create namespace analysis-demo
 
 ```shell
 cat <<EOF | kubectl apply -f - 
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetricsProvider
 metadata:
   name: my-provider
@@ -55,7 +55,7 @@ First, we are going to create the template for the response time:
 
 ```shell
 cat <<EOF | kubectl apply -f - 
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisValueTemplate
 metadata:
   name: response-time-p95
@@ -71,7 +71,7 @@ Our second metric will be the error rate, which we will retrieve with the follow
 
 ```shell
 cat <<EOF | kubectl apply -f - 
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisValueTemplate
 metadata:
   name: error-rate
@@ -115,7 +115,7 @@ rather than from a real Prometheus instance:
 
 ```shell
 cat <<EOF | kubectl apply -f - 
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetricsProvider
 metadata:
   name: my-provider
@@ -133,7 +133,7 @@ This is done in an `AnalysisDefinition`, which can be applied using the followin
 
 ```shell
 cat <<EOF | kubectl apply -f - 
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisDefinition
 metadata:
   name: my-analysis-definition
@@ -172,7 +172,7 @@ to perform an analysis for a specific timeframe:
 
 ```shell
 cat <<EOF | kubectl apply -f - 
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: Analysis
 metadata:
   name: analysis-sample
@@ -217,7 +217,7 @@ This will return something like the following, and includes the `status.raw` fie
 breakdown on the result of each objective evaluation.
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: Analysis
 metadata:
   name: analysis-sample

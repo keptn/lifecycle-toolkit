@@ -1,4 +1,4 @@
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisDefinition
 metadata:
   name: ad-my-proj-dev-svc1

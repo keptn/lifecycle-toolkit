@@ -69,7 +69,7 @@ the HPA to react on the values of these metrics:
 ```
 
 For more information about the `KeptnMetric` and `KeptnMetricsProvider` custom resources,
-please refer to the [CRD documentation](../reference/api-reference/metrics/v1beta1/index.md).
+please refer to the [CRD documentation](../reference/api-reference/metrics/v1/index.md).
 
 After a few seconds we should be able to see values for the `cpu-throttling` metric:
 
@@ -77,7 +77,7 @@ After a few seconds we should be able to see values for the `cpu-throttling` met
 $ kubectl describe  keptnmetrics.metrics.keptn.sh cpu-throttling -n podtato-kubectl
 Name:         cpu-throttling
 Namespace:    podtato-kubectl
-API Version:  metrics.keptn.sh/v1beta1
+API Version:  metrics.keptn.sh/v1
 Kind:         KeptnMetric
 Spec:
   Fetch Interval Seconds:  60

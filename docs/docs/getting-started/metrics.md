@@ -187,7 +187,7 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/simplenode-d
         "kind": "KeptnMetric",
         "namespace": "simplenode-dev",
         "name": "available-cpus",
-        "apiVersion": "metrics.keptn.sh/v1beta1"
+        "apiVersion": "metrics.keptn.sh/v1"
       },
       "metric": {
         "name": "available-cpus",

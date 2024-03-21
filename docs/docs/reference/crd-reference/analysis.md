@@ -18,7 +18,7 @@ that are used in the `AnalysisDefinition` query.
 ## Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: Analysis
 metadata:
   name: <name-of-analysis>
@@ -300,7 +300,7 @@ guide page.
 
 ## Files
 
-API reference: [Analysis](../api-reference/metrics/v1beta1/index.md#analysis)
+API reference: [Analysis](../api-reference/metrics/v1/index.md#analysis)
 
 ## Differences between versions
 

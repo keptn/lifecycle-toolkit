@@ -24,7 +24,7 @@
 
 SLO converter is a tool to convert the old `slo.yaml`
 [file format](https://github.com/keptn/spec/blob/master/service_level_objective.md) into the new
-`AnalysisDefinition` [custom resource definition](https://keptn.sh/latest/docs/reference/api-reference/metrics/v1beta1/).
+`AnalysisDefinition` [custom resource definition](https://keptn.sh/latest/docs/reference/api-reference/metrics/v1/).
 The converter is part of `metrics-operator` image.
 
 ## Usage
@@ -368,7 +368,7 @@ docker run $METRICS_OPERATOR_IMAGE manager --convert-slo=./slo.yaml --slo-namesp
 will be converted to:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisDefinition
 metadata:
   creationTimestamp: null

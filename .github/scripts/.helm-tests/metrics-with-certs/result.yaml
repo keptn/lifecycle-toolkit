@@ -239,7 +239,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -567,7 +567,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -928,7 +928,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - name: v1alpha3
@@ -1598,7 +1598,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -1685,7 +1685,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -1807,7 +1807,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -2010,7 +2010,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -2520,7 +2520,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -2615,7 +2615,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - name: v1alpha2
@@ -2808,7 +2808,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -3573,14 +3573,14 @@ webhooks:
     service:
       name: 'metrics-webhook-service'
       namespace: 'helmtests'
-      path: /validate-metrics-keptn-sh-v1beta1-keptnmetric
+      path: /validate-metrics-keptn-sh-v1-keptnmetric
   failurePolicy: Fail
   name: vkeptnmetric.kb.io
   rules:
   - apiGroups:
     - metrics.keptn.sh
     apiVersions:
-    - v1beta1
+    - v1
     operations:
     - CREATE
     - UPDATE
@@ -3593,14 +3593,14 @@ webhooks:
     service:
       name: 'metrics-webhook-service'
       namespace: 'helmtests'
-      path: /validate-metrics-keptn-sh-v1beta1-analysis
+      path: /validate-metrics-keptn-sh-v1-analysis
   failurePolicy: Fail
   name: vanalysis.kb.io
   rules:
     - apiGroups:
         - metrics.keptn.sh
       apiVersions:
-        - v1beta1
+        - v1
       operations:
         - CREATE
         - UPDATE
@@ -3613,14 +3613,14 @@ webhooks:
     service:
       name: 'metrics-webhook-service'
       namespace: 'helmtests'
-      path: /validate-metrics-keptn-sh-v1beta1-analysisdefinition
+      path: /validate-metrics-keptn-sh-v1-analysisdefinition
   failurePolicy: Fail
   name: vanalysisdefinition.kb.io
   rules:
   - apiGroups:
     - metrics.keptn.sh
     apiVersions:
-    - v1beta1
+    - v1
     operations:
     - CREATE
     - UPDATE

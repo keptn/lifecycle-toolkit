@@ -1,4 +1,4 @@
-package v1beta1
+package v1
 
 import (
 	"fmt"
@@ -132,7 +132,7 @@ func TestScore_validate(t *testing.T) {
 				PassPercentage:    90,
 				WarningPercentage: 90,
 			},
-			wantErr: fmt.Errorf("Warn percentage score cannot be higher or equal than Pass percentage score"),
+			wantErr: fmt.Errorf("warn percentage score cannot be higher or equal than Pass percentage score"),
 		},
 		{
 			name: "warn higher than pass",
@@ -140,7 +140,7 @@ func TestScore_validate(t *testing.T) {
 				PassPercentage:    90,
 				WarningPercentage: 95,
 			},
-			wantErr: fmt.Errorf("Warn percentage score cannot be higher or equal than Pass percentage score"),
+			wantErr: fmt.Errorf("warn percentage score cannot be higher or equal than Pass percentage score"),
 		},
 	}
 
@@ -257,7 +257,7 @@ func TestAnalysisDefinition_validateCreateUpdate(t *testing.T) {
 					},
 				},
 			},
-			wantErr: fmt.Errorf("Warn percentage score cannot be higher or equal than Pass percentage score"),
+			wantErr: fmt.Errorf("warn percentage score cannot be higher or equal than Pass percentage score"),
 		},
 		{
 			name: "happy path",

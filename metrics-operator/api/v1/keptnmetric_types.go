@@ -97,6 +97,7 @@ type IntervalResult struct {
 // +kubebuilder:printcolumn:name="Value",type=string,JSONPath=`.status.value`
 // +kubebuilder:printcolumn:name="Step",type=string,JSONPath=`.spec.range.step`
 // +kubebuilder:printcolumn:name="Aggregation",type=string,JSONPath=`.spec.range.aggregation`
+// +kubebuilder:storageversion
 
 // KeptnMetric is the Schema for the keptnmetrics API
 type KeptnMetric struct {

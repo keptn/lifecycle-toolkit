@@ -45,7 +45,7 @@ func (p *KeptnMetricProvider) GetKeptnMetric(ctx context.Context, objective klcv
 	metric := &unstructured.Unstructured{
 		Object: map[string]interface{}{
 			"kind":       "KeptnMetric",
-			"apiVersion": "metrics.keptn.sh/v1beta1",
+			"apiVersion": "metrics.keptn.sh/v1",
 		},
 	}
 

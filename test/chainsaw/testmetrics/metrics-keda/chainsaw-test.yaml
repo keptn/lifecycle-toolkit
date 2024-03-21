@@ -3,7 +3,7 @@ apiVersion: chainsaw.kyverno.io/v1alpha1
 kind: Test
 metadata:
   creationTimestamp: null
-  name: metrics-hpa
+  name: metrics-keda
 spec:
   steps:
     - name: step-00

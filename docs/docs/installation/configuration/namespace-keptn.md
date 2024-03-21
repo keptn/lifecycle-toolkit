@@ -72,4 +72,3 @@ Restricted allowed namespaces are configured at installation time.
 To add or remove Keptn allowed namespaces,
 you must modify the list of namespaces in your `values.yaml` file
 and rerun the `helm upgrade` command.
-

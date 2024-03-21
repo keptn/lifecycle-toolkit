@@ -85,4 +85,3 @@ The `KeptnApp` resource includes fields to define
 the `version` as well as a `revision`
 (used if you have to rerun a deployment
 but want to retain the version number).
-

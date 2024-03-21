@@ -9,7 +9,7 @@ spec:
     - name: step-00
       try:
         - apply:
-            resource: https://github.com/kedacore/keda/releases/download/v2.13.0/keda-2.13.0.yaml
+            file: https://github.com/kedacore/keda/releases/download/v2.13.0/keda-2.13.0.yaml
         - apply:
             file: 00-install.yaml
         - apply:

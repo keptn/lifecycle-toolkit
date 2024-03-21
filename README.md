@@ -110,51 +110,20 @@ helm repo update
 helm upgrade --install keptn keptn/keptn -n keptn-system --create-namespace --wait
 ```
 
-### Installation with only certain namespaces allowed
+### Keptn and namespaces
 
-Keptn lifecycle orchestration is by default enabled for all namespaces except the following ones:
+Keptn must be installed in its own namespace
+that does not run other major components or deployments.
 
-- `kube-system`
-- `kube-public`
-- `kube-node-lease`
-- `cert-manager`
-- `keptn-system`
-- `observability`
-- `monitoring`
-- `<Keptn installation namespace>`
-
-To restrict Keptn lifecycle orchestration to specific namespaces, you must specify
-those namespaces during installation via helm values.
-First you need to create a `values.yaml`
-file
-
-```yaml
-lifecycleOperator:
-  allowedNamespaces:
-  - allowed-ns-1
-  - allowed-ns-2
-```
-
-and add the values file to the helm installation command:
-
-```shell
-helm repo add keptn https://charts.lifecycle.keptn.sh
-helm repo update
-helm upgrade --install keptn keptn/keptn -n keptn-system --values values.yaml --create-namespace --wait
-```
-
-> **Note**
-Please be aware that you still need to correctly annotate the namespaces where
-Keptn lifecycle orchestration is allowed.
-> To annotate them, use:
-
-```shell
-kubectl annotate ns <your-allowed-namespace> keptn.sh/lifecycle-toolkit='enabled'
-```
-
-> **Note**
-Please be aware that, if this option is set, adding any additional namespace
-requires the helm installation to be updated by adding the name of the new namespace to the list.
+By default, the Keptn lifecycle orchestration
+monitors all namespaces in the cluster
+except for a few namespaces that are reserved
+for specific Kubernetes and other components.
+You can modify the Helm chart to specify the namespaces
+where the Keptn lifecycle orchestration is allowed.
+For more information, see the "Namespaces and Keptn" page in the
+[Configuration](https://keptn.sh/stable/docs/installation/configuration/index.md)
+section of the documentation.
 
 ## More information
 

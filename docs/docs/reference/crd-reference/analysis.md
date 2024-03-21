@@ -6,7 +6,7 @@ comments: true
 
 An `Analysis` is a snapshot of your current application status.
 Based on your defined SLIs, it can validate that your SLOs are satisfied,
-based on the data coming from your defined set of `KeptnMetricsProvider` resources.
+using the data coming from your defined set of `KeptnMetricsProvider` resources.
 
 The `Analysis` resource is an instance of an
 [AnalysisDefinition](analysisdefinition.md) resource

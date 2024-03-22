@@ -33,6 +33,6 @@ It is divided into three sections:
   Keptn metrics provider.
 
 * [Documentation contributions](docs/index.md)
-  gives additional guidelines that apply only to documenation contributions
+  gives additional guidelines that apply only to documentation contributions
   and describes the documentation file structure
   and the documentation tools we use.

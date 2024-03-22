@@ -32,7 +32,7 @@ It is divided into three sections:
   as well as specific instructions for creating a new
   Keptn metrics provider.
 
-* [Documentation contributions](documentation/index.md)
+* [Documentation contributions](docs/index.md)
   gives additional guidelines that apply only to documenation contributions
   and describes the documentation file structure
   and the documentation tools we use.

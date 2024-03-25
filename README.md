@@ -54,7 +54,7 @@ Status of the different features:
   Observability: expose [OTel](https://opentelemetry.io/) metrics and traces of your deployment.
 - ![status](https://img.shields.io/badge/status-stable-brightgreen)
   K8s Custom Metrics: expose your Observability platform via the [Custom Metric API](https://github.com/kubernetes/design-proposals-archive/blob/main/instrumentation/custom-metrics-api.md).
-- ![status](https://img.shields.io/badge/status-beta-yellow)
+- ![status](https://img.shields.io/badge/status-stable-brightgreen)
   Release lifecycle: handle pre- and post-checks of your Application deployment.
 - ![status](https://img.shields.io/badge/status-stable-brightgreen)
   Certificate Manager: automatically configure TLS certificates with the

@@ -3,9 +3,6 @@ kind: Test
 metadata:
   name: metrics-keda
 spec:
-  bindings:
-    - name: url
-      value: (replace_all('http://metrics-operator-service.keptn-system.svc.cluster.local:9999/api/v1/metrics/namespace/cpu-throttling', 'namespace', ($namespace)))
   steps:
     - name: step-00
       try:
@@ -41,7 +38,7 @@ spec:
             selector: app=metrics-operator
         - describe:
             resource: keptnmetric
-            name: cpu-throttling
+            name: test
         - describe:
             resource: keptnmetricsprovider
             name: my-provider

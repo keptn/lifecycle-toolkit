@@ -9,7 +9,7 @@ spec:
 apiVersion: metrics.keptn.sh/v1beta1
 kind: KeptnMetric
 metadata:
-  name: cpu-throttling
+  name: test
 spec:
   provider:
     name: my-provider

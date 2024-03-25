@@ -105,7 +105,7 @@ data:
               "result": [
                 {
                   "metric": {
-                    "__name__": "cpu-throttling",
+                    "__name__": "test",
                     "job": "",
                     "instance": ""
                   },

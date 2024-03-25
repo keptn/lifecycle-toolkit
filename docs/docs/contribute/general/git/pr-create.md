@@ -54,20 +54,20 @@ to the repository are:
      git commit -s
      ```
 
-       Use `vi` commands to add a description of the PR to the commit;
-       this description is displayed as the title of the PR in listings.
+     Use `vi` commands to add a description of the PR to the commit;
+     this description is displayed as the title of the PR in listings.
 
-        * The title text should be prefixed with an appropriate
-          [commit type](#commit-types)
-          to conform to our semantic commit scheme.
-        * Follow the `commit type` with a brief (80 characters or less) description
-          that succinctly describes the change made by this PR.
-          The description must begin with a lowercase letter.
+      * The title text should be prefixed with an appropriate
+        [commit type](#commit-types)
+        to conform to our semantic commit scheme.
+      * Follow the `commit type` with a brief (80 characters or less) description
+        that succinctly describes the change made by this PR.
+        The description must begin with a lowercase letter.
 
-       You can add multiple lines explaining the PR here but, in general,
-       it is better to only supply the PR title here;
-       you can add more information and edit the PR title
-       when you create the PR on the GitHub UI page.
+     You can add multiple lines explaining the PR here but, in general,
+     it is better to only supply the PR title here;
+     you can add more information and edit the PR title
+     when you create the PR on the GitHub UI page.
 
 1. Push your branch to github.
    If you cloned your fork to use SSH, the command is:

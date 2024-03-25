@@ -1,10 +1,11 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/kyverno/chainsaw/main/.schemas/json/test-chainsaw-v1alpha1.json
 apiVersion: chainsaw.kyverno.io/v1alpha1
 kind: Test
 metadata:
-  creationTimestamp: null
   name: metrics-keda
 spec:
+  bindings:
+    - name: url
+      value: (replace_all('http://metrics-operator-service.keptn-system.svc.cluster.local:9999/api/v1/metrics/namespace/cpu-throttling', 'namespace', ($namespace)))
   steps:
     - name: step-00
       try:

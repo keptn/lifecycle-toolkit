@@ -89,7 +89,6 @@ cncf
 codecov
 codeql
 codespace
-commonannotation
 COMMONENVVAR
 configmap
 configmapref
@@ -185,7 +184,6 @@ fieldref
 finalizer
 flyout
 fontawesome
-Frontmatter
 ftp
 fullname
 functionref
@@ -548,6 +546,7 @@ runtimespec
 Sambhav
 sampleuser
 sbom
+scaledobject
 schedulinggates
 sclient
 screenshot
@@ -665,11 +664,9 @@ visualise
 visualised
 vkeptnmetric
 vkeptntaskdefinition
-vmyversion
 vnd
 vwc
 vwh
-webbrowser
 webhookcainjection
 webhookmanager
 webhooknamespaces

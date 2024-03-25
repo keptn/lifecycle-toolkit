@@ -54,15 +54,15 @@ please create an issue on the GitHub repository.
   [issue tracker](https://github.com/keptn/lifecycle-toolkit/issues).
   If you would like to work on this issue, include that in a comment to the issue.
 * Actively participate in the
-  [refinement sessions](refinement-guide)
+  [refinement sessions](refinement-guide.md)
   that are part of the regularly scheduled
   [community meetings](https://community.cncf.io/keptn-community/).
-  * In these sessions, everyone discusses the proposed work, whether it is a good idea,
-    what exactly should be done and how it aligns with the project goals.
-  * After the discussions, maintainers engage in a process known as **Scrum Poker**.
-    This involves a voting mechanism where maintainers collectively assess the size
-    and complexity of the proposed work, helping to decide whether it should proceed.
-  * When the issue is refined, it can be assigned and work can begin.
+    * In these sessions, everyone discusses the proposed work, whether it is a good idea,
+      what exactly should be done and how it aligns with the project goals.
+    * After the discussions, maintainers engage in a process known as **Scrum Poker**.
+      This involves a voting mechanism where maintainers collectively assess the size
+      and complexity of the proposed work, helping to decide whether it should proceed.
+    * When the issue is refined, it can be assigned and work can begin.
 * A PR should be created within a week of when an issue is assigned to you
   or the issue may be reassigned to someone else.
   When necessary, you can request an extension from the maintainers

@@ -56,6 +56,7 @@ to the repository are:
 
      Use `vi` commands to add a description of the PR to the commit;
      this description is displayed as the title of the PR in listings.
+
        * The title text should be prefixed with an appropriate
          [commit type](#commit-types)
          to conform to our semantic commit scheme.
@@ -127,11 +128,11 @@ feat(api): new endpoint for feature X
 * The PR template includes a checklist that must be filled out
   to ensure that the PR adheres to the project requirements.
 
-   * The template includes separate sections for software and documentation;
-     delete the section that does not apply to your PR,
-     unless your PR includes both software and documentation.
-   * Read each item and only check it off if you have satisfied that requirement.
-   * If a requirement is not relevant for your PR, mark it as `n/a` (not applicable).
+    * The template includes separate sections for software and documentation;
+      delete the section that does not apply to your PR,
+      unless your PR includes both software and documentation.
+    * Read each item and only check it off if you have satisfied that requirement.
+    * If a requirement is not relevant for your PR, mark it as `n/a` (not applicable).
 
 * If you have **breaking changes** in your PR,
   it is important to note them in both the PR description

@@ -11,10 +11,7 @@ spec:
   triggers:
     - type: metrics-api
       metadata:
-        targetValue: "7"
-        valueLocation: 'items[0].value'
-        url: (replace_all('https://kubernetes.default.svc/apis/custom.metrics.k8s.io/v1beta2/namespaces/xxxxx/keptnmetrics.metrics.sh/cpu-throttling/cpu-throttling', 'xxxxx', ($namespace)))
+        targetValue: "1"
+        valueLocation: 'value'
+        url: (replace_all('http://metrics-operator-service.keptn-system.svc.cluster.local:9999/api/v1/metrics/xxxxx/cpu-throttling', 'xxxxx', ($namespace)))
         unsafeSsl: "true"
-
-
-        # how do you access the k8s custom metrics api from here???

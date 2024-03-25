@@ -1,0 +1,20 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: test-scaledobject
+  labels:
+    deploymentName: podtato-head-entry
+spec:
+  maxReplicaCount: 3
+  scaleTargetRef:
+    name: podtato-head-entry
+  triggers:
+    - type: metrics-api
+      metadata:
+        targetValue: "7"
+        valueLocation: 'items[0].value'
+        url: (replace_all('https://kubernetes.default.svc/apis/custom.metrics.k8s.io/v1beta2/namespaces/xxxxx/keptnmetrics.metrics.sh/cpu-throttling/cpu-throttling', 'xxxxx', ($namespace)))
+        unsafeSsl: "true"
+
+
+        # how do you access the k8s custom metrics api from here???

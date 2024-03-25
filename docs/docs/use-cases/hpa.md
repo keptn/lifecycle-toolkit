@@ -2,9 +2,7 @@
 comments: true
 ---
 
-# Keptn + HorizontalPodAutoscaler
-
-## Scaling Workloads based on Keptn metrics
+# Scaling Workloads with HPA based on Keptn metrics
 
 Kubernetes provides many built-in capabilities to ensure
 that enough replicas are running in order to meet the current demand of

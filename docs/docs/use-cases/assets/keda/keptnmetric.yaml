@@ -1,0 +1,20 @@
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetricsProvider
+metadata:
+  name: prometheus-provider
+  namespace: podtato-kubectl
+spec:
+  type: prometheus
+  targetServer: <your-metrics-provider-server>
+---
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetric
+metadata:
+  name: cpu-throttling
+spec:
+  provider:
+    name: prometheus-provider
+  query: 'avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-kubectl"}))'
+  fetchIntervalSeconds: 10
+  range:
+    interval: "30s"

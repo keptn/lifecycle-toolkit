@@ -2,34 +2,28 @@
 comments: true
 ---
 
-# Keptn + KEDA
+# Scaling Workloads with KEDA based on Keptn metrics
 
-## Scaling Workloads based on Keptn metrics
+If you want to use KEDA to scale your workloads, you can set it up
+to consume metrics from Keptn.
+This gives you great flexibility for your setup since Keptn can
+consolidate different observability providers for you and KEDA
+will simplify the scaling operations for you.
 
-Kubernetes provides many built-in capabilities to ensure
-that enough replicas are running in order to meet the current demand of
-your [workloads](https://kubernetes.io/docs/concepts/workloads/).
-One of these is the
-[HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
-(HPA).
-
-An HPA can make use of the Keptn Metrics
+This use case is enabled by the Keptn Metrics
 [custom API](https://kubernetes.io/docs/reference/external-api/custom-metrics.v1beta2/)
-to scale the number of replicas of [workloads](https://kubernetes.io/docs/concepts/workloads/) based on the current
-load.
-It does this by using metrics such as CPU throttling, memory consumption, or response time.
+that the Keptn Metrics Operator provides.
 
-### Installation of Keptn Metrics Operator
+## Installation of Keptn Metrics Operator
 
-To use an HPA with the custom metrics API, the
+To use KEDA with Keptn, the
 Keptn Metrics Operator must be installed on the cluster.
 For more information about installation please refer to the
 [installation guide](../installation/index.md).
 
-> **Note**
-  The Keptn Lifecycle Operator does not need to be installed for this use-case.
+> The Keptn Lifecycle Operator does not need to be installed for this use-case.
 
-### Installation of metrics provider (optional)
+## Installation of metrics provider (optional)
 
 If you do not have a metrics provider installed on your cluster yet, please do so.
 
@@ -37,14 +31,14 @@ For this tutorial we are going to use [Prometheus](https://prometheus.io/).
 For more information about how to install Prometheus into your cluster, please
 refer to the [Prometheus documentation](https://prometheus.io/docs/prometheus/latest/installation/).
 
-### Deploy sample application
+## Deploy sample application
 
 First, we need to deploy our application to the cluster.
 For this we are going to
 use a single service `podtato-head` application.
 
 ```yaml
-{% include "./assets/hpa/sample-app.yaml" %}
+{% include "./assets/keda/sample-app.yaml" %}
 ```
 
 Please create a `podtato-kubectl` namespace and apply the above manifest
@@ -56,7 +50,7 @@ $ kubectl get pods -n podtato-kubectl
 podtato-head-entry-58d6485d9b-ld9x2         1/1     Running     (2m ago)
 ```
 
-### Create KeptnMetric and KeptnMetricsProvider custom resources
+## Create KeptnMetric and KeptnMetricsProvider custom resources
 
 To be able to react on the metrics of our application, we need to create
 `KeptnMetrics` and `KeptnMetricsProvider` custom resources.
@@ -65,7 +59,7 @@ exposed via the custom metrics API, which gives us the possibility to configure
 the HPA to react on the values of these metrics:
 
 ```yaml
-{% include "./assets/hpa/keptnmetric.yaml" %}
+{% include "./assets/keda/keptnmetric.yaml" %}
 ```
 
 For more information about the `KeptnMetric` and `KeptnMetricsProvider` custom resources,
@@ -91,7 +85,7 @@ Status:
 
 Here we can see that the value of the `cpu-throttling` metric is `1.63`
 
-### Set up the HorizontalPodAutoscaler
+## Set up the HorizontalPodAutoscaler
 
 Now that we are able to retrieve the value of our metric, and have it stored in
 our cluster in the status of our `KeptnMetric` custom resource, we can configure
@@ -99,7 +93,7 @@ a `HorizontalPodAutoscaler` to make use of this information and therefore scale
 our application automatically:
 
 ```yaml
-{% include "./assets/hpa/hpa.yaml" %}
+{% include "./assets/keda/hpa.yaml" %}
 ```
 
 As we can see in this example, we are now referring to the `KeptnMetric`

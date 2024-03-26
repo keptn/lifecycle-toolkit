@@ -10,8 +10,7 @@ This gives you great flexibility for your setup since Keptn can
 consolidate different observability providers for you and KEDA
 will simplify the scaling operations for you.
 
-This use case is enabled by the
-[Custom Metrics API](https://kubernetes.io/docs/reference/external-api/custom-metrics.v1beta2/)
+This use case is enabled by the metrics endpoint
 that the [Keptn Metrics Operator](../components/metrics-operator.md) provides.
 
 ## Before you begin

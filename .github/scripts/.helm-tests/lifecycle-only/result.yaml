@@ -179,7 +179,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - name: v1alpha1
@@ -496,7 +496,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -616,7 +616,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - name: v1beta1
@@ -709,7 +709,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -776,7 +776,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - name: v1alpha3
@@ -858,7 +858,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -1288,7 +1288,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -2521,7 +2521,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -2788,7 +2788,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -3320,7 +3320,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -3428,7 +3428,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - name: v1alpha1
@@ -3687,7 +3687,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -3881,7 +3881,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -4453,7 +4453,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -6036,7 +6036,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - name: v1alpha1
@@ -9450,7 +9450,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -9592,7 +9592,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -9990,7 +9990,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -10352,7 +10352,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -11003,7 +11003,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -12120,14 +12120,14 @@ webhooks:
     service:
       name: 'lifecycle-webhook-service'
       namespace: 'helmtests'
-      path: /validate-lifecycle-keptn-sh-v1beta1-keptntaskdefinition
+      path: /validate-lifecycle-keptn-sh-v1-keptntaskdefinition
   failurePolicy: Fail
   name: vkeptntaskdefinition.kb.io
   rules:
   - apiGroups:
     - lifecycle.keptn.sh
     apiVersions:
-    - v1beta1
+    - v1
     operations:
     - CREATE
     - UPDATE

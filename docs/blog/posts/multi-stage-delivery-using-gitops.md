@@ -114,7 +114,7 @@ in the following file, located in `.github/workflows/promote.yaml`
 
 This action essentially copies over the `values.yaml` file from the
 `dev` stage to the `prod` stage, to set the
-service versions that should be 
+service versions that should be
 
 ## Prepare the application namespaces
 
@@ -228,7 +228,7 @@ is used to trigger the GitHub action to promote the deployed version
 into the next stage.
 In addition to the pre-/post-deployment checks and the promotion task,
 the `KeptnAppContext` also contains a `metadata` property that
-passes the `commitID` made available by ArgoCD to the 
+passes the `commitID` made available by ArgoCD to the
 application deployment.
 This information is then added by Keptn as an attribute to the
 OpenTelemetry traces created for the application deployment.
@@ -260,7 +260,7 @@ This file contains an additional property called `traceParent`,
 which is essential in linking the deployment traces of the
 `prod` stage to the previous stage, i.e. the `dev` stage.
 The `traceParent` is propagated from Keptn to the GitHub action that
-does the promotion by adapting the `values.yaml` file to 
+does the promotion by adapting the `values.yaml` file to
 specify the workload versions that should be deployed in `prod`.
 In our example, the value of the `traceParent` is the span ID of the
 `promotion` phase of the `dev` stage.

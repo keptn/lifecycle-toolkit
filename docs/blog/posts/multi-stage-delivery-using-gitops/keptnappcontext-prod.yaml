@@ -5,15 +5,13 @@ metadata:
   namespace: simple-go-prod
 spec:
   metadata:
-    commit-id: {{ .Values.commitID }}
+    commit-id: {{.Values.commitID}}
   preDeploymentTasks:
     - wait-for-prometheus
   postDeploymentTasks:
     - post-deployment-loadtests
     - post-deployment-loadtests-backend
-  {{- if .Values.traceParent }}
   spanLinks:
-    - {{ .Values.traceParent }}
-  {{- end }}
+    - {{.Values.traceParent}}
   metadata:
-    commitID: {{ .Values.commitID }}
+    commitID: {{.Values.commitID}}

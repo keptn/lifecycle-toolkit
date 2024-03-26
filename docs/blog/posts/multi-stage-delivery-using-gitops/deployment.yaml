@@ -13,11 +13,11 @@ spec:
         app: simple-go-service
         app.kubernetes.io/name: simple-go-service
         app.kubernetes.io/part-of: simple-go
-        app.kubernetes.io/version: {{ .Values.serviceVersion }}
+        app.kubernetes.io/version: {{.Values.serviceVersion}}
         keptn.sh/post-deployment-tasks: wait-for-monitoring
     spec:
       containers:
-        - image: bacherfl/simple-go-service:{{ .Values.serviceVersion }}
+        - image: bacherfl/simple-go-service:{{.Values.serviceVersion}}
           imagePullPolicy: Always
           name: simple-go-service
           ports:

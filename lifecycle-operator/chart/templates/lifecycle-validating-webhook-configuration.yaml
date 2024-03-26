@@ -23,14 +23,14 @@ webhooks:
     service:
       name: 'lifecycle-webhook-service'
       namespace: '{{ .Release.Namespace }}'
-      path: /validate-lifecycle-keptn-sh-v1beta1-keptntaskdefinition
+      path: /validate-lifecycle-keptn-sh-v1-keptntaskdefinition
   failurePolicy: Fail
   name: vkeptntaskdefinition.kb.io
   rules:
   - apiGroups:
     - lifecycle.keptn.sh
     apiVersions:
-    - v1beta1
+    - v1
     operations:
     - CREATE
     - UPDATE

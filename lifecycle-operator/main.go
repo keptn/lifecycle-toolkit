@@ -368,15 +368,15 @@ func main() {
 		}
 	}
 
-	if err = (&lifecyclev1beta1.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnApp")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1beta1.KeptnAppVersion{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1.KeptnAppVersion{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnAppVersion")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1beta1.KeptnTaskDefinition{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1.KeptnTaskDefinition{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnTaskDefinition")
 		os.Exit(1)
 	}

@@ -64,7 +64,6 @@ type KeptnMetricReference struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:storageversion
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=keptnevaluationdefinitions,shortName=ked
 

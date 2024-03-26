@@ -122,7 +122,7 @@ for specific Kubernetes and other components.
 You can modify the Helm chart to specify the namespaces
 where the Keptn lifecycle orchestration is allowed.
 For more information, see the "Namespaces and Keptn" page in the
-[Configuration](https://keptn.sh/stable/docs/installation/configuration/index.md)
+[Configuration](https://keptn.sh/stable/docs/installation/configuration/)
 section of the documentation.
 
 ## More information

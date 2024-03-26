@@ -7,7 +7,7 @@ comments: true
 This page discusses how to restrict the namespaces
 where the Keptn
 [lifecycle-operator](../../components/lifecycle-operator/index.md)
-runs.
+orchestrates the deployments.
 
 For information about how to allocate Keptn resources
 across namespaces, see

@@ -7,7 +7,7 @@ metadata:
 status:
   readyReplicas: 1
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnWorkload
 metadata:
   name: waiter-waiter
@@ -17,7 +17,7 @@ spec:
     stage: dev
 ---
 
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnWorkloadVersion
 metadata:
   name: waiter-waiter-0.4

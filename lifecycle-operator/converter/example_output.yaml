@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnApp
 metadata:
   annotations:
@@ -14,7 +14,7 @@ spec:
 status: {}
 
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppContext
 metadata:
   creationTimestamp: null

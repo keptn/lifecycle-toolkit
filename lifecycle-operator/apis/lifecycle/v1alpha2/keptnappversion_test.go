@@ -8,13 +8,12 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/propagation"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestKeptnAppVersion(t *testing.T) {
 	app := &KeptnAppVersion{
-		ObjectMeta: metav1.ObjectMeta{
+		ObjectMeta: v1.ObjectMeta{
 			Name:      "app",
 			Namespace: "namespace",
 		},
@@ -194,7 +193,7 @@ func TestKeptnAppVersion(t *testing.T) {
 		AppName:              app.GetParentName(),
 		EvaluationDefinition: "taskdef",
 		Type:                 common.PostDeploymentCheckType,
-		RetryInterval: metav1.Duration{
+		RetryInterval: v1.Duration{
 			Duration: 5 * time.Second,
 		},
 	}, evaluation.Spec)
@@ -417,7 +416,7 @@ func TestKeptnAppVersionList(t *testing.T) {
 	list := KeptnAppVersionList{
 		Items: []KeptnAppVersion{
 			{
-				ObjectMeta: metav1.ObjectMeta{
+				ObjectMeta: v1.ObjectMeta{
 					Name: "obj1",
 				},
 				Status: KeptnAppVersionStatus{
@@ -425,7 +424,7 @@ func TestKeptnAppVersionList(t *testing.T) {
 				},
 			},
 			{
-				ObjectMeta: metav1.ObjectMeta{
+				ObjectMeta: v1.ObjectMeta{
 					Name: "obj2",
 				},
 				Status: KeptnAppVersionStatus{

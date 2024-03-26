@@ -6,6 +6,7 @@ package common
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"math/rand"
 	"strconv"
 
@@ -47,6 +48,9 @@ const (
 	AppTypeSingleService AppType = "single-service"
 	AppTypeMultiService  AppType = "multi-service"
 )
+
+var ErrCannotCastKeptnAppVersion = errors.New("cannot cast KeptnAppVersion to v1")
+var ErrCannotCastKeptnApp = errors.New("cannot cast KeptnApp to v1")
 
 // KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
 type KeptnState string

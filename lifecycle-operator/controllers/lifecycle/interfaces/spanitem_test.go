@@ -3,8 +3,8 @@ package interfaces
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/propagation"
@@ -13,16 +13,16 @@ import (
 )
 
 func TestSpanItemWrapper(t *testing.T) {
-	evaluation := &v1beta1.KeptnEvaluation{
+	evaluation := &apilifecycle.KeptnEvaluation{
 		ObjectMeta: v1.ObjectMeta{
 			Name: "evaluation",
 		},
-		Spec: v1beta1.KeptnEvaluationSpec{
+		Spec: apilifecycle.KeptnEvaluationSpec{
 			AppName:    "app",
 			AppVersion: "appversion",
 			Type:       apicommon.PostDeploymentCheckType,
 		},
-		Status: v1beta1.KeptnEvaluationStatus{
+		Status: apilifecycle.KeptnEvaluationStatus{
 			OverallStatus: apicommon.StateFailed,
 		},
 	}

@@ -120,7 +120,7 @@ nav:
           - Upgrade: docs/installation/upgrade.md
           - Configuration:
               - docs/installation/configuration/index.md
-              -Restricting monitored namespaces : docs/installation/configuration/namespace-keptn.md
+              -Restricting monitored namespaces: docs/installation/configuration/namespace-keptn.md
               - Allocating namespaces for Keptn resources: docs/installation/configuration/namespace-resources.md
               - vCluster installation: docs/installation/configuration/vcluster.md
               - Keptn + cert-manager.io: docs/installation/configuration/cert-manager.md

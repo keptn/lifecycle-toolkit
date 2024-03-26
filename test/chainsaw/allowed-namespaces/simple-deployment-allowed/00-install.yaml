@@ -12,7 +12,7 @@ metadata:
   name: pre-deployment-hello
   namespace: allowed-ns-test
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.log("Pre-Deployment Task has been executed");

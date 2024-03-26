@@ -317,7 +317,7 @@ func makeTaskDefinitionWithConfigmapRef(name, namespace, configMapName string) *
 			},
 		},
 		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-			Function: &klcv1beta1.RuntimeSpec{
+			Deno: &klcv1beta1.RuntimeSpec{
 				ConfigMapReference: klcv1beta1.ConfigMapReference{
 					Name: configMapName,
 				},

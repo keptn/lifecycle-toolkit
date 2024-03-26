@@ -3,7 +3,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: slack-notification-dev
 spec:
-  function:
+  deno:
     functionRef:
       name: slack-notification
     parameters:

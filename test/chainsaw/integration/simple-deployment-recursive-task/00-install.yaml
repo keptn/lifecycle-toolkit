@@ -14,7 +14,7 @@ metadata:
     task-definition: "child"
 spec:
   ttlSecondsAfterFinished: 1000
-  function:
+  deno:
     functionRef:
       name: pre-deployment-parent
     secureParameters:
@@ -32,7 +32,7 @@ metadata:
     task-definition: "parent"
 spec:
   ttlSecondsAfterFinished: 300
-  function:
+  deno:
     parameters:
       map:
         user: "myotheruser"

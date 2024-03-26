@@ -4,7 +4,7 @@ metadata:
   name: pre-deployment-check-frontend
   namespace: podtato-kubectl
 spec:
-  function:
+  deno:
     httpRef:
       url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/http.ts
     parameters:

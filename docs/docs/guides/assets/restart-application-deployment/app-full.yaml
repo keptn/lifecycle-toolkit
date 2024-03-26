@@ -20,7 +20,7 @@ metadata:
   name: pre-deployment-check
   namespace: restartable-apps
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.error("I failed")

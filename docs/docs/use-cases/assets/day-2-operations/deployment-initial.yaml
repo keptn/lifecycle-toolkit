@@ -53,7 +53,7 @@ metadata:
   name: pre-deployment-check
   namespace: podtato-kubectl
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.log("Success")

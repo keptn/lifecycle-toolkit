@@ -41,7 +41,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: pre-task-timeout
 spec:
-  function:
+  deno:
     inline:
       code: |
         const runLater = (delay) => {

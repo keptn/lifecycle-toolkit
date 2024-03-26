@@ -4,7 +4,7 @@ metadata:
   name: pre-deployment-hello
 spec:
   ttlSecondsAfterFinished: 1000
-  function:
+  deno:
     inline:
       code: |
         console.log("Pre-Deployment Task has been executed");

@@ -34,7 +34,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 			BeforeEach(func() {
 			})
 
-			It("create ConfigMap from inline function", func() {
+			It("create ConfigMap from inline deno", func() {
 				By("Create TaskDefinition")
 				taskDefinition = &klcv1beta1.KeptnTaskDefinition{
 					ObjectMeta: metav1.ObjectMeta{
@@ -42,7 +42,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 						Namespace: namespace,
 					},
 					Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-						Function: &klcv1beta1.RuntimeSpec{
+						Deno: &klcv1beta1.RuntimeSpec{
 							Inline: klcv1beta1.Inline{
 								Code: "console.log(Hello);",
 							},
@@ -62,7 +62,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 						Name:      "keptnfn-" + taskDefinitionName,
 					}, configmap)
 					g.Expect(err).To(BeNil())
-					g.Expect(configmap.Data["code"]).To(Equal(taskDefinition.Spec.Function.Inline.Code))
+					g.Expect(configmap.Data["code"]).To(Equal(taskDefinition.Spec.Deno.Inline.Code))
 
 				}, "30s").Should(Succeed())
 
@@ -106,7 +106,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 						Namespace: namespace,
 					},
 					Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-						Function: &klcv1beta1.RuntimeSpec{
+						Deno: &klcv1beta1.RuntimeSpec{
 							ConfigMapReference: klcv1beta1.ConfigMapReference{
 								Name: configmap.Name,
 							},
@@ -193,7 +193,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 						Namespace: namespace,
 					},
 					Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-						Function: &klcv1beta1.RuntimeSpec{
+						Deno: &klcv1beta1.RuntimeSpec{
 							ConfigMapReference: klcv1beta1.ConfigMapReference{
 								Name: "my-configmap-non-existing",
 							},

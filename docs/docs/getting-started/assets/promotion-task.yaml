@@ -4,7 +4,7 @@ metadata:
   name: promotion
   namespace: keptndemo
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.log("Application promoted to stage prod!");

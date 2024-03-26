@@ -2,6 +2,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: my-scaledobject
+  namespace: podtato-kubectl
   labels:
     deploymentName: podtato-head-entry
 spec:

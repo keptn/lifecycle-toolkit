@@ -2,6 +2,7 @@ apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetric
 metadata:
   name: cpu-throttling
+  namespace: podtato-kubectl
 spec:
   provider:
     name: prometheus-provider

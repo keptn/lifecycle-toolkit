@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnApp
 metadata:
   name: "some-keptn-app2"
@@ -6,7 +6,7 @@ spec:
   version: "1.2.3"
   revision: 123
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppVersion
 metadata:
   name: "some-keptn-app-version-2"
@@ -23,7 +23,7 @@ spec:
     - name: some-keptn-app2
       version: 0.2.7
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnWorkload
 metadata:
   name: some-keptn-app2
@@ -39,7 +39,7 @@ spec:
     name: my-replica-set
     uid: 957f825e-4025-4ea8-ad22-9292877ff7eb
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnWorkloadVersion
 metadata:
   name: some-keptn-app-2-0.1.0
@@ -58,14 +58,14 @@ spec:
     name: my-replica-set
     uid: 957f825e-4025-4ea8-ad22-9292877ff7eb
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppCreationRequest
 metadata:
   name: some-keptn-app2
 spec:
   appName: podtato-head
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: some-keptn-app-version-2-task
@@ -75,7 +75,7 @@ spec:
       code: |
         console.log("Okay")
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTask
 metadata:
   name: some-keptn-app-version-2
@@ -89,7 +89,7 @@ spec:
     workloadName: "some-keptn-app2"
     workloadVersion: "0.2.7"
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnEvaluationDefinition
 metadata:
   name: some-keptn-app-version-2
@@ -99,7 +99,7 @@ spec:
       keptnMetricRef:
         name: available-cpus
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnEvaluation
 metadata:
   name: some-keptn-app-version-2

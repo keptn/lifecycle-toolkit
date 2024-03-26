@@ -2,7 +2,7 @@
 apiVersion: chainsaw.kyverno.io/v1alpha1
 kind: Test
 metadata:
-  name: api-conversion-v1alpha-to-v1beta1
+  name: api-conversion-v1alpha-to-v1
 spec:
   steps:
     - name: step-00

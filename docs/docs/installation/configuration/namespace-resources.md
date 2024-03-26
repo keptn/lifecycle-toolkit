@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Namespaces and resources
+# Allocating namespaces for Keptn
 
 Keptn primarily operates on Kubernetes
 [Workload](https://kubernetes.io/docs/concepts/workloads/)

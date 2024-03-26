@@ -10,9 +10,9 @@ This gives you great flexibility for your setup since Keptn can
 consolidate different observability providers for you and KEDA
 will simplify the scaling operations for you.
 
-This use case is enabled by the Keptn Metrics
-[custom API](https://kubernetes.io/docs/reference/external-api/custom-metrics.v1beta2/)
-that the Keptn Metrics Operator provides.
+This use case is enabled by the
+[Custom Metrics API](https://kubernetes.io/docs/reference/external-api/custom-metrics.v1beta2/)
+that the [Keptn Metrics Operator](../components/metrics-operator.md) provides.
 
 ## Before you begin
 
@@ -28,7 +28,7 @@ cluster in order to have a full setup:
 
 - [KEDA](https://keda.sh/): Will be used for scaling.
 - [Prometheus](https://prometheus.io/): Will be used as metrics provider.
-  
+
     For more information about how to install Prometheus into your cluster, please
     refer to the [Prometheus documentation](https://prometheus.io/docs/prometheus/latest/installation/).
 
@@ -56,7 +56,7 @@ use a single service `podtato-head` application.
 
 Please create a `podtato-kubectl` namespace and apply the above manifests
 to your cluster and continue with the next steps.
-After applying, please make sure that the application is up and running:
+After applying, use the following command to ensure that the application is up and running:
 
 ```shell
 $ kubectl get pods -n podtato-kubectl

@@ -54,10 +54,11 @@ $ kubectl get pods -n podtato-kubectl
 podtato-head-entry-58d6485d9b-ld9x2         1/1     Running     (2m ago)
 ```
 
-## Create KeptnMetric and KeptnMetricsProvider custom resources
+## Create KeptnMetric and KeptnMetricsProvider resources
 
 To be able to react on the metrics of our application, we need to create
-`KeptnMetrics` and `KeptnMetricsProvider` custom resources.
+[KeptnMetrics](../reference/crd-reference/metric.md) and
+[KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md) resources.
 These metrics are
 exposed via the custom metrics API, which gives us the possibility to configure
 the HPA to react on the values of these metrics:
@@ -66,7 +67,7 @@ the HPA to react on the values of these metrics:
 {% include "./assets/hpa/keptnmetric.yaml" %}
 ```
 
-For more information about the `KeptnMetric` and `KeptnMetricsProvider` custom resources,
+For more information about the `KeptnMetric` and `KeptnMetricsProvider` resources,
 please refer to the [CRD documentation](../reference/api-reference/metrics/v1/index.md).
 
 After a few seconds we should be able to see values for the `cpu-throttling` metric:
@@ -92,7 +93,7 @@ Here we can see that the value of the `cpu-throttling` metric is `1.63`
 ## Set up the HorizontalPodAutoscaler
 
 Now that we are able to retrieve the value of our metric, and have it stored in
-our cluster in the status of our `KeptnMetric` custom resource, we can configure
+our cluster in the status of our `KeptnMetric` resource, we can configure
 a `HorizontalPodAutoscaler` to make use of this information and therefore scale
 our application automatically:
 

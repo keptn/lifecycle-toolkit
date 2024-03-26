@@ -124,7 +124,7 @@ our application automatically:
 As we can see in this example, by setting the `url` field,
 we are now referring to the `KeptnMetric` and fetch it from the
 Keptn Metrics Operator.
-KEDA will scale up our application, until our target value or `1` is reached,
+KEDA will scale up our application, until our target value of `1` is reached,
 or we hit the maximum number of replicas which is `3` in this example.
 
 If the load of the application is high enough, we will be able to see

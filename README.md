@@ -58,9 +58,9 @@ Status of the different features:
   Release lifecycle: handle pre- and post-checks of your Application deployment.
 - ![status](https://img.shields.io/badge/status-stable-brightgreen)
   Certificate Manager: automatically configure TLS certificates with the
-  [Keptn Certificate Manager](https://keptn.sh/docs/concepts/architecture/cert-manager/).
+  [Keptn Certificate Manager](https://keptn.sh/stable/docs/components/certificate-operator/).
   You can instead
-  [configure your own certificate manager](https://keptn.sh/docs/install/cert-manager/) to provide
+  [configure your own certificate manager](https://keptn.sh/stable/docs/installation/configuration/cert-manager/) to provide
   [secure communication with the Kube API](https://kubernetes.io/docs/concepts/security/controlling-access/#transport-security).
 
 <!---
@@ -159,7 +159,7 @@ requires the helm installation to be updated by adding the name of the new names
 ## More information
 
 For more info about Keptn, please see our
-[documentation](https://keptn.sh/docs/).
+[documentation](https://keptn.sh/stable/docs/).
 
 You can also find a number of video presentations and demos
 about Keptn on the

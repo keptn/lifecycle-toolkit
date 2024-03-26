@@ -32,12 +32,13 @@ cluster in order to have a full setup:
     For more information about how to install Prometheus into your cluster, please
     refer to the [Prometheus documentation](https://prometheus.io/docs/prometheus/latest/installation/).
 
-
 ## Deploy sample application
 
 First, we need to deploy our application to the cluster.
 For this we are going to
 use a single service `podtato-head` application.
+
+<!-- markdownlint-disable MD046 -->
 
 === "deployment.yaml"
 
@@ -50,6 +51,8 @@ use a single service `podtato-head` application.
     ```yaml
     {% include "./assets/keda/sample-service.yaml" %}
     ```
+
+<!-- markdownlint-enable MD046 -->
 
 Please create a `podtato-kubectl` namespace and apply the above manifests
 to your cluster and continue with the next steps.
@@ -68,6 +71,8 @@ These metrics are
 exposed via the Keptn Metrics Operator, which gives us the possibility to configure
 KEDA to react on the values of these metrics:
 
+<!-- markdownlint-disable MD046 -->
+
 === "KeptnMetric"
 
     ```yaml
@@ -79,6 +84,8 @@ KEDA to react on the values of these metrics:
     ```yaml
     {% include "./assets/keda/keptnmetricsprovider.yaml" %}
     ```
+
+<!-- markdownlint-enable MD046 -->
 
 For more information about the `KeptnMetric` and `KeptnMetricsProvider` custom resources,
 please refer to the [CRD documentation](../reference/api-reference/metrics/v1/index.md).
@@ -98,10 +105,10 @@ Spec:
   Query:  avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-kubectl"}))
 Status:
   Raw Value: <omitted for readability>
-  Value:         1.63
+  Value:         4.53
 ```
 
-Here we can see that the value of the `cpu-throttling` metric is `1.63`
+Here we can see that the value of the `cpu-throttling` metric is `4.53`
 
 ## Set up the KEDA ScaledObject
 
@@ -115,7 +122,7 @@ our application automatically:
 ```
 
 As we can see in this example, by setting the `url` field,
-we are now referring to the `KeptnMetric` and fetching it from the
+we are now referring to the `KeptnMetric` and fetch it from the
 Keptn Metrics Operator.
 KEDA will scale up our application, until our target value or `1` is reached,
 or we hit the maximum number of replicas which is `3` in this example.

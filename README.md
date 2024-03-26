@@ -110,7 +110,7 @@ helm repo update
 helm upgrade --install keptn keptn/keptn -n keptn-system --create-namespace --wait
 ```
 
-### Keptn and namespaces
+### Monitored namespaces
 
 Keptn must be installed in its own namespace
 that does not run other major components or deployments.

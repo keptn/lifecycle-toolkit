@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Namespaces and Keptn
+# Restricting monitored namespaces
 
 This page discusses how to restrict the namespaces
 where the Keptn

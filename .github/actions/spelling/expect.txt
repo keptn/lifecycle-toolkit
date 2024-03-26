@@ -229,6 +229,7 @@ GSo
 gstatic
 gtm
 GVK
+GVKR
 healthz
 hellopy
 helloworldtask

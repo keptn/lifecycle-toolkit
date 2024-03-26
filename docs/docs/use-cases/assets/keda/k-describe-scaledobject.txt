@@ -1,0 +1,56 @@
+$ kubectl describe scaledobject -n podtato-kubectl my-scaledobject
+Name:         my-scaledobject
+Namespace:    podtato-kubectl
+Labels:       deploymentName=podtato-head-entry
+              scaledobject.keda.sh/name=my-scaledobject
+API Version:  keda.sh/v1alpha1
+Kind:         ScaledObject
+Spec:
+  Max Replica Count:  3
+  Scale Target Ref:
+    Name:  podtato-head-entry
+  Triggers:
+    Metadata:
+      Target Value:    1
+      Unsafe Ssl:      true
+      URL:             http://metrics-operator-service.keptn-system.svc.cluster.local:9999/api/v1/metrics/chainsaw-proud-wallaby/test
+      Value Location:  value
+    Type:              metrics-api
+Status:
+  Conditions:
+    Message:  ScaledObject is defined correctly and is ready for scaling
+    Reason:   ScaledObjectReady
+    Status:   True
+    Type:     Ready
+    Message:  Scaling is not performed because triggers are not active
+    Reason:   ScalerNotActive
+    Status:   False
+    Type:     Active
+    Message:  No fallbacks are active on this scaled object
+    Reason:   NoFallbackFound
+    Status:   False
+    Type:     Fallback
+    Status:   Unknown
+    Type:     Paused
+  External Metric Names:
+    s0-metric-api-value
+  Health:
+    s0-metric-api-value:
+      Number Of Failures:  0
+      Status:              Happy
+  Hpa Name:                keda-hpa-test-scaledobject
+  Last Active Time:        2024-03-26T09:36:36Z
+  Original Replica Count:  1
+  Scale Target GVKR:
+    Group:            apps
+    Kind:             Deployment
+    Resource:         deployments
+    Version:          v1
+  Scale Target Kind:  apps/v1.Deployment
+Events:
+  Type     Reason              Age                From           Message
+  ----     ------              ----               ----           -------
+  Normal   KEDAScalersStarted  63s                keda-operator  Started scalers watch
+  Normal   ScaledObjectReady   63s                keda-operator  ScaledObject is ready for scaling
+  Warning  KEDAScalerFailed    33s (x2 over 63s)  keda-operator  error requesting metrics endpoint: valueLocation must point to value of type number or a string representing a Quantity got: ''
+  Normal   KEDAScalersStarted  18s (x5 over 63s)  keda-operator  Scaler metrics-api is built.

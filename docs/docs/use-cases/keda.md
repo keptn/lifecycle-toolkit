@@ -107,17 +107,19 @@ Here we can see that the value of the `cpu-throttling` metric is `1.63`
 
 Now that we are able to retrieve the value of our metric, and have it stored in
 our cluster in the status of our `KeptnMetric` custom resource, we can configure
-a `HorizontalPodAutoscaler` to make use of this information and therefore scale
+a `ScaledObject` to make use of this information in KEDA and therefore scale
 our application automatically:
 
 ```yaml
 {% include "./assets/keda/scaledobject.yaml" %}
 ```
 
-As we can see in this example, we are now referring to the `KeptnMetric`
-we applied earlier, and tell the HPA to scale up our application, until our
-target value of `5` for this metric is reached, or the number of replicas
-has reached a maximum of `10`.
+As we can see in this example, by setting the `url` field,
+we are now referring to the `KeptnMetric` and fetching it from the
+Keptn Metrics Operator.
+KEDA will scale up our application, until our target value or `1` is reached,
+or we hit the maximum number of replicas which is `3` in this example.
+
 
 If the load of the application is high enough, we will be able to see
 the automatic scaling of our application:

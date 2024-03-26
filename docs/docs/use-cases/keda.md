@@ -42,15 +42,15 @@ use a single service `podtato-head` application.
 
 === "deployment.yaml"
 
-```yaml
-{% include "./assets/keda/sample-app.yaml" %}
-```
+    ```yaml
+    {% include "./assets/keda/sample-app.yaml" %}
+    ```
 
 === "service.yaml"
 
-```yaml
-{% include "./assets/keda/sample-service.yaml" %}
-```
+    ```yaml
+    {% include "./assets/keda/sample-service.yaml" %}
+    ```
 
 <!-- markdownlint-enable MD046 -->
 
@@ -75,15 +75,15 @@ KEDA to react on the values of these metrics:
 
 === "KeptnMetric"
 
-```yaml
-{% include "./assets/keda/keptnmetric.yaml" %}
-```
+    ```yaml
+    {% include "./assets/keda/keptnmetric.yaml" %}
+    ```
 
 === "KeptnMetricsProvider"
 
-```yaml
-{% include "./assets/keda/keptnmetricsprovider.yaml" %}
-```
+    ```yaml
+    {% include "./assets/keda/keptnmetricsprovider.yaml" %}
+    ```
 
 <!-- markdownlint-enable MD046 -->
 

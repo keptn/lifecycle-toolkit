@@ -125,43 +125,71 @@ If the load of the application is high enough, we will be able to see
 the automatic scaling of our application:
 
 ```shell
-$ kubectl describe  horizontalpodautoscalers.autoscaling -n podtato-kubectl podtato-hpa
-Name:                                                             podtato-hpa
-Namespace:                                                        podtato-kubectl
-Reference:                                                        Deployment/podtato-head-entry
-Metrics:                                                          ( current / target )
-  "cpu-throttling" on KeptnMetric/cpu-throttling (target value):  30.5 / 5
-Min replicas:                                                     1
-Max replicas:                                                     10
-Deployment pods:                                                  10 current / 10 desired
-Conditions:
-  Type            Status  Reason               Message
-  ----            ------  ------               -------
-  AbleToScale     True    ScaleDownStabilized  recent recommendations were higher than current one, applying the highest recent recommendation
-  ScalingActive   True    ValidMetricFound     the HPA was able to successfully calculate a replica count from KeptnMetric metric cpu-throttling
-  ScalingLimited  True    TooManyReplicas      the desired replica count is more than the maximum replica count
+$ kubectl describe scaledobject -n podtato-kubectl my-scaledobject
+Name:         my-scaledobject
+Namespace:    podtato-kubectl
+Labels:       deploymentName=podtato-head-entry
+              scaledobject.keda.sh/name=my-scaledobject
+API Version:  keda.sh/v1alpha1
+Kind:         ScaledObject
+Spec:
+  Max Replica Count:  3
+  Scale Target Ref:
+    Name:  podtato-head-entry
+  Triggers:
+    Metadata:
+      Target Value:    1
+      Unsafe Ssl:      true
+      URL:             http://metrics-operator-service.keptn-system.svc.cluster.local:9999/api/v1/metrics/chainsaw-proud-wallaby/test
+      Value Location:  value
+    Type:              metrics-api
+Status:
+  Conditions:
+    Message:  ScaledObject is defined correctly and is ready for scaling
+    Reason:   ScaledObjectReady
+    Status:   True
+    Type:     Ready
+    Message:  Scaling is not performed because triggers are not active
+    Reason:   ScalerNotActive
+    Status:   False
+    Type:     Active
+    Message:  No fallbacks are active on this scaled object
+    Reason:   NoFallbackFound
+    Status:   False
+    Type:     Fallback
+    Status:   Unknown
+    Type:     Paused
+  External Metric Names:
+    s0-metric-api-value
+  Health:
+    s0-metric-api-value:
+      Number Of Failures:  0
+      Status:              Happy
+  Hpa Name:                keda-hpa-test-scaledobject
+  Last Active Time:        2024-03-26T09:36:36Z
+  Original Replica Count:  1
+  Scale Target GVKR:
+    Group:            apps
+    Kind:             Deployment
+    Resource:         deployments
+    Version:          v1
+  Scale Target Kind:  apps/v1.Deployment
 Events:
-  Type    Reason             Age                  From                       Message
-  ----    ------             ----                 ----                       -------
-  Normal  SuccessfulRescale  7m18s (x5 over 16h)  horizontal-pod-autoscaler  New size: 4; reason: KeptnMetric metric cpu-throttling above target
-  Normal  SuccessfulRescale  6m18s                horizontal-pod-autoscaler  New size: 7; reason: KeptnMetric metric cpu-throttling above target
-  Normal  SuccessfulRescale  6m3s (x4 over 16h)   horizontal-pod-autoscaler  New size: 10; reason: KeptnMetric metric cpu-throttling above target
+  Type     Reason              Age                From           Message
+  ----     ------              ----               ----           -------
+  Normal   KEDAScalersStarted  63s                keda-operator  Started scalers watch
+  Normal   ScaledObjectReady   63s                keda-operator  ScaledObject is ready for scaling
+  Warning  KEDAScalerFailed    33s (x2 over 63s)  keda-operator  error requesting metrics endpoint: valueLocation must point to value of type number or a string representing a Quantity got: ''
+  Normal   KEDAScalersStarted  18s (x5 over 63s)  keda-operator  Scaler metrics-api is built.
 ```
 
 If we retrieve the pods of our application, we can see that, instead of
-a single instance at the beginning, there are currently 10 instances running:
+a single instance at the beginning, there are currently 3 instances running:
 
 ```shell
 $ kubectl get pods -n podtato-kubectl
-NAME                                      READY   STATUS    RESTARTS   AGE
-podtato-head-entry-795b4bf76c-22vl8       1/1     Running   0          4m50s
-podtato-head-entry-795b4bf76c-4mqz5       1/1     Running   0          4m50s
-podtato-head-entry-795b4bf76c-g5bcr       1/1     Running   0          5m5s
-podtato-head-entry-795b4bf76c-h22pq       1/1     Running   0          6m5s
-podtato-head-entry-795b4bf76c-kgcgb       1/1     Running   0          4m50s
-podtato-head-entry-795b4bf76c-kkt82       1/1     Running   0          5m5s
-podtato-head-entry-795b4bf76c-lmfnx       1/1     Running   0          6m5s
-podtato-head-entry-795b4bf76c-pnq2f       1/1     Running   0          15m
-podtato-head-entry-795b4bf76c-r5dx4       1/1     Running   0          5m5s
-podtato-head-entry-795b4bf76c-vwdj7       1/1     Running   0          6m5s
+NAME                                  READY   STATUS    RESTARTS   AGE
+podtato-head-entry-7796c8f786-4cdtc   1/1     Running   0          3m29s
+podtato-head-entry-7796c8f786-nsk2c   1/1     Running   0          2m41s
+podtato-head-entry-7796c8f786-qj85h   1/1     Running   0          2m41s
 ```

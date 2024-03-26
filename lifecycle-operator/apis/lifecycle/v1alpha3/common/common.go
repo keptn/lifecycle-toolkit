@@ -43,8 +43,8 @@ const MaxK8sObjectLength = 253
 
 type AppType string
 
-var ErrCannotCastKeptnAppVersion = errors.New("cannot cast KeptnAppVersion to v1beta1")
-var ErrCannotCastKeptnApp = errors.New("cannot cast KeptnApp to v1beta1")
+var ErrCannotCastKeptnAppVersion = errors.New("cannot cast KeptnAppVersion to v1")
+var ErrCannotCastKeptnApp = errors.New("cannot cast KeptnApp to v1")
 
 const (
 	AppTypeSingleService AppType = "single-service"

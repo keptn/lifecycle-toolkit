@@ -3,7 +3,7 @@ package taskdefinition_test
 import (
 	"context"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -27,7 +27,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 
 	Describe("Creation of a TaskDefinition", func() {
 		var (
-			taskDefinition *klcv1beta1.KeptnTaskDefinition
+			taskDefinition *apilifecycle.KeptnTaskDefinition
 			configmap      *v1.ConfigMap
 		)
 		Context("Reconcile TaskDefinition", func() {
@@ -36,14 +36,14 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 
 			It("create ConfigMap from inline deno", func() {
 				By("Create TaskDefinition")
-				taskDefinition = &klcv1beta1.KeptnTaskDefinition{
+				taskDefinition = &apilifecycle.KeptnTaskDefinition{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      taskDefinitionName,
 						Namespace: namespace,
 					},
-					Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-						Deno: &klcv1beta1.RuntimeSpec{
-							Inline: klcv1beta1.Inline{
+					Spec: apilifecycle.KeptnTaskDefinitionSpec{
+						Deno: &apilifecycle.RuntimeSpec{
+							Inline: apilifecycle.Inline{
 								Code: "console.log(Hello);",
 							},
 						},
@@ -68,7 +68,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 
 				By("Check if TaskDefinition was updated")
 
-				taskDefinition2 := &klcv1beta1.KeptnTaskDefinition{}
+				taskDefinition2 := &apilifecycle.KeptnTaskDefinition{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: namespace,
@@ -100,14 +100,14 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				By("Create TaskDefinition")
-				taskDefinition = &klcv1beta1.KeptnTaskDefinition{
+				taskDefinition = &apilifecycle.KeptnTaskDefinition{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      taskDefinitionName,
 						Namespace: namespace,
 					},
-					Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-						Deno: &klcv1beta1.RuntimeSpec{
-							ConfigMapReference: klcv1beta1.ConfigMapReference{
+					Spec: apilifecycle.KeptnTaskDefinitionSpec{
+						Deno: &apilifecycle.RuntimeSpec{
+							ConfigMapReference: apilifecycle.ConfigMapReference{
 								Name: configmap.Name,
 							},
 						},
@@ -119,7 +119,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 
 				By("Check if TaskDefinition was updated")
 
-				taskDefinition2 := &klcv1beta1.KeptnTaskDefinition{}
+				taskDefinition2 := &apilifecycle.KeptnTaskDefinition{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: namespace,
@@ -151,14 +151,14 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 				Expect(err).To(BeNil())
 
 				By("Create TaskDefinition")
-				taskDefinition = &klcv1beta1.KeptnTaskDefinition{
+				taskDefinition = &apilifecycle.KeptnTaskDefinition{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      taskDefinitionName,
 						Namespace: namespace,
 					},
-					Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-						Python: &klcv1beta1.RuntimeSpec{
-							ConfigMapReference: klcv1beta1.ConfigMapReference{
+					Spec: apilifecycle.KeptnTaskDefinitionSpec{
+						Python: &apilifecycle.RuntimeSpec{
+							ConfigMapReference: apilifecycle.ConfigMapReference{
 								Name: configmap.Name,
 							},
 						},
@@ -170,7 +170,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 
 				By("Check if TaskDefinition was updated")
 
-				taskDefinition2 := &klcv1beta1.KeptnTaskDefinition{}
+				taskDefinition2 := &apilifecycle.KeptnTaskDefinition{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: namespace,
@@ -187,14 +187,14 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 
 			It("TaskDefinition referencing non-existing Configmap", func() {
 				By("Create TaskDefinition")
-				taskDefinition = &klcv1beta1.KeptnTaskDefinition{
+				taskDefinition = &apilifecycle.KeptnTaskDefinition{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      taskDefinitionName,
 						Namespace: namespace,
 					},
-					Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-						Deno: &klcv1beta1.RuntimeSpec{
-							ConfigMapReference: klcv1beta1.ConfigMapReference{
+					Spec: apilifecycle.KeptnTaskDefinitionSpec{
+						Deno: &apilifecycle.RuntimeSpec{
+							ConfigMapReference: apilifecycle.ConfigMapReference{
 								Name: "my-configmap-non-existing",
 							},
 						},
@@ -217,7 +217,7 @@ var _ = Describe("Taskdefinition", Ordered, func() {
 
 				By("Check that TaskDefinition Status was not updated")
 
-				taskDefinition2 := &klcv1beta1.KeptnTaskDefinition{}
+				taskDefinition2 := &apilifecycle.KeptnTaskDefinition{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: namespace,

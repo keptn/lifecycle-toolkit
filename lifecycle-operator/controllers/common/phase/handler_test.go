@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/stretchr/testify/require"
@@ -24,10 +24,10 @@ func TestHandler(t *testing.T) {
 	tests := []struct {
 		name           string
 		handler        Handler
-		object         *v1beta1.KeptnAppVersion
+		object         *apilifecycle.KeptnAppVersion
 		phase          apicommon.KeptnPhaseType
 		reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)
-		wantObject     *v1beta1.KeptnAppVersion
+		wantObject     *apilifecycle.KeptnAppVersion
 		want           PhaseResult
 		wantErr        error
 		endTimeSet     bool
@@ -37,15 +37,15 @@ func TestHandler(t *testing.T) {
 			handler: Handler{
 				SpanHandler: &telemetry.Handler{},
 			},
-			object: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			object: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status: apicommon.StateDeprecated,
 				},
 			},
 			want:    PhaseResult{Continue: false, Result: ctrl.Result{}},
 			wantErr: nil,
-			wantObject: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			wantObject: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status: apicommon.StateDeprecated,
 				},
 			},
@@ -58,8 +58,8 @@ func TestHandler(t *testing.T) {
 				EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
-			object: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			object: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StatePending,
 					CurrentPhase: apicommon.PhaseAppDeployment.LongName,
 				},
@@ -70,8 +70,8 @@ func TestHandler(t *testing.T) {
 			},
 			want:    PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: fmt.Errorf("some err"),
-			wantObject: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			wantObject: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StatePending,
 					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
@@ -85,8 +85,8 @@ func TestHandler(t *testing.T) {
 				EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
-			object: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			object: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StatePending,
 					CurrentPhase: apicommon.PhaseAppDeployment.LongName,
 				},
@@ -97,8 +97,8 @@ func TestHandler(t *testing.T) {
 			},
 			want:    PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
-			wantObject: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			wantObject: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StateProgressing,
 					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
@@ -112,8 +112,8 @@ func TestHandler(t *testing.T) {
 				EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
-			object: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			object: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StatePending,
 					CurrentPhase: apicommon.PhaseAppDeployment.LongName,
 				},
@@ -124,8 +124,8 @@ func TestHandler(t *testing.T) {
 			},
 			want:    PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
-			wantObject: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			wantObject: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StateProgressing,
 					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
@@ -139,8 +139,8 @@ func TestHandler(t *testing.T) {
 				EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
-			object: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			object: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StatePending,
 					CurrentPhase: apicommon.PhaseAppDeployment.LongName,
 				},
@@ -151,8 +151,8 @@ func TestHandler(t *testing.T) {
 			},
 			want:    PhaseResult{Continue: true, Result: requeueResult},
 			wantErr: nil,
-			wantObject: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			wantObject: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StatePending,
 					CurrentPhase: apicommon.PhaseAppDeployment.ShortName,
 				},
@@ -166,8 +166,8 @@ func TestHandler(t *testing.T) {
 				EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
-			object: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			object: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StateProgressing,
 					CurrentPhase: apicommon.PhaseAppPreEvaluation.LongName,
 				},
@@ -178,8 +178,8 @@ func TestHandler(t *testing.T) {
 			},
 			want:    PhaseResult{Continue: false, Result: ctrl.Result{}},
 			wantErr: nil,
-			wantObject: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			wantObject: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StateFailed,
 					CurrentPhase: apicommon.PhaseAppPreEvaluation.ShortName,
 					EndTime:      v1.Time{Time: time.Now().UTC()},
@@ -194,8 +194,8 @@ func TestHandler(t *testing.T) {
 				EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
 				Client:      fake.NewClientBuilder().WithScheme(scheme.Scheme).Build(),
 			},
-			object: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			object: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StateProgressing,
 					CurrentPhase: apicommon.PhaseAppPreEvaluation.LongName,
 				},
@@ -206,8 +206,8 @@ func TestHandler(t *testing.T) {
 			},
 			want:    PhaseResult{Continue: false, Result: requeueResult},
 			wantErr: nil,
-			wantObject: &v1beta1.KeptnAppVersion{
-				Status: v1beta1.KeptnAppVersionStatus{
+			wantObject: &apilifecycle.KeptnAppVersion{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					Status:       apicommon.StateProgressing,
 					CurrentPhase: apicommon.PhaseAppPreEvaluation.ShortName,
 				},

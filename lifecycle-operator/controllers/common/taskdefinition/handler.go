@@ -4,8 +4,8 @@ import (
 	"os"
 	"reflect"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 )
 
 const (
@@ -17,7 +17,7 @@ const (
 	PythonScriptKey         = "python"
 )
 
-func GetRuntimeSpec(def *klcv1beta1.KeptnTaskDefinition) *klcv1beta1.RuntimeSpec {
+func GetRuntimeSpec(def *apilifecycle.KeptnTaskDefinition) *apilifecycle.RuntimeSpec {
 	if !IsRuntimeEmpty(def.Spec.Deno) {
 		return def.Spec.Deno
 	}
@@ -28,23 +28,23 @@ func GetRuntimeSpec(def *klcv1beta1.KeptnTaskDefinition) *klcv1beta1.RuntimeSpec
 	return nil
 }
 
-func IsRuntimeEmpty(spec *klcv1beta1.RuntimeSpec) bool {
-	return spec == nil || reflect.DeepEqual(spec, &klcv1beta1.RuntimeSpec{})
+func IsRuntimeEmpty(spec *apilifecycle.RuntimeSpec) bool {
+	return spec == nil || reflect.DeepEqual(spec, &apilifecycle.RuntimeSpec{})
 }
 
-func IsContainerEmpty(spec *klcv1beta1.ContainerSpec) bool {
-	return spec == nil || reflect.DeepEqual(spec, &klcv1beta1.ContainerSpec{})
+func IsContainerEmpty(spec *apilifecycle.ContainerSpec) bool {
+	return spec == nil || reflect.DeepEqual(spec, &apilifecycle.ContainerSpec{})
 }
 
-func IsVolumeMountPresent(spec *klcv1beta1.ContainerSpec) bool {
+func IsVolumeMountPresent(spec *apilifecycle.ContainerSpec) bool {
 	return spec != nil && spec.Container != nil && spec.VolumeMounts != nil && len(spec.VolumeMounts) > 0
 }
 
-func IsInline(spec *klcv1beta1.RuntimeSpec) bool {
-	return spec != nil && !reflect.DeepEqual(spec.Inline, klcv1beta1.Inline{})
+func IsInline(spec *apilifecycle.RuntimeSpec) bool {
+	return spec != nil && !reflect.DeepEqual(spec.Inline, apilifecycle.Inline{})
 }
 
-func GetRuntimeImage(def *klcv1beta1.KeptnTaskDefinition) string {
+func GetRuntimeImage(def *apilifecycle.KeptnTaskDefinition) string {
 	image := os.Getenv(FunctionRuntimeImageKey)
 	if !IsRuntimeEmpty(def.Spec.Python) && IsRuntimeEmpty(def.Spec.Deno) {
 		image = os.Getenv(PythonRuntimeImageKey)
@@ -52,14 +52,14 @@ func GetRuntimeImage(def *klcv1beta1.KeptnTaskDefinition) string {
 	return image
 }
 
-func GetCmName(functionName string, spec *klcv1beta1.RuntimeSpec) string {
+func GetCmName(functionName string, spec *apilifecycle.RuntimeSpec) string {
 	if IsInline(spec) {
 		return "keptnfn-" + apicommon.TruncateString(functionName, 245)
 	}
 	return spec.ConfigMapReference.Name
 }
 
-func GetRuntimeMountPath(def *klcv1beta1.KeptnTaskDefinition) string {
+func GetRuntimeMountPath(def *apilifecycle.KeptnTaskDefinition) string {
 	path := FunctionScriptMountPath
 	if !IsRuntimeEmpty(def.Spec.Python) && IsRuntimeEmpty(def.Spec.Deno) {
 		path = PythonScriptMountPath
@@ -68,7 +68,7 @@ func GetRuntimeMountPath(def *klcv1beta1.KeptnTaskDefinition) string {
 }
 
 // check if either the functions or container spec is set
-func SpecExists(definition *klcv1beta1.KeptnTaskDefinition) bool {
+func SpecExists(definition *apilifecycle.KeptnTaskDefinition) bool {
 	if definition == nil {
 		return false
 	}

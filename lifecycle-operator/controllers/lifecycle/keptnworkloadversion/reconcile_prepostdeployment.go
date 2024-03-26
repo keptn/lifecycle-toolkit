@@ -5,12 +5,12 @@ import (
 	"context"
 	"fmt"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/task"
 )
 
-func (r *KeptnWorkloadVersionReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
+func (r *KeptnWorkloadVersionReconciler) reconcilePrePostDeployment(ctx context.Context, phaseCtx context.Context, workloadVersion *apilifecycle.KeptnWorkloadVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 	taskHandler := task.Handler{
 		Client:      r.Client,
 		EventSender: r.EventSender,

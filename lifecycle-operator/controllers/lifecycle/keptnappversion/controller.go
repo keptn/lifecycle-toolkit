@@ -22,8 +22,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	appcontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
@@ -84,7 +84,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	requestInfo := controllercommon.GetRequestInfo(req)
 	r.Log.Info("Searching for Keptn App Version", "requestInfo", requestInfo)
 
-	appVersion := &klcv1beta1.KeptnAppVersion{}
+	appVersion := &apilifecycle.KeptnAppVersion{}
 	err := r.Get(ctx, req.NamespacedName, appVersion)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
@@ -110,7 +110,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		r.Log.Error(err, "could not get span")
 	}
 
-	defer func(appVersion *klcv1beta1.KeptnAppVersion, spanAppTrace trace.Span) {
+	defer func(appVersion *apilifecycle.KeptnAppVersion, spanAppTrace trace.Span) {
 		r.closeFailedAppVersionSpan(appVersion, spanAppTrace)
 	}(appVersion, spanAppTrace)
 
@@ -188,7 +188,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	return r.finishKeptnAppVersionReconcile(ctx, appVersion, spanAppTrace)
 }
 
-func (r *KeptnAppVersionReconciler) closeFailedAppVersionSpan(appVersion *klcv1beta1.KeptnAppVersion, spanAppTrace trace.Span) {
+func (r *KeptnAppVersionReconciler) closeFailedAppVersionSpan(appVersion *apilifecycle.KeptnAppVersion, spanAppTrace trace.Span) {
 	// make sure we close and unbind the span of a failed AppVersion
 	if appVersion.Status.Status != apicommon.StateFailed {
 		return
@@ -202,7 +202,7 @@ func (r *KeptnAppVersionReconciler) closeFailedAppVersionSpan(appVersion *klcv1b
 	r.EventSender.Emit(apicommon.PhaseAppCompleted, "Warning", appVersion, apicommon.PhaseStateFailed, "has failed", appVersion.GetVersion())
 }
 
-func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.Context, appVersion *klcv1beta1.KeptnAppVersion, spanAppTrace trace.Span) (ctrl.Result, error) {
+func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.Context, appVersion *apilifecycle.KeptnAppVersion, spanAppTrace trace.Span) (ctrl.Result, error) {
 
 	if !appVersion.IsEndTimeSet() {
 		appVersion.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
@@ -238,7 +238,7 @@ func (r *KeptnAppVersionReconciler) finishKeptnAppVersionReconcile(ctx context.C
 	return ctrl.Result{}, nil
 }
 
-func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appVersion *klcv1beta1.KeptnAppVersion) (context.Context, func()) {
+func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appVersion *apilifecycle.KeptnAppVersion) (context.Context, func()) {
 	appVersion.SetStartTime()
 
 	appTraceContextCarrier := propagation.MapCarrier(appVersion.Spec.TraceId)
@@ -258,7 +258,7 @@ func (r *KeptnAppVersionReconciler) setupSpansContexts(ctx context.Context, appV
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnAppVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1beta1.KeptnAppVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
+		For(&apilifecycle.KeptnAppVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{})).
 		Complete(r)
 }
 
@@ -266,7 +266,7 @@ func (r *KeptnAppVersionReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
 }
 
-func (r *KeptnAppVersionReconciler) getLinkedSpans(appVersion *klcv1beta1.KeptnAppVersion) []trace.Link {
+func (r *KeptnAppVersionReconciler) getLinkedSpans(appVersion *apilifecycle.KeptnAppVersion) []trace.Link {
 	result := make([]trace.Link, len(appVersion.Spec.SpanLinks))
 
 	for i, linkedSpan := range appVersion.Spec.SpanLinks {

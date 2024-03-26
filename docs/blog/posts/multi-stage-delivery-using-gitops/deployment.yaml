@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-go-service
+  namespace: simple-go
+spec:
+  selector:
+    matchLabels:
+      app: simple-go-service
+  template:
+    metadata:
+      labels:
+        app: simple-go-service
+        app.kubernetes.io/name: simple-go-service
+        app.kubernetes.io/part-of: simple-go
+        app.kubernetes.io/version: {{ .Values.serviceVersion }}
+        keptn.sh/post-deployment-tasks: wait-for-monitoring
+    spec:
+      containers:
+        - image: bacherfl/simple-go-service:{{ .Values.serviceVersion }}
+          imagePullPolicy: Always
+          name: simple-go-service
+          ports:
+            - containerPort: 9000
+              name: http
+              protocol: TCP

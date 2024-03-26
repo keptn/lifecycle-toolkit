@@ -4,7 +4,7 @@ metadata:
   name: promotion
   namespace: podtato-kubectl
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.log("Promotion Task has been executed");

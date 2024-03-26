@@ -752,7 +752,6 @@ _Appears in:_
 
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
-| `function` _[RuntimeSpec](#runtimespec)_ | Deprecated<br />Function contains the definition for the function that is to be executed in KeptnTasks. || ✓ |  |
 | `python` _[RuntimeSpec](#runtimespec)_ | Python contains the definition for the python function that is to be executed in KeptnTasks. || ✓ |  |
 | `deno` _[RuntimeSpec](#runtimespec)_ | Deno contains the definition for the Deno function that is to be executed in KeptnTasks. || ✓ |  |
 | `container` _[ContainerSpec](#containerspec)_ | Container contains the definition for the container that is to be used in Job. || ✓ |  |

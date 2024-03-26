@@ -4,7 +4,7 @@ metadata:
   name: post-deployment-hello
   namespace: podtato-kubectl
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.log("Post-Deployment Task has been executed");

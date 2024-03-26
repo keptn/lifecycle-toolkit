@@ -60,7 +60,7 @@ metadata:
   name: post-deployment
   namespace: podtato-head-dev
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.log("deployment completed");
@@ -71,7 +71,7 @@ metadata:
   name: promote
   namespace: podtato-head-dev
 spec:
-  function:
+  deno:
     secureParameters:
       secret: github-token
     inline:

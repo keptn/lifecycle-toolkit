@@ -25,7 +25,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-			Function: &klcv1beta1.RuntimeSpec{
+			Deno: &klcv1beta1.RuntimeSpec{
 				FunctionReference: klcv1beta1.FunctionReference{
 					Name: "mytaskdef",
 				}}},
@@ -36,7 +36,7 @@ func TestJSBuilder_handleParent(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-			Function: &klcv1beta1.RuntimeSpec{
+			Deno: &klcv1beta1.RuntimeSpec{
 				FunctionReference: klcv1beta1.FunctionReference{
 					Name: "mytd"},
 				Parameters: klcv1beta1.TaskParameters{
@@ -129,7 +129,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 			Namespace: "default",
 		},
 		Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-			Function: &klcv1beta1.RuntimeSpec{
+			Deno: &klcv1beta1.RuntimeSpec{
 				Parameters: klcv1beta1.TaskParameters{
 					Inline: map[string]string{"DATA2": "parent_data"},
 				},
@@ -220,9 +220,9 @@ func TestJSBuilder_getParams(t *testing.T) {
 			},
 			params: &RuntimeExecutionParams{
 				ConfigMap:        def.Status.Function.ConfigMap,
-				Parameters:       def.Spec.Function.Parameters.Inline,
-				SecureParameters: def.Spec.Function.SecureParameters.Secret,
-				URL:              def.Spec.Function.HttpReference.Url,
+				Parameters:       def.Spec.Deno.Parameters.Inline,
+				SecureParameters: def.Spec.Deno.SecureParameters.Secret,
+				URL:              def.Spec.Deno.HttpReference.Url,
 				Context: klcv1beta1.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",
@@ -255,7 +255,7 @@ func TestJSBuilder_getParams(t *testing.T) {
 					"DATA1": "child_data",
 				},
 				SecureParameters: paramDef.Spec.Deno.SecureParameters.Secret, // uses child
-				URL:              def.Spec.Function.HttpReference.Url,        // uses parent
+				URL:              def.Spec.Deno.HttpReference.Url,            // uses parent
 				Context: klcv1beta1.TaskContext{
 					WorkloadName: "my-workload",
 					AppName:      "my-app",

@@ -18,10 +18,6 @@ const (
 )
 
 func GetRuntimeSpec(def *klcv1beta1.KeptnTaskDefinition) *klcv1beta1.RuntimeSpec {
-
-	if !IsRuntimeEmpty(def.Spec.Function) {
-		return def.Spec.Function
-	}
 	if !IsRuntimeEmpty(def.Spec.Deno) {
 		return def.Spec.Deno
 	}
@@ -50,7 +46,7 @@ func IsInline(spec *klcv1beta1.RuntimeSpec) bool {
 
 func GetRuntimeImage(def *klcv1beta1.KeptnTaskDefinition) string {
 	image := os.Getenv(FunctionRuntimeImageKey)
-	if !IsRuntimeEmpty(def.Spec.Python) && IsRuntimeEmpty(def.Spec.Function) && IsRuntimeEmpty(def.Spec.Deno) {
+	if !IsRuntimeEmpty(def.Spec.Python) && IsRuntimeEmpty(def.Spec.Deno) {
 		image = os.Getenv(PythonRuntimeImageKey)
 	}
 	return image
@@ -65,7 +61,7 @@ func GetCmName(functionName string, spec *klcv1beta1.RuntimeSpec) string {
 
 func GetRuntimeMountPath(def *klcv1beta1.KeptnTaskDefinition) string {
 	path := FunctionScriptMountPath
-	if !IsRuntimeEmpty(def.Spec.Python) && IsRuntimeEmpty(def.Spec.Function) && IsRuntimeEmpty(def.Spec.Deno) {
+	if !IsRuntimeEmpty(def.Spec.Python) && IsRuntimeEmpty(def.Spec.Deno) {
 		path = PythonScriptMountPath
 	}
 	return path

@@ -4,7 +4,7 @@ metadata:
   name: dummy-task
   namespace: "default"
 spec:
-  function:
+  deno:
     secureParameters:
       secret: my-secret
     inline:

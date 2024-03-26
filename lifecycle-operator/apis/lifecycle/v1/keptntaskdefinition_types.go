@@ -23,10 +23,6 @@ import (
 
 // KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
 type KeptnTaskDefinitionSpec struct {
-	// Deprecated
-	// Function contains the definition for the function that is to be executed in KeptnTasks.
-	// +optional
-	Function *RuntimeSpec `json:"function,omitempty"`
 	// Python contains the definition for the python function that is to be executed in KeptnTasks.
 	// +optional
 	Python *RuntimeSpec `json:"python,omitempty"`

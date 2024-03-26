@@ -41,7 +41,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: pre-task-retries
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.log('hello');

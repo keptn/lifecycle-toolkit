@@ -41,7 +41,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: failing-task
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.error("I failed")

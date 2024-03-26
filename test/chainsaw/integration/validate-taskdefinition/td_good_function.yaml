@@ -3,7 +3,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: goodtaskdefinition2
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.log('hello');

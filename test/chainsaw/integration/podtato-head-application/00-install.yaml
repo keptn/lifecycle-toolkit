@@ -319,7 +319,7 @@ metadata:
   name: post-deployment-hello
 spec:
   ttlSecondsAfterFinished: 1000
-  function:
+  deno:
     inline:
       code: |
         console.log("Post-Deployment Task has been executed");
@@ -330,7 +330,7 @@ metadata:
   name: pre-deployment-hello
 spec:
   ttlSecondsAfterFinished: 1000
-  function:
+  deno:
     inline:
       code: |
         console.log("Pre-Deployment Task has been executed");
@@ -341,7 +341,7 @@ metadata:
   name: check-entry-service
 spec:
   ttlSecondsAfterFinished: 1000
-  function:
+  deno:
     httpRef:
       url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/http.ts
     parameters:

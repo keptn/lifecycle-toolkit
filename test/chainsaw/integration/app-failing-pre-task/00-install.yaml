@@ -41,7 +41,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: check-entry-service
 spec:
-  function:
+  deno:
     httpRef:
       url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/http.ts
     parameters:

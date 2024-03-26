@@ -71,7 +71,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: some-keptn-app-version-2-task
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.log("Okay")

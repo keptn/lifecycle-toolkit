@@ -52,8 +52,6 @@ use a single service `podtato-head` application.
     {% include "./assets/keda/sample-service.yaml" %}
     ```
 
-<!-- markdownlint-enable MD046 -->
-
 Please create a `podtato-kubectl` namespace and apply the above manifests
 to your cluster and continue with the next steps.
 After applying, please make sure that the application is up and running:
@@ -71,8 +69,6 @@ These metrics are
 exposed via the Keptn Metrics Operator, which gives us the possibility to configure
 KEDA to react on the values of these metrics:
 
-<!-- markdownlint-disable MD046 -->
-
 === "KeptnMetric"
 
     ```yaml
@@ -84,8 +80,6 @@ KEDA to react on the values of these metrics:
     ```yaml
     {% include "./assets/keda/keptnmetricsprovider.yaml" %}
     ```
-
-<!-- markdownlint-enable MD046 -->
 
 For more information about the `KeptnMetric` and `KeptnMetricsProvider` custom resources,
 please refer to the [CRD documentation](../reference/api-reference/metrics/v1/index.md).
@@ -199,3 +193,5 @@ podtato-head-entry-7796c8f786-4cdtc   1/1     Running   0          3m29s
 podtato-head-entry-7796c8f786-nsk2c   1/1     Running   0          2m41s
 podtato-head-entry-7796c8f786-qj85h   1/1     Running   0          2m41s
 ```
+
+<!-- markdownlint-enable MD046 -->

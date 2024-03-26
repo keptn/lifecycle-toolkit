@@ -1,0 +1,25 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppVersion
+metadata:
+  name: keptnappversion-sample
+spec:
+  appName: podtato-head
+  preDeploymentTasks:
+    - pre-deployment-task
+  preDeploymentEvaluations:
+    - pre-deployment-evaluation
+  postDeploymentTasks:
+    - post-deployment-task
+  postDeploymentEvaluations:
+    - post-deployment-evaluation
+  promotionTasks:
+    - promotion-task
+  metadata:
+    - key: abc123
+  spanLinks:
+    - "w3c trace id1"
+    - "w3c trace id2"
+  version: "1.3"
+  workloads:
+    - name: podtato-head-entry
+      version: 0.1.0

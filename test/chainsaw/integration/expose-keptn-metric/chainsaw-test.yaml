@@ -20,6 +20,21 @@ spec:
             for:
               condition:
                 name: complete
+      catch:
+        - describe:
+            resource: Job
+        - podLogs:
+            selector: kind=no-metric
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=lifecycle-operator
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=metrics-operator
     - name: step-01
       try:
         - apply:
@@ -32,3 +47,18 @@ spec:
             for:
               condition:
                 name: complete
+      catch:
+        - describe:
+            resource: Job
+        - podLogs:
+            selector: kind=existing-metric
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=lifecycle-operator
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=metrics-operator

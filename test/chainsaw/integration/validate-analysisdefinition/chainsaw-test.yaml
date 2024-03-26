@@ -16,6 +16,17 @@ spec:
             expect:
               - check:
                   ($error != null): true
+      catch:
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=lifecycle-operator
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=metrics-operator
     - name: step-01
       try:
         - error:
@@ -24,3 +35,14 @@ spec:
             file: analysisdef_good_empty_fail.yaml
         - assert:
             file: analysisdef_good.yaml
+      catch:
+        - describe:
+            resource: keptnworkloadversion
+        - describe:
+            resource: keptnappversion
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=lifecycle-operator
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=metrics-operator

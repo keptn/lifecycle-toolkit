@@ -324,7 +324,7 @@ func TestFetchAnalysisValueWithAuth(t *testing.T) {
 
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		header := r.Header.Get("Authorization")
-		//prometheus encodes basic user password in header
+		// prometheus encodes basic user password in header
 		t.Log(header)
 		encoded := "Basic " + base64.StdEncoding.EncodeToString([]byte("user:password"))
 		if strings.Contains(header, encoded) {

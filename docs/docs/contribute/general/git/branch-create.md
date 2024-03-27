@@ -40,7 +40,7 @@ before you create a PR to add these changes to the documentation set.
 * For documentation changes:
     * Do the writing you want to do in your local branch
     * Check the formatted version in your IDE
-    or at `localhost:8000/docs-dev`
+    or at `localhost:8000`
     to ensure that it is rendering correctly
     and that all links are valid..
     See [Build Documentation Locally](../../docs/local-building.md)

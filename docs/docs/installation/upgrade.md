@@ -24,7 +24,7 @@ If you installed your Keptn instance from the Manifest,
 additional steps are required to use the Helm Chart to upgrade.
 Contact us on Slack for assistance.
 
-## Upgrade to v1beta1 version
+## Upgrade to v1 version
 
 If you have previously used Keptn Lifecycle Operator with API
 resources of version `v1alpha3` and `v1alpha4`, you need to

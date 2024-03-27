@@ -1,5 +1,5 @@
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppContext
 metadata:
   name: podtato-head

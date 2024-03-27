@@ -5,7 +5,7 @@ metadata:
   annotations:
     keptn.sh/lifecycle-toolkit: "enabled"
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppContext
 metadata:
   name: podtato-head
@@ -14,7 +14,7 @@ spec:
   preDeploymentTasks:
     - pre-deployment-check
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-check

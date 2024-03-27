@@ -149,7 +149,8 @@ spec:
 
 ## Differences between versions
 
-The `KeptnAppContext` resource is new in the `v1` version of the lifecycle operator.
+The `KeptnAppContext` resource is new in the `v1beta1` version of the lifecycle operator.
+Versions `v1beta1` and `v1` are fully compatible.
 
 ## See also
 

@@ -31,6 +31,7 @@ annadreal
 apicommon
 apierr
 apierrors
+apilifecycle
 apiservice
 APIURL
 apk
@@ -621,6 +622,7 @@ testcommon
 testmetrics
 testreg
 tgz
+thanos
 thisthatdc
 thschue
 timeblock
@@ -694,4 +696,3 @@ Yash
 yml
 YOURNAME
 yourregistry
-apilifecycle

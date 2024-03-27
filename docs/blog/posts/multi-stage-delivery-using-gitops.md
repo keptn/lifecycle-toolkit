@@ -34,6 +34,10 @@ The deployment traces of those stages are linked together and enriched
 with valuable metadata, such as the commit ID that triggered the deployment
 of a new workload version.
 
+<!-- more -->
+
+## Technologies used for this example
+
 For this, we are using the following technologies:
 
 - The new [KeptnAppContext CRD](../../docs/reference/crd-reference/appcontext.md)

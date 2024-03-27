@@ -1,5 +1,5 @@
 ---
-date: 2024-03-27
+date: 2024-03-26
 authors: [bacherfl]
 description: >
   This blog post explains how to use the promotion phase of Keptn to implement a multi stage delivery GitOps workflow.

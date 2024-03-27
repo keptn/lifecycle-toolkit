@@ -80,7 +80,7 @@ We are going to:
 2. Run the promotion flow by:
    1. Creating a pull request to update our `dev` environment
    2. Merging the automatically created pull request to promote the updated version into `prod`
-   3. Inspecting the generated deployment traces for both stages 
+   3. Inspecting the generated deployment traces for both stages
    and see how they are connected with each other
 
 ## Setting up the Environment

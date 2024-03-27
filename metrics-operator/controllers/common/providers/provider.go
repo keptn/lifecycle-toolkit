@@ -29,7 +29,7 @@ type ProviderFactory func(providerType string, log logr.Logger, k8sClient client
 func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
 
 	switch strings.ToLower(providerType) {
-	case PrometheusProviderType, ThanosProviderType:
+	case PrometheusProviderType, ThanosProviderType, CortexProviderType:
 		return prometheus.NewPrometheusProvider(log, k8sClient), nil
 	case DynatraceProviderType:
 		return &dynatrace.KeptnDynatraceProvider{

@@ -340,3 +340,12 @@ but across multiple stages, the `spanLinks` property
 of the `KeptnAppContext` was used to create references to
 deployment traces of a previous stage when
 promoting a new version of a service from one stage to the next.
+
+We hope the example in this blog post gives you some inspiration
+on how you could implement Keptn into your continuous delivery
+workflow.
+If you would like to try out Keptn and its capabilities yourself,
+feel free to head over to the [Keptn docs](https://lifecycle.keptn.sh/docs/)
+and follow the guides to [install Keptn](https://lifecycle.keptn.sh/docs/install/).
+We also appreciate any feedback and are always happy to support you
+with any questions you might have.

@@ -1,0 +1,30 @@
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetric
+metadata:
+  name: podtatometric
+spec:
+  provider:
+    name: "dynatrace"
+  query: "query"
+  fetchIntervalSeconds: 5
+
+---
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetricsProvider
+metadata:
+  name: dynatrace
+spec:
+  secretKeyRef:
+    key: DT_TOKEN
+    name: dynatrace
+  type: dynatrace
+  targetServer: (join('.', ['http://mockserver', $namespace, 'svc.cluster.local:1080']))
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dynatrace
+type: Opaque
+data:
+  DT_TOKEN: dG9rZW46IG15dG9rZW4=

@@ -17,6 +17,7 @@ import (
 var errCouldNotCast = fmt.Errorf("could not cast result")
 var errNoValues = fmt.Errorf("no values in query result")
 var errTooManyValues = fmt.Errorf("too many values in query result")
+var providerName = ""
 
 type KeptnPrometheusProvider struct {
 	Log       logr.Logger
@@ -24,7 +25,8 @@ type KeptnPrometheusProvider struct {
 	Getter    IRoundTripper
 }
 
-func NewPrometheusProvider(log logr.Logger, k8sClient client.Client) *KeptnPrometheusProvider {
+func NewPrometheusProvider(log logr.Logger, k8sClient client.Client, providerType string) *KeptnPrometheusProvider {
+	providerName = providerType
 	return &KeptnPrometheusProvider{
 		K8sClient: k8sClient,
 		Log:       log,
@@ -61,7 +63,7 @@ func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query 
 		return "", err
 	}
 	if len(warnings) != 0 {
-		r.Log.Info("Prometheus API returned warnings: " + warnings[0])
+		r.Log.Info(fmt.Sprintf("%s API returned warnings: %s", providerName, warnings[0]))
 	}
 	res, _, err := getResultForMatrix(result)
 	return res, err
@@ -84,7 +86,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 			return "", nil, err
 		}
 		if len(warnings) != 0 {
-			r.Log.Info("Prometheus API returned warnings: " + warnings[0])
+			r.Log.Info(fmt.Sprintf("%s API returned warnings: %s", providerName, warnings[0]))
 		}
 		return getResultForMatrix(result)
 	} else {
@@ -93,7 +95,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 			return "", nil, err
 		}
 		if len(warnings) != 0 {
-			r.Log.Info("Prometheus API returned warnings: " + warnings[0])
+			r.Log.Info(fmt.Sprintf("%s API returned warnings: %s", providerName, warnings[0]))
 		}
 		return getResultForVector(result)
 	}
@@ -114,7 +116,7 @@ func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metr
 		return nil, nil, err
 	}
 	if len(warnings) != 0 {
-		r.Log.Info("Prometheus API returned warnings: " + warnings[0])
+		r.Log.Info(fmt.Sprintf("%s API returned warnings: %s", providerName, warnings[0]))
 	}
 	return getResultForStepMatrix(result)
 }

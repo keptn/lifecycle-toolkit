@@ -121,7 +121,7 @@ kind: KeptnEvaluationDefinition
 metadata:
   name: <evaluation-name>
 spec:
-  source: prometheus | dynatrace | datadog
+  source: prometheus | dynatrace | datadog | thanos
   objectives:
     - name: query-1
       query: "xxxx"

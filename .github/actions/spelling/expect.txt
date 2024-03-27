@@ -103,6 +103,7 @@ controlleroptions
 controllerutil
 coredns
 CORS
+cortex
 coverpkg
 coverprofile
 cowsay

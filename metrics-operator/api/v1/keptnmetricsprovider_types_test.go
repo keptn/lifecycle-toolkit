@@ -19,7 +19,7 @@ func TestKeptnMetricsProvider_GetType(t *testing.T) {
 		want   string
 	}{
 		{
-			name: "provider type set",
+			name: "prometheus provider type set",
 			fields: fields{
 				ObjectMeta: metav1.ObjectMeta{
 					Name: "provider1",
@@ -30,6 +30,19 @@ func TestKeptnMetricsProvider_GetType(t *testing.T) {
 				},
 			},
 			want: "prometheus",
+		},
+		{
+			name: "thanos provider type set",
+			fields: fields{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "provider1",
+				},
+				Spec: KeptnMetricsProviderSpec{
+					Type:         "thanos",
+					TargetServer: "",
+				},
+			},
+			want: "thanos",
 		},
 		{
 			name: "provider type not set, should return name",

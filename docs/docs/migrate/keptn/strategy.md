@@ -269,7 +269,7 @@ Keptn v1
 [SLIs](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
 (Service Level Indicators)
 represent queries from the data provider
-such as Prometheus, Dynatrace, or Datadog,
+such as Prometheus, Thanos, Dynatrace, or Datadog,
 which is configured as a Keptn integration.
 
 When migrating to Keptn, you need to define a

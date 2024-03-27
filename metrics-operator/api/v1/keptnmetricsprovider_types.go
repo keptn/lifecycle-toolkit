@@ -26,8 +26,8 @@ import (
 // KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
 type KeptnMetricsProviderSpec struct {
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern:=prometheus|dynatrace|datadog|dql
-	// Type represents the provider type. This can be one of prometheus, dynatrace, datadog, dql.
+	// +kubebuilder:validation:Pattern:=prometheus|thanos|dynatrace|datadog|dql
+	// Type represents the provider type. This can be one of prometheus, thanos, dynatrace, datadog, dql.
 	Type string `json:"type"`
 	// TargetServer defines URL (including port and protocol) at which the metrics provider is reachable.
 	TargetServer string `json:"targetServer"`
@@ -73,7 +73,7 @@ func (p *KeptnMetricsProvider) HasSecretDefined() bool {
 	if p.Spec.SecretKeyRef == (corev1.SecretKeySelector{}) {
 		return false
 	}
-	//if the secret name exists the secret is defined
+	// if the secret name exists the secret is defined
 	if strings.TrimSpace(p.Spec.SecretKeyRef.Name) == "" {
 		return false
 	}
@@ -84,7 +84,7 @@ func (p *KeptnMetricsProvider) HasSecretKeyDefined() bool {
 	if p.Spec.SecretKeyRef == (corev1.SecretKeySelector{}) {
 		return false
 	}
-	//if the secret name exists the secret is defined
+	// if the secret name exists the secret is defined
 	if strings.TrimSpace(p.Spec.SecretKeyRef.Key) == "" {
 		return false
 	}

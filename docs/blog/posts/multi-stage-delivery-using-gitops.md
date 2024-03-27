@@ -11,7 +11,7 @@ comments: true
 
 # Multi Stage Delivery using GitOps
 
-In multi-stage environments it can often become a challenge to keep an overview of
+In multi-stage environments it can be a challenge to see
 how a particular version of a workload progresses through different stages.
 This can make it difficult to precisely trace exactly which modification introduced a problem
 when something goes wrong in one of the deployment stages.
@@ -123,7 +123,7 @@ This action copies over the `values.yaml` file from the
 service versions that should be deployed via the helm chart for
 that stage.
 
-## Prepare the application namespaces
+### Prepare the application namespaces
 
 In this example, the application will be deployed in
 two different namespaces, each representing a different
@@ -150,7 +150,7 @@ GH_API_TOKEN=<YOUR_GITHUB_TOKEN>
 kubectl create secret generic github-token -n simple-go --from-literal=SECURE_DATA="{\"githubRepo\":\"${GH_REPO}\",\"githubRepoOwner\":\"${GH_REPO_OWNER}\",\"apiToken\":\"${GH_API_TOKEN}\"}"
 ```
 
-## Prepare the ArgoCD applications
+### Prepare the ArgoCD applications
 
 The next step is to
 create the ArgoCD applications in our cluster.

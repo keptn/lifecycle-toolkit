@@ -111,14 +111,16 @@ This is done in the settings of the repository, see the screenshot below:
 
 The GitHub action performing the promotion is implemented
 in the following file, located in `.github/workflows/promote.yaml`
+within our GitOps repository.
 
 ```yaml
 {% include "./multi-stage-delivery-using-gitops/promote.yaml" %}
 ```
 
-This action essentially copies over the `values.yaml` file from the
+This action copies over the `values.yaml` file from the
 `dev` stage to the `prod` stage, to set the
-service versions that should be
+service versions that should be deployed via the helm chart for
+that stage.
 
 ## Prepare the application namespaces
 
@@ -214,22 +216,26 @@ which looks as follows:
 
 This resource contains a list of pre- and post-deployment checks
 for the complete application.
-In the pre-deployment phase, the task `wait-for-monitoring`
+In the `pre-deployment` phase, the task `wait-for-monitoring`
 ensures the Prometheus installation in our cluster is available.
 If this is not the case, it would not be wise to deploy a new
 version of the application, since we cannot observe the
 performance metrics of our application.
+
 Once all workloads have been deployed, the application enters the
-post-deployment phase, in which load tests against the application are
+`post-deployment` phase, in which load tests against the application are
 executed.
-After executing the load tests, a post-deployment evaluation is
+
+After executing the load tests, a `post-deployment` evaluation is
 performed, in which the response time of the deployed workloads
 is evaluated.
+
 Finally, if all checks have passed, the application proceeds into the
 `promotion` phase.
 This is the phase where the GitHub personal access token we created earlier
 is used to trigger the GitHub action to promote the deployed version
 into the next stage.
+
 In addition to the pre-/post-deployment checks and the promotion task,
 the `KeptnAppContext` also contains a `metadata` property that
 passes the `commitID` made available by ArgoCD to the
@@ -344,6 +350,12 @@ but across multiple stages, the `spanLinks` property
 of the `KeptnAppContext` was used to create references to
 deployment traces of a previous stage when
 promoting a new version of a service from one stage to the next.
+This way, if any kind of problems appear in one of the later
+stages (in this example in the `prod` stage) for a newly deployed version,
+the links to the deployment traces of the previous stages
+enable us to trace back the deployment of that new version
+across the previous stages, until we reach the commit that
+caused the erroneous behavior of that service.
 
 We hope the example in this blog post gives you some inspiration
 on how you could implement Keptn into your continuous delivery

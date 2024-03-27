@@ -79,6 +79,7 @@ Your cluster should include the following:
 * At least one observability data provider such as
   [Prometheus](https://prometheus.io/),
   [Thanos](https://thanos.io/),
+  [Cortex](https://cortexmetrics.io/),
   [Dynatrace](https://www.dynatrace.com/),
   or [Datadog](https://www.datadoghq.com/);
   you can use multiple instances of different data providers.

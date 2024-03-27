@@ -116,12 +116,12 @@ that are now taken from the specified [KeptnMetric](metric.md) CRD.
 The synopsis was:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnEvaluationDefinition
 metadata:
   name: <evaluation-name>
 spec:
-  source: prometheus | dynatrace | datadog | thanos
+  source: prometheus | dynatrace | datadog
   objectives:
     - name: query-1
       query: "xxxx"

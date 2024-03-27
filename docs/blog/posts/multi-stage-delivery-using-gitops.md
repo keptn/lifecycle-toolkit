@@ -108,8 +108,8 @@ This is done in the settings of the repository, see the screenshot below:
 The GitHub action performing the promotion is implemented
 in the following file, located in `.github/workflows/promote.yaml`
 
-```yaml title=".github/workflows/promote.yaml"
-{% include "./assets/multi-stage-delivery-using-gitops/promote.yaml" %}
+```yaml
+{% include "./multi-stage-delivery-using-gitops/promote.yaml" %}
 ```
 
 This action essentially copies over the `values.yaml` file from the

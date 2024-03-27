@@ -65,6 +65,24 @@ Note that for this blog post, we are assuming that these tools are already
 installed on the Kubernetes cluster, as going through the installation
 of each of those would exceed the scope of this blog post.
 
+As this is quite a complex setup, here is a preview of what steps
+are involved in setting everything up.
+We are going to:
+
+1. Set up the environment by:
+   1. Setting up a GitHub repository with an access token, GitHub, workflows, and GitHub actions
+   2. Preparing a Kubernetes namespace for each stage (`dev` and `prod`)
+   3. Preparing the ArgoCD applications with an appropriate Helm chart for each
+   4. Applying labels to associate the Deployment resource with the KeptnWorkload resource
+   5. Defining Keptn pre-/post-deployment checks and tasks
+   6. Defining the metadata to be passed through the deployment traces
+   7. Define a TraceParent that links the deployment traces of the `prod` stage to those of the `dev` stage
+2. Run the promotion flow by:
+   1. Creating a pull request to update our `dev` environment
+   2. Merging the automatically created pull request to promote the updated version into `prod`
+   3. Inspecting the generated deployment traces for both stages 
+   and see how they are connected with each other
+
 ## Setting up the Environment
 
 Now it's time to set up our environment and connect all the tools mentioned above

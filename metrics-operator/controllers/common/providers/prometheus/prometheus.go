@@ -26,7 +26,7 @@ type KeptnPrometheusProvider struct {
 	Getter    IRoundTripper
 }
 
-func NewPrometheusProvider(log logr.Logger, k8sClient client.Client, providerType string) *KeptnPrometheusProvider {
+func NewPrometheusProvider(log logr.Logger, k8sClient client.Client) *KeptnPrometheusProvider {
 	return &KeptnPrometheusProvider{
 		K8sClient: k8sClient,
 		Log:       log,

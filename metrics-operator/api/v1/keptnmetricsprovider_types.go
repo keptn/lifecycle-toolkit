@@ -27,7 +27,7 @@ import (
 type KeptnMetricsProviderSpec struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern:=prometheus|thanos|dynatrace|datadog|dql
-	// Type represents the provider type. This can be one of prometheus, dynatrace, datadog, dql.
+	// Type represents the provider type. This can be one of prometheus, thanos, dynatrace, datadog, dql.
 	Type string `json:"type"`
 	// TargetServer defines URL (including port and protocol) at which the metrics provider is reachable.
 	TargetServer string `json:"targetServer"`

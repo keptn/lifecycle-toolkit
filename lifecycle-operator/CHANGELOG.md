@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.9.3](https://github.com/keptn/lifecycle-toolkit/compare/lifecycle-operator-v0.9.2...lifecycle-operator-v0.9.3) (2024-03-28)
+
+
+### Features
+
+* **lifecycle-operator:** introduce v1 API version ([#3344](https://github.com/keptn/lifecycle-toolkit/issues/3344)) ([1d851c5](https://github.com/keptn/lifecycle-toolkit/commit/1d851c5d72d6a1cf4678b838bd5176c2de89ece7))
+* **lifecycle-operator:** move API HUB version to v1 ([#3350](https://github.com/keptn/lifecycle-toolkit/issues/3350)) ([eed393b](https://github.com/keptn/lifecycle-toolkit/commit/eed393b859000866ecc271d117b9971c3693cfda))
+* **metrics-operator:** use v1 API in operator logic ([#3269](https://github.com/keptn/lifecycle-toolkit/issues/3269)) ([e9a584b](https://github.com/keptn/lifecycle-toolkit/commit/e9a584bc28ce6306362c722fed8849f5d5be0bda))
+
+
+### Other
+
+* bump helm charts versions ([#3303](https://github.com/keptn/lifecycle-toolkit/issues/3303)) ([19cbe9f](https://github.com/keptn/lifecycle-toolkit/commit/19cbe9fda082015d4a61d23c1276d599f6370cec))
+* **lifecycle-operator:** remove deprecated fields in KeptnTaskDefinition ([#3345](https://github.com/keptn/lifecycle-toolkit/issues/3345)) ([15a8ae3](https://github.com/keptn/lifecycle-toolkit/commit/15a8ae3394fe1347434dda87764b86c8cefc1637))
+
+
+### Dependency Updates
+
+* update golang.org/x/exp digest to a685a6e ([#3346](https://github.com/keptn/lifecycle-toolkit/issues/3346)) ([f0e7571](https://github.com/keptn/lifecycle-toolkit/commit/f0e7571054f9bf5ecb9d5c01f471da76d75ea488))
+* update kubernetes packages to v0.28.8 (patch) ([#3300](https://github.com/keptn/lifecycle-toolkit/issues/3300)) ([435e722](https://github.com/keptn/lifecycle-toolkit/commit/435e722776b69c6e7acbf3631d81cdeafc9815ec))
+* update module github.com/onsi/ginkgo/v2 to v2.16.0 ([#3319](https://github.com/keptn/lifecycle-toolkit/issues/3319)) ([10bc1c0](https://github.com/keptn/lifecycle-toolkit/commit/10bc1c02759f6eebe4f30812f868a9e6465c5e3d))
+* update module github.com/onsi/ginkgo/v2 to v2.17.0 ([#3339](https://github.com/keptn/lifecycle-toolkit/issues/3339)) ([997a63c](https://github.com/keptn/lifecycle-toolkit/commit/997a63cbeb8e7707a9c7c6fb21a1f6feabb75e1d))
+* update module github.com/onsi/ginkgo/v2 to v2.17.1 ([#3363](https://github.com/keptn/lifecycle-toolkit/issues/3363)) ([a34b8e5](https://github.com/keptn/lifecycle-toolkit/commit/a34b8e5959f775fe632cad1b7c74f6de46ff9aa0))
+
 ## [0.9.2](https://github.com/keptn/lifecycle-toolkit/compare/lifecycle-operator-v0.9.1...lifecycle-operator-v0.9.2) (2024-03-20)
 
 

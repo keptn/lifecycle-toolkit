@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.2](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.1.1...cert-manager-v2.1.2) (2024-03-28)
+
+
+### Other
+
+* bump helm charts versions ([#3303](https://github.com/keptn/lifecycle-toolkit/issues/3303)) ([19cbe9f](https://github.com/keptn/lifecycle-toolkit/commit/19cbe9fda082015d4a61d23c1276d599f6370cec))
+
+
+### Dependency Updates
+
+* update kubernetes packages to v0.28.8 (patch) ([#3300](https://github.com/keptn/lifecycle-toolkit/issues/3300)) ([435e722](https://github.com/keptn/lifecycle-toolkit/commit/435e722776b69c6e7acbf3631d81cdeafc9815ec))
+* update module golang.org/x/net to v0.22.0 ([#3341](https://github.com/keptn/lifecycle-toolkit/issues/3341)) ([d58df5c](https://github.com/keptn/lifecycle-toolkit/commit/d58df5cac90241f625e05e68ec157827c2d85bbd))
+
 ## [2.1.1](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.1.0...cert-manager-v2.1.1) (2024-03-19)
 
 

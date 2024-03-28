@@ -70,17 +70,17 @@ are involved in setting everything up.
 We are going to:
 
 1. Set up the environment by:
-   1. Setting up a GitHub repository with an access token, GitHub, workflows, and GitHub actions
-   2. Preparing a Kubernetes namespace for each stage (`dev` and `prod`)
-   3. Preparing the ArgoCD applications with an appropriate Helm chart for each
-   4. Applying labels to associate the Deployment resource with the KeptnWorkload resource
-   5. Defining Keptn pre-/post-deployment checks and tasks
-   6. Defining the metadata to be passed through the deployment traces
-   7. Define a TraceParent that links the deployment traces of the `prod` stage to those of the `dev` stage
-2. Run the promotion flow by:
-   1. Creating a pull request to update our `dev` environment
-   2. Merging the automatically created pull request to promote the updated version into `prod`
-   3. Inspecting the generated deployment traces for both stages
+     1. Setting up a GitHub repository with an access token, GitHub, workflows, and GitHub actions
+     1. Preparing a Kubernetes namespace for each stage (`dev` and `prod`)
+     1. Preparing the ArgoCD applications with an appropriate Helm chart for each
+     1. Applying labels to associate the Deployment resource with the KeptnWorkload resource
+     1. Defining Keptn pre-/post-deployment checks and tasks
+     1. Defining the metadata to be passed through the deployment traces
+     1. Define a TraceParent that links the deployment traces of the `prod` stage to those of the `dev` stage
+1. Run the promotion flow by:
+     1. Creating a pull request to update our `dev` environment
+     1. Merging the automatically created pull request to promote the updated version into `prod`
+     1. Inspecting the generated deployment traces for both stages
    and see how they are connected with each other
 
 ## Setting up the Environment

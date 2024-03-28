@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.9.3](https://github.com/keptn/lifecycle-toolkit/compare/scheduler-v0.9.2...scheduler-v0.9.3) (2024-03-28)
+
+
+### Dependency Updates
+
+* update module github.com/onsi/ginkgo/v2 to v2.16.0 ([#3319](https://github.com/keptn/lifecycle-toolkit/issues/3319)) ([10bc1c0](https://github.com/keptn/lifecycle-toolkit/commit/10bc1c02759f6eebe4f30812f868a9e6465c5e3d))
+* update module github.com/onsi/ginkgo/v2 to v2.17.0 ([#3339](https://github.com/keptn/lifecycle-toolkit/issues/3339)) ([997a63c](https://github.com/keptn/lifecycle-toolkit/commit/997a63cbeb8e7707a9c7c6fb21a1f6feabb75e1d))
+* update module github.com/onsi/ginkgo/v2 to v2.17.1 ([#3363](https://github.com/keptn/lifecycle-toolkit/issues/3363)) ([a34b8e5](https://github.com/keptn/lifecycle-toolkit/commit/a34b8e5959f775fe632cad1b7c74f6de46ff9aa0))
+* update module golang.org/x/net to v0.22.0 ([#3341](https://github.com/keptn/lifecycle-toolkit/issues/3341)) ([d58df5c](https://github.com/keptn/lifecycle-toolkit/commit/d58df5cac90241f625e05e68ec157827c2d85bbd))
+
 ## [0.9.2](https://github.com/keptn/lifecycle-toolkit/compare/scheduler-v0.9.1...scheduler-v0.9.2) (2024-03-19)
 
 

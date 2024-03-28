@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.9.4](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v0.9.3...metrics-operator-v0.9.4) (2024-03-28)
+
+
+### Features
+
+* add Thanos metrics provider ([#3358](https://github.com/keptn/lifecycle-toolkit/issues/3358)) ([7cc1622](https://github.com/keptn/lifecycle-toolkit/commit/7cc1622edc1c7e6ffa138389df2b7e15f1c2b8db))
+* **metrics-operator:** introduce v1 API version ([#3266](https://github.com/keptn/lifecycle-toolkit/issues/3266)) ([d034a4f](https://github.com/keptn/lifecycle-toolkit/commit/d034a4f4abbbff31596bc790842a4ba765e82e1e))
+* **metrics-operator:** use v1 API in operator logic ([#3269](https://github.com/keptn/lifecycle-toolkit/issues/3269)) ([e9a584b](https://github.com/keptn/lifecycle-toolkit/commit/e9a584bc28ce6306362c722fed8849f5d5be0bda))
+
+
+### Other
+
+* bump helm charts versions ([#3303](https://github.com/keptn/lifecycle-toolkit/issues/3303)) ([19cbe9f](https://github.com/keptn/lifecycle-toolkit/commit/19cbe9fda082015d4a61d23c1276d599f6370cec))
+* **metrics-operator:** cleanup APIs ([#3270](https://github.com/keptn/lifecycle-toolkit/issues/3270)) ([a683c9a](https://github.com/keptn/lifecycle-toolkit/commit/a683c9a794fcb76017c4cb4fb6d3547de5c2c2ca))
+
+
+### Dependency Updates
+
+* update golang.org/x/exp digest to a685a6e ([#3346](https://github.com/keptn/lifecycle-toolkit/issues/3346)) ([f0e7571](https://github.com/keptn/lifecycle-toolkit/commit/f0e7571054f9bf5ecb9d5c01f471da76d75ea488))
+* update kubernetes packages to v0.28.8 (patch) ([#3300](https://github.com/keptn/lifecycle-toolkit/issues/3300)) ([435e722](https://github.com/keptn/lifecycle-toolkit/commit/435e722776b69c6e7acbf3631d81cdeafc9815ec))
+* update module github.com/datadog/datadog-api-client-go/v2 to v2.24.0 ([#3316](https://github.com/keptn/lifecycle-toolkit/issues/3316)) ([aec937d](https://github.com/keptn/lifecycle-toolkit/commit/aec937d34600be76c05e8545d16a1602fda5b761))
+* update module golang.org/x/net to v0.22.0 ([#3341](https://github.com/keptn/lifecycle-toolkit/issues/3341)) ([d58df5c](https://github.com/keptn/lifecycle-toolkit/commit/d58df5cac90241f625e05e68ec157827c2d85bbd))
+
 ## [0.9.3](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v0.9.2...metrics-operator-v0.9.3) (2024-03-19)
 
 

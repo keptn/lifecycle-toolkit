@@ -1,0 +1,5 @@
+serviceVersion: v1
+backendServiceVersion: v1
+targetResponseRate: "0.50"
+commitID: ""
+traceParent: ""

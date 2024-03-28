@@ -23,7 +23,7 @@ package v1alpha4
 import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	"go.opentelemetry.io/otel/propagation"
+	propagation "go.opentelemetry.io/otel/propagation"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 

@@ -115,6 +115,7 @@ var (
 	PhaseDeprecated               = KeptnPhaseType{LongName: "Deprecated", ShortName: "Deprecated"}
 )
 
+// PhaseTraceID is a map storing TraceIDs of OpenTelemetry spans in lifecycle phases
 type PhaseTraceID map[string]propagation.MapCarrier
 
 func (pid PhaseTraceID) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {

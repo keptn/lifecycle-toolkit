@@ -497,10 +497,6 @@ _Appears in:_
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |  |
 
 
-
-
-
-
 #### KeptnState
 
 _Underlying type:_ _string_
@@ -882,7 +878,7 @@ _Appears in:_
 
 _Underlying type:_ _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_
 
-
+PhaseTraceID is a map storing TraceIDs of OpenTelemetry spans in lifecycle phases
 
 
 
@@ -926,8 +922,6 @@ _Appears in:_
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
 | `secret` _string_ |  || ✓ |  |
-
-
 
 
 #### TaskContext

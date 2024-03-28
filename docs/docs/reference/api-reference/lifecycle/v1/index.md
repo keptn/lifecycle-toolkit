@@ -1091,7 +1091,7 @@ _Appears in:_
 
 _Underlying type:_ _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_
 
-
+PhaseTraceID is a map storing TraceIDs of OpenTelemetry spans in lifecycle phases
 
 
 

@@ -55,7 +55,7 @@ resource
   running a workflow that creates the pull requests for updating the
   application manifests in the different stages.
 - [Helm](https://helm.sh): The configuration of the application in both stages
-  is maintained via two separate helm charts respectively.
+  is maintained via two separate Helm charts respectively.
 - [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)/[Jaeger](https://www.jaegertracing.io):
   The deployment traces are gathered by the OpenTelemetry Collector and forwarded to Jaeger,
   where we can view the generated traces.
@@ -91,7 +91,7 @@ with each other.
 ### Set up the GitHub repository
 
 First things first, since we talk about GitOps in this article, we need
-a git repository to host the helm chart of our application.
+a git repository to host the Helm chart of our application.
 In this example, we are using GitHub, since this also allows us
 to make use of GitHub Actions to implement the promotion from
 `dev` to `production`.
@@ -138,7 +138,7 @@ within our GitOps repository.
 
 This action copies over the `values.yaml` file from the
 `dev` stage to the `prod` stage, to set the
-service versions that should be deployed via the helm chart for
+service versions that should be deployed via the Helm chart for
 that stage.
 
 ### Prepare the application namespaces
@@ -174,12 +174,12 @@ The next step is to
 create the ArgoCD applications in our cluster.
 Each stage of our application (`dev` `production`) is
 represented by a separate ArgoCD application which points to
-a helm chart for the respective stage.
-The helm charts can be found in our [GitOps repository](https://github.com/bacherfl/keptn-analysis-demo)
+a Helm chart for the respective stage.
+The Helm charts can be found in our [GitOps repository](https://github.com/bacherfl/keptn-analysis-demo)
 in the following sub folders:
 
-- `simple-app/chart-dev`: Contains the helm chart for the application in the `dev` stage
-- `simple-app/chart-prod`: Contains the helm chart for the application in the `prod` stage
+- `simple-app/chart-dev`: Contains the Helm chart for the application in the `dev` stage
+- `simple-app/chart-prod`: Contains the Helm chart for the application in the `prod` stage
 
 The ArgoCD applications are created by applying the following manifest:
 
@@ -188,19 +188,19 @@ The ArgoCD applications are created by applying the following manifest:
 ```
 
 The manifest above contains the definition for the two ArgoCD
-applications which both point to the helm charts mentioned earlier.
+applications which both point to the Helm charts mentioned earlier.
 In addition to that, the `$ARGOCD_APP_REVISION` environment variable
 is used to get access to the git commit ID that triggered
 a new deployment of our applications.
-This ID is passed through to the helm chart and is used by
+This ID is passed through to the Helm chart and is used by
 Keptn to include this as metadata for a `KeptnApp` deployment.
 
 After applying the file, using `kubectl apply -f argo-apps.yaml`,
 ArgoCD begins to synchronize the state of the applications,
-meaning that the helm charts for the applications are applied to the
+meaning that the Helm charts for the applications are applied to the
 cluster.
 While this is happening, let's have a closer look at the actual
-content of the helm charts.
+content of the Helm charts.
 
 Both charts contain two `Deployments/Services`
 (`simple-go-service` and `simple-go-backend`), representing
@@ -276,7 +276,7 @@ by ArgoCD, using the `$ARGOCD_APP_REVISION` environment variable.
 {% include "./multi-stage-delivery-using-gitops/values-dev.yaml" %}
 ```
 
-The helm chart of the `prod` stage is rather similar to the one
+The Helm chart of the `prod` stage is rather similar to the one
 for the `dev` stage, but differs in the `values.yaml`, and the
 `KeptnAppContext`.
 First, let's inspect the `values.yaml` in `prod`:

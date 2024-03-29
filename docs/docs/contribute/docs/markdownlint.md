@@ -18,7 +18,7 @@ This page tells how to use  markdownlint.
 We use `GNU make` to ensure the same functionality locally and within our CI builds.
 This allows easier debugging and problem resolution.
 
-## markdownlint execution
+## Markdownlint execution
 
 To verify that your markdown code conforms to the rules,
 run the following on your local branch:

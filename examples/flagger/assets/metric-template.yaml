@@ -1,0 +1,11 @@
+apiVersion: flagger.app/v1beta1
+kind: MetricTemplate
+metadata:
+  name: response-time
+  namespace: keptn-system
+spec:
+  provider:
+    type: prometheus
+    address: http://prometheus-k8s.monitoring:9090
+  query: |
+    response_time{namespace="keptn-system"}

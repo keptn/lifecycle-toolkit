@@ -87,5 +87,5 @@ that are relevant only to documentation.
     make markdownlint-fix
     ```
 
-  See [markdownlint](./linter-requirements.md#markdownlint)
+  See [markdownlint](./markdownlint.md)
   for details.

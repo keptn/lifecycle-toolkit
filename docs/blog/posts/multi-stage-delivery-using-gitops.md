@@ -101,6 +101,8 @@ as an upstream repository.
 If you would like to try the demo yourself, feel free to fork this repository
 and start experimenting with Keptn from there.
 
+#### Create personal access token
+
 The first step in setting up the demo environment is to
 create a personal access token for accessing the GitHub API.
 This token will be used by the container running the promotion
@@ -121,6 +123,8 @@ exclusively within our GitOps repository.
 The required permissions are highlighted in the screenshot below:
 
 ![Token Permissions](./multi-stage-delivery-using-gitops/token-permissions.png)
+
+#### Enable GitHub workflows
 
 Another prerequisite to take care of is to enable GitHub workflows to write to the repo
 and create pull requests.
@@ -202,6 +206,8 @@ cluster.
 While this is happening, let's have a closer look at the actual
 content of the Helm charts.
 
+### What's in the Helm chart for dev stage
+
 Both charts contain two `Deployments/Services`
 (`simple-go-service` and `simple-go-backend`), representing
 the two `KeptnWorkloads` that are part of our `KeptnApp`.
@@ -212,12 +218,16 @@ to see how we prepared it to be managed by Keptn:
 {% include "./multi-stage-delivery-using-gitops/deployment.yaml" %}
 ```
 
+#### Labels
+
 To correctly associate the `Deployment` to `KeptnWorkload`,
 the following labels are set:
 
 - `app.kubernetes.io/name`: The name of the `KeptnWorkload` that should be associated with the `Deployment`.
 - `app.kubernetes.io/part-of`: The name of the `KeptnApp` containing the two workloads.
 - `app.kubernetes.io/version`: The version for the related `KeptnWorkload`.
+
+#### Pre and post-deployment tasks
 
 In addition to the labels which define the `KeptnWorkload`, we also use
 the `keptn.sh/post-deployment-tasks` to define a post-deployment task for the
@@ -226,7 +236,15 @@ The task defined here (`wait-for-monitoring`) ensures the Prometheus
 target for the workload is available, before proceeding with
 the execution of the load tests of the overall application.
 
-Another resource worth mentioning is the `KeptnAppContext`,
+#### KeptnAppContext
+
+The `KeptnAppContext`  provides two important capabilities for multi-stage delivery:
+
+* Define tasks and evaluations that run before or after the applicationdeployment
+* Add metadata and links to traces for a specific application.
+This enables you to enrich your traces
+with additional information that you can use
+to understand and analyze the performance of your applications
 which looks as follows:
 
 ```yaml
@@ -246,14 +264,15 @@ Once all workloads have been deployed, the application enters the
 executed.
 
 After executing the load tests, a `post-deployment` evaluation is
-performed, in which the response time of the deployed workloads
-is evaluated.
+performed, to compare the response time measured by the load tests with a threshold you have defined.
 
-Finally, if all checks have passed, the application proceeds into the
+If this evaluation is successful, the application proceeds into the
 `promotion` phase.
 This is the phase where the GitHub personal access token we created earlier
 is used to trigger the GitHub action to promote the deployed version
 into the next stage.
+
+#### Metadata
 
 In addition to the pre-/post-deployment checks and the promotion task,
 the `KeptnAppContext` also contains a `metadata` property that
@@ -285,12 +304,18 @@ First, let's inspect the `values.yaml` in `prod`:
 {% include "./multi-stage-delivery-using-gitops/values-prod.yaml" %}
 ```
 
-This file contains an additional property called `traceParent`,
+#### TraceParent property
+
+The `values.yaml` file for the `prod` stage
+contains an additional property called `traceParent`,
 which is essential in linking the deployment traces of the
 `prod` stage to the previous stage, i.e. the `dev` stage.
 The `traceParent` is propagated from Keptn to the GitHub action that
 does the promotion by adapting the `values.yaml` file to
 specify the workload versions that should be deployed in `prod`.
+
+#### spanLinks property
+
 In our example, the value of the `traceParent` is the span ID of the
 `promotion` phase of the `dev` stage.
 To pass this property to Keptn, the `spanLinks` property of the `KeptnAppContext`
@@ -340,7 +365,7 @@ deployed in `dev`.
 In addition to that, the `traceParent` property is set to the
 span ID of the `promotion` phase of the deployment in `dev`.
 
-Once the PR is merged, Keptn will take care of deploying
+Once the PR is merged, Keptn deploys
 the new version in the `prod` stage, and eventually
 we will see the deployment trace for that stage in
 Jaeger as well:

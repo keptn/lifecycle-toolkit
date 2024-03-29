@@ -33,7 +33,7 @@ To use the auto-fix option, run:
 make markdownlint-fix
 ```
 
-## markdownlint configuration
+## Markdownlint configuration
 
 We use the default configuration values for `markdownlint`.
 

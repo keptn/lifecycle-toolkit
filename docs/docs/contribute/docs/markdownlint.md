@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Using markdownlint
+# Markdownlint
 
 Keptn uses
 [markdownlint](https://github.com/DavidAnson/markdownlint)

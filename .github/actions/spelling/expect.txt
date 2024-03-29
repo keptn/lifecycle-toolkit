@@ -40,6 +40,7 @@ appcreationrequest
 APPNAME
 appv
 appversion
+applicationdeployment
 aquasecurity
 architecting
 ARCHS

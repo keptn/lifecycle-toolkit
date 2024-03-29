@@ -191,8 +191,8 @@ The ArgoCD applications are created by applying the following manifest:
 {% include "./multi-stage-delivery-using-gitops/argo-apps.yaml" %}
 ```
 
-The manifest above contains the definition for the two ArgoCD
-applications which both point to the Helm charts mentioned earlier.
+The manifest above contains the definition for the two ArgoCD applications
+each of which points to one of the helm charts mentioned earlier.
 In addition to that, the `$ARGOCD_APP_REVISION` environment variable
 is used to get access to the git commit ID that triggered
 a new deployment of our applications.
@@ -220,7 +220,7 @@ to see how we prepared it to be managed by Keptn:
 
 #### Labels
 
-To correctly associate the `Deployment` to `KeptnWorkload`,
+To correctly associate the `Deployment` resource with the `KeptnWorkload` resource,
 the following labels are set:
 
 - `app.kubernetes.io/name`: The name of the `KeptnWorkload` that should be associated with the `Deployment`.
@@ -294,6 +294,8 @@ by ArgoCD, using the `$ARGOCD_APP_REVISION` environment variable.
 ```yaml
 {% include "./multi-stage-delivery-using-gitops/values-dev.yaml" %}
 ```
+
+### What's in the Helm chart for prod stage
 
 The Helm chart of the `prod` stage is rather similar to the one
 for the `dev` stage, but differs in the `values.yaml`, and the

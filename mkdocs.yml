@@ -69,9 +69,12 @@ extra_css:
   - assets/stylesheets/mermaid.css
 plugins:
   - search
-  - social:
-      cards_layout_options:
-        background_color: "#006bba"
+  # Disabling due to problem described here
+  # https://github.com/squidfunk/mkdocs-material/issues/6983.
+  # After resolving it, the plugin can be enabled again.
+  # - social:
+  #     cards_layout_options:
+  #       background_color: "#006bba"
   - include-markdown:
       trailing_newlines: false
   - git-revision-date-localized:

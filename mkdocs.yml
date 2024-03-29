@@ -222,7 +222,7 @@ nav:
       - Software contributions:
           - docs/contribute/software/index.md
           - Software development environment: docs/contribute/software/dev-environ.md
-          - Golangci-lint configuration: docs/contribute/software/golangci-ling.md
+          - Golangci-lint configuration: docs/contribute/software/golangci-lint.md
           - Add a metrics provider: docs/contribute/software/add-new-metric-provider.md
       - Documentation contributions:
           - docs/contribute/docs/index.md

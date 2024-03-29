@@ -76,7 +76,7 @@ This way, after the re-deployment, the workload trace will contain the `stage=de
 ## Include metadata in application traces
 
 Similar to the previous step, custom metadata can also be added to application traces via the
-[KeptnAppContext](../reference/api-reference/lifecycle/v1beta1/index.md#keptnappcontext) CRD.
+[KeptnAppContext](../reference/api-reference/lifecycle/v1/index.md#keptnappcontext) CRD.
 
 `KeptnAppContext` is a custom resource definition in Keptn that allows you to add metadata
 and links to traces for a specific application.

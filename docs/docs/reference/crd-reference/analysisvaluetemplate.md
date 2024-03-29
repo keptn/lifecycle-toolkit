@@ -7,21 +7,20 @@ comments: true
 An `AnalysisValueTemplate` resource
 defines a Service Level Indicator (SLI),
 which identifies the data to be analyzed
-by data source to use and the query to issue.
-One Analysis can use data from multiple instances
-of multiple types of data provider.
+by a data source to use and the query to issue.
+One Analysis can use data from multiple AnalysisValueTemplates.
 
 ## Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisValueTemplate
 metadata:
   name: response-time-p95
   namespace: <namespace-where-this-resource-resides>
 spec:
   provider:
-    name: prometheus | dynatrace | dql | datadog
+    name: prometheus | thanos | dynatrace | dql | datadog
   query: <query>
 ```
 
@@ -87,7 +86,7 @@ guide page.
 ## Files
 
 API reference:
-[AnalysisValueTemplate](../api-reference/metrics/v1beta1/index.md#analysisvaluetemplate)
+[AnalysisValueTemplate](../api-reference/metrics/v1/index.md#analysisvaluetemplate)
 
 ## Differences between versions
 

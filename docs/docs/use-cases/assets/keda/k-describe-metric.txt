@@ -1,0 +1,13 @@
+$ kubectl describe keptnmetrics.metrics.keptn.sh cpu-throttling -n podtato-kubectl
+Name:         cpu-throttling
+Namespace:    podtato-kubectl
+API Version:  metrics.keptn.sh/v1
+Kind:         KeptnMetric
+Spec:
+  Fetch Interval Seconds:  60
+  Provider:
+    Name:  prometheus-provider
+  Query:  avg(rate(container_cpu_cfs_throttled_seconds_total{container="server", namespace="podtato-kubectl"}))
+Status:
+  Raw Value: <omitted for readability>
+  Value:         4.53

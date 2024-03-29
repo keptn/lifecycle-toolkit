@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/datadog"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus"
@@ -29,7 +29,7 @@ type ProviderFactory func(providerType string, log logr.Logger, k8sClient client
 func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
 
 	switch strings.ToLower(providerType) {
-	case PrometheusProviderType:
+	case PrometheusProviderType, ThanosProviderType:
 		return prometheus.NewPrometheusProvider(log, k8sClient), nil
 	case DynatraceProviderType:
 		return &dynatrace.KeptnDynatraceProvider{

@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.1](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.1.0...cert-manager-v2.1.1) (2024-03-19)
+
+
+### Bug Fixes
+
+* security vulnerabilities ([#3230](https://github.com/keptn/lifecycle-toolkit/issues/3230)) ([1d099d7](https://github.com/keptn/lifecycle-toolkit/commit/1d099d7a4c9b5e856de52932693b97c29bea3122))
+
+
+### Other
+
+* bump Go base images and pipelines version to 1.21 ([#3218](https://github.com/keptn/lifecycle-toolkit/issues/3218)) ([de01ca4](https://github.com/keptn/lifecycle-toolkit/commit/de01ca493b307d8c27701552549b982e22281a2e))
+* update chart dependencies ([#3179](https://github.com/keptn/lifecycle-toolkit/issues/3179)) ([b8efdd5](https://github.com/keptn/lifecycle-toolkit/commit/b8efdd50002231a06bac9c5ab02fcdbadea4c60d))
+
 ## [2.1.0](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.0.0...cert-manager-v2.1.0) (2024-03-04)
 
 

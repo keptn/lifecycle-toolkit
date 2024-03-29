@@ -50,7 +50,7 @@ metadata:
   labels:
     task-definition: "child"
   ownerReferences:
-    - apiVersion: lifecycle.keptn.sh/v1beta1
+    - apiVersion: lifecycle.keptn.sh/v1
       blockOwnerDeletion: true
       controller: true
       kind: KeptnTask

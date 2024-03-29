@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppContext
 metadata:
   name: waiter
@@ -6,13 +6,13 @@ spec:
   metadata:
     test-metadata: test-metadata
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
 spec:
   ttlSecondsAfterFinished: 1000
-  function:
+  deno:
     inline:
       code: |
         console.log("Pre-Deployment Task has been executed");

@@ -3,7 +3,7 @@ package analysis
 import (
 	"testing"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	"github.com/stretchr/testify/require"
 )
 

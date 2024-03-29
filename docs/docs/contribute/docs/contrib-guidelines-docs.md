@@ -50,15 +50,9 @@ that are relevant only to documentation.
   use the `include <file-path>` shortcode syntax
   (which automatically pulls the current version of the file into your document)
   rather than copying the text.
-  This ensures that, when the sample file is updated,
-  your document is also updated.
-
-    For example, to include the `examples/sample-app/version1/app-pre-deploy-eval.yaml` file,
-    the syntax is:
-
-    ```md
-    {% /* include "examples/sample-app/version-1/app-pre-deploy-eval.yaml" */ %}
-    ```
+  See
+  [Displaying sample files](code-docs.md/#comments)
+  for details.
 
 * `markdownlint` enforces limits on line length.
   Links to other documents are exempted from this limit

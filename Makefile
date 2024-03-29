@@ -2,7 +2,7 @@
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION?=v5.3.0
-CHART_APPVERSION ?= v2.0.0-rc.1 # x-release-please-version
+CHART_APPVERSION ?= v2.0.0-rc.2 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine
@@ -177,6 +177,14 @@ operator-lint: install-golangci-lint
 .PHONY: scheduler-lint
 scheduler-lint: install-golangci-lint
 	$(MAKE) -C scheduler lint
+
+.PHONY: helm-test
+helm-test:
+	./.github/scripts/helm-test.sh
+
+.PHONY: generate-helm-test-results
+generate-helm-test-results:
+	./.github/scripts/generate-helm-results.sh
 
 .PHONY: lint
 lint: metrics-operator-lint

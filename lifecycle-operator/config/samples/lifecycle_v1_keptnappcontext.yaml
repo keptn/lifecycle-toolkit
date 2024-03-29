@@ -1,0 +1,31 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppContext
+metadata:
+  labels:
+    app.kubernetes.io/name: keptnappcontext
+    app.kubernetes.io/instance: keptnappcontext-sample
+    app.kubernetes.io/part-of: lifecycle-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: lifecycle-operator
+  name: keptnappcontext-sample
+spec:
+  preDeploymentTasks:
+    - task1
+    - task2
+  postDeploymentTasks:
+    - task1
+    - task2
+  preDeploymentEvaluations:
+    - eval1
+    - eval2
+  postDeploymentEvaluations:
+    - eval1
+    - eval2
+  promotionTasks:
+    - task1
+    - task2
+  metadata:
+    - key: abc123
+  spanLinks:
+    - "w3c trace id1"
+    - "w3c trace id2"

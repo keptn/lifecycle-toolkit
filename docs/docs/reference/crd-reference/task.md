@@ -4,17 +4,18 @@ comments: true
 
 # KeptnTask
 
-Keptn uses KeptnTask resources internally
+Keptn uses `KeptnTask` resources internally
 to manage tasks (and their underlying Kubernetes Job resources)
 that are run before and after deployment of your workloads  
 (pre- and post-deployment tasks).
 You do not need to create this resource yourself except in special situations,
-like using Keptn to manage workloads that are outside of the k8s cluster.
+for instance when using Keptn to manage workloads outside the k8s cluster.
+See the [use case page](../../use-cases/non-k8s.md) for more details about this.
 
 ## Synopsis
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTask
 metadata:
   name: <name-of-this-run>
@@ -63,9 +64,9 @@ spec:
           for which the `KeptnTask` is being executed.
         * **metadata** -- Additional key-value pairs with contextual information for the `KeptnTask`.
           Keptn populates this field based on the `spec.metadata` field of the
-          [KeptnWorkloadVersion](../api-reference/lifecycle/v1beta1/index.md#keptnworkloadversion)
+          [KeptnWorkloadVersion](../api-reference/lifecycle/v1/index.md#keptnworkloadversion)
           and
-          [KeptnAppVersion](../api-reference/lifecycle/v1beta1/index.md#keptnappversion)
+          [KeptnAppVersion](../api-reference/lifecycle/v1/index.md#keptnappversion)
           resources.
 
             For example, the following lines reference the commit ID and user ID:
@@ -139,7 +140,7 @@ to use for a deployment being done outside of Kubernetes, see
 
 ## Files
 
-[API reference](../api-reference/lifecycle/v1beta1/index.md#keptntaskspec)
+[API reference](../api-reference/lifecycle/v1/index.md#keptntaskspec)
 
 ## Differences between versions
 

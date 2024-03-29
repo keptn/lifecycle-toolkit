@@ -5,18 +5,27 @@ import (
 	"context"
 	"fmt"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 )
 
-func (r *KeptnWorkloadVersionReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
+func (r *KeptnWorkloadVersionReconciler) reconcilePrePostEvaluation(ctx context.Context, phaseCtx context.Context, workloadVersion *apilifecycle.KeptnWorkloadVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 	evaluationCreateAttributes := evaluation.CreateEvaluationAttributes{
 		SpanName:  fmt.Sprintf(apicommon.CreateWorkloadEvalSpanName, checkType),
 		CheckType: checkType,
 	}
 
-	newStatus, state, err := r.EvaluationHandler.ReconcileEvaluations(ctx, phaseCtx, workloadVersion, evaluationCreateAttributes)
+	evaluationHandler := evaluation.NewHandler(
+		r.Client,
+		r.EventSender,
+		r.Log,
+		r.getTracer(),
+		r.Client.Scheme(),
+		r.SpanHandler,
+	)
+
+	newStatus, state, err := evaluationHandler.ReconcileEvaluations(ctx, phaseCtx, workloadVersion, evaluationCreateAttributes)
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}

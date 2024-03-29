@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
-	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1beta1"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
+	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -35,8 +35,8 @@ var _ = Describe("Evaluation", Ordered, func() {
 
 	Describe("Testing reconcile Evaluation scenario when using KeptnMetric instead of provider directly", func() {
 		var (
-			evaluationDefinition *klcv1beta1.KeptnEvaluationDefinition
-			evaluation           *klcv1beta1.KeptnEvaluation
+			evaluationDefinition *apilifecycle.KeptnEvaluationDefinition
+			evaluation           *apilifecycle.KeptnEvaluation
 		)
 		Context("With an existing EvaluationDefinition pointing to KeptnMetric", func() {
 			It("KeptnEvaluationController Should succeed, as it finds valid values in KeptnMetric", func() {
@@ -66,15 +66,15 @@ var _ = Describe("Evaluation", Ordered, func() {
 				err = k8sClient.Status().Update(context.TODO(), metric2)
 				Expect(err).To(BeNil())
 
-				evaluationdef := &klcv1beta1.KeptnEvaluationDefinition{}
+				evaluationdef := &apilifecycle.KeptnEvaluationDefinition{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: namespaceName,
 						Name:      evaluationDefinitionName,
 					}, evaluationdef)
 					g.Expect(err).To(BeNil())
-					g.Expect(evaluationdef.Spec.Objectives[0]).To(Equal(klcv1beta1.Objective{
-						KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+					g.Expect(evaluationdef.Spec.Objectives[0]).To(Equal(apilifecycle.Objective{
+						KeptnMetricRef: apilifecycle.KeptnMetricReference{
 							Name:      metricName,
 							Namespace: namespaceName,
 						},
@@ -88,7 +88,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 
 				By("Check that the evaluation passed")
 
-				evaluation2 := &klcv1beta1.KeptnEvaluation{}
+				evaluation2 := &apilifecycle.KeptnEvaluation{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: namespaceName,
@@ -96,7 +96,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 					}, evaluation2)
 					g.Expect(err).To(BeNil())
 					g.Expect(evaluation2.Status.OverallStatus).To(Equal(apicommon.StateSucceeded))
-					g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]klcv1beta1.EvaluationStatusItem{
+					g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]apilifecycle.EvaluationStatusItem{
 						metricName: {
 							Value:   "5",
 							Status:  apicommon.StateSucceeded,
@@ -135,15 +135,15 @@ var _ = Describe("Evaluation", Ordered, func() {
 				err = k8sClient.Status().Update(context.TODO(), metric2)
 				Expect(err).To(BeNil())
 
-				evaluationdef := &klcv1beta1.KeptnEvaluationDefinition{}
+				evaluationdef := &apilifecycle.KeptnEvaluationDefinition{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: KeptnNamespace,
 						Name:      evaluationDefinitionName,
 					}, evaluationdef)
 					g.Expect(err).To(BeNil())
-					g.Expect(evaluationdef.Spec.Objectives[0]).To(Equal(klcv1beta1.Objective{
-						KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+					g.Expect(evaluationdef.Spec.Objectives[0]).To(Equal(apilifecycle.Objective{
+						KeptnMetricRef: apilifecycle.KeptnMetricReference{
 							Name:      metricName,
 							Namespace: KeptnNamespace,
 						},
@@ -157,7 +157,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 
 				By("Check that the evaluation passed")
 
-				evaluation2 := &klcv1beta1.KeptnEvaluation{}
+				evaluation2 := &apilifecycle.KeptnEvaluation{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: namespaceName,
@@ -165,7 +165,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 					}, evaluation2)
 					g.Expect(err).To(BeNil())
 					g.Expect(evaluation2.Status.OverallStatus).To(Equal(apicommon.StateSucceeded))
-					g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]klcv1beta1.EvaluationStatusItem{
+					g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]apilifecycle.EvaluationStatusItem{
 						metricName: {
 							Value:   "5",
 							Status:  apicommon.StateSucceeded,
@@ -195,7 +195,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 
 				By("Check that the evaluation failed")
 
-				evaluation2 := &klcv1beta1.KeptnEvaluation{}
+				evaluation2 := &apilifecycle.KeptnEvaluation{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: namespaceName,
@@ -203,7 +203,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 					}, evaluation2)
 					g.Expect(err).To(BeNil())
 					g.Expect(evaluation2.Status.OverallStatus).To(Equal(apicommon.StateFailed))
-					g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]klcv1beta1.EvaluationStatusItem{
+					g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]apilifecycle.EvaluationStatusItem{
 						metricName: {
 							Value:   "",
 							Status:  apicommon.StateFailed,
@@ -226,7 +226,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 
 				By("Check that the evaluation failed")
 
-				evaluation2 := &klcv1beta1.KeptnEvaluation{}
+				evaluation2 := &apilifecycle.KeptnEvaluation{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: namespaceName,
@@ -234,7 +234,7 @@ var _ = Describe("Evaluation", Ordered, func() {
 					}, evaluation2)
 					g.Expect(err).To(BeNil())
 					g.Expect(evaluation2.Status.OverallStatus).To(Equal(apicommon.StateFailed))
-					g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]klcv1beta1.EvaluationStatusItem{
+					g.Expect(evaluation2.Status.EvaluationStatus).To(Equal(map[string]apilifecycle.EvaluationStatusItem{
 						metricName: {
 							Value:   "",
 							Status:  apicommon.StateFailed,
@@ -257,23 +257,23 @@ var _ = Describe("Evaluation", Ordered, func() {
 	})
 })
 
-func makeEvaluationDefinition(name string, namespaceName string, objectiveName string) *klcv1beta1.KeptnEvaluationDefinition {
-	evalDef := &klcv1beta1.KeptnEvaluationDefinition{
+func makeEvaluationDefinition(name string, namespaceName string, objectiveName string) *apilifecycle.KeptnEvaluationDefinition {
+	evalDef := &apilifecycle.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespaceName,
 		},
-		Spec: klcv1beta1.KeptnEvaluationDefinitionSpec{
-			Objectives: []klcv1beta1.Objective{
+		Spec: apilifecycle.KeptnEvaluationDefinitionSpec{
+			Objectives: []apilifecycle.Objective{
 				{
-					KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+					KeptnMetricRef: apilifecycle.KeptnMetricReference{
 						Name:      objectiveName,
 						Namespace: namespaceName,
 					},
 					EvaluationTarget: "<10",
 				},
 			},
-			FailureConditions: klcv1beta1.FailureConditions{
+			FailureConditions: apilifecycle.FailureConditions{
 				Retries: 3,
 			},
 		},
@@ -306,13 +306,13 @@ func makeKeptnMetric(name string, namespaceName string) *metricsapi.KeptnMetric 
 	return metric
 }
 
-func makeEvaluation(name string, namespaceName string, evaluationDefinition string) *klcv1beta1.KeptnEvaluation {
-	eval := &klcv1beta1.KeptnEvaluation{
+func makeEvaluation(name string, namespaceName string, evaluationDefinition string) *apilifecycle.KeptnEvaluation {
+	eval := &apilifecycle.KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespaceName,
 		},
-		Spec: klcv1beta1.KeptnEvaluationSpec{
+		Spec: apilifecycle.KeptnEvaluationSpec{
 			AppVersion:           "1",
 			AppName:              "app",
 			EvaluationDefinition: evaluationDefinition,

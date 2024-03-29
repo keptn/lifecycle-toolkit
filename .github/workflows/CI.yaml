@@ -106,7 +106,7 @@ jobs:
         run: make unit-test
 
       - name: Report code coverage
-        uses: codecov/codecov-action@54bcd8715eee62d40e33596ef5e8f0f48dbbccab # v4
+        uses: codecov/codecov-action@c16abc29c95fcf9174b58eb7e1abf4c866893bc8 # v4.1.1
         with:
           flags: ${{ matrix.config.name }}
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -142,7 +142,7 @@ jobs:
 
       - name: Cache build tools
         id: cache-build-tools
-        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # v4
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
         with:
           path: ./${{ matrix.config.folder }}bin
           key: build-tools-${{ github.ref_name }}
@@ -152,7 +152,7 @@ jobs:
         uses: docker/setup-buildx-action@2b51285047da1547ffb1b2203d8be4c0af6b1f20 # v3
 
       - name: Build Docker Image
-        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.1
+        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64,linux/arm64

@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.9.2](https://github.com/keptn/lifecycle-toolkit/compare/scheduler-v0.9.1...scheduler-v0.9.2) (2024-03-19)
+
+
+### Bug Fixes
+
+* security vulnerabilities ([#3230](https://github.com/keptn/lifecycle-toolkit/issues/3230)) ([1d099d7](https://github.com/keptn/lifecycle-toolkit/commit/1d099d7a4c9b5e856de52932693b97c29bea3122))
+
+
+### Other
+
+* bump Go base images and pipelines version to 1.21 ([#3218](https://github.com/keptn/lifecycle-toolkit/issues/3218)) ([de01ca4](https://github.com/keptn/lifecycle-toolkit/commit/de01ca493b307d8c27701552549b982e22281a2e))
+
+
+### Dependency Updates
+
+* update module google.golang.org/grpc to v1.62.1 ([#3281](https://github.com/keptn/lifecycle-toolkit/issues/3281)) ([f86c49a](https://github.com/keptn/lifecycle-toolkit/commit/f86c49a8e4a72ceccab95f15d0dcde2a4e7dbfb0))
+
 ## [0.9.1](https://github.com/keptn/lifecycle-toolkit/compare/scheduler-v0.9.0...scheduler-v0.9.1) (2024-03-04)
 
 

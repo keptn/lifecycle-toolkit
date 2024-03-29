@@ -151,6 +151,7 @@ func TestKeptnAppVersion(t *testing.T) {
 
 	require.Equal(t, []attribute.KeyValue{
 		common.AppName.String("appname"),
+		common.AppNamespace.String("namespace"),
 		common.AppVersion.String("version"),
 		common.AppPreviousVersion.String("prev"),
 	}, app.GetDurationMetricsAttributes())

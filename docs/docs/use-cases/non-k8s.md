@@ -58,7 +58,7 @@ For example, you might create a `test-task-definition.yaml` file
 with the following content:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: helloworldtask
@@ -98,7 +98,7 @@ For example, you might create a `test-task.yaml` file
 with the following content:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTask
 metadata:
   name: runhelloworld1
@@ -141,7 +141,7 @@ For example, you could create a `test-task-2.yaml` file
 with the `metadata.name` field set to `runhelloworld2`:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTask
 metadata:
   name: runhelloworld2
@@ -179,13 +179,13 @@ similar to what the metrics evaluations of the
 Keptn v1 quality gates feature provided.
 The data used can come from multiple instances
 of multiple data providers
-(such as Prometheus, Dynatrace, and DataDog).
+(such as Prometheus, Thanos, Dynatrace, and DataDog).
 
 A Keptn analysis can be run for any application running anywhere
 as long Keptn can access a monitoring provider endpoint
 that serves metrics for the application.
 You can point to multiple instances of the supported monitoring providers
-(Prometheus, Dynatrace, Datadog, and dql)
+(Prometheus, Thanos, Dynatrace, Datadog, and dql)
 so the application itself can run anywhere.
 
 To implement a Keptn analysis for your deployment:

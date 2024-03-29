@@ -4,7 +4,7 @@ metadata:
   name: keptn-serviceaccount
 automountServiceAccountToken: false
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: task-serviceaccount
@@ -21,7 +21,7 @@ spec:
     args:
       - 'hello world'
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTask
 metadata:
   name: sendserviceaccount

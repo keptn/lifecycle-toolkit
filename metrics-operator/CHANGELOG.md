@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.9.3](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v0.9.2...metrics-operator-v0.9.3) (2024-03-19)
+
+
+### Bug Fixes
+
+* **helm-chart:** introduce cert volumes to metrics and lifecycle operators ([#3247](https://github.com/keptn/lifecycle-toolkit/issues/3247)) ([b7744dd](https://github.com/keptn/lifecycle-toolkit/commit/b7744dd36289b9d7c843f1679481830a843f90ac))
+* **metrics-operator:** remove duplicated CA injection annotations ([#3232](https://github.com/keptn/lifecycle-toolkit/issues/3232)) ([c1472be](https://github.com/keptn/lifecycle-toolkit/commit/c1472be33a74d5df1f4231ff6c5e449b83e40402))
+* security vulnerabilities ([#3230](https://github.com/keptn/lifecycle-toolkit/issues/3230)) ([1d099d7](https://github.com/keptn/lifecycle-toolkit/commit/1d099d7a4c9b5e856de52932693b97c29bea3122))
+
+
+### Other
+
+* backport helm release versions ([#3241](https://github.com/keptn/lifecycle-toolkit/issues/3241)) ([074bb16](https://github.com/keptn/lifecycle-toolkit/commit/074bb165a9a70c8daa187f215f2dd74f3159b95d))
+* bump Go base images and pipelines version to 1.21 ([#3218](https://github.com/keptn/lifecycle-toolkit/issues/3218)) ([de01ca4](https://github.com/keptn/lifecycle-toolkit/commit/de01ca493b307d8c27701552549b982e22281a2e))
+* update chart dependencies ([#3179](https://github.com/keptn/lifecycle-toolkit/issues/3179)) ([b8efdd5](https://github.com/keptn/lifecycle-toolkit/commit/b8efdd50002231a06bac9c5ab02fcdbadea4c60d))
+
+
+### Dependency Updates
+
+* update golang.org/x/exp digest to a85f2c6 ([#3288](https://github.com/keptn/lifecycle-toolkit/issues/3288)) ([62a8c14](https://github.com/keptn/lifecycle-toolkit/commit/62a8c14a06ec81b6a42450195d9ff341f7aaff41))
+* update golang.org/x/exp digest to c7f7c64 ([#3272](https://github.com/keptn/lifecycle-toolkit/issues/3272)) ([a2f0f00](https://github.com/keptn/lifecycle-toolkit/commit/a2f0f00172e379d64c47b99b4b9ef7181fac321c))
+* update module github.com/keptn/lifecycle-toolkit/keptn-cert-manager to v0.8.0 ([#3167](https://github.com/keptn/lifecycle-toolkit/issues/3167)) ([7ad3344](https://github.com/keptn/lifecycle-toolkit/commit/7ad3344e555e848fb38ac55d7e521700a9a33f9f))
+
 ## [0.9.2](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v0.9.1...metrics-operator-v0.9.2) (2024-03-04)
 
 

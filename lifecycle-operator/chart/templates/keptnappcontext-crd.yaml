@@ -20,7 +20,7 @@ spec:
     singular: keptnappcontext
   scope: Namespaced
   versions:
-  - name: v1beta1
+  - name: v1
     schema:
       openAPIV3Schema:
         description: KeptnAppContext is the Schema for the keptnappcontexts API
@@ -111,5 +111,98 @@ spec:
         type: object
     served: true
     storage: true
+    subresources:
+      status: {}
+  - name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: KeptnAppContext is the Schema for the keptnappcontexts API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KeptnAppContextSpec defines the desired state of KeptnAppContext
+            properties:
+              metadata:
+                additionalProperties:
+                  type: string
+                description: Metadata contains additional key-value pairs for contextual
+                  information.
+                type: object
+              postDeploymentEvaluations:
+                description: |-
+                  PostDeploymentEvaluations is a list of all evaluations to be performed
+                  during the post-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              postDeploymentTasks:
+                description: |-
+                  PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              preDeploymentEvaluations:
+                description: |-
+                  PreDeploymentEvaluations is a list of all evaluations to be performed
+                  during the pre-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              preDeploymentTasks:
+                description: |-
+                  PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              promotionTasks:
+                description: |-
+                  PromotionTasks is a list of all tasks to be performed during the promotion phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              spanLinks:
+                description: |-
+                  SpanLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
+                  For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links
+                items:
+                  type: string
+                type: array
+            type: object
+          status:
+            description: KeptnAppContextStatus defines the observed state of KeptnAppContext
+            properties:
+              status:
+                description: unused field
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: false
     subresources:
       status: {}

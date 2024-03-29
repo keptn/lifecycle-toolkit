@@ -31,6 +31,7 @@ annadreal
 apicommon
 apierr
 apierrors
+apilifecycle
 apiservice
 APIURL
 apk
@@ -89,7 +90,6 @@ cncf
 codecov
 codeql
 codespace
-commonannotation
 COMMONENVVAR
 configmap
 configmapref
@@ -185,7 +185,6 @@ fieldref
 finalizer
 flyout
 fontawesome
-Frontmatter
 ftp
 fullname
 functionref
@@ -232,6 +231,7 @@ GSo
 gstatic
 gtm
 GVK
+GVKR
 healthz
 hellopy
 helloworldtask
@@ -421,6 +421,7 @@ multigroup
 mutatingwebhookconfigurations
 mwc
 mwh
+myblog
 mycert
 mydata
 myhost
@@ -547,7 +548,9 @@ runsendevent
 runtimes
 runtimespec
 Sambhav
+sampleuser
 sbom
+scaledobject
 schedulinggates
 sclient
 screenshot
@@ -621,6 +624,7 @@ testcommon
 testmetrics
 testreg
 tgz
+thanos
 thisthatdc
 thschue
 timeblock
@@ -665,11 +669,9 @@ visualise
 visualised
 vkeptnmetric
 vkeptntaskdefinition
-vmyversion
 vnd
 vwc
 vwh
-webbrowser
 webhookcainjection
 webhookmanager
 webhooknamespaces

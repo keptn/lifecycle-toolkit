@@ -240,8 +240,8 @@ the execution of the load tests of the overall application.
 
 The `KeptnAppContext`  provides two important capabilities for multi-stage delivery:
 
-* Define tasks and evaluations that run before or after the applicationdeployment
-* Add metadata and links to traces for a specific application.
+-Define tasks and evaluations that run before or after the applicationdeployment
+-Add metadata and links to traces for a specific application.
 This enables you to enrich your traces
 with additional information that you can use
 to understand and analyze the performance of your applications

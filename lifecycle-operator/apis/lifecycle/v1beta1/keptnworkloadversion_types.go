@@ -123,7 +123,6 @@ type KeptnWorkloadVersionStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:storageversion
 // +kubebuilder:resource:path=keptnworkloadversions,shortName=kwv
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`

@@ -4,7 +4,7 @@ metadata:
   name: <data-source-instance-name>
   namespace: <namespace>
 spec:
-  type: prometheus | dynatrace | dql | datadog
+  type: prometheus | thanos | dynatrace | dql | datadog
   targetServer: "<data-source-url>"
   secretKeyRef:
     name: <secret-name>

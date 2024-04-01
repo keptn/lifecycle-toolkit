@@ -1,12 +1,11 @@
-// Package v1beta1 contains API Schema definitions for the lifecycle v1beta1 API group
+// Package v1 contains API Schema definitions for the lifecycle v1 API group
 // +groupName=lifecycle.keptn.sh
-// +versionName=v1beta1
+// +versionName=v1
 package common
 
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"errors"
 	"math/rand"
 	"strconv"
 
@@ -41,9 +40,6 @@ const MetadataAnnotation = "keptn.sh/metadata"
 
 const MinKeptnNameLen = 80
 const MaxK8sObjectLength = 253
-
-var ErrCannotCastKeptnAppVersion = errors.New("cannot cast KeptnAppVersion to v1beta1")
-var ErrCannotCastKeptnApp = errors.New("cannot cast KeptnApp to v1beta1")
 
 type AppType string
 

@@ -5,7 +5,7 @@ comments: true
 # KeptnMetricsProvider
 
 A `KeptnMetricsProvider` resource defines an instance of a data provider
-(such as Prometheus, Dynatrace, or Datadog)
+(such as Prometheus, Thanos, Dynatrace, or Datadog)
 that is used by one or more [KeptnMetric](metric.md) resources.
 
 One Keptn application can perform
@@ -90,7 +90,7 @@ For detailed information please look at the [Examples section](#examples).
 
 <!-- markdownlint-disable MD046 -->
 
-=== "Prometheus"
+=== "Prometheus and Thanos"
 
     An example of Prometheus as a metrics provider with a Secret holding
     the authentication data looks like the following:
@@ -129,7 +129,7 @@ For detailed information please look at the [Examples section](#examples).
     > **Note**
     When using Dynatrace as metrics provider you can
     define the key name of your DT token stored in a secret,
-    which is not possible for Datadog or Prometheus.
+    which is not possible for Datadog, Prometheus or Thanos.
     For this example `myCustomTokenKey` was used.
 
 <!-- markdownlint-enable MD046 -->

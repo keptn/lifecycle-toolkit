@@ -69,9 +69,12 @@ extra_css:
   - assets/stylesheets/mermaid.css
 plugins:
   - search
-  - social:
-      cards_layout_options:
-        background_color: "#006bba"
+  # Disabling due to problem described here
+  # https://github.com/squidfunk/mkdocs-material/issues/6983.
+  # After resolving it, the plugin can be enabled again.
+  # - social:
+  #     cards_layout_options:
+  #       background_color: "#006bba"
   - include-markdown:
       trailing_newlines: false
   - git-revision-date-localized:
@@ -120,7 +123,8 @@ nav:
           - Upgrade: docs/installation/upgrade.md
           - Configuration:
               - docs/installation/configuration/index.md
-              - How to structure your namespaces: docs/installation/configuration/namespace.md
+              - Restricting monitored namespaces: docs/installation/configuration/namespace-keptn.md
+              - Allocating namespaces for Keptn resources: docs/installation/configuration/namespace-resources.md
               - vCluster installation: docs/installation/configuration/vcluster.md
               - Keptn + cert-manager.io: docs/installation/configuration/cert-manager.md
               - Deploy Keptn via ArgoCD: docs/installation/configuration/argocd.md
@@ -144,6 +148,7 @@ nav:
           - docs/use-cases/index.md
           - Day 2 Operations: docs/use-cases/day-2-operations.md
           - Keptn + HorizontalPodAutoscaler: docs/use-cases/hpa.md
+          - Keptn + KEDA: docs/use-cases/keda.md
           - Keptn for non-Kubernetes deployments: docs/use-cases/non-k8s.md
       - Components:
           - docs/components/index.md
@@ -167,6 +172,7 @@ nav:
                   - v1alpha3: docs/reference/api-reference/lifecycle/v1alpha3/index.md
                   - v1alpha4: docs/reference/api-reference/lifecycle/v1alpha4/index.md
                   - v1beta1: docs/reference/api-reference/lifecycle/v1beta1/index.md
+                  - v1: docs/reference/api-reference/lifecycle/v1/index.md
               - Metrics API:
                   - docs/reference/api-reference/metrics/index.md
                   - v1alpha1: docs/reference/api-reference/metrics/v1alpha1/index.md
@@ -216,12 +222,13 @@ nav:
       - Software contributions:
           - docs/contribute/software/index.md
           - Software development environment: docs/contribute/software/dev-environ.md
+          - Golangci-lint configuration: docs/contribute/software/golangci-lint.md
           - Add a metrics provider: docs/contribute/software/add-new-metric-provider.md
       - Documentation contributions:
           - docs/contribute/docs/index.md
           - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs.md
           - Build Documentation Locally: docs/contribute/docs/local-building.md
-          - Linter Requirements: docs/contribute/docs/linter-requirements.md
+          - Using markdownlint: docs/contribute/docs/markdownlint.md
           - Source File Structure: docs/contribute/docs/source-file-structure.md
           - Coding the docs: docs/contribute/docs/code-docs.md
           - Spell Checker: docs/contribute/docs/spell-check.md

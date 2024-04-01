@@ -194,7 +194,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - name: v1alpha1
@@ -511,7 +511,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -631,7 +631,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - name: v1beta1
@@ -724,7 +724,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -791,7 +791,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - name: v1alpha3
@@ -873,7 +873,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -1303,7 +1303,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -2536,7 +2536,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -2803,7 +2803,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -3335,7 +3335,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -3443,7 +3443,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - name: v1alpha1
@@ -3702,7 +3702,7 @@ spec:
             type: string
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -3896,7 +3896,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -4468,7 +4468,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -5913,80 +5913,6 @@ spec:
                         type: string
                     type: object
                 type: object
-              function:
-                description: |-
-                  Deprecated
-                  Function contains the definition for the function that is to be executed in KeptnTasks.
-                properties:
-                  cmdParameters:
-                    description: CmdParameters contains parameters that will be passed
-                      to the command
-                    type: string
-                  configMapRef:
-                    description: |-
-                      ConfigMapReference allows to reference a ConfigMap containing the code of the function.
-                      When referencing a ConfigMap, the code of the function must be available as a value of the 'code' key
-                      of the referenced ConfigMap.
-                    properties:
-                      name:
-                        description: Name is the name of the referenced ConfigMap.
-                        type: string
-                    type: object
-                  functionRef:
-                    description: |-
-                      FunctionReference allows to reference another KeptnTaskDefinition which contains the source code of the
-                      function to be executes for KeptnTasks based on this KeptnTaskDefinition. This can be useful when you have
-                      multiple KeptnTaskDefinitions that should execute the same logic, but each with different parameters.
-                    properties:
-                      name:
-                        description: Name is the name of the referenced KeptnTaskDefinition.
-                        type: string
-                    type: object
-                  httpRef:
-                    description: HttpReference allows to point to an HTTP URL containing
-                      the code of the function.
-                    properties:
-                      url:
-                        description: Url is the URL containing the code of the function.
-                        type: string
-                    type: object
-                  inline:
-                    description: |-
-                      Inline allows to specify the code that should be executed directly in the KeptnTaskDefinition, as a multi-line
-                      string.
-                    properties:
-                      code:
-                        description: Code contains the code of the function.
-                        type: string
-                    type: object
-                  parameters:
-                    description: Parameters contains parameters that will be passed
-                      to the job that executes the task as env variables.
-                    properties:
-                      map:
-                        additionalProperties:
-                          type: string
-                        description: |-
-                          Inline contains the parameters that will be made available to the job
-                          executing the KeptnTask via the 'DATA' environment variable.
-                          The 'DATA'  environment variable's content will be a json
-                          encoded string containing all properties of the map provided.
-                        type: object
-                    type: object
-                  secureParameters:
-                    description: |-
-                      SecureParameters contains secure parameters that will be passed to the job that executes the task.
-                      These will be stored and accessed as secrets in the cluster.
-                    properties:
-                      secret:
-                        description: |-
-                          Secret contains the parameters that will be made available to the job
-                          executing the KeptnTask via the 'SECRET_DATA' environment variable.
-                          The 'SECRET_DATA'  environment variable's content will the same as value of the 'SECRET_DATA'
-                          key of the referenced secret.
-                        type: string
-                    type: object
-                type: object
               imagePullSecrets:
                 description: ImagePullSecrets is an optional field to specify the
                   names of secrets to use for pulling container images
@@ -6125,7 +6051,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - name: v1alpha1
@@ -9539,7 +9465,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -9681,7 +9607,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -10079,7 +10005,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -10441,7 +10367,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: false
+    storage: true
     subresources:
       status: {}
   - additionalPrinterColumns:
@@ -11092,7 +11018,7 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}
 ---
@@ -12450,14 +12376,14 @@ webhooks:
     service:
       name: 'lifecycle-webhook-service'
       namespace: 'helmtests'
-      path: /validate-lifecycle-keptn-sh-v1beta1-keptntaskdefinition
+      path: /validate-lifecycle-keptn-sh-v1-keptntaskdefinition
   failurePolicy: Fail
   name: vkeptntaskdefinition.kb.io
   rules:
   - apiGroups:
     - lifecycle.keptn.sh
     apiVersions:
-    - v1beta1
+    - v1
     operations:
     - CREATE
     - UPDATE

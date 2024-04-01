@@ -41,7 +41,7 @@ spec:
     app: podtato-head-frontend
   type: ClusterIP
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppContext
 metadata:
   name: podtato-head
@@ -54,24 +54,24 @@ spec:
   metadata:
     commitID: {{.Values.commitID}}
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: post-deployment
   namespace: podtato-head-dev
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.log("deployment completed");
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: promote
   namespace: podtato-head-dev
 spec:
-  function:
+  deno:
     secureParameters:
       secret: github-token
     inline:

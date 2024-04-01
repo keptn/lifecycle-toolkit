@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1beta1
+package v1
 
 import (
 	"github.com/pkg/errors"
@@ -37,7 +37,7 @@ func (r *KeptnTaskDefinition) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/validate-lifecycle-keptn-sh-v1beta1-keptntaskdefinition,mutating=false,failurePolicy=fail,sideEffects=None,groups=lifecycle.keptn.sh,resources=keptntaskdefinitions,verbs=create;update,versions=v1beta1,name=vkeptntaskdefinition.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/validate-lifecycle-keptn-sh-v1-keptntaskdefinition,mutating=false,failurePolicy=fail,sideEffects=None,groups=lifecycle.keptn.sh,resources=keptntaskdefinitions,verbs=create;update,versions=v1,name=vkeptntaskdefinition.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Validator = &KeptnTaskDefinition{}
 
@@ -83,7 +83,7 @@ func (r *KeptnTaskDefinition) validateFields() *field.Error {
 		return field.Invalid(
 			field.NewPath("spec"),
 			r.Spec,
-			errors.New("Forbidden! Either Function, Container, Python, or Deno field must be defined").Error(),
+			errors.New("Forbidden! Either Container, Python, or Deno field must be defined").Error(),
 		)
 	}
 
@@ -91,7 +91,7 @@ func (r *KeptnTaskDefinition) validateFields() *field.Error {
 		return field.Invalid(
 			field.NewPath("spec"),
 			r.Spec,
-			errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
+			errors.New("Forbidden! Only one of Container, Python, or Deno field can be defined").Error(),
 		)
 	}
 
@@ -100,9 +100,6 @@ func (r *KeptnTaskDefinition) validateFields() *field.Error {
 
 func countSpec(r *KeptnTaskDefinition) int {
 	count := 0
-	if r.Spec.Function != nil {
-		count++
-	}
 	if r.Spec.Container != nil {
 		count++
 	}

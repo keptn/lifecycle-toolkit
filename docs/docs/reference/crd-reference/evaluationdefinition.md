@@ -13,7 +13,7 @@ as part of pre- and post-analysis phases of a `KeptnApp` or workload.
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnEvaluationDefinition
 metadata:
   name: <evaluation-name>
@@ -84,7 +84,7 @@ on all namespaces in the cluster.
 ## Example
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnEvaluationDefinition
 metadata:
   name: my-prometheus-evaluation
@@ -116,12 +116,12 @@ that are now taken from the specified [KeptnMetric](metric.md) CRD.
 The synopsis was:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnEvaluationDefinition
 metadata:
   name: <evaluation-name>
 spec:
-  source: prometheus | dynatrace | datadog
+  source: prometheus | dynatrace | datadog | thanos
   objectives:
     - name: query-1
       query: "xxxx"
@@ -134,6 +134,9 @@ spec:
 Beginning with `v1beta1` API version, `KeptnEvaluationDefinition` references a `keptnMetricRef`
 that points to a [KeptnMetric](metric.md) CR, that defines the data source, the query and the namespace to use.
 The `KeptnEvaluationDefinition` merely specifies the evaluation target.
+
+> **Note**
+Versions `v1beta1` and `v1` are fully compatible.
 
 ## See also
 

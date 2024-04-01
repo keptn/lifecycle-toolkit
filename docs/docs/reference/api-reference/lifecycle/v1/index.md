@@ -6,7 +6,6 @@ Reference information for lifecycle.keptn.sh/v1
 
 ## Packages
 - [lifecycle.keptn.sh/v1](#lifecyclekeptnshv1)
-- [lifecycle.keptn.sh/v1beta1](#lifecyclekeptnshv1beta1)
 
 
 ## lifecycle.keptn.sh/v1
@@ -37,6 +36,8 @@ Package v1 contains API Schema definitions for the lifecycle v1 API group
 
 
 
+
+
 #### AutomountServiceAccountTokenSpec
 
 
@@ -51,6 +52,20 @@ _Appears in:_
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
 | `type` _boolean_ |  || x |  |
+
+
+#### CheckType
+
+_Underlying type:_ _string_
+
+
+
+
+
+_Appears in:_
+- [KeptnEvaluationSpec](#keptnevaluationspec)
+- [KeptnTaskSpec](#keptntaskspec)
+
 
 
 #### ConfigMapReference
@@ -664,6 +679,8 @@ _Appears in:_
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | EndTime represents the time at which the KeptnEvaluation finished. || ✓ |  |
 
 
+
+
 #### KeptnMetricReference
 
 
@@ -679,6 +696,27 @@ _Appears in:_
 | --- | --- | --- | --- | --- |
 | `name` _string_ | Name is the name of the referenced KeptnMetric. || x |  |
 | `namespace` _string_ | Namespace is the namespace where the referenced KeptnMetric is located. || ✓ |  |
+
+
+
+
+#### KeptnState
+
+_Underlying type:_ _string_
+
+KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
+
+
+
+_Appears in:_
+- [EvaluationStatusItem](#evaluationstatusitem)
+- [ItemStatus](#itemstatus)
+- [KeptnAppVersionStatus](#keptnappversionstatus)
+- [KeptnEvaluationStatus](#keptnevaluationstatus)
+- [KeptnTaskStatus](#keptntaskstatus)
+- [KeptnWorkloadVersionStatus](#keptnworkloadversionstatus)
+- [WorkloadStatus](#workloadstatus)
+
 
 
 #### KeptnTask
@@ -752,7 +790,6 @@ _Appears in:_
 
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
-| `function` _[RuntimeSpec](#runtimespec)_ | Deprecated<br />Function contains the definition for the function that is to be executed in KeptnTasks. || ✓ |  |
 | `python` _[RuntimeSpec](#runtimespec)_ | Python contains the definition for the python function that is to be executed in KeptnTasks. || ✓ |  |
 | `deno` _[RuntimeSpec](#runtimespec)_ | Deno contains the definition for the Deno function that is to be executed in KeptnTasks. || ✓ |  |
 | `container` _[ContainerSpec](#containerspec)_ | Container contains the definition for the container that is to be used in Job. || ✓ |  |
@@ -1050,6 +1087,20 @@ _Appears in:_
 | `evaluationTarget` _string_ | EvaluationTarget specifies the target value for the references KeptnMetric.<br />Needs to start with either '<' or '>', followed by the target value (e.g. '<10'). || x |  |
 
 
+#### PhaseTraceID
+
+_Underlying type:_ _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_
+
+
+
+
+
+_Appears in:_
+- [KeptnAppVersionStatus](#keptnappversionstatus)
+- [KeptnWorkloadVersionStatus](#keptnworkloadversionstatus)
+
+
+
 #### ResourceReference
 
 
@@ -1124,6 +1175,8 @@ _Appears in:_
 | `name` _string_ |  || x |  |
 
 
+
+
 #### TaskContext
 
 
@@ -1178,67 +1231,5 @@ _Appears in:_
 | --- | --- | --- | --- | --- |
 | `workload` _[KeptnWorkloadRef](#keptnworkloadref)_ | Workload refers to a KeptnWorkload that is part of the KeptnAppVersion. || ✓ |  |
 | `status` _string_ | Status indicates the current status of the KeptnWorkload. |Pending| ✓ |  |
-
-
-
-## lifecycle.keptn.sh/v1beta1
-
-Package v1beta1 contains API Schema definitions for the lifecycle v1beta1 API group
-
-
-
-
-
-#### CheckType
-
-_Underlying type:_ _string_
-
-
-
-
-
-_Appears in:_
-- [KeptnEvaluationSpec](#keptnevaluationspec)
-- [KeptnTaskSpec](#keptntaskspec)
-
-
-
-
-
-
-
-#### KeptnState
-
-_Underlying type:_ _string_
-
-KeptnState  is a string containing current Phase state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
-
-
-
-_Appears in:_
-- [EvaluationStatusItem](#evaluationstatusitem)
-- [ItemStatus](#itemstatus)
-- [KeptnAppVersionStatus](#keptnappversionstatus)
-- [KeptnEvaluationStatus](#keptnevaluationstatus)
-- [KeptnTaskStatus](#keptntaskstatus)
-- [KeptnWorkloadVersionStatus](#keptnworkloadversionstatus)
-- [WorkloadStatus](#workloadstatus)
-
-
-
-#### PhaseTraceID
-
-_Underlying type:_ _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_
-
-
-
-
-
-_Appears in:_
-- [KeptnAppVersionStatus](#keptnappversionstatus)
-- [KeptnWorkloadVersionStatus](#keptnworkloadversionstatus)
-
-
-
 
 

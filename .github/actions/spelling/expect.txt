@@ -31,6 +31,7 @@ annadreal
 apicommon
 apierr
 apierrors
+apilifecycle
 apiservice
 APIURL
 apk
@@ -229,6 +230,7 @@ GSo
 gstatic
 gtm
 GVK
+GVKR
 healthz
 hellopy
 helloworldtask
@@ -620,6 +622,7 @@ testcommon
 testmetrics
 testreg
 tgz
+thanos
 thisthatdc
 thschue
 timeblock

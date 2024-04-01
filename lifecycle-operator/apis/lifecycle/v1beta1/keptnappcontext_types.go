@@ -67,7 +67,6 @@ type KeptnAppContextStatus struct {
 }
 
 //+kubebuilder:object:root=true
-//+kubebuilder:storageversion
 //+kubebuilder:subresource:status
 
 // KeptnAppContext is the Schema for the keptnappcontexts API

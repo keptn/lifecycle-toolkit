@@ -2,9 +2,7 @@
 comments: true
 ---
 
-# Keptn + HorizontalPodAutoscaler
-
-## Scaling Workloads based on Keptn metrics
+# Scaling Workloads with HPA based on Keptn metrics
 
 Kubernetes provides many built-in capabilities to ensure
 that enough replicas are running in order to meet the current demand of
@@ -19,7 +17,7 @@ to scale the number of replicas of [workloads](https://kubernetes.io/docs/concep
 load.
 It does this by using metrics such as CPU throttling, memory consumption, or response time.
 
-### Installation of Keptn Metrics Operator
+## Installation of Keptn Metrics Operator
 
 To use an HPA with the custom metrics API, the
 Keptn Metrics Operator must be installed on the cluster.
@@ -29,7 +27,7 @@ For more information about installation please refer to the
 > **Note**
   The Keptn Lifecycle Operator does not need to be installed for this use-case.
 
-### Installation of metrics provider (optional)
+## Installation of metrics provider (optional)
 
 If you do not have a metrics provider installed on your cluster yet, please do so.
 
@@ -37,7 +35,7 @@ For this tutorial we are going to use [Prometheus](https://prometheus.io/).
 For more information about how to install Prometheus into your cluster, please
 refer to the [Prometheus documentation](https://prometheus.io/docs/prometheus/latest/installation/).
 
-### Deploy sample application
+## Deploy sample application
 
 First, we need to deploy our application to the cluster.
 For this we are going to
@@ -56,10 +54,11 @@ $ kubectl get pods -n podtato-kubectl
 podtato-head-entry-58d6485d9b-ld9x2         1/1     Running     (2m ago)
 ```
 
-### Create KeptnMetric and KeptnMetricsProvider custom resources
+## Create KeptnMetric and KeptnMetricsProvider resources
 
 To be able to react on the metrics of our application, we need to create
-`KeptnMetrics` and `KeptnMetricsProvider` custom resources.
+[KeptnMetrics](../reference/crd-reference/metric.md) and
+[KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md) resources.
 These metrics are
 exposed via the custom metrics API, which gives us the possibility to configure
 the HPA to react on the values of these metrics:
@@ -68,7 +67,7 @@ the HPA to react on the values of these metrics:
 {% include "./assets/hpa/keptnmetric.yaml" %}
 ```
 
-For more information about the `KeptnMetric` and `KeptnMetricsProvider` custom resources,
+For more information about the `KeptnMetric` and `KeptnMetricsProvider` resources,
 please refer to the [CRD documentation](../reference/api-reference/metrics/v1/index.md).
 
 After a few seconds we should be able to see values for the `cpu-throttling` metric:
@@ -91,10 +90,10 @@ Status:
 
 Here we can see that the value of the `cpu-throttling` metric is `1.63`
 
-### Set up the HorizontalPodAutoscaler
+## Set up the HorizontalPodAutoscaler
 
 Now that we are able to retrieve the value of our metric, and have it stored in
-our cluster in the status of our `KeptnMetric` custom resource, we can configure
+our cluster in the status of our `KeptnMetric` resource, we can configure
 a `HorizontalPodAutoscaler` to make use of this information and therefore scale
 our application automatically:
 

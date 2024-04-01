@@ -1,4 +1,4 @@
-package v1beta1
+package v1
 
 import (
 	"testing"
@@ -13,21 +13,6 @@ import (
 )
 
 func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
-
-	specWithFunctionAndContainer := KeptnTaskDefinitionSpec{
-		Function:  &RuntimeSpec{},
-		Container: &ContainerSpec{},
-	}
-
-	specWithFunctionAndPython := KeptnTaskDefinitionSpec{
-		Function: &RuntimeSpec{},
-		Python:   &RuntimeSpec{},
-	}
-
-	specWithFunctionAndDeno := KeptnTaskDefinitionSpec{
-		Function: &RuntimeSpec{},
-		Deno:     &RuntimeSpec{},
-	}
 
 	specWithContainerAndPython := KeptnTaskDefinitionSpec{
 		Container: &ContainerSpec{},
@@ -54,38 +39,17 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 		oldSpec runtime.Object
 	}{
 		{
-			name: "with-no-function-or-container-or-python-or-deno",
+			name: "with-no-container-or-python-or-deno",
 			spec: emptySpec,
 			want: apierrors.NewInvalid(
 				schema.GroupKind{Group: "lifecycle.keptn.sh", Kind: "KeptnTaskDefinition"},
-				"with-no-function-or-container-or-python-or-deno",
+				"with-no-container-or-python-or-deno",
 				[]*field.Error{field.Invalid(
 					field.NewPath("spec"),
 					emptySpec,
-					errors.New("Forbidden! Either Function, Container, Python, or Deno field must be defined").Error(),
+					errors.New("Forbidden! Either Container, Python, or Deno field must be defined").Error(),
 				)},
 			),
-			verb: "create",
-		},
-		{
-			name: "with-both-function-and-container",
-			spec: specWithFunctionAndContainer,
-			verb: "create",
-			want: apierrors.NewInvalid(
-				schema.GroupKind{Group: "lifecycle.keptn.sh", Kind: "KeptnTaskDefinition"},
-				"with-both-function-and-container",
-				[]*field.Error{field.Invalid(
-					field.NewPath("spec"),
-					specWithFunctionAndContainer,
-					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
-				)},
-			),
-		},
-		{
-			name: "with-function-only",
-			spec: KeptnTaskDefinitionSpec{
-				Function: &RuntimeSpec{},
-			},
 			verb: "create",
 		},
 		{
@@ -109,89 +73,6 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 			},
 			verb: "create",
 		},
-
-		{
-			name: "update-with-both-function-and-container",
-			spec: specWithFunctionAndContainer,
-			want: apierrors.NewInvalid(
-				schema.GroupKind{Group: "lifecycle.keptn.sh", Kind: "KeptnTaskDefinition"},
-				"update-with-both-function-and-container",
-				[]*field.Error{field.Invalid(
-					field.NewPath("spec"),
-					specWithFunctionAndContainer,
-					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
-				)},
-			),
-			oldSpec: &KeptnTaskDefinition{
-				Spec: KeptnTaskDefinitionSpec{},
-			},
-			verb: "update",
-		},
-
-		{
-			name: "with-both-function-and-python",
-			spec: specWithFunctionAndPython,
-			verb: "create",
-			want: apierrors.NewInvalid(
-				schema.GroupKind{Group: "lifecycle.keptn.sh", Kind: "KeptnTaskDefinition"},
-				"with-both-function-and-python",
-				[]*field.Error{field.Invalid(
-					field.NewPath("spec"),
-					specWithFunctionAndPython,
-					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
-				)},
-			),
-		},
-		{
-			name: "update-with-both-function-and-python",
-			spec: specWithFunctionAndPython,
-			want: apierrors.NewInvalid(
-				schema.GroupKind{Group: "lifecycle.keptn.sh", Kind: "KeptnTaskDefinition"},
-				"update-with-both-function-and-python",
-				[]*field.Error{field.Invalid(
-					field.NewPath("spec"),
-					specWithFunctionAndPython,
-					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
-				)},
-			),
-			oldSpec: &KeptnTaskDefinition{
-				Spec: KeptnTaskDefinitionSpec{},
-			},
-			verb: "update",
-		},
-
-		{
-			name: "with-both-function-and-deno",
-			spec: specWithFunctionAndDeno,
-			verb: "create",
-			want: apierrors.NewInvalid(
-				schema.GroupKind{Group: "lifecycle.keptn.sh", Kind: "KeptnTaskDefinition"},
-				"with-both-function-and-deno",
-				[]*field.Error{field.Invalid(
-					field.NewPath("spec"),
-					specWithFunctionAndDeno,
-					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
-				)},
-			),
-		},
-		{
-			name: "update-with-both-function-and-deno",
-			spec: specWithFunctionAndDeno,
-			want: apierrors.NewInvalid(
-				schema.GroupKind{Group: "lifecycle.keptn.sh", Kind: "KeptnTaskDefinition"},
-				"update-with-both-function-and-deno",
-				[]*field.Error{field.Invalid(
-					field.NewPath("spec"),
-					specWithFunctionAndDeno,
-					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
-				)},
-			),
-			oldSpec: &KeptnTaskDefinition{
-				Spec: KeptnTaskDefinitionSpec{},
-			},
-			verb: "update",
-		},
-
 		{
 			name: "with-both-container-and-python",
 			spec: specWithContainerAndPython,
@@ -202,7 +83,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				[]*field.Error{field.Invalid(
 					field.NewPath("spec"),
 					specWithContainerAndPython,
-					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
+					errors.New("Forbidden! Only one of Container, Python, or Deno field can be defined").Error(),
 				)},
 			),
 		},
@@ -215,7 +96,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				[]*field.Error{field.Invalid(
 					field.NewPath("spec"),
 					specWithContainerAndPython,
-					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
+					errors.New("Forbidden! Only one of Container, Python, or Deno field can be defined").Error(),
 				)},
 			),
 			oldSpec: &KeptnTaskDefinition{
@@ -234,7 +115,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				[]*field.Error{field.Invalid(
 					field.NewPath("spec"),
 					specWithContainerAndDeno,
-					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
+					errors.New("Forbidden! Only one of Container, Python, or Deno field can be defined").Error(),
 				)},
 			),
 		},
@@ -247,7 +128,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				[]*field.Error{field.Invalid(
 					field.NewPath("spec"),
 					specWithContainerAndDeno,
-					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
+					errors.New("Forbidden! Only one of Container, Python, or Deno field can be defined").Error(),
 				)},
 			),
 			oldSpec: &KeptnTaskDefinition{
@@ -265,7 +146,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				[]*field.Error{field.Invalid(
 					field.NewPath("spec"),
 					specWithPythonAndDeno,
-					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
+					errors.New("Forbidden! Only one of Container, Python, or Deno field can be defined").Error(),
 				)},
 			),
 		},
@@ -278,7 +159,7 @@ func TestKeptnTaskDefinition_ValidateFields(t *testing.T) {
 				[]*field.Error{field.Invalid(
 					field.NewPath("spec"),
 					specWithPythonAndDeno,
-					errors.New("Forbidden! Only one of Function, Container, Python, or Deno field can be defined").Error(),
+					errors.New("Forbidden! Only one of Container, Python, or Deno field can be defined").Error(),
 				)},
 			),
 			oldSpec: &KeptnTaskDefinition{

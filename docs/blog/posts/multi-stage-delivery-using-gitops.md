@@ -244,8 +244,7 @@ to understand and analyze the performance of your applications
 which looks as follows:
 
   ```yaml
-  {% include "./multi-stage-delivery-using- 
-  gitops/keptnappcontext.yaml" %}
+  {% include "./multi-stage-delivery-using-gitops/keptnappcontext.yaml" %}
   ```
 
 This resource contains a list of pre- and post-deployment checks

@@ -90,7 +90,7 @@ with each other.
 
 First things first, since we talk about GitOps in this article, we need
 a git repository to host the Helm chart of our application.
-We are use GitHub in this example, which allows us
+We use GitHub in this example, which allows us
 to use GitHub Actions to implement the promotion from
 `dev` to `production`.
 
@@ -129,7 +129,7 @@ This is done in the settings of the repository; see the screenshot below:
 ![Workflow Permissions](./multi-stage-delivery-using-gitops/workflow-permissions.png)
 
 The GitHub action performing the promotion is implemented
-in the  `.github/workflows/promote.yaml` file
+in the `.github/workflows/promote.yaml` file
 located in our GitOps repository.
 
 ```yaml
@@ -234,7 +234,7 @@ the execution of the load tests of the overall application.
 
 #### KeptnAppContext
 
-The `KeptnAppContext`  provides two important capabilities for multi-stage delivery:
+The `KeptnAppContext` provides two important capabilities for multi-stage delivery:
 
 - Define tasks and evaluations that run before or after the application deployment
 - Add metadata and links to traces for a specific application.
@@ -246,6 +246,7 @@ which looks as follows:
   ```yaml
   {% include "./multi-stage-delivery-using- 
   gitops/keptnappcontext.yaml" %}
+  ```
 
 This resource contains a list of pre- and post-deployment checks
 for the complete application.

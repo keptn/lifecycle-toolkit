@@ -40,6 +40,7 @@ appcreationrequest
 APPNAME
 appv
 appversion
+applicationdeployment
 aquasecurity
 architecting
 ARCHS
@@ -205,6 +206,7 @@ ghtoken
 ginkgotypes
 giscus
 Gitlab
+gitops
 gke
 glasskube
 gms
@@ -387,6 +389,7 @@ linenums
 linkedin
 linkedtrace
 livenessprobe
+loadtests
 LOCALBIN
 logf
 logr

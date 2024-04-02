@@ -69,9 +69,12 @@ extra_css:
   - assets/stylesheets/mermaid.css
 plugins:
   - search
-  - social:
-      cards_layout_options:
-        background_color: "#006bba"
+  # Disabling due to problem described here
+  # https://github.com/squidfunk/mkdocs-material/issues/6983.
+  # After resolving it, the plugin can be enabled again.
+  # - social:
+  #     cards_layout_options:
+  #       background_color: "#006bba"
   - include-markdown:
       trailing_newlines: false
   - git-revision-date-localized:
@@ -219,17 +222,18 @@ nav:
       - Software contributions:
           - docs/contribute/software/index.md
           - Software development environment: docs/contribute/software/dev-environ.md
+          - Golangci-lint configuration: docs/contribute/software/golangci-lint.md
           - Add a metrics provider: docs/contribute/software/add-new-metric-provider.md
       - Documentation contributions:
           - docs/contribute/docs/index.md
           - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs.md
           - Build Documentation Locally: docs/contribute/docs/local-building.md
-          - Linter Requirements: docs/contribute/docs/linter-requirements.md
-          - Source File Structure: docs/contribute/docs/source-file-structure.md
+          - Markdownlint: docs/contribute/docs/markdownlint.md
+          - Source file structure: docs/contribute/docs/source-file-structure.md
           - Coding the docs: docs/contribute/docs/code-docs.md
-          - Spell Checker: docs/contribute/docs/spell-check.md
+          - Spell checker: docs/contribute/docs/spell-check.md
           - Blogs: docs/contribute/docs/blog.md
-          - Published Doc Structure: docs/contribute/docs/publish.md
+          - Published doc structure: docs/contribute/docs/publish.md
           - Word list: docs/contribute/docs/word-list.md
   - Blog:
       - blog/index.md

@@ -13,6 +13,8 @@ import (
 	v2 "sigs.k8s.io/controller-runtime/pkg/webhook/conversion/testdata/api/v2"
 )
 
+const StateFailed common.KeptnState = "Failed"
+
 func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -205,25 +207,25 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 					},
 				},
 				Status: KeptnAppVersionStatus{
-					PreDeploymentStatus:            common.StateFailed,
-					PostDeploymentStatus:           common.StateFailed,
-					PreDeploymentEvaluationStatus:  common.StateFailed,
-					PostDeploymentEvaluationStatus: common.StateFailed,
-					WorkloadOverallStatus:          common.StateFailed,
+					PreDeploymentStatus:            StateFailed,
+					PostDeploymentStatus:           StateFailed,
+					PreDeploymentEvaluationStatus:  StateFailed,
+					PostDeploymentEvaluationStatus: StateFailed,
+					WorkloadOverallStatus:          StateFailed,
 					WorkloadStatus: []WorkloadStatus{
 						{
 							Workload: KeptnWorkloadRef{
 								Name:    "name1",
 								Version: "1",
 							},
-							Status: common.StateFailed,
+							Status: StateFailed,
 						},
 						{
 							Workload: KeptnWorkloadRef{
 								Name:    "name2",
 								Version: "2",
 							},
-							Status: common.StateFailed,
+							Status: StateFailed,
 						},
 					},
 					CurrentPhase: "phase",
@@ -231,48 +233,48 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 						{
 							TaskDefinitionName: "def1",
 							TaskName:           "name1",
-							Status:             common.StateFailed,
+							Status:             StateFailed,
 						},
 						{
 							TaskDefinitionName: "def12",
 							TaskName:           "name12",
-							Status:             common.StateFailed,
+							Status:             StateFailed,
 						},
 					},
 					PostDeploymentTaskStatus: []TaskStatus{
 						{
 							TaskDefinitionName: "def2",
 							TaskName:           "name2",
-							Status:             common.StateFailed,
+							Status:             StateFailed,
 						},
 						{
 							TaskDefinitionName: "def22",
 							TaskName:           "name22",
-							Status:             common.StateFailed,
+							Status:             StateFailed,
 						},
 					},
 					PreDeploymentEvaluationTaskStatus: []EvaluationStatus{
 						{
 							EvaluationDefinitionName: "def3",
 							EvaluationName:           "name3",
-							Status:                   common.StateFailed,
+							Status:                   StateFailed,
 						},
 						{
 							EvaluationDefinitionName: "def32",
 							EvaluationName:           "name32",
-							Status:                   common.StateFailed,
+							Status:                   StateFailed,
 						},
 					},
 					PostDeploymentEvaluationTaskStatus: []EvaluationStatus{
 						{
 							EvaluationDefinitionName: "def4",
 							EvaluationName:           "name4",
-							Status:                   common.StateFailed,
+							Status:                   StateFailed,
 						},
 						{
 							EvaluationDefinitionName: "def42",
 							EvaluationName:           "name42",
-							Status:                   common.StateFailed,
+							Status:                   StateFailed,
 						},
 					},
 					PhaseTraceIDs: common.PhaseTraceID{
@@ -285,7 +287,7 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 							"key222": "value222",
 						},
 					},
-					Status: common.StateFailed,
+					Status: StateFailed,
 				},
 			},
 		},
@@ -366,25 +368,25 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 					},
 				},
 				Status: KeptnAppVersionStatus{
-					PreDeploymentStatus:            common.StateFailed,
-					PostDeploymentStatus:           common.StateFailed,
-					PreDeploymentEvaluationStatus:  common.StateFailed,
-					PostDeploymentEvaluationStatus: common.StateFailed,
-					WorkloadOverallStatus:          common.StateFailed,
+					PreDeploymentStatus:            StateFailed,
+					PostDeploymentStatus:           StateFailed,
+					PreDeploymentEvaluationStatus:  StateFailed,
+					PostDeploymentEvaluationStatus: StateFailed,
+					WorkloadOverallStatus:          StateFailed,
 					WorkloadStatus: []WorkloadStatus{
 						{
 							Workload: KeptnWorkloadRef{
 								Name:    "name1",
 								Version: "1",
 							},
-							Status: common.StateFailed,
+							Status: StateFailed,
 						},
 						{
 							Workload: KeptnWorkloadRef{
 								Name:    "name2",
 								Version: "2",
 							},
-							Status: common.StateFailed,
+							Status: StateFailed,
 						},
 					},
 					CurrentPhase: "phase",
@@ -392,48 +394,48 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 						{
 							TaskDefinitionName: "def1",
 							TaskName:           "name1",
-							Status:             common.StateFailed,
+							Status:             StateFailed,
 						},
 						{
 							TaskDefinitionName: "def12",
 							TaskName:           "name12",
-							Status:             common.StateFailed,
+							Status:             StateFailed,
 						},
 					},
 					PostDeploymentTaskStatus: []TaskStatus{
 						{
 							TaskDefinitionName: "def2",
 							TaskName:           "name2",
-							Status:             common.StateFailed,
+							Status:             StateFailed,
 						},
 						{
 							TaskDefinitionName: "def22",
 							TaskName:           "name22",
-							Status:             common.StateFailed,
+							Status:             StateFailed,
 						},
 					},
 					PreDeploymentEvaluationTaskStatus: []EvaluationStatus{
 						{
 							EvaluationDefinitionName: "def3",
 							EvaluationName:           "name3",
-							Status:                   common.StateFailed,
+							Status:                   StateFailed,
 						},
 						{
 							EvaluationDefinitionName: "def32",
 							EvaluationName:           "name32",
-							Status:                   common.StateFailed,
+							Status:                   StateFailed,
 						},
 					},
 					PostDeploymentEvaluationTaskStatus: []EvaluationStatus{
 						{
 							EvaluationDefinitionName: "def4",
 							EvaluationName:           "name4",
-							Status:                   common.StateFailed,
+							Status:                   StateFailed,
 						},
 						{
 							EvaluationDefinitionName: "def42",
 							EvaluationName:           "name42",
-							Status:                   common.StateFailed,
+							Status:                   StateFailed,
 						},
 					},
 					PhaseTraceIDs: common.PhaseTraceID{
@@ -446,7 +448,7 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 							"key222": "value222",
 						},
 					},
-					Status: common.StateFailed,
+					Status: StateFailed,
 				},
 			},
 			wantErr: false,

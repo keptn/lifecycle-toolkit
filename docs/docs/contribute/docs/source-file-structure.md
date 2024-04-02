@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Source File Structure
+# Source file structure
 
 The source files for the Keptn documentation
 are stored in the same GitHub repository as the source code for the software.
@@ -163,8 +163,6 @@ are assembled into the documentation set.
 See
 [Published Doc Structure](./publish.md)
 for information about the branches where the documentation is published.
-
-All files in the directories are built.
 
 The order in which the files are displayed
 is determined by their order in the `nav` field

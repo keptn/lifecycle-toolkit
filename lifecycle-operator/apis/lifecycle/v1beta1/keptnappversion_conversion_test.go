@@ -13,6 +13,8 @@ import (
 	v2 "sigs.k8s.io/controller-runtime/pkg/webhook/conversion/testdata/api/v2"
 )
 
+const StateFailed common.KeptnState = "Failed"
+
 func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -159,7 +161,7 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 						{
 							DefinitionName: "def52",
 							Name:           "name52",
-							Status:         v1common.StateSucceeded,
+							Status:         v1common.StateFailed,
 						},
 					},
 					PhaseTraceIDs: v1common.PhaseTraceID{
@@ -229,26 +231,26 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 					},
 				},
 				Status: KeptnAppVersionStatus{
-					PreDeploymentStatus:            common.StateFailed,
-					PostDeploymentStatus:           common.StateFailed,
-					PreDeploymentEvaluationStatus:  common.StateFailed,
-					PostDeploymentEvaluationStatus: common.StateFailed,
-					WorkloadOverallStatus:          common.StateFailed,
-					PromotionStatus:                common.StateFailed,
+					PreDeploymentStatus:            StateFailed,
+					PostDeploymentStatus:           StateFailed,
+					PreDeploymentEvaluationStatus:  StateFailed,
+					PostDeploymentEvaluationStatus: StateFailed,
+					WorkloadOverallStatus:          StateFailed,
+					PromotionStatus:                StateFailed,
 					WorkloadStatus: []WorkloadStatus{
 						{
 							Workload: KeptnWorkloadRef{
 								Name:    "name1",
 								Version: "1",
 							},
-							Status: common.StateFailed,
+							Status: StateFailed,
 						},
 						{
 							Workload: KeptnWorkloadRef{
 								Name:    "name2",
 								Version: "2",
 							},
-							Status: common.StateFailed,
+							Status: StateFailed,
 						},
 					},
 					CurrentPhase: "phase",
@@ -256,60 +258,60 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 						{
 							DefinitionName: "def1",
 							Name:           "name1",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 						{
 							DefinitionName: "def12",
 							Name:           "name12",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 					},
 					PostDeploymentTaskStatus: []ItemStatus{
 						{
 							DefinitionName: "def2",
 							Name:           "name2",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 						{
 							DefinitionName: "def22",
 							Name:           "name22",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 					},
 					PreDeploymentEvaluationTaskStatus: []ItemStatus{
 						{
 							DefinitionName: "def3",
 							Name:           "name3",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 						{
 							DefinitionName: "def32",
 							Name:           "name32",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 					},
 					PostDeploymentEvaluationTaskStatus: []ItemStatus{
 						{
 							DefinitionName: "def4",
 							Name:           "name4",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 						{
 							DefinitionName: "def42",
 							Name:           "name42",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 					},
 					PromotionTaskStatus: []ItemStatus{
 						{
 							DefinitionName: "def5",
 							Name:           "name5",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 						{
 							DefinitionName: "def52",
 							Name:           "name52",
-							Status:         common.StateSucceeded,
+							Status:         StateFailed,
 						},
 					},
 					PhaseTraceIDs: common.PhaseTraceID{
@@ -322,7 +324,7 @@ func TestKeptnAppVersion_ConvertFrom(t *testing.T) {
 							"key222": "value222",
 						},
 					},
-					Status: common.StateFailed,
+					Status: StateFailed,
 				},
 			},
 		},
@@ -411,26 +413,26 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 					},
 				},
 				Status: KeptnAppVersionStatus{
-					PreDeploymentStatus:            common.StateFailed,
-					PostDeploymentStatus:           common.StateFailed,
-					PreDeploymentEvaluationStatus:  common.StateFailed,
-					PostDeploymentEvaluationStatus: common.StateFailed,
-					WorkloadOverallStatus:          common.StateFailed,
-					PromotionStatus:                common.StateFailed,
+					PreDeploymentStatus:            StateFailed,
+					PostDeploymentStatus:           StateFailed,
+					PreDeploymentEvaluationStatus:  StateFailed,
+					PostDeploymentEvaluationStatus: StateFailed,
+					WorkloadOverallStatus:          StateFailed,
+					PromotionStatus:                StateFailed,
 					WorkloadStatus: []WorkloadStatus{
 						{
 							Workload: KeptnWorkloadRef{
 								Name:    "name1",
 								Version: "1",
 							},
-							Status: common.StateFailed,
+							Status: StateFailed,
 						},
 						{
 							Workload: KeptnWorkloadRef{
 								Name:    "name2",
 								Version: "2",
 							},
-							Status: common.StateFailed,
+							Status: StateFailed,
 						},
 					},
 					CurrentPhase: "phase",
@@ -438,60 +440,60 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 						{
 							DefinitionName: "def1",
 							Name:           "name1",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 						{
 							DefinitionName: "def12",
 							Name:           "name12",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 					},
 					PostDeploymentTaskStatus: []ItemStatus{
 						{
 							DefinitionName: "def2",
 							Name:           "name2",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 						{
 							DefinitionName: "def22",
 							Name:           "name22",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 					},
 					PreDeploymentEvaluationTaskStatus: []ItemStatus{
 						{
 							DefinitionName: "def3",
 							Name:           "name3",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 						{
 							DefinitionName: "def32",
 							Name:           "name32",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 					},
 					PostDeploymentEvaluationTaskStatus: []ItemStatus{
 						{
 							DefinitionName: "def4",
 							Name:           "name4",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 						{
 							DefinitionName: "def42",
 							Name:           "name42",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 					},
 					PromotionTaskStatus: []ItemStatus{
 						{
 							DefinitionName: "def5",
 							Name:           "name5",
-							Status:         common.StateFailed,
+							Status:         StateFailed,
 						},
 						{
 							DefinitionName: "def52",
 							Name:           "name52",
-							Status:         common.StateSucceeded,
+							Status:         StateFailed,
 						},
 					},
 					PhaseTraceIDs: common.PhaseTraceID{
@@ -504,7 +506,7 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 							"key222": "value222",
 						},
 					},
-					Status: common.StateFailed,
+					Status: StateFailed,
 				},
 			},
 			wantErr: false,
@@ -641,7 +643,7 @@ func TestKeptnAppVersion_ConvertTo(t *testing.T) {
 						{
 							DefinitionName: "def52",
 							Name:           "name52",
-							Status:         v1common.StateSucceeded,
+							Status:         v1common.StateFailed,
 						},
 					},
 					PhaseTraceIDs: v1common.PhaseTraceID{

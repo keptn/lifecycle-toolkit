@@ -16,5 +16,9 @@ This section includes:
   where you can develop and test software contributions.
   It includes a video walkthrough that illustrates the process.
 
+- [Golangci-lint configuration](golangci-lint.md)
+  discusses the linter Keptn uses to ensure good code quality
+  and how to configure your local development environment to use it.
+
 - [Add a metrics provider](add-new-metric-provider.md)
   explains how to add support for a new metrics provider to Keptn.

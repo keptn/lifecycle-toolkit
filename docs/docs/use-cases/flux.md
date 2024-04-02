@@ -8,14 +8,14 @@ Flux is a tool for keeping Kubernetes clusters in sync with sources
 of configuration (like Git repositories), and automating updates to
 configuration when there is new code to deploy.
 
-This section shows an already existing use case of running
+This section shows an already existing Flux use case of running
 [pre and post-deployment jobs with Flux](https://fluxcd.io/flux/use-cases/running-jobs/)
 and how Keptn makes it simpler and and more straight-forward.
 
 ## High-level structure of the git repository
 
-Since Flux uses a GitOps approach to continuous delivery, the git
-repository structure needs to look like the following:
+Since Flux uses a GitOps approach for continuous delivery, the git
+repository structure, for our use case, will look like the following:
 
 ```markdown
 ├── apps
@@ -40,7 +40,7 @@ but for simplicity of this excercise, we will keep them in a single one.
 
 ## Set up environment
 
-Before starting, you need to install Flux CLI and Keptn.
+Before we start, you need to install Flux CLI and Keptn.
 You can find the installation instructions of Keptn [here](./../installation/index.md)
 and for Flux [here](https://fluxcd.io/flux/installation/).
 
@@ -50,10 +50,10 @@ You can use any available git providers, but be sure to store your `token`
 for later usage.
 For simplicity, we will use `GitHub`.
 
-In the end, you need to install Flux to your cluster.
+As another step, you need to install Flux to your cluster.
 This step will require
 [bootstrapping the git repository](https://fluxcd.io/flux/installation/bootstrap/)
-in order to set up all Flux structures.
+in order to set up all needed Flux structures in the repository.
 For that, you can use the following command:
 
 ```bash
@@ -94,7 +94,7 @@ Additionally, create a `kustomize.yaml` file right next to it:
 {% include "./assets/flux/kustomize.yaml" %}
 ```
 
-You can commit and push these manifests to your git repository.
+You can commit and push these manifests to the git repository.
 
 > **Note**
 Notice, that the application has pre- and post-deployment tasks defined
@@ -120,7 +120,7 @@ flux create source git podtato-head \
   --export > ./clusters/dev/podtato-head-source.yaml
 ```
 
-which will result output similar to:
+which results in an output similar to:
 
 ```yaml
 {% include "./assets/flux/gitrepository.yaml" %}
@@ -144,15 +144,15 @@ flux create kustomization podtato-head \
   --export > ./clusters/dev/podtato-head-kustomization.yaml
 ```
 
-which will result output similar to:
+which results in an output similar to:
 
 ```yaml
 {% include "./assets/flux/flux-kustomization.yaml" %}
 ```
 
 Now commit and push the resources you created in the recent steps.
-After pushing them, Flux should pick up the configuration and
-deploy your application into the cluster.
+After pushing them, Flux picks up the configuration and
+deploys your application into the cluster.
 
 ## Watch Flux sync of the application
 
@@ -182,8 +182,8 @@ synced to the cluster.
 
 ## Possible follow-ups
 
-You can set up a multi-stage delivery with Flux, same
+You can also set up a multi-stage delivery with Flux, same
 as it was done with `ArgoCD`.
-You can follow similar steps to the
+You can follow the steps of the
 [ArgoCD multi-stage delivery with Keptn](../guides/multi-stage-application-delivery.md)
 user guide.

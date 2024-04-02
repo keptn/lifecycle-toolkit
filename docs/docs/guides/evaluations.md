@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Evaluations
+# Evaluations in Keptn
 
 A `KeptnEvaluation` does a simple evaluation of the metrics data you capture,
 to answer a question such as "Do I have more than four CPUs available?"

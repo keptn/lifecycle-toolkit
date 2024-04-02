@@ -13,7 +13,7 @@ of the application and infrastructure.
 
 While Kubernetes has ways to extend its metrics APIs, there are limitations,
 especially that they allow you to use only a single observability platform
-such as Prometheus, Thanos, Dynatrace or Datadog.
+such as Prometheus, Thanos, Cortex, Dynatrace or Datadog.
 The Keptn Metrics Operator solves this problem
 by providing a single entry point for
 all your metrics data, regardless of its source.

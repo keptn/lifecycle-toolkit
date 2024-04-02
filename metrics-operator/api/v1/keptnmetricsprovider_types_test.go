@@ -45,6 +45,19 @@ func TestKeptnMetricsProvider_GetType(t *testing.T) {
 			want: "thanos",
 		},
 		{
+			name: "cortex provider type set",
+			fields: fields{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "provider1",
+				},
+				Spec: KeptnMetricsProviderSpec{
+					Type:         "cortex",
+					TargetServer: "",
+				},
+			},
+			want: "cortex",
+		},
+		{
 			name: "provider type not set, should return name",
 			fields: fields{
 				ObjectMeta: metav1.ObjectMeta{

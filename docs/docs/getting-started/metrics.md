@@ -14,7 +14,7 @@ such as whether a rollout is good, or whether to scale up or down.
 
 Your observability data may come
 from multiple observability solutions --
-Prometheus, Thanos, Dynatrace, Datadog and others --
+Prometheus, Thanos, Cortex, Dynatrace, Datadog and others --
 or may be data that comes directly
 from your cloud provider such as AWS, Google, or Azure.
 The Keptn Metrics Server unifies and standardizes access to all this data.

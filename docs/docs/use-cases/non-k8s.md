@@ -179,13 +179,13 @@ similar to what the metrics evaluations of the
 Keptn v1 quality gates feature provided.
 The data used can come from multiple instances
 of multiple data providers
-(such as Prometheus, Thanos, Dynatrace, and DataDog).
+(such as Prometheus, Thanos, Cortex, Dynatrace, and DataDog).
 
 A Keptn analysis can be run for any application running anywhere
 as long Keptn can access a monitoring provider endpoint
 that serves metrics for the application.
 You can point to multiple instances of the supported monitoring providers
-(Prometheus, Thanos, Dynatrace, Datadog, and dql)
+(Prometheus, Thanos, Cortex, Dynatrace, Datadog, and dql)
 so the application itself can run anywhere.
 
 To implement a Keptn analysis for your deployment:

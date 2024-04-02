@@ -174,17 +174,3 @@ type KeptnTaskDefinitionList struct {
 func init() {
 	SchemeBuilder.Register(&KeptnTaskDefinition{}, &KeptnTaskDefinitionList{})
 }
-
-func (d *KeptnTaskDefinition) GetServiceAccount() string {
-	if d.Spec.ServiceAccount == nil {
-		return ""
-	}
-	return d.Spec.ServiceAccount.Name
-}
-
-func (d *KeptnTaskDefinition) GetAutomountServiceAccountToken() *bool {
-	if d.Spec.AutomountServiceAccountToken == nil {
-		return nil
-	}
-	return d.Spec.AutomountServiceAccountToken.Type
-}

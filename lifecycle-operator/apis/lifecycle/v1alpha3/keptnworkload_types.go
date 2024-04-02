@@ -17,18 +17,9 @@ limitations under the License.
 package v1alpha3
 
 import (
-	"fmt"
-	"strings"
-
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 )
-
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // KeptnWorkloadSpec defines the desired state of KeptnWorkload
 type KeptnWorkloadSpec struct {
@@ -108,28 +99,4 @@ type ResourceReference struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnWorkload{}, &KeptnWorkloadList{})
-}
-
-func (w KeptnWorkload) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(w.GetSpanAttributes()...)
-}
-
-func (w KeptnWorkload) GetSpanAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(w.Spec.AppName),
-		common.WorkloadName.String(w.Name),
-		common.WorkloadVersion.String(w.Spec.Version),
-	}
-}
-
-func (w KeptnWorkload) GetEventAnnotations() map[string]string {
-	return map[string]string{
-		"appName":         w.Spec.AppName,
-		"workloadName":    w.Name,
-		"workloadVersion": w.Spec.Version,
-	}
-}
-
-func (w KeptnWorkload) GetNameWithoutAppPrefix() string {
-	return strings.TrimPrefix(w.Name, fmt.Sprintf("%s-", w.Spec.AppName))
 }

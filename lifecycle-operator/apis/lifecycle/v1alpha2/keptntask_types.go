@@ -17,18 +17,9 @@ limitations under the License.
 package v1alpha2
 
 import (
-	"time"
-
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha2/common"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
-
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // KeptnTaskSpec defines the desired state of KeptnTask
 type KeptnTaskSpec struct {
@@ -113,109 +104,4 @@ type KeptnTaskList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnTask{}, &KeptnTaskList{})
-}
-
-func (t KeptnTaskList) GetItems() []client.Object {
-	var b []client.Object
-	for _, i := range t.Items {
-		b = append(b, &i)
-	}
-	return b
-}
-
-func (t *KeptnTask) SetStartTime() {
-	if t.Status.StartTime.IsZero() {
-		t.Status.StartTime = metav1.NewTime(time.Now().UTC())
-	}
-}
-
-func (t *KeptnTask) SetEndTime() {
-	if t.Status.EndTime.IsZero() {
-		t.Status.EndTime = metav1.NewTime(time.Now().UTC())
-	}
-}
-
-func (t *KeptnTask) IsStartTimeSet() bool {
-	return !t.Status.StartTime.IsZero()
-}
-
-func (t *KeptnTask) IsEndTimeSet() bool {
-	return !t.Status.EndTime.IsZero()
-}
-
-func (t KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(t.Spec.AppName),
-		common.AppVersion.String(t.Spec.AppVersion),
-		common.WorkloadName.String(t.Spec.Workload),
-		common.WorkloadVersion.String(t.Spec.WorkloadVersion),
-		common.TaskName.String(t.Name),
-		common.TaskType.String(string(t.Spec.Type)),
-	}
-}
-
-func (t KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(t.Spec.AppName),
-		common.AppVersion.String(t.Spec.AppVersion),
-		common.WorkloadName.String(t.Spec.Workload),
-		common.WorkloadVersion.String(t.Spec.WorkloadVersion),
-		common.TaskName.String(t.Name),
-		common.TaskType.String(string(t.Spec.Type)),
-		common.TaskStatus.String(string(t.Status.Status)),
-	}
-}
-
-func (t KeptnTask) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(t.GetSpanAttributes()...)
-}
-
-func (t KeptnTask) CreateKeptnLabels() map[string]string {
-	if t.Spec.Workload != "" {
-		return map[string]string{
-			common.AppAnnotation:      t.Spec.AppName,
-			common.WorkloadAnnotation: t.Spec.Workload,
-			common.VersionAnnotation:  t.Spec.WorkloadVersion,
-			common.TaskNameAnnotation: t.Name,
-		}
-	}
-	return map[string]string{
-		common.AppAnnotation:      t.Spec.AppName,
-		common.VersionAnnotation:  t.Spec.AppVersion,
-		common.TaskNameAnnotation: t.Name,
-	}
-}
-
-func (t KeptnTask) GetSpanAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(t.Spec.AppName),
-		common.AppVersion.String(t.Spec.AppVersion),
-		common.WorkloadName.String(t.Spec.Workload),
-		common.WorkloadVersion.String(t.Spec.WorkloadVersion),
-		common.TaskName.String(t.Name),
-		common.TaskType.String(string(t.Spec.Type)),
-	}
-}
-
-func (t *KeptnTask) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
-	// present due to SpanItem interface
-}
-
-func (t KeptnTask) GetSpanKey(phase string) string {
-	return t.Name
-}
-
-func (t KeptnTask) GetSpanName(phase string) string {
-	return t.Name
-}
-
-func (t KeptnTask) GetEventAnnotations() map[string]string {
-	return map[string]string{
-		"appName":            t.Spec.AppName,
-		"appVersion":         t.Spec.AppVersion,
-		"workloadName":       t.Spec.Workload,
-		"workloadVersion":    t.Spec.WorkloadVersion,
-		"taskName":           t.Name,
-		"taskDefinitionName": t.Spec.TaskDefinition,
-	}
 }

@@ -36,8 +36,6 @@ Package v1beta1 contains API Schema definitions for the lifecycle v1beta1 API gr
 
 
 
-
-
 #### AutomountServiceAccountTokenSpec
 
 
@@ -679,8 +677,6 @@ _Appears in:_
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | EndTime represents the time at which the KeptnEvaluation finished. || ✓ |  |
 
 
-
-
 #### KeptnMetricReference
 
 
@@ -696,8 +692,6 @@ _Appears in:_
 | --- | --- | --- | --- | --- |
 | `name` _string_ | Name is the name of the referenced KeptnMetric. || x |  |
 | `namespace` _string_ | Namespace is the namespace where the referenced KeptnMetric is located. || ✓ |  |
-
-
 
 
 #### KeptnState
@@ -1092,7 +1086,7 @@ _Appears in:_
 
 _Underlying type:_ _[MapCarrier](https://pkg.go.dev/go.opentelemetry.io/otel/propagation#MapCarrier)_
 
-
+PhaseTraceID is a map storing TraceIDs of OpenTelemetry spans in lifecycle phases
 
 
 
@@ -1174,8 +1168,6 @@ _Appears in:_
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
 | `name` _string_ |  || x |  |
-
-
 
 
 #### TaskContext

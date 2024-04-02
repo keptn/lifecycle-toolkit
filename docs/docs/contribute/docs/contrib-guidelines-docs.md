@@ -44,7 +44,9 @@ that are relevant only to documentation.
   as references to the official installation section of the docs.
 
     For usability considerations, we have a few exceptions to this rule
-    for the main `README.md` file and the [Getting Started Guide](../../getting-started/index.md).
+    for the main `README.md` file and the exercises in the
+    [Get Started](../../getting-started/index.md)
+    section.
 
 * When you want to display a sample file that exists in the repository,
   use the `include <file-path>` shortcode syntax

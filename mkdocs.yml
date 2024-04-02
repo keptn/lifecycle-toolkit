@@ -228,12 +228,12 @@ nav:
           - docs/contribute/docs/index.md
           - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs.md
           - Build Documentation Locally: docs/contribute/docs/local-building.md
-          - Using markdownlint: docs/contribute/docs/markdownlint.md
-          - Source File Structure: docs/contribute/docs/source-file-structure.md
+          - Markdownlint: docs/contribute/docs/markdownlint.md
+          - Source file structure: docs/contribute/docs/source-file-structure.md
           - Coding the docs: docs/contribute/docs/code-docs.md
-          - Spell Checker: docs/contribute/docs/spell-check.md
+          - Spell checker: docs/contribute/docs/spell-check.md
           - Blogs: docs/contribute/docs/blog.md
-          - Published Doc Structure: docs/contribute/docs/publish.md
+          - Published doc structure: docs/contribute/docs/publish.md
           - Word list: docs/contribute/docs/word-list.md
   - Blog:
       - blog/index.md

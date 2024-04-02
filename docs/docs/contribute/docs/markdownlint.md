@@ -27,6 +27,12 @@ run the following on your local branch:
 make markdownlint
 ```
 
+Markdown includes an auto-fix option that you can run on your local branch
+to resolve many issues such as extra spaces
+and notify you of errors it can not fix automatically.
+You should always run this command before pushing a commit
+and resolve any errors it reports.
+
 To use the auto-fix option, run:
 
 ```shell

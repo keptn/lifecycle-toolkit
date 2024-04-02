@@ -22,7 +22,7 @@ with information that is specific to the documentation:
   tells how to build the documentation locally
   so you can check the formatting, readability, and links
   in your local branch before you push the new content.
-- [Markdownling](markdownlint.md) provides information
+- [Markdownlint](markdownlint.md) provides information
   about the linter we use to check the quality of the coding
   in all `.md` files in the repository.
 - [Source file structure](source-file-structure.md)
@@ -33,7 +33,7 @@ with information that is specific to the documentation:
 - [Spell checker](spell-check.md) describes the spell checker we use
   and gives instructions for resolving errors it finds.
 - [Blogs](blog.md) explains the extra steps required
-  to contribut a blog to the Keptn page.
+  to contribute a blog to the Keptn page.
 - [Published doc structure](publish.md) explains
   the branches (`stable` and `latest`) for the published documentation.
 - [Word list](word-list.md) provides some information about the proper

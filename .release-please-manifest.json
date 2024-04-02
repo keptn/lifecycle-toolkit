@@ -1,9 +1,9 @@
 {
-  ".": "0.10.0",
-  "keptn-cert-manager": "2.0.0",
-  "runtimes/python-runtime": "1.0.2",
-  "runtimes/deno-runtime": "2.0.1",
-  "lifecycle-operator": "0.9.0",
-  "scheduler": "0.9.0",
-  "metrics-operator": "0.9.1"
+  ".": "2.0.0-rc.2",
+  "keptn-cert-manager": "2.1.1",
+  "runtimes/python-runtime": "1.0.4",
+  "runtimes/deno-runtime": "2.0.3",
+  "lifecycle-operator": "0.9.2",
+  "scheduler": "0.9.2",
+  "metrics-operator": "0.9.3"
 }

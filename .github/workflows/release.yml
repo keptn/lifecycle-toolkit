@@ -7,12 +7,15 @@ on:
       - "[0-9]+.[0-9]+.x"
   workflow_dispatch:
 
+    # Declare default permissions as read only.
+permissions: read-all
+
 defaults:
   run:
     shell: bash
 
 env:
-  GO_VERSION: "~1.20"
+  GO_VERSION: "~1.21"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
   CONTROLLER_TOOLS_VERSION: "v0.13.0"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
@@ -35,11 +38,11 @@ jobs:
       BUILD_TIME: ${{ steps.get_datetime.outputs.BUILD_TIME }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Extract branch name
         id: extract_branch
-        uses: keptn/gh-action-extract-branch-name@main
+        uses: keptn/gh-action-extract-branch-name@6ca4fe061da10c66b2d7341fd1fb12962ad911b2
 
       - name: Get current date and time
         id: get_datetime
@@ -50,10 +53,9 @@ jobs:
           echo "BUILD_TIME=$BUILD_TIME" >> "$GITHUB_OUTPUT"
 
       - name: Run release please
-        uses: google-github-actions/release-please-action@v3
+        uses: google-github-actions/release-please-action@a37ac6e4f6449ce8b3f7607e4d97d0146028dc0b # v4
         id: release
         with:
-          command: manifest
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
           default-branch: main
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
@@ -78,7 +80,7 @@ jobs:
 
       - name: Create release matrix
         id: build-matrix
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
         env:
           CHANGED_ITEMS: ${{ steps.release.outputs.paths_released }}
           KEPTN_TAG: ${{ steps.release.outputs.tag_name }}
@@ -146,16 +148,16 @@ jobs:
       GIT_SHA: ${{ needs.release-please.outputs.GIT_SHA }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: recursive
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@2b51285047da1547ffb1b2203d8be4c0af6b1f20 # v3
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20 # v3.1.0
         with:
           registry: "ghcr.io"
           username: ${{ github.actor }}
@@ -180,7 +182,7 @@ jobs:
 
       - name: Build Docker Image
         id: docker_build_image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64,linux/arm64
@@ -209,14 +211,14 @@ jobs:
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0.15.8
+        uses: anchore/sbom-action@ab5d7b5f48981941c4c5d6bf33aeb98fe3bae38c # v0.15.10
         with:
           image: ${{ env.IMAGE_NAME }}:${{ steps.clean-image-tag.outputs.IMAGE_TAG }}
           artifact-name: sbom-${{ matrix.config.name }}
           output-file: ./sbom-${{ matrix.config.name }}.spdx.json
 
       - name: Attach SBOM to release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564 # v2.0.4
         with:
           tag_name: ${{ matrix.config.tagName }}
           files: ./sbom-${{ matrix.config.name }}.spdx.json
@@ -235,7 +237,7 @@ jobs:
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Upload verification log as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         with:
           name: cosign-attest-verification-log
           path: ./cosign-attest-output.json

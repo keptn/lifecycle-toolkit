@@ -23,8 +23,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
@@ -89,7 +89,7 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	r.Log.Info("Searching for KeptnWorkloadVersion", "requestInfo", requestInfo)
 
 	// retrieve workload version
-	workloadVersion := &klcv1beta1.KeptnWorkloadVersion{}
+	workloadVersion := &apilifecycle.KeptnWorkloadVersion{}
 	err := r.Get(ctx, req.NamespacedName, workloadVersion)
 	if errors.IsNotFound(err) {
 		return reconcile.Result{}, nil
@@ -120,6 +120,10 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	if err != nil {
 		r.Log.Error(err, "could not get span")
 	}
+
+	defer func(workloadVersion *apilifecycle.KeptnWorkloadVersion, spanWorkloadTrace trace.Span) {
+		r.closeFailedWorkloadVersionSpan(workloadVersion, spanWorkloadTrace)
+	}(workloadVersion, spanWorkloadTrace)
 
 	if workloadVersion.Status.CurrentPhase == "" {
 		spanWorkloadTrace.AddEvent("WorkloadVersion Pre-Deployment Tasks started", trace.WithTimestamp(time.Now()))
@@ -154,7 +158,7 @@ func (r *KeptnWorkloadVersionReconciler) Reconcile(ctx context.Context, req ctrl
 	return r.finishKeptnWorkloadVersionReconcile(ctx, workloadVersion, spanWorkloadTrace)
 }
 
-func (r *KeptnWorkloadVersionReconciler) doPreDeploymentTaskPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
+func (r *KeptnWorkloadVersionReconciler) doPreDeploymentTaskPhase(ctx context.Context, workloadVersion *apilifecycle.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
 	if !workloadVersion.IsPreDeploymentSucceeded(r.Config.GetBlockDeployment()) {
 		reconcilePre := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadVersion, apicommon.PreDeploymentCheckType)
@@ -172,7 +176,7 @@ func (r *KeptnWorkloadVersionReconciler) doPreDeploymentTaskPhase(ctx context.Co
 	}, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) doPreDeploymentEvaluationPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
+func (r *KeptnWorkloadVersionReconciler) doPreDeploymentEvaluationPhase(ctx context.Context, workloadVersion *apilifecycle.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
 	if !workloadVersion.IsPreDeploymentEvaluationSucceeded(r.Config.GetBlockDeployment()) {
 		reconcilePreEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadVersion, apicommon.PreDeploymentEvaluationCheckType)
@@ -190,7 +194,7 @@ func (r *KeptnWorkloadVersionReconciler) doPreDeploymentEvaluationPhase(ctx cont
 	}, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) doDeploymentPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
+func (r *KeptnWorkloadVersionReconciler) doDeploymentPhase(ctx context.Context, workloadVersion *apilifecycle.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
 	if !workloadVersion.IsDeploymentSucceeded() {
 		reconcileWorkloadVersion := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcileDeployment(ctx, workloadVersion)
@@ -208,7 +212,7 @@ func (r *KeptnWorkloadVersionReconciler) doDeploymentPhase(ctx context.Context, 
 	}, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) doPostDeploymentTaskPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
+func (r *KeptnWorkloadVersionReconciler) doPostDeploymentTaskPhase(ctx context.Context, workloadVersion *apilifecycle.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
 	if !workloadVersion.IsPostDeploymentSucceeded(r.Config.GetBlockDeployment()) {
 		reconcilePost := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostDeployment(ctx, phaseCtx, workloadVersion, apicommon.PostDeploymentCheckType)
@@ -226,7 +230,7 @@ func (r *KeptnWorkloadVersionReconciler) doPostDeploymentTaskPhase(ctx context.C
 	}, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) doPostDeploymentEvaluationPhase(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
+func (r *KeptnWorkloadVersionReconciler) doPostDeploymentEvaluationPhase(ctx context.Context, workloadVersion *apilifecycle.KeptnWorkloadVersion, ctxWorkloadTrace context.Context) (phase.PhaseResult, error) {
 	if !workloadVersion.IsPostDeploymentEvaluationSucceeded(r.Config.GetBlockDeployment()) {
 		reconcilePostEval := func(phaseCtx context.Context) (apicommon.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, phaseCtx, workloadVersion, apicommon.PostDeploymentEvaluationCheckType)
@@ -244,7 +248,21 @@ func (r *KeptnWorkloadVersionReconciler) doPostDeploymentEvaluationPhase(ctx con
 	}, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) finishKeptnWorkloadVersionReconcile(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion, spanWorkloadTrace trace.Span) (ctrl.Result, error) {
+func (r *KeptnWorkloadVersionReconciler) closeFailedWorkloadVersionSpan(workloadVersion *apilifecycle.KeptnWorkloadVersion, spanWorkloadTrace trace.Span) {
+	// make sure we close and unbind the span of a failed AppVersion
+	if workloadVersion.Status.Status != apicommon.StateFailed {
+		return
+	}
+	spanWorkloadTrace.AddEvent(workloadVersion.Name + " has failed")
+	spanWorkloadTrace.SetStatus(codes.Error, "Failed")
+	spanWorkloadTrace.End()
+	if err := r.SpanHandler.UnbindSpan(workloadVersion, ""); err != nil {
+		r.Log.Error(err, controllererrors.ErrCouldNotUnbindSpan, workloadVersion.Name)
+	}
+	r.EventSender.Emit(apicommon.PhaseWorkloadCompleted, "Warning", workloadVersion, apicommon.PhaseStateFailed, "has failed", workloadVersion.GetVersion())
+}
+
+func (r *KeptnWorkloadVersionReconciler) finishKeptnWorkloadVersionReconcile(ctx context.Context, workloadVersion *apilifecycle.KeptnWorkloadVersion, spanWorkloadTrace trace.Span) (ctrl.Result, error) {
 	if !workloadVersion.IsEndTimeSet() {
 		workloadVersion.Status.CurrentPhase = apicommon.PhaseCompleted.ShortName
 		workloadVersion.Status.Status = apicommon.StateSucceeded
@@ -276,34 +294,34 @@ func (r *KeptnWorkloadVersionReconciler) finishKeptnWorkloadVersionReconcile(ctx
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnWorkloadVersionReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &klcv1beta1.KeptnWorkloadVersion{}, "spec.app", func(rawObj client.Object) []string {
-		workloadVersion := rawObj.(*klcv1beta1.KeptnWorkloadVersion)
+	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &apilifecycle.KeptnWorkloadVersion{}, "spec.app", func(rawObj client.Object) []string {
+		workloadVersion := rawObj.(*apilifecycle.KeptnWorkloadVersion)
 		return []string{workloadVersion.Spec.AppName}
 	}); err != nil {
 		return err
 	}
-	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &klcv1beta1.KeptnWorkloadVersion{}, resourceReferenceUIDField, func(rawObj client.Object) []string {
+	if err := mgr.GetFieldIndexer().IndexField(context.Background(), &apilifecycle.KeptnWorkloadVersion{}, resourceReferenceUIDField, func(rawObj client.Object) []string {
 		return controllercommon.KeptnWorkloadVersionResourceRefUIDIndexFunc(rawObj)
 	}); err != nil {
 		return err
 	}
 	controllerBuilder := ctrl.NewControllerManagedBy(mgr).
 		// predicate disabling the auto reconciliation after updating the object status
-		For(&klcv1beta1.KeptnWorkloadVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{}))
+		For(&apilifecycle.KeptnWorkloadVersion{}, builder.WithPredicates(predicate.GenerationChangedPredicate{}))
 
 	return controllerBuilder.Complete(r)
 }
 
-func (r *KeptnWorkloadVersionReconciler) sendUnfinishedPreEvaluationEvents(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadVersion *klcv1beta1.KeptnWorkloadVersion) {
+func (r *KeptnWorkloadVersionReconciler) sendUnfinishedPreEvaluationEvents(appPreEvalStatus apicommon.KeptnState, phase apicommon.KeptnPhaseType, workloadVersion *apilifecycle.KeptnWorkloadVersion) {
 	if appPreEvalStatus.IsFailed() {
 		r.EventSender.Emit(phase, "Warning", workloadVersion, apicommon.PhaseStateFailed, "has failed since app has failed", workloadVersion.GetVersion())
 	}
 }
 
-func (r *KeptnWorkloadVersionReconciler) getCompletionFunc(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion) func(workloadVersion *klcv1beta1.KeptnWorkloadVersion) {
+func (r *KeptnWorkloadVersionReconciler) getCompletionFunc(ctx context.Context, workloadVersion *apilifecycle.KeptnWorkloadVersion) func(workloadVersion *apilifecycle.KeptnWorkloadVersion) {
 	workloadVersion.SetStartTime()
 
-	endFunc := func(workloadVersion *klcv1beta1.KeptnWorkloadVersion) {
+	endFunc := func(workloadVersion *apilifecycle.KeptnWorkloadVersion) {
 		if workloadVersion.IsEndTimeSet() {
 			r.Log.Info("Increasing deployment count")
 			attrs := workloadVersion.GetMetricsAttributes()
@@ -314,7 +332,7 @@ func (r *KeptnWorkloadVersionReconciler) getCompletionFunc(ctx context.Context, 
 	return endFunc
 }
 
-func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion) (bool, error) {
+func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx context.Context, workloadVersion *apilifecycle.KeptnWorkloadVersion) (bool, error) {
 	// Wait for pre-evaluation checks of App
 	// Only check if we have not begun with the first phase of the workload version, to avoid retrieving the KeptnAppVersion
 	// in each reconciliation loop
@@ -360,12 +378,12 @@ func (r *KeptnWorkloadVersionReconciler) checkPreEvaluationStatusOfApp(ctx conte
 	return false, nil
 }
 
-func (r *KeptnWorkloadVersionReconciler) getAppVersionForWorkloadVersion(ctx context.Context, wli *klcv1beta1.KeptnWorkloadVersion) (bool, klcv1beta1.KeptnAppVersion, error) {
-	apps := &klcv1beta1.KeptnAppVersionList{}
+func (r *KeptnWorkloadVersionReconciler) getAppVersionForWorkloadVersion(ctx context.Context, wli *apilifecycle.KeptnWorkloadVersion) (bool, apilifecycle.KeptnAppVersion, error) {
+	apps := &apilifecycle.KeptnAppVersionList{}
 
 	// TODO add label selector for looking up by name?
 	if err := r.Client.List(ctx, apps, client.InNamespace(wli.Namespace)); err != nil {
-		return false, klcv1beta1.KeptnAppVersion{}, err
+		return false, apilifecycle.KeptnAppVersion{}, err
 	}
 
 	// due to effectivity reasons deprecated KeptnAppVersions are removed from the list, as there is
@@ -380,7 +398,7 @@ func (r *KeptnWorkloadVersionReconciler) getAppVersionForWorkloadVersion(ctx con
 
 	// If the latest version is empty or the workload is not found, return false and empty result
 	if latestVersion.Spec.Version == "" || !workloadFound {
-		return false, klcv1beta1.KeptnAppVersion{}, nil
+		return false, apilifecycle.KeptnAppVersion{}, nil
 	}
 	return true, latestVersion, nil
 }
@@ -389,8 +407,8 @@ func (r *KeptnWorkloadVersionReconciler) getTracer() telemetry.ITracer {
 	return r.TracerFactory.GetTracer(traceComponentName)
 }
 
-func getLatestAppVersion(apps *klcv1beta1.KeptnAppVersionList, wli *klcv1beta1.KeptnWorkloadVersion) (bool, klcv1beta1.KeptnAppVersion, error) {
-	latestVersion := klcv1beta1.KeptnAppVersion{}
+func getLatestAppVersion(apps *apilifecycle.KeptnAppVersionList, wli *apilifecycle.KeptnWorkloadVersion) (bool, apilifecycle.KeptnAppVersion, error) {
+	latestVersion := apilifecycle.KeptnAppVersion{}
 
 	workloadFound := false
 	for _, app := range apps.Items {
@@ -409,10 +427,10 @@ func getLatestAppVersion(apps *klcv1beta1.KeptnAppVersionList, wli *klcv1beta1.K
 	return workloadFound, latestVersion, nil
 }
 
-func isNewer(app klcv1beta1.KeptnAppVersion, latestVersion klcv1beta1.KeptnAppVersion) bool {
+func isNewer(app apilifecycle.KeptnAppVersion, latestVersion apilifecycle.KeptnAppVersion) bool {
 	return app.ObjectMeta.CreationTimestamp.Time.After(latestVersion.ObjectMeta.CreationTimestamp.Time) || latestVersion.CreationTimestamp.Time.IsZero()
 }
 
-func workloadMatchesApp(appWorkload klcv1beta1.KeptnWorkloadRef, wli *klcv1beta1.KeptnWorkloadVersion, app klcv1beta1.KeptnAppVersion) bool {
+func workloadMatchesApp(appWorkload apilifecycle.KeptnWorkloadRef, wli *apilifecycle.KeptnWorkloadVersion, app apilifecycle.KeptnAppVersion) bool {
 	return appWorkload.Version == wli.Spec.Version && app.GetWorkloadNameOfApp(appWorkload.Name) == wli.Spec.WorkloadName
 }

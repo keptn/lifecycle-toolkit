@@ -21,9 +21,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // KeptnTaskDefinitionSpec defines the desired state of KeptnTaskDefinition
 type KeptnTaskDefinitionSpec struct {
 	// Deprecated
@@ -176,18 +173,4 @@ type KeptnTaskDefinitionList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnTaskDefinition{}, &KeptnTaskDefinitionList{})
-}
-
-func (d *KeptnTaskDefinition) GetServiceAccount() string {
-	if d.Spec.ServiceAccount == nil {
-		return ""
-	}
-	return d.Spec.ServiceAccount.Name
-}
-
-func (d *KeptnTaskDefinition) GetAutomountServiceAccountToken() *bool {
-	if d.Spec.AutomountServiceAccountToken == nil {
-		return nil
-	}
-	return d.Spec.AutomountServiceAccountToken.Type
 }

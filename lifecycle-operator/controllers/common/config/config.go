@@ -3,6 +3,8 @@ package config
 import (
 	"sync"
 	"time"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const defaultKeptnAppCreationRequestTimeout = 30 * time.Second
@@ -17,6 +19,8 @@ type IConfig interface {
 	GetDefaultNamespace() string
 	SetBlockDeployment(value bool)
 	GetBlockDeployment() bool
+	SetObservabilityTimeout(timeout metav1.Duration)
+	GetObservabilityTimeout() metav1.Duration
 }
 
 type ControllerConfig struct {
@@ -24,6 +28,7 @@ type ControllerConfig struct {
 	cloudEventsEndpoint            string
 	defaultNamespace               string
 	blockDeployment                bool
+	observabilityTimeout           metav1.Duration
 }
 
 var instance *ControllerConfig
@@ -34,6 +39,9 @@ func Instance() *ControllerConfig {
 		instance = &ControllerConfig{
 			keptnAppCreationRequestTimeout: defaultKeptnAppCreationRequestTimeout,
 			blockDeployment:                true,
+			observabilityTimeout: metav1.Duration{
+				Duration: time.Duration(5 * time.Minute),
+			},
 		}
 	})
 	return instance
@@ -69,4 +77,12 @@ func (o *ControllerConfig) SetBlockDeployment(value bool) {
 
 func (o *ControllerConfig) GetBlockDeployment() bool {
 	return o.blockDeployment
+}
+
+func (o *ControllerConfig) SetObservabilityTimeout(timeout metav1.Duration) {
+	o.observabilityTimeout = timeout
+}
+
+func (o *ControllerConfig) GetObservabilityTimeout() metav1.Duration {
+	return o.observabilityTimeout
 }

@@ -96,6 +96,7 @@ spec:
               previousVersion:
                 type: string
               resourceReference:
+                description: ResourceReference represents the parent resource of Workload
                 properties:
                   kind:
                     type: string
@@ -339,6 +340,7 @@ spec:
               previousVersion:
                 type: string
               resourceReference:
+                description: ResourceReference represents the parent resource of Workload
                 properties:
                   kind:
                     type: string
@@ -390,6 +392,8 @@ spec:
                     MapCarrier is a TextMapCarrier that uses a map held in memory as a storage
                     medium for propagated key-value pairs.
                   type: object
+                description: PhaseTraceID is a map storing TraceIDs of OpenTelemetry
+                  spans in lifecycle phases
                 type: object
               postDeploymentEvaluationStatus:
                 default: Pending

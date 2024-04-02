@@ -8,14 +8,14 @@ resource.
 
 ### Global parameters
 
-| Name                            | Description                                                               | Value |
-| ------------------------------- | ------------------------------------------------------------------------- | ----- |
-| `global.imageRegistry`          | Global container image registry                                           | `""`  |
-| `global.imagePullPolicy`        | select global image pull policy                                           | `""`  |
-| `global.imagePullSecrets`       | Global Docker registry secret names as an array                           | `[]`  |
-| `global.commonLabels`           | Common labels to add to all Keptn resources. Evaluated as a template      | `{}`  |
-| `global.commonAnnotations`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`  |
-| `global.caInjectionAnnotations` | CA injection annotations for cert-manager.io configuration                | `{}`  |
+| Name                            | Description                                                               | Value     |
+| ------------------------------- | ------------------------------------------------------------------------- | --------- |
+| `global.imageRegistry`          | Global container image registry                                           | `ghcr.io` |
+| `global.imagePullPolicy`        | select global image pull policy                                           | `""`      |
+| `global.imagePullSecrets`       | Global Docker registry secret names as an array                           | `[]`      |
+| `global.commonLabels`           | Common labels to add to all Keptn resources. Evaluated as a template      | `{}`      |
+| `global.commonAnnotations`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`      |
+| `global.caInjectionAnnotations` | CA injection annotations for cert-manager.io configuration                | `{}`      |
 
 ### Keptn Certificate Operator common
 
@@ -36,9 +36,9 @@ resource.
 | `containerSecurityContext` | Sets security context for the cert manager                                |                              |
 | `env.labelSelectorKey`     | specify the label selector to find resources to generate certificates for | `keptn.sh/inject-cert`       |
 | `env.labelSelectorValue`   | specify the value for the label selector                                  | `true`                       |
-| `image.registry`           | specify the container registry for the certificate-operator image         | `ghcr.io`                    |
+| `image.registry`           | specify the container registry for the certificate-operator image         | `""`                         |
 | `image.repository`         | specify repo for manager image                                            | `keptn/certificate-operator` |
-| `image.tag`                | select tag for manager container                                          | `v2.0.0`                     |
+| `image.tag`                | select tag for manager container                                          | `v2.1.1`                     |
 | `image.imagePullPolicy`    | specify pull policy for the manager image. This overrides global values   | `""`                         |
 | `livenessProbe`            | custom RBAC proxy liveness probe                                          |                              |
 | `readinessProbe`           | custom manager readiness probe                                            |                              |

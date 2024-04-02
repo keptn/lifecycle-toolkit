@@ -7,15 +7,15 @@ comments: true
 ## Keptn Workloads
 
 A
-[KeptnWorkload](../../reference/api-reference/lifecycle/v1beta1/index.md#keptnworkload)
+[KeptnWorkload](../../reference/api-reference/lifecycle/v1/index.md#keptnworkload)
 resource augments a Kubernetes
 [Workload](https://kubernetes.io/docs/concepts/workloads/)
 with the ability to handle extra phases.
 It can execute the pre-/post-deployment evaluations of a workload
 and run pre-/post-deployment tasks.
 
-In its state, it tracks the currently active `Workload Instances`
-(`Pod`, `DaemonSet`, `StatefulSet`, and `ReplicaSet` resources),
+In its state, it tracks the currently active workloads
+(`DaemonSet`, `StatefulSet`, or `ReplicaSet` resources),
 as well as the overall state of the Pre Deployment phase,
 which Keptn can use to determine
 whether the pods belonging to a workload
@@ -27,6 +27,17 @@ it knows that a`PostDeploymentCheck` can be triggered.
 The `KeptnWorkload` resources are created automatically
 and without delay by the mutating webhook
 as soon as the workload manifest is applied.
+
+> **Note**
+By default Keptn observes the state of the Kubernetes workloads
+for 5 minutes.
+After this timeout is exceeded, the deployment phase (from Keptn
+viewpoint) is considered as `Failed` and Keptn does not proceed
+with post-deployment phases (tasks, evaluations or promotion phase).
+This timeout can be modified for the cluster by changing the value
+of the `observabilityTimeout` field in the
+[KeptnConfig](../../reference/crd-reference/config.md)
+resource.
 
 ## Keptn Applications
 

@@ -2,7 +2,7 @@
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
 KUSTOMIZE_VERSION?=v5.3.0
-CHART_APPVERSION ?= v0.10.0 # x-release-please-version
+CHART_APPVERSION ?= v2.0.0-rc.2 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine
@@ -32,8 +32,9 @@ integration-test:
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/
 	chainsaw test --test-dir ./test/chainsaw/integration/
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/
-	chainsaw test --test-dir ./test/chainsaw/testcertificate/
 	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/
+	chainsaw test --test-dir ./test/chainsaw/timeout-failure-deployment/
+	chainsaw test --test-dir ./test/chainsaw/traces/
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
 integration-test-local:
@@ -41,8 +42,9 @@ integration-test-local:
 	chainsaw test --test-dir ./test/chainsaw/integration/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/ --config ./.chainsaw-local.yaml
-	chainsaw test --test-dir ./test/chainsaw/testcertificate/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/timeout-failure-deployment/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/traces/ --config ./.chainsaw-local.yaml
 
 .PHONY: integration-test-scheduling-gates #these tests should run on a real cluster!
 integration-test-scheduling-gates:
@@ -51,6 +53,14 @@ integration-test-scheduling-gates:
 .PHONY: integration-test-scheduling-gates-local #these tests should run on a real cluster!
 integration-test-scheduling-gates-local: install-prometheus
 	chainsaw test --test-dir ./test/chainsaw/scheduling-gates/ --config ./.chainsaw-local.yaml
+
+.PHONY: integration-test-cert-manager #these tests should run on a real cluster!
+integration-test-cert-manager:
+	chainsaw test --test-dir ./test/chainsaw/testcertificate/
+
+.PHONY: integration-test-cert-manager-local #these tests should run on a real cluster!
+integration-test-cert-manager-local: install-prometheus
+	chainsaw test --test-dir ./test/chainsaw/testcertificate/ --config ./.chainsaw-local.yaml
 
 .PHONY: integration-test-allowed-namespaces #these tests should run on a real cluster!
 integration-test-allowed-namespaces:
@@ -167,6 +177,14 @@ operator-lint: install-golangci-lint
 .PHONY: scheduler-lint
 scheduler-lint: install-golangci-lint
 	$(MAKE) -C scheduler lint
+
+.PHONY: helm-test
+helm-test:
+	./.github/scripts/helm-test.sh
+
+.PHONY: generate-helm-test-results
+generate-helm-test-results:
+	./.github/scripts/generate-helm-results.sh
 
 .PHONY: lint
 lint: metrics-operator-lint

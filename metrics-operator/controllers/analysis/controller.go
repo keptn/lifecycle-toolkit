@@ -23,7 +23,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	ctrlcommon "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common"
 	common "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis"
 	evalType "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"

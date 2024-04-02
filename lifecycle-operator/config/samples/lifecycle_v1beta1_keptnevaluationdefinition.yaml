@@ -4,6 +4,8 @@ metadata:
   name: keptnevaluationdefinition-sample
 spec:
   source: prometheus
+  retries: 5
+  retryInterval: 10s
   objectives:
     - name: prometheus
       query: "sum(prometheus_engine_query_duration_seconds_count)"

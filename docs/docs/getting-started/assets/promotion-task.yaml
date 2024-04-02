@@ -1,10 +1,10 @@
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: promotion
   namespace: keptndemo
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.log("Application promoted to stage prod!");

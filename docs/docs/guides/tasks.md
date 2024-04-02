@@ -11,7 +11,7 @@ resource defines one or more "executables"
 that Keptn runs
 as part of the pre- and post-deployment phases of a
 [KeptnApp](../reference/crd-reference/app.md) or
-[KeptnWorkload](../reference/api-reference/lifecycle/v1beta1/index.md#keptnworkload).
+[KeptnWorkload](../reference/api-reference/lifecycle/v1/index.md#keptnworkload).
 
 - pre-deployment (before the pod is scheduled)
 - post-deployment (after the pod is scheduled)
@@ -22,7 +22,7 @@ These `KeptnTask` resources and the
 are part of the Keptn Release Lifecycle Management.
 
 A
-[KeptnTask](../reference/api-reference/lifecycle/v1beta1/index.md#keptntask)
+[KeptnTask](../reference/api-reference/lifecycle/v1/index.md#keptntask)
 executes as a runner in an application
 [container](https://kubernetes.io/docs/concepts/containers/),
 which runs as part of a Kubernetes

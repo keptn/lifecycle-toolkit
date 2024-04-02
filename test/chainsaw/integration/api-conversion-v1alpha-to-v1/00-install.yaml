@@ -1,0 +1,112 @@
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnApp
+metadata:
+  name: "some-keptn-app2"
+spec:
+  version: "1.2.3"
+  revision: 123
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnAppVersion
+metadata:
+  name: "some-keptn-app-version-2"
+spec:
+  appName: podtato-head
+  revision: 1
+  preDeploymentTasks:
+    - pre-deployment-task
+  postDeploymentTasks:
+    - post-deployment-task
+  traceId:
+    traceparent: my-trace-parent
+  version: 0.1.0
+  workloads:
+    - name: some-keptn-app2
+      version: 0.2.7
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnWorkload
+metadata:
+  name: some-keptn-app2
+spec:
+  app: podtato-head
+  version: 0.1.0
+  preDeploymentTasks:
+    - pre-deployment-task
+  postDeploymentTasks:
+    - post-deployment-task
+  resourceReference:
+    kind: ReplicaSet
+    name: my-replica-set
+    uid: 957f825e-4025-4ea8-ad22-9292877ff7eb
+---
+apiVersion: lifecycle.keptn.sh/v1alpha4
+kind: KeptnWorkloadVersion
+metadata:
+  name: some-keptn-app-2-0.1.0
+spec:
+  app: some-keptn-app2
+  version: 0.1.0
+  preDeploymentTasks:
+    - pre-deployment-task
+  postDeploymentTasks:
+    - post-deployment-task
+  traceId:
+    traceparent: my-trace-parent
+  workloadName: some-keptn-app2
+  resourceReference:
+    kind: ReplicaSet
+    name: my-replica-set
+    uid: 957f825e-4025-4ea8-ad22-9292877ff7eb
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnAppCreationRequest
+metadata:
+  name: some-keptn-app2
+spec:
+  appName: podtato-head
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTaskDefinition
+metadata:
+  name: some-keptn-app-version-2-task
+spec:
+  deno:
+    inline:
+      code: |
+        console.log("Okay")
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnTask
+metadata:
+  name: some-keptn-app-version-2
+spec:
+  taskDefinition: some-keptn-app-version-2-task
+  context:
+    appName: "some-keptn-app2"
+    appVersion: "1.2.3"
+    objectType: ""
+    taskType: ""
+    workloadName: "some-keptn-app2"
+    workloadVersion: "0.2.7"
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnEvaluationDefinition
+metadata:
+  name: some-keptn-app-version-2
+spec:
+  objectives:
+    - evaluationTarget: ">1000"
+      keptnMetricRef:
+        name: available-cpus
+---
+apiVersion: lifecycle.keptn.sh/v1alpha3
+kind: KeptnEvaluation
+metadata:
+  name: some-keptn-app-version-2
+spec:
+  workload: "some-keptn-app2"
+  workloadVersion: "0.2.7"
+  appName: "some-keptn-app2"
+  appVersion: "1.2.3"
+  evaluationDefinition: "some-keptn-app-version-2"

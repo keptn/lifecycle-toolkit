@@ -5,8 +5,8 @@ package fake
 
 import (
 	"context"
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sync"
@@ -18,7 +18,7 @@ import (
 //
 //		// make and configure a mocked evaluation.IEvaluationHandler
 //		mockedIEvaluationHandler := &MockEvaluationHandler{
-//			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
+//			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]apilifecycle.ItemStatus, apicommon.StatusSummary, error) {
 //				panic("mock out the ReconcileEvaluations method")
 //			},
 //		}
@@ -29,7 +29,7 @@ import (
 //	}
 type MockEvaluationHandler struct {
 	// ReconcileEvaluationsFunc mocks the ReconcileEvaluations method.
-	ReconcileEvaluationsFunc func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error)
+	ReconcileEvaluationsFunc func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]apilifecycle.ItemStatus, apicommon.StatusSummary, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -49,7 +49,7 @@ type MockEvaluationHandler struct {
 }
 
 // ReconcileEvaluations calls ReconcileEvaluationsFunc.
-func (mock *MockEvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
+func (mock *MockEvaluationHandler) ReconcileEvaluations(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]apilifecycle.ItemStatus, apicommon.StatusSummary, error) {
 	if mock.ReconcileEvaluationsFunc == nil {
 		panic("MockEvaluationHandler.ReconcileEvaluationsFunc: method is nil but IEvaluationHandler.ReconcileEvaluations was just called")
 	}

@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnWorkload
 metadata:
   name: waiter-waiter
@@ -7,7 +7,7 @@ spec:
     commit-id: "1234"
     stage: dev
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnWorkloadVersion
 metadata:
   name: waiter-waiter-1.36
@@ -23,12 +23,12 @@ status:
   preDeploymentEvaluationStatus: Succeeded
   preDeploymentStatus: Succeeded
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnApp
 metadata:
   name: waiter
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppVersion
 metadata:
   name: waiter-1.36-d4735e3a

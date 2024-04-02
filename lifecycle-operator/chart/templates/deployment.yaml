@@ -135,6 +135,9 @@ spec:
             }}
           seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
+        volumeMounts:
+        - name: keptn-certs
+          mountPath: /tmp/webhook/certs/
         {{- if .Values.lifecycleOperator.livenessProbe }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.livenessProbe "context" $) | nindent 10 }}
          {{- else }}
@@ -155,11 +158,15 @@ spec:
          initialDelaySeconds: 5
          periodSeconds: 10
         {{- end }}
-      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
+      {{- include "lifecycleOperator.imagePullSecrets" . | nindent 6 }}
       securityContext:
         runAsNonRoot: true
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10
+      volumes:
+      - name: keptn-certs
+        secret:
+          secretName: keptn-certs
 {{- if .Values.lifecycleOperator.topologySpreadConstraints }}
       topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.topologySpreadConstraints "context" $) | nindent 8 }}
 {{- end }}
@@ -243,7 +250,7 @@ spec:
            port: 10259
            scheme: HTTPS
         {{- end }}
-      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
+      {{- include "scheduler.imagePullSecrets" . | nindent 6 }}
       serviceAccountName: keptn-scheduler
       volumes:
       - configMap:

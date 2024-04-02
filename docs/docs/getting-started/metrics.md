@@ -14,7 +14,7 @@ such as whether a rollout is good, or whether to scale up or down.
 
 Your observability data may come
 from multiple observability solutions --
-Prometheus, Dynatrace, Datadog and others --
+Prometheus, Thanos, Dynatrace, Datadog and others --
 or may be data that comes directly
 from your cloud provider such as AWS, Google, or Azure.
 The Keptn Metrics Server unifies and standardizes access to all this data.
@@ -29,8 +29,7 @@ Each has plugins but it is difficult to maintain them,
 especially if you are using multiple tools,
 and multiple observability platforms,
 and multiple instances of some tools or observability platforms.
-The Keptn metrics feature unites all these metrics
-integrates metrics from all these sources into a single set of metrics.
+The Keptn metrics feature unites metrics from all these sources into a single set.
 
 ## Using this exercise
 
@@ -188,7 +187,7 @@ $ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/simplenode-d
         "kind": "KeptnMetric",
         "namespace": "simplenode-dev",
         "name": "available-cpus",
-        "apiVersion": "metrics.keptn.sh/v1beta1"
+        "apiVersion": "metrics.keptn.sh/v1"
       },
       "metric": {
         "name": "available-cpus",

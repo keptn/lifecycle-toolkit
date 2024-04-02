@@ -15,7 +15,7 @@ global:
   ## @param global.certManagerEnabled Enable this value to install Keptn Certificate Manager
   certManagerEnabled: true
   ## @param global.imageRegistry Global Docker image registry
-  imageRegistry: ""
+  imageRegistry: "ghcr.io"
 
   ## @param global.imagePullSecrets Global Docker registry secret names as an array
   ## E.g.

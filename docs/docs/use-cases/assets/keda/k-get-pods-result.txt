@@ -1,0 +1,5 @@
+$ kubectl get pods -n podtato-kubectl
+NAME                                  READY   STATUS    RESTARTS   AGE
+podtato-head-entry-7796c8f786-4cdtc   1/1     Running   0          3m29s
+podtato-head-entry-7796c8f786-nsk2c   1/1     Running   0          2m41s
+podtato-head-entry-7796c8f786-qj85h   1/1     Running   0          2m41s

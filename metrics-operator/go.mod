@@ -3,29 +3,29 @@ module github.com/keptn/lifecycle-toolkit/metrics-operator
 go 1.21
 
 require (
-	github.com/DataDog/datadog-api-client-go/v2 v2.22.0
+	github.com/DataDog/datadog-api-client-go/v2 v2.24.0
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.4.1
 	github.com/gorilla/mux v1.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240214135802-4eeac278ce20
+	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240319133656-ce8192f64000
 	github.com/open-feature/go-sdk v1.10.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.18.0
 	github.com/prometheus/client_model v0.6.0
 	github.com/prometheus/common v0.47.0
-	github.com/stretchr/testify v1.8.4
-	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225
-	golang.org/x/net v0.21.0
+	github.com/stretchr/testify v1.9.0
+	golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8
+	golang.org/x/net v0.22.0
 	gopkg.in/inf.v0 v0.9.1
-	k8s.io/api v0.28.7
-	k8s.io/apiextensions-apiserver v0.28.7
-	k8s.io/apimachinery v0.28.7
-	k8s.io/apiserver v0.28.7
-	k8s.io/client-go v0.28.7
-	k8s.io/component-base v0.28.7
+	k8s.io/api v0.28.8
+	k8s.io/apiextensions-apiserver v0.28.8
+	k8s.io/apimachinery v0.28.8
+	k8s.io/apiserver v0.28.8
+	k8s.io/client-go v0.28.8
+	k8s.io/component-base v0.28.8
 	k8s.io/klog/v2 v2.120.1
-	k8s.io/metrics v0.28.7
+	k8s.io/metrics v0.28.8
 	sigs.k8s.io/controller-runtime v0.16.5
 	sigs.k8s.io/custom-metrics-apiserver v1.28.0
 	sigs.k8s.io/yaml v1.4.0
@@ -56,7 +56,7 @@ require (
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/cel-go v0.16.1 // indirect
 	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
@@ -94,11 +94,11 @@ require (
 	go.opentelemetry.io/proto/otlp v1.1.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.25.0 // indirect
-	golang.org/x/crypto v0.19.0 // indirect
+	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/oauth2 v0.16.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
-	golang.org/x/sys v0.17.0 // indirect
-	golang.org/x/term v0.17.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/term v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
@@ -107,11 +107,11 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20240102182953-50ed04b92917 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240102182953-50ed04b92917 // indirect
 	google.golang.org/grpc v1.61.1 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/kms v0.28.7 // indirect
+	k8s.io/kms v0.28.8 // indirect
 	k8s.io/kube-openapi v0.0.0-20230901164831-6c774f458599 // indirect
 	k8s.io/utils v0.0.0-20230726121419-3b25d923346b // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.1.2 // indirect
@@ -120,7 +120,9 @@ require (
 )
 
 replace (
+	github.com/golang/protobuf => github.com/golang/protobuf v1.5.4
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc => go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.49.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp => go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.49.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc => go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.24.0
+	google.golang.org/protobuf => google.golang.org/protobuf v1.33.0
 )

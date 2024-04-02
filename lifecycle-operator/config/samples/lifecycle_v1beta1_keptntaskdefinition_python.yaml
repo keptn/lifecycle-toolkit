@@ -3,7 +3,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: keptntaskdefinition-sample-py
 spec:
-  function:
+  python:
     inline:
       code: |
         print("hello");

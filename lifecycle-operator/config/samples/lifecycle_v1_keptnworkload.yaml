@@ -1,0 +1,19 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkload
+metadata:
+  name: keptnworkload-sample
+spec:
+  app: "some-keptn-app2"
+  version: "0.2.7"
+  preDeploymentTasks:
+    - pre-deployment-task
+  preDeploymentEvaluations:
+    - pre-deployment-evaluation
+  postDeploymentTasks:
+    - post-deployment-task
+  postDeploymentEvaluations:
+    - post-deployment-evaluation
+  resourceReference:
+    kind: ReplicaSet
+    name: my-replica-set
+    uid: 957f825e-4025-4ea8-ad22-9292877ff7eb

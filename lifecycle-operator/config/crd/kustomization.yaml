@@ -43,4 +43,14 @@ patches:
 # - path: patches/webhook_in_options_keptnconfigs.yaml
 # - path: patches/webhook_in_keptnappcreationrequests.yaml
 # -  path:  patches/webhook_in_lifecycle_keptnappcontexts.yaml
+#- patches/webhook_in_keptnapps.yaml
+#- patches/webhook_in_keptnappcontexts.yaml
+#- patches/webhook_in_keptnappcreationrequests.yaml
+#- patches/webhook_in_keptnappversions.yaml
+#- patches/webhook_in_keptnevaluations.yaml
+#- patches/webhook_in_keptnevaluationdefinitions.yaml
+#- patches/webhook_in_keptntasks.yaml
+#- patches/webhook_in_keptntaskdefinitions.yaml
+#- patches/webhook_in_keptnworkloads.yaml
+#- patches/webhook_in_keptnworkloadversions.yaml
 # +kubebuilder:scaffold:crdkustomizewebhookpatch

@@ -7,7 +7,7 @@ import (
 	"path"
 	"time"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -23,21 +23,21 @@ const LOAD = 100
 
 var _ = Describe("Load", Ordered, func() {
 	var (
-		apps        []*klcv1beta1.KeptnApp // Shelf is declared here
-		appVersions []*klcv1beta1.KeptnAppVersion
+		apps        []*apilifecycle.KeptnApp // Shelf is declared here
+		appVersions []*apilifecycle.KeptnAppVersion
 		metrics     Metric
 	)
 
 	BeforeEach(func() {
 		for i := 0; i < LOAD; i++ {
-			instance := &klcv1beta1.KeptnApp{
+			instance := &apilifecycle.KeptnApp{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      fmt.Sprintf("app-%d", i),
 					Namespace: "default",
 				},
-				Spec: klcv1beta1.KeptnAppSpec{
+				Spec: apilifecycle.KeptnAppSpec{
 					Version: "1.2.3",
-					Workloads: []klcv1beta1.KeptnWorkloadRef{
+					Workloads: []apilifecycle.KeptnWorkloadRef{
 						{
 							Name:    "app-wname",
 							Version: "2.0",

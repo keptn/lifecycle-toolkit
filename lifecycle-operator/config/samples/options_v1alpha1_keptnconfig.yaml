@@ -12,3 +12,5 @@ metadata:
 spec:
   OTelCollectorUrl: 'otel-collector:4317'
   keptnAppCreationRequestTimeoutSeconds: 30
+  blockDeployment: true
+  observabilityTimeout: 5m

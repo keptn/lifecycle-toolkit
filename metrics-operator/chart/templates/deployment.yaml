@@ -94,9 +94,11 @@ spec:
         volumeMounts:
         - mountPath: /tmp/metrics-adapter/serving-certs
           name: adapter-certs-dir
+        - name: keptn-certs
+          mountPath: /tmp/webhook/certs/ 
         {{- if .Values.livenessProbe }}
         livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.livenessProbe "context" $) | nindent 10 }}
-         {{- else }}
+        {{- else }}
         livenessProbe:
          httpGet:
            path: /healthz
@@ -106,7 +108,7 @@ spec:
         {{- end }}
         {{- if .Values.readinessProbe }}
         readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.readinessProbe "context" $) | nindent 10 }}
-         {{- else }}
+        {{- else }}
         readinessProbe:
          httpGet:
            path: /readyz
@@ -114,7 +116,7 @@ spec:
          initialDelaySeconds: 5
          periodSeconds: 10
         {{- end }}
-      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
+        {{- include "metricsOperator.imagePullSecrets" . | nindent 6 }}
       securityContext:
         runAsNonRoot: true
       serviceAccountName: metrics-operator
@@ -122,6 +124,9 @@ spec:
       volumes:
       - emptyDir: {}
         name: adapter-certs-dir
+      - name: keptn-certs
+        secret:
+          secretName: keptn-certs
 {{- if .Values.topologySpreadConstraints }}
       topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
 {{- end }}

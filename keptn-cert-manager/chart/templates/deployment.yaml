@@ -82,7 +82,7 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
         {{- end }}
-      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
+      {{- include "certManager.imagePullSecrets" . | nindent 6 }}
       securityContext:
         runAsNonRoot: true
       serviceAccountName: certificate-operator

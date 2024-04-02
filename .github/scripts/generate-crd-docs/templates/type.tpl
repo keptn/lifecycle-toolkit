@@ -8,6 +8,13 @@
 
 {{ $type.Doc }}
 
+{{ if $type.Validation -}}
+_Validation:_
+{{- range $type.Validation }}
+- {{ . }}
+{{- end }}
+{{- end }}
+
 {{ if $type.References -}}
 _Appears in:_
 {{- range $type.SortedReferences }}
@@ -16,11 +23,11 @@ _Appears in:_
 {{- end }}
 
 {{ if $type.Members -}}
-| Field | Description | Default | Optional |
-| --- | --- | --- | --- |
+| Field | Description | Default | Optional |Validation |
+| --- | --- | --- | --- | --- |
 {{ if $type.GVK -}}
-| `apiVersion` _string_ | `{{ $type.GVK.Group }}/{{ $type.GVK.Version }}` | | |
-| `kind` _string_ | `{{ $type.GVK.Kind }}` | | |
+| `apiVersion` _string_ | `{{ $type.GVK.Group }}/{{ $type.GVK.Version }}` | | | |
+| `kind` _string_ | `{{ $type.GVK.Kind }}` | | | |
 {{ end -}}
 
 {{ range $type.Members -}}
@@ -30,7 +37,7 @@ _Appears in:_
  {{ .Value -}}
 {{ end -}}
 {{ end -}}
-| {{ if index .Markers "optional" }}✓{{ else }}x{{ end }} |
+| {{ if index .Markers "optional" }}✓{{ else }}x{{ end }} | {{ range .Validation -}} {{ . }} <br />{{ end }} |
 {{ end }}
 
 {{- end -}}

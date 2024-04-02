@@ -1,0 +1,62 @@
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: metrics-keda
+spec:
+  steps:
+    - name: step-00
+      try:
+        - script:
+            content: |
+              kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.13.1/keda-2.13.1.yaml
+        - wait:
+            timeout: 1m
+            apiVersion: v1
+            kind: Pod
+            namespace: keda
+            selector: name=keda-operator
+            for:
+              condition:
+                name: ready
+        - apply:
+            file: 00-install.yaml
+        - apply:
+            file: mock-server.yaml
+        - apply:
+            file: metric.yaml
+            template: true
+        - apply:
+            file: scaledobject.yaml
+            template: true
+        - assert:
+            file: deployment.yaml
+      catch:
+        - podLogs:
+            selector: app=podtato-head
+        - podLogs:
+            namespace: keptn-system
+            selector: app=metrics-operator
+        - describe:
+            resource: keptnmetric
+            name: test
+        - describe:
+            resource: keptnmetricsprovider
+            name: my-provider
+        - describe:
+            resource: pods
+            selector: app=podtato-head
+        - describe:
+            resource: scaledobject
+            name: test-scaledobject
+      finally:
+        - script:
+            content: |
+              kubectl delete -f https://github.com/kedacore/keda/releases/download/v2.13.0/keda-2.13.0.yaml
+        - wait:
+            timeout: 1m
+            apiVersion: v1
+            kind: Pod
+            namespace: keda
+            selector: name=keda-operator
+            for:
+              deletion: {}

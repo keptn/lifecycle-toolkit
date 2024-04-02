@@ -5,7 +5,11 @@ on:
     # Run this once per day, towards the end of the day for keeping the most
     # recent data point most meaningful (hours are interpreted in UTC).
     - cron: "0 23 * * *"
-  workflow_dispatch: # Allow for running this manually.
+  workflow_dispatch:
+    # Allow for running this manually.
+
+    # Declare default permissions as read only.
+permissions: read-all
 
 jobs:
   snapshot:
@@ -14,7 +18,7 @@ jobs:
     steps:
       - name: run-ghrs
         # Use latest release.
-        uses: jgehrcke/github-repo-stats@v1.4.2
+        uses: jgehrcke/github-repo-stats@306db38ad131cab2aa5f2cd3062bf6f8aa78c1aa # v1.4.2
         with:
           databranch: github-repo-stats
           ghtoken: ${{ secrets.KEPTN_BOT_TOKEN }}

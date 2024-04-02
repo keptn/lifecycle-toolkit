@@ -9,7 +9,7 @@ status:
   availableReplicas: 2
   readyReplicas: 2
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnWorkload
 metadata:
   name: work-work
@@ -19,7 +19,7 @@ spec:
     stage: dev
 ---
 
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnWorkloadVersion
 metadata:
   name: work-work-0.4

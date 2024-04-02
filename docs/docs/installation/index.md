@@ -125,7 +125,8 @@ Some helpful hints:
 
 #### Install Keptn via Glasskube
 
-Glasskube is a package manager for Keptn that simplifies the installation process
+[Glasskube](https://glasskube.dev/)
+is a package manager for Keptn that simplifies the installation process
 and can be used to automatically upgrade Keptn to the latest version.
 For more information how to install Glasskube, see
 [Glasskube Installation](https://glasskube.dev/docs/getting-started/install/).

@@ -101,19 +101,19 @@ and start experimenting with Keptn from there.
 
 #### Create personal access token
 
-First, we need to create a personal access token for accessing the GitHub API.
+We need to create a personal access token for accessing the GitHub API.
 This token will be used by the container running the promotion
 task during the post-deployment phase of the `KeptnApp` within
 the `dev` stage.
 The container uses this access token to trigger a GitHub action
 that creates a pull request to promote the version that has
 been deployed from `dev` into `production`.
-By using GitHub actions rather than interacting directly with the Git repository in the container that executes the promotion
+Using GitHub actions rather than interacting directly with the Git repository in the container that executes the promotion
 step lets us avoid granting the container any write permissions to the
 repository.
 
-Instead, an access token with a restricted set of permissions can be used,
-se we can make use of GitHub's [fine-grained access tokens](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/)
+Instead, we use an access token with a restricted set of permissions,
+so we can use of GitHub's [fine-grained access tokens](https://github.blog/2022-10-18-introducing-fine-grained-personal-access-tokens-for-github/)
 to restrict the permissions to only be able to trigger workflow actions,
 exclusively within our GitOps repository.
 The required permissions are highlighted in the screenshot below:

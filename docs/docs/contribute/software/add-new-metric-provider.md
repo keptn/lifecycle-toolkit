@@ -95,7 +95,7 @@ The steps to create your own metrics provider are:
    [line](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/api/v1/keptnmetricsprovider_types.go#L29)
    to look like this
 
-    `// +kubebuilder:validation:Pattern:=prometheus|thanos|cortex|dynatrace|datadog|dql|placeholder`.
+    `// +kubebuilder:validation:Pattern:=cortex|datadog|dql|dynatrace|prometheus|thanos|placeholder`.
 
      In the metric-operator directory run `make generate manifests` to update the metrics-operator crd config
      Then modify the helm chart and the helm chart crd validation to match the update in the metrics-operator crd config

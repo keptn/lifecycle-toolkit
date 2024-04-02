@@ -10,7 +10,7 @@ spec:
             content: |
               kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.13.1/keda-2.13.1.yaml
         - wait:
-            timeout: 1m
+            timeout: 3m
             apiVersion: v1
             kind: Pod
             namespace: keda
@@ -33,6 +33,16 @@ spec:
       catch:
         - podLogs:
             selector: app=podtato-head
+        - describe:
+            resource: pods
+            selector: app=podtato-head
+        - podLogs:
+            namespace: keda
+            selector: name=keda-operator
+        - describe:
+            resource: pods
+            namespace: keda
+            selector: name=keda-operator
         - podLogs:
             namespace: keptn-system
             selector: app=metrics-operator
@@ -43,17 +53,16 @@ spec:
             resource: keptnmetricsprovider
             name: my-provider
         - describe:
-            resource: pods
-            selector: app=podtato-head
-        - describe:
             resource: scaledobject
             name: test-scaledobject
-      finally:
+    # remove keda in regular step, since in case of failure, we want to have the logs available
+    - name: step-01
+      try:
         - script:
             content: |
-              kubectl delete -f https://github.com/kedacore/keda/releases/download/v2.13.0/keda-2.13.0.yaml
+              kubectl delete -f https://github.com/kedacore/keda/releases/download/v2.13.1/keda-2.13.1.yaml
         - wait:
-            timeout: 1m
+            timeout: 3m
             apiVersion: v1
             kind: Pod
             namespace: keda

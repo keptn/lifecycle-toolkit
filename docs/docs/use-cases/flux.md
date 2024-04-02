@@ -12,12 +12,12 @@ This section shows an already existing use case of running
 [pre and post-deployment jobs with Flux](https://fluxcd.io/flux/use-cases/running-jobs/)
 and how Keptn makes it simpler and and more straight-forward.
 
-## High-level strucutre of the git repository
+## High-level structure of the git repository
 
 Since Flux uses a GitOps approach to continuous delivery, the git
 repository structure needs to look like the following:
 
-```
+```markdown
 ├── apps
 │   └── dev
 │       ├── podtato-head.yaml
@@ -36,7 +36,7 @@ The `apps` directory contains application manifests, that will be deployed.
 The `clusters` directory contains Flux configuration manifests and custom
 resources, that are needed for the delivery.
 `apps` and `clusters` directories can live in two separate repositories,
-but for simplicity of this excercise, we will keed them in a single one.
+but for simplicity of this excercise, we will keep them in a single one.
 
 ## Set up environment
 
@@ -44,7 +44,7 @@ Before starting, you need to install Flux CLI and Keptn.
 You can find the installation instructions of Keptn [here](./../installation/index.md)
 and for Flux [here](https://fluxcd.io/flux/installation/).
 
-After succesffully installing Flux CLI and Keptn, you need to
+After successfully installing Flux CLI and Keptn, you need to
 retrieve your git repository credentials.
 You can use any available git providers, but be sure to store your `token`
 for later usage.
@@ -105,7 +105,7 @@ setup with added observability out of the box.
 
 ## Set up continuous delivery for the application
 
-Firstly, we need to create a 
+Firstly, we need to create a
 [GitRepository](https://fluxcd.io/flux/components/source/gitrepositories/)
 Flux custom resource
 pointing to a repository where the application manifests are present.
@@ -132,7 +132,7 @@ Flux custom resource to deploy the `podtato-head` application to the cluster.
 You can create it using the Flux CLI:
 
 ```bash
-flux create kustomization podinfo \
+flux create kustomization podtato-head \
   --target-namespace=podtato-kubectl \
   --source=podtato-head \
   --path="./apps/dev" \
@@ -164,7 +164,7 @@ $ flux get kustomizations --watch
 
 NAME          REVISION             SUSPENDED  READY   MESSAGE
 flux-system   main@sha1:4e9c917f   False      True    Applied revision: main@sha1:4e9c917f
-podtato-head  main@sha1:44157ecd   False      True    Applied revision: main@sha1:44157ecd
+podtato-head  main@sha1:44154333   False      True    Applied revision: main@sha1:44154333
 
 ```
 

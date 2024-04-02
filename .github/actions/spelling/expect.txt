@@ -185,6 +185,7 @@ fieldpath
 fieldref
 finalizer
 flyout
+fluxcd
 fontawesome
 ftp
 fullname
@@ -207,6 +208,7 @@ ginkgotypes
 giscus
 Gitlab
 gitops
+gitrepository
 gke
 glasskube
 gms
@@ -223,6 +225,7 @@ goodanalysis
 goodmetric
 goodtaskdefinition
 google
+gotk
 govulncheck
 Grabner
 grafana

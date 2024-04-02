@@ -29,7 +29,7 @@ or restart applications using Keptn.
 
 ## Analysis
 
-- [Analysis](slo.md) - Validate your deployments with Keptn Analysis using SLIs and SLOs.
+- [Analysis with Keptn](slo.md) - Validate your deployments with Keptn Analysis using SLIs and SLOs.
 - [Evaluations in Keptn](evaluations.md) - Discover how Keptn conducts evaluations to assess the
 performance and quality of your deployments.
 

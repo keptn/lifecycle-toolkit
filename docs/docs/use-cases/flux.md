@@ -5,16 +5,16 @@ comments: true
 # Deploying Applications with Flux and Keptn
 
 Flux is a tool that keeps Kubernetes clusters synchronized with sources
-of configuration (such as Git repositories) and automate updates to
+of configuration (such as Git repositories) and automates updates to
 configuration when new code is deployed.
 
 This section shows how to add Keptn to an existing Flux use case that runs
 [pre and post-deployment jobs with Flux](https://fluxcd.io/flux/use-cases/running-jobs/)
-to make it simpler and and more straight-forward.
+to make it simpler and more straight-forward.
 
-## High-level structure of the git repository
+## High-level structure of the Git repository
 
-Since Flux uses a GitOps approach for continuous delivery, the git
+Since Flux uses a GitOps approach for continuous delivery, the Git
 repository structure for our use case looks like the following:
 
 ```markdown
@@ -38,17 +38,17 @@ resources, that are needed for the delivery.
 `apps` and `clusters` directories can live in two separate repositories,
 but for simplicity of this excercise, we will keep them in a single one.
 
-## Set up environment
+## Set up your environment
 
 Before we start, you need to install Flux CLI and Keptn.
-You can find the installation instructions for Keptn [here](./../installation/index.md)
+You can find the installation instructions for Keptn [here](../installation/index.md)
 and for Flux [here](https://fluxcd.io/flux/installation/).
 
 After successfully installing Flux CLI and Keptn, you need to
 retrieve your Git repository credentials.
 You can use any available Git providers, but be sure to store your `token`
 for later usage.
-For simplicity, we will use `GitHub`.
+For simplicity, we will use GitHub.
 
 You also need to install Flux in your cluster.
 This requires
@@ -56,7 +56,7 @@ This requires
 to set up all necessary Flux structures in the repository.
 Use the following command to do this:
 
-```bash
+```shell
 GITHUB_USER=<user-name> GITHUB_TOKEN=<token> \
 flux bootstrap github \
   --owner=$GITHUB_USER \
@@ -68,18 +68,18 @@ flux bootstrap github \
 
 The bootstrap command above does the following:
 
-* Creates a git repository `podtato-head` on your `GitHub` account.
+* Creates a Git repository `podtato-head` on your GitHub account.
 * Adds Flux component manifests to the repository -
 creates `./clusters/dev/flux-system/*` structure.
 * Deploys Flux components to your Kubernetes Cluster.
 * Configures Flux components to track the path `./clusters/dev/` in the repository.
 
-## Creating application
+## Creating the application
 
 Now it's time to add the application together with pre- and
-post-deployments checks to the repository.
+post-deployment checks to the repository.
 
-Firstly, clone the `podtato-head` repository to your local machine.
+First, clone the `podtato-head` repository to your local machine.
 
 Add the following manifests that represent the application into the  `podtato-head.yaml` file
 and store it in the `./apps/dev/` directory of your repository:
@@ -96,7 +96,6 @@ Additionally, create a `kustomize.yaml` file right next to it:
 
 You can commit and push these manifests to the Git repository.
 
-> **Note**
 The application has Keptn pre- and post-deployment tasks defined
 in the manifests.
 This enhances the
@@ -105,14 +104,14 @@ setup with added observability out of the box.
 
 ## Set up continuous delivery for the application
 
-Firstly, we need to create a Flux
+First, we need to create a Flux
 [GitRepository](https://fluxcd.io/flux/components/source/gitrepositories/)
 resource
 pointing to a repository where the application manifests are present.
 In this case, it will be our `podtato-head` repository.
 To create this resource, we use Flux CLI:
 
-```bash
+```shell
 flux create source git podtato-head \
   --url=<git-repo-url> \
   --branch=main \
@@ -131,7 +130,7 @@ In the last step, create a Flux
 resource to deploy the `podtato-head` application to the cluster.
 You can create it using the Flux CLI:
 
-```bash
+```shell
 flux create kustomization podtato-head \
   --target-namespace=podtato-kubectl \
   --source=podtato-head \
@@ -150,7 +149,7 @@ which results in output similar to:
 {% include "./assets/flux/flux-kustomization.yaml" %}
 ```
 
-Now commit and push the resources you created in the recent steps.
+Now, commit and push the resources you created in the recent steps.
 After pushing them, Flux picks up the configuration and
 deploys your application into the cluster.
 
@@ -159,13 +158,12 @@ deploys your application into the cluster.
 You can watch the synchronization of the application
 using the Flux CLI:
 
-```bash
+```shell
 $ flux get kustomizations --watch
 
 NAME          REVISION             SUSPENDED  READY   MESSAGE
 flux-system   main@sha1:4e9c917f   False      True    Applied revision: main@sha1:4e9c917f
 podtato-head  main@sha1:44154333   False      True    Applied revision: main@sha1:44154333
-
 ```
 
 or using `kubectl`:
@@ -182,7 +180,7 @@ synced to the cluster.
 
 ## Possible follow-ups
 
-You can also set up a multi-stage delivery with Flux,
+You can also set up multi-stage delivery with Flux,
 following the steps described for `ArgoCD` in the
 [ArgoCD multi-stage delivery with Keptn](../guides/multi-stage-application-delivery.md)
 user guide.

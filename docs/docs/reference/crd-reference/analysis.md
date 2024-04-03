@@ -4,17 +4,21 @@ comments: true
 
 # Analysis
 
-An `Analysis` resource customizes the templates
-that are defined in an
+An `Analysis` is a snapshot of your current application status.
+Based on your defined SLIs, it can validate that your SLOs are satisfied,
+using the data coming from your defined set of `KeptnMetricsProvider` resources.
+
+The `Analysis` resource is an instance of an
 [AnalysisDefinition](analysisdefinition.md) resource
-by identifying the time for which the analysis should be done
+which defines specific data like
+the time for which the analysis should be done
 and the appropriate values to use for variables
 that are used in the `AnalysisDefinition` query.
 
 ## Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: Analysis
 metadata:
   name: <name-of-analysis>
@@ -72,17 +76,17 @@ status:
             If the namespace is not specified,
             the analysis controller looks for the `AnalysisDefinition` resource
             in the same namespace as the `Analysis` resource.
-    - **status** -- results of this Analysis run,
-       added to the resource by Keptn,
-       based on criteria defined in the `AnalysisDefinition` resource.
+- **status** -- results of this Analysis run,
+   added to the resource by Keptn,
+   based on criteria defined in the `AnalysisDefinition` resource.
 
-        - **warning** -- Whether the analysis returned a warning.
-        - **raw** --  String-encoded JSON object that reports the results
-            of evaluating one or more objectives or metrics.
-            See
-            [Interpreting Analysis results](#interpreting-analysis-results)
-            for details.
-        - **state** -- Set to `Completed` or `Progressing` as appropriate.
+    - **warning** -- Whether the analysis returned a warning.
+    - **raw** --  String-encoded JSON object that reports the results
+        of evaluating one or more objectives or metrics.
+        See
+        [Interpreting Analysis results](#interpreting-analysis-results)
+        for details.
+    - **state** -- Set to `Completed` or `Progressing` as appropriate.
 
 ## Interpreting Analysis results
 
@@ -221,18 +225,6 @@ each representing the results of a specific objective or performance metric.
     - **`value`** -- Indicates the actual value measured for this objective (value: 0).
     - **`score`** -- Indicates the score assigned to this objective (score: 1).
 
-- The second item in the array:
-    - **`result`** -- Similar to the first objective,
-      it checks whether a value is greater than 0 and has not been fulfilled (`fulfilled: false`).
-      There are no warning conditions in this case.
-    - **`objective`** -- Describes the objective related to error rate analysis.
-        - **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`error-rate`).
-        - **`target`** -- Sets the target value for failure (failure occurs if the value is greater than 0).
-        - **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
-        - **`keyObjective`** -- Indicates that this is a key objective (true).
-    - **`value`** -- Indicates the actual value measured for this objective (value: 0).
-    - **`score`** -- Indicates the score assigned to this objective (score: 1).
-
 **`totalScore`** -- Represents the total score achieved based on the objectives evaluated (totalScore: 2).
 
 **`maximumScore`** -- Indicates the maximum possible score (maximumScore: 2).
@@ -308,7 +300,7 @@ guide page.
 
 ## Files
 
-API reference: [Analysis](../api-reference/metrics/v1beta1/index.md#analysis)
+API reference: [Analysis](../api-reference/metrics/v1/index.md#analysis)
 
 ## Differences between versions
 

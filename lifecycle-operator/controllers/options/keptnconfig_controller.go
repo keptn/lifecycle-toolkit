@@ -76,6 +76,8 @@ func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	// reconcile config values
 	r.config.SetCreationRequestTimeout(time.Duration(cfg.Spec.KeptnAppCreationRequestTimeoutSeconds) * time.Second)
 	r.config.SetCloudEventsEndpoint(cfg.Spec.CloudEventsEndpoint)
+	r.config.SetBlockDeployment(cfg.Spec.BlockDeployment)
+	r.config.SetObservabilityTimeout(cfg.Spec.ObservabilityTimeout)
 	result, err := r.reconcileOtelCollectorUrl(cfg)
 	if err != nil {
 		return result, err

@@ -62,7 +62,7 @@ to ensure that all tests are still passing.
 
 When your PR has the appropriate approvals,
 it will be merged and the revised content should be published on the
-website (as part of the `development` release)
+website (as part of the `latest` release)
 within a few minutes.
 You can now delete your local branch with the following command:
 

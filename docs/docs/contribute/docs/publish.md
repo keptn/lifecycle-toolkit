@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Published Doc Structure
+# Published doc structure
 
 New writing goes to the `main` branch and can be viewed on the Keptn website under the `latest` version.
 We have staging and production levels for our documentation which are as follows:

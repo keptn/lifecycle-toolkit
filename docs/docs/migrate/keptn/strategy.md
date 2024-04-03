@@ -54,11 +54,13 @@ Some key points:
     defined for Keptn.
 
 * Keptn is not a delivery tool
-  because it does not provide promotion.
-  Instead, it works with standard deployment tools
+  but it does provide a possibility to promote software
+  to another stage in a staged environment
+  which works with standard deployment tools
   such as ArgoCD, Flux, even `kubectl apply`.
-  Keptn then prevents the scheduling and deployment
-  of workflows if the environment does not meet
+  Keptn complements these tools by preventing the
+  scheduling and deployment of workflows
+  if the environment does not meet
   the user-defined requirements.
 
 * Keptn operates on a
@@ -267,7 +269,7 @@ Keptn v1
 [SLIs](https://v1.keptn.sh/docs/1.0.x/reference/files/sli/)
 (Service Level Indicators)
 represent queries from the data provider
-such as Prometheus, Dynatrace, or Datadog,
+such as Prometheus, Thanos, Cortex, Dynatrace, or Datadog,
 which is configured as a Keptn integration.
 
 When migrating to Keptn, you need to define a

@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"
@@ -138,35 +138,35 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 		{
 			name: "related WorkloadVersion is completed",
 			objects: []client.Object{
-				&klcv1beta1.KeptnWorkloadVersion{
+				&apilifecycle.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "my-wlv",
 						Namespace: "my-namespace",
 					},
-					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
-							ResourceReference: klcv1beta1.ResourceReference{
+					Spec: apilifecycle.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
+							ResourceReference: apilifecycle.ResourceReference{
 								UID: podMeta.OwnerReferences[0].UID,
 							},
 						},
 					},
-					Status: klcv1beta1.KeptnWorkloadVersionStatus{DeploymentStatus: apicommon.StateSucceeded},
+					Status: apilifecycle.KeptnWorkloadVersionStatus{DeploymentStatus: apicommon.StateSucceeded},
 				},
-				&klcv1beta1.KeptnWorkloadVersion{
+				&apilifecycle.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "my-other-wlv",
 						Namespace: "my-namespace",
 					},
-					Spec: klcv1beta1.KeptnWorkloadVersionSpec{},
+					Spec: apilifecycle.KeptnWorkloadVersionSpec{},
 				},
-				&klcv1beta1.KeptnWorkloadVersion{
+				&apilifecycle.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "my-wlv",
 						Namespace: "my-other-namespace",
 					},
-					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
-							ResourceReference: klcv1beta1.ResourceReference{
+					Spec: apilifecycle.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
+							ResourceReference: apilifecycle.ResourceReference{
 								UID: podMeta.OwnerReferences[0].UID,
 							},
 						},
@@ -194,19 +194,19 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 		{
 			name: "related WorkloadVersion is completed - error during update",
 			objects: []client.Object{
-				&klcv1beta1.KeptnWorkloadVersion{
+				&apilifecycle.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "my-wlv",
 						Namespace: "my-namespace",
 					},
-					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
-							ResourceReference: klcv1beta1.ResourceReference{
+					Spec: apilifecycle.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
+							ResourceReference: apilifecycle.ResourceReference{
 								UID: podMeta.OwnerReferences[0].UID,
 							},
 						},
 					},
-					Status: klcv1beta1.KeptnWorkloadVersionStatus{DeploymentStatus: apicommon.StateSucceeded},
+					Status: apilifecycle.KeptnWorkloadVersionStatus{DeploymentStatus: apicommon.StateSucceeded},
 				},
 				&v1.Pod{
 					ObjectMeta: podMeta,
@@ -231,19 +231,19 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 		{
 			name: "related WorkloadVersion is not completed",
 			objects: []client.Object{
-				&klcv1beta1.KeptnWorkloadVersion{
+				&apilifecycle.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "my-wlv",
 						Namespace: "my-namespace",
 					},
-					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
-							ResourceReference: klcv1beta1.ResourceReference{
+					Spec: apilifecycle.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
+							ResourceReference: apilifecycle.ResourceReference{
 								UID: podMeta.OwnerReferences[0].UID,
 							},
 						},
 					},
-					Status: klcv1beta1.KeptnWorkloadVersionStatus{DeploymentStatus: apicommon.StatePending},
+					Status: apilifecycle.KeptnWorkloadVersionStatus{DeploymentStatus: apicommon.StatePending},
 				},
 				&v1.Pod{
 					ObjectMeta: podMeta,
@@ -267,7 +267,7 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := klcv1beta1.AddToScheme(scheme.Scheme)
+			err := apilifecycle.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			opts := zap.Options{
 				Development: true,
@@ -277,8 +277,8 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 				NewClientBuilder().
 				WithScheme(scheme.Scheme).
 				WithObjects(tt.objects...).
-				WithStatusSubresource(&klcv1beta1.KeptnWorkloadVersion{}).
-				WithIndex(&klcv1beta1.KeptnWorkloadVersion{}, ".spec.resourceReference.uid", func(object client.Object) []string {
+				WithStatusSubresource(&apilifecycle.KeptnWorkloadVersion{}).
+				WithIndex(&apilifecycle.KeptnWorkloadVersion{}, ".spec.resourceReference.uid", func(object client.Object) []string {
 					return common.KeptnWorkloadVersionResourceRefUIDIndexFunc(object)
 				}).
 				WithInterceptorFuncs(
@@ -298,7 +298,7 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 				Build()
 
 			for _, obj := range tt.objects {
-				kwv, ok := obj.(*klcv1beta1.KeptnWorkloadVersion)
+				kwv, ok := obj.(*apilifecycle.KeptnWorkloadVersion)
 				if ok && kwv.Status.DeploymentStatus != "" {
 					err := mockClient.Status().Update(context.TODO(), kwv)
 					require.Nil(t, err)
@@ -332,6 +332,69 @@ func TestSchedulingGatesReconciler_Reconcile(t *testing.T) {
 				require.Empty(t, resultingPod.Spec.SchedulingGates)
 				require.Equal(t, "true", resultingPod.Annotations[apicommon.SchedulingGateRemoved])
 			}
+		})
+	}
+}
+
+func TestHasKeptnSchedulingGate(t *testing.T) {
+	tests := []struct {
+		name    string
+		pod     *v1.Pod
+		hasGate bool
+	}{
+		{
+			name: "PodWithKeptnSchedulingGate",
+			pod: &v1.Pod{
+				Spec: v1.PodSpec{
+					SchedulingGates: []v1.PodSchedulingGate{
+						{
+							Name: apicommon.KeptnGate,
+						},
+					},
+				},
+			},
+			hasGate: true,
+		},
+		{
+			name:    "PodWithoutSchedulingGate",
+			pod:     &v1.Pod{},
+			hasGate: false,
+		},
+		{
+			name: "PodWithOtherSchedulingGates",
+			pod: &v1.Pod{
+				Spec: v1.PodSpec{
+					SchedulingGates: []v1.PodSchedulingGate{
+						{
+							Name: "other-gate",
+						},
+					},
+				},
+			},
+			hasGate: false,
+		},
+		{
+			name: "PodWithKeptnAndOtherSchedulingGates",
+			pod: &v1.Pod{
+				Spec: v1.PodSpec{
+					SchedulingGates: []v1.PodSchedulingGate{
+						{
+							Name: apicommon.KeptnGate,
+						},
+						{
+							Name: "other-gate",
+						},
+					},
+				},
+			},
+			hasGate: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			hasGate := hasKeptnSchedulingGate(tt.pod)
+			require.Equal(t, tt.hasGate, hasGate)
 		})
 	}
 }

@@ -10,9 +10,9 @@ who may not have `make` installed.
 It is also useful for Linux and MacOS users
 who may not wish to download tools just to contribute to docs.
 
-Review [this video](https://www.youtube.com/watch?v=sFNzOhZw7Eg) to see how this works.
+Review [this video](https://www.youtube.com/watch?v=HdiXPgvfgQw) to see how this works.
 
-[![Keptn + GitHub codespaces video](https://img.youtube.com/vi/sFNzOhZw7Eg/0.jpg)](https://www.youtube.com/watch?v=sFNzOhZw7Eg)
+[![Keptn + GitHub codespaces video](https://i.ytimg.com/vi/HdiXPgvfgQw/hqdefault.jpg)](https://www.youtube.com/watch?v=HdiXPgvfgQw)
 
 As shown in the video, the steps to set up a new Codespace are:
 
@@ -29,6 +29,21 @@ to develop software or documentation for Keptn.
 
 The interface is similar to that of
 [Visual Studio Code](https://code.visualstudio.com/).
+
+The only additional tool required for software development is [Kustomize](https://kustomize.io/),
+which is a Kubernetes configuration transformation tool.
+To install it, simply change your directory to the workspace
+as shown in the video and copy and paste the below-mentioned two commands.
+The first command downloads the precompiled binary of Kustomize;
+the second command grants the necessary permissions to the tool and sets the path.
+You can always download the latest binaries from the official [Kustomize GitHub repository](https://github.com/kubernetes-sigs/kustomize/releases).
+
+```bash
+
+curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+
+sudo install -o root -g root -m 0755 kustomize /usr/local/bin/kustomize
+```
 
 To develop or modify software or documentation, the steps are:
 

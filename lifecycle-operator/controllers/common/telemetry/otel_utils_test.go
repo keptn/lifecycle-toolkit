@@ -158,6 +158,7 @@ func TestSetUpKeptnTaskMeters(t *testing.T) {
 	require.NotNil(t, got.AppDuration)
 	require.NotNil(t, got.EvaluationCount)
 	require.NotNil(t, got.EvaluationDuration)
+	require.NotNil(t, got.PromotionCount)
 }
 
 func TestSetUpKeptnTaskMeters_ErrorCase(t *testing.T) {
@@ -189,6 +190,7 @@ func TestSetUpKeptnTaskMeters_ErrorCase(t *testing.T) {
 	require.Nil(t, got.AppDuration)
 	require.Nil(t, got.EvaluationCount)
 	require.Nil(t, got.EvaluationDuration)
+	require.Nil(t, got.PromotionCount)
 }
 
 func Test_otelConfig_GetTracer(t *testing.T) {

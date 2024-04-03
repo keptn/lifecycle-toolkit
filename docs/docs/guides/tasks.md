@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Deployment tasks
+# Deployment Tasks with Keptn
 
 A
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
@@ -11,7 +11,7 @@ resource defines one or more "executables"
 that Keptn runs
 as part of the pre- and post-deployment phases of a
 [KeptnApp](../reference/crd-reference/app.md) or
-[KeptnWorkload](../reference/api-reference/lifecycle/v1beta1/index.md#keptnworkload).
+[KeptnWorkload](../reference/api-reference/lifecycle/v1/index.md#keptnworkload).
 
 - pre-deployment (before the pod is scheduled)
 - post-deployment (after the pod is scheduled)
@@ -22,7 +22,7 @@ These `KeptnTask` resources and the
 are part of the Keptn Release Lifecycle Management.
 
 A
-[KeptnTask](../reference/api-reference/lifecycle/v1beta1/index.md#keptntask)
+[KeptnTask](../reference/api-reference/lifecycle/v1/index.md#keptntask)
 executes as a runner in an application
 [container](https://kubernetes.io/docs/concepts/containers/),
 which runs as part of a Kubernetes
@@ -243,8 +243,15 @@ your workloads and tasks in a `KeptnApp` (for instance a commit ID value).
 To do so, the metadata needs to be specified for the workload or for the application.
 Follow our guide on [Context and Metadata here](./metadata.md).
 
-For an example of how to access the `KEPTN_CONTEXT`, follow our
-[reference page](../reference/crd-reference/taskdefinition.md#example-6-accessing-keptn_context-environment-variable-in-a-deno-task)
+<!-- markdownlint-disable MD046 max-one-sentence-per-line-->
+
+!!! note
+
+    For an example of how to access the `KEPTN_CONTEXT`, follow our reference page examples
+    [for deno](../reference/crd-reference/taskdefinition.md#accessing-keptn_context-in-a-deno-task)
+    and [for python](../reference/crd-reference/taskdefinition.md#accessing-keptn_context-in-a-python-task).
+
+<!-- markdownlint-enable MD046 max-one-sentence-per-line-->
 
 ## Parameterized functions
 

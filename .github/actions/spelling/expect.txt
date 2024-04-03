@@ -1,6 +1,7 @@
 activemetricsobject
 addprefix
 afero
+agardner
 agg
 Akshay
 alices
@@ -30,6 +31,7 @@ annadreal
 apicommon
 apierr
 apierrors
+apilifecycle
 apiservice
 APIURL
 apk
@@ -38,6 +40,7 @@ appcreationrequest
 APPNAME
 appv
 appversion
+applicationdeployment
 aquasecurity
 architecting
 ARCHS
@@ -84,10 +87,10 @@ clt
 clusterrole
 clusterrolebinding
 cmp
-CNCF
+cncf
 codecov
+codeql
 codespace
-commonannotation
 COMMONENVVAR
 configmap
 configmapref
@@ -101,6 +104,7 @@ controlleroptions
 controllerutil
 coredns
 CORS
+cortex
 coverpkg
 coverprofile
 cowsay
@@ -142,6 +146,7 @@ deploymentstate
 deploymenttrace
 dflags
 distroless
+dnf
 Dockerfiles
 docsy
 donath
@@ -179,6 +184,7 @@ fakeclient
 fetchintervalseconds
 fieldpath
 fieldref
+finalizer
 flyout
 fontawesome
 ftp
@@ -201,12 +207,15 @@ ghtoken
 ginkgotypes
 giscus
 Gitlab
+gitops
 gke
+glasskube
 gms
 GOBIN
 gocognit
 gocyclo
 gofmt
+GOGC
 golangci
 gomega
 gomod
@@ -222,7 +231,9 @@ graphql
 groupversion
 GSo
 gstatic
+gtm
 GVK
+GVKR
 healthz
 hellopy
 helloworldtask
@@ -322,6 +333,7 @@ keptnmetricstatus
 keptnprommetrics
 keptnsandbox
 keptnserver
+keptnstate
 keptntask
 keptntaskdefinition
 keptntaskdefinitionlist
@@ -364,18 +376,21 @@ kubeutils
 kustomization
 kustomize
 kustomizeconfig
+kwds
 kwi
 kwv
 kyverno
 lastword
 Lato
 LFC
+libexpat
 Lifcycle
 lifecyclekeptnsh
 linenums
 linkedin
 linkedtrace
 livenessprobe
+loadtests
 LOCALBIN
 logf
 logr
@@ -395,6 +410,7 @@ metricsobject
 metricsprovider
 metricsserver
 metricstypes
+Miglinci
 mindepth
 minio
 mkdocs
@@ -404,10 +420,10 @@ moq
 mowies
 mpod
 multigroup
-multipe
 mutatingwebhookconfigurations
 mwc
 mwh
+myblog
 mycert
 mydata
 myhost
@@ -451,7 +467,9 @@ opentracing
 operatorcommon
 operatorvalue
 optionskeptnsh
+ossf
 otel
+otelcol
 otelprom
 otelsdk
 otelurl
@@ -464,12 +482,15 @@ overriden
 owide
 oyaml
 PARAMSx
+PDTR
 perc
 persistentvolumeclaims
 persistentvolumes
 phaseitem
+phasetraceid
 pid
 pipefail
+pmig
 poc
 poddisruptionbudgets
 podgroups
@@ -517,6 +538,7 @@ resourcereference
 Rexed
 rgb
 RLock
+roadmap
 rolebinding
 rollme
 roundtripper
@@ -528,7 +550,9 @@ runsendevent
 runtimes
 runtimespec
 Sambhav
+sampleuser
 sbom
+scaledobject
 schedulinggates
 sclient
 screenshot
@@ -542,6 +566,7 @@ sendserviceaccount
 serrors
 serviceaccount
 serviceaccountspec
+serviceapp
 serviceport
 setuptools
 Shandilya
@@ -601,6 +626,7 @@ testcommon
 testmetrics
 testreg
 tgz
+thanos
 thisthatdc
 thschue
 timeblock
@@ -645,7 +671,6 @@ visualise
 visualised
 vkeptnmetric
 vkeptntaskdefinition
-vmyversion
 vnd
 vwc
 vwh

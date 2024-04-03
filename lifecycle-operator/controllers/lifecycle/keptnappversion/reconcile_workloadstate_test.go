@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	lfcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -13,12 +13,12 @@ import (
 
 //nolint:dogsled
 func TestKeptnAppVersionReconciler_reconcileWorkloads_noWorkloads(t *testing.T) {
-	appVersion := &lfcv1beta1.KeptnAppVersion{
+	appVersion := &apilifecycle.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "appversion",
 			Namespace: "default",
 		},
-		Spec: lfcv1beta1.KeptnAppVersionSpec{
+		Spec: apilifecycle.KeptnAppVersionSpec{
 			AppName: "app",
 		},
 	}
@@ -36,14 +36,14 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads_noWorkloads(t *testing.T) 
 
 //nolint:dogsled
 func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
-	appVersion := &lfcv1beta1.KeptnAppVersion{
+	appVersion := &apilifecycle.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "appversion",
 			Namespace: "default",
 		},
-		Spec: lfcv1beta1.KeptnAppVersionSpec{
-			KeptnAppSpec: lfcv1beta1.KeptnAppSpec{
-				Workloads: []lfcv1beta1.KeptnWorkloadRef{
+		Spec: apilifecycle.KeptnAppVersionSpec{
+			KeptnAppSpec: apilifecycle.KeptnAppSpec{
+				Workloads: []apilifecycle.KeptnWorkloadRef{
 					{
 						Name:    "workload",
 						Version: "ver1",
@@ -65,9 +65,9 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StatePending, appVersion.Status.WorkloadOverallStatus)
 	require.Len(t, appVersion.Status.WorkloadStatus, 1)
-	require.Equal(t, []lfcv1beta1.WorkloadStatus{
+	require.Equal(t, []apilifecycle.WorkloadStatus{
 		{
-			Workload: lfcv1beta1.KeptnWorkloadRef{
+			Workload: apilifecycle.KeptnWorkloadRef{
 				Name:    "workload",
 				Version: "ver1",
 			},
@@ -77,13 +77,13 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 
 	// Creating WorkloadInstace that is not part of the App -> should stay Pending
 
-	wi1 := &lfcv1beta1.KeptnWorkloadVersion{
+	wi1 := &apilifecycle.KeptnWorkloadVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "workload",
 			Namespace: "default",
 		},
-		Spec: lfcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: lfcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				AppName: "app2",
 			},
 		},
@@ -100,9 +100,9 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StatePending, appVersion.Status.WorkloadOverallStatus)
 	require.Len(t, appVersion.Status.WorkloadStatus, 1)
-	require.Equal(t, []lfcv1beta1.WorkloadStatus{
+	require.Equal(t, []apilifecycle.WorkloadStatus{
 		{
-			Workload: lfcv1beta1.KeptnWorkloadRef{
+			Workload: apilifecycle.KeptnWorkloadRef{
 				Name:    "workload",
 				Version: "ver1",
 			},
@@ -112,13 +112,13 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 
 	// Creating WorkloadVersion of App with progressing state -> appVersion should be Progressing
 
-	wi2 := &lfcv1beta1.KeptnWorkloadVersion{
+	wi2 := &apilifecycle.KeptnWorkloadVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "app-workload-ver1",
 			Namespace: "default",
 		},
-		Spec: lfcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: lfcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				AppName: "app",
 			},
 		},
@@ -142,9 +142,9 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateProgressing, appVersion.Status.WorkloadOverallStatus)
 	require.Len(t, appVersion.Status.WorkloadStatus, 1)
-	require.Equal(t, []lfcv1beta1.WorkloadStatus{
+	require.Equal(t, []apilifecycle.WorkloadStatus{
 		{
-			Workload: lfcv1beta1.KeptnWorkloadRef{
+			Workload: apilifecycle.KeptnWorkloadRef{
 				Name:    "workload",
 				Version: "ver1",
 			},
@@ -169,9 +169,9 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateSucceeded, appVersion.Status.WorkloadOverallStatus)
 	require.Len(t, appVersion.Status.WorkloadStatus, 1)
-	require.Equal(t, []lfcv1beta1.WorkloadStatus{
+	require.Equal(t, []apilifecycle.WorkloadStatus{
 		{
-			Workload: lfcv1beta1.KeptnWorkloadRef{
+			Workload: apilifecycle.KeptnWorkloadRef{
 				Name:    "workload",
 				Version: "ver1",
 			},
@@ -182,14 +182,14 @@ func TestKeptnAppVersionReconciler_reconcileWorkloads(t *testing.T) {
 
 //nolint:dogsled
 func TestKeptnAppVersionReconciler_handleUnaccessibleWorkloadVersionList(t *testing.T) {
-	appVersion := &lfcv1beta1.KeptnAppVersion{
+	appVersion := &apilifecycle.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "appversion",
 			Namespace: "default",
 		},
-		Spec: lfcv1beta1.KeptnAppVersionSpec{
-			KeptnAppSpec: lfcv1beta1.KeptnAppSpec{
-				Workloads: []lfcv1beta1.KeptnWorkloadRef{
+		Spec: apilifecycle.KeptnAppVersionSpec{
+			KeptnAppSpec: apilifecycle.KeptnAppSpec{
+				Workloads: []apilifecycle.KeptnWorkloadRef{
 					{
 						Name:    "workload",
 						Version: "ver1",
@@ -208,9 +208,9 @@ func TestKeptnAppVersionReconciler_handleUnaccessibleWorkloadVersionList(t *test
 	require.Nil(t, err)
 	require.Equal(t, apicommon.StateUnknown, appVersion.Status.WorkloadOverallStatus)
 	require.Len(t, appVersion.Status.WorkloadStatus, 1)
-	require.Equal(t, []lfcv1beta1.WorkloadStatus{
+	require.Equal(t, []apilifecycle.WorkloadStatus{
 		{
-			Workload: lfcv1beta1.KeptnWorkloadRef{
+			Workload: apilifecycle.KeptnWorkloadRef{
 				Name:    "workload",
 				Version: "ver1",
 			},

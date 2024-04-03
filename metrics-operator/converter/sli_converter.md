@@ -2,7 +2,7 @@
 
 SLI converter is a tool to convert the old `sli.yaml`
 [file format](https://github.com/keptn/spec/blob/master/service_level_indicator.md) into the new
-`AnalysisValueTemplate` [custom resource definition](https://keptn.sh/latest/docs/reference/api-reference/metrics/v1beta1/).
+`AnalysisValueTemplate` [custom resource definition](https://keptn.sh/latest/docs/reference/api-reference/metrics/v1/).
 The converter is part of `metrics-operator` image.
 
 ## Usage
@@ -13,7 +13,7 @@ To run the converter, execute the following command:
 
 <!---x-release-please-start-version-->
 ```shell
-METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.9.1
+METRICS_OPERATOR_IMAGE=ghcr.io/keptn/metrics-operator:v0.9.3
 PATH_TO_SLI=<PATH_TO_SLI>
 KEPTN_PROVIDER_NAME=<KEPTN_PROVIDER_NAME>
 KEPTN_PROVIDER_NAMESPACE=<KEPTN_PROVIDER_NAMESPACE>
@@ -54,7 +54,7 @@ will be converted to:
 
 ```yaml
 ---
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisValueTemplate
 metadata:
   creationTimestamp: null
@@ -65,7 +65,7 @@ spec:
     namespace: keptn
   query: builtin:service.response.time:merge(0):percentile(95)?scope=tag(keptn_project:{{.project}}),tag(keptn_stage:{{.stage}}),tag(keptn_service:{{.service}}),tag(keptn_deployment:{{.deployment}})
 ---
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisValueTemplate
 metadata:
   creationTimestamp: null

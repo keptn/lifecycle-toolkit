@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# OpenTelemetry observability
+# OpenTelemetry Observability
 
 Keptn makes any Kubernetes deployment observable.
 In other words, it creates a distributed, end-to-end trace
@@ -160,6 +160,20 @@ kubectl port-forward deployment/metrics-operator 9999 -n keptn-system
 ```
 
 You can access the metrics from your browser at: `http://localhost:9999`
+
+## Define timeout for workload observability
+
+There are situations when the deployment of the application fails due to
+various reasons (e.g. container image not found).
+By default Keptn observes the state of the Kubernetes workloads
+for 5 minutes.
+After this timeout is exceeded, the deployment phase (from Keptn
+viewpoint) is considered as `Failed` and Keptn does not proceed
+with post-deployment phases (tasks, evaluations or promotion phase).
+This timeout can be modified for the cluster by changing the value
+of the `observabilityTimeout` field in the
+[KeptnConfig](../reference/crd-reference/config.md)
+resource.
 
 ## Advanced tracing configurations in Keptn: Linking traces
 

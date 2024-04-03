@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-entry
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-entry
+  template:
+    metadata:
+      labels:
+        component: podtato-head-entry
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-entry
+        keptn.sh/version: 0.1.0
+    spec:
+      containers:
+        - name: server
+          image: ghcr.io/podtato-head/entry:non-existing
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"

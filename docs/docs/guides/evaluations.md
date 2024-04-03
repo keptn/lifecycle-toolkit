@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Evaluations
+# Evaluations in Keptn
 
 A `KeptnEvaluation` does a simple evaluation of the metrics data you capture,
 to answer a question such as "Do I have more than four CPUs available?"
@@ -10,7 +10,7 @@ or "Is my remote database accessible?"
 or check for other problems in your infrastructure.
 It can be defined to run before or after your software is deployed.
 
-When an evaluation is run pre-deployment,
+When a pre-deployment evaluation is run, by default,
 the deployment is kept in a pending state
 until the evaluation passes with a successful result.
 
@@ -70,7 +70,7 @@ resource contains a list of `objectives`,
 each of which checks whether a defined `KeptnMetric` resource
 meets a defined target value.
 The example
-[app-pre-deploy-eval.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-2/app-pre-deploy-eval.yaml)
+[app-pre-deploy-eval.yaml](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-1/app-pre-deploy-eval.yaml)
 file specifies the `app-pre-deploy-eval-2` evaluation as follows:
 
 ```yaml
@@ -113,7 +113,7 @@ Note the following:
   has no effect on whether other evaluations are completed.
 - The results of each evaluation
   are written to a
-  [KeptnEvaluation](../reference/api-reference/lifecycle/v1beta1/index.md#keptnevaluation)
+  [KeptnEvaluation](../reference/api-reference/lifecycle/v1/index.md#keptnevaluation)
   resource.
 
 ## Annotate the workload resource for workload level evaluations

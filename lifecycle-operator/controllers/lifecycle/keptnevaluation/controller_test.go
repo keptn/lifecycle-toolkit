@@ -6,12 +6,12 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr"
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
-	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1beta1"
+	metricsapi "github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/api/metrics/v1"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/sdk/metric"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -37,32 +37,37 @@ func TestKeptnEvaluationReconciler_Reconcile_FailEvaluation(t *testing.T) {
 		},
 	}
 
-	evaluationDefinition := &klcv1beta1.KeptnEvaluationDefinition{
+	evaluationDefinition := &apilifecycle.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-definition",
 			Namespace: namespace,
 		},
-		Spec: klcv1beta1.KeptnEvaluationDefinitionSpec{
-			Objectives: []klcv1beta1.Objective{
+		Spec: apilifecycle.KeptnEvaluationDefinitionSpec{
+			Objectives: []apilifecycle.Objective{
 				{
-					KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+					KeptnMetricRef: apilifecycle.KeptnMetricReference{
 						Name:      metric.Name,
 						Namespace: namespace,
 					},
 					EvaluationTarget: "<5",
 				},
 			},
+			FailureConditions: apilifecycle.FailureConditions{
+				Retries: 1,
+			},
 		},
 	}
 
-	evaluation := &klcv1beta1.KeptnEvaluation{
+	evaluation := &apilifecycle.KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-evaluation",
 			Namespace: namespace,
 		},
-		Spec: klcv1beta1.KeptnEvaluationSpec{
+		Spec: apilifecycle.KeptnEvaluationSpec{
 			EvaluationDefinition: evaluationDefinition.Name,
-			Retries:              1,
+			FailureConditions: apilifecycle.FailureConditions{
+				Retries: 1,
+			},
 		},
 	}
 
@@ -80,7 +85,7 @@ func TestKeptnEvaluationReconciler_Reconcile_FailEvaluation(t *testing.T) {
 	require.Nil(t, err)
 	require.True(t, reconcile.Requeue)
 
-	updatedEvaluation := &klcv1beta1.KeptnEvaluation{}
+	updatedEvaluation := &apilifecycle.KeptnEvaluation{}
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
 		Namespace: namespace,
 		Name:      evaluation.Name,
@@ -88,7 +93,7 @@ func TestKeptnEvaluationReconciler_Reconcile_FailEvaluation(t *testing.T) {
 
 	require.Nil(t, err)
 
-	require.Equal(t, common.StateFailed, updatedEvaluation.Status.EvaluationStatus[metric.Name].Status)
+	require.Equal(t, apicommon.StateFailed, updatedEvaluation.Status.EvaluationStatus[metric.Name].Status)
 	require.Equal(t, "value '10' did not meet objective '<5'", updatedEvaluation.Status.EvaluationStatus[metric.Name].Message)
 }
 
@@ -106,32 +111,37 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation(t *testing.T) {
 		},
 	}
 
-	evaluationDefinition := &klcv1beta1.KeptnEvaluationDefinition{
+	evaluationDefinition := &apilifecycle.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-definition",
 			Namespace: namespace,
 		},
-		Spec: klcv1beta1.KeptnEvaluationDefinitionSpec{
-			Objectives: []klcv1beta1.Objective{
+		Spec: apilifecycle.KeptnEvaluationDefinitionSpec{
+			Objectives: []apilifecycle.Objective{
 				{
-					KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+					KeptnMetricRef: apilifecycle.KeptnMetricReference{
 						Name:      metric.Name,
 						Namespace: namespace,
 					},
 					EvaluationTarget: "<11",
 				},
 			},
+			FailureConditions: apilifecycle.FailureConditions{
+				Retries: 1,
+			},
 		},
 	}
 
-	evaluation := &klcv1beta1.KeptnEvaluation{
+	evaluation := &apilifecycle.KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-evaluation",
 			Namespace: namespace,
 		},
-		Spec: klcv1beta1.KeptnEvaluationSpec{
+		Spec: apilifecycle.KeptnEvaluationSpec{
 			EvaluationDefinition: evaluationDefinition.Name,
-			Retries:              1,
+			FailureConditions: apilifecycle.FailureConditions{
+				Retries: 1,
+			},
 		},
 	}
 
@@ -149,7 +159,7 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation(t *testing.T) {
 	require.Nil(t, err)
 	require.False(t, reconcile.Requeue)
 
-	updatedEvaluation := &klcv1beta1.KeptnEvaluation{}
+	updatedEvaluation := &apilifecycle.KeptnEvaluation{}
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
 		Namespace: namespace,
 		Name:      evaluation.Name,
@@ -157,7 +167,7 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation(t *testing.T) {
 
 	require.Nil(t, err)
 
-	require.Equal(t, common.StateSucceeded, updatedEvaluation.Status.EvaluationStatus[metric.Name].Status)
+	require.Equal(t, apicommon.StateSucceeded, updatedEvaluation.Status.EvaluationStatus[metric.Name].Status)
 	require.Equal(t, "value '10' met objective '<11'", updatedEvaluation.Status.EvaluationStatus[metric.Name].Message)
 }
 
@@ -175,32 +185,37 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation_withDefinitionInD
 		},
 	}
 
-	evaluationDefinition := &klcv1beta1.KeptnEvaluationDefinition{
+	evaluationDefinition := &apilifecycle.KeptnEvaluationDefinition{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-definition",
 			Namespace: "keptn",
 		},
-		Spec: klcv1beta1.KeptnEvaluationDefinitionSpec{
-			Objectives: []klcv1beta1.Objective{
+		Spec: apilifecycle.KeptnEvaluationDefinitionSpec{
+			Objectives: []apilifecycle.Objective{
 				{
-					KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+					KeptnMetricRef: apilifecycle.KeptnMetricReference{
 						Name:      metric.Name,
 						Namespace: namespace,
 					},
 					EvaluationTarget: "<11",
 				},
 			},
+			FailureConditions: apilifecycle.FailureConditions{
+				Retries: 1,
+			},
 		},
 	}
 
-	evaluation := &klcv1beta1.KeptnEvaluation{
+	evaluation := &apilifecycle.KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-evaluation",
 			Namespace: namespace,
 		},
-		Spec: klcv1beta1.KeptnEvaluationSpec{
+		Spec: apilifecycle.KeptnEvaluationSpec{
 			EvaluationDefinition: evaluationDefinition.Name,
-			Retries:              1,
+			FailureConditions: apilifecycle.FailureConditions{
+				Retries: 1,
+			},
 		},
 	}
 
@@ -218,7 +233,7 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation_withDefinitionInD
 	require.Nil(t, err)
 	require.False(t, reconcile.Requeue)
 
-	updatedEvaluation := &klcv1beta1.KeptnEvaluation{}
+	updatedEvaluation := &apilifecycle.KeptnEvaluation{}
 	err = fakeClient.Get(context.TODO(), types.NamespacedName{
 		Namespace: namespace,
 		Name:      evaluation.Name,
@@ -226,14 +241,14 @@ func TestKeptnEvaluationReconciler_Reconcile_SucceedEvaluation_withDefinitionInD
 
 	require.Nil(t, err)
 
-	require.Equal(t, common.StateSucceeded, updatedEvaluation.Status.EvaluationStatus[metric.Name].Status)
+	require.Equal(t, apicommon.StateSucceeded, updatedEvaluation.Status.EvaluationStatus[metric.Name].Status)
 	require.Equal(t, "value '10' met objective '<11'", updatedEvaluation.Status.EvaluationStatus[metric.Name].Message)
 }
 
 func setupReconcilerAndClient(t *testing.T, objects ...client.Object) (*KeptnEvaluationReconciler, client.Client) {
 	scheme := runtime.NewScheme()
 
-	err := klcv1beta1.AddToScheme(scheme)
+	err := apilifecycle.AddToScheme(scheme)
 	require.Nil(t, err)
 
 	err = metricsapi.AddToScheme(scheme)

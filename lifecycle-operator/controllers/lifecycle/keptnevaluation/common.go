@@ -5,10 +5,10 @@ import (
 	"math"
 	"strconv"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 )
 
-func checkValue(objective klcv1beta1.Objective, item *klcv1beta1.EvaluationStatusItem) (bool, error) {
+func checkValue(objective apilifecycle.Objective, item *apilifecycle.EvaluationStatusItem) (bool, error) {
 
 	if len(item.Value) == 0 || len(objective.EvaluationTarget) == 0 {
 		return false, fmt.Errorf("no values")

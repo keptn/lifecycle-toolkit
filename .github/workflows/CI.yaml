@@ -16,8 +16,11 @@ on:
       - "mkdocs.yml"
       - ".github/actions/spelling/*"
 
+# Declare default permissions as read only.
+permissions: read-all
+
 env:
-  GO_VERSION: "~1.20"
+  GO_VERSION: "~1.21"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
   CONTROLLER_TOOLS_VERSION: "v0.13.0"
   ENVTEST_K8S_VERSION: "1.24.2"
@@ -40,11 +43,11 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Extract branch name
         id: extract_branch
-        uses: keptn/gh-action-extract-branch-name@main
+        uses: keptn/gh-action-extract-branch-name@6ca4fe061da10c66b2d7341fd1fb12962ad911b2
 
       - name: Get current date and time
         id: get_datetime
@@ -88,10 +91,10 @@ jobs:
             folder: "keptn-cert-manager/"
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Set up Go 1.x
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
@@ -103,9 +106,10 @@ jobs:
         run: make unit-test
 
       - name: Report code coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@c16abc29c95fcf9174b58eb7e1abf4c866893bc8 # v4.1.1
         with:
           flags: ${{ matrix.config.name }}
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   build_image:
     name: Build Docker Image
@@ -134,21 +138,21 @@ jobs:
             folder: "keptn-cert-manager/"
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Cache build tools
         id: cache-build-tools
-        uses: actions/cache@v4
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
         with:
           path: ./${{ matrix.config.folder }}bin
           key: build-tools-${{ github.ref_name }}
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@2b51285047da1547ffb1b2203d8be4c0af6b1f20 # v3
 
       - name: Build Docker Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64,linux/arm64
@@ -168,7 +172,7 @@ jobs:
           outputs: type=oci,dest=/tmp/${{ matrix.config.name }}-image.tar
 
       - name: Upload image as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         with:
           name: ${{ matrix.config.name }}-image.tar
           path: /tmp/${{ matrix.config.name }}-image.tar
@@ -184,7 +188,7 @@ jobs:
         run: echo "" > tag
 
       - name: Upload tag for tests
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
         with:
           name: dev-${{ env.DATETIME }}
           path: tag
@@ -193,6 +197,8 @@ jobs:
     name: Component Tests
     needs: prepare_ci_run
     uses: ./.github/workflows/component-test.yml
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration_tests:
     name: Integration Tests
@@ -203,10 +209,12 @@ jobs:
       matrix:
         scheduling-gates: [gates_on, gates_off]
         allowed-namespaces: [allowed_ns_on, allowed_ns_off]
+        cert-manager-io-enabled: [cert_manager_io_on, cert_manager_io_off]
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       scheduling-gates: ${{ matrix.scheduling-gates }}
       allowed-namespaces: ${{ matrix.allowed-namespaces }}
+      cert-manager-io-enabled: ${{ matrix.cert-manager-io-enabled }}
     uses: ./.github/workflows/integration-test.yml
 
   load-tests:
@@ -241,10 +249,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out keptn repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Check out helm-charts repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           repository: 'keptn/lifecycle-toolkit-charts'
           path: ./helm-charts-repository
@@ -266,7 +274,7 @@ jobs:
         run: rsync -av --delete --exclude='charts/*.tgz' ./${{ matrix.config.path }}/ ./helm-charts-repository/charts/${{ matrix.config.name }}/
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@70a41aba780001da0a30141984ae2a0c95d8704e # v6.0.2
         with:
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
           path: ./helm-charts-repository

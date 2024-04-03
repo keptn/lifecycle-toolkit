@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -32,7 +32,7 @@ var _ = Describe("Appversion", Ordered, func() {
 	})
 	Describe("Creation of AppVersion", func() {
 		var (
-			av *klcv1beta1.KeptnAppVersion
+			av *apilifecycle.KeptnAppVersion
 		)
 		Context("reconcile a new AppVersions CRD", func() {
 
@@ -40,17 +40,19 @@ var _ = Describe("Appversion", Ordered, func() {
 			})
 
 			It("should be deprecated when pre-eval checks failed", func() {
-				evaluation := &klcv1beta1.KeptnEvaluation{
+				evaluation := &apilifecycle.KeptnEvaluation{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "pre-eval-eval-def-appversion",
 						Namespace: namespace,
 					},
-					Spec: klcv1beta1.KeptnEvaluationSpec{
+					Spec: apilifecycle.KeptnEvaluationSpec{
 						EvaluationDefinition: "eval-def-appversion",
 						AppName:              appName,
 						AppVersion:           version,
 						Type:                 apicommon.PreDeploymentEvaluationCheckType,
-						Retries:              10,
+						FailureConditions: apilifecycle.FailureConditions{
+							Retries: 10,
+						},
 					},
 				}
 
@@ -68,10 +70,10 @@ var _ = Describe("Appversion", Ordered, func() {
 				}, evaluation)
 				Expect(err).To(BeNil())
 
-				evaluation.Status = klcv1beta1.KeptnEvaluationStatus{
+				evaluation.Status = apilifecycle.KeptnEvaluationStatus{
 					OverallStatus: apicommon.StateFailed,
 					RetryCount:    10,
-					EvaluationStatus: map[string]klcv1beta1.EvaluationStatusItem{
+					EvaluationStatus: map[string]apilifecycle.EvaluationStatusItem{
 						"something": {
 							Status: apicommon.StateFailed,
 							Value:  "10",
@@ -84,18 +86,18 @@ var _ = Describe("Appversion", Ordered, func() {
 				err = k8sClient.Status().Update(ctx, evaluation)
 				Expect(err).To(BeNil())
 
-				av = &klcv1beta1.KeptnAppVersion{
+				av = &apilifecycle.KeptnAppVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      appName + "-" + version,
 						Namespace: namespace,
 					},
-					Spec: klcv1beta1.KeptnAppVersionSpec{
+					Spec: apilifecycle.KeptnAppVersionSpec{
 						AppName: appName,
-						KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+						KeptnAppSpec: apilifecycle.KeptnAppSpec{
 							Version: version,
 						},
-						KeptnAppContextSpec: klcv1beta1.KeptnAppContextSpec{
-							DeploymentTaskSpec: klcv1beta1.DeploymentTaskSpec{
+						KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+							DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
 								PreDeploymentEvaluations: []string{"eval-def-appversion"},
 							},
 						},
@@ -107,12 +109,12 @@ var _ = Describe("Appversion", Ordered, func() {
 
 				time.Sleep(5 * time.Second)
 
-				av2 := &klcv1beta1.KeptnAppVersion{}
+				av2 := &apilifecycle.KeptnAppVersion{}
 				err = k8sClient.Get(ctx, types.NamespacedName{Namespace: av.Namespace, Name: av.Name}, av2)
 				Expect(err).To(BeNil())
 				Expect(av2).To(Not(BeNil()))
 
-				av2.Status = klcv1beta1.KeptnAppVersionStatus{
+				av2.Status = apilifecycle.KeptnAppVersionStatus{
 					PreDeploymentStatus:            apicommon.StateSucceeded,
 					PreDeploymentEvaluationStatus:  apicommon.StateProgressing,
 					WorkloadOverallStatus:          apicommon.StatePending,
@@ -120,7 +122,7 @@ var _ = Describe("Appversion", Ordered, func() {
 					PostDeploymentEvaluationStatus: apicommon.StatePending,
 					CurrentPhase:                   apicommon.PhaseWorkloadPreEvaluation.ShortName,
 					Status:                         apicommon.StateProgressing,
-					PreDeploymentEvaluationTaskStatus: []klcv1beta1.ItemStatus{
+					PreDeploymentEvaluationTaskStatus: []apilifecycle.ItemStatus{
 						{
 							Name:           "pre-eval-eval-def-appversion",
 							Status:         apicommon.StateProgressing,
@@ -139,7 +141,7 @@ var _ = Describe("Appversion", Ordered, func() {
 				}
 				//nolint:dupl
 				Eventually(func(g Gomega) {
-					av := &klcv1beta1.KeptnAppVersion{}
+					av := &apilifecycle.KeptnAppVersion{}
 					err := k8sClient.Get(ctx, avNameObj, av)
 					g.Expect(err).To(BeNil())
 					g.Expect(av).To(Not(BeNil()))

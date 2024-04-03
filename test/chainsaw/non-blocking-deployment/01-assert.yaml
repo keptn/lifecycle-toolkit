@@ -1,0 +1,49 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppVersion
+metadata:
+  name: podtato-head-0.2.0-d4735e3a
+spec:
+  appName: podtato-head
+  preDeploymentTasks:
+    - failing-task
+  previousVersion: 0.1.0
+  revision: 1
+  version: 0.2.0
+  workloads:
+    - name: podtato-head-entry
+      version: 0.2.0
+status:
+  currentPhase: AppPreDeployTasks
+  postDeploymentEvaluationStatus: Deprecated
+  postDeploymentStatus: Deprecated
+  preDeploymentEvaluationStatus: Deprecated
+  preDeploymentStatus: Failed
+  preDeploymentTaskStatus:
+    - definitionName: failing-task
+      status: Failed
+  promotionStatus: Deprecated
+  status: Failed
+  workloadOverallStatus: Deprecated
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkloadVersion
+metadata:
+  generation: 1
+  name: podtato-head-podtato-head-entry-0.2.0
+spec:
+  app: podtato-head
+  previousVersion: 0.1.0
+  version: 0.2.0
+  workloadName: podtato-head-podtato-head-entry
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    keptn.sh/app: podtato-head
+    keptn.sh/version: 0.2.0
+    keptn.sh/workload: podtato-head-entry
+  labels:
+    component: podtato-head-entry
+status:
+  phase: Pending

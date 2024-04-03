@@ -68,6 +68,12 @@ If all evaluations and tasks in a phase are successful,
 the `KeptnApp` issues the appropriate `*Succeeded` event
 and initiates the next phase.
 
+> **Note**
+This behavior can be changed by configuring non-blocking deployment
+functionality.
+More information can be found in the
+[Keptn non-blocking deployment section](./keptn-non-blocking.md).
+
 ## Summary of deployment flow
 
 To view these events on your cluster, execute:
@@ -115,6 +121,17 @@ and continues to the next phase.
 If any of these activities fail,
 the `KeptnApp` issues the `AppDeployErrored` event
 and terminates the deployment.
+
+> **Note**
+By default Keptn observes the state of the Kubernetes workloads
+for 5 minutes.
+After this timeout is exceeded, the deployment phase (from Keptn
+viewpoint) is considered as `Failed` and Keptn does not proceed
+with post-deployment phases (tasks, evaluations or promotion phase).
+This timeout can be modified for the cluster by changing the value
+of the `observabilityTimeout` field in the
+[KeptnConfig](../../reference/crd-reference/config.md)
+resource.
 
 ```shell
 AppDeploy

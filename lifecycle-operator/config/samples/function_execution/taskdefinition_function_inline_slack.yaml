@@ -3,7 +3,7 @@ kind: KeptnTaskDefinition
 metadata:
   name: slack-notification-inline
 spec:
-  function:
+  deno:
     inlineRef:
       code: |
         let text = Deno.env.get("SECURE_DATA");

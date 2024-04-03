@@ -1,0 +1,8 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: hello-keptn-http
+spec:
+  deno:
+    httpRef:
+      url: "https://www.example.com/yourscript.js"

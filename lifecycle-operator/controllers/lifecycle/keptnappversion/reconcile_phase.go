@@ -5,12 +5,12 @@ import (
 	"context"
 	"fmt"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/task"
 )
 
-func (r *KeptnAppVersionReconciler) reconcilePhase(ctx context.Context, phaseCtx context.Context, appVersion *klcv1beta1.KeptnAppVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
+func (r *KeptnAppVersionReconciler) reconcilePhase(ctx context.Context, phaseCtx context.Context, appVersion *apilifecycle.KeptnAppVersion, checkType apicommon.CheckType) (apicommon.KeptnState, error) {
 	taskHandler := task.Handler{
 		Client:      r.Client,
 		EventSender: r.EventSender,
@@ -29,7 +29,7 @@ func (r *KeptnAppVersionReconciler) reconcilePhase(ctx context.Context, phaseCtx
 	if err != nil {
 		return apicommon.StateUnknown, err
 	}
-	overallState := apicommon.GetOverallState(state)
+	overallState := apicommon.GetOverallStateBlockedDeployment(state, r.Config.GetBlockDeployment())
 
 	switch checkType {
 	case apicommon.PreDeploymentCheckType:

@@ -1,5 +1,5 @@
 # renovate: datasource=github-tags depName=jaegertracing/jaeger-operator
-JAEGER_VERSION ?= v1.53.0
+JAEGER_VERSION ?= v1.55.0
 TOOLKIT_NAMESPACE ?= keptn-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
@@ -11,7 +11,7 @@ install: install-observability
 	@echo "-----------------------------------"
 	helm repo add keptn https://charts.lifecycle.keptn.sh
 	helm repo update
-	helm upgrade --install keptn keptn/keptn -n $(TOOLKIT_NAMESPACE) --create-namespace --wait
+	helm upgrade --install keptn keptn/keptn -n $(TOOLKIT_NAMESPACE) --set 'lifecycleOperator.promotionTasksEnabled=true'  --create-namespace --wait
 	kubectl apply -f support/keptn/keptnconfig.yaml -n $(TOOLKIT_NAMESPACE)
 
 .PHONY: install-observability
@@ -40,11 +40,6 @@ deploy-version-1:
 deploy-version-2:
 	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -k sample-app/version-2
-
-.PHONY: deploy-version-3
-deploy-version-3:
-	kubectl create namespace "$(PODTATO_NAMESPACE)" --dry-run=client -o yaml | kubectl apply -f -
-	kubectl apply -k sample-app/version-3
 
 .PHONY: cleanup
 cleanup:

@@ -5,6 +5,8 @@ config:
     line_length: 120
     tables: false
     code_blocks: false
+  code-block-style:
+    style: fenced
   no-inline-html:
     allowed_elements:
       - details

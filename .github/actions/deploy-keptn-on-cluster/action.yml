@@ -26,11 +26,15 @@ inputs:
     required: false
     description: "Decides whether to allow only certain namespaces"
     default: "allowed_ns_off"
+  cert-manager-io-enabled:
+    required: false
+    description: "Decides whether to use cert-manager.io"
+    default: "cert_manager_io_off"
 runs:
   using: "composite"
   steps:
     - name: Set up Go 1.x
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5
       with:
         go-version: ${{ env.GO_VERSION }}
         cache: true
@@ -38,12 +42,12 @@ runs:
         check-latest: true
 
     - name: Download artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4
       with:
         path: ~/download/artifacts
 
     - name: "Create single kind Cluster"
-      uses: helm/kind-action@v1.9.0
+      uses: helm/kind-action@99576bfa6ddf9a8e612d83b513da5a75875caced # v1.9.0
       with:
         cluster_name: ${{ inputs.cluster-name }}
         version: ${{ inputs.kind-version }}
@@ -60,7 +64,8 @@ runs:
           kind load image-archive $image/$image -n ${{ inputs.cluster-name }}
         done
 
-    - name: Install lifecycle-toolkit with helm
+    - name: Install Keptn with helm
+      if: inputs.cert-manager-io-enabled == 'cert_manager_io_off'
       env:
         RELEASE_REGISTRY: "localhost:5000/keptn"
       shell: bash
@@ -99,5 +104,61 @@ runs:
         cat tmp.yaml
 
         helm install -n keptn-system --create-namespace keptn ../../../chart \
+          --values ./tmp.yaml \
+          --debug --wait --timeout 1m
+
+    - name: Install cert-manager.io
+      if: inputs.cert-manager-io-enabled == 'cert_manager_io_on'
+      env:
+        # renovate: datasource=github-releases depName=cert-manager/cert-manager
+        CERT_MANAGER_IO_VERSION: "v1.14.4"
+      shell: bash
+      run: |
+        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$CERT_MANAGER_IO_VERSION/cert-manager.yaml
+        kubectl wait --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=120s
+        kubectl wait --for=condition=ready pod -l app=webhook -n cert-manager --timeout=60s
+
+    - name: Install Keptn using cert-manager.io with helm
+      if: inputs.cert-manager-io-enabled == 'cert_manager_io_on'
+      env:
+        RELEASE_REGISTRY: "localhost:5000/keptn"
+      shell: bash
+      run: |
+        echo "Installing Keptn using helm"
+        helm version
+
+        helm repo add keptn "https://charts.lifecycle.keptn.sh"
+        helm repo update
+
+        for chart_dir in ./lifecycle-operator/chart \
+                ./metrics-operator/chart \
+                ./chart; do
+            cd "$chart_dir"
+            echo "updating charts for" $chart_dir
+            helm dependency update
+            helm dependency build
+            cd -  # Return to the previous directory
+        done
+
+        cd .github/actions/deploy-keptn-on-cluster
+
+        if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_on" ]; then
+          echo "  allowedNamespaces: [allowed-ns-test]" >> values-cert-manager-io.yaml
+        fi
+
+        if [ "${{ inputs.scheduling-gates }}" == "gates_on" ]; then
+          echo "  schedulingGatesEnabled: true" >> values-cert-manager-io.yaml
+        fi
+
+        export TAG=${{ inputs.runtime_tag }}
+        envsubst < values-cert-manager-io.yaml > tmp.yaml
+
+        echo "installing with values-cert-manager-io.yaml file:"
+        cat tmp.yaml
+
+        kubectl create ns keptn-system
+        kubectl apply -f certificate.yaml
+
+        helm install -n keptn-system keptn ../../../chart \
           --values ./tmp.yaml \
           --debug --wait --timeout 1m

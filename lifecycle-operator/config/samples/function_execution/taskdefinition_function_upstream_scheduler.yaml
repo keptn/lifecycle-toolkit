@@ -3,6 +3,6 @@ kind: KeptnTaskDefinition
 metadata:
   name: schedule-upstream-deployment
 spec:
-  function:
+  deno:
     httpRef:
       url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/schedule.ts

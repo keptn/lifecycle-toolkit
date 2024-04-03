@@ -8,16 +8,18 @@ A `KeptnEvaluationDefinition` assigns target values
 to [KeptnMetric](metric.md) queries.
 These are used as part of evaluation tasks
 that Keptn runs
-as part of pre- and post-analysis phases of a [workload](https://kubernetes.io/docs/concepts/workloads/) or application.
+as part of pre- and post-analysis phases of a `KeptnApp` or workload.
 
 ## Yaml Synopsis
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnEvaluationDefinition
 metadata:
   name: <evaluation-name>
 spec:
+  retries: <number-of-retries>
+  retryInterval: <duration>
   objectives:
     - evaluationTarget: "<value>"
       keptnMetricRef:
@@ -56,6 +58,16 @@ spec:
           This is used to define success or failure criteria for the referenced `KeptnMetric` in order to pass or fail
           the pre- and post-evaluation stages
 
+    * **retries** -- specifies the number of times
+      an `Keptnevaluation` defined by the `KeptnEvaluationDefinition`
+      should be restarted if an attempt is unsuccessful.
+      The default value is `10`.
+    * **retryInterval** -- specifies the time
+      to wait between the retries.
+      The value supplied should specify the unit of measurement;
+      for example, `5s` indicates 5 seconds and `5m` indicates 5 minutes.
+      The default value is `5s`.
+
 ## Usage
 
 A `KeptnEvaluationDefinition` references one or more [KeptnMetric](metric.md) resources.
@@ -72,12 +84,14 @@ on all namespaces in the cluster.
 ## Example
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnEvaluationDefinition
 metadata:
   name: my-prometheus-evaluation
   namespace: example
 spec:
+  retries: 5
+  retryInterval: 10s
   source: prometheus
   objectives:
     - keptnMetricRef:
@@ -102,12 +116,12 @@ that are now taken from the specified [KeptnMetric](metric.md) CRD.
 The synopsis was:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1alpha2
 kind: KeptnEvaluationDefinition
 metadata:
   name: <evaluation-name>
 spec:
-  source: prometheus | dynatrace | datadog
+  source: datadog | dynatrace | prometheus 
   objectives:
     - name: query-1
       query: "xxxx"
@@ -120,6 +134,9 @@ spec:
 Beginning with `v1beta1` API version, `KeptnEvaluationDefinition` references a `keptnMetricRef`
 that points to a [KeptnMetric](metric.md) CR, that defines the data source, the query and the namespace to use.
 The `KeptnEvaluationDefinition` merely specifies the evaluation target.
+
+> **Note**
+Versions `v1beta1` and `v1` are fully compatible.
 
 ## See also
 

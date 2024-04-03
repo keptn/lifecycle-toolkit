@@ -1,21 +1,31 @@
 authors:
   mowies:
     name: Moritz Wiesinger
-    description: Maintainer
+    description: Keptn Maintainer
     avatar: https://avatars.githubusercontent.com/u/6901203?v=4
     url: https://github.com/mowies
   bacherfl:
     name: Florian Bacher
-    description: Maintainer
+    description: Keptn Maintainer
     avatar: https://avatars.githubusercontent.com/u/2143586?v=4
     url: https://github.com/bacherfl
   odubajDT:
     name: Ondrej Dubaj
-    description: Maintainer
+    description: Keptn Maintainer
     avatar: https://avatars.githubusercontent.com/u/93584209?v=4
     url: https://github.com/odubajDT
   staceypotter:
     name: Stacey Potter
-    description: Member
+    description: Keptn Member
     avatar: https://avatars.githubusercontent.com/u/50154848?v=4
     url: https://github.com/staceypotter
+  agardnerIT:
+    name: Adam Gardner
+    description: Keptn Docs Maintainer
+    avatar: https://avatars.githubusercontent.com/u/26523841?v=4
+    url: https://github.com/agardnerIT
+  pmig:
+    name: Philip Miglinci
+    description: Co-Founder Glasskube
+    avatar: https://avatars.githubusercontent.com/u/3041752?v=4
+    url: https://github.com/pmig

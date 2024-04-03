@@ -23,6 +23,16 @@ func TestFactory(t *testing.T) {
 			err:          false,
 		},
 		{
+			providerType: ThanosProviderType,
+			provider:     &prometheus.KeptnPrometheusProvider{},
+			err:          false,
+		},
+		{
+			providerType: CortexProviderType,
+			provider:     &prometheus.KeptnPrometheusProvider{},
+			err:          false,
+		},
+		{
 			providerType: DynatraceProviderType,
 			provider:     &dynatrace.KeptnDynatraceProvider{},
 			err:          false,

@@ -14,22 +14,22 @@ spec:
             file: 00-assert.yaml
     - name: step-01
       try:
-# we expect none of these resources to be present
+        # we expect none of these resources to be present
         - error:
             resource:
-              apiVersion: lifecycle.keptn.sh/v1beta1
+              apiVersion: lifecycle.keptn.sh/v1
               kind: KeptnTask
               metadata:
                 namespace: not-allowed-ns-test
         - error:
             resource:
-              apiVersion: lifecycle.keptn.sh/v1beta1
+              apiVersion: lifecycle.keptn.sh/v1
               kind: KeptnWorkload
               metadata:
                 namespace: not-allowed-ns-test
         - error:
             resource:
-              apiVersion: lifecycle.keptn.sh/v1beta1
+              apiVersion: lifecycle.keptn.sh/v1
               kind: KeptnApp
               metadata:
                 namespace: not-allowed-ns-test

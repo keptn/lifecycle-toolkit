@@ -5,8 +5,9 @@
 ##
 global:
   ## @param global.imageRegistry Global container image registry
-  imageRegistry: ""
-
+  imageRegistry: "ghcr.io"
+  ## @param     global.imagePullPolicy select global image pull policy
+  imagePullPolicy: ""
   ## @param global.imagePullSecrets Global Docker registry secret names as an array
   ## E.g.
   ## imagePullSecrets:
@@ -64,14 +65,13 @@ env:
   labelSelectorValue: "true"
 image:
 ## @param     image.registry specify the container registry for the certificate-operator image
-  registry: ghcr.io
+  registry: ""
 ## @param     image.repository specify repo for manager image
   repository: keptn/certificate-operator
 ## @param     image.tag select tag for manager container
-  tag: v2.0.0 # x-release-please-version
-## @param     imagePullPolicy select image pull policy for manager container
-imagePullPolicy: Always
-
+  tag: v2.1.1 # x-release-please-version
+## @param   image.imagePullPolicy specify pull policy for the manager image. This overrides global values
+  imagePullPolicy: ""
 ## @extra     livenessProbe custom RBAC proxy liveness probe
 ## @skip     livenessProbe.httpGet.path
 ## @skip     livenessProbe.httpGet.port

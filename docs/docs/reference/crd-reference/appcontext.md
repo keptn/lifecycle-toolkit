@@ -11,7 +11,7 @@ It allows you to
 
 - Add metadata and links to traces for a specific application.
   This enables you to enrich your traces with additional information that
-  you can use to understand and analyze
+  you can use to better understand and analyze
   the performance of your applications.
 
 - Define tasks and evaluations that run
@@ -20,7 +20,7 @@ It allows you to
 ## Synopsis
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppContext
 metadata:
   name: <app-name>
@@ -45,7 +45,7 @@ spec:
 ## Fields
 
 - **apiVersion** -- API version being used.
-  Must be set to `lifecycle.keptn.sh/v1beta1`
+  Must be set to `lifecycle.keptn.sh/v1`
 - **kind** -- Resource type.
   Must be set to `KeptnAppContext`
 
@@ -132,7 +132,7 @@ resource and identified by the value of the `metadata.name` field;
 ## Example
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppContext
 metadata:
   name: podtato-head
@@ -145,11 +145,12 @@ spec:
 
 ## Files
 
-[KeptnAppContext](../api-reference/lifecycle/v1beta1/index.md#keptnappcontext)
+[KeptnAppContext](../api-reference/lifecycle/v1/index.md#keptnappcontext)
 
 ## Differences between versions
 
 The `KeptnAppContext` resource is new in the `v1beta1` version of the lifecycle operator.
+Versions `v1beta1` and `v1` are fully compatible.
 
 ## See also
 

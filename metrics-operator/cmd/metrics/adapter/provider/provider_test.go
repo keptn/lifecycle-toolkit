@@ -124,7 +124,7 @@ func TestProvider(t *testing.T) {
 
 func getSampleKeptnMetric(metricName string, labels map[string]interface{}) map[string]interface{} {
 	return map[string]interface{}{
-		"apiVersion": "metrics.keptn.sh/v1beta1",
+		"apiVersion": "metrics.keptn.sh/v1",
 		"kind":       "KeptnMetric",
 		"metadata": map[string]interface{}{
 			"name":      metricName,

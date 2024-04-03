@@ -7,7 +7,7 @@ global:
   ## @param global.certManagerEnabled Enable this value to install Keptn Certificate Manager
   certManagerEnabled: true
   ## @param global.imageRegistry Global container image registry
-  imageRegistry: ""
+  imageRegistry: "ghcr.io"
 
   ## @param global.imagePullSecrets Global Docker registry secret names as an array
   ## E.g.
@@ -15,6 +15,8 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
+  ## @param   global.imagePullPolicy specify global pull policy
+  imagePullPolicy: ""
   ## @param global.commonLabels Common labels to add to all Keptn resources. Evaluated as a template
   ##
   commonLabels: { }
@@ -131,13 +133,13 @@ env:
   analysisControllerLogLevel: "0"
 image:
 ## @param     image.registry specify the container registry for the metrics-operator image
-  registry: ghcr.io
+  registry: ""
 ## @param   image.repository specify registry for manager image
   repository: keptn/metrics-operator
 ## @param   image.tag select tag for manager image
-  tag: v0.9.1 # x-release-please-version
-## @param   imagePullPolicy specify pull policy for manager image
-imagePullPolicy: Always
+  tag: v0.9.3 # x-release-please-version
+## @param   image.imagePullPolicy specify pull policy for the manager image. This overrides global values
+  imagePullPolicy: ""
 ## @extra  livenessProbe custom livenessprobe for manager container
 ## @skip   livenessProbe.httpGet.path
 ## @skip   livenessProbe.httpGet.port

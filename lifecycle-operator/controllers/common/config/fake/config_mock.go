@@ -4,6 +4,7 @@
 package fake
 
 import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sync"
 	"time"
 )
@@ -14,6 +15,9 @@ import (
 //
 //		// make and configure a mocked config.IConfig
 //		mockedIConfig := &MockConfig{
+//			GetBlockDeploymentFunc: func() bool {
+//				panic("mock out the GetBlockDeployment method")
+//			},
 //			GetCloudEventsEndpointFunc: func() string {
 //				panic("mock out the GetCloudEventsEndpoint method")
 //			},
@@ -22,6 +26,12 @@ import (
 //			},
 //			GetDefaultNamespaceFunc: func() string {
 //				panic("mock out the GetDefaultNamespace method")
+//			},
+//			GetObservabilityTimeoutFunc: func() metav1.Duration {
+//				panic("mock out the GetObservabilityTimeout method")
+//			},
+//			SetBlockDeploymentFunc: func(value bool)  {
+//				panic("mock out the SetBlockDeployment method")
 //			},
 //			SetCloudEventsEndpointFunc: func(endpoint string)  {
 //				panic("mock out the SetCloudEventsEndpoint method")
@@ -32,6 +42,9 @@ import (
 //			SetDefaultNamespaceFunc: func(namespace string)  {
 //				panic("mock out the SetDefaultNamespace method")
 //			},
+//			SetObservabilityTimeoutFunc: func(timeout metav1.Duration)  {
+//				panic("mock out the SetObservabilityTimeout method")
+//			},
 //		}
 //
 //		// use mockedIConfig in code that requires config.IConfig
@@ -39,6 +52,9 @@ import (
 //
 //	}
 type MockConfig struct {
+	// GetBlockDeploymentFunc mocks the GetBlockDeployment method.
+	GetBlockDeploymentFunc func() bool
+
 	// GetCloudEventsEndpointFunc mocks the GetCloudEventsEndpoint method.
 	GetCloudEventsEndpointFunc func() string
 
@@ -47,6 +63,12 @@ type MockConfig struct {
 
 	// GetDefaultNamespaceFunc mocks the GetDefaultNamespace method.
 	GetDefaultNamespaceFunc func() string
+
+	// GetObservabilityTimeoutFunc mocks the GetObservabilityTimeout method.
+	GetObservabilityTimeoutFunc func() metav1.Duration
+
+	// SetBlockDeploymentFunc mocks the SetBlockDeployment method.
+	SetBlockDeploymentFunc func(value bool)
 
 	// SetCloudEventsEndpointFunc mocks the SetCloudEventsEndpoint method.
 	SetCloudEventsEndpointFunc func(endpoint string)
@@ -57,8 +79,14 @@ type MockConfig struct {
 	// SetDefaultNamespaceFunc mocks the SetDefaultNamespace method.
 	SetDefaultNamespaceFunc func(namespace string)
 
+	// SetObservabilityTimeoutFunc mocks the SetObservabilityTimeout method.
+	SetObservabilityTimeoutFunc func(timeout metav1.Duration)
+
 	// calls tracks calls to the methods.
 	calls struct {
+		// GetBlockDeployment holds details about calls to the GetBlockDeployment method.
+		GetBlockDeployment []struct {
+		}
 		// GetCloudEventsEndpoint holds details about calls to the GetCloudEventsEndpoint method.
 		GetCloudEventsEndpoint []struct {
 		}
@@ -67,6 +95,14 @@ type MockConfig struct {
 		}
 		// GetDefaultNamespace holds details about calls to the GetDefaultNamespace method.
 		GetDefaultNamespace []struct {
+		}
+		// GetObservabilityTimeout holds details about calls to the GetObservabilityTimeout method.
+		GetObservabilityTimeout []struct {
+		}
+		// SetBlockDeployment holds details about calls to the SetBlockDeployment method.
+		SetBlockDeployment []struct {
+			// Value is the value argument value.
+			Value bool
 		}
 		// SetCloudEventsEndpoint holds details about calls to the SetCloudEventsEndpoint method.
 		SetCloudEventsEndpoint []struct {
@@ -83,13 +119,49 @@ type MockConfig struct {
 			// Namespace is the namespace argument value.
 			Namespace string
 		}
+		// SetObservabilityTimeout holds details about calls to the SetObservabilityTimeout method.
+		SetObservabilityTimeout []struct {
+			// Timeout is the timeout argument value.
+			Timeout metav1.Duration
+		}
 	}
+	lockGetBlockDeployment        sync.RWMutex
 	lockGetCloudEventsEndpoint    sync.RWMutex
 	lockGetCreationRequestTimeout sync.RWMutex
 	lockGetDefaultNamespace       sync.RWMutex
+	lockGetObservabilityTimeout   sync.RWMutex
+	lockSetBlockDeployment        sync.RWMutex
 	lockSetCloudEventsEndpoint    sync.RWMutex
 	lockSetCreationRequestTimeout sync.RWMutex
 	lockSetDefaultNamespace       sync.RWMutex
+	lockSetObservabilityTimeout   sync.RWMutex
+}
+
+// GetBlockDeployment calls GetBlockDeploymentFunc.
+func (mock *MockConfig) GetBlockDeployment() bool {
+	if mock.GetBlockDeploymentFunc == nil {
+		panic("MockConfig.GetBlockDeploymentFunc: method is nil but IConfig.GetBlockDeployment was just called")
+	}
+	callInfo := struct {
+	}{}
+	mock.lockGetBlockDeployment.Lock()
+	mock.calls.GetBlockDeployment = append(mock.calls.GetBlockDeployment, callInfo)
+	mock.lockGetBlockDeployment.Unlock()
+	return mock.GetBlockDeploymentFunc()
+}
+
+// GetBlockDeploymentCalls gets all the calls that were made to GetBlockDeployment.
+// Check the length with:
+//
+//	len(mockedIConfig.GetBlockDeploymentCalls())
+func (mock *MockConfig) GetBlockDeploymentCalls() []struct {
+} {
+	var calls []struct {
+	}
+	mock.lockGetBlockDeployment.RLock()
+	calls = mock.calls.GetBlockDeployment
+	mock.lockGetBlockDeployment.RUnlock()
+	return calls
 }
 
 // GetCloudEventsEndpoint calls GetCloudEventsEndpointFunc.
@@ -170,6 +242,65 @@ func (mock *MockConfig) GetDefaultNamespaceCalls() []struct {
 	mock.lockGetDefaultNamespace.RLock()
 	calls = mock.calls.GetDefaultNamespace
 	mock.lockGetDefaultNamespace.RUnlock()
+	return calls
+}
+
+// GetObservabilityTimeout calls GetObservabilityTimeoutFunc.
+func (mock *MockConfig) GetObservabilityTimeout() metav1.Duration {
+	if mock.GetObservabilityTimeoutFunc == nil {
+		panic("MockConfig.GetObservabilityTimeoutFunc: method is nil but IConfig.GetObservabilityTimeout was just called")
+	}
+	callInfo := struct {
+	}{}
+	mock.lockGetObservabilityTimeout.Lock()
+	mock.calls.GetObservabilityTimeout = append(mock.calls.GetObservabilityTimeout, callInfo)
+	mock.lockGetObservabilityTimeout.Unlock()
+	return mock.GetObservabilityTimeoutFunc()
+}
+
+// GetObservabilityTimeoutCalls gets all the calls that were made to GetObservabilityTimeout.
+// Check the length with:
+//
+//	len(mockedIConfig.GetObservabilityTimeoutCalls())
+func (mock *MockConfig) GetObservabilityTimeoutCalls() []struct {
+} {
+	var calls []struct {
+	}
+	mock.lockGetObservabilityTimeout.RLock()
+	calls = mock.calls.GetObservabilityTimeout
+	mock.lockGetObservabilityTimeout.RUnlock()
+	return calls
+}
+
+// SetBlockDeployment calls SetBlockDeploymentFunc.
+func (mock *MockConfig) SetBlockDeployment(value bool) {
+	if mock.SetBlockDeploymentFunc == nil {
+		panic("MockConfig.SetBlockDeploymentFunc: method is nil but IConfig.SetBlockDeployment was just called")
+	}
+	callInfo := struct {
+		Value bool
+	}{
+		Value: value,
+	}
+	mock.lockSetBlockDeployment.Lock()
+	mock.calls.SetBlockDeployment = append(mock.calls.SetBlockDeployment, callInfo)
+	mock.lockSetBlockDeployment.Unlock()
+	mock.SetBlockDeploymentFunc(value)
+}
+
+// SetBlockDeploymentCalls gets all the calls that were made to SetBlockDeployment.
+// Check the length with:
+//
+//	len(mockedIConfig.SetBlockDeploymentCalls())
+func (mock *MockConfig) SetBlockDeploymentCalls() []struct {
+	Value bool
+} {
+	var calls []struct {
+		Value bool
+	}
+	mock.lockSetBlockDeployment.RLock()
+	calls = mock.calls.SetBlockDeployment
+	mock.lockSetBlockDeployment.RUnlock()
 	return calls
 }
 
@@ -266,5 +397,37 @@ func (mock *MockConfig) SetDefaultNamespaceCalls() []struct {
 	mock.lockSetDefaultNamespace.RLock()
 	calls = mock.calls.SetDefaultNamespace
 	mock.lockSetDefaultNamespace.RUnlock()
+	return calls
+}
+
+// SetObservabilityTimeout calls SetObservabilityTimeoutFunc.
+func (mock *MockConfig) SetObservabilityTimeout(timeout metav1.Duration) {
+	if mock.SetObservabilityTimeoutFunc == nil {
+		panic("MockConfig.SetObservabilityTimeoutFunc: method is nil but IConfig.SetObservabilityTimeout was just called")
+	}
+	callInfo := struct {
+		Timeout metav1.Duration
+	}{
+		Timeout: timeout,
+	}
+	mock.lockSetObservabilityTimeout.Lock()
+	mock.calls.SetObservabilityTimeout = append(mock.calls.SetObservabilityTimeout, callInfo)
+	mock.lockSetObservabilityTimeout.Unlock()
+	mock.SetObservabilityTimeoutFunc(timeout)
+}
+
+// SetObservabilityTimeoutCalls gets all the calls that were made to SetObservabilityTimeout.
+// Check the length with:
+//
+//	len(mockedIConfig.SetObservabilityTimeoutCalls())
+func (mock *MockConfig) SetObservabilityTimeoutCalls() []struct {
+	Timeout metav1.Duration
+} {
+	var calls []struct {
+		Timeout metav1.Duration
+	}
+	mock.lockSetObservabilityTimeout.RLock()
+	calls = mock.calls.SetObservabilityTimeout
+	mock.lockSetObservabilityTimeout.RUnlock()
 	return calls
 }

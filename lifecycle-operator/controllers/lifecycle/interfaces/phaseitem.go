@@ -3,8 +3,8 @@ package interfaces
 import (
 	"time"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
@@ -31,15 +31,15 @@ type PhaseItem interface {
 	GetPreDeploymentTasks() []string
 	GetPostDeploymentTasks() []string
 	GetPromotionTasks() []string
-	GetPreDeploymentTaskStatus() []klcv1beta1.ItemStatus
-	GetPostDeploymentTaskStatus() []klcv1beta1.ItemStatus
-	GetPromotionTaskStatus() []klcv1beta1.ItemStatus
+	GetPreDeploymentTaskStatus() []apilifecycle.ItemStatus
+	GetPostDeploymentTaskStatus() []apilifecycle.ItemStatus
+	GetPromotionTaskStatus() []apilifecycle.ItemStatus
 	GetPreDeploymentEvaluations() []string
 	GetPostDeploymentEvaluations() []string
-	GetPreDeploymentEvaluationTaskStatus() []klcv1beta1.ItemStatus
-	GetPostDeploymentEvaluationTaskStatus() []klcv1beta1.ItemStatus
-	GenerateTask(taskDefinition klcv1beta1.KeptnTaskDefinition, checkType apicommon.CheckType) klcv1beta1.KeptnTask
-	GenerateEvaluation(evaluationDefinition klcv1beta1.KeptnEvaluationDefinition, checkType apicommon.CheckType) klcv1beta1.KeptnEvaluation
+	GetPreDeploymentEvaluationTaskStatus() []apilifecycle.ItemStatus
+	GetPostDeploymentEvaluationTaskStatus() []apilifecycle.ItemStatus
+	GenerateTask(taskDefinition apilifecycle.KeptnTaskDefinition, checkType apicommon.CheckType) apilifecycle.KeptnTask
+	GenerateEvaluation(evaluationDefinition apilifecycle.KeptnEvaluationDefinition, checkType apicommon.CheckType) apilifecycle.KeptnEvaluation
 	GetSpanAttributes() []attribute.KeyValue
 	SetSpanAttributes(span trace.Span)
 	DeprecateRemainingPhases(phase apicommon.KeptnPhaseType)
@@ -117,11 +117,11 @@ func (pw PhaseItemWrapper) GetPostDeploymentTasks() []string {
 	return pw.Obj.GetPostDeploymentTasks()
 }
 
-func (pw PhaseItemWrapper) GetPreDeploymentTaskStatus() []klcv1beta1.ItemStatus {
+func (pw PhaseItemWrapper) GetPreDeploymentTaskStatus() []apilifecycle.ItemStatus {
 	return pw.Obj.GetPreDeploymentTaskStatus()
 }
 
-func (pw PhaseItemWrapper) GetPostDeploymentTaskStatus() []klcv1beta1.ItemStatus {
+func (pw PhaseItemWrapper) GetPostDeploymentTaskStatus() []apilifecycle.ItemStatus {
 	return pw.Obj.GetPostDeploymentTaskStatus()
 }
 
@@ -133,19 +133,19 @@ func (pw PhaseItemWrapper) GetPostDeploymentEvaluations() []string {
 	return pw.Obj.GetPostDeploymentEvaluations()
 }
 
-func (pw PhaseItemWrapper) GetPreDeploymentEvaluationTaskStatus() []klcv1beta1.ItemStatus {
+func (pw PhaseItemWrapper) GetPreDeploymentEvaluationTaskStatus() []apilifecycle.ItemStatus {
 	return pw.Obj.GetPreDeploymentEvaluationTaskStatus()
 }
 
-func (pw PhaseItemWrapper) GetPostDeploymentEvaluationTaskStatus() []klcv1beta1.ItemStatus {
+func (pw PhaseItemWrapper) GetPostDeploymentEvaluationTaskStatus() []apilifecycle.ItemStatus {
 	return pw.Obj.GetPostDeploymentEvaluationTaskStatus()
 }
 
-func (pw PhaseItemWrapper) GenerateTask(taskDefinition klcv1beta1.KeptnTaskDefinition, checkType apicommon.CheckType) klcv1beta1.KeptnTask {
+func (pw PhaseItemWrapper) GenerateTask(taskDefinition apilifecycle.KeptnTaskDefinition, checkType apicommon.CheckType) apilifecycle.KeptnTask {
 	return pw.Obj.GenerateTask(taskDefinition, checkType)
 }
 
-func (pw PhaseItemWrapper) GenerateEvaluation(evaluationDefinition klcv1beta1.KeptnEvaluationDefinition, checkType apicommon.CheckType) klcv1beta1.KeptnEvaluation {
+func (pw PhaseItemWrapper) GenerateEvaluation(evaluationDefinition apilifecycle.KeptnEvaluationDefinition, checkType apicommon.CheckType) apilifecycle.KeptnEvaluation {
 	return pw.Obj.GenerateEvaluation(evaluationDefinition, checkType)
 }
 
@@ -165,6 +165,6 @@ func (pw PhaseItemWrapper) GetPromotionTasks() []string {
 	return pw.Obj.GetPromotionTasks()
 }
 
-func (pw PhaseItemWrapper) GetPromotionTaskStatus() []klcv1beta1.ItemStatus {
+func (pw PhaseItemWrapper) GetPromotionTaskStatus() []apilifecycle.ItemStatus {
 	return pw.Obj.GetPromotionTaskStatus()
 }

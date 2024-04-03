@@ -20,14 +20,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // KeptnConfigSpec defines the desired state of KeptnConfig
 type KeptnConfigSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// OTelCollectorUrl can be used to set the Open Telemetry collector that the lifecycle operator should use
 	// +optional
 	OTelCollectorUrl string `json:"OTelCollectorUrl,omitempty"`
@@ -41,6 +35,21 @@ type KeptnConfigSpec struct {
 	// CloudEventsEndpoint can be used to set the endpoint where Cloud Events should be posted by the lifecycle operator
 	// +optional
 	CloudEventsEndpoint string `json:"cloudEventsEndpoint,omitempty"`
+
+	// BlockDeployment is used to block the deployment of the application until the pre-deployment
+	// tasks and evaluations succeed
+	// +kubebuilder:default:=true
+	// +optional
+	BlockDeployment bool `json:"blockDeployment,omitempty"`
+
+	// ObservabilityTimeout specifies the maximum time to observe the deployment phase of KeptnWorkload.
+	// If the workload does not deploy successfully within this time frame, it will be
+	// considered as failed.
+	// +kubebuilder:default:="5m"
+	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
+	// +kubebuilder:validation:Type:=string
+	// +optional
+	ObservabilityTimeout metav1.Duration `json:"observabilityTimeout,omitempty"`
 }
 
 // +kubebuilder:object:root=true

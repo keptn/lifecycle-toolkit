@@ -1,0 +1,24 @@
+global:
+  imageRegistry: "localhost:5000"
+  certManagerEnabled: false
+  caInjectionAnnotations:
+    cert-manager.io/inject-ca-from: keptn-system/keptn-certs
+
+metricsOperator:
+  imagePullPolicy: Never
+  image:
+    tag: $TAG
+
+lifecycleOperator:
+  promotionTasksEnabled: true
+  lifecycleOperator:
+    imagePullPolicy: Never
+    image:
+      tag: $TAG
+    env:
+      functionRunnerImage: localhost:5000/keptn/deno-runtime:$TAG
+      pythonRunnerImage: localhost:5000/keptn/python-runtime:$TAG
+  scheduler:
+    imagePullPolicy: Never
+    image:
+      tag: $TAG

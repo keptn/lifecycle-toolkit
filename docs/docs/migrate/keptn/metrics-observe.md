@@ -239,7 +239,7 @@ The process is:
     ```yaml
     apiVersion: v1
     items:
-    - apiVersion: metrics.keptn.sh/v1beta1
+    - apiVersion: metrics.keptn.sh/v1
       kind: Analysis
       metadata:
         creationTimestamp: "2023-09-14T11:00:01Z"
@@ -295,7 +295,7 @@ to insert a variable as a placeholder
 for the service identifier in the prometheus query:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisValueTemplate
 metadata:
   creationTimestamp: null
@@ -312,7 +312,7 @@ the name of the service can be passed to the analysis
 using the `spec.args` property from the `Analysis` resource:
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: Analysis
 metadata:
   name: analysis-sample-1

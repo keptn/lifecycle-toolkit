@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: podtato-head-entry
+  namespace: podtato-kubectl
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    component: podtato-head-entry
+  ports:
+    - name: http
+      port: 9000
+      protocol: TCP
+      nodePort: 30900
+      targetPort: 9000
+  type: NodePort

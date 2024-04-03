@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-frontend
+  namespace: podtato-head-dev
+spec:
+  selector:
+    matchLabels:
+      app: podtato-head-frontend
+  template:
+    metadata:
+      labels:
+        app: podtato-head-frontend
+        app.kubernetes.io/name: podtato-head-frontend
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/version: {{.Values.serviceVersion}}
+    spec:
+      containers:
+        - image: ghcr.io/podtato-head/podtato-server:{{.Values.serviceVersion}}
+          name: podtato-head-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+              name: http
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/part-of: podtato-head
+  name: podtato-head-frontend
+  namespace: podtato-head-dev
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 9000
+      protocol: TCP
+  selector:
+    app: podtato-head-frontend
+  type: ClusterIP
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppContext
+metadata:
+  name: podtato-head
+  namespace: podtato-head-dev
+spec:
+  postDeploymentTasks:
+    - post-deployment
+  promotionTasks:
+    - promote
+  metadata:
+    commitID: {{.Values.commitID}}
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: post-deployment
+  namespace: podtato-head-dev
+spec:
+  deno:
+    inline:
+      code: |
+        console.log("deployment completed");
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: promote
+  namespace: podtato-head-dev
+spec:
+  deno:
+    secureParameters:
+      secret: github-token
+    inline:
+      code: |
+        let secureDataText = Deno.env.get("SECURE_DATA");
+        let secureData;
+        if (secureDataText != "") {
+            secureData = JSON.parse(secureDataText);
+        }
+        let contextText = Deno.env.get("KEPTN_CONTEXT");
+        let context;
+        if (contextText != "") {
+          context = JSON.parse(contextText);
+        }
+        let body = `{"ref":"main","inputs":{"traceParent":"${context.metadata.traceparent}"}}`;
+        let resp = await fetch(
+          "https://api.github.com/repos/" + secureData.githubRepoOwner + "/" + secureData.githubRepo + "/actions/workflows/promote.yaml/dispatches",
+          {
+            method: "POST",
+            body: body,
+            headers: {
+              'Accept': 'application/vnd.github+json',
+              'Authorization': `Bearer ${secureData.apiToken}`,
+              'X-GitHub-Api-Version': '2022-11-28'
+          },
+        });
+        console.log(resp);

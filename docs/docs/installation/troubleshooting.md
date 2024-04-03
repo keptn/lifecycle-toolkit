@@ -40,26 +40,27 @@ kubectl -n prod get pods
 kubectl -n prod logs job/...
 ```
 
+> **Note**
+The blocking behavior can be changed by configuring non-blocking deployment
+functionality.
+More information can be found in the
+[Keptn non-blocking deployment section](../components/lifecycle-operator/keptn-non-blocking.md).
+
 ## I have pending Pods after Keptn is uninstalled
 
-> **Note** This section particularly affects clusters managed by ArgoCD.
+> **Note** This section particularly affects clusters where
+Keptn was installed via ArgoCD.
 
-If you have uninstalled Keptn and are now facing issues scheduling or deleting pods, follow these steps:
+If you have uninstalled Keptn, originally installed via ArgoCD
+and are now facing issues scheduling or deleting pods for other applications,
+you probably didn't enable
+[cascading deletion](https://kubernetes.io/docs/concepts/architecture/garbage-collection/#cascading-deletion)
+of the application during installation, which is disabled by default in ArgoCD.
 
-ArgoCD does not delete various CRDs and webhooks, when uninstalling applications, causing lingering resources.
-
-### For cleanup instructions
-
-1. Install Keptn & CRDs w/ Argo
-2. Uninstall Keptn via Argo
-3. Cluster is frozen, Pods cannot be deleted or scheduled
-
-Trying to schedule a new pod results an `mpod.keptn.sh` error.
-
-Reason: Argo doesn't remove the CRDs and global objects (mutating webhooks) and the
-[default failurePolicy is to fail](https://github.com/keptn/lifecycle-toolkit/blob/650ecba95624ed3dc2bd61bf1f86578f450223a5/operator/config/webhook/manifests.yaml#L17).
-
-to get further information refer to this [issue](https://github.com/keptn/lifecycle-toolkit/issues/1828).
+To fix this problem, you need to install Keptn via ArgoCD again, with the use
+of `finalizers` in your Argo Application.
+For more information see the
+[Deploy Keptn via ArgoCD](./configuration/argocd.md) section for more information.
 
 ## I cannot see DORA metrics or OpenTelemetry traces
 

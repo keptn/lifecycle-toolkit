@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-frontend
+  namespace: podtato-head-production
+spec:
+  selector:
+    matchLabels:
+      app: podtato-head-frontend
+  template:
+    metadata:
+      labels:
+        app: podtato-head-frontend
+        app.kubernetes.io/name: podtato-head-frontend
+        app.kubernetes.io/part-of: podtato-head
+        app.kubernetes.io/version: {{.Values.serviceVersion}}
+    spec:
+      containers:
+        - image: ghcr.io/podtato-head/podtato-server:{{.Values.serviceVersion}}
+          name: podtato-head-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+              name: http
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/part-of: podtato-head
+  name: podtato-head-frontend
+  namespace: podtato-head-production
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 9000
+      protocol: TCP
+  selector:
+    app: podtato-head-frontend
+  type: ClusterIP
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppContext
+metadata:
+  name: podtato-head
+  namespace: podtato-head-production
+spec:
+  metadata:
+    commitID: {{.Values.commitID}}
+  spanLinks:
+    - {{.Values.traceParent}} # (1)!

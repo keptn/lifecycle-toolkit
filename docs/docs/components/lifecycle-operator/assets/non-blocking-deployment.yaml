@@ -1,0 +1,54 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppVersion
+metadata:
+  name: podtato-head-0.1.0-6b86b273
+spec:
+  appName: podtato-head
+  preDeploymentTasks:
+    - failing-task
+  revision: 1
+  version: 0.1.0
+  workloads:
+    - name: podtato-head-entry
+      version: 0.1.0
+status:
+  currentPhase: Completed
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Warning
+  preDeploymentTaskStatus:
+    - definitionName: failing-task
+      status: Failed
+  promotionStatus: Succeeded
+  status: Succeeded
+  workloadOverallStatus: Succeeded
+  workloadStatus:
+    - status: Succeeded
+      workload:
+        name: podtato-head-entry
+        version: 0.1.0
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkloadVersion
+metadata:
+  generation: 1
+  name: podtato-head-podtato-head-entry-0.1.0
+spec:
+  app: podtato-head
+  version: 0.1.0
+  workloadName: podtato-head-podtato-head-entry
+status:
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Warning
+  postDeploymentTaskStatus:
+    - definitionName: failing-task
+      status: Failed
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Warning
+  preDeploymentTaskStatus:
+    - definitionName: failing-task
+      status: Failed
+  status: Succeeded

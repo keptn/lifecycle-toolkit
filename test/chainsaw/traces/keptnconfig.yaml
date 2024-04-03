@@ -1,0 +1,6 @@
+apiVersion: options.keptn.sh/v1alpha1
+kind: KeptnConfig
+metadata:
+  name: keptnconfig
+spec:
+  OTelCollectorUrl: 'otel-collector.keptn-system.svc.cluster.local:4317'

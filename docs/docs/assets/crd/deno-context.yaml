@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  SECURE_DATA: dG9rZW46IG15dG9rZW4=
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: pre-deployment-hello
+  annotations: ## accessible via "KEPTN_CONTEXT"
+    my: test
+spec:
+  deno:
+    parameters: ## accessible via "DATA"
+      map:
+        user: "myuser"
+    secureParameters: ## accessible via "SECURE_DATA"
+      secret: mysecret
+    inline:
+      code: |
+        const data = Deno.env.get("DATA")!;
+        const secret = Deno.env.get("SECURE_DATA")!;
+        const context = Deno.env.get("KEPTN_CONTEXT")!;
+        console.log(data);
+        console.log(secret);
+        console.log(context);

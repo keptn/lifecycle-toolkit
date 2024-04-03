@@ -2,18 +2,23 @@ package task
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/stretchr/testify/require"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/trace"
 	"go.opentelemetry.io/otel/trace/noop"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -30,18 +35,18 @@ func TestTaskHandler(t *testing.T) {
 		name            string
 		object          client.Object
 		createAttr      CreateTaskAttributes
-		wantStatus      []v1beta1.ItemStatus
+		wantStatus      []apilifecycle.ItemStatus
 		wantSummary     apicommon.StatusSummary
-		taskObj         v1beta1.KeptnTask
-		taskDef         *v1beta1.KeptnTaskDefinition
+		taskObj         apilifecycle.KeptnTask
+		taskDef         *apilifecycle.KeptnTaskDefinition
 		wantErr         error
 		getSpanCalls    int
 		unbindSpanCalls int
 	}{
 		{
 			name:            "cannot unwrap object",
-			object:          &v1beta1.KeptnTask{},
-			taskObj:         v1beta1.KeptnTask{},
+			object:          &apilifecycle.KeptnTask{},
+			taskObj:         apilifecycle.KeptnTask{},
 			createAttr:      CreateTaskAttributes{},
 			wantStatus:      nil,
 			wantSummary:     apicommon.StatusSummary{},
@@ -51,14 +56,14 @@ func TestTaskHandler(t *testing.T) {
 		},
 		{
 			name:    "no tasks",
-			object:  &v1beta1.KeptnAppVersion{},
-			taskObj: v1beta1.KeptnTask{},
+			object:  &apilifecycle.KeptnAppVersion{},
+			taskObj: apilifecycle.KeptnTask{},
 			createAttr: CreateTaskAttributes{
 				SpanName:   "",
-				Definition: v1beta1.KeptnTaskDefinition{},
+				Definition: apilifecycle.KeptnTaskDefinition{},
 				CheckType:  apicommon.PreDeploymentCheckType,
 			},
-			wantStatus:      []v1beta1.ItemStatus(nil),
+			wantStatus:      []apilifecycle.ItemStatus(nil),
 			wantSummary:     apicommon.StatusSummary{},
 			wantErr:         nil,
 			getSpanCalls:    0,
@@ -66,22 +71,22 @@ func TestTaskHandler(t *testing.T) {
 		},
 		{
 			name: "task not started - could not find taskDefinition",
-			object: &v1beta1.KeptnAppVersion{
+			object: &apilifecycle.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 				},
-				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
-						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+				Spec: apilifecycle.KeptnAppVersionSpec{
+					KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+						DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
 							PreDeploymentTasks: []string{"task-def"},
 						},
 					},
 				},
 			},
-			taskObj: v1beta1.KeptnTask{},
+			taskObj: apilifecycle.KeptnTask{},
 			createAttr: CreateTaskAttributes{
 				SpanName: "",
-				Definition: v1beta1.KeptnTaskDefinition{
+				Definition: apilifecycle.KeptnTaskDefinition{
 					ObjectMeta: v1.ObjectMeta{
 						Name: "task-def",
 					},
@@ -96,35 +101,35 @@ func TestTaskHandler(t *testing.T) {
 		},
 		{
 			name: "tasks not started - could not find taskDefinition of one task",
-			object: &v1beta1.KeptnAppVersion{
+			object: &apilifecycle.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 				},
-				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
-						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+				Spec: apilifecycle.KeptnAppVersionSpec{
+					KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+						DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
 							PreDeploymentTasks: []string{"task-def", "other-task-def"},
 						},
 					},
 				},
 			},
-			taskDef: &v1beta1.KeptnTaskDefinition{
+			taskDef: &apilifecycle.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: testcommon.KeptnNamespace,
 					Name:      "task-def",
 				},
 			},
-			taskObj: v1beta1.KeptnTask{},
+			taskObj: apilifecycle.KeptnTask{},
 			createAttr: CreateTaskAttributes{
 				SpanName: "",
-				Definition: v1beta1.KeptnTaskDefinition{
+				Definition: apilifecycle.KeptnTaskDefinition{
 					ObjectMeta: v1.ObjectMeta{
 						Name: "task-def",
 					},
 				},
 				CheckType: apicommon.PreDeploymentCheckType,
 			},
-			wantStatus: []v1beta1.ItemStatus{
+			wantStatus: []apilifecycle.ItemStatus{
 				{
 					DefinitionName: "task-def",
 					Status:         apicommon.StatePending,
@@ -138,35 +143,35 @@ func TestTaskHandler(t *testing.T) {
 		},
 		{
 			name: "task not started - taskDefinition in default Keptn namespace",
-			object: &v1beta1.KeptnAppVersion{
+			object: &apilifecycle.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 				},
-				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
-						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+				Spec: apilifecycle.KeptnAppVersionSpec{
+					KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+						DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
 							PreDeploymentTasks: []string{"task-def"},
 						},
 					},
 				},
 			},
-			taskDef: &v1beta1.KeptnTaskDefinition{
+			taskDef: &apilifecycle.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: testcommon.KeptnNamespace,
 					Name:      "task-def",
 				},
 			},
-			taskObj: v1beta1.KeptnTask{},
+			taskObj: apilifecycle.KeptnTask{},
 			createAttr: CreateTaskAttributes{
 				SpanName: "",
-				Definition: v1beta1.KeptnTaskDefinition{
+				Definition: apilifecycle.KeptnTaskDefinition{
 					ObjectMeta: v1.ObjectMeta{
 						Name: "task-def",
 					},
 				},
 				CheckType: apicommon.PreDeploymentCheckType,
 			},
-			wantStatus: []v1beta1.ItemStatus{
+			wantStatus: []apilifecycle.ItemStatus{
 				{
 					DefinitionName: "task-def",
 					Status:         apicommon.StatePending,
@@ -180,35 +185,35 @@ func TestTaskHandler(t *testing.T) {
 		},
 		{
 			name: "task not started",
-			object: &v1beta1.KeptnAppVersion{
+			object: &apilifecycle.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 				},
-				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
-						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+				Spec: apilifecycle.KeptnAppVersionSpec{
+					KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+						DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
 							PreDeploymentTasks: []string{"task-def"},
 						},
 					},
 				},
 			},
-			taskDef: &v1beta1.KeptnTaskDefinition{
+			taskDef: &apilifecycle.KeptnTaskDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 					Name:      "task-def",
 				},
 			},
-			taskObj: v1beta1.KeptnTask{},
+			taskObj: apilifecycle.KeptnTask{},
 			createAttr: CreateTaskAttributes{
 				SpanName: "",
-				Definition: v1beta1.KeptnTaskDefinition{
+				Definition: apilifecycle.KeptnTaskDefinition{
 					ObjectMeta: v1.ObjectMeta{
 						Name: "task-def",
 					},
 				},
 				CheckType: apicommon.PreDeploymentCheckType,
 			},
-			wantStatus: []v1beta1.ItemStatus{
+			wantStatus: []apilifecycle.ItemStatus{
 				{
 					DefinitionName: "task-def",
 					Status:         apicommon.StatePending,
@@ -222,17 +227,17 @@ func TestTaskHandler(t *testing.T) {
 		},
 		{
 			name: "already done task",
-			object: &v1beta1.KeptnAppVersion{
-				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
-						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+			object: &apilifecycle.KeptnAppVersion{
+				Spec: apilifecycle.KeptnAppVersionSpec{
+					KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+						DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
 							PreDeploymentTasks: []string{"task-def"},
 						},
 					},
 				},
-				Status: v1beta1.KeptnAppVersionStatus{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					PreDeploymentStatus: apicommon.StateSucceeded,
-					PreDeploymentTaskStatus: []v1beta1.ItemStatus{
+					PreDeploymentTaskStatus: []apilifecycle.ItemStatus{
 						{
 							DefinitionName: "task-def",
 							Status:         apicommon.StateSucceeded,
@@ -241,17 +246,17 @@ func TestTaskHandler(t *testing.T) {
 					},
 				},
 			},
-			taskObj: v1beta1.KeptnTask{},
+			taskObj: apilifecycle.KeptnTask{},
 			createAttr: CreateTaskAttributes{
 				SpanName: "",
-				Definition: v1beta1.KeptnTaskDefinition{
+				Definition: apilifecycle.KeptnTaskDefinition{
 					ObjectMeta: v1.ObjectMeta{
 						Name: "task-def",
 					},
 				},
 				CheckType: apicommon.PreDeploymentCheckType,
 			},
-			wantStatus: []v1beta1.ItemStatus{
+			wantStatus: []apilifecycle.ItemStatus{
 				{
 					DefinitionName: "task-def",
 					Status:         apicommon.StateSucceeded,
@@ -265,20 +270,20 @@ func TestTaskHandler(t *testing.T) {
 		},
 		{
 			name: "failed task",
-			object: &v1beta1.KeptnAppVersion{
+			object: &apilifecycle.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 				},
-				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
-						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+				Spec: apilifecycle.KeptnAppVersionSpec{
+					KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+						DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
 							PreDeploymentTasks: []string{"task-def"},
 						},
 					},
 				},
-				Status: v1beta1.KeptnAppVersionStatus{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					PreDeploymentStatus: apicommon.StateSucceeded,
-					PreDeploymentTaskStatus: []v1beta1.ItemStatus{
+					PreDeploymentTaskStatus: []apilifecycle.ItemStatus{
 						{
 							DefinitionName: "task-def",
 							Status:         apicommon.StateProgressing,
@@ -287,25 +292,25 @@ func TestTaskHandler(t *testing.T) {
 					},
 				},
 			},
-			taskObj: v1beta1.KeptnTask{
+			taskObj: apilifecycle.KeptnTask{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 					Name:      "pre-task-def-",
 				},
-				Status: v1beta1.KeptnTaskStatus{
+				Status: apilifecycle.KeptnTaskStatus{
 					Status: apicommon.StateFailed,
 				},
 			},
 			createAttr: CreateTaskAttributes{
 				SpanName: "",
-				Definition: v1beta1.KeptnTaskDefinition{
+				Definition: apilifecycle.KeptnTaskDefinition{
 					ObjectMeta: v1.ObjectMeta{
 						Name: "task-def",
 					},
 				},
 				CheckType: apicommon.PreDeploymentCheckType,
 			},
-			wantStatus: []v1beta1.ItemStatus{
+			wantStatus: []apilifecycle.ItemStatus{
 				{
 					DefinitionName: "task-def",
 					Status:         apicommon.StateFailed,
@@ -319,20 +324,20 @@ func TestTaskHandler(t *testing.T) {
 		},
 		{
 			name: "succeeded task",
-			object: &v1beta1.KeptnAppVersion{
+			object: &apilifecycle.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 				},
-				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
-						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+				Spec: apilifecycle.KeptnAppVersionSpec{
+					KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+						DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
 							PreDeploymentTasks: []string{"task-def"},
 						},
 					},
 				},
-				Status: v1beta1.KeptnAppVersionStatus{
+				Status: apilifecycle.KeptnAppVersionStatus{
 					PreDeploymentStatus: apicommon.StateSucceeded,
-					PreDeploymentTaskStatus: []v1beta1.ItemStatus{
+					PreDeploymentTaskStatus: []apilifecycle.ItemStatus{
 						{
 							DefinitionName: "task-def",
 							Status:         apicommon.StateProgressing,
@@ -341,29 +346,83 @@ func TestTaskHandler(t *testing.T) {
 					},
 				},
 			},
-			taskObj: v1beta1.KeptnTask{
+			taskObj: apilifecycle.KeptnTask{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 					Name:      "pre-task-def-",
 				},
-				Status: v1beta1.KeptnTaskStatus{
+				Status: apilifecycle.KeptnTaskStatus{
 					Status: apicommon.StateSucceeded,
 				},
 			},
 			createAttr: CreateTaskAttributes{
 				SpanName: "",
-				Definition: v1beta1.KeptnTaskDefinition{
+				Definition: apilifecycle.KeptnTaskDefinition{
 					ObjectMeta: v1.ObjectMeta{
 						Name: "task-def",
 					},
 				},
 				CheckType: apicommon.PreDeploymentCheckType,
 			},
-			wantStatus: []v1beta1.ItemStatus{
+			wantStatus: []apilifecycle.ItemStatus{
 				{
 					DefinitionName: "task-def",
 					Status:         apicommon.StateSucceeded,
 					Name:           "pre-task-def-",
+				},
+			},
+			wantSummary:     apicommon.StatusSummary{Total: 1, Succeeded: 1},
+			wantErr:         nil,
+			getSpanCalls:    1,
+			unbindSpanCalls: 1,
+		},
+		{
+			name: "succeeded promotion task",
+			object: &apilifecycle.KeptnAppVersion{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+				},
+				Spec: apilifecycle.KeptnAppVersionSpec{
+					KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+						DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
+							PromotionTasks: []string{"task-def"},
+						},
+					},
+				},
+				Status: apilifecycle.KeptnAppVersionStatus{
+					PromotionStatus: apicommon.StateSucceeded,
+					PromotionTaskStatus: []apilifecycle.ItemStatus{
+						{
+							DefinitionName: "task-def",
+							Status:         apicommon.StateProgressing,
+							Name:           "prom-task-def-",
+						},
+					},
+				},
+			},
+			taskObj: apilifecycle.KeptnTask{
+				ObjectMeta: v1.ObjectMeta{
+					Namespace: "namespace",
+					Name:      "prom-task-def-",
+				},
+				Status: apilifecycle.KeptnTaskStatus{
+					Status: apicommon.StateSucceeded,
+				},
+			},
+			createAttr: CreateTaskAttributes{
+				SpanName: "",
+				Definition: apilifecycle.KeptnTaskDefinition{
+					ObjectMeta: v1.ObjectMeta{
+						Name: "task-def",
+					},
+				},
+				CheckType: apicommon.PromotionCheckType,
+			},
+			wantStatus: []apilifecycle.ItemStatus{
+				{
+					DefinitionName: "task-def",
+					Status:         apicommon.StateSucceeded,
+					Name:           "prom-task-def-",
 				},
 			},
 			wantSummary:     apicommon.StatusSummary{Total: 1, Succeeded: 1},
@@ -376,7 +435,7 @@ func TestTaskHandler(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := v1beta1.AddToScheme(scheme.Scheme)
+			err := apilifecycle.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			spanHandlerMock := telemetryfake.ISpanHandlerMock{
 				GetSpanFunc: func(ctx context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phase string, links ...trace.Link) (context.Context, trace.Span, error) {
@@ -426,20 +485,20 @@ func TestTaskHandler_createTask(t *testing.T) {
 	}{
 		{
 			name:       "cannot unwrap object",
-			object:     &v1beta1.KeptnEvaluation{},
+			object:     &apilifecycle.KeptnEvaluation{},
 			createAttr: CreateTaskAttributes{},
 			wantName:   "",
 			wantErr:    controllererrors.ErrCannotWrapToPhaseItem,
 		},
 		{
 			name: "created task",
-			object: &v1beta1.KeptnAppVersion{
+			object: &apilifecycle.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Namespace: "namespace",
 				},
-				Spec: v1beta1.KeptnAppVersionSpec{
-					KeptnAppContextSpec: v1beta1.KeptnAppContextSpec{
-						DeploymentTaskSpec: v1beta1.DeploymentTaskSpec{
+				Spec: apilifecycle.KeptnAppVersionSpec{
+					KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+						DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
 							PreDeploymentTasks: []string{"task-def"},
 						},
 					},
@@ -448,7 +507,7 @@ func TestTaskHandler_createTask(t *testing.T) {
 			createAttr: CreateTaskAttributes{
 				SpanName:  "",
 				CheckType: apicommon.PreDeploymentCheckType,
-				Definition: v1beta1.KeptnTaskDefinition{
+				Definition: apilifecycle.KeptnTaskDefinition{
 					ObjectMeta: v1.ObjectMeta{
 						Name: "task-def",
 					},
@@ -461,8 +520,9 @@ func TestTaskHandler_createTask(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := v1beta1.AddToScheme(scheme.Scheme)
+			err := apilifecycle.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
+
 			handler := Handler{
 				SpanHandler: &telemetryfake.ISpanHandlerMock{},
 				Log:         ctrl.Log.WithName("controller"),
@@ -471,9 +531,43 @@ func TestTaskHandler_createTask(t *testing.T) {
 				Tracer:      noop.NewTracerProvider().Tracer("tracer"),
 				Scheme:      scheme.Scheme,
 			}
-			name, err := handler.CreateKeptnTask(context.TODO(), "namespace", tt.object, tt.createAttr)
+
+			// create a context with a traceParent and metadata attributes
+
+			name, err := handler.CreateKeptnTask(context.TODO(), context.TODO(), "namespace", tt.object, tt.createAttr)
+
 			require.True(t, strings.Contains(name, tt.wantName))
 			require.Equal(t, tt.wantErr, err)
 		})
 	}
+}
+
+func Test_injectKeptnContext(t *testing.T) {
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+
+	tp := sdktrace.NewTracerProvider()
+
+	tracer := tp.Tracer("keptn")
+
+	ctx := keptncontext.WithAppMetadata(context.TODO(), map[string]string{
+		"foo": "bar",
+	})
+	ctx, span := tracer.Start(ctx, "my-span")
+	defer span.End()
+
+	task := &apilifecycle.KeptnTask{}
+	injectKeptnContext(ctx, task)
+
+	require.Equal(
+		t, map[string]string{
+			"foo": "bar",
+			"traceparent": fmt.Sprintf(
+				"00-%s-%s-01",
+				span.SpanContext().TraceID().String(),
+				span.SpanContext().SpanID().String(),
+			),
+		},
+		task.Spec.Context.Metadata,
+	)
+
 }

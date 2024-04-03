@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn for non-Kubernetes deployments
 
 Keptn can interact with deployments that are not running on Kubernetes
@@ -54,7 +58,7 @@ For example, you might create a `test-task-definition.yaml` file
 with the following content:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: helloworldtask
@@ -94,7 +98,7 @@ For example, you might create a `test-task.yaml` file
 with the following content:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTask
 metadata:
   name: runhelloworld1
@@ -137,7 +141,7 @@ For example, you could create a `test-task-2.yaml` file
 with the `metadata.name` field set to `runhelloworld2`:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTask
 metadata:
   name: runhelloworld2
@@ -175,13 +179,13 @@ similar to what the metrics evaluations of the
 Keptn v1 quality gates feature provided.
 The data used can come from multiple instances
 of multiple data providers
-(such as Prometheus, Dynatrace, and DataDog).
+(such as Prometheus, Thanos, Cortex, Dynatrace, and DataDog).
 
 A Keptn analysis can be run for any application running anywhere
 as long Keptn can access a monitoring provider endpoint
 that serves metrics for the application.
 You can point to multiple instances of the supported monitoring providers
-(Prometheus, Dynatrace, Datadog, and dql)
+(Prometheus, Thanos, Cortex, Dynatrace, Datadog, and dql)
 so the application itself can run anywhere.
 
 To implement a Keptn analysis for your deployment:
@@ -202,6 +206,6 @@ To implement a Keptn analysis for your deployment:
 See the
 [Analysis](../guides/slo.md)
 guide and the
-[Analyzing Application Performance with Keptn](https://keptn.sh/latest/blog/2023/12/19/analyzing-application-performance-with-keptn/)
+[Analyzing Application Performance with Keptn](https://keptn.sh/stable/blog/2023/12/19/analyzing-application-performance-with-keptn/)
 blog
 for more details and examples for the Keptn analysis feature.

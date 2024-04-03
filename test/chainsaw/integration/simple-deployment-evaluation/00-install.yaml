@@ -1,0 +1,56 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnEvaluationDefinition
+metadata:
+  name: pre-deployment-hello
+spec:
+  objectives:
+    - evaluationTarget: ">1"
+      keptnMetricRef:
+        name: available-cpus
+---
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetric
+metadata:
+  name: available-cpus
+spec:
+  fetchIntervalSeconds: 10
+  provider:
+    name: prometheus
+  query: >-
+    sum(kube_node_status_capacity{resource='cpu'})
+---
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetricsProvider
+metadata:
+  name: prometheus
+spec:
+  type: prometheus
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test
+  name: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: test
+      annotations:
+        keptn.sh/workload: waiter
+        keptn.sh/version: "0.4"
+        keptn.sh/pre-deployment-evaluations: pre-deployment-hello
+        keptn.sh/post-deployment-evaluations: pre-deployment-hello
+        keptn.sh/metadata: "commit-id=1234,stage=dev"
+    spec:
+      containers:
+        - image: busybox
+          name: busybox
+          command: ['sh', '-c', 'echo The app is running! && sleep infinity']

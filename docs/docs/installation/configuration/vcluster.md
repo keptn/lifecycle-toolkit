@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # vCluster installation
 
 Keptn running on Kubernetes versions 1.26 and older

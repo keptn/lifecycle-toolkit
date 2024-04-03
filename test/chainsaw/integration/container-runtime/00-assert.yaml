@@ -1,0 +1,50 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkloadVersion
+metadata:
+  name: waiter-waiter-0.4
+status:
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - definitionName: pre-deployment-sleep
+      status: Succeeded
+  status: Succeeded
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTask
+metadata:
+  annotations:
+    container: test
+status:
+  status: Succeeded
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    container: test
+    keptn.sh/app: waiter
+    keptn.sh/version: '0.4'
+    keptn.sh/workload: waiter-waiter
+spec:
+  template:
+    spec:
+      containers:
+        - name: testy-test
+          image: busybox:1.36.1
+          env:
+            - name: KEPTN_CONTEXT
+              value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"pre","objectType":"Workload"}'
+          command:
+            - 'sh'
+            - '-c'
+            - 'sleep 30'
+status:
+  conditions:
+    - type: Complete
+      status: 'True'
+  succeeded: 1

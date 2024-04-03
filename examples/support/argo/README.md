@@ -9,7 +9,7 @@ using Keptn and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/).
 * Install argo CLI according to the instructions [here](https://argo-cd.readthedocs.io/en/stable/cli_installation/)
 * Afterward, you can fetch the secret for the ArgoCD CLI using: `make argo-get-password`
 * Then you can port-forward the ArgoUI using: `make port-forward-argocd`
-  * Alternatively, you can access Argo using the CLI, configure it using `make argo-configure-cli`
+    * Alternatively, you can access Argo using the CLI, configure it using `make argo-configure-cli`
 * Deploy the PodTatoHead Demo Application: `make argo-install-podtatohead`
 * Watch the progress on your ArgoUI: `http://localhost:8080`.
   Use the `admin` user and the password
@@ -29,14 +29,13 @@ ArgoCD, as in the following their [installation instructions](https://argo-cd.re
 
 If you don't have an already existing installation of ArgoCD, you
 can [install](https://raw.githubusercontent.com/argoproj/argo-cd/v2.4.14/manifests/install.yaml) it using the following
-commands:
+command:
 
 ```shell
-kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.4.14/manifests/install.yaml
+make install
 ```
 
-With these commands, ArgoCD will be installed in the `argocd` namespace.
+With this command, ArgoCD will be installed in the `argocd` namespace.
 
 After that, you can find the password for ArgoCD using the following command:
 
@@ -56,11 +55,10 @@ Then you can access the UI using <http://localhost:8080>.
 
 ## Installing the Demo Application
 
-To install the demo application, you can use the following command (
-apply [this manifest](https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/examples/support/argo/config/app.yaml)):
+To install the demo application, you can use the following command:
 
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/keptn-sandbox/lifecycle-toolkit-examples/main/support/argo/config/app.yaml
+make argo-install-podtatohead
 ```
 
 You will see that the application will be deployed using ArgoCD.

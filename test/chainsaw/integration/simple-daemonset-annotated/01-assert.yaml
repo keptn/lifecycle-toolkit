@@ -1,0 +1,37 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkload
+metadata:
+  name: work-work
+spec:
+  metadata:
+    commit-id: "1234"
+    stage: dev
+---
+
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkloadVersion
+metadata:
+  name: work-work-0.4
+spec:
+  metadata:
+    commit-id: "1234"
+    stage: dev
+status:
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: pre-deployment-hello
+  status: Succeeded
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: daemonset
+status:
+  phase: Running

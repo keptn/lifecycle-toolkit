@@ -1,0 +1,12 @@
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppContext
+metadata:
+  name: podtato-head
+  namespace: podtato-kubectl
+spec:
+  preDeploymentTasks:
+    - container-sleep
+    - python-secret
+  promotionTasks:
+    - promotion

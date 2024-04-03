@@ -15,7 +15,7 @@ global:
   ## @param global.certManagerEnabled Enable this value to install Keptn Certificate Manager
   certManagerEnabled: true
   ## @param global.imageRegistry Global Docker image registry
-  imageRegistry: ""
+  imageRegistry: "ghcr.io"
 
   ## @param global.imagePullSecrets Global Docker registry secret names as an array
   ## E.g.
@@ -23,6 +23,8 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
+  ## @param global.imagePullPolicy Policy for pulling Docker images. Options: Always, IfNotPresent, Never
+  imagePullPolicy: ""
   ## @param global.commonLabels Common labels to add to all Keptn resources. Evaluated as a template
   commonLabels: {}
   ## @param global.commonAnnotations Common annotations to add to all Keptn resources. Evaluated as a template

@@ -1,0 +1,28 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnApp
+metadata:
+  name: "some-keptn-app"
+  namespace: "my-app-ns"
+  labels:
+    app.kubernetes.io/managed-by: keptn # added annotation
+spec:
+  version: "1.2.3"
+  workloads:
+    - name: podtato-head-left-arm
+      version: 0.2.7
+# removed pre/post-deployment tasks and evaluations
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppContext
+metadata:
+  name: "some-keptn-app" # created a resource with the same name as KeptnApp
+  namespace: "my-app-ns"
+spec:
+  preDeploymentTasks:    # moved pre/post-deployment tasks and evaluations
+    - pre-deployment-task
+  preDeploymentEvaluations:
+    - pre-deployment-evaluation
+  postDeploymentTasks:
+    - post-deployment-task
+  postDeploymentEvaluations:
+    - post-deployment-evaluation

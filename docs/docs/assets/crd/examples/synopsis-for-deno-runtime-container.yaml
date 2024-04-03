@@ -1,0 +1,12 @@
+apiVersion: lifecycle.keptn.sh/v?alpha?
+kind: KeptnTaskDefinition
+metadata:
+  name: <task-name>
+spec:
+  deno: |
+    inline | httpRef | functionRef | ConfigMapRef
+    parameters: |
+      map:
+        textMessage: "This is my configuration"
+    secureParameters:
+      secret: <secret-name>

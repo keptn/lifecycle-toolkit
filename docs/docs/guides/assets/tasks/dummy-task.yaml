@@ -1,0 +1,13 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: dummy-task
+  namespace: "default"
+spec:
+  deno:
+    secureParameters:
+      secret: my-secret
+    inline:
+      code: |
+        let secret_text = Deno.env.get("SECURE_DATA");
+        // secret_text = "foo"

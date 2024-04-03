@@ -1,0 +1,10 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: pre-deployment-check
+  namespace: restartable-apps
+spec:
+  deno:
+    inline:
+      code: |
+        console.error("Success")

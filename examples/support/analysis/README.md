@@ -31,7 +31,7 @@ kubectl create namespace analysis-demo
 
 ```shell
 cat <<EOF | kubectl apply -f - 
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetricsProvider
 metadata:
   name: my-provider
@@ -55,7 +55,7 @@ First, we are going to create the template for the response time:
 
 ```shell
 cat <<EOF | kubectl apply -f - 
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisValueTemplate
 metadata:
   name: response-time-p95
@@ -71,7 +71,7 @@ Our second metric will be the error rate, which we will retrieve with the follow
 
 ```shell
 cat <<EOF | kubectl apply -f - 
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisValueTemplate
 metadata:
   name: error-rate
@@ -115,7 +115,7 @@ rather than from a real Prometheus instance:
 
 ```shell
 cat <<EOF | kubectl apply -f - 
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetricsProvider
 metadata:
   name: my-provider
@@ -133,7 +133,7 @@ This is done in an `AnalysisDefinition`, which can be applied using the followin
 
 ```shell
 cat <<EOF | kubectl apply -f - 
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisDefinition
 metadata:
   name: my-analysis-definition
@@ -172,7 +172,7 @@ to perform an analysis for a specific timeframe:
 
 ```shell
 cat <<EOF | kubectl apply -f - 
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: Analysis
 metadata:
   name: analysis-sample
@@ -217,7 +217,7 @@ This will return something like the following, and includes the `status.raw` fie
 breakdown on the result of each objective evaluation.
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: Analysis
 metadata:
   name: analysis-sample
@@ -340,37 +340,37 @@ The meaning of each of these properties is as follows:
 each representing the results of a specific objective or performance metric.
 
 - The first item in the array:
-  - **`result`**: This object contains information about whether the objective has passed or failed.
+    - **`result`**: This object contains information about whether the objective has passed or failed.
 It has two sub-objects:
-    - **`failResult`**: Indicates whether the objective has failed.
+        - **`failResult`**: Indicates whether the objective has failed.
 In this case, it checks if a value is greater than 500 milliseconds, and it hasn't been fulfilled (`fulfilled: false`).
-    - **`warnResult`**: Indicates whether the objective has issued a warning.
+        - **`warnResult`**: Indicates whether the objective has issued a warning.
 It checks if a value is greater than 300 milliseconds, and it hasn't been fulfilled (`fulfilled: false`).
     <!-- markdownlint-disable-next-line -->
     - **`warning`**: Indicates whether a warning has been issued (false in this case).
-    - **`pass`**: Indicates whether the objective has passed (true in this case).
-  - **`objective`**: Describes the objective being evaluated.
+        - **`pass`**: Indicates whether the objective has passed (true in this case).
+    - **`objective`**: Describes the objective being evaluated.
 It includes:
-    - **`analysisValueTemplateRef`**: Refers to the template used for analysis (`response-time-p95`).
-    - **`target`**: Sets the target values for failure and warning conditions.
+        - **`analysisValueTemplateRef`**: Refers to the template used for analysis (`response-time-p95`).
+        - **`target`**: Sets the target values for failure and warning conditions.
 In this case, failure occurs if the value is greater than 500 milliseconds,
 and warning occurs if it's greater than 300 milliseconds.
-    - **`weight`**: Specifies the weight assigned to this objective (weight: 1).
-  - **`value`**: Indicates the actual value measured for this objective (value: 0.00475).
-  - **`score`**: Indicates the score assigned to this objective (score: 1).
+        - **`weight`**: Specifies the weight assigned to this objective (weight: 1).
+    - **`value`**: Indicates the actual value measured for this objective (value: 0.00475).
+    - **`score`**: Indicates the score assigned to this objective (score: 1).
 
 - The second item in the array:
-  - **`result`**: Similar to the first objective, it checks whether a value is
+    - **`result`**: Similar to the first objective, it checks whether a value is
 greater than 0 and has not been fulfilled (`fulfilled: false`).
 There are no warning conditions in this case.
-  - **`objective`**: Describes the objective related to error rate analysis.
-    - **`analysisValueTemplateRef`**: Refers to the template used for analysis (`error-rate`).
-    - **`target`**: Sets the target value for failure (failure occurs if the value is greater than 0).
-    - **`weight`**: Specifies the weight assigned to this objective (weight: 1).
-    - **`keyObjective`**: Indicates that this is a key objective (true).
+    - **`objective`**: Describes the objective related to error rate analysis.
+        - **`analysisValueTemplateRef`**: Refers to the template used for analysis (`error-rate`).
+        - **`target`**: Sets the target value for failure (failure occurs if the value is greater than 0).
+        - **`weight`**: Specifies the weight assigned to this objective (weight: 1).
+        - **`keyObjective`**: Indicates that this is a key objective (true).
 
-  - **`value`**: Indicates the actual value measured for this objective (value: 0).
-  - **`score`**: Indicates the score assigned to this objective (score: 1).
+    - **`value`**: Indicates the actual value measured for this objective (value: 0).
+    - **`score`**: Indicates the score assigned to this objective (score: 1).
 
 **`totalScore`**: Represents the total score achieved based on the objectives evaluated (totalScore: 2).
 

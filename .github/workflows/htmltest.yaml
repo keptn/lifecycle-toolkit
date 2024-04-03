@@ -14,6 +14,9 @@ on:
     paths:
       - 'docs/**'
 
+# Declare default permissions as read only.
+permissions: read-all
+
 jobs:
   htmltest:
     # The type of runner that the job will run on
@@ -22,25 +25,17 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           submodules: true
           fetch-depth: 0
 
       - name: Cache HTMLTest packages
-        uses: actions/cache@v3
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
         with:
           path: |
-            docs/tmp/.htmltest
             tmp/.htmltest
-          key: ${{ runner.os }}-htmltest
-
-      - name: Cache Hugo packages
-        uses: actions/cache@v3
-        with:
-          path: |
-            docs/tmp/.hugo
-          key: ${{ runner.os }}-hugo-${{ hashFiles('docs/go.sum') }}
+          key: htmltest-${{ hashFiles('tmp/.htmltest/refcache.json') }}
 
       - name: Check HTML
         run: make htmltest

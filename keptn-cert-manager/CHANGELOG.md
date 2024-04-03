@@ -1,5 +1,81 @@
 # Changelog
 
+## [2.1.1](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.1.0...cert-manager-v2.1.1) (2024-03-19)
+
+
+### Bug Fixes
+
+* security vulnerabilities ([#3230](https://github.com/keptn/lifecycle-toolkit/issues/3230)) ([1d099d7](https://github.com/keptn/lifecycle-toolkit/commit/1d099d7a4c9b5e856de52932693b97c29bea3122))
+
+
+### Other
+
+* bump Go base images and pipelines version to 1.21 ([#3218](https://github.com/keptn/lifecycle-toolkit/issues/3218)) ([de01ca4](https://github.com/keptn/lifecycle-toolkit/commit/de01ca493b307d8c27701552549b982e22281a2e))
+* update chart dependencies ([#3179](https://github.com/keptn/lifecycle-toolkit/issues/3179)) ([b8efdd5](https://github.com/keptn/lifecycle-toolkit/commit/b8efdd50002231a06bac9c5ab02fcdbadea4c60d))
+
+## [2.1.0](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.0.0...cert-manager-v2.1.0) (2024-03-04)
+
+
+### Features
+
+* add global value for imagePullPolicy ([#2807](https://github.com/keptn/lifecycle-toolkit/issues/2807)) ([5596d12](https://github.com/keptn/lifecycle-toolkit/commit/5596d1252b164e469aa122c0ebda8526ccbca888))
+
+
+### Other
+
+* bump go version to 1.21 ([#3006](https://github.com/keptn/lifecycle-toolkit/issues/3006)) ([8236c25](https://github.com/keptn/lifecycle-toolkit/commit/8236c25da7ec3768e76d12eb2e8f5765a005ecfa))
+* bump helm chart dependencies ([#2991](https://github.com/keptn/lifecycle-toolkit/issues/2991)) ([49ee351](https://github.com/keptn/lifecycle-toolkit/commit/49ee3511fd6e425ac095bd7f16ecd1dae6258eb0))
+
+
+### Dependency Updates
+
+* update helm release common to v0.1.4 ([#3114](https://github.com/keptn/lifecycle-toolkit/issues/3114)) ([12b2e58](https://github.com/keptn/lifecycle-toolkit/commit/12b2e58e085fd40cf5c04ca0e5eb071823777701))
+* update kubernetes packages to v0.28.7 (patch) ([#3062](https://github.com/keptn/lifecycle-toolkit/issues/3062)) ([8698803](https://github.com/keptn/lifecycle-toolkit/commit/8698803ff60b71d658d60bfc0c6b8b3d4282798d))
+* update module github.com/stretchr/testify to v1.9.0 ([#3171](https://github.com/keptn/lifecycle-toolkit/issues/3171)) ([d334790](https://github.com/keptn/lifecycle-toolkit/commit/d3347903ad91c33ba4bf664277c53024eb02825a))
+* update module golang.org/x/net to v0.21.0 ([#3091](https://github.com/keptn/lifecycle-toolkit/issues/3091)) ([44489ea](https://github.com/keptn/lifecycle-toolkit/commit/44489ea8909c5c81a2115b952bba9e3416ddd85e))
+* update module sigs.k8s.io/controller-runtime to v0.16.4 ([#3033](https://github.com/keptn/lifecycle-toolkit/issues/3033)) ([f576707](https://github.com/keptn/lifecycle-toolkit/commit/f57670729a18cfdb391c3af5ffdd92de6a330ee5))
+* update module sigs.k8s.io/controller-runtime to v0.16.5 ([#3073](https://github.com/keptn/lifecycle-toolkit/issues/3073)) ([599e2d8](https://github.com/keptn/lifecycle-toolkit/commit/599e2d8712ed7d7b614026a0038d238ed0833b37))
+
+## [2.0.0](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v1.2.0...cert-manager-v2.0.0) (2024-02-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename KLT to Keptn ([#2554](https://github.com/keptn/lifecycle-toolkit/issues/2554))
+
+### Features
+
+* **cert-manager:** introduce a no-op implementation of ICertificateWatcher ([#2708](https://github.com/keptn/lifecycle-toolkit/issues/2708)) ([6b5f424](https://github.com/keptn/lifecycle-toolkit/commit/6b5f424f8cf11ca276c73217b1dc837ec40b4102))
+* introduce configurable support of cert-manager.io CA injection ([#2811](https://github.com/keptn/lifecycle-toolkit/issues/2811)) ([d6d83c7](https://github.com/keptn/lifecycle-toolkit/commit/d6d83c7f67a18a4b30aabe774a8fa2c93399f301))
+
+
+### Bug Fixes
+
+* **helm-chart:** remove double templating of annotations ([#2770](https://github.com/keptn/lifecycle-toolkit/issues/2770)) ([b7a1d29](https://github.com/keptn/lifecycle-toolkit/commit/b7a1d291223eddd9ac83425c71c8c1a515f25f58))
+
+
+### Other
+
+* adapt helm charts to the new Keptn naming ([#2564](https://github.com/keptn/lifecycle-toolkit/issues/2564)) ([9ee4583](https://github.com/keptn/lifecycle-toolkit/commit/9ee45834bfa4dcedcbe99362d5d58b9febe3caae))
+* bump keptn-cert-manager version in helm charts ([#2802](https://github.com/keptn/lifecycle-toolkit/issues/2802)) ([681a050](https://github.com/keptn/lifecycle-toolkit/commit/681a0507020aedcd86a0321ab7230f8072f62f0b))
+* rename Keptn default namespace to 'keptn-system' ([#2565](https://github.com/keptn/lifecycle-toolkit/issues/2565)) ([aec1148](https://github.com/keptn/lifecycle-toolkit/commit/aec11489451ab1b0bcd69a6b90b0d45f69c5df7c))
+* rename KLT to Keptn ([#2554](https://github.com/keptn/lifecycle-toolkit/issues/2554)) ([15b0ac0](https://github.com/keptn/lifecycle-toolkit/commit/15b0ac0b36b8081b85b63f36e94b00065bcc8b22))
+* revert helm charts bump ([#2806](https://github.com/keptn/lifecycle-toolkit/issues/2806)) ([2e85214](https://github.com/keptn/lifecycle-toolkit/commit/2e85214ecd6112e9f9af750d9bde2d491dc8ae73))
+* upgrade helm chart versions ([#2801](https://github.com/keptn/lifecycle-toolkit/issues/2801)) ([ad26093](https://github.com/keptn/lifecycle-toolkit/commit/ad2609373c4819fc560766e64bc032fcfd801889))
+
+
+### Dependency Updates
+
+* update dependency kubernetes-sigs/controller-tools to v0.14.0 ([#2797](https://github.com/keptn/lifecycle-toolkit/issues/2797)) ([71f20a6](https://github.com/keptn/lifecycle-toolkit/commit/71f20a63f8e307d6e94c9c2df79a1258ab147ede))
+* update dependency kubernetes-sigs/kustomize to v5.3.0 ([#2659](https://github.com/keptn/lifecycle-toolkit/issues/2659)) ([8877921](https://github.com/keptn/lifecycle-toolkit/commit/8877921b8be3052ce61a4f8decd96537c93df27a))
+* update keptn/common helm chart to 0.1.3 ([#2831](https://github.com/keptn/lifecycle-toolkit/issues/2831)) ([29187fa](https://github.com/keptn/lifecycle-toolkit/commit/29187fa7eeab148b7188b4c3f05317cc291c15e4))
+* update kubernetes packages to v0.28.5 (patch) ([#2714](https://github.com/keptn/lifecycle-toolkit/issues/2714)) ([192c0b1](https://github.com/keptn/lifecycle-toolkit/commit/192c0b16fc0852dca572448d8caeb113b0e21d40))
+* update kubernetes packages to v0.28.6 (patch) ([#2827](https://github.com/keptn/lifecycle-toolkit/issues/2827)) ([da080fa](https://github.com/keptn/lifecycle-toolkit/commit/da080fafadef25028f9e4b1a78d8a862e58b47e7))
+* update module github.com/go-logr/logr to v1.4.1 ([#2726](https://github.com/keptn/lifecycle-toolkit/issues/2726)) ([3598999](https://github.com/keptn/lifecycle-toolkit/commit/3598999e1cfce6ee528fb5fb777c0b7b7c21678a))
+* update module github.com/spf13/afero to v1.11.0 ([#2622](https://github.com/keptn/lifecycle-toolkit/issues/2622)) ([f4d705d](https://github.com/keptn/lifecycle-toolkit/commit/f4d705dbed6d5a602c5707cbe62024092384693e))
+* update module golang.org/x/net to v0.19.0 ([#2619](https://github.com/keptn/lifecycle-toolkit/issues/2619)) ([af2d0a5](https://github.com/keptn/lifecycle-toolkit/commit/af2d0a509b670792e06e2d05ab4be261d3bb54f4))
+* update module golang.org/x/net to v0.20.0 ([#2786](https://github.com/keptn/lifecycle-toolkit/issues/2786)) ([8294c7b](https://github.com/keptn/lifecycle-toolkit/commit/8294c7b471d7f4d33961513e056c36ba14c940c7))
+
 ## [1.2.0](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v1.1.0...cert-manager-v1.2.0) (2023-10-30)
 
 

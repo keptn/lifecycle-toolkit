@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kyverno/chainsaw/main/.schemas/json/test-chainsaw-v1alpha1.json
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: validate-taskdefinition
+spec:
+  steps:
+    - name: step-00
+      try:
+        - apply:
+            file: td_good_deno.yaml
+        - apply:
+            file: td_good_python.yaml
+        - apply:
+            file: td_good_function.yaml
+        - apply:
+            file: td_good_container.yaml
+        - apply:
+            file: td_bad_python_deno.yaml
+            expect:
+              - check:
+                  ($error != null): true
+        - apply:
+            file: td_bad_function_python.yaml
+            expect:
+              - check:
+                  ($error != null): true
+        - apply:
+            file: td_bad_container_deno.yaml
+            expect:
+              - check:
+                  ($error != null): true
+        - apply:
+            file: td_bad_container_python.yaml
+            expect:
+              - check:
+                  ($error != null): true
+        - apply:
+            file: td_bad_empty.yaml
+            expect:
+              - check:
+                  ($error != null): true
+    - name: step-01
+      try:
+        - assert:
+            file: td_good_deno.yaml
+        - assert:
+            file: td_good_python.yaml
+        - assert:
+            file: td_good_function.yaml
+        - assert:
+            file: td_good_container.yaml
+        - error:
+            file: td_bad_python_deno.yaml
+        - error:
+            file: td_bad_function_python.yaml
+        - error:
+            file: td_bad_container_deno.yaml
+        - error:
+            file: td_bad_container_python.yaml
+        - error:
+            file: td_bad_empty.yaml

@@ -17,14 +17,8 @@ limitations under the License.
 package v1beta1
 
 import (
-	"time"
-
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // KeptnTaskSpec defines the desired state of KeptnTask
@@ -55,7 +49,6 @@ type KeptnTaskSpec struct {
 	// Timeout specifies the maximum time to wait for the task to be completed successfully.
 	// If the task does not complete successfully within this time frame, it will be
 	// considered to be failed.
-	// +optional
 	// +kubebuilder:default:="5m"
 	// +kubebuilder:validation:Pattern="^0|([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$"
 	// +kubebuilder:validation:Type:=string
@@ -82,6 +75,9 @@ type TaskContext struct {
 	// ObjectType indicates whether the KeptnTask is being executed for a KeptnApp or KeptnWorkload.
 	// +optional
 	ObjectType string `json:"objectType"`
+	// +optional
+	// Metadata contains additional key-value pairs for contextual information.
+	Metadata map[string]string `json:"metadata,omitempty"`
 }
 
 type TaskParameters struct {
@@ -126,7 +122,6 @@ type KeptnTaskStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:storageversion
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AppName",type=string,JSONPath=`.spec.app`
 // +kubebuilder:printcolumn:name="AppVersion",type=string,JSONPath=`.spec.appVersion`
@@ -161,115 +156,4 @@ type KeptnTaskList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnTask{}, &KeptnTaskList{})
-}
-
-func (t KeptnTaskList) GetItems() []client.Object {
-	var b []client.Object
-	for _, i := range t.Items {
-		b = append(b, &i)
-	}
-	return b
-}
-
-func (t *KeptnTask) SetStartTime() {
-	if t.Status.StartTime.IsZero() {
-		t.Status.StartTime = metav1.NewTime(time.Now().UTC())
-	}
-}
-
-func (t *KeptnTask) SetEndTime() {
-	if t.Status.EndTime.IsZero() {
-		t.Status.EndTime = metav1.NewTime(time.Now().UTC())
-	}
-}
-
-func (t *KeptnTask) IsStartTimeSet() bool {
-	return !t.Status.StartTime.IsZero()
-}
-
-func (t *KeptnTask) IsEndTimeSet() bool {
-	return !t.Status.EndTime.IsZero()
-}
-
-func (t KeptnTask) GetActiveMetricsAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(t.Spec.Context.AppName),
-		common.AppVersion.String(t.Spec.Context.AppVersion),
-		common.WorkloadName.String(t.Spec.Context.WorkloadName),
-		common.WorkloadVersion.String(t.Spec.Context.WorkloadVersion),
-		common.TaskName.String(t.Name),
-		common.TaskType.String(string(t.Spec.Type)),
-	}
-}
-
-func (t KeptnTask) GetMetricsAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(t.Spec.Context.AppName),
-		common.AppVersion.String(t.Spec.Context.AppVersion),
-		common.WorkloadName.String(t.Spec.Context.WorkloadName),
-		common.WorkloadVersion.String(t.Spec.Context.WorkloadVersion),
-		common.TaskName.String(t.Name),
-		common.TaskType.String(string(t.Spec.Type)),
-		common.TaskStatus.String(string(t.Status.Status)),
-	}
-}
-
-func (t KeptnTask) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(t.GetSpanAttributes()...)
-}
-
-func (t KeptnTask) CreateKeptnAnnotations() map[string]string {
-	if t.Spec.Context.WorkloadName != "" {
-		return common.MergeMaps(t.Annotations, map[string]string{
-			common.AppAnnotation:      t.Spec.Context.AppName,
-			common.WorkloadAnnotation: t.Spec.Context.WorkloadName,
-			common.VersionAnnotation:  t.Spec.Context.WorkloadVersion,
-			common.TaskNameAnnotation: t.Name,
-		})
-	}
-	return common.MergeMaps(t.Annotations, map[string]string{
-		common.AppAnnotation:      t.Spec.Context.AppName,
-		common.VersionAnnotation:  t.Spec.Context.AppVersion,
-		common.TaskNameAnnotation: t.Name,
-	})
-}
-
-func (t KeptnTask) GetSpanAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(t.Spec.Context.AppName),
-		common.AppVersion.String(t.Spec.Context.AppVersion),
-		common.WorkloadName.String(t.Spec.Context.WorkloadName),
-		common.WorkloadVersion.String(t.Spec.Context.WorkloadVersion),
-		common.TaskName.String(t.Name),
-		common.TaskType.String(string(t.Spec.Type)),
-	}
-}
-
-func (t *KeptnTask) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
-	// present due to SpanItem interface
-}
-
-func (t KeptnTask) GetSpanKey(phase string) string {
-	return t.Name
-}
-
-func (t KeptnTask) GetSpanName(phase string) string {
-	return t.Name
-}
-
-func (t KeptnTask) GetEventAnnotations() map[string]string {
-	return map[string]string{
-		"appName":            t.Spec.Context.AppName,
-		"appVersion":         t.Spec.Context.AppVersion,
-		"workloadName":       t.Spec.Context.WorkloadName,
-		"workloadVersion":    t.Spec.Context.WorkloadVersion,
-		"taskName":           t.Name,
-		"taskDefinitionName": t.Spec.TaskDefinition,
-	}
-}
-
-func (t KeptnTask) GetActiveDeadlineSeconds() *int64 {
-	deadline, _ := time.ParseDuration(t.Spec.Timeout.Duration.String())
-	seconds := int64(deadline.Seconds())
-	return &seconds
 }

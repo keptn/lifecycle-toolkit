@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kyverno/chainsaw/main/.schemas/json/test-chainsaw-v1alpha1.json
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: expose-keptn-metric
+spec:
+  bindings:
+    - name: service
+      value: (x_k8s_list($client, 'v1', 'Service', 'keptn-system') | items[?metadata.labels."control-plane" == 'metrics-operator'] | [0])
+  steps:
+    - name: step-00
+      try:
+        - apply:
+            template: true
+            file: job-no-metric.yaml
+        - wait:
+            timeout: 5m
+            resource: job
+            selector: kind=no-metric
+            for:
+              condition:
+                name: complete
+    - name: step-01
+      try:
+        - apply:
+            template: true
+            file: job-existing-metric.yaml
+        - wait:
+            timeout: 5m
+            resource: job
+            selector: kind=existing-metric
+            for:
+              condition:
+                name: complete

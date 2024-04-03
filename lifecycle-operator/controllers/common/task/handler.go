@@ -6,15 +6,19 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
+	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
+	"golang.org/x/exp/maps"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -33,12 +37,12 @@ type Handler struct {
 
 type CreateTaskAttributes struct {
 	SpanName   string
-	Definition klcv1beta1.KeptnTaskDefinition
+	Definition apilifecycle.KeptnTaskDefinition
 	CheckType  apicommon.CheckType
 }
 
 //nolint:gocognit,gocyclo
-func (r Handler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes CreateTaskAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
+func (r Handler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, taskCreateAttributes CreateTaskAttributes) ([]apilifecycle.ItemStatus, apicommon.StatusSummary, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return nil, apicommon.StatusSummary{}, err
@@ -51,12 +55,12 @@ func (r Handler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, r
 	var summary apicommon.StatusSummary
 	summary.Total = len(tasks)
 	// Check current state of the PrePostDeploymentTasks
-	var newStatus []klcv1beta1.ItemStatus
+	var newStatus []apilifecycle.ItemStatus
 	for _, taskDefinitionName := range tasks {
 		oldstatus := common.GetOldStatus(taskDefinitionName, statuses)
 
 		taskStatus := common.GetItemStatus(taskDefinitionName, statuses)
-		task := &klcv1beta1.KeptnTask{}
+		task := &apilifecycle.KeptnTask{}
 		taskExists := false
 
 		if oldstatus != taskStatus.Status {
@@ -124,7 +128,7 @@ func (r Handler) ReconcileTasks(ctx context.Context, phaseCtx context.Context, r
 }
 
 //nolint:dupl
-func (r Handler) CreateKeptnTask(ctx context.Context, namespace string, reconcileObject client.Object, taskCreateAttributes CreateTaskAttributes) (string, error) {
+func (r Handler) CreateKeptnTask(ctx, phaseCtx context.Context, namespace string, reconcileObject client.Object, taskCreateAttributes CreateTaskAttributes) (string, error) {
 	piWrapper, err := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
 	if err != nil {
 		return "", err
@@ -133,6 +137,7 @@ func (r Handler) CreateKeptnTask(ctx context.Context, namespace string, reconcil
 	phase := apicommon.PhaseCreateTask
 
 	newTask := piWrapper.GenerateTask(taskCreateAttributes.Definition, taskCreateAttributes.CheckType)
+	injectKeptnContext(phaseCtx, &newTask)
 	err = controllerutil.SetControllerReference(reconcileObject, &newTask, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference:")
@@ -147,13 +152,25 @@ func (r Handler) CreateKeptnTask(ctx context.Context, namespace string, reconcil
 	return newTask.Name, nil
 }
 
-func (r Handler) setTaskFailureEvents(task *klcv1beta1.KeptnTask, spanTrace trace.Span) {
+func injectKeptnContext(phaseCtx context.Context, newTask *apilifecycle.KeptnTask) {
+	if metadata, ok := keptncontext.GetAppMetadataFromContext(phaseCtx); ok {
+		traceContextCarrier := &propagation.MapCarrier{}
+		otel.GetTextMapPropagator().Inject(phaseCtx, traceContextCarrier)
+		newTask.Spec.Context.Metadata = map[string]string{}
+		maps.Copy(newTask.Spec.Context.Metadata, metadata)
+		for _, key := range traceContextCarrier.Keys() {
+			newTask.Spec.Context.Metadata[key] = traceContextCarrier.Get(key)
+		}
+	}
+}
+
+func (r Handler) setTaskFailureEvents(task *apilifecycle.KeptnTask, spanTrace trace.Span) {
 	spanTrace.AddEvent(fmt.Sprintf("task '%s' failed with reason: '%s'", task.Name, task.Status.Message), trace.WithTimestamp(time.Now().UTC()))
 }
 
-func (r Handler) setupTasks(taskCreateAttributes CreateTaskAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []klcv1beta1.ItemStatus) {
+func (r Handler) setupTasks(taskCreateAttributes CreateTaskAttributes, piWrapper *interfaces.PhaseItemWrapper) ([]string, []apilifecycle.ItemStatus) {
 	var tasks []string
-	var statuses []klcv1beta1.ItemStatus
+	var statuses []apilifecycle.ItemStatus
 
 	switch taskCreateAttributes.CheckType {
 	case apicommon.PreDeploymentCheckType:
@@ -162,17 +179,20 @@ func (r Handler) setupTasks(taskCreateAttributes CreateTaskAttributes, piWrapper
 	case apicommon.PostDeploymentCheckType:
 		tasks = piWrapper.GetPostDeploymentTasks()
 		statuses = piWrapper.GetPostDeploymentTaskStatus()
+	case apicommon.PromotionCheckType:
+		tasks = piWrapper.GetPromotionTasks()
+		statuses = piWrapper.GetPromotionTaskStatus()
 	}
 	return tasks, statuses
 }
 
-func (r Handler) handleTaskNotExists(ctx context.Context, phaseCtx context.Context, taskCreateAttributes CreateTaskAttributes, taskName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, task *klcv1beta1.KeptnTask, taskStatus *klcv1beta1.ItemStatus) error {
+func (r Handler) handleTaskNotExists(ctx context.Context, phaseCtx context.Context, taskCreateAttributes CreateTaskAttributes, taskName string, piWrapper *interfaces.PhaseItemWrapper, reconcileObject client.Object, task *apilifecycle.KeptnTask, taskStatus *apilifecycle.ItemStatus) error {
 	definition, err := common.GetTaskDefinition(r.Client, r.Log, ctx, taskName, piWrapper.GetNamespace())
 	if err != nil {
 		return controllererrors.ErrCannotGetKeptnTaskDefinition
 	}
 	taskCreateAttributes.Definition = *definition
-	taskName, err = r.CreateKeptnTask(ctx, piWrapper.GetNamespace(), reconcileObject, taskCreateAttributes)
+	taskName, err = r.CreateKeptnTask(ctx, phaseCtx, piWrapper.GetNamespace(), reconcileObject, taskCreateAttributes)
 	if err != nil {
 		return err
 	}
@@ -186,7 +206,7 @@ func (r Handler) handleTaskNotExists(ctx context.Context, phaseCtx context.Conte
 	return nil
 }
 
-func (r Handler) handleTaskExists(phaseCtx context.Context, task *klcv1beta1.KeptnTask, taskStatus *klcv1beta1.ItemStatus) {
+func (r Handler) handleTaskExists(phaseCtx context.Context, task *apilifecycle.KeptnTask, taskStatus *apilifecycle.ItemStatus) {
 	_, spanTaskTrace, err := r.SpanHandler.GetSpan(phaseCtx, r.Tracer, task, "")
 	if err != nil {
 		r.Log.Error(err, "could not get span")

@@ -1,0 +1,14 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTask
+metadata:
+  name: runsendevent1
+  namespace: keptndemo
+spec:
+  taskDefinition: send-event
+  context:
+    appName: "my-test-app"
+    appVersion: "1.0.0"
+    objectType: ""
+    taskType: ""
+    workloadName: "my-test-workload"
+    workloadVersion: "1.0.0"

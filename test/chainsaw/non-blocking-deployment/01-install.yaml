@@ -1,0 +1,49 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppContext
+metadata:
+  name: podtato-head
+spec:
+  preDeploymentTasks:
+    - failing-task
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-entry
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-entry
+  template:
+    metadata:
+      labels:
+        component: podtato-head-entry
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-entry
+        keptn.sh/version: 0.2.0
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image: ghcr.io/podtato-head/entry:0.2.8
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          env:
+            - name: PODTATO_PORT
+              value: "9000"
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: failing-task
+spec:
+  deno:
+    inline:
+      code: |
+        console.log('hello');
+        exit 1;
+  retries: 1

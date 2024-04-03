@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Fork and clone the repository
 
 Perform the following steps to create a copy
@@ -11,7 +15,7 @@ of the Keptn repository on your local machine:
      * Choose the user for the fork from the options you are given,
        usually your GitHub ID.
 
-   A copy of this repository is now available in your GitHub account.
+     A copy of this repository is now available in your GitHub account.
 
 2. Get the string to use when cloning your fork:
 

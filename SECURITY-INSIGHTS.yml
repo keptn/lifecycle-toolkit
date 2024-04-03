@@ -1,0 +1,34 @@
+header:
+  license: 'https://github.com/keptn/lifecycle-toolkit/blob/main/LICENSE'
+  schema-version: 1.0.0
+  expiration-date: '2025-03-04T01:00:00.000Z'
+  last-updated: '2024-03-05'
+  project-url: https://github.com/keptn/lifecycle-toolkit
+  project-release: '2.0.0-rc.1'
+  commit-hash: 95fdd03fe26a44538106d1c450b6e14bd59c11b1
+project-lifecycle:
+  status: active
+  roadmap: https://github.com/orgs/keptn/projects/10
+  release-process: https://keptn.sh/stable/docs/contribute/general/release-checklist/
+  bug-fixes-only: false
+  core-maintainers:
+    - https://github.com/keptn/community/blob/main/config/keptn/lifecycle-toolkit/workgroup.yaml
+contribution-policy:
+  accepts-pull-requests: true
+  code-of-conduct: https://github.com/keptn/.github/blob/main/CODE_OF_CONDUCT.md
+  contributing-policy: https://github.com/keptn/lifecycle-toolkit/blob/main/CONTRIBUTING.md
+  accepts-automated-pull-requests: true
+distribution-points:
+  - https://charts.lifecycle.keptn.sh
+  - https://github.com/orgs/keptn/packages?repo_name=lifecycle-toolkit
+documentation:
+  - https://keptn.sh/stable/docs/
+security-contacts:
+  - type: email
+    value: cncf-keptn-tc@lists.cncf.io
+  - type: url
+    value: https://github.com/keptn/lifecycle-toolkit/security/advisories/new/
+vulnerability-reporting:
+  email-contact: cncf-keptn-tc@lists.cncf.io
+  accepts-vulnerability-reports: true
+  security-policy: https://github.com/keptn/.github/blob/main/SECURITY.md

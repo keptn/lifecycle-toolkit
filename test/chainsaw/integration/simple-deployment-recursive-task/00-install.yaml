@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  SECURE_DATA: dG9rZW46IG15dG9rZW4=
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: pre-deployment-hello
+  labels:
+    task-definition: "child"
+spec:
+  ttlSecondsAfterFinished: 1000
+  deno:
+    functionRef:
+      name: pre-deployment-parent
+    secureParameters:
+      secret: mysecret
+    parameters:
+      map:
+        user: "myuser"
+        data: "mydata"
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: pre-deployment-parent
+  labels:
+    task-definition: "parent"
+spec:
+  ttlSecondsAfterFinished: 300
+  deno:
+    parameters:
+      map:
+        user: "myotheruser"
+        data: "myotherdata"
+        other: "data"
+    inline:
+      code: |
+        console.log("Parent Task has been executed");
+
+        let foo = Deno.env.get('DATA');
+        console.log(foo);
+        Deno.exit(0);
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test
+  name: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: test
+      annotations:
+        keptn.sh/workload: waiter
+        keptn.sh/version: "0.4"
+        keptn.sh/pre-deployment-tasks: pre-deployment-hello
+        keptn.sh/post-deployment-tasks: pre-deployment-parent
+    spec:
+      containers:
+        - image: busybox
+          name: busybox
+          command: ['sh', '-c', 'echo The app is running! && sleep infinity']

@@ -3,6 +3,10 @@ name: Set the Date in the project
 on:
   issues:
     types: [assigned, closed]
+
+# Declare default permissions as read only.
+permissions: read-all
+
 jobs:
   set_date:
     runs-on: ubuntu-22.04

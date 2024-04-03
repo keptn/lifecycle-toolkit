@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn integration with Scheduling
 
 Keptn integrates with Kubernetes scheduling to block
@@ -91,6 +95,12 @@ If the pre-deployment checks have finished successfully, the **Keptn Scheduler**
 the Pod to be bound to a node.
 If the `pre-deployment` checks have not finished successfully within 5 minutes,
 the Pod is not bound to a node and it remains in a Pending state.
+
+> **Note**
+The blocking behavior can be changed by configuring non-blocking deployment
+functionality.
+More information can be found in the
+[Keptn non-blocking deployment section](./lifecycle-operator/keptn-non-blocking.md).
 
 It is important to note that the Keptn Scheduler is a plugin to the default Kubernetes scheduler.
 This means that all of the checks that are by default performed by the default Kubernetes scheduler

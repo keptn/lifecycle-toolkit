@@ -1,13 +1,17 @@
-# Deployment tasks
+---
+comments: true
+---
+
+# Deployment Tasks with Keptn
 
 A
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 resource defines one or more "executables"
-(functions, programs, scripts, etc)
+(functions, programs, scripts, etc.)
 that Keptn runs
 as part of the pre- and post-deployment phases of a
 [KeptnApp](../reference/crd-reference/app.md) or
-[KeptnWorkload](../reference/api-reference/lifecycle/v1alpha3/index.md#keptnworkload).
+[KeptnWorkload](../reference/api-reference/lifecycle/v1/index.md#keptnworkload).
 
 - pre-deployment (before the pod is scheduled)
 - post-deployment (after the pod is scheduled)
@@ -18,7 +22,7 @@ These `KeptnTask` resources and the
 are part of the Keptn Release Lifecycle Management.
 
 A
-[KeptnTask](../reference/api-reference/lifecycle/v1alpha3/index.md#keptntask)
+[KeptnTask](../reference/api-reference/lifecycle/v1/index.md#keptntask)
 executes as a runner in an application
 [container](https://kubernetes.io/docs/concepts/containers/),
 which runs as part of a Kubernetes
@@ -31,17 +35,18 @@ To implement a `KeptnTask`:
   [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
   resource that defines the runner to use for the container
   and the executables to be run
-pre- and post-deployment
+  pre- and post-deployment
 - Apply [basic-annotations](./integrate.md#basic-annotations)
-  to your workloads to integrate your tasks with Kubernetes.
+  to your workloads.
 - Generate the required
   [KeptnApp](../reference/crd-reference/app.md)
   resources following the instructions in
   [Auto app discovery](auto-app-discovery.md).
-- Annotate the appropriate
-  [KeptnApp](../reference/crd-reference/app.md)
-  resource to associate your `KeptnTaskDefinition`
-  with the pre/post-deployment tasks that should be run.
+- Annotate your workload YAML files
+  to associate your `KeptnTaskDefinition`
+  with the pre-/post-deployment tasks that should be run.
+- Create the appropriate `KeptnAppContext` resource
+  to associate `KeptnTaskDefinition` resources to the generated `KeptnApp`.
 
 This page provides information to help you create your tasks:
 
@@ -101,13 +106,12 @@ See the
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 reference page for the synopsis and examples for each runner.
 
-## Annotations to KeptnApp
+## Run a task associated with your workload deployment
 
-To define pre/post-deployment tasks,
+To define pre-/post-deployment tasks,
 you must manually edit the YAML files
 to add annotations for your tasks to the appropriate
-[KeptnApp](../reference/crd-reference/app.md)
-resource.
+workload YAML file.
 
 Specify one of the following annotations/labels
 for each task you want to execute:
@@ -122,33 +126,32 @@ to the value of the `name` field of the
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 resource.
 
+## Run a task associated with your entire KeptnApp
+
+To execute pre-/post-deployment tasks for a `KeptnApp`,
+create a `KeptnAppContext` with the same name and in the same `namespace` as the `KeptnApp`.
+The `KeptnAppContext` resource contains a list of
+pre-/post-deployment tasks
+that should be executed before and after the
+workloads within the `KeptnApp` are deployed.
+
+See the [Getting started guide](../getting-started/lifecycle-management.md#more-control-over-the-application)
+for more information on how to configure a `KeptnAppContext` resource
+to execute pre-/post-deployment checks.
+`KeptnAppContext` is also used to collect user defined
+metadata information to use during your Task execution.
+As explained later in this guide.
+(See [the context section](#context))
+
 ## Example of pre/post-deployment actions
 
-A comprehensive example of pre/post-deployment
+A comprehensive example of pre-/post-deployment
 evaluations and tasks can be found in our
 [examples folder](https://github.com/keptn/lifecycle-toolkit/tree/main/examples/sample-app),
 where we use [Podtato-Head](https://github.com/podtato-head/podtato-head)
 to run some simple pre-deployment checks.
-
-To run the example, download the example and
-then issue the following commands:
-
-```shell
-cd ./examples/podtatohead-deployment/
-kubectl apply -f .
-```
-
-Afterward, use the following command
-to  monitor the status of the deployment:
-
-```shell
-kubectl get keptnworkloadversion -n podtato-kubectl -w
-```
-
-The deployment for a workload stays in a `Pending`
-state until all pre-deployment tasks and evaluations complete successfully.
-Afterwards, the deployment starts and when the workload is deployed,
-the post-deployment checks start.
+Check out the [readme](https://github.com/keptn/lifecycle-toolkit/blob/main/examples/sample-app/README.md)
+to learn how to test this example on your machine.
 
 ## Executing sequential tasks
 
@@ -173,7 +176,7 @@ You have the following options:
   and build an image
   that Keptn executes in a `container-runtime` runner.
   This is often the best solution if you need to execute complex sequences
-  because it gives you the most flexibility..
+  because it gives you the most flexibility.
 
 - Use the `inline` syntax for one of the Keptn pre-defined runners
   (either `deno-runtime` or `python-runtime`)
@@ -195,37 +198,60 @@ page.
 
 ## Context
 
-A Kubernetes context is a set of access parameters
-that contains a Kubernetes cluster, a user, a namespace,
-the application name, workload name, and version.
+The Keptn task context includes details about the current deployment, application name, version, object type and other
+user-defined metadata.
+Keptn populates this metadata while running tasks before and after deployments, to provide the necessary context
+associated with each task.
+
+This contrasts with the Kubernetes context, which is a set of access parameters that defines the
+specific cluster, user and namespace with which you interact.
 For more information, see
 [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/).
 
-You may need to include context information in the `function` code
-included in the YAML file that defines a
+For Tasks generated for applications running in Kubernetes,
+Keptn populates a `KEPTN_CONTEXT` environment variable containing a set
+of parameters that correlate a task
+to a specific application/workload,
+information about the phase in which the task is being executed,
+as well as any metadata that has been attached to
+the related application/workload
+
+You can use this context information
+in the `function` code in your
 [KeptnTaskDefinition](../reference/crd-reference/taskdefinition.md)
 resource.
-For an example of how to do this, see the
-[keptn-tasks.yaml](https://github.com/keptn-sandbox/klt-on-k3s-with-argocd/blob/main/simplenode-dev/keptn-tasks.yaml)
-file.
 
-A context environment variable is available via `Deno.env.get("KEPTN_CONTEXT")`.
-It can be used like this:
-  
-```javascript
-let context = Deno.env.get("KEPTN_CONTEXT");
-    
-if (context.objectType == "Application") {
-    let application_name = contextdata.appName;
-    let application_version = contextdata.appVersion;
-}       
-        
-if (context.objectType == "Workload") {
-    let application_name = contextdata.appName;
-    let workload_name = contextdata.workloadName;
-    let workload_version = contextdata.workloadVersion;
-}
+`KEPTN_CONTEXT` is encoded as JSON and by default, contains:
+
+- "appName"
+- "appVersion"
+- "workloadName"
+- "workloadVersion"
+- "taskType"
+- "objectType"
+- "traceparent"
+- "metadata"
+
+A Job created by a `KeptnTask` with `KEPTN_CONTEXT`, may look like the following
+
+```yaml
+{% include "./assets/tasks/job-context.yaml" %}
 ```
+
+You can customize the metadata field to hold any key-value pair of interest to share among
+your workloads and tasks in a `KeptnApp` (for instance a commit ID value).
+To do so, the metadata needs to be specified for the workload or for the application.
+Follow our guide on [Context and Metadata here](./metadata.md).
+
+<!-- markdownlint-disable MD046 max-one-sentence-per-line-->
+
+!!! note
+
+    For an example of how to access the `KEPTN_CONTEXT`, follow our reference page examples
+    [for deno](../reference/crd-reference/taskdefinition.md#accessing-keptn_context-in-a-deno-task)
+    and [for python](../reference/crd-reference/taskdefinition.md#accessing-keptn_context-in-a-python-task).
+
+<!-- markdownlint-enable MD046 max-one-sentence-per-line-->
 
 ## Parameterized functions
 
@@ -236,19 +262,7 @@ while the `secret` parameters refer to a single Kubernetes `secret`.
 Consider the following example:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnTaskDefinition
-metadata:
-  name: slack-notification-dev
-spec:
-  function:
-    functionRef:
-      name: slack-notification
-    parameters:
-      map:
-        textMessage: "This is my configuration"
-    secureParameters:
-      secret: slack-token
+{% include "./assets/tasks/slack.yaml" %}
 ```
 
 Note the following about using parameters with functions:
@@ -278,19 +292,7 @@ kubectl create secret generic my-secret --from-literal=SECURE_DATA=foo
 ```
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: dummy-task
-  namespace: "default"
-spec: 
-  function: 
-    secureParameters:
-      secret: my-secret
-    inline:
-      code: |
-        let secret_text = Deno.env.get("SECURE_DATA");
-        // secret_text = "foo"
+{% include "./assets/tasks/dummy-task.yaml" %}
 ```
 
 To pass multiple variables
@@ -302,21 +304,7 @@ kubectl create secret generic my-secret \
 ```
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: dummy-task
-  namespace: "default"
-spec:
-  function:
-    secureParameters:
-      secret: my-secret
-    inline:
-      code: |
-        let secret_text = Deno.env.get("SECURE_DATA");
-        let secret_text_obj = JSON.parse(secret_text);
-        // secret_text_obj["foo"] = "bar"
-        // secret_text_obj["foo2"] = "bar2"
+{% include "./assets/tasks/multi-secret.yaml" %}
 ```
 
 ### Pass secrets to a function
@@ -335,33 +323,11 @@ you must first ensure that the secret containing the `SECURE_DATA` key exists
 For example:
 
 ```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: deno-demo-secret
-  namespace: default
-type: Opaque
-data:
-  SECURE_DATA: YmFyCg== # base64 encoded string, e.g. 'bar'
+{% include "./assets/tasks/secret-data.yaml" %}
 ```
 
 Then, you can make use of that secret as follows:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha3
-kind: KeptnTaskDefinition
-metadata:
-  name: deployment-hello
-  namespace: "default"
-spec:
-  function:
-    secureParameters:
-      secret: deno-demo-secret
-    inline:
-      code: |
-        console.log("Deployment Hello Task has been executed");
-
-        let foo = Deno.env.get('SECURE_DATA');
-        console.log(foo);
-        Deno.exit(0);
+{% include "./assets/tasks/taskdef-secure-data.yaml" %}
 ```

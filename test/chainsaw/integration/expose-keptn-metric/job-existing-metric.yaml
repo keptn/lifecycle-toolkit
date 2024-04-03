@@ -1,0 +1,62 @@
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetric
+metadata:
+  name: (replace_all($namespace, '-', ''))
+spec:
+  provider:
+    name: "provider"
+  query: "query"
+  fetchIntervalSeconds: 5
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: (join('-', [$namespace, 'job2']))
+  labels:
+    kind: existing-metric
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      containers:
+        - name: test-prometheus
+          image: curlimages/curl:8.7.1
+          env:
+            - name: NAME
+              value: (replace_all($namespace, '-', ''))
+            - name: SVCNAME
+              value: ($service.metadata.name)
+          args:
+            - /bin/sh
+            - -ec
+            - |
+              curl -s $SVCNAME.keptn-system.svc.cluster.local:9999/metrics > ~/out.txt
+              echo ~/out.txt
+              if grep -Fxq "# HELP $NAME $NAME" ~/out.txt
+              then
+                exit 0
+              fi
+              exit 1
+        - name: test-api-endpoint
+          image: curlimages/curl:8.7.1
+          env:
+            - name: NAME
+              value: (replace_all($namespace, '-', ''))
+            - name: SVCNAME
+              value: ($service.metadata.name)
+            - name: NAMESPACE
+              value: ($namespace)
+          # yamllint disable rule:line-length
+          args:
+            - /bin/sh
+            - -ec
+            - |
+              curl -s $SVCNAME.keptn-system.svc.cluster.local:9999/api/v1/metrics/$NAMESPACE/$NAME > ~/out.txt
+              echo ~/out.txt
+              if grep -F "$NAME" ~/out.txt
+              then
+                exit 0
+              fi
+              exit 1
+            # yamllint enable rule:line-length
+      restartPolicy: Never

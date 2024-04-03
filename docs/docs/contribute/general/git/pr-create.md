@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Create PR
 
 When you have completed the checking and testing of your work
@@ -14,7 +18,7 @@ This is a two-step process:
 The steps to push your new content from your local branch
 to the repository are:
 
-1. When you have completed the writing you want to do,
+1. When you have completed the writing you want to do and tested it,
    close all files in your branch and run `git status` to confirm
    that it correctly reflects the files you have modified, added, and deleted
    and does not include any files that you do not want to push.
@@ -23,44 +27,47 @@ to the repository are:
    and ensure that it is up to date
    with the `main` Keptn branch:
 
-   ```bash
-   git remote add upstream https://github.com/keptn/lifecycle-toolkit.git
-   git checkout main
-   git pull upstream main
-   ```
+     ```bash
+     git remote add upstream https://github.com/keptn/lifecycle-toolkit.git
+     git checkout main
+     git pull upstream main
+     ```
 
-   Then update your feature branch from your local copy of `main` and push it:
+1. Update your feature branch from your local copy of `main` and push it:
 
-   ```bash
-   git checkout feature/123/foo
-   git rebase main
-   git push --set-upstream origin feature/123/foo
-   ```
+     ```bash
+     git checkout feature/123/foo
+     git rebase main
+     git push --set-upstream origin feature/123/foo
+     ```
 
 1. Add and commit your changes.
    The `git commit -s` command commits the files
    and signs that you are contributing this intellectual property
    to the Keptn project.
-   See the DCO docs for more information.
+   See [DCO](../dco.md) for more information.
    Here, we commit all modified files but you can specify individual files
    to the `git add` command.
 
-   ```console
-   git add .
-   git commit -s
-   ```
+     ```console
+     git add .
+     git commit -s
+     ```
 
-   Use vi commands to add a description of the PR
-   (should be 80 characters or less) to the commit.
-   The title text should be prefixed with an appropriate
-   [commit type](#commit-types)
-   to conform to our semantic commit scheme.
-   This title is displayed as the title of the PR in listings.
+     Use `vi` commands to add a description of the PR to the commit;
+     this description is displayed as the title of the PR in listings.
 
-   You can add multiple lines explaining the PR here but, in general,
-   it is better to only supply the PR title here;
-   you can add more information and edit the PR title
-   when you create the PR on the GitHub UI page.
+      * The title text should be prefixed with an appropriate
+        [commit type](#commit-types)
+        to conform to our semantic commit scheme.
+      * Follow the `commit type` with a brief (80 characters or less) description
+        that succinctly describes the change made by this PR.
+        The description must begin with a lowercase letter.
+
+     You can add multiple lines explaining the PR here but, in general,
+     it is better to only supply the PR title here;
+     you can add more information and edit the PR title
+     when you create the PR on the GitHub UI page.
 
 1. Push your branch to github.
    If you cloned your fork to use SSH, the command is:
@@ -85,68 +92,77 @@ Click the `Compare & pull request` button in that box
 to open a PR template that you can populate.
 
 > **Note**
-  The PR template can also be found at `.github/pull_request_template.md`.
+> The PR template can also be found at `.github/pull_request_template.md`.
 
 You need to provide the following information:
 
-* Title for the PR.
-   Follow the
+* Title for the PR:
+  Follow the
   [conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/)
   for your PR title.
-  * Title should begin with an appropriate
-    [commit type](#commit-types).feature type.
-  * The first word after the feature type should be lowercase.
+    * Title should begin with an appropriate
+      [commit type](#commit-types).
+    * The first word after the feature type should be lowercase.
 
-    An example for a pull request title is:
+An example for a pull request title is:
 
-    ```bash
-    feat(api): new endpoint for feature X
-    ```
+```bash
+feat(api): new endpoint for feature X
+```
 
 * Full description of what the PR is about.
 
-  * Link to relevant GitHub issue(s).
-     Use the phrase `Closes <issue>` for this link;
-       is ensures that the issue is closed when this PR is merged.
-        this PR does not completely satisfy the issue,
-       e some other phrasing for the link to the issue.
-  * Describe what this PR does,
-    including related work that will be in other PRs.
-  * If you changed something that is visible to the user,
-    add a screenshot.
-  * Describe tests that are included or were run to test this PR.
-  * Anything else that will help reviewers understand
-    the scope and purpose of this PR.
+    * Link to relevant GitHub issue(s).
+      Use the phrase `Closes <issue>` for this link;
+      is ensures that the issue is closed when this PR is merged.
+      this PR does not completely satisfy the issue,
+      e some other phrasing for the link to the issue.
+    * Describe what this PR does,
+      including related work that will be in other PRs.
+    * If you changed something that is visible to the user,
+      add a screenshot.
+    * Describe tests that are included or were run to test this PR.
+    * Anything else that will help reviewers understand
+      the scope and purpose of this PR.
+
+* The PR template includes a checklist that must be filled out
+  to ensure that the PR adheres to the project requirements.
+
+    * The template includes separate sections for software and documentation;
+      delete the section that does not apply to your PR,
+      unless your PR includes both software and documentation.
+    * Read each item and only check it off if you have satisfied that requirement.
+    * If a requirement is not relevant for your PR, mark it as `n/a` (not applicable).
 
 * If you have **breaking changes** in your PR,
   it is important to note them in both the PR description
   and in the merge commit for that PR.
 
-   When pressing "squash and merge",
-   you have the option to fill out the commit message.
-   Please use that feature to add the breaking changes according to the
-   [conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/).
-   Also, please remove the PR number at the end and just add the issue number.
+When pressing "squash and merge",
+you have the option to fill out the commit message.
+Please use that feature to add the breaking changes according to the
+[conventional commit guidelines](https://www.conventionalcommits.org/en/v1.0.0/).
+Also, please remove the PR number at the end and just add the issue number.
 
-   An example for a PR with breaking changes and the according merge commit:
+An example for a PR with breaking changes and the according merge commit:
 
-   ```bash
-   feat(bridge): New button that breaks other things (#345) 
+```bash
+feat(bridge): New button that breaks other things (#345) 
 
-   BREAKING CHANGE: The new button added with #345 introduces
-   new functionality that is not compatible with the previous
-   type of sent events.
-   ```
+BREAKING CHANGE: The new button added with #345 introduces
+new functionality that is not compatible with the previous
+type of sent events.
+```
 
-   If your breaking change can be explained in a single line,
-   you can also use this form:
+If your breaking change can be explained in a single line,
+you can also use this form:
 
-   ```bash
-   feat(bridge)!: New button that breaks other things (#345)
-   ```
+```bash
+feat(bridge)!: New button that breaks other things (#345)
+```
 
-   Following these guidelines helps us create automated releases
-   where the commit and PR messages are directly used in the changelog.
+Following these guidelines helps us create automated releases
+where the commit and PR messages are directly used in the changelog.
 
 When you have filled in the PR template,
 you should also quickly scroll down to see the changes

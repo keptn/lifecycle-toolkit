@@ -17,8 +17,6 @@ limitations under the License.
 package v1beta1
 
 import (
-	"strings"
-
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -40,7 +38,6 @@ type KeptnMetricsProviderSpec struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=keptnmetricsproviders,shortName=kmp
-// +kubebuilder:storageversion
 
 // KeptnMetricsProvider is the Schema for the keptnmetricsproviders API
 type KeptnMetricsProvider struct {
@@ -67,33 +64,4 @@ type KeptnMetricsProviderList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnMetricsProvider{}, &KeptnMetricsProviderList{})
-}
-
-func (p *KeptnMetricsProvider) HasSecretDefined() bool {
-	if p.Spec.SecretKeyRef == (corev1.SecretKeySelector{}) {
-		return false
-	}
-	//if the secret name exists the secret is defined
-	if strings.TrimSpace(p.Spec.SecretKeyRef.Name) == "" {
-		return false
-	}
-	return true
-}
-
-func (p *KeptnMetricsProvider) HasSecretKeyDefined() bool {
-	if p.Spec.SecretKeyRef == (corev1.SecretKeySelector{}) {
-		return false
-	}
-	//if the secret name exists the secret is defined
-	if strings.TrimSpace(p.Spec.SecretKeyRef.Key) == "" {
-		return false
-	}
-	return true
-}
-
-func (p *KeptnMetricsProvider) GetType() string {
-	if p.Spec.Type != "" {
-		return p.Spec.Type
-	}
-	return p.Name
 }

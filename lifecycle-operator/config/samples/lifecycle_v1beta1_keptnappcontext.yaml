@@ -21,8 +21,11 @@ spec:
   postDeploymentEvaluations:
     - eval1
     - eval2
+  promotionTasks:
+    - task1
+    - task2
   metadata:
     - key: abc123
-  traceLinks:
+  spanLinks:
     - "w3c trace id1"
     - "w3c trace id2"

@@ -1,4 +1,4 @@
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetricsProvider
 metadata:
   name: dev-prometheus
@@ -18,7 +18,7 @@ data:
   user: user
 type: Opaque
 ---
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetricsProvider
 metadata:
   name: dev-dynatrace

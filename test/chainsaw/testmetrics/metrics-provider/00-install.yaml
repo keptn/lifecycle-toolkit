@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dynatrace
+  namespace: keptn-system
+type: Opaque
+data:
+  DT_TOKEN: dG9rZW46IG15dG9rZW4=
+---
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetric
+metadata:
+  name: podtatometric
+  namespace: keptn-system
+spec:
+  provider:
+    name: "dynatrace"
+  query: "query"
+  fetchIntervalSeconds: 5
+
+---
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetricsProvider
+metadata:
+  name: dynatrace
+  namespace: keptn-system
+spec:
+  secretKeyRef:
+    key: DT_TOKEN
+    name: dynatrace
+  type: dynatrace
+  targetServer: "http://localhost:8080"  # string

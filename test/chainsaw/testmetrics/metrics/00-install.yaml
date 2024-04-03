@@ -1,0 +1,7 @@
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetricsProvider
+metadata:
+  name: prometheus
+spec:
+  type: prometheus
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"

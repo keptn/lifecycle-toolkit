@@ -1,0 +1,12 @@
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetric
+metadata:
+  name: podtato-head1
+spec:
+  provider:
+    name: "prometheus"
+  query: "sum(kube_pod_container_resource_limits{resource='cpu'})"
+  fetchIntervalSeconds: 5
+  range:
+    interval: "5m"
+    step: "1mins"

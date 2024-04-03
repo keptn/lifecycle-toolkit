@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/test/component/common"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -30,8 +30,8 @@ var _ = Describe("Workload", Ordered, func() {
 	})
 	Describe("Creation of WorkloadVersion from a new Workload", func() {
 		var (
-			workload        *klcv1beta1.KeptnWorkload
-			workloadVersion *klcv1beta1.KeptnWorkloadVersion
+			workload        *apilifecycle.KeptnWorkload
+			workloadVersion *apilifecycle.KeptnWorkloadVersion
 		)
 
 		BeforeEach(func() {
@@ -42,7 +42,7 @@ var _ = Describe("Workload", Ordered, func() {
 			It("should create WorkloadVersion", func() {
 				By("Check if WorkloadVersion was created")
 
-				workloadVersion = &klcv1beta1.KeptnWorkloadVersion{}
+				workloadVersion = &apilifecycle.KeptnWorkloadVersion{}
 				Eventually(func(g Gomega) {
 					err := k8sClient.Get(context.TODO(), types.NamespacedName{
 						Namespace: namespace,
@@ -68,16 +68,16 @@ var _ = Describe("Workload", Ordered, func() {
 	})
 })
 
-func createWorkloadInCluster(name string, namespace string, version string, applicationName string) *klcv1beta1.KeptnWorkload {
-	workload := &klcv1beta1.KeptnWorkload{
+func createWorkloadInCluster(name string, namespace string, version string, applicationName string) *apilifecycle.KeptnWorkload {
+	workload := &apilifecycle.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: namespace,
 		},
-		Spec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadSpec{
 			AppName:           applicationName,
 			Version:           version,
-			ResourceReference: klcv1beta1.ResourceReference{UID: types.UID("uid"), Kind: "Pod", Name: "pod1"},
+			ResourceReference: apilifecycle.ResourceReference{UID: types.UID("uid"), Kind: "ReplicaSet", Name: "replicaset1"},
 		},
 	}
 	By("Invoking Reconciling for Create")

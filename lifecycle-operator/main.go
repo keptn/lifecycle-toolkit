@@ -30,6 +30,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/certificates"
 	certCommon "github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/common"
 	"github.com/keptn/lifecycle-toolkit/keptn-cert-manager/pkg/webhook"
+	lifecyclev1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 	lifecyclev1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha1"
 	lifecyclev1alpha2 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha2"
 	lifecyclev1alpha3 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3"
@@ -37,10 +38,8 @@ import (
 	lifecyclev1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	optionsv1alpha1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/options/v1alpha1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnapp"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnappcreationrequest"
@@ -50,13 +49,13 @@ import (
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptntaskdefinition"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkload"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/keptnworkloadversion"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/schedulinggates"
 	controlleroptions "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/options"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	otelprom "go.opentelemetry.io/otel/exporters/prometheus"
 	metricsapi "go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/sdk/metric"
-	"go.opentelemetry.io/otel/trace/noop"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -84,6 +83,7 @@ func init() {
 	utilruntime.Must(argov1alpha1.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1alpha4.AddToScheme(scheme))
 	utilruntime.Must(lifecyclev1beta1.AddToScheme(scheme))
+	utilruntime.Must(lifecyclev1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 
@@ -99,10 +99,12 @@ type envConfig struct {
 	KeptnTaskDefinitionControllerLogLevel     int `envconfig:"KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadControllerLogLevel           int `envconfig:"KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnWorkloadVersionControllerLogLevel    int `envconfig:"KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL" default:"0"`
+	KeptnSchedulingGatesControllerLogLevel    int `envconfig:"KEPTN_SCHEDULING_GATES_CONTROLLER_LOG_LEVEL" default:"0"`
 	KeptnDoraMetricsPort                      int `envconfig:"KEPTN_DORA_METRICS_PORT" default:"2222"`
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
 	SchedulingGatesEnabled bool `envconfig:"SCHEDULING_GATES_ENABLED" default:"false"`
+	PromotionTasksEnabled  bool `envconfig:"PROMOTION_TASKS_ENABLED" default:"false"`
 
 	CertManagerEnabled bool `envconfig:"CERT_MANAGER_ENABLED" default:"true"`
 }
@@ -277,14 +279,7 @@ func main() {
 	workloadVersionLogger := ctrl.Log.WithName("KeptnWorkloadVersion Controller").V(env.KeptnWorkloadVersionControllerLogLevel)
 	workloadVersionRecorder := mgr.GetEventRecorderFor("keptnworkloadversion-controller")
 	workloadVersionEventSender := eventsender.NewEventMultiplexer(workloadVersionLogger, workloadVersionRecorder, ceClient)
-	workloadVersionEvaluationHandler := evaluation.NewHandler(
-		mgr.GetClient(),
-		workloadVersionEventSender,
-		workloadVersionLogger,
-		noop.NewTracerProvider().Tracer("keptn/lifecycle-operator/workloadversion"),
-		mgr.GetScheme(),
-		spanHandler,
-	)
+
 	workloadVersionPhaseHandler := phase.NewHandler(
 		mgr.GetClient(),
 		workloadVersionEventSender,
@@ -292,16 +287,15 @@ func main() {
 		spanHandler,
 	)
 	workloadVersionReconciler := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
-		SchedulingGatesHandler: schedulinggates.NewHandler(mgr.GetClient(), workloadVersionLogger, env.SchedulingGatesEnabled),
-		Client:                 mgr.GetClient(),
-		Scheme:                 mgr.GetScheme(),
-		Log:                    workloadVersionLogger,
-		EventSender:            workloadVersionEventSender,
-		Meters:                 keptnMeters,
-		TracerFactory:          telemetry.GetOtelInstance(),
-		SpanHandler:            spanHandler,
-		EvaluationHandler:      workloadVersionEvaluationHandler,
-		PhaseHandler:           workloadVersionPhaseHandler,
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		Log:           workloadVersionLogger,
+		EventSender:   workloadVersionEventSender,
+		Meters:        keptnMeters,
+		TracerFactory: telemetry.GetOtelInstance(),
+		SpanHandler:   spanHandler,
+		PhaseHandler:  workloadVersionPhaseHandler,
+		Config:        config.Instance(),
 	}
 	if err = (workloadVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnWorkloadVersion")
@@ -311,14 +305,7 @@ func main() {
 	appVersionLogger := ctrl.Log.WithName("KeptnAppVersion Controller").V(env.KeptnAppVersionControllerLogLevel)
 	appVersionRecorder := mgr.GetEventRecorderFor("keptnappversion-controller")
 	appVersionEventSender := eventsender.NewEventMultiplexer(appVersionLogger, appVersionRecorder, ceClient)
-	appVersionEvaluationHandler := evaluation.NewHandler(
-		mgr.GetClient(),
-		appVersionEventSender,
-		appVersionLogger,
-		noop.NewTracerProvider().Tracer("keptn/lifecycle-operator/appversion"),
-		mgr.GetScheme(),
-		spanHandler,
-	)
+
 	appVersionPhaseHandler := phase.NewHandler(
 		mgr.GetClient(),
 		appVersionEventSender,
@@ -326,15 +313,16 @@ func main() {
 		spanHandler,
 	)
 	appVersionReconciler := &keptnappversion.KeptnAppVersionReconciler{
-		Client:            mgr.GetClient(),
-		Scheme:            mgr.GetScheme(),
-		Log:               appVersionLogger,
-		EventSender:       appVersionEventSender,
-		TracerFactory:     telemetry.GetOtelInstance(),
-		Meters:            keptnMeters,
-		SpanHandler:       spanHandler,
-		EvaluationHandler: appVersionEvaluationHandler,
-		PhaseHandler:      appVersionPhaseHandler,
+		Client:                mgr.GetClient(),
+		Scheme:                mgr.GetScheme(),
+		Log:                   appVersionLogger,
+		EventSender:           appVersionEventSender,
+		TracerFactory:         telemetry.GetOtelInstance(),
+		Meters:                keptnMeters,
+		SpanHandler:           spanHandler,
+		PhaseHandler:          appVersionPhaseHandler,
+		PromotionTasksEnabled: env.PromotionTasksEnabled,
+		Config:                config.Instance(),
 	}
 	if err = (appVersionReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnAppVersion")
@@ -366,15 +354,29 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&lifecyclev1beta1.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
+	schedulingGatesLogger := ctrl.Log.WithName("SchedulingGates Controller").V(env.KeptnSchedulingGatesControllerLogLevel)
+	if env.SchedulingGatesEnabled {
+		schedulingGatesReconciler := &schedulinggates.SchedulingGatesReconciler{
+			Client: mgr.GetClient(),
+			Scheme: mgr.GetScheme(),
+			Log:    schedulingGatesLogger,
+		}
+
+		if err := schedulingGatesReconciler.SetupWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "SchedulingGates")
+			os.Exit(1)
+		}
+	}
+
+	if err = (&lifecyclev1.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnApp")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1beta1.KeptnAppVersion{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1.KeptnAppVersion{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnAppVersion")
 		os.Exit(1)
 	}
-	if err = (&lifecyclev1beta1.KeptnTaskDefinition{}).SetupWebhookWithManager(mgr); err != nil {
+	if err = (&lifecyclev1.KeptnTaskDefinition{}).SetupWebhookWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create webhook", "webhook", "KeptnTaskDefinition")
 		os.Exit(1)
 	}

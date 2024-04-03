@@ -1,0 +1,13 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: slack-notification-dev
+spec:
+  deno:
+    functionRef:
+      name: slack-notification
+    parameters:
+      map:
+        textMessage: "This is my configuration"
+    secureParameters:
+      secret: slack-token

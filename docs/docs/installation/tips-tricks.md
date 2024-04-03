@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Installation Tips and Tricks
 
 The

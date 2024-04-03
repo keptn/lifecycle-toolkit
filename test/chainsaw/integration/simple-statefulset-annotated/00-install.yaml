@@ -1,0 +1,41 @@
+---
+
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: pre-deployment-hello
+spec:
+  deno:
+    inline:
+      code: |
+        console.log("Pre-Deployment Task has been executed");
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: statefultest
+  name: statefultest
+  annotations:
+    keptn.sh/workload: work
+    keptn.sh/version: "0.4"
+    keptn.sh/pre-deployment-tasks: pre-deployment-hello
+    keptn.sh/metadata: "commit-id=1234,stage=dev"
+spec:
+  serviceName: statefultest
+  replicas: 2
+  selector:
+    matchLabels:
+      app: statefultest
+  template:
+    metadata:
+      labels:
+        app: statefultest
+      annotations:
+        rollme: what
+    spec:
+      containers:
+        - image: busybox
+          name: busybox
+          command: ['sh', '-c', 'echo The app is running! && sleep infinity']

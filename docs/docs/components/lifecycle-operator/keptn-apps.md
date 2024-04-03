@@ -1,17 +1,21 @@
+---
+comments: true
+---
+
 # KeptnApp and KeptnWorkload resources
 
 ## Keptn Workloads
 
 A
-[KeptnWorkload](../../reference/api-reference/lifecycle/v1alpha3/index.md#keptnworkload)
+[KeptnWorkload](../../reference/api-reference/lifecycle/v1/index.md#keptnworkload)
 resource augments a Kubernetes
 [Workload](https://kubernetes.io/docs/concepts/workloads/)
 with the ability to handle extra phases.
-It can execute the pre/post-deployment evaluations of a Workload
-and run pre/post-deployment tasks.
+It can execute the pre-/post-deployment evaluations of a workload
+and run pre-/post-deployment tasks.
 
-In its state, it tracks the currently active `Workload Instances`
-(`Pod`, `DaemonSet`, `StatefulSet`, and `ReplicaSet` resources),
+In its state, it tracks the currently active workloads
+(`DaemonSet`, `StatefulSet`, or `ReplicaSet` resources),
 as well as the overall state of the Pre Deployment phase,
 which Keptn can use to determine
 whether the pods belonging to a workload
@@ -23,6 +27,17 @@ it knows that a`PostDeploymentCheck` can be triggered.
 The `KeptnWorkload` resources are created automatically
 and without delay by the mutating webhook
 as soon as the workload manifest is applied.
+
+> **Note**
+By default Keptn observes the state of the Kubernetes workloads
+for 5 minutes.
+After this timeout is exceeded, the deployment phase (from Keptn
+viewpoint) is considered as `Failed` and Keptn does not proceed
+with post-deployment phases (tasks, evaluations or promotion phase).
+This timeout can be modified for the cluster by changing the value
+of the `observabilityTimeout` field in the
+[KeptnConfig](../../reference/crd-reference/config.md)
+resource.
 
 ## Keptn Applications
 
@@ -44,9 +59,14 @@ Implementing Keptn applications provides the following benefits:
   of all workloads together rather than individually.
 * You can define pre-deployment evaluations and tasks
   that must all complete successfully
-  before the scheduler creates the pods for any of the workloads.
+  before the scheduler binds the pods to the nodes.
+  For information about how to disable the blocking
+  functionality, please refer to
+  [this section](./keptn-non-blocking.md#keptn-non-blocking-deployment-functionality).
 * You can define post-deployment evaluations and tasks
   that run only after all the workloads have completed successfully.
+* You can define promotion tasks that run only after all the post-deployment
+  tasks and evaluations have completed successfully.
 
 You control the content of a `KeptnApp` resource
 with annotations or labels that are applied to each
@@ -54,7 +74,7 @@ with annotations or labels that are applied to each
 ([Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/),
 [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/),
 and
-[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+[DaemonSets](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/))
 plus specific tasks and evaluations that you define
 for the `KeptnApp` resource itself:
 
@@ -63,17 +83,17 @@ for the `KeptnApp` resource itself:
   are used to automatically generate `KeptnApp` resources
   that contain the identifications required
   to run the Keptn observability features.
-* You must manually add the annotations described in
-  [Annotations to KeptnApp](../../guides/tasks.md#annotations-to-keptnapp)
-  to the basic `KeptnApp` manifest to define
-  the evaluations and tasks you want to run pre/post-deployment.
+* You must create a `KeptnAppContext` resource
+  that has the same name and namespace of your `KeptnApp` to define
+  the evaluations and tasks you want to run pre-/post-deployment.
+  For more information check [how to create tasks](../../guides/tasks.md/#run-a-task-associated-with-your-entire-keptnapp)
+  and [how to create evaluations](../../guides/evaluations.md/#create-keptnappcontext-for-app-level-evaluations).
 
-The `KeptnApp` resources that are generated automatically
+The `KeptnApp` resources are generated automatically and
 contain the identifications required to run the Keptn observability features.
 The `spec.workloads.name` and a `spec.workloads.version` fields
-that define evaluations and tasks to be run
-pre- and post-deployment are not generated automatically
-but must be input manually.
+are also generated automatically as long as all the workloads you want in your app
+are correctly annotated. (See [basic annotations](#how-basic-annotations-are-implemented))
 
 By default, the `KeptnApp` resources are updated every 30 seconds
 when any of the Workloads have been modified;
@@ -107,8 +127,6 @@ Keptn automatically generates appropriate
 resources that are used for observability,
 based on whether the `keptn.sh/app` or `app.kubernetes.io/part-of`
 annotation/label is populated:
-resource for each defined group.
-that together constitute a single deployable Keptn Application.
 
 * If either of these labels/annotations are populated,
   Keptn automatically generates a `KeptnApp` resource

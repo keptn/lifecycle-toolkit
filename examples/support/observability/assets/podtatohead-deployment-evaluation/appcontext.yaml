@@ -1,0 +1,12 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppContext
+metadata:
+  name: podtato-head
+  namespace: podtato-kubectl
+spec:
+  postDeploymentTasks:
+    - post-deployment-hello
+  preDeploymentEvaluations: # Comment out this four lines if you do not have a prometheus installation
+    - my-prometheus-definition1
+  postDeploymentEvaluations:
+    - my-prometheus-definition2

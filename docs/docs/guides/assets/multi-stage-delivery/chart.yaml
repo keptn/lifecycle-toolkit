@@ -1,0 +1,6 @@
+apiVersion: v2
+name: podtato-head
+kubeVersion: ">= 1.24.0-0"
+type: application
+version: 0.1.0
+appVersion: "v0.1.0"

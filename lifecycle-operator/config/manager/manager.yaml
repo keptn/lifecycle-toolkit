@@ -81,6 +81,8 @@ spec:
               value: "0"
             - name: SCHEDULING_GATES_ENABLED
               value: "false"
+            - name: PROMOTION_TASKS_ENABLED
+              value: "false"
             - name: CERT_MANAGER_ENABLED
               value: "true"
           securityContext:
@@ -94,6 +96,9 @@ spec:
             capabilities:
               drop:
                 - "ALL"
+          volumeMounts:
+            - name: keptn-certs
+              mountPath: /tmp/webhook/certs/
           livenessProbe:
             httpGet:
               path: /healthz
@@ -117,3 +122,7 @@ spec:
               memory: 64Mi
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10
+      volumes:
+        - name: keptn-certs
+          secret:
+            secretName: keptn-certs

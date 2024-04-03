@@ -23,6 +23,8 @@ theme:
     - navigation.tracking
     - navigation.indexes
     - navigation.top
+    - navigation.tabs
+    - navigation.tabs.sticky
     - search.suggest
     - search.highlight
     - content.action.edit
@@ -30,6 +32,9 @@ theme:
     - search.suggest
     - search.highlight
     - content.code.copy
+    - content.code.annotate
+  icon:
+    annotation: material/arrow-right-circle
 site_url: !ENV READTHEDOCS_CANONICAL_URL
 repo_name: keptn/lifecycle-toolkit
 repo_url: https://github.com/keptn/lifecycle-toolkit
@@ -39,7 +44,12 @@ site_description: >-
   Achieve cloud-native application lifecycle orchestration with Keptn.
   Enhance Kubernetes monitoring, streamline metrics ingestion, and
   automate deployment validation. Join the Keptn community for insights.
+copyright: The Linux Foundation has registered trademarks and uses trademarks. For a list of trademarks of The Linux Foundation,
+  please see our <a href="https://www.linuxfoundation.org/legal/trademark-usage">Trademark Usage page</a>.
 extra:
+  analytics:
+    provider: google
+    property: !ENV GLOBAL_ANALYTICS_CODE
   social:
     - icon: fontawesome/solid/house
       link: https://keptn.sh
@@ -59,15 +69,23 @@ extra_css:
   - assets/stylesheets/mermaid.css
 plugins:
   - search
-  - social
+  # Disabling due to problem described here
+  # https://github.com/squidfunk/mkdocs-material/issues/6983.
+  # After resolving it, the plugin can be enabled again.
+  # - social:
+  #     cards_layout_options:
+  #       background_color: "#006bba"
   - include-markdown:
       trailing_newlines: false
   - git-revision-date-localized:
       fallback_to_build_date: true
   - blog:
+      post_excerpt: required
       blog_dir: blog
       draft_if_future_date: true
 markdown_extensions:
+  - admonition
+  - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -79,6 +97,13 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - attr_list
+  - md_in_html
 
 nav:
   - Home:
@@ -98,9 +123,11 @@ nav:
           - Upgrade: docs/installation/upgrade.md
           - Configuration:
               - docs/installation/configuration/index.md
-              - How to structure your namespaces: docs/installation/configuration/namespace.md
+              - Restricting monitored namespaces: docs/installation/configuration/namespace-keptn.md
+              - Allocating namespaces for Keptn resources: docs/installation/configuration/namespace-resources.md
               - vCluster installation: docs/installation/configuration/vcluster.md
               - Keptn + cert-manager.io: docs/installation/configuration/cert-manager.md
+              - Deploy Keptn via ArgoCD: docs/installation/configuration/argocd.md
           - Installation Tips and Tricks: docs/installation/tips-tricks.md
           - Troubleshooting Guide: docs/installation/troubleshooting.md
           - Kubernetes cluster: docs/installation/k8s.md
@@ -109,16 +136,19 @@ nav:
           - Auto app discovery: docs/guides/auto-app-discovery.md
           - Integrate Keptn with your Applications: docs/guides/integrate.md
           - Keptn Metrics: docs/guides/evaluatemetrics.md
-          - Analysis: docs/guides/slo.md
-          - Deployment tasks: docs/guides/tasks.md
+          - Analysis with Keptn: docs/guides/slo.md
+          - Deployment Tasks with Keptn: docs/guides/tasks.md
           - Redeploy/Restart an Application: docs/guides/restart-application-deployment.md
-          - Evaluations: docs/guides/evaluations.md
-          - DORA metrics: docs/guides/dora.md
-          - OpenTelemetry observability: docs/guides/otel.md
+          - Evaluations in Keptn: docs/guides/evaluations.md
+          - DORA Metrics: docs/guides/dora.md
+          - OpenTelemetry Observability: docs/guides/otel.md
+          - Context Metadata: docs/guides/metadata.md
+          - Multi-stage Application delivery: docs/guides/multi-stage-application-delivery.md
       - Use Cases:
           - docs/use-cases/index.md
           - Day 2 Operations: docs/use-cases/day-2-operations.md
           - Keptn + HorizontalPodAutoscaler: docs/use-cases/hpa.md
+          - Keptn + KEDA: docs/use-cases/keda.md
           - Keptn for non-Kubernetes deployments: docs/use-cases/non-k8s.md
       - Components:
           - docs/components/index.md
@@ -126,6 +156,8 @@ nav:
               - docs/components/lifecycle-operator/index.md
               - Flow of deployment: docs/components/lifecycle-operator/deployment-flow.md
               - Keptn Applications and Keptn Workloads: docs/components/lifecycle-operator/keptn-apps.md
+              - Keptn non-blocking application deployment: docs/components/lifecycle-operator/keptn-non-blocking.md
+              - Webhooks: docs/components/lifecycle-operator/webhook.md
           - Metrics Operator: docs/components/metrics-operator.md
           - Scheduler and Scheduling Gates: docs/components/scheduling.md
           - Keptn Certificate Manager: docs/components/certificate-operator.md
@@ -139,12 +171,15 @@ nav:
                   - v1alpha2: docs/reference/api-reference/lifecycle/v1alpha2/index.md
                   - v1alpha3: docs/reference/api-reference/lifecycle/v1alpha3/index.md
                   - v1alpha4: docs/reference/api-reference/lifecycle/v1alpha4/index.md
+                  - v1beta1: docs/reference/api-reference/lifecycle/v1beta1/index.md
+                  - v1: docs/reference/api-reference/lifecycle/v1/index.md
               - Metrics API:
                   - docs/reference/api-reference/metrics/index.md
                   - v1alpha1: docs/reference/api-reference/metrics/v1alpha1/index.md
                   - v1alpha2: docs/reference/api-reference/metrics/v1alpha2/index.md
                   - v1alpha3: docs/reference/api-reference/metrics/v1alpha3/index.md
                   - v1beta1: docs/reference/api-reference/metrics/v1beta1/index.md
+                  - v1: docs/reference/api-reference/metrics/v1/index.md
               - Options API:
                   - docs/reference/api-reference/options/index.md
                   - v1alpha1: docs/reference/api-reference/options/v1alpha1/index.md
@@ -154,16 +189,20 @@ nav:
               - AnalysisDefinition: docs/reference/crd-reference/analysisdefinition.md
               - AnalysisValueTemplate: docs/reference/crd-reference/analysisvaluetemplate.md
               - KeptnApp: docs/reference/crd-reference/app.md
+              - KeptnAppContext: docs/reference/crd-reference/appcontext.md
               - KeptnConfig: docs/reference/crd-reference/config.md
               - KeptnEvaluationDefinition: docs/reference/crd-reference/evaluationdefinition.md
               - KeptnMetric: docs/reference/crd-reference/metric.md
               - KeptnMetricsProvider: docs/reference/crd-reference/metricsprovider.md
               - KeptnTask: docs/reference/crd-reference/task.md
               - KeptnTaskDefinition: docs/reference/crd-reference/taskdefinition.md
-      - Migrating to Keptn:
-          - docs/migrate/index.md
-          - Migration strategy: docs/migrate/strategy.md
-          - Migrate Quality Gates: docs/migrate/metrics-observe.md
+      - Migration:
+          - Migrating to Keptn:
+              - docs/migrate/keptn/index.md
+              - Migration strategy: docs/migrate/keptn/strategy.md
+              - Migrate Quality Gates: docs/migrate/keptn/metrics-observe.md
+          - KeptnApp Migration:
+              - docs/migrate/keptnapp/index.md
   - Contributing:
       - docs/contribute/index.md
       - General information:
@@ -179,17 +218,22 @@ nav:
               - PR review process: docs/contribute/general/git/review.md
           - Contribution Guidelines: docs/contribute/general/contrib-guidelines-gen.md
           - Refinement Process: docs/contribute/general/refinement-guide.md
+          - Release Checklist: docs/contribute/general/release-checklist.md
       - Software contributions:
           - docs/contribute/software/index.md
           - Software development environment: docs/contribute/software/dev-environ.md
+          - Golangci-lint configuration: docs/contribute/software/golangci-lint.md
+          - Add a metrics provider: docs/contribute/software/add-new-metric-provider.md
       - Documentation contributions:
           - docs/contribute/docs/index.md
           - Contribution guidelines for documentation: docs/contribute/docs/contrib-guidelines-docs.md
           - Build Documentation Locally: docs/contribute/docs/local-building.md
-          - Linter Requirements: docs/contribute/docs/linter-requirements.md
-          - Source File Structure: docs/contribute/docs/source-file-structure.md
-          - Spell Checker: docs/contribute/docs/spell-check.md
-          - Published Doc Structure: docs/contribute/docs/publish.md
+          - Markdownlint: docs/contribute/docs/markdownlint.md
+          - Source file structure: docs/contribute/docs/source-file-structure.md
+          - Coding the docs: docs/contribute/docs/code-docs.md
+          - Spell checker: docs/contribute/docs/spell-check.md
+          - Blogs: docs/contribute/docs/blog.md
+          - Published doc structure: docs/contribute/docs/publish.md
           - Word list: docs/contribute/docs/word-list.md
   - Blog:
       - blog/index.md

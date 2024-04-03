@@ -1,10 +1,31 @@
-bases:
-  - ../base
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 
 resources:
   - app-pre-deploy.yaml
-  - app-pre-deploy-eval.yaml
+  - ../base
 
-patchesStrategicMerge:
-  - app.yaml
-  - manifest.yaml
+patches:
+  - path: appcontext.yaml
+  - patch: |-
+      - op: add
+        path: /spec/template/metadata/labels/app.kubernetes.io~1version
+        value: 0.1.1
+      - op: add
+        path: /spec/template/metadata/labels/keptn.sh~1pre-deployment-tasks
+        value: pre-deployment-check-frontend
+    target:
+      version: v1
+      kind: Deployment
+      name: podtato-head.*
+  - patch: |-
+      - op: remove
+        path: /spec/template/metadata/labels/keptn.sh~1pre-deployment-tasks
+        value: pre-deployment-check-frontend
+      - op: add
+        path: /spec/template/metadata/labels/app.kubernetes.io~1version
+        value: 0.1.2
+    target:
+      version: v1
+      kind: Deployment
+      name: podtato-head-frontend

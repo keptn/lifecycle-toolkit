@@ -8,26 +8,25 @@ import (
 	"testing"
 	"time"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	evaluationfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
 	phasefake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase/fake"
-	schedulinggatesfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/schedulinggates/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
 	telemetryfake "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry/fake"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	controllererrors "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/errors"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces"
 	"github.com/magiconair/properties/assert"
 	"github.com/stretchr/testify/require"
-	testrequire "github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 	appsv1 "k8s.io/api/apps/v1"
-	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -52,8 +51,9 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedReplicaSet(t *
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateProgressing, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableReplicaSet(t *testing.T) {
@@ -70,8 +70,53 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableReplicaSe
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.NotNil(t, err)
-	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
+	require.NotNil(t, err)
+	require.Equal(t, apicommon.StateUnknown, keptnState)
+	require.True(t, workloadVersion.Status.DeploymentStartTime.IsZero())
+}
+
+func TestKeptnWorkloadVersionReconciler_reconcileDeployment_WorkloadDeploymentTimedOut(t *testing.T) {
+
+	rep := int32(1)
+	replicaset := makeReplicaSet("myrep", "default", &rep, 0)
+	workloadVersion := makeWorkloadVersionWithRef(replicaset.ObjectMeta, "ReplicaSet")
+
+	fakeClient := testcommon.NewTestClient(replicaset, workloadVersion)
+
+	fakeRecorder := record.NewFakeRecorder(100)
+
+	r := &KeptnWorkloadVersionReconciler{
+		Client:      fakeClient,
+		Config:      config.Instance(),
+		EventSender: eventsender.NewK8sSender(fakeRecorder),
+	}
+
+	r.Config.SetObservabilityTimeout(metav1.Duration{
+		Duration: 5 * time.Second,
+	})
+
+	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateProgressing, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
+
+	//revert the start time parameter backwards to check the timer
+	workloadVersion.Status.DeploymentStartTime = metav1.Time{
+		Time: workloadVersion.Status.DeploymentStartTime.Add(-10 * time.Second),
+	}
+
+	err = r.Client.Status().Update(context.TODO(), workloadVersion)
+	require.Nil(t, err)
+
+	keptnState, err = r.reconcileDeployment(context.TODO(), workloadVersion)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateFailed, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
+
+	event := <-fakeRecorder.Events
+	require.Equal(t, strings.Contains(event, workloadVersion.GetName()), true, "wrong workloadVersion")
+	require.Equal(t, strings.Contains(event, workloadVersion.GetNamespace()), true, "wrong namespace")
+	require.Equal(t, strings.Contains(event, "has reached timeout"), true, "wrong message")
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedStatefulSet(t *testing.T) {
@@ -86,8 +131,9 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedStatefulSet(t 
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateProgressing, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableStatefulSet(t *testing.T) {
@@ -104,8 +150,9 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableStatefulS
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.NotNil(t, err)
-	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
+	require.NotNil(t, err)
+	require.Equal(t, apicommon.StateUnknown, keptnState)
+	require.True(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedDaemonSet(t *testing.T) {
@@ -120,8 +167,9 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_FailedDaemonSet(t *t
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateProgressing, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateProgressing, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableDaemonSet(t *testing.T) {
@@ -136,8 +184,9 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnavailableDaemonSet
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.NotNil(t, err)
-	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
+	require.NotNil(t, err)
+	require.Equal(t, apicommon.StateUnknown, keptnState)
+	require.True(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyReplicaSet(t *testing.T) {
@@ -153,8 +202,9 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyReplicaSet(t *t
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyStatefulSet(t *testing.T) {
@@ -170,8 +220,9 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyStatefulSet(t *
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyDaemonSet(t *testing.T) {
@@ -186,8 +237,9 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_ReadyDaemonSet(t *te
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.Nil(t, err)
-	testrequire.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.Nil(t, err)
+	require.Equal(t, apicommon.StateSucceeded, keptnState)
+	require.False(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnsupportedReferenceKind(t *testing.T) {
@@ -199,47 +251,9 @@ func TestKeptnWorkloadVersionReconciler_reconcileDeployment_UnsupportedReference
 	}
 
 	keptnState, err := r.reconcileDeployment(context.TODO(), workloadVersion)
-	testrequire.ErrorIs(t, err, controllererrors.ErrUnsupportedWorkloadVersionResourceReference)
-	testrequire.Equal(t, apicommon.StateUnknown, keptnState)
-}
-
-func TestKeptnWorkloadVersionReconciler_IsPodRunning(t *testing.T) {
-	p1 := makeNominatedPod("pod1", "node1", v1.PodRunning)
-	p2 := makeNominatedPod("pod2", "node1", v1.PodPending)
-	podList := &v1.PodList{Items: []v1.Pod{p1, p2}}
-	podList2 := &v1.PodList{Items: []v1.Pod{p2}}
-	r := &KeptnWorkloadVersionReconciler{
-		Client: k8sfake.NewClientBuilder().WithLists(podList).Build(),
-	}
-	isPodRunning, err := r.isPodRunning(context.TODO(), klcv1beta1.ResourceReference{UID: "pod1"}, "node1")
-	testrequire.Nil(t, err)
-	if !isPodRunning {
-		t.Errorf("Wrong!")
-	}
-
-	r2 := &KeptnWorkloadVersionReconciler{
-		Client: k8sfake.NewClientBuilder().WithLists(podList2).Build(),
-	}
-	isPodRunning, err = r2.isPodRunning(context.TODO(), klcv1beta1.ResourceReference{UID: "pod1"}, "node1")
-	testrequire.Nil(t, err)
-	if isPodRunning {
-		t.Errorf("Wrong!")
-	}
-
-}
-
-func makeNominatedPod(podName string, nodeName string, phase v1.PodPhase) v1.Pod {
-	return v1.Pod{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: nodeName,
-			Name:      podName,
-			UID:       types.UID(podName),
-		},
-		Status: v1.PodStatus{
-			Phase:             phase,
-			NominatedNodeName: nodeName,
-		},
-	}
+	require.ErrorIs(t, err, controllererrors.ErrUnsupportedWorkloadVersionResourceReference)
+	require.Equal(t, apicommon.StateUnknown, keptnState)
+	require.True(t, workloadVersion.Status.DeploymentStartTime.IsZero())
 }
 
 func makeReplicaSet(name string, namespace string, wanted *int32, available int32) *appsv1.ReplicaSet {
@@ -308,59 +322,59 @@ func Test_getAppVersionForWorkloadVersion(t *testing.T) {
 	now := time.Now()
 	tests := []struct {
 		name           string
-		wli            *klcv1beta1.KeptnWorkloadVersion
-		list           *klcv1beta1.KeptnAppVersionList
+		wli            *apilifecycle.KeptnWorkloadVersion
+		list           *apilifecycle.KeptnAppVersionList
 		wantFound      bool
-		wantAppVersion klcv1beta1.KeptnAppVersion
+		wantAppVersion apilifecycle.KeptnAppVersion
 		wantErr        bool
 	}{
 		{
 			name: "no appVersions",
-			wli: &klcv1beta1.KeptnWorkloadVersion{
+			wli: &apilifecycle.KeptnWorkloadVersion{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "my-workloadVersion",
 					Namespace: "default",
 				},
-				Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+				Spec: apilifecycle.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 						AppName: "my-app",
 						Version: "1.0",
 					},
 					WorkloadName: "my-app-my-workload",
 				},
 			},
-			list:           &klcv1beta1.KeptnAppVersionList{},
+			list:           &apilifecycle.KeptnAppVersionList{},
 			wantFound:      false,
-			wantAppVersion: klcv1beta1.KeptnAppVersion{},
+			wantAppVersion: apilifecycle.KeptnAppVersion{},
 			wantErr:        false,
 		},
 		{
 			name: "appVersion found",
-			wli: &klcv1beta1.KeptnWorkloadVersion{
+			wli: &apilifecycle.KeptnWorkloadVersion{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "my-workloadVersion",
 					Namespace: "default",
 				},
-				Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+				Spec: apilifecycle.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 						AppName: "my-app",
 						Version: "1.0",
 					},
 					WorkloadName: "my-app-my-workload",
 				},
 			},
-			list: &klcv1beta1.KeptnAppVersionList{
-				Items: []klcv1beta1.KeptnAppVersion{
+			list: &apilifecycle.KeptnAppVersionList{
+				Items: []apilifecycle.KeptnAppVersion{
 					{
 						ObjectMeta: metav1.ObjectMeta{
 							Name:              "my-app",
 							Namespace:         "default",
 							CreationTimestamp: metav1.Time{Time: now},
 						},
-						Spec: klcv1beta1.KeptnAppVersionSpec{
-							KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+						Spec: apilifecycle.KeptnAppVersionSpec{
+							KeptnAppSpec: apilifecycle.KeptnAppSpec{
 								Version: "1.0",
-								Workloads: []klcv1beta1.KeptnWorkloadRef{
+								Workloads: []apilifecycle.KeptnWorkloadRef{
 									{
 										Name:    "my-workload",
 										Version: "1.0",
@@ -376,10 +390,10 @@ func Test_getAppVersionForWorkloadVersion(t *testing.T) {
 							Namespace:         "default",
 							CreationTimestamp: metav1.Time{Time: now.Add(5 * time.Second)},
 						},
-						Spec: klcv1beta1.KeptnAppVersionSpec{
-							KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+						Spec: apilifecycle.KeptnAppVersionSpec{
+							KeptnAppSpec: apilifecycle.KeptnAppSpec{
 								Version: "2.0",
-								Workloads: []klcv1beta1.KeptnWorkloadRef{
+								Workloads: []apilifecycle.KeptnWorkloadRef{
 									{
 										Name:    "my-workload",
 										Version: "1.0",
@@ -392,16 +406,16 @@ func Test_getAppVersionForWorkloadVersion(t *testing.T) {
 				},
 			},
 			wantFound: true,
-			wantAppVersion: klcv1beta1.KeptnAppVersion{
+			wantAppVersion: apilifecycle.KeptnAppVersion{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:            "my-app2",
 					Namespace:       "default",
 					ResourceVersion: "999",
 				},
-				Spec: klcv1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+				Spec: apilifecycle.KeptnAppVersionSpec{
+					KeptnAppSpec: apilifecycle.KeptnAppSpec{
 						Version: "2.0",
-						Workloads: []klcv1beta1.KeptnWorkloadRef{
+						Workloads: []apilifecycle.KeptnWorkloadRef{
 							{
 								Name:    "my-workload",
 								Version: "1.0",
@@ -415,30 +429,30 @@ func Test_getAppVersionForWorkloadVersion(t *testing.T) {
 		},
 		{
 			name: "appVersion deprecated",
-			wli: &klcv1beta1.KeptnWorkloadVersion{
+			wli: &apilifecycle.KeptnWorkloadVersion{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "my-workloadVersion",
 					Namespace: "default",
 				},
-				Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+				Spec: apilifecycle.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 						AppName: "my-app",
 						Version: "1.0",
 					},
 					WorkloadName: "my-app-my-workload",
 				},
 			},
-			list: &klcv1beta1.KeptnAppVersionList{
-				Items: []klcv1beta1.KeptnAppVersion{
+			list: &apilifecycle.KeptnAppVersionList{
+				Items: []apilifecycle.KeptnAppVersion{
 					{
 						ObjectMeta: metav1.ObjectMeta{
 							Name:      "my-app",
 							Namespace: "default",
 						},
-						Spec: klcv1beta1.KeptnAppVersionSpec{
-							KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+						Spec: apilifecycle.KeptnAppVersionSpec{
+							KeptnAppSpec: apilifecycle.KeptnAppSpec{
 								Version: "1.0",
-								Workloads: []klcv1beta1.KeptnWorkloadRef{
+								Workloads: []apilifecycle.KeptnWorkloadRef{
 									{
 										Name:    "my-workload",
 										Version: "1.0",
@@ -447,7 +461,7 @@ func Test_getAppVersionForWorkloadVersion(t *testing.T) {
 							},
 							AppName: "my-app",
 						},
-						Status: klcv1beta1.KeptnAppVersionStatus{
+						Status: apilifecycle.KeptnAppVersionStatus{
 							Status: apicommon.StateDeprecated,
 						},
 					},
@@ -456,10 +470,10 @@ func Test_getAppVersionForWorkloadVersion(t *testing.T) {
 							Name:      "my-app2",
 							Namespace: "default",
 						},
-						Spec: klcv1beta1.KeptnAppVersionSpec{
-							KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+						Spec: apilifecycle.KeptnAppVersionSpec{
+							KeptnAppSpec: apilifecycle.KeptnAppSpec{
 								Version: "2.0",
-								Workloads: []klcv1beta1.KeptnWorkloadRef{
+								Workloads: []apilifecycle.KeptnWorkloadRef{
 									{
 										Name:    "my-workload",
 										Version: "1.0",
@@ -468,42 +482,42 @@ func Test_getAppVersionForWorkloadVersion(t *testing.T) {
 							},
 							AppName: "my-app",
 						},
-						Status: klcv1beta1.KeptnAppVersionStatus{
+						Status: apilifecycle.KeptnAppVersionStatus{
 							Status: apicommon.StateDeprecated,
 						},
 					},
 				},
 			},
 			wantFound:      false,
-			wantAppVersion: klcv1beta1.KeptnAppVersion{},
+			wantAppVersion: apilifecycle.KeptnAppVersion{},
 			wantErr:        false,
 		},
 		{
 			name: "no workload for appversion",
-			wli: &klcv1beta1.KeptnWorkloadVersion{
+			wli: &apilifecycle.KeptnWorkloadVersion{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "my-workloadVersion3",
 					Namespace: "default",
 				},
-				Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+				Spec: apilifecycle.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 						AppName: "my-app333",
 						Version: "1.0.0",
 					},
 					WorkloadName: "my-app-my-workload",
 				},
 			},
-			list: &klcv1beta1.KeptnAppVersionList{
-				Items: []klcv1beta1.KeptnAppVersion{
+			list: &apilifecycle.KeptnAppVersionList{
+				Items: []apilifecycle.KeptnAppVersion{
 					{
 						ObjectMeta: metav1.ObjectMeta{
 							Name:      "my-app",
 							Namespace: "default",
 						},
-						Spec: klcv1beta1.KeptnAppVersionSpec{
-							KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+						Spec: apilifecycle.KeptnAppVersionSpec{
+							KeptnAppSpec: apilifecycle.KeptnAppSpec{
 								Version: "1.0",
-								Workloads: []klcv1beta1.KeptnWorkloadRef{
+								Workloads: []apilifecycle.KeptnWorkloadRef{
 									{
 										Name:    "my-workload",
 										Version: "1.0",
@@ -518,10 +532,10 @@ func Test_getAppVersionForWorkloadVersion(t *testing.T) {
 							Name:      "my-app2",
 							Namespace: "default",
 						},
-						Spec: klcv1beta1.KeptnAppVersionSpec{
-							KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+						Spec: apilifecycle.KeptnAppVersionSpec{
+							KeptnAppSpec: apilifecycle.KeptnAppSpec{
 								Version: "2.0",
-								Workloads: []klcv1beta1.KeptnWorkloadRef{
+								Workloads: []apilifecycle.KeptnWorkloadRef{
 									{
 										Name:    "my-workload",
 										Version: "1.0",
@@ -534,14 +548,14 @@ func Test_getAppVersionForWorkloadVersion(t *testing.T) {
 				},
 			},
 			wantFound:      false,
-			wantAppVersion: klcv1beta1.KeptnAppVersion{},
+			wantAppVersion: apilifecycle.KeptnAppVersion{},
 			wantErr:        false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := klcv1beta1.AddToScheme(scheme.Scheme)
+			err := apilifecycle.AddToScheme(scheme.Scheme)
 			require.Nil(t, err)
 			r := &KeptnWorkloadVersionReconciler{
 				Client: k8sfake.NewClientBuilder().WithLists(tt.list).Build(),
@@ -563,31 +577,31 @@ func Test_getLatestAppVersion(t *testing.T) {
 
 	now := time.Now()
 	type args struct {
-		apps *klcv1beta1.KeptnAppVersionList
-		wli  *klcv1beta1.KeptnWorkloadVersion
+		apps *apilifecycle.KeptnAppVersionList
+		wli  *apilifecycle.KeptnWorkloadVersion
 	}
 	tests := []struct {
 		name           string
 		args           args
 		wantFound      bool
-		wantAppVersion klcv1beta1.KeptnAppVersion
+		wantAppVersion apilifecycle.KeptnAppVersion
 		wantErr        bool
 	}{
 		{
 			name: "app version found",
 			args: args{
-				apps: &klcv1beta1.KeptnAppVersionList{
-					Items: []klcv1beta1.KeptnAppVersion{
+				apps: &apilifecycle.KeptnAppVersionList{
+					Items: []apilifecycle.KeptnAppVersion{
 						{
 							ObjectMeta: metav1.ObjectMeta{
 								Name:              "my-app",
 								Namespace:         "default",
 								CreationTimestamp: metav1.Time{Time: now},
 							},
-							Spec: klcv1beta1.KeptnAppVersionSpec{
-								KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+							Spec: apilifecycle.KeptnAppVersionSpec{
+								KeptnAppSpec: apilifecycle.KeptnAppSpec{
 									Version: "1.0",
-									Workloads: []klcv1beta1.KeptnWorkloadRef{
+									Workloads: []apilifecycle.KeptnWorkloadRef{
 										{
 											Name:    "my-workload",
 											Version: "1.0",
@@ -603,10 +617,10 @@ func Test_getLatestAppVersion(t *testing.T) {
 								Namespace:         "default",
 								CreationTimestamp: metav1.Time{Time: now.Add(5 * time.Second)},
 							},
-							Spec: klcv1beta1.KeptnAppVersionSpec{
-								KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+							Spec: apilifecycle.KeptnAppVersionSpec{
+								KeptnAppSpec: apilifecycle.KeptnAppSpec{
 									Version: "2.0",
-									Workloads: []klcv1beta1.KeptnWorkloadRef{
+									Workloads: []apilifecycle.KeptnWorkloadRef{
 										{
 											Name:    "my-workload",
 											Version: "1.0",
@@ -618,13 +632,13 @@ func Test_getLatestAppVersion(t *testing.T) {
 						},
 					},
 				},
-				wli: &klcv1beta1.KeptnWorkloadVersion{
+				wli: &apilifecycle.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "my-workloadVersion",
 						Namespace: "default",
 					},
-					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+					Spec: apilifecycle.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 							AppName: "my-app",
 							Version: "1.0",
 						},
@@ -633,16 +647,16 @@ func Test_getLatestAppVersion(t *testing.T) {
 				},
 			},
 			wantFound: true,
-			wantAppVersion: klcv1beta1.KeptnAppVersion{
+			wantAppVersion: apilifecycle.KeptnAppVersion{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:              "my-app",
 					Namespace:         "default",
 					CreationTimestamp: metav1.Time{Time: now.Add(5 * time.Second)},
 				},
-				Spec: klcv1beta1.KeptnAppVersionSpec{
-					KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+				Spec: apilifecycle.KeptnAppVersionSpec{
+					KeptnAppSpec: apilifecycle.KeptnAppSpec{
 						Version: "2.0",
-						Workloads: []klcv1beta1.KeptnWorkloadRef{
+						Workloads: []apilifecycle.KeptnWorkloadRef{
 							{
 								Name:    "my-workload",
 								Version: "1.0",
@@ -657,17 +671,17 @@ func Test_getLatestAppVersion(t *testing.T) {
 		{
 			name: "app version not found",
 			args: args{
-				apps: &klcv1beta1.KeptnAppVersionList{
-					Items: []klcv1beta1.KeptnAppVersion{
+				apps: &apilifecycle.KeptnAppVersionList{
+					Items: []apilifecycle.KeptnAppVersion{
 						{
 							ObjectMeta: metav1.ObjectMeta{
 								Name:      "my-app",
 								Namespace: "default",
 							},
-							Spec: klcv1beta1.KeptnAppVersionSpec{
-								KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+							Spec: apilifecycle.KeptnAppVersionSpec{
+								KeptnAppSpec: apilifecycle.KeptnAppSpec{
 									Version: "1.0",
-									Workloads: []klcv1beta1.KeptnWorkloadRef{
+									Workloads: []apilifecycle.KeptnWorkloadRef{
 										{
 											Name:    "my-other-workload",
 											Version: "1.0",
@@ -679,13 +693,13 @@ func Test_getLatestAppVersion(t *testing.T) {
 						},
 					},
 				},
-				wli: &klcv1beta1.KeptnWorkloadVersion{
+				wli: &apilifecycle.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "my-workloadVersion",
 						Namespace: "default",
 					},
-					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+					Spec: apilifecycle.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 							AppName: "my-app",
 							Version: "1.0",
 						},
@@ -694,22 +708,22 @@ func Test_getLatestAppVersion(t *testing.T) {
 				},
 			},
 			wantFound:      false,
-			wantAppVersion: klcv1beta1.KeptnAppVersion{},
+			wantAppVersion: apilifecycle.KeptnAppVersion{},
 			wantErr:        false,
 		},
 		{
 			name: "app version list empty",
 			args: args{
-				apps: &klcv1beta1.KeptnAppVersionList{
-					Items: []klcv1beta1.KeptnAppVersion{},
+				apps: &apilifecycle.KeptnAppVersionList{
+					Items: []apilifecycle.KeptnAppVersion{},
 				},
-				wli: &klcv1beta1.KeptnWorkloadVersion{
+				wli: &apilifecycle.KeptnWorkloadVersion{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      "my-workloadVersion",
 						Namespace: "default",
 					},
-					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+					Spec: apilifecycle.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 							AppName: "my-app",
 							Version: "1.0",
 						},
@@ -718,7 +732,7 @@ func Test_getLatestAppVersion(t *testing.T) {
 				},
 			},
 			wantFound:      false,
-			wantAppVersion: klcv1beta1.KeptnAppVersion{},
+			wantAppVersion: apilifecycle.KeptnAppVersion{},
 			wantErr:        false,
 		},
 	}
@@ -745,14 +759,14 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 
 	testNamespace := "some-ns"
 
-	wi := &klcv1beta1.KeptnWorkloadVersion{
+	wi := &apilifecycle.KeptnWorkloadVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "some-wi",
 			Namespace: testNamespace,
 		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				AppName: "some-app",
 				Version: "1.0.0",
 				Metadata: map[string]string{
@@ -763,7 +777,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 			PreviousVersion: "",
 			TraceId:         nil,
 		},
-		Status: klcv1beta1.KeptnWorkloadVersionStatus{
+		Status: apilifecycle.KeptnWorkloadVersionStatus{
 			DeploymentStatus:               apicommon.StateSucceeded,
 			PreDeploymentStatus:            apicommon.StateSucceeded,
 			PostDeploymentStatus:           apicommon.StateSucceeded,
@@ -771,8 +785,11 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 			PostDeploymentEvaluationStatus: apicommon.StateSucceeded,
 			CurrentPhase:                   apicommon.PhaseWorkloadPostEvaluation.ShortName,
 			Status:                         apicommon.StateSucceeded,
-			StartTime:                      metav1.Time{},
-			EndTime:                        metav1.Time{},
+			AppContextMetadata: map[string]string{
+				"testy": "test",
+			},
+			StartTime: metav1.Time{},
+			EndTime:   metav1.Time{},
 		},
 	}
 
@@ -780,22 +797,17 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 		testNamespace,
 		"some-app",
 		"1.0.0",
-		[]klcv1beta1.KeptnWorkloadRef{
+		[]apilifecycle.KeptnWorkloadRef{
 			{
 				Name:    "some-workload",
 				Version: "1.0.0",
 			},
 		},
-		klcv1beta1.KeptnAppVersionStatus{
+		apilifecycle.KeptnAppVersionStatus{
 			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 		},
 	)
 	r, eventChannel, _ := setupReconciler(wi, app)
-	r.SchedulingGatesHandler = &schedulinggatesfake.ISchedulingGatesHandlerMock{
-		EnabledFunc: func() bool {
-			return false
-		},
-	}
 
 	req := ctrl.Request{
 		NamespacedName: types.NamespacedName{
@@ -834,182 +846,21 @@ func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion(t *testing.T) {
 
 	require.True(t, b)
 	require.Equal(t, "bar", metadata["foo"])
-}
-
-func TestKeptnWorkloadVersionReconciler_ReconcileReachCompletion_SchedulingGates(t *testing.T) {
-
-	testNamespace := "some-ns"
-
-	wi := &klcv1beta1.KeptnWorkloadVersion{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "some-wi",
-			Namespace: testNamespace,
-		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
-				AppName: "some-app",
-				Version: "1.0.0",
-			},
-			WorkloadName:    "some-app-some-workload",
-			PreviousVersion: "",
-			TraceId:         nil,
-		},
-		Status: klcv1beta1.KeptnWorkloadVersionStatus{
-			DeploymentStatus:               apicommon.StateSucceeded,
-			PreDeploymentStatus:            apicommon.StateSucceeded,
-			PostDeploymentStatus:           apicommon.StateSucceeded,
-			PreDeploymentEvaluationStatus:  apicommon.StateSucceeded,
-			PostDeploymentEvaluationStatus: apicommon.StateSucceeded,
-			CurrentPhase:                   apicommon.PhaseWorkloadPostEvaluation.ShortName,
-			Status:                         apicommon.StateSucceeded,
-			StartTime:                      metav1.Time{},
-			EndTime:                        metav1.Time{},
-		},
-	}
-
-	app := testcommon.ReturnAppVersion(
-		testNamespace,
-		"some-app",
-		"1.0.0",
-		[]klcv1beta1.KeptnWorkloadRef{
-			{
-				Name:    "some-workload",
-				Version: "1.0.0",
-			},
-		},
-		klcv1beta1.KeptnAppVersionStatus{
-			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
-		},
-	)
-
-	schedulingGatesMock := &schedulinggatesfake.ISchedulingGatesHandlerMock{
-		RemoveGatesFunc: func(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion) error {
-			return nil
-		},
-		EnabledFunc: func() bool {
-			return true
-		},
-	}
-	r, eventChannel, _ := setupReconciler(wi, app)
-	r.SchedulingGatesHandler = schedulingGatesMock
-
-	req := ctrl.Request{
-		NamespacedName: types.NamespacedName{
-			Namespace: testNamespace,
-			Name:      "some-wi",
-		},
-	}
-
-	result, err := r.Reconcile(context.TODO(), req)
-
-	require.Len(t, schedulingGatesMock.RemoveGatesCalls(), 1)
-	require.Nil(t, err)
-
-	// do not requeue since we reached completion
-	require.False(t, result.Requeue)
-
-	// here we do not expect an event about the application preEvaluation being finished since that  will have been sent in
-	// one of the previous reconciliation loops that lead to the first phase being reached
-	expectedEvents := []string{
-		"CompletedFinished",
-	}
-
-	for _, e := range expectedEvents {
-		select {
-		case event := <-eventChannel:
-			assert.Equal(t, strings.Contains(event, req.Name), true, "wrong workloadVersion")
-			assert.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
-			assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
-		case <-time.After(5 * time.Second):
-			t.Error("Didn't receive the cloud event")
-		}
-	}
-}
-
-func TestKeptnWorkloadVersionReconciler_RemoveGates_fail(t *testing.T) {
-
-	testNamespace := "some-ns"
-
-	wi := &klcv1beta1.KeptnWorkloadVersion{
-		TypeMeta: metav1.TypeMeta{},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "some-wi",
-			Namespace: testNamespace,
-		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
-				AppName: "some-app",
-				Version: "1.0.0",
-			},
-			WorkloadName:    "some-app-some-workload",
-			PreviousVersion: "",
-			TraceId:         nil,
-		},
-		Status: klcv1beta1.KeptnWorkloadVersionStatus{
-			DeploymentStatus:               apicommon.StateSucceeded,
-			PreDeploymentStatus:            apicommon.StateSucceeded,
-			PostDeploymentStatus:           apicommon.StateSucceeded,
-			PreDeploymentEvaluationStatus:  apicommon.StateSucceeded,
-			PostDeploymentEvaluationStatus: apicommon.StateSucceeded,
-			CurrentPhase:                   apicommon.PhaseWorkloadPostEvaluation.ShortName,
-			Status:                         apicommon.StateSucceeded,
-			StartTime:                      metav1.Time{},
-			EndTime:                        metav1.Time{},
-		},
-	}
-
-	app := testcommon.ReturnAppVersion(
-		testNamespace,
-		"some-app",
-		"1.0.0",
-		[]klcv1beta1.KeptnWorkloadRef{
-			{
-				Name:    "some-workload",
-				Version: "1.0.0",
-			},
-		},
-		klcv1beta1.KeptnAppVersionStatus{
-			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
-		},
-	)
-	r, _, _ := setupReconciler(wi, app)
-	r.SchedulingGatesHandler = &schedulinggatesfake.ISchedulingGatesHandlerMock{
-		RemoveGatesFunc: func(ctx context.Context, workloadVersion *klcv1beta1.KeptnWorkloadVersion) error {
-			return fmt.Errorf("err")
-		},
-		EnabledFunc: func() bool {
-			return true
-		},
-	}
-
-	req := ctrl.Request{
-		NamespacedName: types.NamespacedName{
-			Namespace: testNamespace,
-			Name:      "some-wi",
-		},
-	}
-
-	result, err := r.Reconcile(context.TODO(), req)
-
-	require.NotNil(t, err)
-
-	// do not requeue since we reached completion
-	require.True(t, result.Requeue)
+	require.Equal(t, "test", metadata["testy"])
 }
 
 func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 
 	testNamespace := "some-ns"
 
-	wi := &klcv1beta1.KeptnWorkloadVersion{
+	wi := &apilifecycle.KeptnWorkloadVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "some-wi",
 			Namespace: testNamespace,
 		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				AppName: "some-app",
 				Version: "1.0.0",
 				PreDeploymentTasks: []string{
@@ -1020,7 +871,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 			PreviousVersion: "",
 			TraceId:         nil,
 		},
-		Status: klcv1beta1.KeptnWorkloadVersionStatus{
+		Status: apilifecycle.KeptnWorkloadVersionStatus{
 			DeploymentStatus:               apicommon.StatePending,
 			PreDeploymentStatus:            apicommon.StateProgressing,
 			PostDeploymentStatus:           apicommon.StatePending,
@@ -1028,7 +879,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 			PostDeploymentEvaluationStatus: apicommon.StatePending,
 			CurrentPhase:                   apicommon.PhaseWorkloadPreDeployment.ShortName,
 			Status:                         apicommon.StateProgressing,
-			PreDeploymentTaskStatus: []klcv1beta1.ItemStatus{
+			PreDeploymentTaskStatus: []apilifecycle.ItemStatus{
 				{
 					Name:           "pre-task",
 					DefinitionName: "task",
@@ -1043,20 +894,22 @@ func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 		testNamespace,
 		"some-app",
 		"1.0.0",
-		[]klcv1beta1.KeptnWorkloadRef{
+		[]apilifecycle.KeptnWorkloadRef{
 			{
 				Name:    "some-workload",
 				Version: "1.0.0",
 			},
 		},
-		klcv1beta1.KeptnAppVersionStatus{
+		apilifecycle.KeptnAppVersionStatus{
 			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 		},
 	)
 
-	r, _, _ := setupReconciler(app, wi)
+	r, eventChannel, _ := setupReconciler(app, wi)
 
 	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		piWrapper, _ := interfaces.NewPhaseItemWrapperFromClientObject(reconcileObject)
+		piWrapper.SetState(apicommon.StateFailed)
 		return phase.PhaseResult{Continue: false, Result: ctrl.Result{Requeue: false}}, nil
 	}}
 
@@ -1070,6 +923,24 @@ func TestKeptnWorkloadVersionReconciler_ReconcileFailed(t *testing.T) {
 	result, err := r.Reconcile(context.TODO(), req)
 
 	require.Nil(t, err)
+
+	// here we do not expect an event about the application preEvaluation being finished since that  will have been sent in
+	// one of the previous reconciliation loops that lead to the first phase being reached
+	expectedEvents := []string{
+		"CompletedFailed",
+	}
+
+	for _, e := range expectedEvents {
+		event := <-eventChannel
+		assert.Equal(t, strings.Contains(event, req.Name), true, "wrong workloadVersion")
+		assert.Equal(t, strings.Contains(event, req.Namespace), true, "wrong namespace")
+		assert.Equal(t, strings.Contains(event, e), true, fmt.Sprintf("no %s found in %s", e, event))
+	}
+
+	spanHandlerMock := r.SpanHandler.(*telemetryfake.ISpanHandlerMock)
+
+	require.Len(t, spanHandlerMock.GetSpanCalls(), 1)
+	require.Len(t, spanHandlerMock.UnbindSpanCalls(), 1)
 
 	// do not requeue since we reached completion
 	require.False(t, result.Requeue)
@@ -1106,14 +977,14 @@ func TestKeptnWorkloadVersionReconciler_ReconcilePreDeploymentEvaluationUnexpect
 
 	testNamespace := "some-ns"
 
-	wi := &klcv1beta1.KeptnWorkloadVersion{
+	wi := &apilifecycle.KeptnWorkloadVersion{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "some-wi",
 			Namespace: testNamespace,
 		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				AppName:                  "some-app",
 				Version:                  "1.0.0",
 				PreDeploymentEvaluations: []string{"my-pre-evaluation"},
@@ -1122,7 +993,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcilePreDeploymentEvaluationUnexpect
 			PreviousVersion: "",
 			TraceId:         nil,
 		},
-		Status: klcv1beta1.KeptnWorkloadVersionStatus{
+		Status: apilifecycle.KeptnWorkloadVersionStatus{
 			CurrentPhase: apicommon.PhaseWorkloadPreDeployment.ShortName,
 			StartTime:    metav1.Time{},
 			EndTime:      metav1.Time{},
@@ -1133,13 +1004,13 @@ func TestKeptnWorkloadVersionReconciler_ReconcilePreDeploymentEvaluationUnexpect
 		testNamespace,
 		"some-app",
 		"1.0.0",
-		[]klcv1beta1.KeptnWorkloadRef{
+		[]apilifecycle.KeptnWorkloadRef{
 			{
 				Name:    "some-workload",
 				Version: "1.0.0",
 			},
 		},
-		klcv1beta1.KeptnAppVersionStatus{
+		apilifecycle.KeptnAppVersionStatus{
 			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 		},
 	)
@@ -1148,7 +1019,7 @@ func TestKeptnWorkloadVersionReconciler_ReconcilePreDeploymentEvaluationUnexpect
 
 	mockEvaluationHandler := r.EvaluationHandler.(*evaluationfake.MockEvaluationHandler)
 
-	mockEvaluationHandler.ReconcileEvaluationsFunc = func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
+	mockEvaluationHandler.ReconcileEvaluationsFunc = func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]apilifecycle.ItemStatus, apicommon.StatusSummary, error) {
 		return nil, apicommon.StatusSummary{}, errors.New("unexpected error")
 	}
 
@@ -1211,24 +1082,25 @@ func setupReconciler(objs ...client.Object) (*KeptnWorkloadVersionReconciler, ch
 		Meters:        testcommon.InitAppMeters(),
 		SpanHandler:   spanHandlerMock,
 		TracerFactory: tf,
+		Config:        config.Instance(),
 		EvaluationHandler: &evaluationfake.MockEvaluationHandler{
-			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]klcv1beta1.ItemStatus, apicommon.StatusSummary, error) {
-				return []klcv1beta1.ItemStatus{}, apicommon.StatusSummary{}, nil
+			ReconcileEvaluationsFunc: func(ctx context.Context, phaseCtx context.Context, reconcileObject client.Object, evaluationCreateAttributes evaluation.CreateEvaluationAttributes) ([]apilifecycle.ItemStatus, apicommon.StatusSummary, error) {
+				return []apilifecycle.ItemStatus{}, apicommon.StatusSummary{}, nil
 			},
 		},
 	}
 	return r, recorder.Events, tr
 }
 
-func makeWorkloadVersionWithRef(objectMeta metav1.ObjectMeta, refKind string) *klcv1beta1.KeptnWorkloadVersion {
-	workloadVersion := &klcv1beta1.KeptnWorkloadVersion{
+func makeWorkloadVersionWithRef(objectMeta metav1.ObjectMeta, refKind string) *apilifecycle.KeptnWorkloadVersion {
+	workloadVersion := &apilifecycle.KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-wli",
 			Namespace: "default",
 		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
-				ResourceReference: klcv1beta1.ResourceReference{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
+				ResourceReference: apilifecycle.ResourceReference{
 					UID:  objectMeta.UID,
 					Name: objectMeta.Name,
 					Kind: refKind,
@@ -1242,9 +1114,9 @@ func makeWorkloadVersionWithRef(objectMeta metav1.ObjectMeta, refKind string) *k
 func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppCannotRetrieveApp(t *testing.T) {
 	r, _, _ := setupReconciler()
 
-	wv := &klcv1beta1.KeptnWorkloadVersion{
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{},
+	wv := &apilifecycle.KeptnWorkloadVersion{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{},
 		},
 	}
 
@@ -1265,9 +1137,9 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppCannotRetri
 func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppAppNotFound(t *testing.T) {
 	r, _, _ := setupReconciler()
 
-	wv := &klcv1beta1.KeptnWorkloadVersion{
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+	wv := &apilifecycle.KeptnWorkloadVersion{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				AppName: "my-unknown-app",
 			},
 		},
@@ -1280,13 +1152,13 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppAppNotFound
 }
 
 func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppAppPreTasksNotFinished(t *testing.T) {
-	appVersion := &klcv1beta1.KeptnAppVersion{
+	appVersion := &apilifecycle.KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{},
-		Spec: klcv1beta1.KeptnAppVersionSpec{
+		Spec: apilifecycle.KeptnAppVersionSpec{
 			AppName: "my-app",
-			KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+			KeptnAppSpec: apilifecycle.KeptnAppSpec{
 				Version: "1.0",
-				Workloads: []klcv1beta1.KeptnWorkloadRef{
+				Workloads: []apilifecycle.KeptnWorkloadRef{
 					{
 						Name:    "my-workload",
 						Version: "1.0",
@@ -1298,12 +1170,12 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppAppPreTasks
 
 	r, _, _ := setupReconciler(appVersion)
 
-	wv := &klcv1beta1.KeptnWorkloadVersion{
+	wv := &apilifecycle.KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "my-app-my-workload-1.0",
 		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				AppName: "my-app",
 				Version: "1.0",
 			},
@@ -1318,15 +1190,15 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppAppPreTasks
 }
 
 func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTraceID(t *testing.T) {
-	appVersion := &klcv1beta1.KeptnAppVersion{
+	appVersion := &apilifecycle.KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "my-app-version",
 		},
-		Spec: klcv1beta1.KeptnAppVersionSpec{
+		Spec: apilifecycle.KeptnAppVersionSpec{
 			AppName: "my-app",
-			KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+			KeptnAppSpec: apilifecycle.KeptnAppSpec{
 				Version: "1.0",
-				Workloads: []klcv1beta1.KeptnWorkloadRef{
+				Workloads: []apilifecycle.KeptnWorkloadRef{
 					{
 						Name:    "my-workload",
 						Version: "1.0",
@@ -1334,7 +1206,7 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTrace
 				},
 			},
 		},
-		Status: klcv1beta1.KeptnAppVersionStatus{
+		Status: apilifecycle.KeptnAppVersionStatus{
 			PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 			PhaseTraceIDs: map[string]propagation.MapCarrier{
 				apicommon.PhaseAppDeployment.ShortName: map[string]string{"traceparent": "parent-id"},
@@ -1342,12 +1214,12 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTrace
 		},
 	}
 
-	wv := &klcv1beta1.KeptnWorkloadVersion{
+	wv := &apilifecycle.KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "my-app-my-workload-1.0",
 		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				AppName: "my-app",
 				Version: "1.0",
 			},
@@ -1357,7 +1229,7 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTrace
 
 	r, _, _ := setupReconciler(appVersion, wv)
 
-	appVersion.Status = klcv1beta1.KeptnAppVersionStatus{
+	appVersion.Status = apilifecycle.KeptnAppVersionStatus{
 		PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 		PhaseTraceIDs: map[string]propagation.MapCarrier{
 			apicommon.PhaseAppDeployment.ShortName: map[string]string{"traceparent": "parent-id"},
@@ -1381,16 +1253,16 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTrace
 }
 
 func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTraceIDWithAppVersionSpecTraceID(t *testing.T) {
-	appVersion := &klcv1beta1.KeptnAppVersion{
+	appVersion := &apilifecycle.KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "my-app-version",
 		},
-		Spec: klcv1beta1.KeptnAppVersionSpec{
+		Spec: apilifecycle.KeptnAppVersionSpec{
 			AppName: "my-app",
 			TraceId: map[string]string{"traceparent": "parent-id"},
-			KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+			KeptnAppSpec: apilifecycle.KeptnAppSpec{
 				Version: "1.0",
-				Workloads: []klcv1beta1.KeptnWorkloadRef{
+				Workloads: []apilifecycle.KeptnWorkloadRef{
 					{
 						Name:    "my-workload",
 						Version: "1.0",
@@ -1400,12 +1272,12 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTrace
 		},
 	}
 
-	wv := &klcv1beta1.KeptnWorkloadVersion{
+	wv := &apilifecycle.KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "my-app-my-workload-1.0",
 		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				AppName: "my-app",
 				Version: "1.0",
 			},
@@ -1415,7 +1287,7 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTrace
 
 	r, _, _ := setupReconciler(appVersion, wv)
 
-	appVersion.Status = klcv1beta1.KeptnAppVersionStatus{
+	appVersion.Status = apilifecycle.KeptnAppVersionStatus{
 		PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 	}
 
@@ -1436,16 +1308,16 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateTrace
 }
 
 func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppErrorWhenUpdatingWorkloadVersion(t *testing.T) {
-	appVersion := &klcv1beta1.KeptnAppVersion{
+	appVersion := &apilifecycle.KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "my-app-version",
 		},
-		Spec: klcv1beta1.KeptnAppVersionSpec{
+		Spec: apilifecycle.KeptnAppVersionSpec{
 			AppName: "my-app",
 			TraceId: map[string]string{"traceparent": "parent-id"},
-			KeptnAppSpec: klcv1beta1.KeptnAppSpec{
+			KeptnAppSpec: apilifecycle.KeptnAppSpec{
 				Version: "1.0",
-				Workloads: []klcv1beta1.KeptnWorkloadRef{
+				Workloads: []apilifecycle.KeptnWorkloadRef{
 					{
 						Name:    "my-workload",
 						Version: "1.0",
@@ -1455,12 +1327,12 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppErrorWhenUp
 		},
 	}
 
-	wv := &klcv1beta1.KeptnWorkloadVersion{
+	wv := &apilifecycle.KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "my-app-my-workload-1.0",
 		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				AppName: "my-app",
 				Version: "1.0",
 			},
@@ -1479,7 +1351,132 @@ func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppErrorWhenUp
 
 	r.Client = fakeClient
 
-	appVersion.Status = klcv1beta1.KeptnAppVersionStatus{
+	appVersion.Status = apilifecycle.KeptnAppVersionStatus{
+		PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
+	}
+
+	err := r.Client.Status().Update(context.TODO(), appVersion)
+
+	require.Nil(t, err)
+
+	requeue, err := r.checkPreEvaluationStatusOfApp(context.TODO(), wv)
+
+	require.NotNil(t, err)
+	require.True(t, requeue)
+}
+
+func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppUpdateMetadata(t *testing.T) {
+	appVersion := &apilifecycle.KeptnAppVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-app-version",
+		},
+		Spec: apilifecycle.KeptnAppVersionSpec{
+			AppName: "my-app",
+			TraceId: map[string]string{"traceparent": "parent-id"},
+			KeptnAppSpec: apilifecycle.KeptnAppSpec{
+				Version: "1.0",
+				Workloads: []apilifecycle.KeptnWorkloadRef{
+					{
+						Name:    "my-workload",
+						Version: "1.0",
+					},
+				},
+			},
+			KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+				Metadata: map[string]string{
+					"test": "testy",
+				},
+			},
+		},
+	}
+
+	wv := &apilifecycle.KeptnWorkloadVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-app-my-workload-1.0",
+		},
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
+				AppName: "my-app",
+				Version: "1.0",
+			},
+			TraceId:      map[string]string{"traceparent": "parent-id"},
+			WorkloadName: "my-app-my-workload",
+		},
+	}
+
+	r, _, _ := setupReconciler(appVersion, wv)
+
+	appVersion.Status = apilifecycle.KeptnAppVersionStatus{
+		PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
+	}
+
+	err := r.Client.Status().Update(context.TODO(), appVersion)
+
+	require.Nil(t, err)
+
+	requeue, err := r.checkPreEvaluationStatusOfApp(context.TODO(), wv)
+
+	require.False(t, requeue)
+	require.Nil(t, err)
+
+	err = r.Client.Get(context.TODO(), types.NamespacedName{Name: wv.Name}, wv)
+
+	require.Nil(t, err)
+
+	require.Equal(t, map[string]string{"test": "testy"}, wv.Status.AppContextMetadata)
+}
+
+func TestKeptnWorkloadVersionReconciler_checkPreEvaluationStatusOfAppErrorWhenUpdatingWorkloadVersionStatus(t *testing.T) {
+	appVersion := &apilifecycle.KeptnAppVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-app-version",
+		},
+		Spec: apilifecycle.KeptnAppVersionSpec{
+			AppName: "my-app",
+			TraceId: map[string]string{"traceparent": "parent-id"},
+			KeptnAppSpec: apilifecycle.KeptnAppSpec{
+				Version: "1.0",
+				Workloads: []apilifecycle.KeptnWorkloadRef{
+					{
+						Name:    "my-workload",
+						Version: "1.0",
+					},
+				},
+			},
+			KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+				Metadata: map[string]string{
+					"test": "testy",
+				},
+			},
+		},
+	}
+
+	wv := &apilifecycle.KeptnWorkloadVersion{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "my-app-my-workload-1.0",
+		},
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			TraceId: map[string]string{"traceparent": "parent-id"},
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
+				AppName: "my-app",
+				Version: "1.0",
+			},
+			WorkloadName: "my-app-my-workload",
+		},
+	}
+
+	r, _, _ := setupReconciler(appVersion, wv)
+
+	// inject an error into the fake client to return an error on update
+	fakeClient := k8sfake.NewClientBuilder().WithScheme(scheme.Scheme).WithInterceptorFuncs(interceptor.Funcs{
+		Update: func(ctx context.Context, client client.WithWatch, obj client.Object, opts ...client.UpdateOption) error {
+			return errors.New("unexpected error")
+		},
+	}).WithObjects(wv, appVersion).WithStatusSubresource(appVersion).Build()
+
+	r.Client = fakeClient
+
+	appVersion.Status = apilifecycle.KeptnAppVersionStatus{
 		PreDeploymentEvaluationStatus: apicommon.StateSucceeded,
 	}
 

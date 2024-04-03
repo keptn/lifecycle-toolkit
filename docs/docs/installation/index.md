@@ -1,15 +1,20 @@
+---
+comments: true
+---
+
 # Installation
 
 Keptn must be installed onto each Kubernetes cluster you want to monitor.
 Additionally, Keptn needs to be enabled on your namespaces.
 This gives you flexibility in how and where you want to use Keptn.
 
-Keptn v0.9.0 and later is installed using [Helm](https://helm.sh/).
-
-> **Note** Earlier releases could also be installed using the manifest.
+> **Note** By default, Keptn monitors all namespaces in the cluster
+> except for those reserved for major components.
 > See
-[Upgrade to Helm from a manifest installation](upgrade.md/#upgrade-to-helm-from-a-manifest-installation)
-> if you need to upgrade from a manifest installation.
+> [Namespaces and Keptn](configuration/namespace-keptn.md)
+> to learn how to limit the namespaces that Keptn monitors.
+
+Keptn is installed using [Helm](https://helm.sh/).
 
 After you install Keptn, you are ready to
 [Integrate Keptn with your applications](../guides/integrate.md).
@@ -50,6 +55,10 @@ See
 [Running Keptn with vCluster](./configuration/vcluster.md)
 for more information.
 
+If you want to deploy Keptn via [ArgoCD](https://argoproj.github.io/cd/),
+refer to the [Deploying Keptn via ArgoCD](./configuration/argocd.md) section
+for more information.
+
 ## Basic installation
 
 Keptn is installed onto an existing Kubernetes cluster
@@ -87,31 +96,49 @@ Some helpful hints:
 * Use the `--version <version>` flag on the
   `helm upgrade --install` command to specify a different Keptn Helm chart version.
 
-  To get the appropriate chart version for the Keptn version you want,
-  use the following command:
+    To get the appropriate chart version for the Keptn version you want,
+    use the following command:
 
-```shell
-helm search repo keptn --versions
-```
+    ```shell
+    helm search repo keptn --versions
+    ```
 
-  You see that the "CHART VERSION" for `keptn/keptn` v0.9.0 is 0.3.0
-  so use the following command to explicitly installs Keptn v0.9.0:
+    You see that the "CHART VERSION" for `keptn/keptn` v0.9.0 is 0.3.0
+    so use the following command to explicitly installs Keptn v0.9.0:
 
-```shell
-helm upgrade --install keptn keptn/keptn \
---version 0.3.0 \
--n keptn-system --create-namespace --wait
-```
+    ```shell
+    helm upgrade --install keptn keptn/keptn --version 0.3.0 \
+    -n keptn-system --create-namespace --wait
+    ```
 
 * To view which Keptn components are installed in your cluster
   and verify that they are the correct ones,
   run the following command:
 
-```shell
-kubectl get pods -n keptn-system
+    ```shell
+    kubectl get pods -n keptn-system
+    ```
+
+    The output shows all Keptn components that are running on your cluster.
+
+### Alternative installation methods
+
+#### Install Keptn via Glasskube
+
+[Glasskube](https://glasskube.dev/)
+is a package manager for Keptn that simplifies the installation process
+and can be used to automatically upgrade Keptn to the latest version.
+For more information on how to install Glasskube, see
+[Glasskube Installation](https://glasskube.dev/docs/getting-started/install/).
+
+To install Keptn via Glasskube after Glasskube is installed, run the following command:
+
+``` shell
+glasskube install keptn
 ```
 
-  The output shows all Keptn components that are running on your cluster.
+After that, Keptn is installed on your cluster and
+will be automatically upgraded to the latest version.
 
 ## Keptn Helm configuration
 
@@ -174,9 +201,9 @@ To modify Helm values:
 
 1. Download a copy of the Helm values file:
 
-```shell
-helm show values keptn/keptn > values.yaml
-```
+    ```shell
+    helm show values keptn/keptn > values.yaml
+    ```
 
 1. Edit your local copy to modify some values
 
@@ -184,28 +211,28 @@ helm show values keptn/keptn > values.yaml
    to your `helm upgrade` command to install Keptn
    with your configuration changes:
 
-```shell
---values=values.yaml
-```
+    ```shell
+    --values=values.yaml
+    ```
 
-   For example, if you create a `my.values.yaml`
-   and modify some configuration values,
-   use the following command to apply your configuration:
+    For example, if you create a `my.values.yaml`
+    and modify some configuration values,
+    use the following command to apply your configuration:
 
-```shell
-helm upgrade --install keptn keptn/keptn \
---values my.values.yaml \
--n keptn-system --create-namespace --wait
-```
+    ```shell
+    helm upgrade --install keptn keptn/keptn \
+    --values my.values.yaml \
+    -n keptn-system --create-namespace --wait
+    ```
 
-   You can also use the `--set` flag
-   to specify a value change for the `helm upgrade --install` command.
-   Helm values are specified using the format:
+    You can also use the `--set` flag
+    to specify a value change for the `helm upgrade --install` command.
+    Helm values are specified using the format:
 
-```shell
---set key1=value1 \
---set key2=value2 ...
-```
+    ```shell
+    --set key1=value1 \
+    --set key2=value2 ...
+    ```
 
 ## Control what components are installed
 

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Keptn Documentation
 
 This is the documentation homepage.
@@ -11,6 +15,8 @@ and provides information about special configuration options
 that are available.
 - [Guides](guides/index.md) provides detailed and comprehensive how-to information
 for Keptn features and capabilities.
+- [Use Cases](use-cases/index.md) has more specific integration scenarios and use cases with other Cloud Native
+tools.
 - [Reference](reference/index.md) provides comprehensive information
 about the CRDs and APIs that define how Keptn behaves.
 - [Components](components/index.md) provides architectural information

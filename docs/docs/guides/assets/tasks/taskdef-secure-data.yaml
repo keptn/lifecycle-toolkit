@@ -1,0 +1,16 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: deployment-hello
+  namespace: "default"
+spec:
+  deno:
+    secureParameters:
+      secret: deno-demo-secret
+    inline:
+      code: |
+        console.log("Deployment Hello Task has been executed");
+
+        let foo = Deno.env.get('SECURE_DATA');
+        console.log(foo);
+        Deno.exit(0);

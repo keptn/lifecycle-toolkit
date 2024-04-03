@@ -1,0 +1,25 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppVersion
+metadata:
+  name: podtato-head-0.1.0-6b86b273
+status:
+  currentPhase: AppPreDeployTasks
+  postDeploymentEvaluationStatus: Pending
+  postDeploymentStatus: Pending
+  preDeploymentEvaluationStatus: Pending
+  preDeploymentStatus: Pending
+  status: Progressing
+  workloadOverallStatus: Pending
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTask
+spec:
+  context:
+    appName: podtato-head
+    appVersion: '0.1.0'
+    taskType: pre
+  retries: 10
+  taskDefinition: pre-task-timeout
+  timeout: 30s
+status:
+  status: Succeeded

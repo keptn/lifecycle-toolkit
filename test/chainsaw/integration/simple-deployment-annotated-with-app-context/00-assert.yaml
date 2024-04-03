@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test
+  name: test
+status:
+  readyReplicas: 2
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkload
+metadata:
+  name: waiter-waiter
+spec:
+  metadata:
+    commit-id: "1234"
+    stage: dev
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkloadVersion
+metadata:
+  name: waiter-waiter-0.4
+spec:
+  metadata:
+    commit-id: "1234"
+    stage: dev
+status:
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: pre-deployment-hello
+---
+apiVersion: batch/v1
+kind: Job
+spec:
+  template:
+    spec:
+      containers:
+        - env:
+            - name: KEPTN_CONTEXT
+              # yamllint disable-line rule:line-length
+              value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"pre","objectType":"Workload","metadata":{"commit-id":"1234","stage":"dev","test-metadata":"test-metadata"}}'
+            - name: CMD_ARGS
+            - name: SCRIPT
+              value: /var/data/function.ts

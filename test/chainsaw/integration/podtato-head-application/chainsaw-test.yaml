@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kyverno/chainsaw/main/.schemas/json/test-chainsaw-v1alpha1.json
+apiVersion: chainsaw.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  creationTimestamp: null
+  name: podtato-head-application
+spec:
+  namespaceTemplate:
+    metadata:
+      annotations:
+        keptn.sh/lifecycle-toolkit: enabled
+  steps:
+    - name: step-00
+      try:
+        - apply:
+            file: 00-install.yaml
+        - assert:
+            file: 00-assert.yaml
+    - name: step-01
+      try:
+        - script:
+            content: |
+              kubectl port-forward svc/lifecycle-operator-metrics-service -n keptn-system 2222 > /dev/null 2>&1 &
+              port_forward_pid=$!
+              # trap to kill the port-forward process on script exit
+              trap 'kill $port_forward_pid' EXIT
+              # Wait for the port-forward process to complete
+              sleep 10
+              curl -s "http://localhost:2222/metrics" | grep "keptn_promotion_count"
+            timeout: 40s
+            check:
+              # This checks that Keptn returns active metrics
+              (contains($stdout, 'keptn_promotion_count_total')): true

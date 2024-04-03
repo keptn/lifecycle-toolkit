@@ -1,0 +1,10 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppContext
+metadata:
+  name: keptndemoapp
+  namespace: keptndemo
+spec:
+  postDeploymentTasks:
+    - send-event
+  promotionTasks:
+    - promotion

@@ -26,16 +26,18 @@ Package v1alpha2 contains API Schema definitions for the metrics v1alpha2 API gr
 
 KeptnMetric is the Schema for the keptnmetrics API
 
+
+
 _Appears in:_
 - [KeptnMetricList](#keptnmetriclist)
 
-| Field | Description | Default | Optional |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | |
-| `kind` _string_ | `KeptnMetric` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
-| `spec` _[KeptnMetricSpec](#keptnmetricspec)_ |  || ✓ |
-| `status` _[KeptnMetricStatus](#keptnmetricstatus)_ |  || ✓ |
+| Field | Description | Default | Optional |Validation |
+| --- | --- | --- | --- | --- |
+| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | | |
+| `kind` _string_ | `KeptnMetric` | | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |  |
+| `spec` _[KeptnMetricSpec](#keptnmetricspec)_ |  || ✓ |  |
+| `status` _[KeptnMetricStatus](#keptnmetricstatus)_ |  || ✓ |  |
 
 
 #### KeptnMetricList
@@ -46,12 +48,14 @@ KeptnMetricList contains a list of KeptnMetric
 
 
 
-| Field | Description | Default | Optional |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | |
-| `kind` _string_ | `KeptnMetricList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
-| `items` _[KeptnMetric](#keptnmetric) array_ |  || x |
+
+
+| Field | Description | Default | Optional |Validation |
+| --- | --- | --- | --- | --- |
+| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | | |
+| `kind` _string_ | `KeptnMetricList` | | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |  |
+| `items` _[KeptnMetric](#keptnmetric) array_ |  || x |  |
 
 
 #### KeptnMetricSpec
@@ -60,14 +64,16 @@ KeptnMetricList contains a list of KeptnMetric
 
 KeptnMetricSpec defines the desired state of KeptnMetric
 
+
+
 _Appears in:_
 - [KeptnMetric](#keptnmetric)
 
-| Field | Description | Default | Optional |
-| --- | --- | --- | --- |
-| `provider` _[ProviderRef](#providerref)_ | Provider represents the provider object || x |
-| `query` _string_ | Query represents the query to be run || x |
-| `fetchIntervalSeconds` _integer_ | FetchIntervalSeconds represents the update frequency in seconds that is used to update the metric || x |
+| Field | Description | Default | Optional |Validation |
+| --- | --- | --- | --- | --- |
+| `provider` _[ProviderRef](#providerref)_ | Provider represents the provider object || x |  |
+| `query` _string_ | Query represents the query to be run || x |  |
+| `fetchIntervalSeconds` _integer_ | FetchIntervalSeconds represents the update frequency in seconds that is used to update the metric || x |  |
 
 
 #### KeptnMetricStatus
@@ -76,14 +82,16 @@ _Appears in:_
 
 KeptnMetricStatus defines the observed state of KeptnMetric
 
+
+
 _Appears in:_
 - [KeptnMetric](#keptnmetric)
 
-| Field | Description | Default | Optional |
-| --- | --- | --- | --- |
-| `value` _string_ | Value represents the resulting value || x |
-| `rawValue` _integer array_ | RawValue represents the resulting value in raw format || x |
-| `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated || x |
+| Field | Description | Default | Optional |Validation |
+| --- | --- | --- | --- | --- |
+| `value` _string_ | Value represents the resulting value || x |  |
+| `rawValue` _integer array_ | RawValue represents the resulting value in raw format || x |  |
+| `lastUpdated` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ | LastUpdated represents the time when the status data was last updated || x |  |
 
 
 #### KeptnMetricsProvider
@@ -92,16 +100,18 @@ _Appears in:_
 
 KeptnMetricsProvider is the Schema for the keptnmetricsproviders API
 
+
+
 _Appears in:_
 - [KeptnMetricsProviderList](#keptnmetricsproviderlist)
 
-| Field | Description | Default | Optional |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | |
-| `kind` _string_ | `KeptnMetricsProvider` | | |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
-| `spec` _[KeptnMetricsProviderSpec](#keptnmetricsproviderspec)_ |  || ✓ |
-| `status` _string_ | unused field || ✓ |
+| Field | Description | Default | Optional |Validation |
+| --- | --- | --- | --- | --- |
+| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | | |
+| `kind` _string_ | `KeptnMetricsProvider` | | | |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation about [`metadata`](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/#attaching-metadata-to-objects). || ✓ |  |
+| `spec` _[KeptnMetricsProviderSpec](#keptnmetricsproviderspec)_ |  || ✓ |  |
+| `status` _string_ | unused field || ✓ |  |
 
 
 #### KeptnMetricsProviderList
@@ -112,12 +122,14 @@ KeptnMetricsProviderList contains a list of KeptnMetricsProvider
 
 
 
-| Field | Description | Default | Optional |
-| --- | --- | --- | --- |
-| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | |
-| `kind` _string_ | `KeptnMetricsProviderList` | | |
-| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. || ✓ |
-| `items` _[KeptnMetricsProvider](#keptnmetricsprovider) array_ |  || x |
+
+
+| Field | Description | Default | Optional |Validation |
+| --- | --- | --- | --- | --- |
+| `apiVersion` _string_ | `metrics.keptn.sh/v1alpha2` | | | |
+| `kind` _string_ | `KeptnMetricsProviderList` | | | |
+| `metadata` _[ListMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#listmeta-v1-meta)_ |  || ✓ |  |
+| `items` _[KeptnMetricsProvider](#keptnmetricsprovider) array_ |  || x |  |
 
 
 #### KeptnMetricsProviderSpec
@@ -126,13 +138,15 @@ KeptnMetricsProviderList contains a list of KeptnMetricsProvider
 
 KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
 
+
+
 _Appears in:_
 - [KeptnMetricsProvider](#keptnmetricsprovider)
 
-| Field | Description | Default | Optional |
-| --- | --- | --- | --- |
-| `targetServer` _string_ |  || x |
-| `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#secretkeyselector-v1-core)_ |  || ✓ |
+| Field | Description | Default | Optional |Validation |
+| --- | --- | --- | --- | --- |
+| `targetServer` _string_ |  || x |  |
+| `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#secretkeyselector-v1-core)_ |  || ✓ |  |
 
 
 #### ProviderRef
@@ -141,11 +155,13 @@ _Appears in:_
 
 ProviderRef represents the provider object
 
+
+
 _Appears in:_
 - [KeptnMetricSpec](#keptnmetricspec)
 
-| Field | Description | Default | Optional |
-| --- | --- | --- | --- |
-| `name` _string_ | Name of the provider || x |
+| Field | Description | Default | Optional |Validation |
+| --- | --- | --- | --- | --- |
+| `name` _string_ | Name of the provider || x |  |
 
 

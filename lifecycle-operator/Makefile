@@ -7,7 +7,7 @@ RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
-TAG?="v0.8.3" # x-release-please-version
+TAG?="v0.9.2" # x-release-please-version
 RELEASE_IMAGE:=lifecycle-operator:$(TAG)
 CHART_APPVERSION?=""
 
@@ -88,13 +88,15 @@ unit-test: manifests fmt vet generate envtest ## Run tests.
 	go test ./apis/... -v -coverprofile cover-apis.out
 	go test ./controllers/... -v -coverprofile cover-pkg.out
 	go test ./webhooks/... -v -coverprofile cover-main.out
+	go test ./converter -v -coverprofile cover-converter.out
 	sed -i '/mode: set/d' "cover-cmd.out"
 	sed -i '/mode: set/d' "cover-apis.out"
 	sed -i '/mode: set/d' "cover-pkg.out"
 	sed -i '/mode: set/d' "cover-main.out"
+	sed -i '/mode: set/d' "cover-converter.out"
 	echo "mode: set" > cover.out
-	cat cover-cmd.out cover-main.out cover-pkg.out cover-apis.out >> cover.out
-	rm cover-cmd.out cover-pkg.out cover-main.out cover-apis.out
+	cat cover-converter.out cover-cmd.out cover-main.out cover-pkg.out cover-apis.out >> cover.out
+	rm cover-converter.out cover-cmd.out cover-pkg.out cover-main.out cover-apis.out
 
 .PHONY: component-test
 component-test: manifests generate envtest ## Run tests.

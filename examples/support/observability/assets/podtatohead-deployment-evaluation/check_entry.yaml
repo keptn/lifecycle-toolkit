@@ -1,10 +1,10 @@
-apiVersion: lifecycle.keptn.sh/v1alpha2
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: check-entry-service
   namespace: podtato-kubectl
 spec:
-  function:
+  deno:
     httpRef:
       url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/http.ts
     parameters:

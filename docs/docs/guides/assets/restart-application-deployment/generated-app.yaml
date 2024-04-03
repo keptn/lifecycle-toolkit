@@ -1,0 +1,13 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnApp
+metadata:
+  name: podtato-head
+  namespace: restartable-apps
+  annotations:
+    app.kubernetes.io/managed-by: "keptn"
+spec:
+  version: "0.1.2"
+  revision: 1
+  workloads:
+    - name: podtato-head-entry
+      version: "0.1.2"

@@ -1,0 +1,28 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: pre-deployment-hello
+spec:
+  ttlSecondsAfterFinished: 1000
+  deno:
+    inline:
+      code: |
+        console.log("Pre-Deployment Task has been executed");
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTask
+metadata:
+  name: pre-deployment-hello-1234
+spec:
+  checkType: pre
+  taskDefinition: pre-deployment-hello
+  timeout: 5m0s
+  context:
+    appName: "podtato-head"
+    appVersion: "1.0.0"
+    objectType: ""
+    taskType: ""
+    workloadName: "workload"
+    workloadVersion: "0.1.0"
+    metadata:
+      commit-id: "1234"

@@ -1,0 +1,32 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppVersion
+metadata:
+  name: podtato-head-0.1.0-6b86b273
+status:
+  currentPhase: AppPreDeployEvaluations
+  postDeploymentEvaluationStatus: Deprecated
+  postDeploymentStatus: Deprecated
+  preDeploymentEvaluationStatus: Failed
+  preDeploymentStatus: Succeeded
+  status: Failed
+  workloadOverallStatus: Deprecated
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnEvaluation
+spec:
+  checkType: pre-eval
+  evaluationDefinition: available-cpus
+  appName: podtato-head
+  appVersion: 0.1.0
+  retries: 10
+  retryInterval: 5s
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnEvaluationDefinition
+metadata:
+  name: available-cpus
+spec:
+  objectives:
+    - evaluationTarget: ">1000"
+      keptnMetricRef:
+        name: available-cpus

@@ -1,0 +1,15 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: hello-keptn-inline
+spec:
+  deno:
+    inline:
+      code: |
+        let text = Deno.env.get("DATA");
+        let data;
+        let name;
+        data = JSON.parse(text);
+
+        name = data.name
+        console.log("Hello, " + name + " new");

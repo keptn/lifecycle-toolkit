@@ -1,0 +1,19 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppVersion
+metadata:
+  name: keptnapp-0.0.1-6b86b273
+spec:
+  appName: keptnapp
+  revision: 1
+  version: 0.0.1
+  workloads:
+    - name: nginx
+      version: 0.0.1
+status:
+  currentPhase: Completed
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  status: Succeeded
+  workloadOverallStatus: Succeeded

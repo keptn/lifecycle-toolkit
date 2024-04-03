@@ -1,0 +1,37 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: pre-deployment-hello
+spec:
+  deno:
+    inline:
+      code: |
+        console.log("Pre-Deployment Task has been executed");
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: daemonset
+  name: daemonset
+  annotations:
+    keptn.sh/workload: work
+    keptn.sh/version: "0.4"
+    keptn.sh/pre-deployment-tasks: pre-deployment-hello
+    keptn.sh/metadata: "commit-id=1234,stage=dev"
+spec:
+  selector:
+    matchLabels:
+      app: daemonset
+  template:
+    metadata:
+      labels:
+        app: daemonset
+      annotations:
+        rollme: what
+    spec:
+      containers:
+        - image: busybox
+          name: busybox
+          command: ['sh', '-c', 'echo The app is running! && sleep infinity']

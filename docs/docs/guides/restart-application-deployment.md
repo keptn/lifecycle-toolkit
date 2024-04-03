@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Redeploy/Restart an Application
 
 A [KeptnApp](../reference/crd-reference/app.md) can fail
@@ -23,81 +27,34 @@ to enter their respective deployment phases.
 To illustrate this, consider the following example:
 
 ```yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: restartable-apps
-  annotations:
-    keptn.sh/lifecycle-toolkit: "enabled"
----
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnApp
-metadata:
-  name: podtato-head
-  namespace: restartable-apps
-spec:
-  version: "0.1.1"
-  revision: 1
-  workloads:
-    - name: podtato-head-entry
-      version: "0.1.2"
-  preDeploymentTasks:
-    - pre-deployment-check
----
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnTaskDefinition
-metadata:
-  name: pre-deployment-check
-  namespace: restartable-apps
-spec:
-  function:
-    inline:
-      code: |
-        console.error("I failed")
-        process.exit(1)
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: podtato-head-entry
-  namespace: restartable-apps
-  labels:
-    app: podtato-head
-spec:
-  selector:
-    matchLabels:
-      component: podtato-head-entry
-  template:
-    metadata:
-      labels:
-        component: podtato-head-entry
-        keptn.sh/workload: podtato-head-entry
-        keptn.sh/app: podtato-head
-        keptn.sh/version: "0.1.2"
-    spec:
-      terminationGracePeriodSeconds: 5
-      containers:
-        - name: server
-          image: ghcr.io/podtato-head/entry:0.2.7
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 9000
-          env:
-            - name: PODTATO_PORT
-              value: "9000"
+{% include "./assets/restart-application-deployment/app-full.yaml" %}
 ```
 
-In this example, the `KeptnApp` executes a pre-deployment check
-which clearly fails because of the `pre-deployment-check` task,
-and therefore is not able to proceed with the deployment.
+Applying these resources causes a `KeptnApp`
+to be created.
+The `KeptnApp` contains all workloads that are part of
+the application, and a version number that is
+derived from the workloads:
 
-After applying this manifest,
-you can inspect the status of the created `KeptnAppVersion`:
+```yaml
+{% include "./assets/restart-application-deployment/generated-app.yaml" %}
+```
+
+Then, based on the `KeptnApp` and `KeptnAppContext`,
+a `KeptnAppVersion` is created automatically and
+the execution of the pre-deployment checks defined in
+the `KeptnAppContext` starts.
+In this example, the pre-deployment checks
+contain a task which clearly fails.
+Therefore, the `KeptnAppVersion` is not able
+to proceed with the deployment.
+
+You can inspect the status of the created `KeptnAppVersion`:
 
 ```shell
 $ kubectl get keptnappversions.lifecycle.keptn.sh -n restartable-apps
 NAME                   APPNAME        VERSION   PHASE
-podtato-head-0.1.1-1   podtato-head   0.1.1     AppPreDeployTasks
+podtato-head-0.1.2-ab1223js   podtato-head   0.1.1     AppPreDeployTasks
 ```
 
 Notice that the `KeptnAppVersion` stays
@@ -110,8 +67,8 @@ is in a `Failed` state, with the remaining phases being `Deprecated`.
 <!-- markdownlint-disable MD013 -->
 ```shell
 $ kubectl get keptnappversions.lifecycle.keptn.sh -n restartable-apps -owide
-NAME                   APPNAME        VERSION   PHASE               PREDEPLOYMENTSTATUS   PREDEPLOYMENTEVALUATIONSTATUS   WORKLOADOVERALLSTATUS   POSTDEPLOYMENTSTATUS   POSTDEPLOYMENTEVALUATIONSTATUS
-podtato-head-0.1.1-1   podtato-head   0.1.1     AppPreDeployTasks   Failed                Deprecated                      Deprecated              Deprecated             Deprecated
+NAME                          APPNAME        VERSION   PHASE               PREDEPLOYMENTSTATUS   PREDEPLOYMENTEVALUATIONSTATUS   WORKLOADOVERALLSTATUS   POSTDEPLOYMENTSTATUS   POSTDEPLOYMENTEVALUATIONSTATUS
+podtato-head-0.1.2-ab1223js   podtato-head   0.1.2     AppPreDeployTasks   Failed                Deprecated                      Deprecated              Deprecated             Deprecated
 ```
 <!-- markdownlint-enable MD013 -->
 
@@ -126,16 +83,7 @@ kubectl -n restartable-apps edit keptntaskdefinitions.lifecycle.keptn.sh pre-dep
 Modify the manifest to look like this:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnTaskDefinition
-metadata:
-  name: pre-deployment-check
-  namespace: restartable-apps
-spec:
-  function:
-    inline:
-      code: |
-        console.error("Success")
+{% include "./assets/restart-application-deployment/fixed-task.yaml" %}
 ```
 
 To restart the deployment of our `KeptnApplication`,
@@ -148,19 +96,7 @@ kubectl -n restartable-apps edit keptnapps.lifecycle.keptn.sh podtato-head
 Increment the value of the `spec.revision` field by one:
 
 ```yaml
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnApp
-metadata:
-  name: podtato-head
-  namespace: restartable-apps
-spec:
-  version: "0.1.1"
-  revision: 2 # Increased this value from 1 to 2
-  workloads:
-    - name: podtato-head-entry
-      version: "0.1.2"
-  preDeploymentTasks:
-    - pre-deployment-check
+{% include "./assets/restart-application-deployment/generated-app-bumped-revision.yaml" %}
 ```
 
 After those changes have been made,
@@ -168,12 +104,12 @@ you will notice a new revision of the `podtato-head` `KeptnAppVersion`:
 
 ```shell
 $ kubectl get keptnappversions.lifecycle.keptn.sh -n restartable-apps       
-NAME                   APPNAME        VERSION   PHASE
-podtato-head-0.1.1-1   podtato-head   0.1.1     AppPreDeployTasks
-podtato-head-0.1.1-2   podtato-head   0.1.1     AppDeploy
+NAME                          APPNAME        VERSION   PHASE
+podtato-head-0.1.2-ab1223js   podtato-head   0.1.2     AppPreDeployTasks
+podtato-head-0.1.2-xbhj9073   podtato-head   0.1.2     AppDeploy
 ```
 
-See that the newly created revision `podtato-head-0.1.1-2`
+See that the newly created revision `podtato-head-0.1.2-xbhj9073`
 has made it beyond the pre-deployment check phase
 and has reached its `AppDeployPhase`.
 
@@ -185,8 +121,8 @@ the `restartable-apps` namespace:
 ```shell
 $ kubectl get keptntasks.lifecycle.keptn.sh -n restartable-apps
 NAME                             APPNAME        APPVERSION   WORKLOADNAME   WORKLOADVERSION   JOB NAME                              STATUS
-pre-pre-deployment-check-49827   podtato-head   0.1.1                                         klc-pre-pre-deployment-check--77601   Failed
-pre-pre-deployment-check-65056   podtato-head   0.1.1                                         klc-pre-pre-deployment-check--57313   Succeeded
+pre-pre-deployment-check-49827   podtato-head   0.1.2                                         klc-pre-pre-deployment-check--77601   Failed
+pre-pre-deployment-check-65056   podtato-head   0.1.2                                         klc-pre-pre-deployment-check--57313   Succeeded
 ```
 <!-- markdownlint-enable MD013 -->
 

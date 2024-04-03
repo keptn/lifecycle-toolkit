@@ -1,17 +1,14 @@
 global:
   certManagerEnabled: false
-  imageRegistry: "testreg"
-  commonLabels:
-    app.kubernetes.io/version: vmyversion
-  caInjectionAnnotations:
-    cert-manager.io/inject-ca-from: helmtests/keptn-certs
 
 lifecycleOperator:
   enabled: true
+  promotionTasksEnabled: true
   lifecycleOperator:
     image:
-      repository: myrep
-      tag: v0.0.1
+      repository: busybox
+      tag: 1.35
+      imagePullPolicy: Always
   scheduler:
     image:
       tag: v0.0.0

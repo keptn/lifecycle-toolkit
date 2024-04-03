@@ -1,0 +1,14 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnApp
+metadata:
+  name: podtato-head
+  namespace: podtato-kubectl
+  annotations:
+    app.kubernetes.io/managed-by: "keptn"
+spec:
+  version: "<version string based on a hash of all containing workloads>"
+  workloads:
+    - name: podtato-head-frontend
+      version: 0.1.0
+    - name: podtato-head-hat
+      version: 1.1.1

@@ -1,0 +1,28 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: ttlsecondsafterfinished-task
+spec:
+  ttlSecondsAfterFinished: 100
+  retries: 0
+  timeout: 30s
+  container:
+    command:
+    name: rancher
+    image: rancher/cowsay:latest
+    args:
+      - 'hello world'
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTask
+metadata:
+  name: ttlsecondstask-job
+spec:
+  taskDefinition: ttlsecondsafterfinished-task
+  context:
+    appName: "test-app"
+    appVersion: "1.0.0"
+    objectType: ""
+    taskType: ""
+    workloadName: "my-test-workload"
+    workloadVersion: "1.0.0"

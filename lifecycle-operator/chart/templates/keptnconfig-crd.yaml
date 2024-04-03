@@ -51,6 +51,12 @@ spec:
                 description: OTelCollectorUrl can be used to set the Open Telemetry
                   collector that the lifecycle operator should use
                 type: string
+              blockDeployment:
+                default: true
+                description: |-
+                  BlockDeployment is used to block the deployment of the application until the pre-deployment
+                  tasks and evaluations succeed
+                type: boolean
               cloudEventsEndpoint:
                 description: CloudEventsEndpoint can be used to set the endpoint where
                   Cloud Events should be posted by the lifecycle operator
@@ -61,6 +67,14 @@ spec:
                   KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery
                   searches for workload to put into the same auto-generated KeptnApp
                 type: integer
+              observabilityTimeout:
+                default: 5m
+                description: |-
+                  ObservabilityTimeout specifies the maximum time to observe the deployment phase of KeptnWorkload.
+                  If the workload does not deploy successfully within this time frame, it will be
+                  considered as failed.
+                pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                type: string
             type: object
           status:
             description: unused field

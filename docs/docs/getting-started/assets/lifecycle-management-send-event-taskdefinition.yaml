@@ -1,0 +1,20 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: send-event
+  namespace: keptndemo
+spec:
+  retries: 0
+  timeout: 5s
+  container:
+    name: curlcontainer
+    image: curlimages/curl:latest
+    args: [
+      '-X',
+      'POST',
+      'http://webhook.webhook.svc.cluster.local:8084/YOUR-UUID-HERE',
+      '-H',
+      'Content-Type: application/json',
+      '-d',
+      '{ "from": "keptn send-event" }'
+    ]

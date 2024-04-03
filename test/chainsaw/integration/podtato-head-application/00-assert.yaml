@@ -1,0 +1,136 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnApp
+metadata:
+  name: podtato-head
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppVersion
+metadata:
+  name: podtato-head-95a0b0ddca-6b86b273
+spec:
+  metadata:
+    test-metadata: testy-metadata
+status:
+  currentPhase: Completed
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  promotionStatus: Succeeded
+  promotionTaskStatus:
+    - status: Succeeded
+      definitionName: post-deployment-hello
+  status: Succeeded
+  workloadOverallStatus: Succeeded
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkloadVersion
+metadata:
+  name: podtato-head-podtato-head-entry-0.1.0
+spec:
+  metadata:
+    commit-id: "1234"
+    stage: dev
+status:
+  appContextMetadata:
+    test-metadata: testy-metadata
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  postDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: post-deployment-hello
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  status: Succeeded
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkloadVersion
+metadata:
+  name: podtato-head-podtato-head-hat-0.1.0
+status:
+  appContextMetadata:
+    test-metadata: testy-metadata
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: check-entry-service
+  status: Succeeded
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkloadVersion
+metadata:
+  name: podtato-head-podtato-head-left-arm-0.1.0
+status:
+  appContextMetadata:
+    test-metadata: testy-metadata
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: check-entry-service
+  status: Succeeded
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkloadVersion
+metadata:
+  name: podtato-head-podtato-head-left-leg-0.1.0
+status:
+  appContextMetadata:
+    test-metadata: testy-metadata
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: check-entry-service
+  status: Succeeded
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkloadVersion
+metadata:
+  name: podtato-head-podtato-head-right-arm-0.1.0
+status:
+  appContextMetadata:
+    test-metadata: testy-metadata
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: check-entry-service
+  status: Succeeded
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkloadVersion
+metadata:
+  name: podtato-head-podtato-head-right-leg-0.1.0
+status:
+  appContextMetadata:
+    test-metadata: testy-metadata
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+  preDeploymentTaskStatus:
+    - status: Succeeded
+      definitionName: check-entry-service
+  status: Succeeded

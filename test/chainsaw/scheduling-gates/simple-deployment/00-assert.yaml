@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test
+  name: test
+status:
+  readyReplicas: 1
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    keptn.sh/scheduling-gate-removed: "true"
+  labels:
+    app: test
+spec:
+  schedulerName: default-scheduler
+status:
+  phase: Running

@@ -1,0 +1,11 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnApp
+metadata:
+  name: podtato-head
+  namespace: restartable-apps
+spec:
+  version: "0.1.2"
+  revision: 2 # Increased this value from 1 to 2
+  workloads:
+    - name: podtato-head-entry
+      version: "0.1.2"

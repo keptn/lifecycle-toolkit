@@ -1,0 +1,10 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: promotion
+  namespace: podtato-kubectl
+spec:
+  deno:
+    inline:
+      code: |
+        console.log("Promotion Task has been executed");

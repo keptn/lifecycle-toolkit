@@ -2,20 +2,20 @@
 comments: true
 ---
 
-# Deploying Applications with Flux
+# Deploying Applications with Flux and Keptn
 
-Flux is a tool for keeping Kubernetes clusters in sync with sources
-of configuration (like Git repositories), and automating updates to
-configuration when there is new code to deploy.
+Flux is a tool that keeps Kubernetes clusters synchronized with sources
+of configuration (such as Git repositories) and automate updates to
+configuration when new code is deployed.
 
-This section shows an already existing Flux use case of running
+This section shows how to add Keptn to an existing Flux use case that runs
 [pre and post-deployment jobs with Flux](https://fluxcd.io/flux/use-cases/running-jobs/)
-and how Keptn makes it simpler and and more straight-forward.
+to make it simpler and and more straight-forward.
 
 ## High-level structure of the git repository
 
 Since Flux uses a GitOps approach for continuous delivery, the git
-repository structure, for our use case, will look like the following:
+repository structure for our use case looks like the following:
 
 ```markdown
 ├── apps
@@ -41,20 +41,20 @@ but for simplicity of this excercise, we will keep them in a single one.
 ## Set up environment
 
 Before we start, you need to install Flux CLI and Keptn.
-You can find the installation instructions of Keptn [here](./../installation/index.md)
+You can find the installation instructions for Keptn [here](./../installation/index.md)
 and for Flux [here](https://fluxcd.io/flux/installation/).
 
 After successfully installing Flux CLI and Keptn, you need to
-retrieve your git repository credentials.
-You can use any available git providers, but be sure to store your `token`
+retrieve your Git repository credentials.
+You can use any available Git providers, but be sure to store your `token`
 for later usage.
 For simplicity, we will use `GitHub`.
 
-As another step, you need to install Flux to your cluster.
-This step will require
+You also need to install Flux in your cluster.
+This requires
 [bootstrapping the git repository](https://fluxcd.io/flux/installation/bootstrap/)
-in order to set up all needed Flux structures in the repository.
-For that, you can use the following command:
+to set up all necessary Flux structures in the repository.
+Use the following command to do this:
 
 ```bash
 GITHUB_USER=<user-name> GITHUB_TOKEN=<token> \
@@ -71,7 +71,7 @@ The bootstrap command above does the following:
 * Creates a git repository `podtato-head` on your `GitHub` account.
 * Adds Flux component manifests to the repository -
 creates `./clusters/dev/flux-system/*` structure.
-* Deploys Flux Components to your Kubernetes Cluster.
+* Deploys Flux components to your Kubernetes Cluster.
 * Configures Flux components to track the path `./clusters/dev/` in the repository.
 
 ## Creating application
@@ -81,8 +81,8 @@ post-deployments checks to the repository.
 
 Firstly, clone the `podtato-head` repository to your local machine.
 
-Add the following manifests into `podtato-head.yaml` representing the application
-and store it into `./apps/dev/` directory of your repository:
+Add the following manifests that represent the application into the  `podtato-head.yaml` file
+and store it in the `./apps/dev/` directory of your repository:
 
 ```yaml
 {% include "./assets/flux/app.yaml" %}
@@ -94,10 +94,10 @@ Additionally, create a `kustomize.yaml` file right next to it:
 {% include "./assets/flux/kustomize.yaml" %}
 ```
 
-You can commit and push these manifests to the git repository.
+You can commit and push these manifests to the Git repository.
 
 > **Note**
-Notice, that the application has pre- and post-deployment tasks defined
+The application has Keptn pre- and post-deployment tasks defined
 in the manifests.
 This enhances the
 [Flux pre and post-deployment jobs](https://fluxcd.io/flux/use-cases/running-jobs/)
@@ -105,12 +105,12 @@ setup with added observability out of the box.
 
 ## Set up continuous delivery for the application
 
-Firstly, we need to create a
+Firstly, we need to create a Flux
 [GitRepository](https://fluxcd.io/flux/components/source/gitrepositories/)
-Flux custom resource
+resource
 pointing to a repository where the application manifests are present.
 In this case, it will be our `podtato-head` repository.
-To create it, we will use Flux CLI:
+To create this resource, we use Flux CLI:
 
 ```bash
 flux create source git podtato-head \
@@ -120,15 +120,15 @@ flux create source git podtato-head \
   --export > ./clusters/dev/podtato-head-source.yaml
 ```
 
-which results in an output similar to:
+which results in output similar to:
 
 ```yaml
 {% include "./assets/flux/gitrepository.yaml" %}
 ```
 
-In the last step, create a
+In the last step, create a Flux
 [Kustomization](https://fluxcd.io/flux/components/kustomize/kustomizations/)
-Flux custom resource to deploy the `podtato-head` application to the cluster.
+resource to deploy the `podtato-head` application to the cluster.
 You can create it using the Flux CLI:
 
 ```bash
@@ -144,7 +144,7 @@ flux create kustomization podtato-head \
   --export > ./clusters/dev/podtato-head-kustomization.yaml
 ```
 
-which results in an output similar to:
+which results in output similar to:
 
 ```yaml
 {% include "./assets/flux/flux-kustomization.yaml" %}
@@ -157,7 +157,7 @@ deploys your application into the cluster.
 ## Watch Flux sync of the application
 
 You can watch the synchronization of the application
-with Flux CLI
+using the Flux CLI:
 
 ```bash
 $ flux get kustomizations --watch
@@ -177,13 +177,12 @@ NAME                           APPNAME        VERSION   PHASE
 podtato-head-v0.1.0-6b86b273   podtato-head   v0.1.0    Completed
 ```
 
-Every time you update the application, the changes will be
+Each time you update the application, the changes are
 synced to the cluster.
 
 ## Possible follow-ups
 
-You can also set up a multi-stage delivery with Flux, same
-as it was done with `ArgoCD`.
-You can follow the steps of the
+You can also set up a multi-stage delivery with Flux,
+following the steps described for `ArgoCD` in the
 [ArgoCD multi-stage delivery with Keptn](../guides/multi-stage-application-delivery.md)
 user guide.

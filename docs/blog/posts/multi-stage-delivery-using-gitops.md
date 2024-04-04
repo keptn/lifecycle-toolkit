@@ -168,7 +168,7 @@ GH_API_TOKEN=<YOUR_GITHUB_TOKEN>
 kubectl create secret generic github-token -n simple-go --from-literal=SECURE_DATA="{\"githubRepo\":\"${GH_REPO}\",\"githubRepoOwner\":\"${GH_REPO_OWNER}\",\"apiToken\":\"${GH_API_TOKEN}\"}"
 ```
 
-### Prepare the ArgoCD Application resourcess
+### Prepare the ArgoCD Application resources
 
 The next step is to
 create the ArgoCD
@@ -227,7 +227,7 @@ the following labels are set:
 - `app.kubernetes.io/version`: The version for the related `KeptnWorkload`.
 
 For more information about setting these labels for Keptn, see
-[Basic annotations](../docs/guides/integrate.md#basic-annotations).
+[Basic annotations](../../docs/guides/integrate.md#basic-annotations).
 
 #### Pre and post-deployment tasks
 

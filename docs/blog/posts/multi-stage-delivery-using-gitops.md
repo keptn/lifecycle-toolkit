@@ -249,7 +249,7 @@ The `KeptnAppContext` provides two important capabilities for multi-stage delive
 - Add metadata and links to traces for a specific ArgoCD `Application`.
 This enables you to enrich your traces
 with additional information that you can use
-to understand and analyze the performance of your `Applications`
+to understand and analyze the performance of your applications
 
 The `KeptnAppContext` manifest looks as follows:
 

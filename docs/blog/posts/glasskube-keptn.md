@@ -10,6 +10,7 @@ categories:
   - Upgrade
 comments: true
 slug: install-keptn-with-glasskube
+title: Keptn is now officially available via Glasskube
 ---
 
 # Keptn is now officially available via the Glasskube Package Manager for Kubernetes

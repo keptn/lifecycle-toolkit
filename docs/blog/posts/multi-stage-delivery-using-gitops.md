@@ -54,7 +54,7 @@ resource
   repository is hosted on GitHub so we can use GitHub Actions
   to implement the promotion of an artifact from one stage to the next.
   We do this by running a workflow that creates the pull requests for updating the
-  `Application` manifests in the different stages.
+  ArgoCD `Application` resource in the different stages.
 - [Helm](https://helm.sh): The configuration of the application for each stage
   is maintained via two separate Helm charts, one for each stage.
 - [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)/[Jaeger](https://www.jaegertracing.io):

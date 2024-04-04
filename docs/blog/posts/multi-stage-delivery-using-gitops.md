@@ -159,7 +159,7 @@ kubectl annotate namespace simple-go-prod keptn.sh/lifecycle-toolkit=enabled
 ```
 
 The promotion task that triggers the action to
-create a pull request for promoting an `Application` version
+create a pull request for promoting an ArgoCD `Application`
 from `dev` to `production` will be executed in the `simple-go` namespace.
 Therefore, we need to create a secret containing the GitHub personal
 access token we created earlier, using the following command:

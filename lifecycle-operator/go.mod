@@ -25,7 +25,7 @@ require (
 	go.opentelemetry.io/otel/sdk/metric v1.24.0
 	go.opentelemetry.io/otel/trace v1.24.0
 	golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8
-	golang.org/x/net v0.22.0
+	golang.org/x/net v0.23.0
 	google.golang.org/grpc v1.62.1
 	k8s.io/api v0.28.8
 	k8s.io/apiextensions-apiserver v0.28.8

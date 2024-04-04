@@ -226,7 +226,7 @@ To correctly associate the `Deployment` resource with the `KeptnWorkload` resour
 the following labels are set:
 
 - `app.kubernetes.io/name`: The name of the `KeptnWorkload` that should be associated with the `Deployment`.
-- `app.kubernetes.io/part-of`: The name of the `KeptnWorkload` resource containing the two workloads.
+- `app.kubernetes.io/part-of`: The name of the `KeptnApp` resource containing the two workloads.
 - `app.kubernetes.io/version`: The version for the related `KeptnWorkload`.
 
 For more information about setting these labels for Keptn, see

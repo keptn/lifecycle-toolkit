@@ -197,7 +197,7 @@ This manifest contains the definitions for the two ArgoCD `Applications`,
 each of which points to one of the helm charts mentioned earlier.
 In addition to that, the `$ARGOCD_APP_REVISION` environment variable
 is used to get access to the Git commit ID that triggered
-a new deployment of our `Applications`.
+a new deployment of our ArgoCD `Applications`.
 This ID is passed through to the Helm chart.
 Keptn uses this as metadata for a `KeptnApp` deployment.
 

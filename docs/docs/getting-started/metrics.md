@@ -154,7 +154,7 @@ You do this by defining
 The steps are:
 
 1. Create a
-   [KeptnMetricsProvider](../../reference/crd-reference/metricsprovidermd/)
+   [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider.md/)
    resource for the observability platform you are using as a data source.
    To do this, create a new `.yml` file with content like the following:
 

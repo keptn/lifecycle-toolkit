@@ -10,7 +10,7 @@ of configuration (such as Git repositories) and automates updates to
 the configuration when new code is deployed.
 
 This section shows how to add Keptn
-[pre- and post-deploymnt tasks](../guides/tasks.md)
+[pre- and post-deployment tasks](../guides/tasks.md)
 to an existing Flux use case that runs
 [pre and post-deployment jobs with Flux](https://fluxcd.io/flux/use-cases/running-jobs/).
 Adding Keptn makes it simpler and more straight-forward

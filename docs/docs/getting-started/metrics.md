@@ -154,7 +154,7 @@ You do this by defining
 The steps are:
 
 1. Create a
-   [KeptnMetricsProvider](../../reference/crd-reference/metricsprovider/)
+   [KeptnMetricsProvider](../../reference/crd-reference/metricsprovidermd/)
    resource for the observability platform you are using as a data source.
    To do this, create a new `.yml` file with content like the following:
 
@@ -189,7 +189,7 @@ The steps are:
       ```
 
 1. Define your
-   [KeptnMetric](../../reference/crd-reference/metric/)
+   [KeptnMetric](../../reference/crd-reference/metric.md/)
    custom resource for each piece of data you want to pull
    (in this case, the Prometheus query for the metric you selected).
 

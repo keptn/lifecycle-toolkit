@@ -4,17 +4,23 @@ comments: true
 
 # Deploying Applications with Flux and Keptn
 
-Flux is a tool that keeps Kubernetes clusters synchronized with sources
+[Flux](https://fluxcd.io/)
+is a tool that keeps Kubernetes clusters synchronized with sources
 of configuration (such as Git repositories) and automates updates to
-configuration when new code is deployed.
+the configuration when new code is deployed.
 
-This section shows how to add Keptn to an existing Flux use case that runs
-[pre and post-deployment jobs with Flux](https://fluxcd.io/flux/use-cases/running-jobs/)
-to make it simpler and more straight-forward.
+This section shows how to add Keptn
+[pre- and post-deploymnt tasks](../guides/tasks.md)
+to an existing Flux use case that runs
+[pre and post-deployment jobs with Flux](https://fluxcd.io/flux/use-cases/running-jobs/).
+Adding Keptn makes it simpler and more straight-forward
+to run the Flux pre and post-deployment jobs
+and provides added observability out of the box.
 
 ## High-level structure of the Git repository
 
-Since Flux uses a GitOps approach for continuous delivery, the Git
+Flux uses a GitOps approach for continuous delivery.
+The Git
 repository structure for our use case looks like the following:
 
 ```markdown
@@ -35,7 +41,7 @@ repository structure for our use case looks like the following:
 The `apps` directory contains application manifests, that will be deployed.
 The `clusters` directory contains Flux configuration manifests and custom
 resources, that are needed for the delivery.
-`apps` and `clusters` directories can live in two separate repositories,
+The `apps` and `clusters` directories can live in two separate repositories,
 but for simplicity of this excercise, we will keep them in a single one.
 
 ## Set up your environment
@@ -52,7 +58,7 @@ For simplicity, we will use GitHub.
 
 You also need to install Flux in your cluster.
 This requires
-[bootstrapping the git repository](https://fluxcd.io/flux/installation/bootstrap/)
+[bootstrapping the Git repository](https://fluxcd.io/flux/installation/bootstrap/)
 to set up all necessary Flux structures in the repository.
 Use the following command to do this:
 
@@ -69,14 +75,14 @@ flux bootstrap github \
 The bootstrap command above does the following:
 
 * Creates a Git repository `podtato-head` on your GitHub account.
-* Adds Flux component manifests to the repository -
+* Adds Flux component manifests to the repository and
 creates `./clusters/dev/flux-system/*` structure.
 * Deploys Flux components to your Kubernetes Cluster.
 * Configures Flux components to track the path `./clusters/dev/` in the repository.
 
 ## Creating the application
 
-Now it's time to add the application together with pre- and
+Now it's time to add the Keptn application that defines the Keptn pre- and
 post-deployment checks to the repository.
 
 First, clone the `podtato-head` repository to your local machine.
@@ -119,7 +125,7 @@ flux create source git podtato-head \
   --export > ./clusters/dev/podtato-head-source.yaml
 ```
 
-which results in output similar to:
+This results in output similar to:
 
 ```yaml
 {% include "./assets/flux/gitrepository.yaml" %}
@@ -149,7 +155,7 @@ which results in output similar to:
 {% include "./assets/flux/flux-kustomization.yaml" %}
 ```
 
-Now, commit and push the resources you created in the recent steps.
+Now, commit and push the resources you created in the previous steps.
 After pushing them, Flux picks up the configuration and
 deploys your application into the cluster.
 

@@ -51,7 +51,7 @@ and contains more information than the Flux jobs do.
 
 ## Set up your environment
 
-Before we start, you need to install Flux CLI and Keptn.
+Before we start, you need to install Flux CLI on your local machine and Keptn on your cluster.
 You can find the installation instructions for Keptn [here](../installation/index.md)
 and for Flux [here](https://fluxcd.io/flux/installation/).
 
@@ -61,10 +61,11 @@ You can use any available Git providers, but be sure to store your `token`
 for later usage.
 For simplicity, we will use GitHub.
 
-You also need to install Flux in your cluster.
-This requires
-[bootstrapping the Git repository](https://fluxcd.io/flux/installation/bootstrap/)
-to set up all necessary Flux structures in the repository.
+You then need to
+[bootstrap the Git repository](https://fluxcd.io/flux/installation/bootstrap/),
+supplying the `token` you saved,
+to install Flux in your cluster.
+This sets up all necessary Flux structures in the repository.
 Use the following command to do this:
 
 ```shell
@@ -99,6 +100,12 @@ and store it in the `./apps/dev/` directory of your repository:
 {% include "./assets/flux/app.yaml" %}
 ```
 
+See the Keptn
+[CRD reference](../reference/crd-reference/index.md)
+documentation for more information about the Keptn resources that are used.
+See
+[Basic annotations](../guides/integrate.md#basic-annotations)
+for a description of the labels and annotations that Keptn uses.
 Additionally, create a `kustomize.yaml` file right next to it:
 
 ```yaml

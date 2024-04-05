@@ -44,6 +44,11 @@ resources, that are needed for the delivery.
 The `apps` and `clusters` directories can live in two separate repositories,
 but for simplicity of this excercise, we will keep them in a single one.
 
+You see that the Keptn runs pre/post-deployment tasks
+rather than using the Flux `pre-deploy` and `post-deploy` directories in the Git repository.
+The Keptn process is easier to implement
+and contains more information than the Flux jobs do.
+
 ## Set up your environment
 
 Before we start, you need to install Flux CLI and Keptn.

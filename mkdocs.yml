@@ -146,6 +146,7 @@ nav:
           - Day 2 Operations: docs/use-cases/day-2-operations.md
           - Keptn + HorizontalPodAutoscaler: docs/use-cases/hpa.md
           - Keptn + KEDA: docs/use-cases/keda.md
+          - Keptn + Flux: docs/use-cases/flux.md
           - Keptn for non-Kubernetes deployments: docs/use-cases/non-k8s.md
       - Components:
           - docs/components/index.md

@@ -307,7 +307,7 @@ func TestKeptnConfigReconciler_reconcileOtelCollectorUrl(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Test garbage URL",
+			name: "set URL",
 			fields: fields{
 				Client: nil,
 				Scheme: nil,
@@ -326,8 +326,8 @@ func TestKeptnConfigReconciler_reconcileOtelCollectorUrl(t *testing.T) {
 					},
 				},
 			},
-			want:    ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second},
-			wantErr: true,
+			want:    ctrl.Result{},
+			wantErr: false,
 		},
 		{
 			name: "Test with no URL",

@@ -5,7 +5,7 @@ metadata:
   namespace: keptn-system
 spec:
   provider:
-    type: prometheus
-    address: http://prometheus-k8s.monitoring:9090
+    type: keptn
+    address: ""
   query: |
-    response_time{namespace="keptn-system"}
+    analysis/simple-go/my-analysis-definition/1m/workload=simple-go-service

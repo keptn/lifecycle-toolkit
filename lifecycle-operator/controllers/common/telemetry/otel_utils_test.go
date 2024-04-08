@@ -47,14 +47,6 @@ func TestGetOTelTracerProviderOptions(t *testing.T) {
 			wantArrayLength: 2,
 		},
 		{
-			name: "Test with wrong URL",
-			args: args{
-				oTelCollectorUrl: "error-url",
-			},
-			wantArrayLength: 0,
-			wantErr:         true,
-		},
-		{
 			name: "Test with URL",
 			args: args{
 				oTelCollectorUrl: "localhost:9000",

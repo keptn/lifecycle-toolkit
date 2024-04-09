@@ -21,16 +21,16 @@ The Keptn Metrics Server unifies and standardizes access to all this data.
 Minimal configuration is required
 because Keptn hooks directly into Kubernetes primitives.
 
-The
-[Kubernetes metric server](https://github.com/kubernetes-sigs/metrics-server)
-requires that you maintain point-to-point integrations
-from Argo Rollouts, Flux, KEDA, and HPA.
-Each has plugins but it is difficult to maintain them,
-especially if you are using multiple tools,
-and multiple observability platforms,
-and multiple instances of some tools or observability platforms.
 The Keptn metrics feature
 integrates metrics from all these sources into a single set of metrics.
+This makes it easier to use than the
+[Kubernetes metric server](https://github.com/kubernetes-sigs/metrics-server),
+which requires that you maintain point-to-point integrations
+from each source -- Argo Rollouts, Flux, KEDA, HPA, etc.
+Each has plugins but it is difficult to maintain them,
+especially if you are using multiple tools,
+multiple observability platforms,
+and multiple instances of some tools or observability platforms.
 
 ## Using this exercise
 
@@ -89,7 +89,7 @@ follow the instructions in [Installation](../installation/index.md).
      For more details about how to install Keptn, see the
      [Installation Guide](../installation/index.md).
 
-## Expose Prometheus and get an existing metric
+### Expose Prometheus and get an existing metric
 
 Now we need to expose Prometheus
 and chose an existing metric to use for this exercise.
@@ -148,8 +148,11 @@ and the specific metrics query you want to pull.
 You do this by defining
 
 - A
-  custom resource for each data provider
+  [KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
+  resource for each data provider
 - A
+  [KeptnMetric](../reference/crd-reference/metric.md)
+  resource for each metric you want to monitor
 
 The steps are:
 
@@ -237,7 +240,7 @@ Note the following:
 - Populate one YAML file per metric
   then apply all of them.
 - Each metric is assigned a unique `name`.
-- The value of the `spec.provider.name` field
+- The value of the `spec.provider.name` field in the `KeptnMetric` resource
   must correspond to the name assigned in
   the `metadata.name` field of a `KeptnMetricsProvider` resource.
 - Information is fetched in on a continuous basis

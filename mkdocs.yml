@@ -69,12 +69,9 @@ extra_css:
   - assets/stylesheets/mermaid.css
 plugins:
   - search
-  # Disabling due to problem described here
-  # https://github.com/squidfunk/mkdocs-material/issues/6983.
-  # After resolving it, the plugin can be enabled again.
-  # - social:
-  #     cards_layout_options:
-  #       background_color: "#006bba"
+  - social:
+      cards_layout_options:
+        background_color: "#006bba"
   - include-markdown:
       trailing_newlines: false
   - git-revision-date-localized:
@@ -149,6 +146,7 @@ nav:
           - Day 2 Operations: docs/use-cases/day-2-operations.md
           - Keptn + HorizontalPodAutoscaler: docs/use-cases/hpa.md
           - Keptn + KEDA: docs/use-cases/keda.md
+          - Keptn + Flux: docs/use-cases/flux.md
           - Keptn for non-Kubernetes deployments: docs/use-cases/non-k8s.md
       - Components:
           - docs/components/index.md

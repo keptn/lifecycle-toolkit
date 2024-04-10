@@ -270,17 +270,10 @@ kubectl -n default get keptnmetric/prometheus-http-requests-total
 ```
 
 Use the following command to view
-the metrics that are configured in your cluster.
-This example displays the two metrics we configured above:
+the metrics that are configured in your cluster:
 
 ```shell
 kubectl get KeptnMetrics -A
-```
-
-```shell
-NAMESPACE       NAME              PROVIDER       QUERY
-simplenode-dev  availability-slo  dev-dynatrace  func:slo.availability_simplenodeservice
-simplenode-dev  available-cpus    dev-prometheus sum(kube_node_status_capacity{resource=`cpu`})
 ```
 
 ## Run the metrics
@@ -300,47 +293,10 @@ The syntax to retrieve metrics from the CR is:
 kubectl get keptnmetrics.metrics.keptn.sh -n <namespace> <metric-name>
 ```
 
-For example, the output for the `available-cpus` metric looks like:
-
-```shell
-$ kubectl get keptnmetrics.metrics.keptn.sh -n simplenode-dev available-cpus
-
-NAME             PROVIDER     QUERY                                           VALUE
-cpu-throttling   my-provider  sum(kube_node_status_capacity{resource=`cpu`})   6.000
-```
-
 The syntax to retrieve metrics through the Kubernetes API  is:
 
 ```yaml
 kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/<namespace>/keptnmetrics.metrics.sh/<metric-name>/<metric-name>"
-```
-
-For example, the output for the `available-cpus` looks like:
-
-```yaml
-$ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2/namespaces/simplenode-dev/keptnmetrics.metrics.sh/available-cpus/available-cpus"
-
-{
-  "kind": "MetricValueList",
-  "apiVersion": "custom.metrics.k8s.io/v1beta2",
-  "metadata": {},
-  "items": [
-    {
-      "describedObject": {
-        "kind": "KeptnMetric",
-        "namespace": "simplenode-dev",
-        "name": "available-cpus",
-        "apiVersion": "metrics.keptn.sh/v1"
-      },
-      "metric": {
-        "name": "available-cpus",
-        "selector": {}
-      },
-      "timestamp": "2023-05-11T08:05:36Z",
-      "value": "6"
-    }
-  ]
-}
 ```
 
 You can also display the metrics graphically using a dashboard such as Grafana.

@@ -15,7 +15,7 @@ require (
 	github.com/prometheus/client_model v0.6.1
 	github.com/prometheus/common v0.47.0
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/exp v0.0.0-20240404231335-c0f41cb1a7a0
+	golang.org/x/exp v0.0.0-20240409090435-93d18d7e34b8
 	golang.org/x/net v0.24.0
 	gopkg.in/inf.v0 v0.9.1
 	k8s.io/api v0.28.8

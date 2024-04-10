@@ -162,7 +162,7 @@ The steps are:
    To do this, create a new `.yml` file with content like the following:
 
       ```shell
-        apiVersion: metrics.keptn.sh/v1alpha3
+        apiVersion: metrics.keptn.sh/v1
         kind: KeptnMetricsProvider
         metadata:
           name: local-prometheus
@@ -200,7 +200,7 @@ The steps are:
      Note: The namespaces of `KeptnMetricsProvider` and `KeptnMetric` must match.
 
      ```yaml
-     apiVersion: metrics.keptn.sh/v1alpha3
+     apiVersion: metrics.keptn.sh/v1
      kind: KeptnMetric
      metadata:
        name: prometheus-http-requests-total

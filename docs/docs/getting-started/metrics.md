@@ -141,18 +141,18 @@ and chose an existing metric to use for this exercise.
 
 ## Configure Keptn for your metrics
 
-Now you must tell Keptn about the external observability platform
-you are using as a data source
-(in this case, the Prometheus server you installed and exposed above)
-and the specific metrics query you want to pull.
-You do this by defining
+Now you must tell Keptn about the metrics you are using.j
+You do this by defining:
 
 - A
   [KeptnMetricsProvider](../reference/crd-reference/metricsprovider.md)
-  resource for each data provider
+  resource to define the external observability platform you are using
+  as a data source.
+  For this exercise, this is the Prometheus server
+  you installed and exposed above.
 - A
   [KeptnMetric](../reference/crd-reference/metric.md)
-  resource for each metric you want to monitor
+  resource to define each metric query you want to pull.
 
 The steps are:
 

@@ -90,12 +90,12 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
-	golang.org/x/crypto v0.21.0 // indirect
+	golang.org/x/crypto v0.22.0 // indirect
 	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/oauth2 v0.16.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/term v0.18.0 // indirect
+	golang.org/x/sys v0.19.0 // indirect
+	golang.org/x/term v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	golang.org/x/tools v0.17.0 // indirect
@@ -125,7 +125,7 @@ require (
 replace (
 	github.com/golang/protobuf => github.com/golang/protobuf v1.5.4
 	github.com/keptn/lifecycle-toolkit/scheduler/pkg/klcpermit => /pkg/klcpermit
-	golang.org/x/net => golang.org/x/net v0.22.0
+	golang.org/x/net => golang.org/x/net v0.24.0
 	google.golang.org/protobuf => google.golang.org/protobuf v1.33.0
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.25.16
 	k8s.io/cli-runtime => k8s.io/cli-runtime v0.25.16

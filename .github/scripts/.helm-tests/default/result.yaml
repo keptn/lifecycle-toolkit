@@ -15399,8 +15399,8 @@ spec:
             - ALL
           privileged: false
           runAsGroup: 65532
-          runAsNonRoot: true
           runAsUser: 65532
+          runAsNonRoot: true
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:

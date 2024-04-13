@@ -26,6 +26,9 @@ global:
   ## @param global.caInjectionAnnotations CA injection annotations for cert-manager.io configuration
   ##
   caInjectionAnnotations: { }
+  openShift:
+    ## @param global.openShift.enabled Enable this value to install on Openshift
+    enabled: false
 
 ## @section Keptn Metrics Operator common
 ## @extra   operatorService.ports[0] webhook port (must correspond to Mutating Webhook Configurations)

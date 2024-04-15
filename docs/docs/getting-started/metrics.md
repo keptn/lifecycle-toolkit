@@ -22,7 +22,7 @@ Minimal configuration is required
 because Keptn hooks directly into Kubernetes primitives.
 
 The Keptn metrics feature
-integrates metrics from all these sources into a single set of metrics.
+integrates metrics from any number of metrics providers into a single set of metrics.
 This makes it easier to use than the
 [Kubernetes metric server](https://github.com/kubernetes-sigs/metrics-server),
 which requires that you maintain point-to-point integrations

@@ -1,0 +1,5 @@
+User-agent: *
+
+Disallow: /latest/*
+
+Sitemap: https://keptn.sh/sitemap.xml

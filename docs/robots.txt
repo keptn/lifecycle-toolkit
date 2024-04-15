@@ -2,4 +2,4 @@ User-agent: *
 
 Disallow: /latest/*
 
-Sitemap: https://keptn.sh/sitemap.xml
+Sitemap: https://keptn.sh/sitemap-custom.xml

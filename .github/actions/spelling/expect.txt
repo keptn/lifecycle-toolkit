@@ -78,6 +78,7 @@ certificatehandler
 certmanager
 certwebhook
 chainsaw
+changefreq
 Chans
 Checkmarx
 clientgoscheme
@@ -381,6 +382,7 @@ kwds
 kwi
 kwv
 kyverno
+lastmod
 lastword
 Lato
 LFC
@@ -659,6 +661,7 @@ undeploy
 unmarshal
 unmarshalling
 usr
+urlset
 utilruntime
 Utkarsh
 validatingwebhookconfigurations

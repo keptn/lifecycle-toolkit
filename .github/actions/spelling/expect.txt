@@ -77,6 +77,7 @@ certificatehandler
 certmanager
 certwebhook
 chainsaw
+changefreq
 Chans
 Checkmarx
 clientgoscheme
@@ -377,6 +378,7 @@ kwds
 kwi
 kwv
 kyverno
+lastmod
 lastword
 Lato
 LFC
@@ -571,6 +573,7 @@ sigstore
 simpleapp
 simplenode
 simplenodeservice
+sitemap
 sli
 slisslos
 slo
@@ -649,6 +652,7 @@ undeploy
 unmarshal
 unmarshalling
 usr
+urlset
 utilruntime
 Utkarsh
 validatingwebhookconfigurations

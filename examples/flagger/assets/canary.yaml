@@ -51,7 +51,7 @@ spec:
         # maximum req duration P99
         # milliseconds
         thresholdRange:
-          max: 0.1
+          min: 1.0
         interval: 30s
     # testing (optional)
     webhooks:

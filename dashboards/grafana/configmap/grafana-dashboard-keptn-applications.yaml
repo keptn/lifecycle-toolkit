@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   grafana_dashboard_applications.json: |-
-   {
+    {
     "annotations": {
       "list": [
         {
@@ -861,7 +861,7 @@ data:
     "uid": "nbiPNgN4z",
     "version": 1,
     "weekStart": ""
-  }
+    }
 kind: ConfigMap
 metadata:
   creationTimestamp: null

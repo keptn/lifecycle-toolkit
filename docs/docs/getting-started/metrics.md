@@ -183,7 +183,7 @@ The steps are:
      Keptn uses the `name` you assign to reference this data source.
 
      The `targetServer` field tells Keptn where to find this data source;
-     in this case, it points to the UI on port 9090.
+     in this case, it points to a prometheus API endpoint on port 9090.
 
      Apply this file with the following command:
 

@@ -1,5 +1,5 @@
-github.com/DataDog/datadog-api-client-go/v2 v2.24.0 h1:7G+eyezFM8gHq5dOHcrQcGVxrXnwPqX2yYHxsLiq3iM=
-github.com/DataDog/datadog-api-client-go/v2 v2.24.0/go.mod h1:QKOu6vscsh87fMY1lHfLEmNSunyXImj8BUaUWJXOehc=
+github.com/DataDog/datadog-api-client-go/v2 v2.25.0 h1:9Zq42D6M3U///VDxjx2SS1g+EW55WhZYZFHtzM+cO4k=
+github.com/DataDog/datadog-api-client-go/v2 v2.25.0/go.mod h1:QKOu6vscsh87fMY1lHfLEmNSunyXImj8BUaUWJXOehc=
 github.com/DataDog/zstd v1.5.2 h1:vUG4lAyuPCXO0TLbXvPv7EB7cNK1QV/luu55UHLrrn8=
 github.com/DataDog/zstd v1.5.2/go.mod h1:g4AWEaM3yOg3HYfnJ3YIawPnVdXJh9QME85blwSAmyw=
 github.com/NYTimes/gziphandler v1.1.1 h1:ZUDjpQae29j0ryrS0u/B8HZfJBtBQHjqw2rQ2cqUQ3I=

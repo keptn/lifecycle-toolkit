@@ -161,7 +161,7 @@ The steps are:
    resource for the observability platform you are using as a data source.
    To do this, create a new `.yml` file with content like the following:
 
-      ```shell
+      ```yaml
         apiVersion: metrics.keptn.sh/v1
         kind: KeptnMetricsProvider
         metadata:

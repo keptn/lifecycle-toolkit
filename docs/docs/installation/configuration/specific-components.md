@@ -23,7 +23,7 @@ you can disable Keptn `cert-manager` by setting the
 `certificateManager.enabled` Helm value to `false`:
 
 ```yaml
-{% include "./assets/values-remove-certmanager.yaml" %}
+{% include "../assets/values-remove-certmanager.yaml" %}
 ```
 
 For more information on using `cert-manager` with Keptn, see

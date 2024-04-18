@@ -11637,16 +11637,13 @@ subjects:
   name: 'lifecycle-operator'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/lifecycleOperator/templates/leader-election-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: leader-election-role
+  name: lifecycle-operator-leader-election-role
   namespace: "helmtests"
   labels:
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: certificate-operator
-    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
@@ -11685,11 +11682,11 @@ rules:
   - create
   - patch
 ---
-# Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-leader-election-rbac.yaml
+# Source: keptn/charts/lifecycleOperator/templates/scheduler-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: lifecycle-operator-leader-election-role
+  name: keptn-scheduler-leader-election-role
   namespace: "helmtests"
   labels:
     app.kubernetes.io/instance: keptn-test
@@ -11791,6 +11788,27 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'lifecycle-operator'
+  namespace: 'helmtests'
+---
+# Source: keptn/charts/lifecycleOperator/templates/scheduler-leader-election-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: keptn-scheduler-leader-election-rolebinding
+  namespace: "helmtests"
+  labels:
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: lifecycle-operator
+    app.kubernetes.io/version: v0.9.2
+    helm.sh/chart: lifecycle-operator-0.2.3
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: 'keptn-scheduler-leader-election-role'
+subjects:
+- kind: ServiceAccount
+  name: 'keptn-scheduler'
   namespace: 'helmtests'
 ---
 # Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-metrics-service.yaml

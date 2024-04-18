@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn
     app.kubernetes.io/managed-by: kustomize
-  name: certidicate-operator-leader-election-role
+  name: certificate-operator-leader-election-role
 rules:
   - apiGroups:
       - ""

@@ -27,7 +27,7 @@ you can disable Keptn `cert-manager` by setting the
 ```
 
 For more information on using `cert-manager` with Keptn, see
-[Use Keptn with cert-manager.io](../components/certificate-operator.md).
+[Use Keptn with cert-manager.io](../../components/certificate-operator.md).
 
 For the full list of Helm values, see the
 [keptn-cert-manager Helm chart README](https://github.com/keptn/lifecycle-toolkit-charts/blob/main/charts/keptn-cert-manager/README.md).
@@ -35,4 +35,4 @@ For the full list of Helm values, see the
 ## Uninstalling Keptn
 
 To uninstall Keptn from your cluster, please follow the steps
-on the [Uninstall page](./uninstall.md).
+on the [Uninstall page](../uninstall.md).

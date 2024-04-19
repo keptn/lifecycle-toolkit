@@ -1,0 +1,13 @@
+global:
+  imageRegistry: "localhost:5000"
+  certManagerEnabled: false
+  caInjectionAnnotations:
+    cert-manager.io/inject-ca-from: keptn-system/keptn-certs
+
+metricsOperator:
+  imagePullPolicy: Never
+  image:
+    tag: $TAG
+
+lifecycleOperator:
+  enabled: false

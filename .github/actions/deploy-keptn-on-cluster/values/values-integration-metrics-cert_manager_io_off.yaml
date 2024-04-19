@@ -1,0 +1,15 @@
+global:
+  imageRegistry: "localhost:5000"
+
+certManager:
+  imagePullPolicy: Never
+  image:
+    tag: $TAG
+
+metricsOperator:
+  imagePullPolicy: Never
+  image:
+    tag: $TAG
+
+lifecycleOperator:
+  enabled: false

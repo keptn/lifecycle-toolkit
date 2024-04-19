@@ -140,7 +140,7 @@ jobs:
           export TAG=$(ls tag/)
           echo "$TAG"
           mkdir scans
-          envsubst < .github/actions/deploy-keptn-on-cluster/values.yaml > tmp.yaml
+          envsubst < .github/actions/deploy-keptn-on-cluster/values/values.yaml > tmp.yaml
           echo "used values.yaml file:"
           cat tmp.yaml
 

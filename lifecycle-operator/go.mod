@@ -29,7 +29,7 @@ require (
 	google.golang.org/grpc v1.63.0
 	k8s.io/api v0.28.8
 	k8s.io/apiextensions-apiserver v0.28.8
-	k8s.io/apimachinery v0.28.8
+	k8s.io/apimachinery v0.28.9
 	k8s.io/apiserver v0.28.8
 	k8s.io/client-go v0.28.8
 	sigs.k8s.io/controller-runtime v0.16.5

@@ -11689,6 +11689,9 @@ metadata:
   name: keptn-scheduler-leader-election-role
   namespace: "helmtests"
   labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: scheduler
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator

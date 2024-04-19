@@ -8,6 +8,9 @@ metadata:
   annotations: {{- . -}}
   {{- end }}
   labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: scheduler
+    app.kubernetes.io/part-of: keptn
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 rules:
 - apiGroups:

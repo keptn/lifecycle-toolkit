@@ -5,9 +5,12 @@ kind: ServiceAccount
 metadata:
   name: keptn-scheduler
   namespace: {{ .Release.Namespace | quote }}
+  {{- $annotations := include "common.annotations" (dict "context" .) }}
+  {{- with $annotations }}
+  annotations: {{- . -}}
+  {{- end }}
   labels:
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include "common.annotations" ( dict "context" . ) }}
 {{- end }}
 ---
 apiVersion: v1

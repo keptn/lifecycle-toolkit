@@ -26,6 +26,10 @@ kind: ServiceAccount
 metadata:
   name: keptn-scheduler
   namespace: "helmtests"
+  annotations:
+    globalAnnotation1: test1
+    globalAnnotation2: test2
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
@@ -34,9 +38,6 @@ metadata:
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.2.3
-    globalAnnotation1: test1
-    globalAnnotation2: test2
-    test-annotation: local
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: v1
@@ -15077,6 +15078,9 @@ metadata:
     globalAnnotation2: test2
     test-annotation: local
   labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: scheduler
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
@@ -15179,6 +15183,9 @@ metadata:
     globalAnnotation2: test2
     test-annotation: local
   labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
@@ -15186,6 +15193,9 @@ metadata:
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: cert-manager-0.2.3
+    globalAnnotation1: test1
+    globalAnnotation2: test2
+    test-annotation: local
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

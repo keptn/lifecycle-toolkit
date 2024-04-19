@@ -128,7 +128,7 @@ func (client *apiClient) auth(ctx context.Context) (int, error) {
 	}
 
 	if oauthResponse.AccessToken == "" {
-		return http.StatusInternalServerError, ErrAuthenticationFailed
+		return http.StatusUnauthorized, ErrAuthenticationFailed
 	}
 
 	client.config.oAuthCredentials.accessToken = oauthResponse.AccessToken

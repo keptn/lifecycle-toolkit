@@ -3081,6 +3081,51 @@ subjects:
   name: 'metrics-operator'
   namespace: 'helmtests'
 ---
+# Source: keptn/charts/certManager/templates/certificate-operator-leader-election-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: certificate-operator-leader-election-role
+  namespace: "helmtests"
+  labels:
+    app.kubernetes.io/instance: keptn-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: v2.1.1
+    helm.sh/chart: cert-manager-0.2.3
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
 # Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -3176,7 +3221,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: 'leader-election-role'
+  name: 'certificate-operator-leader-election-role'
 subjects:
 - kind: ServiceAccount
   name: 'certificate-operator'

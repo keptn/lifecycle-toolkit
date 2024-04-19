@@ -11,15 +11,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    control-plane: metrics-operator
-  namespace: keptn-system
-status:
-  readyReplicas: 1
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
     control-plane: lifecycle-operator
   namespace: keptn-system
 status:
@@ -31,14 +22,5 @@ metadata:
   namespace: keptn-system
   labels:
     control-plane: lifecycle-operator
-status:
-  phase: Running
----
-apiVersion: v1
-kind: Pod
-metadata:
-  namespace: keptn-system
-  labels:
-    control-plane: metrics-operator
 status:
   phase: Running

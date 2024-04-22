@@ -225,7 +225,8 @@ jobs:
       - build_image
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-    uses: ./.github/workflows/integration-test-allowed-namespaces.yml
+      type: allowed-namespaces
+    uses: ./.github/workflows/integration-test-component.yml
 
   integration_tests_lifecycle:
     name: Integration Tests Lifecycle
@@ -234,7 +235,8 @@ jobs:
       - build_image
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-    uses: ./.github/workflows/integration-test-lifecycle.yml
+      type: lifecycle
+    uses: ./.github/workflows/integration-test-component.yml
 
   integration_tests_metrics:
     name: Integration Tests Metrics
@@ -243,7 +245,8 @@ jobs:
       - build_image
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-    uses: ./.github/workflows/integration-test-metrics.yml
+      type: metrics
+    uses: ./.github/workflows/integration-test-component.yml
 
   integration_tests_cert_manager:
     name: Integration Tests Cert Manager
@@ -252,7 +255,8 @@ jobs:
       - build_image
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-    uses: ./.github/workflows/integration-test-cert-manager.yml
+      type: cert-manager
+    uses: ./.github/workflows/integration-test-component.yml
 
   load-tests:
     name: Load Tests

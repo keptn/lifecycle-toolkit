@@ -172,7 +172,7 @@ jobs:
           outputs: type=oci,dest=/tmp/${{ matrix.config.name }}-image.tar
 
       - name: Upload image as artifact
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+        uses: actions/upload-artifact@1746f4ab65b179e0ea60a494b83293b640dd5bba # v4
         with:
           name: ${{ matrix.config.name }}-image.tar
           path: /tmp/${{ matrix.config.name }}-image.tar
@@ -188,7 +188,7 @@ jobs:
         run: echo "" > tag
 
       - name: Upload tag for tests
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+        uses: actions/upload-artifact@1746f4ab65b179e0ea60a494b83293b640dd5bba # v4
         with:
           name: dev-${{ env.DATETIME }}
           path: tag

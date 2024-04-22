@@ -65,14 +65,14 @@ jobs:
           path: ./dist
 
       - name: Upload tag
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+        uses: actions/upload-artifact@1746f4ab65b179e0ea60a494b83293b640dd5bba # v4
         with:
           name: tag
           path: |
             ./dist/dev-*/
 
       - name: Upload images
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+        uses: actions/upload-artifact@1746f4ab65b179e0ea60a494b83293b640dd5bba # v4
         with:
           name: images
           path: |
@@ -157,7 +157,7 @@ jobs:
 
       - name: Upload KICS results
         if: always() && matrix.tool == 'kics'
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+        uses: actions/upload-artifact@1746f4ab65b179e0ea60a494b83293b640dd5bba # v4
         with:
           name: kics-results
           path: results.json

@@ -517,6 +517,7 @@ printcolumn
 privs
 proj
 promapi
+prome
 promhttp
 providerref
 providerresult

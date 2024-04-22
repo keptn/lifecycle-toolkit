@@ -3,7 +3,6 @@ package telemetry
 import (
 	"context"
 	"fmt"
-	"net"
 	"os"
 	"sync"
 	"time"
@@ -136,11 +135,7 @@ func newStdOutExporter() (trace.SpanExporter, error) {
 func newOTelExporter(oTelCollectorUrl string) (trace.SpanExporter, error) {
 	ctx, cancel := context.WithTimeout(context.TODO(), 3*time.Second)
 	defer cancel()
-	_, err := net.DialTimeout("tcp", oTelCollectorUrl, 3*time.Second)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create gRPC connection to collector at %s: %w", oTelCollectorUrl, err)
-	}
-	conn, err := grpc.NewClient(oTelCollectorUrl, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
+	conn, err := grpc.DialContext(ctx, oTelCollectorUrl, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gRPC connection to collector at %s: %w", oTelCollectorUrl, err)
 	}

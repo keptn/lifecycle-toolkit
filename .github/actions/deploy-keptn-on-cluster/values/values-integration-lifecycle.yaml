@@ -1,13 +1,13 @@
 global:
   imageRegistry: "localhost:5000"
-  certManagerEnabled: false
-  caInjectionAnnotations:
-    cert-manager.io/inject-ca-from: keptn-system/keptn-certs
 
-metricsOperator:
+certManager:
   imagePullPolicy: Never
   image:
     tag: $TAG
+
+metricsOperator:
+  enabled: false
 
 lifecycleOperator:
   promotionTasksEnabled: true
@@ -22,3 +22,4 @@ lifecycleOperator:
     imagePullPolicy: Never
     image:
       tag: $TAG
+  schedulingGatesEnabled: true

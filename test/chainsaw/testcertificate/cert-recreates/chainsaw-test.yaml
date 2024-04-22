@@ -18,7 +18,6 @@ spec:
             content: |
               set -e
               kubectl rollout restart deployment -n keptn-system -l control-plane=lifecycle-operator
-              kubectl rollout restart deployment -n keptn-system -l control-plane=metrics-operator
         - assert:
             file: 00-assert.yaml
     - name: step-01

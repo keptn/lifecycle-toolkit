@@ -208,14 +208,55 @@ jobs:
     strategy:
       matrix:
         scheduling-gates: [gates_on, gates_off]
-        allowed-namespaces: [allowed_ns_on, allowed_ns_off]
         cert-manager-io-enabled: [cert_manager_io_on, cert_manager_io_off]
+        exclude:
+          - scheduling-gates: gates_on
+            cert-manager-io-enabled: cert_manager_io_on
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
       scheduling-gates: ${{ matrix.scheduling-gates }}
-      allowed-namespaces: ${{ matrix.allowed-namespaces }}
       cert-manager-io-enabled: ${{ matrix.cert-manager-io-enabled }}
     uses: ./.github/workflows/integration-test.yml
+
+  integration_tests_allowed_namespaces:
+    name: Integration Tests Allowed Namespaces
+    needs:
+      - prepare_ci_run
+      - build_image
+    with:
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      type: allowed-namespaces
+    uses: ./.github/workflows/integration-test-component.yml
+
+  integration_tests_lifecycle:
+    name: Integration Tests Lifecycle
+    needs:
+      - prepare_ci_run
+      - build_image
+    with:
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      type: lifecycle
+    uses: ./.github/workflows/integration-test-component.yml
+
+  integration_tests_metrics:
+    name: Integration Tests Metrics
+    needs:
+      - prepare_ci_run
+      - build_image
+    with:
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      type: metrics
+    uses: ./.github/workflows/integration-test-component.yml
+
+  integration_tests_cert_manager:
+    name: Integration Tests Cert Manager
+    needs:
+      - prepare_ci_run
+      - build_image
+    with:
+      runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
+      type: cert-manager
+    uses: ./.github/workflows/integration-test-component.yml
 
   load-tests:
     name: Load Tests

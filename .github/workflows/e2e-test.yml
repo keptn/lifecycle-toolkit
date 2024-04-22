@@ -47,7 +47,7 @@ jobs:
 
       - name: Upload ${{ matrix.config.name }} cluster logs
         if: always()
-        uses: actions/upload-artifact@1746f4ab65b179e0ea60a494b83293b640dd5bba # v4
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
         with:
           name: logs-e2e-tests-${{ matrix.config.name }}
           path: .github/scripts/logs

@@ -18,7 +18,7 @@ inputs:
     required: false
     description: "Name of the kind cluster"
     default: "test-cluster"
-  values_file:
+  values-file:
     required: false
     description: "Values file used for Keptn installation configuration"
     default: "values.yaml"
@@ -99,7 +99,7 @@ runs:
         cd .github/actions/deploy-keptn-on-cluster
 
         export TAG=${{ inputs.runtime_tag }}
-        envsubst < values/${{ inputs.values_file }} > tmp.yaml
+        envsubst < values/${{ inputs.values-file }} > tmp.yaml
 
         echo "installing with values.yaml file:"
         cat tmp.yaml

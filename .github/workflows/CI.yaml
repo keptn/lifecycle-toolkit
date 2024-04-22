@@ -241,12 +241,8 @@ jobs:
     needs:
       - prepare_ci_run
       - build_image
-    strategy:
-      matrix:
-        cert-manager-io-enabled: [cert_manager_io_on, cert_manager_io_off]
     with:
       runtime_tag: dev-${{ needs.prepare_ci_run.outputs.DATETIME }}
-      cert-manager-io-enabled: ${{ matrix.cert-manager-io-enabled }}
     uses: ./.github/workflows/integration-test-metrics.yml
 
   integration_tests_cert_manager:

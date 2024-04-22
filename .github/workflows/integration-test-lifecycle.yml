@@ -28,7 +28,7 @@ jobs:
         uses: ./.github/actions/deploy-keptn-on-cluster
         with:
           runtime_tag: ${{ inputs.runtime_tag }}
-          values_file: values-integration-lifecycle.yaml
+          values-file: values-integration-lifecycle.yaml
 
       - name: Install and expose Prometheus
         uses: ./.github/actions/deploy-prometheus-on-cluster

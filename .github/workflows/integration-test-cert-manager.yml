@@ -28,7 +28,7 @@ jobs:
         uses: ./.github/actions/deploy-keptn-on-cluster
         with:
           runtime_tag: ${{ inputs.runtime_tag }}
-          values_file: values-integration-cert-manager.yaml
+          values-file: values-integration-cert-manager.yaml
 
       - name: Install Chainsaw
         uses: kyverno/action-install-chainsaw@995cddaee7702e849270b84fa44cdcebe7462da8 # v0.1.9

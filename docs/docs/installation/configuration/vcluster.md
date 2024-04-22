@@ -20,7 +20,7 @@ for details.
 To solve this problem:
 
 1. Follow the instructions in
-   [Separate vCluster Scheduler](https://www.vcluster.com/docs/architecture/scheduling#separate-vcluster-scheduler)
+   [Separate vCluster Scheduler](https://www.vcluster.com/docs/vcluster/vcluster-yaml/control-plane/other/advanced/virtual-scheduler)
    to modify the vCluster `values.yaml` file
    to use a virtual scheduler.
 

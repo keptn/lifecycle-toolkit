@@ -11,7 +11,7 @@ Openshift sets those automatically.
 You can set the `global.isOpenshift` parameter when running the `helm install` command:
 
 ```shell
-helm install keptn keptn --set global.openShift.enabled=true
+helm install keptn keptn/keptn -n keptn-system --create-namespace --set global.openShift.enabled=true
 ```
 
 or you can define it in your `values.yaml` file:

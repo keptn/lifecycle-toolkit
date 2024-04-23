@@ -8,7 +8,7 @@ To install on Openshift, set the value `global.isOpenshift` in the `values.yaml`
 In practice this means that `runAsUser` and `runAsGroup` are removed, since
 Openshift sets those automatically.
 
-You can set the `global.isOpenshift` parameter when running the `helm install` command:
+You can set the `global.openShift.enabled` parameter when running the `helm install` command:
 
 ```shell
 helm install keptn keptn/keptn -n keptn-system --create-namespace --set global.openShift.enabled=true

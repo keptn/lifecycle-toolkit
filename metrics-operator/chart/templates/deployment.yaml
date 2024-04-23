@@ -83,11 +83,13 @@ spec:
             "context" $) | nindent 12 }}
           privileged: {{ .Values.containerSecurityContext.privileged
             }}
+          {{- if not .Values.global.openShift.enabled }}
           runAsGroup: {{ .Values.containerSecurityContext.runAsGroup
             }}
-          runAsNonRoot: {{ .Values.containerSecurityContext.runAsNonRoot
-            }}
           runAsUser: {{ .Values.containerSecurityContext.runAsUser
+            }}
+          {{- end }}
+          runAsNonRoot: {{ .Values.containerSecurityContext.runAsNonRoot
             }}
           seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}

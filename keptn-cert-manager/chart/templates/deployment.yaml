@@ -56,10 +56,12 @@ spec:
             capabilities: {{- include "common.tplvalues.render" (dict "value" .Values.containerSecurityContext.capabilities "context" $) | nindent 14 }}
             readOnlyRootFilesystem: {{ .Values.containerSecurityContext.readOnlyRootFilesystem
             }}
+            {{- if not .Values.global.openShift.enabled }}
             runAsGroup: {{ .Values.containerSecurityContext.runAsGroup
             }}
             runAsUser: {{ .Values.containerSecurityContext.runAsUser
             }}
+            {{- end }}
             seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.containerSecurityContext.seccompProfile
             "context" $) | nindent 14 }}
         {{- if .Values.livenessProbe }}

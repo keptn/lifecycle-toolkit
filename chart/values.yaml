@@ -31,3 +31,6 @@ global:
   commonAnnotations: {}
   ## @param global.caInjectionAnnotations CA injection annotations for cert-manager.io configuration
   caInjectionAnnotations: {}
+  openShift:
+    ## @param global.openShift.enabled Enable this value to install on Openshift
+    enabled: false

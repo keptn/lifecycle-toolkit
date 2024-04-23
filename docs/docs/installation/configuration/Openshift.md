@@ -4,7 +4,7 @@ comments: true
 
 # Installing on Openshift
 
-To install on Openshift, set the value `global.isOpenshift` in the `values.yaml` file to true.
+To install on OpenShift, set the value `global.openShift.enabled` in the `values.yaml` file to true.
 In practice this means that `runAsUser` and `runAsGroup` are removed, since
 Openshift sets those automatically.
 

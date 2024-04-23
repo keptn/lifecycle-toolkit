@@ -94,8 +94,23 @@ data:
     [
       {
         "httpRequest": {
-          "path": "/api/v1/query_range",
-          "method": "POST"
+          "method" : "GET",
+          "path" : "/api/v2/metrics/query",
+          "queryStringParameters" : {
+            "metricSelector" : [ "query" ]
+          }
+          "headers" : {
+            "x-forwarded-by" : [ "MockServer_99f6f711-462f-4a60-9432-303a23ddd8ec" ],
+            "host" : [ "mockserver.chainsaw-epic-spaniel.svc.cluster.local:1080" ],
+            "content-length" : [ "0" ],
+            "connection" : [ "keep-alive" ],
+            "accept-encoding" : [ "gzip,deflate" ],
+            "User-Agent" : [ "Go-http-client/1.1" ],
+            "Authorization" : [ "Api-Token token: mytoken" ]
+          },
+          "keepAlive" : true,
+          "secure" : false,
+          "remoteAddress" : "10.244.0.1"
         },
         "httpResponse": {
           "body": {

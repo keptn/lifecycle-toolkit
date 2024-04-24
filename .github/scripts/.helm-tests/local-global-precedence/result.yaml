@@ -71,7 +71,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -153,7 +153,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -11187,7 +11187,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -11711,7 +11711,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -12748,7 +12748,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -12963,7 +12963,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -13682,7 +13682,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -14634,7 +14634,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -14748,7 +14748,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -14860,7 +14860,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -14887,7 +14887,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -14914,7 +14914,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -15135,7 +15135,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -15357,7 +15357,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -15384,7 +15384,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -15472,7 +15472,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -15509,7 +15509,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -15860,7 +15860,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -15910,7 +15910,7 @@ spec:
           value: cluster.local
         - name: CERT_MANAGER_ENABLED
           value: "true"
-        image: local-registry.io/keptn/metrics-operator:v1.0.0
+        image: local-registry.io/keptn/metrics-operator:v1.0.1
         imagePullPolicy: Never
         name: metrics-operator
         ports:
@@ -15986,7 +15986,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -16014,7 +16014,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4
@@ -16142,7 +16142,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/version: v1.0.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.1.4

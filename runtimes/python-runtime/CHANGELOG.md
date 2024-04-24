@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/keptn/lifecycle-toolkit/compare/python-runtime-v1.0.4...python-runtime-v1.0.5) (2024-04-24)
+
+
+### Dependency Updates
+
+* update python docker tag to v3.12.3 ([#3406](https://github.com/keptn/lifecycle-toolkit/issues/3406)) ([850bc4a](https://github.com/keptn/lifecycle-toolkit/commit/850bc4abae1b1bf52e10d45e30ffcf00fa2547a4))
+
 ## [1.0.4](https://github.com/keptn/lifecycle-toolkit/compare/python-runtime-v1.0.3...python-runtime-v1.0.4) (2024-03-19)
 
 

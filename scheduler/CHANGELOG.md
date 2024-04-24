@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.0.0](https://github.com/keptn/lifecycle-toolkit/compare/scheduler-v0.9.2...scheduler-v1.0.0) (2024-04-24)
+
+
+### Bug Fixes
+
+* introduce missing Role into keptn-cert-manager helm charts ([#3435](https://github.com/keptn/lifecycle-toolkit/issues/3435)) ([16afdaa](https://github.com/keptn/lifecycle-toolkit/commit/16afdaaf4ae56179d0f725ae9f9e9ae96709f042))
+
+
+### Other
+
+* **scheduler:** bump scheduler release version ([#3457](https://github.com/keptn/lifecycle-toolkit/issues/3457)) ([2093dd2](https://github.com/keptn/lifecycle-toolkit/commit/2093dd2f2030ee032174657a78c789b961542b78))
+
+
+### Dependency Updates
+
+* bump golang.org/x/net to v0.23.0 ([#3388](https://github.com/keptn/lifecycle-toolkit/issues/3388)) ([e9c1dda](https://github.com/keptn/lifecycle-toolkit/commit/e9c1dda3489117422160d53467d2155b1ca2bad3))
+* update dependency kubernetes-sigs/kustomize to v5.4.1 ([#3394](https://github.com/keptn/lifecycle-toolkit/issues/3394)) ([2dda172](https://github.com/keptn/lifecycle-toolkit/commit/2dda17232aab5542929a5fa73378cd2399a2f5e5))
+* update golang docker tag to v1.21.9 ([#3384](https://github.com/keptn/lifecycle-toolkit/issues/3384)) ([e4f1a6a](https://github.com/keptn/lifecycle-toolkit/commit/e4f1a6adefc2670a6c18efbaf416aee80eb2584a))
+* update module github.com/onsi/ginkgo/v2 to v2.16.0 ([#3319](https://github.com/keptn/lifecycle-toolkit/issues/3319)) ([10bc1c0](https://github.com/keptn/lifecycle-toolkit/commit/10bc1c02759f6eebe4f30812f868a9e6465c5e3d))
+* update module github.com/onsi/ginkgo/v2 to v2.17.0 ([#3339](https://github.com/keptn/lifecycle-toolkit/issues/3339)) ([997a63c](https://github.com/keptn/lifecycle-toolkit/commit/997a63cbeb8e7707a9c7c6fb21a1f6feabb75e1d))
+* update module github.com/onsi/ginkgo/v2 to v2.17.1 ([#3363](https://github.com/keptn/lifecycle-toolkit/issues/3363)) ([a34b8e5](https://github.com/keptn/lifecycle-toolkit/commit/a34b8e5959f775fe632cad1b7c74f6de46ff9aa0))
+* update module golang.org/x/net to v0.22.0 ([#3341](https://github.com/keptn/lifecycle-toolkit/issues/3341)) ([d58df5c](https://github.com/keptn/lifecycle-toolkit/commit/d58df5cac90241f625e05e68ec157827c2d85bbd))
+* update module golang.org/x/net to v0.24.0 ([#3395](https://github.com/keptn/lifecycle-toolkit/issues/3395)) ([16d436c](https://github.com/keptn/lifecycle-toolkit/commit/16d436c84f92aea191e0503f4dc1fa058bc1f083))
+* update module google.golang.org/grpc to v1.62.2 ([#3391](https://github.com/keptn/lifecycle-toolkit/issues/3391)) ([213204b](https://github.com/keptn/lifecycle-toolkit/commit/213204b9685ac355f42701ece024c7df18bf4308))
+* update module google.golang.org/grpc to v1.63.2 ([#3422](https://github.com/keptn/lifecycle-toolkit/issues/3422)) ([7da06b7](https://github.com/keptn/lifecycle-toolkit/commit/7da06b74b2cd28fb5a092d4b2028c1bed99b01a3))
+* update opentelemetry-go monorepo (minor) ([#3408](https://github.com/keptn/lifecycle-toolkit/issues/3408)) ([15ebf45](https://github.com/keptn/lifecycle-toolkit/commit/15ebf45f382f8661abc15d7ae71feeea57126431))
+
 ## [0.9.2](https://github.com/keptn/lifecycle-toolkit/compare/scheduler-v0.9.1...scheduler-v0.9.2) (2024-03-19)
 
 

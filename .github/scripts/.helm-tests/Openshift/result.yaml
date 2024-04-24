@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.1
+    app.kubernetes.io/version: v2.2.0
     helm.sh/chart: cert-manager-0.2.3
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
@@ -13832,7 +13832,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.1
+    app.kubernetes.io/version: v2.2.0
     helm.sh/chart: cert-manager-0.2.3
 rules:
 - apiGroups:
@@ -14603,7 +14603,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.1
+    app.kubernetes.io/version: v2.2.0
     helm.sh/chart: cert-manager-0.2.3
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -14729,7 +14729,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.1
+    app.kubernetes.io/version: v2.2.0
     helm.sh/chart: cert-manager-0.2.3
 rules:
 - apiGroups:
@@ -14774,7 +14774,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.1
+    app.kubernetes.io/version: v2.2.0
     helm.sh/chart: cert-manager-0.2.3
 rules:
 - apiGroups:
@@ -14947,7 +14947,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.1
+    app.kubernetes.io/version: v2.2.0
     helm.sh/chart: cert-manager-0.2.3
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -14971,7 +14971,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.1
+    app.kubernetes.io/version: v2.2.0
     helm.sh/chart: cert-manager-0.2.3
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -15224,7 +15224,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.1.1
+    app.kubernetes.io/version: v2.2.0
     helm.sh/chart: cert-manager-0.2.3
 spec:
   replicas: 1
@@ -15258,7 +15258,7 @@ spec:
               value: "true"
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
-          image: ghcr.io/keptn/certificate-operator:v2.1.1
+          image: ghcr.io/keptn/certificate-operator:v2.2.0
           imagePullPolicy: IfNotPresent
           name: certificate-operator
           resources:

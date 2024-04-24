@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v1.0.0...metrics-operator-v1.0.1) (2024-04-24)
+
+
+### Dependency Updates
+
+* update module github.com/keptn/lifecycle-toolkit/keptn-cert-manager ([#3318](https://github.com/keptn/lifecycle-toolkit/issues/3318)) ([f765187](https://github.com/keptn/lifecycle-toolkit/commit/f765187aa304850ea6f4cf0014e2de4bb1fecafa))
+
 ## [1.0.0](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v0.9.3...metrics-operator-v1.0.0) (2024-04-24)
 
 

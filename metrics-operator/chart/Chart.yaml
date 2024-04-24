@@ -22,7 +22,7 @@ annotations:
   artifacthub.io/operator: 'true'
 kubeVersion: '>= 1.24.0-0'
 type: application
-version: 0.1.4
+version: 0.2.1
 appVersion: v1.0.1 # x-release-please-version
 dependencies:
   - name: common

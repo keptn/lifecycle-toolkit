@@ -35,7 +35,7 @@ annotations:
 kubeVersion: '>= 1.24.0-0'
 type: application
 version: 0.5.2
-appVersion: v2.0.0
+appVersion: v2.0.0 # x-release-please-version
 dependencies:
   - name: keptn-cert-manager
     version: 0.2.4

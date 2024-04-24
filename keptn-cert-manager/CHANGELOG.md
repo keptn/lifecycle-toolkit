@@ -1,5 +1,33 @@
 # Changelog
 
+## [2.2.0](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.1.1...cert-manager-v2.2.0) (2024-04-24)
+
+
+### Features
+
+* **helm-chart:** make charts Openshift compliant ([#3415](https://github.com/keptn/lifecycle-toolkit/issues/3415)) ([32f077a](https://github.com/keptn/lifecycle-toolkit/commit/32f077aa875d591d5b17eca01b2e75cafeaae44d))
+
+
+### Bug Fixes
+
+* introduce missing Role into keptn-cert-manager helm charts ([#3435](https://github.com/keptn/lifecycle-toolkit/issues/3435)) ([16afdaa](https://github.com/keptn/lifecycle-toolkit/commit/16afdaaf4ae56179d0f725ae9f9e9ae96709f042))
+
+
+### Other
+
+* bump helm charts versions ([#3303](https://github.com/keptn/lifecycle-toolkit/issues/3303)) ([19cbe9f](https://github.com/keptn/lifecycle-toolkit/commit/19cbe9fda082015d4a61d23c1276d599f6370cec))
+
+
+### Dependency Updates
+
+* bump golang.org/x/net to v0.23.0 ([#3388](https://github.com/keptn/lifecycle-toolkit/issues/3388)) ([e9c1dda](https://github.com/keptn/lifecycle-toolkit/commit/e9c1dda3489117422160d53467d2155b1ca2bad3))
+* update dependency kubernetes-sigs/kustomize to v5.4.1 ([#3394](https://github.com/keptn/lifecycle-toolkit/issues/3394)) ([2dda172](https://github.com/keptn/lifecycle-toolkit/commit/2dda17232aab5542929a5fa73378cd2399a2f5e5))
+* update golang docker tag to v1.21.9 ([#3384](https://github.com/keptn/lifecycle-toolkit/issues/3384)) ([e4f1a6a](https://github.com/keptn/lifecycle-toolkit/commit/e4f1a6adefc2670a6c18efbaf416aee80eb2584a))
+* update kubernetes packages to v0.28.8 (patch) ([#3300](https://github.com/keptn/lifecycle-toolkit/issues/3300)) ([435e722](https://github.com/keptn/lifecycle-toolkit/commit/435e722776b69c6e7acbf3631d81cdeafc9815ec))
+* update module golang.org/x/net to v0.22.0 ([#3341](https://github.com/keptn/lifecycle-toolkit/issues/3341)) ([d58df5c](https://github.com/keptn/lifecycle-toolkit/commit/d58df5cac90241f625e05e68ec157827c2d85bbd))
+* update module golang.org/x/net to v0.24.0 ([#3395](https://github.com/keptn/lifecycle-toolkit/issues/3395)) ([16d436c](https://github.com/keptn/lifecycle-toolkit/commit/16d436c84f92aea191e0503f4dc1fa058bc1f083))
+* update module k8s.io/apimachinery to v0.28.9 ([#3433](https://github.com/keptn/lifecycle-toolkit/issues/3433)) ([a75d65e](https://github.com/keptn/lifecycle-toolkit/commit/a75d65e6528509276af4060aea6f85a02d03ad30))
+
 ## [2.1.1](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.1.0...cert-manager-v2.1.1) (2024-03-19)
 
 

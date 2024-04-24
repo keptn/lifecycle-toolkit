@@ -7,7 +7,7 @@ RELEASE_REGISTRY?=ghcr.io/keptn
 RELEASE_TIME=$(shell date +%Y%m%d%s)
 BUILD_TIME=$(shell date -u "+%F_%T")
 RELEASE_VERSION?=$(RELEASE_TIME)-v0.24.3#$(shell git describe --tags --match "v*")
-TAG?="v0.9.2" # x-release-please-version
+TAG?="v1.0.0" # x-release-please-version
 RELEASE_IMAGE:=lifecycle-operator:$(TAG)
 CHART_APPVERSION?=""
 
@@ -25,7 +25,7 @@ ENVTEST_K8S_VERSION=1.27.1
 
 ## Tool Versions
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v5.3.0
+KUSTOMIZE_VERSION?=v5.4.1
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
 CONTROLLER_TOOLS_VERSION?=v0.14.0
 

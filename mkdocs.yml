@@ -125,6 +125,7 @@ nav:
               - vCluster installation: docs/installation/configuration/vcluster.md
               - Keptn + cert-manager.io: docs/installation/configuration/cert-manager.md
               - Deploy Keptn via ArgoCD: docs/installation/configuration/argocd.md
+              - Deploy Keptn on OpenShift: docs/installation/configuration/Openshift.md
           - Installation Tips and Tricks: docs/installation/tips-tricks.md
           - Troubleshooting Guide: docs/installation/troubleshooting.md
           - Kubernetes cluster: docs/installation/k8s.md

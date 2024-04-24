@@ -1,10 +1,11 @@
 apiVersion: v2
 name: keptn-cert-manager
 description: A Helm chart for Keptn Certificate Manager, a subproject of Keptn
-icon: "https://raw.githubusercontent.com/cncf/artwork/master/projects/keptn/icon/color/keptn-icon-color.svg"
+icon: >-
+  https://raw.githubusercontent.com/cncf/artwork/master/projects/keptn/icon/color/keptn-icon-color.svg
 home: https://keptn.sh
 sources:
-  - "https://github.com/keptn/lifecycle-toolkit"
+  - https://github.com/keptn/lifecycle-toolkit
 keywords:
   - cloud-native
   - keptn
@@ -31,14 +32,14 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.2.3
+version: 0.2.4
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "v2.1.1" # x-release-please-version
+appVersion: "v2.2.0" # x-release-please-version
 dependencies:
   - name: common
-    repository: "https://charts.lifecycle.keptn.sh"
+    repository: https://charts.lifecycle.keptn.sh
     version: 0.2.1

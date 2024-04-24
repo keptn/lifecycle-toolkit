@@ -40,7 +40,6 @@ appcreationrequest
 APPNAME
 appv
 appversion
-applicationdeployment
 aquasecurity
 architecting
 ARCHS
@@ -79,6 +78,7 @@ certificatehandler
 certmanager
 certwebhook
 chainsaw
+changefreq
 Chans
 Checkmarx
 clientgoscheme
@@ -104,7 +104,6 @@ controlleroptions
 controllerutil
 coredns
 CORS
-cortex
 coverpkg
 coverprofile
 cowsay
@@ -383,6 +382,7 @@ kwds
 kwi
 kwv
 kyverno
+lastmod
 lastword
 Lato
 LFC
@@ -517,6 +517,7 @@ printcolumn
 privs
 proj
 promapi
+prome
 promhttp
 providerref
 providerresult
@@ -581,6 +582,7 @@ sigstore
 simpleapp
 simplenode
 simplenodeservice
+sitemap
 sli
 slisslos
 slo
@@ -660,6 +662,7 @@ undeploy
 unmarshal
 unmarshalling
 usr
+urlset
 utilruntime
 Utkarsh
 validatingwebhookconfigurations

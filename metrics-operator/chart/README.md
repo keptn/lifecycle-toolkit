@@ -22,6 +22,7 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 | `global.commonLabels`           | Common labels to add to all Keptn resources. Evaluated as a template      | `{}`      |
 | `global.commonAnnotations`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`      |
 | `global.caInjectionAnnotations` | CA injection annotations for cert-manager.io configuration                | `{}`      |
+| `global.openShift.enabled`      | Enable this value to install on Openshift                                 | `false`   |
 
 ### Keptn Metrics Operator common
 
@@ -78,7 +79,7 @@ Prometheus, Dynatrace, DataDog and K8s metric server...
 | `env.analysisControllerLogLevel`                    | sets the log level of Analysis Controller                               | `0`                      |
 | `image.registry`                                    | specify the container registry for the metrics-operator image           | `""`                     |
 | `image.repository`                                  | specify registry for manager image                                      | `keptn/metrics-operator` |
-| `image.tag`                                         | select tag for manager image                                            | `v0.9.3`                 |
+| `image.tag`                                         | select tag for manager image                                            | `v1.0.1`                 |
 | `image.imagePullPolicy`                             | specify pull policy for the manager image. This overrides global values | `""`                     |
 | `livenessProbe`                                     | custom livenessprobe for manager container                              |                          |
 | `readinessProbe`                                    | custom readinessprobe for manager container                             |                          |

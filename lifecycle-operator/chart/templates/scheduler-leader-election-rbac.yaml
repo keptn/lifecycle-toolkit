@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: leader-election-role
+  name: keptn-scheduler-leader-election-role
   namespace: {{ .Release.Namespace | quote }}
   {{- $annotations := include "common.annotations" (dict "context" .) }}
   {{- with $annotations }}
@@ -9,7 +9,7 @@ metadata:
   {{- end }}
   labels:
     app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: certificate-operator
+    app.kubernetes.io/created-by: scheduler
     app.kubernetes.io/part-of: keptn
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 rules:
@@ -44,3 +44,22 @@ rules:
   verbs:
   - create
   - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: keptn-scheduler-leader-election-rolebinding
+  namespace: {{ .Release.Namespace | quote }}
+  {{- with $annotations }}
+  annotations: {{- . -}}
+  {{- end }}
+  labels:
+{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: 'keptn-scheduler-leader-election-role'
+subjects:
+- kind: ServiceAccount
+  name: 'keptn-scheduler'
+  namespace: '{{ .Release.Namespace }}'

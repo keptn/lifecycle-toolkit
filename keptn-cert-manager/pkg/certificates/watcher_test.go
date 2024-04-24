@@ -21,6 +21,30 @@ import (
 )
 
 const CACERT = `-----BEGIN CERTIFICATE-----
+MIIBrzCCAVmgAwIBAgIUH/zWlPkTXVBcu2zOvUy/NV1hCKkwDQYJKoZIhvcNAQEL
+BQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoM
+GEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDAeFw0yNDA0MTgwOTEzMDdaFw0zNDA0
+MTYwOTEzMDdaMEUxCzAJBgNVBAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEw
+HwYDVQQKDBhJbnRlcm5ldCBXaWRnaXRzIFB0eSBMdGQwXDANBgkqhkiG9w0BAQEF
+AANLADBIAkEAyLJjXFVA0DzUVSJy+ANqe+tXki2MsWgm+cbYkpBMLJMKhhwnv6vW
+Hxwsh5MZNwAmSoprINGb7i6Ub2OhjpVq0QIDAQABoyEwHzAdBgNVHQ4EFgQUtwGr
+j5axZSNJo6o1mP7L09axxIIwDQYJKoZIhvcNAQELBQADQQDIJGtVIgsg0J3e5QRf
+LZ21sKKY+xzeG5yy90ao8QMWX9CqCpZncprE1MJijkG7paCFq6Bh22g6xTZYYJ1m
+yG/y
+-----END CERTIFICATE-----`
+
+const CAKEY = `-----BEGIN PRIVATE KEY-----
+MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAyLJjXFVA0DzUVSJy
++ANqe+tXki2MsWgm+cbYkpBMLJMKhhwnv6vWHxwsh5MZNwAmSoprINGb7i6Ub2Oh
+jpVq0QIDAQABAkANdxJ9hmbD0eD5GUeXZjtFtyN39kBjQraiuXmcU7wYnWJ9OyaB
+jsKkWlv9vx1stbMSYzlSQepDRYVcKL6AgGexAiEA7EwLkpiWT41/IwIIoYVQNgMN
+Q/n8ltO47ecFljF1G6UCIQDZbm1JXYF068xo0vglnKl9HK3I69cHA4hrVww0ZUha
+vQIgIDy7s3NHxnCqcK89WDPk3omKDMUVNcqKx0ImW/hBXtUCIQCvrMgCCdmp9UaP
+vz0dbomGe6ByARMYKKOVTpyezOJ75QIgNqihb0lQbzEceTo6S2bQakDH7dH4Eydd
+hMfh5Ml1u3o=
+-----END PRIVATE KEY-----`
+
+const OUTDATED_CACERT = `-----BEGIN CERTIFICATE-----
 MIICPTCCAeKgAwIBAgIRAMIV/0UqFGHgKSYOWBdx/KcwCgYIKoZIzj0EAwIwczEL
 MAkGA1UEBhMCQVQxCzAJBgNVBAgTAktMMRMwEQYDVQQHEwpLbGFnZW5mdXJ0MQ4w
 DAYDVQQKEwVLZXB0bjEZMBcGA1UECxMQTGlmZWN5Y2xlVG9vbGtpdDEXMBUGA1UE
@@ -36,7 +60,7 @@ ow49D22Gsrh7YM+vmTQCIQDU1L5IT0Zz+bdIyFSsDnEUXZDeydNv56DoSLh+358Y
 aw==
 -----END CERTIFICATE-----`
 
-const CAKEY = `-----BEGIN PRIVATE KEY-----
+const OUTDATED_CAKEY = `-----BEGIN PRIVATE KEY-----
 MHcCAQEEII5SAqBxINKatksyu2mTvLZZhfEOpNinYJDwlQjkfreboAoGCCqGSM49
 AwEHoUQDQgAE/EA/glMl/ArP8/fZ1e7J9WLuSKdA95tJjAX+BEBRw3R0ICLoafFs
 jY5eVxTSC4PMde/dVGHcRfZ+I2zNx8poJg==
@@ -83,6 +107,18 @@ var emptySecret = v1.Secret{
 	ObjectMeta: metav1.ObjectMeta{
 		Namespace: "default",
 		Name:      "my-cert",
+	},
+}
+
+var outdatedSecret = v1.Secret{
+	TypeMeta: metav1.TypeMeta{},
+	ObjectMeta: metav1.ObjectMeta{
+		Namespace: "default",
+		Name:      "my-cert",
+	},
+	Data: map[string][]byte{
+		ServerCert: []byte(OUTDATED_CACERT),
+		ServerKey:  []byte(OUTDATED_CAKEY),
 	},
 }
 
@@ -254,7 +290,7 @@ func TestCertificateWatcher_updateCertificatesFromSecret(t *testing.T) {
 		},
 		{
 			name:                  "outdated certificate found, nothing in dir",
-			apiReader:             newFakeClient(&emptySecret),
+			apiReader:             newFakeClient(&outdatedSecret),
 			certificateDirectory:  t.TempDir(),
 			namespace:             "default",
 			certificateSecretName: "my-cert",

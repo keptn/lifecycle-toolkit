@@ -26,6 +26,9 @@ global:
   ## @param global.caInjectionAnnotations CA injection annotations for cert-manager.io configuration
   ##
   caInjectionAnnotations: { }
+  openShift:
+    ## @param global.openShift.enabled Enable this value to install on Openshift
+    enabled: false
 
 lifecycleOperatorConfig:
   health:
@@ -77,7 +80,7 @@ lifecycleOperator:
       type: RuntimeDefault
 ## @param   lifecycleOperator.env.functionRunnerImage specify image for deno task runtime
   env:
-    functionRunnerImage: ghcr.io/keptn/deno-runtime:v2.0.3
+    functionRunnerImage: ghcr.io/keptn/deno-runtime:v2.0.4
 ## @param   lifecycleOperator.env.keptnAppControllerLogLevel sets the log level of Keptn App Controller
     keptnAppControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.keptnAppCreationRequestControllerLogLevel sets the log level of Keptn App Creation Request Controller
@@ -99,14 +102,14 @@ lifecycleOperator:
 ## @param   lifecycleOperator.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
     optionsControllerLogLevel: "0"
 ## @param   lifecycleOperator.env.pythonRunnerImage specify image for python task runtime
-    pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.4
+    pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.5
   image:
 ## @param    lifecycleOperator.image.registry specify the container registry for the lifecycle-operator image
     registry: ""
 ## @param   lifecycleOperator.image.repository specify registry for manager image
     repository: keptn/lifecycle-operator
 ## @param   lifecycleOperator.image.tag  select tag for manager image
-    tag: v0.9.2 # x-release-please-version
+    tag: v1.0.0 # x-release-please-version
 ## @param   lifecycleOperator.image.imagePullPolicy specify pull policy for the manager image. This overrides global values
     imagePullPolicy: ""
 ## @extra  lifecycleOperator.livenessProbe custom liveness probe for manager container
@@ -221,7 +224,7 @@ scheduler:
 ## @param scheduler.image.repository set image repository for scheduler
     repository: keptn/scheduler
 ## @param scheduler.image.tag set image tag for scheduler
-    tag: v0.9.2
+    tag: v1.0.0
 ## @param   scheduler.image.imagePullPolicy specify pull policy for the manager image. This overrides global values
     imagePullPolicy: ""
 ## @extra scheduler.livenessProbe customizable liveness probe for the scheduler

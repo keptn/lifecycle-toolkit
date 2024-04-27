@@ -185,6 +185,7 @@ jobs:
         uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
         with:
           context: ${{ matrix.config.folder }}
+          sbom: true
           platforms: linux/amd64,linux/arm64
           target: production
           tags: |
@@ -209,13 +210,6 @@ jobs:
             --certificate-identity-regexp="https://github.com/keptn/lifecycle-toolkit/.*" \
             --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
-
-      - name: Generate SBOM
-        uses: anchore/sbom-action@ab5d7b5f48981941c4c5d6bf33aeb98fe3bae38c # v0.15.10
-        with:
-          image: ${{ env.IMAGE_NAME }}:${{ steps.clean-image-tag.outputs.IMAGE_TAG }}
-          artifact-name: sbom-${{ matrix.config.name }}
-          output-file: ./sbom-${{ matrix.config.name }}.spdx.json
 
       - name: Attach SBOM to release
         uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564 # v2.0.4

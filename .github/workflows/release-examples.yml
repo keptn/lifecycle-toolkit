@@ -26,17 +26,17 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
 
       - name: Checkout examples repo
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
         with:
           repository: keptn-sandbox/lifecycle-toolkit-examples
           path: ${{ inputs.examples_dir }}
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
 
       - name: Get Latest Release Information
-        uses: octokit/request-action@d69a4d4369a61d4045c56451421ff93ee5e7bea0 # v2.2.0
+        uses: octokit/request-action@21d174fc38ff59af9cf4d7e07347d29df6dbaa99 # v2.3.0
         id: latest_release
         with:
           route: GET /repos/:owner/:repository/releases/latest

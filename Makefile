@@ -1,8 +1,8 @@
 # Image URL to use all building/pushing image targets
 
 # renovate: datasource=github-tags depName=kubernetes-sigs/kustomize
-KUSTOMIZE_VERSION?=v5.3.0
-CHART_APPVERSION ?= v2.0.0-rc.2 # x-release-please-version
+KUSTOMIZE_VERSION?=v5.4.1
+CHART_APPVERSION ?= v2.0.0 # x-release-please-version
 
 # renovate: datasource=docker depName=cytopia/yamllint
 YAMLLINT_VERSION ?= alpine
@@ -29,30 +29,40 @@ KUSTOMIZE ?= $(LOCALBIN)/kustomize
 .PHONY: integration-test #these tests should run on a real cluster!
 integration-test:
 	kubectl apply -f ./lifecycle-operator/config/crd/bases
-	chainsaw test --test-dir ./test/chainsaw/testmetrics/
 	chainsaw test --test-dir ./test/chainsaw/integration/
-	chainsaw test --test-dir ./test/chainsaw/testanalysis/
-	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/
-	chainsaw test --test-dir ./test/chainsaw/timeout-failure-deployment/
-	chainsaw test --test-dir ./test/chainsaw/traces/
 
 .PHONY: integration-test-local #these tests should run on a real cluster!
 integration-test-local:
 	kubectl apply -f ./lifecycle-operator/config/crd/bases
 	chainsaw test --test-dir ./test/chainsaw/integration/ --config ./.chainsaw-local.yaml
+
+.PHONY: integration-test-metrics #these tests should run on a real cluster!
+integration-test-metrics:
+	kubectl apply -f ./lifecycle-operator/config/crd/bases
+	chainsaw test --test-dir ./test/chainsaw/testmetrics/
+	chainsaw test --test-dir ./test/chainsaw/testanalysis/
+
+.PHONY: integration-test-metrics-local #these tests should run on a real cluster!
+integration-test-metrics-local:
+	kubectl apply -f ./lifecycle-operator/config/crd/bases
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/ --config ./.chainsaw-local.yaml
+
+.PHONY: integration-test-lifecycle #these tests should run on a real cluster!
+integration-test-lifecycle:
+	kubectl apply -f ./lifecycle-operator/config/crd/bases
+	chainsaw test --test-dir ./test/chainsaw/scheduling-gates/
+	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/
+	chainsaw test --test-dir ./test/chainsaw/timeout-failure-deployment/
+	chainsaw test --test-dir ./test/chainsaw/traces/
+
+.PHONY: integration-test-lifecycle-local #these tests should run on a real cluster!
+integration-test-lifecycle-local:
+	kubectl apply -f ./lifecycle-operator/config/crd/bases
+	chainsaw test --test-dir ./test/chainsaw/scheduling-gates/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/non-blocking-deployment/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/timeout-failure-deployment/ --config ./.chainsaw-local.yaml
-	chainsaw test --test-dir ./test/chainsaw/traces/ --config ./.chainsaw-local.yaml
-
-.PHONY: integration-test-scheduling-gates #these tests should run on a real cluster!
-integration-test-scheduling-gates:
-	chainsaw test --test-dir ./test/chainsaw/scheduling-gates/
-
-.PHONY: integration-test-scheduling-gates-local #these tests should run on a real cluster!
-integration-test-scheduling-gates-local: install-prometheus
-	chainsaw test --test-dir ./test/chainsaw/scheduling-gates/ --config ./.chainsaw-local.yaml
+	chainsaw test --test-dir ./test/chainsaw/traces/ --config ./.chainsaw-local.yaml	
 
 .PHONY: integration-test-cert-manager #these tests should run on a real cluster!
 integration-test-cert-manager:

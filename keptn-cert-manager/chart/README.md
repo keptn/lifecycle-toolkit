@@ -16,6 +16,7 @@ resource.
 | `global.commonLabels`           | Common labels to add to all Keptn resources. Evaluated as a template      | `{}`      |
 | `global.commonAnnotations`      | Common annotations to add to all Keptn resources. Evaluated as a template | `{}`      |
 | `global.caInjectionAnnotations` | CA injection annotations for cert-manager.io configuration                | `{}`      |
+| `global.openShift.enabled`      | Enable this value to install on Openshift                                 | `false`   |
 
 ### Keptn Certificate Operator common
 
@@ -38,7 +39,7 @@ resource.
 | `env.labelSelectorValue`   | specify the value for the label selector                                  | `true`                       |
 | `image.registry`           | specify the container registry for the certificate-operator image         | `""`                         |
 | `image.repository`         | specify repo for manager image                                            | `keptn/certificate-operator` |
-| `image.tag`                | select tag for manager container                                          | `v2.1.1`                     |
+| `image.tag`                | select tag for manager container                                          | `v2.2.0`                     |
 | `image.imagePullPolicy`    | specify pull policy for the manager image. This overrides global values   | `""`                         |
 | `livenessProbe`            | custom RBAC proxy liveness probe                                          |                              |
 | `readinessProbe`           | custom manager readiness probe                                            |                              |

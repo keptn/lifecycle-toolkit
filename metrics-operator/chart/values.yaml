@@ -26,6 +26,9 @@ global:
   ## @param global.caInjectionAnnotations CA injection annotations for cert-manager.io configuration
   ##
   caInjectionAnnotations: { }
+  openShift:
+    ## @param global.openShift.enabled Enable this value to install on Openshift
+    enabled: false
 
 ## @section Keptn Metrics Operator common
 ## @extra   operatorService.ports[0] webhook port (must correspond to Mutating Webhook Configurations)
@@ -137,7 +140,7 @@ image:
 ## @param   image.repository specify registry for manager image
   repository: keptn/metrics-operator
 ## @param   image.tag select tag for manager image
-  tag: v0.9.3 # x-release-please-version
+  tag: v1.0.1 # x-release-please-version
 ## @param   image.imagePullPolicy specify pull policy for the manager image. This overrides global values
   imagePullPolicy: ""
 ## @extra  livenessProbe custom livenessprobe for manager container

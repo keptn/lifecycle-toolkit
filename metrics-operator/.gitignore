@@ -28,5 +28,4 @@ load-report.*
 *~
 
 .dccache*
-
 chart/charts/*.tgz

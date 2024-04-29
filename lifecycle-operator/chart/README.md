@@ -20,6 +20,7 @@ and application health checks
 | `global.commonLabels`                                   | Common labels to add to all Keptn resources. Evaluated as a template                                                                                          | `{}`                |
 | `global.commonAnnotations`                              | Common annotations to add to all Keptn resources. Evaluated as a template                                                                                     | `{}`                |
 | `global.caInjectionAnnotations`                         | CA injection annotations for cert-manager.io configuration                                                                                                    | `{}`                |
+| `global.openShift.enabled`                              | Enable this value to install on Openshift                                                                                                                     | `false`             |
 | `lifecycleOperatorConfig.health.healthProbeBindAddress` | setup on what address to start the default health handler                                                                                                     | `:8081`             |
 | `lifecycleOperatorConfig.leaderElection.leaderElect`    | enable leader election for multiple replicas of the lifecycle operator                                                                                        | `true`              |
 | `lifecycleOperatorConfig.leaderElection.resourceName`   | define LeaderElectionID                                                                                                                                       | `6b866dd9.keptn.sh` |
@@ -43,7 +44,7 @@ and application health checks
 | `lifecycleOperator.containerSecurityContext.runAsNonRoot`             |                                                                                | `true`                                |
 | `lifecycleOperator.containerSecurityContext.runAsUser`                |                                                                                | `65532`                               |
 | `lifecycleOperator.containerSecurityContext.seccompProfile.type`      |                                                                                | `RuntimeDefault`                      |
-| `lifecycleOperator.env.functionRunnerImage`                           | specify image for deno task runtime                                            | `ghcr.io/keptn/deno-runtime:v2.0.3`   |
+| `lifecycleOperator.env.functionRunnerImage`                           | specify image for deno task runtime                                            | `ghcr.io/keptn/deno-runtime:v2.0.4`   |
 | `lifecycleOperator.env.keptnAppControllerLogLevel`                    | sets the log level of Keptn App Controller                                     | `0`                                   |
 | `lifecycleOperator.env.keptnAppCreationRequestControllerLogLevel`     | sets the log level of Keptn App Creation Request Controller                    | `0`                                   |
 | `lifecycleOperator.env.keptnAppVersionControllerLogLevel`             | sets the log level of Keptn AppVersion Controller                              | `0`                                   |
@@ -54,10 +55,10 @@ and application health checks
 | `lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel`        | sets the log level of Keptn WorkloadVersion Controller                         | `0`                                   |
 | `lifecycleOperator.env.keptnDoraMetricsPort`                          | sets the port for accessing lifecycle metrics in prometheus format             | `2222`                                |
 | `lifecycleOperator.env.optionsControllerLogLevel`                     | sets the log level of Keptn Options Controller                                 | `0`                                   |
-| `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                          | `ghcr.io/keptn/python-runtime:v1.0.4` |
+| `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                          | `ghcr.io/keptn/python-runtime:v1.0.5` |
 | `lifecycleOperator.image.registry`                                    | specify the container registry for the lifecycle-operator image                | `""`                                  |
 | `lifecycleOperator.image.repository`                                  | specify registry for manager image                                             | `keptn/lifecycle-operator`            |
-| `lifecycleOperator.image.tag`                                         | select tag for manager image                                                   | `v0.9.2`                              |
+| `lifecycleOperator.image.tag`                                         | select tag for manager image                                                   | `v1.0.0`                              |
 | `lifecycleOperator.image.imagePullPolicy`                             | specify pull policy for the manager image. This overrides global values        | `""`                                  |
 | `lifecycleOperator.livenessProbe`                                     | custom liveness probe for manager container                                    |                                       |
 | `lifecycleOperator.readinessProbe`                                    | custom readinessprobe for manager container                                    |                                       |
@@ -90,7 +91,7 @@ and application health checks
 | `scheduler.env.otelCollectorUrl`                             | sets url for open telemetry collector                                   | `otel-collector:4317` |
 | `scheduler.image.registry`                                   | specify the container registry for the scheduler image                  | `""`                  |
 | `scheduler.image.repository`                                 | set image repository for scheduler                                      | `keptn/scheduler`     |
-| `scheduler.image.tag`                                        | set image tag for scheduler                                             | `v0.9.2`              |
+| `scheduler.image.tag`                                        | set image tag for scheduler                                             | `v1.0.0`              |
 | `scheduler.image.imagePullPolicy`                            | specify pull policy for the manager image. This overrides global values | `""`                  |
 | `scheduler.livenessProbe`                                    | customizable liveness probe for the scheduler                           |                       |
 | `scheduler.readinessProbe`                                   | customizable readiness probe for the scheduler                          |                       |

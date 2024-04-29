@@ -34,7 +34,6 @@ manifests/
 .DS_Store
 
 /examples/observability/assets/backups/
-
 /dashboards/grafana/output/
 
 ## Kubebuilder

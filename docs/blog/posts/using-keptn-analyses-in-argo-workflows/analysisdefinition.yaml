@@ -1,0 +1,29 @@
+apiVersion: metrics.keptn.sh/v1
+kind: AnalysisDefinition
+metadata:
+  name: my-analysis-definition
+  namespace: simple-go
+spec:
+  objectives:
+    - analysisValueTemplateRef:
+        name: response-time-p95
+      keyObjective: false
+      target:
+        failure:
+          greaterThan:
+            fixedValue: 500m
+        warning:
+          greaterThan:
+            fixedValue: 300m
+      weight: 1
+    - analysisValueTemplateRef:
+        name: error-rate
+      keyObjective: true
+      target:
+        failure:
+          greaterThan:
+            fixedValue: 0
+      weight: 1
+  totalScore:
+    passPercentage: 60
+    warningPercentage: 50

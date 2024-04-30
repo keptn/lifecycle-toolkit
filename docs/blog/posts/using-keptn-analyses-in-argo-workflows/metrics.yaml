@@ -4,7 +4,7 @@ metadata:
   name: my-provider
   namespace: simple-go
 spec:
-  targetServer: http://prometheus-k8s.monitoring.svc.cluster.local:9090
+  targetServer: https://prometheus-k8s.monitoring.svc.cluster.local:9090
   type: prometheus
 ---
 apiVersion: metrics.keptn.sh/v1

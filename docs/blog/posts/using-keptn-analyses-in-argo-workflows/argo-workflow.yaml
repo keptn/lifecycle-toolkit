@@ -92,7 +92,7 @@ spec:
       container:
         image: docker/whalesay:latest
         command: [sh, -c]
-        args: [ "cowsay 'Analysis result for timeframe {{inputs.parameters.start}} - {{inputs.parameters.end}}: {{inputs.parameters.result}}'" ]
+        args: ["cowsay 'Analysis result for timeframe {{inputs.parameters.start}} - {{inputs.parameters.end}}: {{inputs.parameters.result}}'"]
 
     - name: print-json
       inputs:

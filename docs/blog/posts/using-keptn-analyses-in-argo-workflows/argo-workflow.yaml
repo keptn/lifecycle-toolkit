@@ -81,7 +81,7 @@ spec:
               jsonPath: "{.output.parameters.details}"
 
       plugin:
-        keptn: { }
+        keptn: {}
 
     - name: whalesay
       inputs:
@@ -91,7 +91,7 @@ spec:
           - name: result
       container:
         image: docker/whalesay:latest
-        command: [ sh, -c ]
+        command: [sh, -c]
         args: [ "cowsay 'Analysis result for timeframe {{inputs.parameters.start}} - {{inputs.parameters.end}}: {{inputs.parameters.result}}'" ]
 
     - name: print-json
@@ -100,14 +100,14 @@ spec:
           - name: details
       container:
         image: alpine:latest
-        command: [ sh, -c ]
-        args: [ "echo '{{inputs.parameters.details}}' | tee /tmp/result.json" ]
+        command: [sh, -c]
+        args: ["echo '{{inputs.parameters.details}}' | tee /tmp/result.json"]
       outputs:
         artifacts:
           - name: result
             path: /tmp/result.json
             archive:
-              none: { }
+              none: {}
 
   ttlStrategy:
     secondsAfterCompletion: 300

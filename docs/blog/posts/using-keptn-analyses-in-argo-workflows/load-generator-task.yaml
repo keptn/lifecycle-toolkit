@@ -7,7 +7,7 @@ spec:
   container:
     - name: loadtests
       image: curl
-      command: [ "sh", "-c" ]
+      command: ["sh", "-c"]
       args:
         - |
           for i in $(seq 1 600); do

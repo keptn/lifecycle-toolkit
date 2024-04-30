@@ -33,7 +33,7 @@ For this, we are using the following technologies:
   is used to define goals for our metrics and evaluate them.
 - [Argo Workflows](https://argoproj.github.io/workflows/) as a workflow engine.
 - [Prometheus](https://prometheus.io): Provides monitoring data for the application.
-- 
+
 ## Architecture
 
 The overall architecture of this example is depicted in the diagram below:
@@ -68,8 +68,7 @@ please follow the instructions at the respective installation guides:
 - [Keptn Installation Guide](https://keptn.sh/stable/docs/installation/)
 - [Argo Workflows Installation Guide](https://argo-workflows.readthedocs.io/en/latest/quick-start/)
 
-The next step is to install the [Keptn extension for Argo Workflows (unofficial PoC implementation)]
-(https://github.com/bacherfl/argo-keptn-plugin).
+The next step is to install the [Keptn extension for Argo Workflows (unofficial PoC implementation)](https://github.com/bacherfl/argo-keptn-plugin).
 This is done by applying the `ConfigMap` that enables the plugin within Argo workflows,
 and the required RBAC configuration for the plugin to be able to interact
 with Keptn resources:
@@ -95,8 +94,9 @@ to the sample application for a duration of one minute.
 ## Defining the AnalysisValueTemplates
 
 Now we are going to define the queries for the metrics we would like to analyse:
- - The response time of the demo service
- - The error rate of the demo service
+
+- The response time of the demo service
+- The error rate of the demo service
 
 Below are the `AnalysisValueTemplate` definitions, as well as the
 `KeptnMetricsProvider` which points to the Prometheus API
@@ -106,7 +106,7 @@ inside our cluster:
 {% include "./using-keptn-analyses-in-argo-workflows/metrics.yaml" %}
 ```
 
-Next, we define the `AnalysisDefintion` resource that contains the goals
+Next, we define the `AnalysisDefinition` resource that contains the goals
 for the metrics mentioned above:
 
 ```yaml

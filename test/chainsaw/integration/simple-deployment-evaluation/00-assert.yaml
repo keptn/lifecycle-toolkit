@@ -16,12 +16,7 @@ spec:
     commit-id: "1234"
     stage: dev
 ---
-<<<<<<< HEAD
-apiVersion: lifecycle.keptn.sh/v1beta1
-=======
-
 apiVersion: lifecycle.keptn.sh/v1
->>>>>>> e048679b0b2d95bdd71b4545ef620e6be0bfac20
 kind: KeptnWorkloadVersion
 metadata:
   name: waiter-waiter-0.4

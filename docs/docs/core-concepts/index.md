@@ -33,7 +33,7 @@ The Keptn metrics feature extends the functionality of
 
 * Handles observability data from multiple instances
   of multiple observability solutions
-  – Prometheus, Dynatrace, Datadog and others –
+  – Prometheus, Thanos, Cortex, Dynatrace, Datadog and others –
   as well as data that comes directly from your cloud provider
   such as AWS, Google, or Azure.
 

@@ -2,16 +2,18 @@
 
 The
 [KeptnAppContext](../../reference/crd-reference/appcontext.md)
-resource is new in the `v1beta1` API version.
+resource was introduced in the `v1beta1` API version.
 Existing
 [KeptnApp](../../reference/crd-reference/app.md)
 resources that were generated manually must be migrated
 because of this new feature.
 This page gives instructions for doing that.
+Versions `v1beta1` and `v1` are fully compatible.
 
 > **Note**
 > Manual migration is only required for:
 >
+> * `KeptnApp` resources with older versions than `v1beta1`
 > * Manually created `KeptnApp` resources
 > * Automatically created `KeptnApp` resources with
 >   manually edited pre/post-deployment tasks or evaluations**

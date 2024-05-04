@@ -1,4 +1,4 @@
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetricsProvider
 metadata:
   name: prometheus-provider
@@ -7,7 +7,7 @@ spec:
   type: prometheus
   targetServer: <your-metrics-provider-server>
 ---
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetric
 metadata:
   name: cpu-throttling

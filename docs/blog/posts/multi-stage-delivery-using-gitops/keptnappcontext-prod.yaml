@@ -1,0 +1,16 @@
+apiVersion: lifecycle.keptn.sh/v1beta1
+kind: KeptnAppContext
+metadata:
+  name: simple-go-prod
+  namespace: simple-go-prod
+spec:
+
+  preDeploymentTasks:
+    - wait-for-prometheus
+  postDeploymentTasks:
+    - post-deployment-loadtests
+    - post-deployment-loadtests-backend
+  spanLinks:
+    - {{.Values.traceParent}}
+  metadata:
+    commitID: {{.Values.commitID}}

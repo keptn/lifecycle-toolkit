@@ -64,6 +64,398 @@ spec:
       name: PostDeploymentEvaluationStatus
       priority: 1
       type: string
+    - jsonPath: .status.promotionStatus
+      name: PromotionStatus
+      priority: 1
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: KeptnAppVersion is the Schema for the keptnappversions API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec describes the desired state of the KeptnAppVersion.
+            properties:
+              appName:
+                description: AppName is the name of the KeptnApp.
+                type: string
+              metadata:
+                additionalProperties:
+                  type: string
+                description: Metadata contains additional key-value pairs for contextual
+                  information.
+                type: object
+              postDeploymentEvaluations:
+                description: |-
+                  PostDeploymentEvaluations is a list of all evaluations to be performed
+                  during the post-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              postDeploymentTasks:
+                description: |-
+                  PostDeploymentTasks is a list of all tasks to be performed during the post-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              preDeploymentEvaluations:
+                description: |-
+                  PreDeploymentEvaluations is a list of all evaluations to be performed
+                  during the pre-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnEvaluationDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              preDeploymentTasks:
+                description: |-
+                  PreDeploymentTasks is a list of all tasks to be performed during the pre-deployment phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              previousVersion:
+                description: PreviousVersion is the version of the KeptnApp that has
+                  been deployed prior to this version.
+                type: string
+              promotionTasks:
+                description: |-
+                  PromotionTasks is a list of all tasks to be performed during the promotion phase of the KeptnApp.
+                  The items of this list refer to the names of KeptnTaskDefinitions
+                  located in the same namespace as the KeptnApp, or in the Keptn namespace.
+                items:
+                  type: string
+                type: array
+              revision:
+                default: 1
+                description: |-
+                  Revision can be modified to trigger another deployment of a KeptnApp of the same version.
+                  This can be used for restarting a KeptnApp which failed to deploy,
+                  e.g. due to a failed preDeploymentEvaluation/preDeploymentTask.
+                type: integer
+              spanLinks:
+                description: |-
+                  SpanLinks are links to OpenTelemetry span IDs for tracking. These links establish relationships between spans across different services, enabling distributed tracing.
+                  For more information on OpenTelemetry span links, refer to the documentation: https://opentelemetry.io/docs/concepts/signals/traces/#span-links
+                items:
+                  type: string
+                type: array
+              traceId:
+                additionalProperties:
+                  type: string
+                description: TraceId contains the OpenTelemetry trace ID.
+                type: object
+              version:
+                description: |-
+                  Version defines the version of the application. For automatically created KeptnApps,
+                  the version is a function of all KeptnWorkloads that are part of the KeptnApp.
+                type: string
+              workloads:
+                description: Workloads is a list of all KeptnWorkloads that are part
+                  of the KeptnApp.
+                items:
+                  description: KeptnWorkloadRef refers to a KeptnWorkload that is
+                    part of a KeptnApp
+                  properties:
+                    name:
+                      description: Name is the name of the KeptnWorkload.
+                      type: string
+                    version:
+                      description: Version is the version of the KeptnWorkload.
+                      type: string
+                  required:
+                  - name
+                  - version
+                  type: object
+                type: array
+            required:
+            - appName
+            - version
+            type: object
+          status:
+            description: Status describes the current state of the KeptnAppVersion.
+            properties:
+              currentPhase:
+                description: CurrentPhase indicates the current phase of the KeptnAppVersion.
+                type: string
+              endTime:
+                description: EndTime represents the time at which the deployment of
+                  the KeptnAppVersion finished.
+                format: date-time
+                type: string
+              phaseTraceIDs:
+                additionalProperties:
+                  additionalProperties:
+                    type: string
+                  description: |-
+                    MapCarrier is a TextMapCarrier that uses a map held in memory as a storage
+                    medium for propagated key-value pairs.
+                  type: object
+                description: PhaseTraceIDs contains the trace IDs of the OpenTelemetry
+                  spans of each phase of the KeptnAppVersion.
+                type: object
+              postDeploymentEvaluationStatus:
+                default: Pending
+                description: PostDeploymentEvaluationStatus indicates the current
+                  status of the KeptnAppVersion's PostDeploymentEvaluation phase.
+                type: string
+              postDeploymentEvaluationTaskStatus:
+                description: PostDeploymentEvaluationTaskStatus indicates the current
+                  state of each postDeploymentEvaluation of the KeptnAppVersion.
+                items:
+                  properties:
+                    definitionName:
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
+                      type: string
+                    endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
+                      format: date-time
+                      type: string
+                    name:
+                      description: Name is the name of the Evaluation/Task
+                      type: string
+                    startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
+                      type: string
+                  type: object
+                type: array
+              postDeploymentStatus:
+                default: Pending
+                description: PostDeploymentStatus indicates the current status of
+                  the KeptnAppVersion's PostDeployment phase.
+                type: string
+              postDeploymentTaskStatus:
+                description: PostDeploymentTaskStatus indicates the current state
+                  of each postDeploymentTask of the KeptnAppVersion.
+                items:
+                  properties:
+                    definitionName:
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
+                      type: string
+                    endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
+                      format: date-time
+                      type: string
+                    name:
+                      description: Name is the name of the Evaluation/Task
+                      type: string
+                    startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
+                      type: string
+                  type: object
+                type: array
+              preDeploymentEvaluationStatus:
+                default: Pending
+                description: PreDeploymentEvaluationStatus indicates the current status
+                  of the KeptnAppVersion's PreDeploymentEvaluation phase.
+                type: string
+              preDeploymentEvaluationTaskStatus:
+                description: PreDeploymentEvaluationTaskStatus indicates the current
+                  state of each preDeploymentEvaluation of the KeptnAppVersion.
+                items:
+                  properties:
+                    definitionName:
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
+                      type: string
+                    endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
+                      format: date-time
+                      type: string
+                    name:
+                      description: Name is the name of the Evaluation/Task
+                      type: string
+                    startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
+                      type: string
+                  type: object
+                type: array
+              preDeploymentStatus:
+                default: Pending
+                description: PreDeploymentStatus indicates the current status of the
+                  KeptnAppVersion's PreDeployment phase.
+                type: string
+              preDeploymentTaskStatus:
+                description: PreDeploymentTaskStatus indicates the current state of
+                  each preDeploymentTask of the KeptnAppVersion.
+                items:
+                  properties:
+                    definitionName:
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
+                      type: string
+                    endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
+                      format: date-time
+                      type: string
+                    name:
+                      description: Name is the name of the Evaluation/Task
+                      type: string
+                    startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
+                      type: string
+                  type: object
+                type: array
+              promotionStatus:
+                default: Pending
+                description: PromotionStatus indicates the current status of the KeptnAppVersion's
+                  Promotion phase.
+                type: string
+              promotionTaskStatus:
+                description: PromotionTaskStatus indicates the current state of each
+                  promotionTask of the KeptnAppVersion.
+                items:
+                  properties:
+                    definitionName:
+                      description: DefinitionName is the name of the EvaluationDefinition/TaskDefinition
+                      type: string
+                    endTime:
+                      description: EndTime represents the time at which the Item (Evaluation/Task)
+                        started.
+                      format: date-time
+                      type: string
+                    name:
+                      description: Name is the name of the Evaluation/Task
+                      type: string
+                    startTime:
+                      description: StartTime represents the time at which the Item
+                        (Evaluation/Task) started.
+                      format: date-time
+                      type: string
+                    status:
+                      default: Pending
+                      description: KeptnState  is a string containing current Phase
+                        state  (Progressing/Succeeded/Failed/Unknown/Pending/Deprecated/Warning)
+                      type: string
+                  type: object
+                type: array
+              startTime:
+                description: StartTime represents the time at which the deployment
+                  of the KeptnAppVersion started.
+                format: date-time
+                type: string
+              status:
+                default: Pending
+                description: Status represents the overall status of the KeptnAppVersion.
+                type: string
+              workloadOverallStatus:
+                default: Pending
+                description: WorkloadOverallStatus indicates the current status of
+                  the KeptnAppVersion's Workload deployment phase.
+                type: string
+              workloadStatus:
+                description: WorkloadStatus contains the current status of each KeptnWorkload
+                  that is part of the KeptnAppVersion.
+                items:
+                  properties:
+                    status:
+                      default: Pending
+                      description: Status indicates the current status of the KeptnWorkload.
+                      type: string
+                    workload:
+                      description: Workload refers to a KeptnWorkload that is part
+                        of the KeptnAppVersion.
+                      properties:
+                        name:
+                          description: Name is the name of the KeptnWorkload.
+                          type: string
+                        version:
+                          description: Version is the version of the KeptnWorkload.
+                          type: string
+                      required:
+                      - name
+                      - version
+                      type: object
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+  - additionalPrinterColumns:
+    - jsonPath: .spec.appName
+      name: AppName
+      type: string
+    - jsonPath: .spec.version
+      name: Version
+      type: string
+    - jsonPath: .status.currentPhase
+      name: Phase
+      type: string
+    - jsonPath: .status.preDeploymentStatus
+      name: PreDeploymentStatus
+      priority: 1
+      type: string
+    - jsonPath: .status.preDeploymentEvaluationStatus
+      name: PreDeploymentEvaluationStatus
+      priority: 1
+      type: string
+    - jsonPath: .status.workloadOverallStatus
+      name: WorkloadOverallStatus
+      priority: 1
+      type: string
+    - jsonPath: .status.postDeploymentStatus
+      name: PostDeploymentStatus
+      priority: 1
+      type: string
+    - jsonPath: .status.postDeploymentEvaluationStatus
+      name: PostDeploymentEvaluationStatus
+      priority: 1
+      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -399,6 +791,8 @@ spec:
                     MapCarrier is a TextMapCarrier that uses a map held in memory as a storage
                     medium for propagated key-value pairs.
                   type: object
+                description: PhaseTraceID is a map storing TraceIDs of OpenTelemetry
+                  spans in lifecycle phases
                 type: object
               postDeploymentEvaluationStatus:
                 default: Pending
@@ -1264,6 +1658,6 @@ spec:
             type: object
         type: object
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}

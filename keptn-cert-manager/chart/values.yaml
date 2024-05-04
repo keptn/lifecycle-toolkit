@@ -5,7 +5,7 @@
 ##
 global:
   ## @param global.imageRegistry Global container image registry
-  imageRegistry: ""
+  imageRegistry: "ghcr.io"
   ## @param     global.imagePullPolicy select global image pull policy
   imagePullPolicy: ""
   ## @param global.imagePullSecrets Global Docker registry secret names as an array
@@ -20,6 +20,9 @@ global:
   commonAnnotations: {}
   ## @param global.caInjectionAnnotations CA injection annotations for cert-manager.io configuration
   caInjectionAnnotations: { }
+  openShift:
+    ## @param global.openShift.enabled Enable this value to install on Openshift
+    enabled: false
 
 
 # yamllint disable rule:line-length
@@ -65,11 +68,11 @@ env:
   labelSelectorValue: "true"
 image:
 ## @param     image.registry specify the container registry for the certificate-operator image
-  registry: ghcr.io
+  registry: ""
 ## @param     image.repository specify repo for manager image
   repository: keptn/certificate-operator
 ## @param     image.tag select tag for manager container
-  tag: v2.1.0 # x-release-please-version
+  tag: v2.2.0 # x-release-please-version
 ## @param   image.imagePullPolicy specify pull policy for the manager image. This overrides global values
   imagePullPolicy: ""
 ## @extra     livenessProbe custom RBAC proxy liveness probe

@@ -33,9 +33,7 @@ manifests/
 # macOS
 .DS_Store
 
-# Examples
 /examples/observability/assets/backups/
-
 /dashboards/grafana/output/
 
 ## Kubebuilder

@@ -31,6 +31,7 @@ annadreal
 apicommon
 apierr
 apierrors
+apilifecycle
 apiservice
 APIURL
 apk
@@ -77,6 +78,7 @@ certificatehandler
 certmanager
 certwebhook
 chainsaw
+changefreq
 Chans
 Checkmarx
 clientgoscheme
@@ -89,7 +91,6 @@ cncf
 codecov
 codeql
 codespace
-commonannotation
 COMMONENVVAR
 configmap
 configmapref
@@ -184,8 +185,8 @@ fieldpath
 fieldref
 finalizer
 flyout
+fluxcd
 fontawesome
-Frontmatter
 ftp
 fullname
 functionref
@@ -206,6 +207,8 @@ ghtoken
 ginkgotypes
 giscus
 Gitlab
+gitops
+gitrepository
 gke
 glasskube
 gms
@@ -222,6 +225,7 @@ goodanalysis
 goodmetric
 goodtaskdefinition
 google
+gotk
 govulncheck
 Grabner
 grafana
@@ -231,6 +235,7 @@ GSo
 gstatic
 gtm
 GVK
+GVKR
 healthz
 hellopy
 helloworldtask
@@ -377,6 +382,7 @@ kwds
 kwi
 kwv
 kyverno
+lastmod
 lastword
 Lato
 LFC
@@ -387,6 +393,7 @@ linenums
 linkedin
 linkedtrace
 livenessprobe
+loadtests
 LOCALBIN
 logf
 logr
@@ -419,6 +426,7 @@ multigroup
 mutatingwebhookconfigurations
 mwc
 mwh
+myblog
 mycert
 mydata
 myhost
@@ -509,6 +517,7 @@ printcolumn
 privs
 proj
 promapi
+prome
 promhttp
 providerref
 providerresult
@@ -545,7 +554,9 @@ runsendevent
 runtimes
 runtimespec
 Sambhav
+sampleuser
 sbom
+scaledobject
 schedulinggates
 sclient
 screenshot
@@ -571,6 +582,7 @@ sigstore
 simpleapp
 simplenode
 simplenodeservice
+sitemap
 sli
 slisslos
 slo
@@ -619,6 +631,7 @@ testcommon
 testmetrics
 testreg
 tgz
+thanos
 thisthatdc
 thschue
 timeblock
@@ -649,6 +662,7 @@ undeploy
 unmarshal
 unmarshalling
 usr
+urlset
 utilruntime
 Utkarsh
 validatingwebhookconfigurations
@@ -663,11 +677,9 @@ visualise
 visualised
 vkeptnmetric
 vkeptntaskdefinition
-vmyversion
 vnd
 vwc
 vwh
-webbrowser
 webhookcainjection
 webhookmanager
 webhooknamespaces

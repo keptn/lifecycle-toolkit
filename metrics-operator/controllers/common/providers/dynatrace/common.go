@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"strings"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -20,7 +20,7 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		{
 			name: "defined, no task spec",
 			builder: ContainerBuilder{
-				containerSpec: v1beta1.ContainerSpec{
+				containerSpec: apilifecycle.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 					},
@@ -39,13 +39,13 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		{
 			name: "defined, adding context",
 			builder: ContainerBuilder{
-				containerSpec: v1beta1.ContainerSpec{
+				containerSpec: apilifecycle.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 					},
 				},
-				taskSpec: v1beta1.KeptnTaskSpec{
-					Context: v1beta1.TaskContext{
+				taskSpec: apilifecycle.KeptnTaskSpec{
+					Context: apilifecycle.TaskContext{
 						WorkloadName: "my-workload",
 					},
 				},
@@ -63,7 +63,7 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		{
 			name: "defined, replacing context",
 			builder: ContainerBuilder{
-				containerSpec: v1beta1.ContainerSpec{
+				containerSpec: apilifecycle.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 						Env: []v1.EnvVar{
@@ -74,8 +74,8 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 						},
 					},
 				},
-				taskSpec: v1beta1.KeptnTaskSpec{
-					Context: v1beta1.TaskContext{
+				taskSpec: apilifecycle.KeptnTaskSpec{
+					Context: apilifecycle.TaskContext{
 						WorkloadName: "my-workload",
 					},
 				},
@@ -93,7 +93,7 @@ func TestContainerBuilder_CreateContainerWithVolumes(t *testing.T) {
 		{
 			name: "nil",
 			builder: ContainerBuilder{
-				containerSpec: v1beta1.ContainerSpec{
+				containerSpec: apilifecycle.ContainerSpec{
 					Container: nil,
 				},
 			},
@@ -123,7 +123,7 @@ func TestContainerBuilder_CreateVolume(t *testing.T) {
 		{
 			name: "defined without volume",
 			builder: ContainerBuilder{
-				containerSpec: v1beta1.ContainerSpec{
+				containerSpec: apilifecycle.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 					},
@@ -134,7 +134,7 @@ func TestContainerBuilder_CreateVolume(t *testing.T) {
 		{
 			name: "defined with volume",
 			builder: ContainerBuilder{
-				containerSpec: v1beta1.ContainerSpec{
+				containerSpec: apilifecycle.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 						VolumeMounts: []v1.VolumeMount{
@@ -159,7 +159,7 @@ func TestContainerBuilder_CreateVolume(t *testing.T) {
 		{
 			name: "defined with volume and limits",
 			builder: ContainerBuilder{
-				containerSpec: v1beta1.ContainerSpec{
+				containerSpec: apilifecycle.ContainerSpec{
 					Container: &v1.Container{
 						Image: "image",
 						Resources: v1.ResourceRequirements{
@@ -198,12 +198,12 @@ func TestContainerBuilder_CreateVolume(t *testing.T) {
 func Test_GenerateVolumes(t *testing.T) {
 	tests := []struct {
 		name string
-		spec *v1beta1.ContainerSpec
+		spec *apilifecycle.ContainerSpec
 		want *v1.Volume
 	}{
 		{
 			name: "defined",
-			spec: &v1beta1.ContainerSpec{
+			spec: &apilifecycle.ContainerSpec{
 				Container: &v1.Container{
 					Image: "image",
 					VolumeMounts: []v1.VolumeMount{
@@ -226,7 +226,7 @@ func Test_GenerateVolumes(t *testing.T) {
 		},
 		{
 			name: "empty",
-			spec: &v1beta1.ContainerSpec{},
+			spec: &apilifecycle.ContainerSpec{},
 			want: nil,
 		},
 	}
@@ -243,12 +243,12 @@ func Test_GenerateVolumes(t *testing.T) {
 func Test_GetVolumeSource(t *testing.T) {
 	tests := []struct {
 		name string
-		spec *v1beta1.ContainerSpec
+		spec *apilifecycle.ContainerSpec
 		want *v1.EmptyDirVolumeSource
 	}{
 		{
 			name: "not set limits",
-			spec: &v1beta1.ContainerSpec{
+			spec: &apilifecycle.ContainerSpec{
 				Container: &v1.Container{
 					Image: "image",
 					Resources: v1.ResourceRequirements{
@@ -263,7 +263,7 @@ func Test_GetVolumeSource(t *testing.T) {
 		},
 		{
 			name: "set limits",
-			spec: &v1beta1.ContainerSpec{
+			spec: &apilifecycle.ContainerSpec{
 				Container: &v1.Container{
 					Image: "image",
 					Resources: v1.ResourceRequirements{

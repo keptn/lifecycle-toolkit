@@ -32,7 +32,6 @@ type AnalysisValueTemplateSpec struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:printcolumn:name="Provider",type=string,JSONPath=`.spec.provider.name`
-//+kubebuilder:storageversion
 
 // AnalysisValueTemplate is the Schema for the analysisvaluetemplates API
 type AnalysisValueTemplate struct {

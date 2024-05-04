@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Evaluations
+# Evaluations in Keptn
 
 A `KeptnEvaluation` does a simple evaluation of the metrics data you capture,
 to answer a question such as "Do I have more than four CPUs available?"
@@ -113,7 +113,7 @@ Note the following:
   has no effect on whether other evaluations are completed.
 - The results of each evaluation
   are written to a
-  [KeptnEvaluation](../reference/api-reference/lifecycle/v1beta1/index.md#keptnevaluation)
+  [KeptnEvaluation](../reference/api-reference/lifecycle/v1/index.md#keptnevaluation)
   resource.
 
 ## Annotate the workload resource for workload level evaluations

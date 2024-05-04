@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -55,7 +55,7 @@ func (r *SchedulingGatesReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 		Namespace:     pod.GetNamespace(),
 	}
 
-	attachedWorkloadVersions := &klcv1beta1.KeptnWorkloadVersionList{}
+	attachedWorkloadVersions := &apilifecycle.KeptnWorkloadVersionList{}
 
 	if err := r.List(ctx, attachedWorkloadVersions, listOps); err != nil {
 		r.Log.Error(err, "Could not list WorkloadVersions related to pod", "pod", pod.GetName(), "namespace", pod.GetNamespace())

@@ -156,10 +156,6 @@ _Appears in:_
 | `configMap` _string_ |  || ✓ |  |
 
 
-
-
-
-
 #### HttpReference
 
 
@@ -497,10 +493,6 @@ _Appears in:_
 | `overallStatus` _string_ |  |Pending| x |  |
 | `startTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |  |
 | `endTime` _[Time](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#time-v1-meta)_ |  || ✓ |  |
-
-
-
-
 
 
 #### KeptnState
@@ -929,8 +921,6 @@ _Appears in:_
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
 | `secret` _string_ |  || ✓ |  |
-
-
 
 
 #### TaskContext

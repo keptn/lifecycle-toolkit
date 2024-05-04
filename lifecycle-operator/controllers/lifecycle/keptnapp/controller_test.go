@@ -7,8 +7,8 @@ import (
 	"reflect"
 	"testing"
 
-	lfcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/magiconair/properties/assert"
@@ -27,27 +27,27 @@ import (
 // Example Unit test on help function
 func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 
-	app := &lfcv1beta1.KeptnApp{
+	app := &apilifecycle.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       "my-app",
 			Namespace:  "default",
 			Generation: 1,
 		},
-		Spec: lfcv1beta1.KeptnAppSpec{
+		Spec: apilifecycle.KeptnAppSpec{
 			Version: "1.0.0",
 		},
-		Status: lfcv1beta1.KeptnAppStatus{},
+		Status: apilifecycle.KeptnAppStatus{},
 	}
-	appContext := &lfcv1beta1.KeptnAppContext{
+	appContext := &apilifecycle.KeptnAppContext{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       "my-app-context",
 			Namespace:  "default",
 			Generation: 1,
 		},
-		Spec: lfcv1beta1.KeptnAppContextSpec{
-			DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
+		Spec: apilifecycle.KeptnAppContextSpec{
+			DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
 				PreDeploymentTasks: []string{
 					"some-pre-deployment-task1",
 				},
@@ -68,7 +68,7 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 				"spanlink1",
 			},
 		},
-		Status: lfcv1beta1.KeptnAppContextStatus{},
+		Status: apilifecycle.KeptnAppContextStatus{},
 	}
 	r, _ := setupReconciler()
 
@@ -79,7 +79,7 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 	t.Log("Verifying created app")
 	require.Equal(t, appVersion.Namespace, app.Namespace)
 	require.Equal(t, appVersion.Name, fmt.Sprintf("%s-%s-%s", app.Name, app.Spec.Version, apicommon.Hash(app.Generation)))
-	require.Equal(t, lfcv1beta1.KeptnAppVersionSpec{
+	require.Equal(t, apilifecycle.KeptnAppVersionSpec{
 		KeptnAppContextSpec: appContext.Spec,
 		KeptnAppSpec:        app.Spec,
 		AppName:             app.Name,
@@ -95,27 +95,27 @@ func TestKeptnAppReconciler_createAppVersionSuccess(t *testing.T) {
 
 func TestKeptnAppReconciler_createAppVersionError(t *testing.T) {
 
-	app := &lfcv1beta1.KeptnApp{
+	app := &apilifecycle.KeptnApp{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       "my-app",
 			Namespace:  "default",
 			Generation: 1,
 		},
-		Spec: lfcv1beta1.KeptnAppSpec{
+		Spec: apilifecycle.KeptnAppSpec{
 			Version: "1.0.0",
 		},
-		Status: lfcv1beta1.KeptnAppStatus{},
+		Status: apilifecycle.KeptnAppStatus{},
 	}
-	appContext := &lfcv1beta1.KeptnAppContext{
+	appContext := &apilifecycle.KeptnAppContext{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       "my-app-context",
 			Namespace:  "default",
 			Generation: 1,
 		},
-		Spec: lfcv1beta1.KeptnAppContextSpec{
-			DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
+		Spec: apilifecycle.KeptnAppContextSpec{
+			DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
 				PreDeploymentTasks: []string{
 					"some-pre-deployment-task1",
 				},
@@ -136,7 +136,7 @@ func TestKeptnAppReconciler_createAppVersionError(t *testing.T) {
 				"spanlink1",
 			},
 		},
-		Status: lfcv1beta1.KeptnAppContextStatus{},
+		Status: apilifecycle.KeptnAppContextStatus{},
 	}
 	r, _ := setupReconciler(app, appContext)
 
@@ -163,23 +163,23 @@ func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {
 	//nolint:gci
 	trimmedName := `loremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypesettingindustryloremipsumissimplydummytextoftheprintingandtypeset-version-5feceb66`
 
-	app := &lfcv1beta1.KeptnApp{
+	app := &apilifecycle.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: longName,
 		},
-		Spec: lfcv1beta1.KeptnAppSpec{
+		Spec: apilifecycle.KeptnAppSpec{
 			Version: "version",
 		},
 	}
-	appContext := &lfcv1beta1.KeptnAppContext{
+	appContext := &apilifecycle.KeptnAppContext{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:       "my-app-context",
 			Namespace:  "default",
 			Generation: 1,
 		},
-		Spec: lfcv1beta1.KeptnAppContextSpec{
-			DeploymentTaskSpec: lfcv1beta1.DeploymentTaskSpec{
+		Spec: apilifecycle.KeptnAppContextSpec{
+			DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
 				PreDeploymentTasks: []string{
 					"some-pre-deployment-task1",
 				},
@@ -194,7 +194,7 @@ func TestKeptnAppReconciler_createAppVersionWithLongName(t *testing.T) {
 				},
 			},
 		},
-		Status: lfcv1beta1.KeptnAppContextStatus{},
+		Status: apilifecycle.KeptnAppContextStatus{},
 	}
 	r, _ := setupReconciler()
 
@@ -250,7 +250,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 
 	app := testcommon.GetApp("myapp")
 	appfin := testcommon.GetApp("myfinishedapp")
-	appver := testcommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0-6b86b273", nil, lfcv1beta1.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
+	appver := testcommon.ReturnAppVersion("default", "myfinishedapp", "1.0.0-6b86b273", nil, apilifecycle.KeptnAppVersionStatus{Status: apicommon.StateSucceeded})
 	r, _ := setupReconciler(app, appfin, appver)
 
 	for _, tt := range tests {
@@ -262,7 +262,7 @@ func TestKeptnAppReconciler_reconcile(t *testing.T) {
 				return
 			}
 			if tt.appVersionName != "" {
-				keptnappversion := &lfcv1beta1.KeptnAppVersion{}
+				keptnappversion := &apilifecycle.KeptnAppVersion{}
 				err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: "myapp-1.0.0-6b86b273"}, keptnappversion)
 				require.Nil(t, err)
 			}
@@ -276,7 +276,7 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 	app := testcommon.GetApp("myapp")
 	app.Spec.Revision = uint(2)
 	app.Generation = int64(2)
-	appVersion := &lfcv1beta1.KeptnAppVersion{
+	appVersion := &apilifecycle.KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "myapp-1.0.0-6b86b273",
 			Namespace: "default",
@@ -293,7 +293,7 @@ func TestKeptnAppReconciler_deprecateAppVersions(t *testing.T) {
 
 	require.Nil(t, err)
 
-	keptnappversion := &lfcv1beta1.KeptnAppVersion{}
+	keptnappversion := &apilifecycle.KeptnAppVersion{}
 	err = r.Client.Get(context.TODO(), types.NamespacedName{Namespace: "default", Name: "myapp-1.0.0-d4735e3a"}, keptnappversion)
 	require.Nil(t, err)
 
@@ -307,7 +307,7 @@ func TestKeptnAppReconciler_deprecateAppVersionsError(t *testing.T) {
 	app := testcommon.GetApp("myapp")
 	app.Spec.Revision = uint(2)
 	app.Generation = int64(2)
-	appVersion := &lfcv1beta1.KeptnAppVersion{
+	appVersion := &apilifecycle.KeptnAppVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "myapp-1.0.0-6b86b273",
 			Namespace: "default",

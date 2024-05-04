@@ -4,17 +4,21 @@ comments: true
 
 # Analysis
 
-An `Analysis` resource customizes the templates
-that are defined in an
+An `Analysis` is a snapshot of your current application status.
+Based on your defined SLIs, it can validate that your SLOs are satisfied,
+using the data coming from your defined set of `KeptnMetricsProvider` resources.
+
+The `Analysis` resource is an instance of an
 [AnalysisDefinition](analysisdefinition.md) resource
-by identifying the time for which the analysis should be done
+which defines specific data like
+the time for which the analysis should be done
 and the appropriate values to use for variables
 that are used in the `AnalysisDefinition` query.
 
 ## Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: Analysis
 metadata:
   name: <name-of-analysis>
@@ -296,7 +300,7 @@ guide page.
 
 ## Files
 
-API reference: [Analysis](../api-reference/metrics/v1beta1/index.md#analysis)
+API reference: [Analysis](../api-reference/metrics/v1/index.md#analysis)
 
 ## Differences between versions
 

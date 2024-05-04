@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppContext
 metadata:
   name: podtato-head
@@ -313,42 +313,42 @@ spec:
       targetPort: 9000
   type: ClusterIP
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: post-deployment-hello
 spec:
   ttlSecondsAfterFinished: 1000
-  function:
+  deno:
     inline:
       code: |
         console.log("Post-Deployment Task has been executed");
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
 spec:
   ttlSecondsAfterFinished: 1000
-  function:
+  deno:
     inline:
       code: |
         console.log("Pre-Deployment Task has been executed");
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: check-entry-service
 spec:
   ttlSecondsAfterFinished: 1000
-  function:
+  deno:
     httpRef:
       url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/runtimes/deno-runtime/samples/ts/http.ts
     parameters:
       map:
         url: http://podtato-head-entry:9000
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnEvaluationDefinition
 metadata:
   name: available-cpus
@@ -358,7 +358,7 @@ spec:
       keptnMetricRef:
         name: available-cpus
 ---
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetric
 metadata:
   name: available-cpus
@@ -369,7 +369,7 @@ spec:
   query: >-
     sum(kube_node_status_capacity{resource='cpu'})
 ---
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: KeptnMetricsProvider
 metadata:
   name: prometheus

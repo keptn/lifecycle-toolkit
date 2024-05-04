@@ -26,8 +26,8 @@ import (
 
 	"github.com/benbjohnson/clock"
 	"github.com/go-logr/logr"
-	lifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -74,7 +74,7 @@ func NewReconciler(client client.Client, scheme *runtime.Scheme, log logr.Logger
 //
 //nolint:gocyclo
 func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	creationRequest := &lifecycle.KeptnAppCreationRequest{}
+	creationRequest := &apilifecycle.KeptnAppCreationRequest{}
 
 	if err := r.Get(ctx, req.NamespacedName, creationRequest); err != nil {
 		if errors.IsNotFound(err) {
@@ -86,7 +86,7 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 	// check if we already have an app that has not been created by this controller
 
 	appFound := false
-	keptnApp := &lifecycle.KeptnApp{}
+	keptnApp := &apilifecycle.KeptnApp{}
 	name := req.NamespacedName
 	name.Name = creationRequest.Spec.AppName
 	if err := r.Get(ctx, name, keptnApp); err != nil {
@@ -135,8 +135,8 @@ func (r *KeptnAppCreationRequestReconciler) Reconcile(ctx context.Context, req c
 	return ctrl.Result{}, nil
 }
 
-func (r *KeptnAppCreationRequestReconciler) getWorkloads(ctx context.Context, creationRequest *lifecycle.KeptnAppCreationRequest) ([]lifecycle.KeptnWorkload, error) {
-	workloads := &lifecycle.KeptnWorkloadList{}
+func (r *KeptnAppCreationRequestReconciler) getWorkloads(ctx context.Context, creationRequest *apilifecycle.KeptnAppCreationRequest) ([]apilifecycle.KeptnWorkload, error) {
+	workloads := &apilifecycle.KeptnWorkloadList{}
 	if err := r.Client.List(ctx, workloads, client.InNamespace(creationRequest.Namespace), client.MatchingFields{
 		"spec.app": creationRequest.Spec.AppName,
 	}); err != nil {
@@ -148,7 +148,7 @@ func (r *KeptnAppCreationRequestReconciler) getWorkloads(ctx context.Context, cr
 	return workloads.Items, nil
 }
 
-func (r *KeptnAppCreationRequestReconciler) getCreationRequestExpirationDuration(cr *lifecycle.KeptnAppCreationRequest) time.Duration {
+func (r *KeptnAppCreationRequestReconciler) getCreationRequestExpirationDuration(cr *apilifecycle.KeptnAppCreationRequest) time.Duration {
 	creationRequestTimeout := r.config.GetCreationRequestTimeout()
 	deadline := cr.CreationTimestamp.Add(creationRequestTimeout)
 
@@ -161,7 +161,7 @@ func (r *KeptnAppCreationRequestReconciler) getCreationRequestExpirationDuration
 	return 0
 }
 
-func (r *KeptnAppCreationRequestReconciler) shouldCreateApp(creationRequest *lifecycle.KeptnAppCreationRequest) bool {
+func (r *KeptnAppCreationRequestReconciler) shouldCreateApp(creationRequest *apilifecycle.KeptnAppCreationRequest) bool {
 	discoveryDeadline := r.config.GetCreationRequestTimeout()
 	return creationRequest.IsSingleService() || r.clock.Now().After(creationRequest.CreationTimestamp.Add(discoveryDeadline))
 }
@@ -169,11 +169,11 @@ func (r *KeptnAppCreationRequestReconciler) shouldCreateApp(creationRequest *lif
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnAppCreationRequestReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&lifecycle.KeptnAppCreationRequest{}).
+		For(&apilifecycle.KeptnAppCreationRequest{}).
 		Complete(r)
 }
 
-func (r *KeptnAppCreationRequestReconciler) updateKeptnApp(ctx context.Context, keptnApp *lifecycle.KeptnApp, workloads []lifecycle.KeptnWorkload) error {
+func (r *KeptnAppCreationRequestReconciler) updateKeptnApp(ctx context.Context, keptnApp *apilifecycle.KeptnApp, workloads []apilifecycle.KeptnWorkload) error {
 
 	addOrUpdatedWorkload := r.addOrUpdateWorkloads(workloads, keptnApp)
 	removedWorkload := r.cleanupWorkloads(workloads, keptnApp)
@@ -187,7 +187,7 @@ func (r *KeptnAppCreationRequestReconciler) updateKeptnApp(ctx context.Context, 
 	return r.Update(ctx, keptnApp)
 }
 
-func (r *KeptnAppCreationRequestReconciler) addOrUpdateWorkloads(workloads []lifecycle.KeptnWorkload, keptnApp *lifecycle.KeptnApp) bool {
+func (r *KeptnAppCreationRequestReconciler) addOrUpdateWorkloads(workloads []apilifecycle.KeptnWorkload, keptnApp *apilifecycle.KeptnApp) bool {
 	updated := false
 	for _, workload := range workloads {
 		foundWorkload := false
@@ -206,7 +206,7 @@ func (r *KeptnAppCreationRequestReconciler) addOrUpdateWorkloads(workloads []lif
 		}
 
 		if !foundWorkload {
-			keptnApp.Spec.Workloads = append(keptnApp.Spec.Workloads, lifecycle.KeptnWorkloadRef{
+			keptnApp.Spec.Workloads = append(keptnApp.Spec.Workloads, apilifecycle.KeptnWorkloadRef{
 				Name:    workloadName,
 				Version: workload.Spec.Version,
 			})
@@ -216,9 +216,9 @@ func (r *KeptnAppCreationRequestReconciler) addOrUpdateWorkloads(workloads []lif
 	return updated
 }
 
-func (r *KeptnAppCreationRequestReconciler) cleanupWorkloads(workloads []lifecycle.KeptnWorkload, keptnApp *lifecycle.KeptnApp) bool {
+func (r *KeptnAppCreationRequestReconciler) cleanupWorkloads(workloads []apilifecycle.KeptnWorkload, keptnApp *apilifecycle.KeptnApp) bool {
 	updated := false
-	updatedWorkloads := []lifecycle.KeptnWorkloadRef{}
+	updatedWorkloads := []apilifecycle.KeptnWorkloadRef{}
 	for index, appWorkload := range keptnApp.Spec.Workloads {
 		foundWorkload := false
 		for _, workload := range workloads {
@@ -236,25 +236,25 @@ func (r *KeptnAppCreationRequestReconciler) cleanupWorkloads(workloads []lifecyc
 	return updated
 }
 
-func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, creationRequest *lifecycle.KeptnAppCreationRequest, workloads []lifecycle.KeptnWorkload) error {
-	keptnApp := &lifecycle.KeptnApp{
+func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, creationRequest *apilifecycle.KeptnAppCreationRequest, workloads []apilifecycle.KeptnWorkload) error {
+	keptnApp := &apilifecycle.KeptnApp{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      creationRequest.Spec.AppName,
 			Namespace: creationRequest.Namespace,
 			Labels: map[string]string{
-				common.K8sRecommendedManagedByAnnotations: managedByKeptn,
+				apicommon.K8sRecommendedManagedByAnnotations: managedByKeptn,
 			},
 			// pass through the annotations since those contain the trace context
 			Annotations: creationRequest.Annotations,
 		},
-		Spec: lifecycle.KeptnAppSpec{
+		Spec: apilifecycle.KeptnAppSpec{
 			Version:   computeVersionFromWorkloads(workloads),
-			Workloads: []lifecycle.KeptnWorkloadRef{},
+			Workloads: []apilifecycle.KeptnWorkloadRef{},
 		},
 	}
 
 	for _, workload := range workloads {
-		keptnApp.Spec.Workloads = append(keptnApp.Spec.Workloads, lifecycle.KeptnWorkloadRef{
+		keptnApp.Spec.Workloads = append(keptnApp.Spec.Workloads, apilifecycle.KeptnWorkloadRef{
 			Name:    strings.TrimPrefix(workload.Name, fmt.Sprintf("%s-", creationRequest.Spec.AppName)),
 			Version: workload.Spec.Version,
 		})
@@ -263,7 +263,7 @@ func (r *KeptnAppCreationRequestReconciler) createKeptnApp(ctx context.Context, 
 	return r.Create(ctx, keptnApp)
 }
 
-func computeVersionFromWorkloads(workloads []lifecycle.KeptnWorkload) string {
+func computeVersionFromWorkloads(workloads []apilifecycle.KeptnWorkload) string {
 	// for single workload applications, the workload version is the application version
 	if len(workloads) == 1 {
 		return workloads[0].Spec.Version
@@ -281,10 +281,10 @@ func computeVersionFromWorkloads(workloads []lifecycle.KeptnWorkload) string {
 	hash.Write([]byte(versionString))
 	hashValue := fmt.Sprintf("%x", hash.Sum(nil))
 
-	return common.TruncateString(hashValue, 10)
+	return apicommon.TruncateString(hashValue, 10)
 }
 
-func appIsManagedByKeptn(keptnApp *lifecycle.KeptnApp) bool {
-	annotation := common.K8sRecommendedManagedByAnnotations
+func appIsManagedByKeptn(keptnApp *apilifecycle.KeptnApp) bool {
+	annotation := apicommon.K8sRecommendedManagedByAnnotations
 	return keptnApp.Labels[annotation] == managedByKeptn
 }

@@ -3,35 +3,35 @@ package keptnevaluation
 import (
 	"testing"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 	"github.com/stretchr/testify/require"
 )
 
 func TestCheckValue(t *testing.T) {
 	tests := []struct {
 		name   string
-		obj    klcv1beta1.Objective
-		item   *klcv1beta1.EvaluationStatusItem
+		obj    apilifecycle.Objective
+		item   *apilifecycle.EvaluationStatusItem
 		result bool
 		err    bool
 	}{
 		{
 			name:   "empty values",
-			obj:    klcv1beta1.Objective{},
-			item:   &klcv1beta1.EvaluationStatusItem{},
+			obj:    apilifecycle.Objective{},
+			item:   &apilifecycle.EvaluationStatusItem{},
 			result: false,
 			err:    true,
 		},
 		{
 			name: "garbage values",
-			obj: klcv1beta1.Objective{
-				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+			obj: apilifecycle.Objective{
+				KeptnMetricRef: apilifecycle.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
 				EvaluationTarget: "testytest",
 			},
-			item: &klcv1beta1.EvaluationStatusItem{
+			item: &apilifecycle.EvaluationStatusItem{
 				Value:   "testytest",
 				Status:  "testytest",
 				Message: "testytest",
@@ -41,14 +41,14 @@ func TestCheckValue(t *testing.T) {
 		},
 		{
 			name: "Item nan",
-			obj: klcv1beta1.Objective{
-				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+			obj: apilifecycle.Objective{
+				KeptnMetricRef: apilifecycle.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
 				EvaluationTarget: "10",
 			},
-			item: &klcv1beta1.EvaluationStatusItem{
+			item: &apilifecycle.EvaluationStatusItem{
 				Value:   "nan",
 				Status:  "all good",
 				Message: "all good",
@@ -58,14 +58,14 @@ func TestCheckValue(t *testing.T) {
 		},
 		{
 			name: "garbage comparison",
-			obj: klcv1beta1.Objective{
-				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+			obj: apilifecycle.Objective{
+				KeptnMetricRef: apilifecycle.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
 				EvaluationTarget: "testytest",
 			},
-			item: &klcv1beta1.EvaluationStatusItem{
+			item: &apilifecycle.EvaluationStatusItem{
 				Value:   "10",
 				Status:  "all good",
 				Message: "all good",
@@ -75,14 +75,14 @@ func TestCheckValue(t *testing.T) {
 		},
 		{
 			name: "objective nan",
-			obj: klcv1beta1.Objective{
-				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+			obj: apilifecycle.Objective{
+				KeptnMetricRef: apilifecycle.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
 				EvaluationTarget: "nan",
 			},
-			item: &klcv1beta1.EvaluationStatusItem{
+			item: &apilifecycle.EvaluationStatusItem{
 				Value:   "10",
 				Status:  "all good",
 				Message: "all good",
@@ -92,14 +92,14 @@ func TestCheckValue(t *testing.T) {
 		},
 		{
 			name: "10>10",
-			obj: klcv1beta1.Objective{
-				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+			obj: apilifecycle.Objective{
+				KeptnMetricRef: apilifecycle.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
 				EvaluationTarget: ">10",
 			},
-			item: &klcv1beta1.EvaluationStatusItem{
+			item: &apilifecycle.EvaluationStatusItem{
 				Value:   "10",
 				Status:  "all good",
 				Message: "all good",
@@ -109,14 +109,14 @@ func TestCheckValue(t *testing.T) {
 		},
 		{
 			name: "9>10",
-			obj: klcv1beta1.Objective{
-				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+			obj: apilifecycle.Objective{
+				KeptnMetricRef: apilifecycle.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
 				EvaluationTarget: ">10",
 			},
-			item: &klcv1beta1.EvaluationStatusItem{
+			item: &apilifecycle.EvaluationStatusItem{
 				Value:   "9",
 				Status:  "all good",
 				Message: "all good",
@@ -126,14 +126,14 @@ func TestCheckValue(t *testing.T) {
 		},
 		{
 			name: "11>10",
-			obj: klcv1beta1.Objective{
-				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+			obj: apilifecycle.Objective{
+				KeptnMetricRef: apilifecycle.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
 				EvaluationTarget: ">10",
 			},
-			item: &klcv1beta1.EvaluationStatusItem{
+			item: &apilifecycle.EvaluationStatusItem{
 				Value:   "11",
 				Status:  "all good",
 				Message: "all good",
@@ -143,14 +143,14 @@ func TestCheckValue(t *testing.T) {
 		},
 		{
 			name: "10<10",
-			obj: klcv1beta1.Objective{
-				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+			obj: apilifecycle.Objective{
+				KeptnMetricRef: apilifecycle.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
 				EvaluationTarget: "<10",
 			},
-			item: &klcv1beta1.EvaluationStatusItem{
+			item: &apilifecycle.EvaluationStatusItem{
 				Value:   "10",
 				Status:  "all good",
 				Message: "all good",
@@ -160,14 +160,14 @@ func TestCheckValue(t *testing.T) {
 		},
 		{
 			name: "9<10",
-			obj: klcv1beta1.Objective{
-				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+			obj: apilifecycle.Objective{
+				KeptnMetricRef: apilifecycle.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
 				EvaluationTarget: "<10",
 			},
-			item: &klcv1beta1.EvaluationStatusItem{
+			item: &apilifecycle.EvaluationStatusItem{
 				Value:   "9",
 				Status:  "all good",
 				Message: "all good",
@@ -177,14 +177,14 @@ func TestCheckValue(t *testing.T) {
 		},
 		{
 			name: "11<10",
-			obj: klcv1beta1.Objective{
-				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+			obj: apilifecycle.Objective{
+				KeptnMetricRef: apilifecycle.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
 				EvaluationTarget: "<10",
 			},
-			item: &klcv1beta1.EvaluationStatusItem{
+			item: &apilifecycle.EvaluationStatusItem{
 				Value:   "11",
 				Status:  "all good",
 				Message: "all good",
@@ -194,14 +194,14 @@ func TestCheckValue(t *testing.T) {
 		},
 		{
 			name: "invalid op",
-			obj: klcv1beta1.Objective{
-				KeptnMetricRef: klcv1beta1.KeptnMetricReference{
+			obj: apilifecycle.Objective{
+				KeptnMetricRef: apilifecycle.KeptnMetricReference{
 					Name:      "testytest",
 					Namespace: "default",
 				},
 				EvaluationTarget: "-10",
 			},
-			item: &klcv1beta1.EvaluationStatusItem{
+			item: &apilifecycle.EvaluationStatusItem{
 				Value:   "11",
 				Status:  "all good",
 				Message: "all good",

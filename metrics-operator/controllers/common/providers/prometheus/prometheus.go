@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	promapi "github.com/prometheus/client_golang/api"
 	prometheus "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
@@ -17,6 +17,8 @@ import (
 var errCouldNotCast = fmt.Errorf("could not cast result")
 var errNoValues = fmt.Errorf("no values in query result")
 var errTooManyValues = fmt.Errorf("too many values in query result")
+
+const warningLogString = "%s API returned warnings: %s"
 
 type KeptnPrometheusProvider struct {
 	Log       logr.Logger
@@ -61,7 +63,7 @@ func (r *KeptnPrometheusProvider) FetchAnalysisValue(ctx context.Context, query 
 		return "", err
 	}
 	if len(warnings) != 0 {
-		r.Log.Info("Prometheus API returned warnings: " + warnings[0])
+		r.Log.Info(fmt.Sprintf(warningLogString, provider.GetType(), warnings[0]))
 	}
 	res, _, err := getResultForMatrix(result)
 	return res, err
@@ -84,7 +86,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 			return "", nil, err
 		}
 		if len(warnings) != 0 {
-			r.Log.Info("Prometheus API returned warnings: " + warnings[0])
+			r.Log.Info(fmt.Sprintf(warningLogString, provider.GetType(), warnings[0]))
 		}
 		return getResultForMatrix(result)
 	} else {
@@ -93,7 +95,7 @@ func (r *KeptnPrometheusProvider) EvaluateQuery(ctx context.Context, metric metr
 			return "", nil, err
 		}
 		if len(warnings) != 0 {
-			r.Log.Info("Prometheus API returned warnings: " + warnings[0])
+			r.Log.Info(fmt.Sprintf(warningLogString, provider.GetType(), warnings[0]))
 		}
 		return getResultForVector(result)
 	}
@@ -114,7 +116,7 @@ func (r *KeptnPrometheusProvider) EvaluateQueryForStep(ctx context.Context, metr
 		return nil, nil, err
 	}
 	if len(warnings) != 0 {
-		r.Log.Info("Prometheus API returned warnings: " + warnings[0])
+		r.Log.Info(fmt.Sprintf(warningLogString, provider.GetType(), warnings[0]))
 	}
 	return getResultForStepMatrix(result)
 }

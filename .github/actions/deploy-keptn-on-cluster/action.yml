@@ -18,14 +18,14 @@ inputs:
     required: false
     description: "Name of the kind cluster"
     default: "test-cluster"
-  scheduling-gates:
+  values-file:
     required: false
-    description: "Use scheduling gates instead of scheduler"
-    default: "gates_off"
-  allowed-namespaces:
+    description: "Values file used for Keptn installation configuration"
+    default: "values.yaml"
+  cert-manager-io-enabled:
     required: false
-    description: "Decides whether to allow only certain namespaces"
-    default: "allowed_ns_off"
+    description: "Decides whether to use cert-manager.io"
+    default: "cert_manager_io_off"
 runs:
   using: "composite"
   steps:
@@ -38,12 +38,12 @@ runs:
         check-latest: true
 
     - name: Download artifacts
-      uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4
+      uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4
       with:
         path: ~/download/artifacts
 
     - name: "Create single kind Cluster"
-      uses: helm/kind-action@99576bfa6ddf9a8e612d83b513da5a75875caced # v1.9.0
+      uses: helm/kind-action@0025e74a8c7512023d06dc019c617aa3cf561fde # v1.10.0
       with:
         cluster_name: ${{ inputs.cluster-name }}
         version: ${{ inputs.kind-version }}
@@ -60,7 +60,21 @@ runs:
           kind load image-archive $image/$image -n ${{ inputs.cluster-name }}
         done
 
-    - name: Install lifecycle-toolkit with helm
+    - name: Install cert-manager.io
+      if: inputs.cert-manager-io-enabled == 'cert_manager_io_on'
+      env:
+        # renovate: datasource=github-releases depName=cert-manager/cert-manager
+        CERT_MANAGER_IO_VERSION: "v1.14.4"
+      shell: bash
+      run: |
+        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$CERT_MANAGER_IO_VERSION/cert-manager.yaml
+        kubectl wait --for=condition=Available deployment/cert-manager-webhook -n cert-manager --timeout=120s
+        kubectl wait --for=condition=ready pod -l app=webhook -n cert-manager --timeout=60s
+
+        kubectl create ns keptn-system
+        kubectl apply -f .github/actions/deploy-keptn-on-cluster/values/certificate.yaml
+
+    - name: Install Keptn with helm
       env:
         RELEASE_REGISTRY: "localhost:5000/keptn"
       shell: bash
@@ -84,16 +98,8 @@ runs:
 
         cd .github/actions/deploy-keptn-on-cluster
 
-        if [ "${{ inputs.allowed-namespaces }}" == "allowed_ns_on" ]; then
-          echo "  allowedNamespaces: [allowed-ns-test]" >> values.yaml
-        fi
-
-        if [ "${{ inputs.scheduling-gates }}" == "gates_on" ]; then
-          echo "  schedulingGatesEnabled: true" >> values.yaml
-        fi
-
         export TAG=${{ inputs.runtime_tag }}
-        envsubst < values.yaml > tmp.yaml
+        envsubst < values/${{ inputs.values-file }} > tmp.yaml
 
         echo "installing with values.yaml file:"
         cat tmp.yaml

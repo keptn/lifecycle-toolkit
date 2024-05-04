@@ -38,7 +38,7 @@ jobs:
       BUILD_TIME: ${{ steps.get_datetime.outputs.BUILD_TIME }}
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
 
       - name: Extract branch name
         id: extract_branch
@@ -53,10 +53,9 @@ jobs:
           echo "BUILD_TIME=$BUILD_TIME" >> "$GITHUB_OUTPUT"
 
       - name: Run release please
-        uses: google-github-actions/release-please-action@db8f2c60ee802b3748b512940dde88eabd7b7e01 # v3
+        uses: google-github-actions/release-please-action@a37ac6e4f6449ce8b3f7607e4d97d0146028dc0b # v4
         id: release
         with:
-          command: manifest
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
           default-branch: main
           signoff: "keptn-bot <86361500+keptn-bot@users.noreply.github.com>"
@@ -149,13 +148,13 @@ jobs:
       GIT_SHA: ${{ needs.release-please.outputs.GIT_SHA }}
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
         with:
           submodules: recursive
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@2b51285047da1547ffb1b2203d8be4c0af6b1f20 # v3
+        uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v3
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20 # v3.1.0
@@ -165,7 +164,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Cosign
-        uses: sigstore/cosign-installer@e1523de7571e31dbe865fd2e80c5c7c23ae71eb4 # v3.4.0
+        uses: sigstore/cosign-installer@59acb6260d9c0ba8f4a2f9d9b48431a222b68e20 # v3.5.0
 
       - name: Clean up image tag
         id: clean-image-tag
@@ -183,7 +182,7 @@ jobs:
 
       - name: Build Docker Image
         id: docker_build_image
-        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.1
+        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64,linux/arm64
@@ -212,14 +211,14 @@ jobs:
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@9fece9e20048ca9590af301449208b2b8861333b # v0.15.9
+        uses: anchore/sbom-action@7ccf588e3cf3cc2611714c2eeae48550fbc17552 # v0.15.11
         with:
           image: ${{ env.IMAGE_NAME }}:${{ steps.clean-image-tag.outputs.IMAGE_TAG }}
           artifact-name: sbom-${{ matrix.config.name }}
           output-file: ./sbom-${{ matrix.config.name }}.spdx.json
 
       - name: Attach SBOM to release
-        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1
+        uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564 # v2.0.4
         with:
           tag_name: ${{ matrix.config.tagName }}
           files: ./sbom-${{ matrix.config.name }}.spdx.json
@@ -238,7 +237,7 @@ jobs:
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Upload verification log as artifact
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
         with:
           name: cosign-attest-verification-log
           path: ./cosign-attest-output.json

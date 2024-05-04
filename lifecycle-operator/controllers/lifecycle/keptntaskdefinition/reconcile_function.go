@@ -4,15 +4,15 @@ import (
 	"context"
 	"reflect"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
-func (r *KeptnTaskDefinitionReconciler) generateConfigMap(spec *klcv1beta1.RuntimeSpec, name string, namespace string) *corev1.ConfigMap {
+func (r *KeptnTaskDefinitionReconciler) generateConfigMap(spec *apilifecycle.RuntimeSpec, name string, namespace string) *corev1.ConfigMap {
 
 	functionCm := &corev1.ConfigMap{
 		ObjectMeta: metav1.ObjectMeta{
@@ -56,7 +56,7 @@ func (r *KeptnTaskDefinitionReconciler) getConfigMap(ctx context.Context, cmName
 	return cm, nil
 }
 
-func (r *KeptnTaskDefinitionReconciler) updateTaskDefinitionStatus(functionCm *corev1.ConfigMap, definition *klcv1beta1.KeptnTaskDefinition) {
+func (r *KeptnTaskDefinitionReconciler) updateTaskDefinitionStatus(functionCm *corev1.ConfigMap, definition *apilifecycle.KeptnTaskDefinition) {
 	// config map referenced but does not exist we can use the status to signify that
 	if functionCm != nil && definition.Status.Function.ConfigMap != functionCm.Name { // configmap referenced exists but old
 		definition.Status.Function.ConfigMap = functionCm.Name

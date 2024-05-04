@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-logr/logr"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/webhooks/pod_mutator/handlers"
 	corev1 "k8s.io/api/core/v1"

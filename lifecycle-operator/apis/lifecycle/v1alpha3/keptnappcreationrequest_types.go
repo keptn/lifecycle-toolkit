@@ -17,14 +17,8 @@ limitations under the License.
 package v1alpha3
 
 import (
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
-
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // KeptnAppCreationRequestSpec defines the desired state of KeptnAppCreationRequest
 type KeptnAppCreationRequestSpec struct {
@@ -61,18 +55,4 @@ type KeptnAppCreationRequestList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnAppCreationRequest{}, &KeptnAppCreationRequestList{})
-}
-
-func (kacr KeptnAppCreationRequest) IsSingleService() bool {
-	return kacr.Annotations[common.AppTypeAnnotation] == string(common.AppTypeSingleService)
-}
-
-func (kacr KeptnAppCreationRequest) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(kacr.GetSpanAttributes()...)
-}
-
-func (kacr KeptnAppCreationRequest) GetSpanAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(kacr.Name),
-	}
 }

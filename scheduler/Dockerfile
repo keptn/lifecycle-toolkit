@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM golang:1.21.8-alpine3.19 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.21.9-alpine3.19 AS builder
 
 ENV CGO_ENABLED=0
 

@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
@@ -14,7 +14,7 @@ import (
 )
 
 func TestSpanHandler_GetAndUnbindSpan_WorkloadVersion(t *testing.T) {
-	wi := &v1beta1.KeptnWorkloadVersion{}
+	wi := &apilifecycle.KeptnWorkloadVersion{}
 	wi.Spec.TraceId = make(map[string]string, 1)
 	wi.Spec.TraceId["test"] = "test"
 	wi.Spec.AppName = "test"
@@ -24,7 +24,7 @@ func TestSpanHandler_GetAndUnbindSpan_WorkloadVersion(t *testing.T) {
 }
 
 func TestSpanHandler_GetAndUnbindSpan_AppVersion(t *testing.T) {
-	av := &v1beta1.KeptnAppVersion{}
+	av := &apilifecycle.KeptnAppVersion{}
 	av.Spec.TraceId = make(map[string]string, 1)
 	av.Spec.TraceId["test"] = "test"
 	av.Spec.AppName = "test"
@@ -51,7 +51,7 @@ func doAssert(t *testing.T, obj client.Object) {
 }
 
 func TestSpanHandler_GetSpan(t *testing.T) {
-	wi := &v1beta1.KeptnWorkloadVersion{}
+	wi := &apilifecycle.KeptnWorkloadVersion{}
 	wi.Spec.TraceId = make(map[string]string, 1)
 	wi.Spec.TraceId["traceparent"] = "test-parent"
 	wi.Spec.AppName = "test"
@@ -74,7 +74,7 @@ func TestSpanHandler_GetSpan(t *testing.T) {
 	require.Equal(t, ctx, ctx2)
 	require.Equal(t, span, span2)
 
-	wi2 := &v1beta1.KeptnWorkloadVersion{}
+	wi2 := &apilifecycle.KeptnWorkloadVersion{}
 	wi2.Spec.TraceId = make(map[string]string, 1)
 	wi2.Spec.TraceId["traceparent"] = "test-parent2"
 	wi2.Spec.AppName = "test2"
@@ -107,7 +107,7 @@ func TestSpanHandler_GetSpan(t *testing.T) {
 }
 
 func TestSpanHandler_GetSpanWithAttributes(t *testing.T) {
-	wi := &v1beta1.KeptnWorkloadVersion{}
+	wi := &apilifecycle.KeptnWorkloadVersion{}
 	wi.Spec.TraceId = make(map[string]string, 1)
 	wi.Spec.TraceId["traceparent"] = "test-parent"
 	wi.Spec.AppName = "test"

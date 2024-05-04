@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppVersion
 metadata:
   name: podtato-head-0.1.0-6b86b273
@@ -29,7 +29,7 @@ status:
         name: podtato-head-entry
         version: 0.1.0
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnWorkloadVersion
 metadata:
   generation: 1

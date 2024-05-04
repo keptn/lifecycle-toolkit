@@ -13,7 +13,7 @@ of the application and infrastructure.
 
 While Kubernetes has ways to extend its metrics APIs, there are limitations,
 especially that they allow you to use only a single observability platform
-such as Prometheus, Dynatrace or Datadog.
+such as Prometheus, Thanos, Cortex, Dynatrace or Datadog.
 The Keptn Metrics Operator solves this problem
 by providing a single entry point for
 all your metrics data, regardless of its source.
@@ -100,7 +100,7 @@ The steps in which the controller fetches metrics are given below:
      in the `status` field of the `KeptnMetric` object.
    * If the evaluation fails,
      the error and reason is written to the
-     [KeptnMetricStatus](../reference/api-reference/metrics/v1beta1/index.md#keptnmetricstatus)
+     [KeptnMetricStatus](../reference/api-reference/metrics/v1/index.md#keptnmetricstatus)
      resource.
      The error is described in both human-readable language
      and as raw data to help identify the source of the problem

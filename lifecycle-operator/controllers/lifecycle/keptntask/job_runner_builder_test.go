@@ -3,21 +3,21 @@ package keptntask
 import (
 	"testing"
 
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 	"github.com/stretchr/testify/require"
 	v1 "k8s.io/api/core/v1"
 )
 
 func Test_getJobRunnerBuilder(t *testing.T) {
 	runtimeBuilderOptions := BuilderOptions{
-		funcSpec: &v1beta1.RuntimeSpec{
-			Inline: v1beta1.Inline{
+		funcSpec: &apilifecycle.RuntimeSpec{
+			Inline: apilifecycle.Inline{
 				Code: "some code",
 			},
 		},
 	}
 	containerBuilderOptions := BuilderOptions{
-		containerSpec: &v1beta1.ContainerSpec{
+		containerSpec: &apilifecycle.ContainerSpec{
 			Container: &v1.Container{
 				Image: "image",
 			},

@@ -25,9 +25,6 @@ spec:
         - podLogs:
             namespace: keptn-system
             selector: control-plane=lifecycle-operator
-        - podLogs:
-            namespace: keptn-system
-            selector: control-plane=metrics-operator
     - name: step-01
       try:
         - apply:
@@ -42,9 +39,6 @@ spec:
         - podLogs:
             namespace: keptn-system
             selector: control-plane=lifecycle-operator
-        - podLogs:
-            namespace: keptn-system
-            selector: control-plane=metrics-operator
     - name: step-02
       try:
         - apply:
@@ -59,6 +53,3 @@ spec:
         - podLogs:
             namespace: keptn-system
             selector: control-plane=lifecycle-operator
-        - podLogs:
-            namespace: keptn-system
-            selector: control-plane=metrics-operator

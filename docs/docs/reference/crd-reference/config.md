@@ -51,7 +51,7 @@ spec:
       [non-blocking deployment section](../../components/lifecycle-operator/keptn-non-blocking.md).
     * **observabilityTimeout** -- specifies the maximum time
       to observe the deployment phase of
-      [KeptnWorkload](../api-reference/lifecycle/v1beta1/index.md).
+      [KeptnWorkload](../api-reference/lifecycle/v1/index.md).
       The value supplied should specify the unit of measurement;
       for example, `5m` indicates 5 minutes and `1h` indicates 1 hour.
       If the workload is not deployed successfully within this time frame,
@@ -88,7 +88,7 @@ spec:
 
 API Reference:
 
-* [KeptnTaskDefinition](../api-reference/lifecycle/v1beta1/index.md#keptntaskdefinition)
+* [KeptnTaskDefinition](../api-reference/lifecycle/v1/index.md#keptntaskdefinition)
 
 ## Differences between versions
 

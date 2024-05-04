@@ -7,8 +7,8 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/go-logr/logr/testr"
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
@@ -42,10 +42,10 @@ func TestAppHandlerHandle(t *testing.T) {
 			},
 		}}
 
-	singleServiceCreationReq := &klcv1beta1.KeptnAppCreationRequest{
+	singleServiceCreationReq := &apilifecycle.KeptnAppCreationRequest{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "KeptnAppCreationRequest",
-			APIVersion: "lifecycle.keptn.sh/v1beta1",
+			APIVersion: "lifecycle.keptn.sh/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:            TestWorkload,
@@ -55,7 +55,7 @@ func TestAppHandlerHandle(t *testing.T) {
 				"keptn.sh/app-type": "single-service",
 			},
 		},
-		Spec: klcv1beta1.KeptnAppCreationRequestSpec{AppName: TestWorkload},
+		Spec: apilifecycle.KeptnAppCreationRequestSpec{AppName: TestWorkload},
 	}
 
 	tests := []struct {
@@ -63,7 +63,7 @@ func TestAppHandlerHandle(t *testing.T) {
 		client  client.Client
 		pod     *corev1.Pod
 		wanterr error
-		wantReq *klcv1beta1.KeptnAppCreationRequest
+		wantReq *apilifecycle.KeptnAppCreationRequest
 	}{
 		{
 			name:    "Create AppCreationRequest inherit from workload",
@@ -90,17 +90,17 @@ func TestAppHandlerHandle(t *testing.T) {
 					},
 				}},
 			client: testcommon.NewTestClient(),
-			wantReq: &klcv1beta1.KeptnAppCreationRequest{
+			wantReq: &apilifecycle.KeptnAppCreationRequest{
 				TypeMeta: metav1.TypeMeta{
 					Kind:       "KeptnAppCreationRequest",
-					APIVersion: "lifecycle.keptn.sh/v1beta1",
+					APIVersion: "lifecycle.keptn.sh/v1",
 				},
 				ObjectMeta: metav1.ObjectMeta{
 					Name:            testApp,
 					Namespace:       namespace,
 					ResourceVersion: "1",
 				},
-				Spec: klcv1beta1.KeptnAppCreationRequestSpec{AppName: testApp},
+				Spec: apilifecycle.KeptnAppCreationRequestSpec{AppName: testApp},
 			},
 		},
 		{
@@ -142,7 +142,7 @@ func TestAppHandlerHandle(t *testing.T) {
 			}
 
 			if tt.wantReq != nil {
-				creationReq := &klcv1beta1.KeptnAppCreationRequest{}
+				creationReq := &apilifecycle.KeptnAppCreationRequest{}
 				err = tt.client.Get(context.TODO(), types.NamespacedName{Name: tt.wantReq.Name, Namespace: tt.wantReq.Namespace}, creationReq)
 				require.Nil(t, err)
 				require.Equal(t, tt.wantReq, creationReq)
@@ -165,13 +165,13 @@ func TestAppHandlerCreateAppSucceeds(t *testing.T) {
 
 	ctx := context.TODO()
 	name := "myappcreationreq"
-	newAppCreationRequest := &klcv1beta1.KeptnAppCreationRequest{
+	newAppCreationRequest := &apilifecycle.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{Name: name},
 	}
 	err := appHandler.createResource(ctx, newAppCreationRequest)
 
 	require.Nil(t, err)
-	creationReq := &klcv1beta1.KeptnAppCreationRequest{}
+	creationReq := &apilifecycle.KeptnAppCreationRequest{}
 	err = fakeClient.Get(ctx, types.NamespacedName{Name: name}, creationReq)
 	require.Nil(t, err)
 
@@ -189,7 +189,7 @@ func TestAppHandlerCreateAppFails(t *testing.T) {
 	}
 
 	ctx := context.TODO()
-	newAppCreationRequest := &klcv1beta1.KeptnAppCreationRequest{
+	newAppCreationRequest := &apilifecycle.KeptnAppCreationRequest{
 		ObjectMeta: metav1.ObjectMeta{},
 	}
 	err := appHandler.createResource(ctx, newAppCreationRequest)

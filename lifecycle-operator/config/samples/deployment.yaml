@@ -1,27 +1,4 @@
 ---
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnTaskDefinition
-metadata:
-  name: hello-world
-spec:
-  function:
-    inline:
-      code: |
-        console.log("Hello World");
-
----
-apiVersion: lifecycle.keptn.sh/v1alpha2
-kind: KeptnTaskDefinition
-metadata:
-  name: hello-world2
-spec:
-  function:
-    inline:
-      code: |
-        console.log("Hello World2");
-
----
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:

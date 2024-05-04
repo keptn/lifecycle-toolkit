@@ -6,7 +6,7 @@ type: Opaque
 data:
   SECURE_DATA: dG9rZW46IG15dG9rZW4=
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-hello
@@ -14,7 +14,7 @@ metadata:
     task-definition: "child"
 spec:
   ttlSecondsAfterFinished: 1000
-  function:
+  deno:
     functionRef:
       name: pre-deployment-parent
     secureParameters:
@@ -24,7 +24,7 @@ spec:
         user: "myuser"
         data: "mydata"
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-parent
@@ -32,7 +32,7 @@ metadata:
     task-definition: "parent"
 spec:
   ttlSecondsAfterFinished: 300
-  function:
+  deno:
     parameters:
       map:
         user: "myotheruser"

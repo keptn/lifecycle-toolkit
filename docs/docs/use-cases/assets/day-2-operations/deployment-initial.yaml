@@ -47,18 +47,18 @@ spec:
         - name: podtato-head-hat
           image: ghcr.io/podtato-head/podtato-server:v0.3.0
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnTaskDefinition
 metadata:
   name: pre-deployment-check
   namespace: podtato-kubectl
 spec:
-  function:
+  deno:
     inline:
       code: |
         console.log("Success")
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppContext
 metadata:
   name: podtato-head

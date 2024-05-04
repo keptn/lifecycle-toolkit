@@ -18,7 +18,7 @@ This is a two-step process:
 The steps to push your new content from your local branch
 to the repository are:
 
-1. When you have completed the writing you want to do,
+1. When you have completed the writing you want to do and tested it,
    close all files in your branch and run `git status` to confirm
    that it correctly reflects the files you have modified, added, and deleted
    and does not include any files that you do not want to push.
@@ -27,44 +27,47 @@ to the repository are:
    and ensure that it is up to date
    with the `main` Keptn branch:
 
-   ```bash
-   git remote add upstream https://github.com/keptn/lifecycle-toolkit.git
-   git checkout main
-   git pull upstream main
-   ```
+     ```bash
+     git remote add upstream https://github.com/keptn/lifecycle-toolkit.git
+     git checkout main
+     git pull upstream main
+     ```
 
-   Then update your feature branch from your local copy of `main` and push it:
+1. Update your feature branch from your local copy of `main` and push it:
 
-   ```bash
-   git checkout feature/123/foo
-   git rebase main
-   git push --set-upstream origin feature/123/foo
-   ```
+     ```bash
+     git checkout feature/123/foo
+     git rebase main
+     git push --set-upstream origin feature/123/foo
+     ```
 
 1. Add and commit your changes.
    The `git commit -s` command commits the files
    and signs that you are contributing this intellectual property
    to the Keptn project.
-   See the DCO docs for more information.
+   See [DCO](../dco.md) for more information.
    Here, we commit all modified files but you can specify individual files
    to the `git add` command.
 
-   ```console
-   git add .
-   git commit -s
-   ```
+     ```console
+     git add .
+     git commit -s
+     ```
 
-   Use vi commands to add a description of the PR
-   (should be 80 characters or less) to the commit.
-   The title text should be prefixed with an appropriate
-   [commit type](#commit-types)
-   to conform to our semantic commit scheme.
-   This title is displayed as the title of the PR in listings.
+     Use `vi` commands to add a description of the PR to the commit;
+     this description is displayed as the title of the PR in listings.
 
-   You can add multiple lines explaining the PR here but, in general,
-   it is better to only supply the PR title here;
-   you can add more information and edit the PR title
-   when you create the PR on the GitHub UI page.
+      * The title text should be prefixed with an appropriate
+        [commit type](#commit-types)
+        to conform to our semantic commit scheme.
+      * Follow the `commit type` with a brief (80 characters or less) description
+        that succinctly describes the change made by this PR.
+        The description must begin with a lowercase letter.
+
+     You can add multiple lines explaining the PR here but, in general,
+     it is better to only supply the PR title here;
+     you can add more information and edit the PR title
+     when you create the PR on the GitHub UI page.
 
 1. Push your branch to github.
    If you cloned your fork to use SSH, the command is:
@@ -121,6 +124,15 @@ feat(api): new endpoint for feature X
     * Describe tests that are included or were run to test this PR.
     * Anything else that will help reviewers understand
       the scope and purpose of this PR.
+
+* The PR template includes a checklist that must be filled out
+  to ensure that the PR adheres to the project requirements.
+
+    * The template includes separate sections for software and documentation;
+      delete the section that does not apply to your PR,
+      unless your PR includes both software and documentation.
+    * Read each item and only check it off if you have satisfied that requirement.
+    * If a requirement is not relevant for your PR, mark it as `n/a` (not applicable).
 
 * If you have **breaking changes** in your PR,
   it is important to note them in both the PR description

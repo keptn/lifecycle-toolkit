@@ -4,7 +4,7 @@
 package fake
 
 import (
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sync"
 )

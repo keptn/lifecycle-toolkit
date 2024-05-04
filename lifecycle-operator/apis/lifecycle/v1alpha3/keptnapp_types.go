@@ -17,15 +17,8 @@ limitations under the License.
 package v1alpha3
 
 import (
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	operatorcommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/common"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
-
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // KeptnAppSpec defines the desired state of KeptnApp
 type KeptnAppSpec struct {
@@ -109,41 +102,4 @@ type KeptnAppList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnApp{}, &KeptnAppList{})
-}
-
-func (a KeptnApp) GetAppVersionName() string {
-	return operatorcommon.CreateResourceName(common.MaxK8sObjectLength, common.MinKeptnNameLen, a.Name, a.Spec.Version, common.Hash(a.Generation))
-}
-
-func (a KeptnApp) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(a.GetSpanAttributes()...)
-}
-
-func (a KeptnApp) GenerateAppVersion(previousVersion string) KeptnAppVersion {
-	return KeptnAppVersion{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      a.GetAppVersionName(),
-			Namespace: a.Namespace,
-		},
-		Spec: KeptnAppVersionSpec{
-			KeptnAppSpec:    a.Spec,
-			AppName:         a.Name,
-			PreviousVersion: previousVersion,
-		},
-	}
-}
-
-func (a KeptnApp) GetSpanAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(a.Name),
-		common.AppVersion.String(a.Spec.Version),
-	}
-}
-
-func (a KeptnApp) GetEventAnnotations() map[string]string {
-	return map[string]string{
-		"appName":     a.Name,
-		"appVersion":  a.Spec.Version,
-		"appRevision": common.Hash(a.Generation),
-	}
 }

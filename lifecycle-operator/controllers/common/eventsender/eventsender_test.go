@@ -10,8 +10,8 @@ import (
 	"time"
 
 	ce "github.com/cloudevents/sdk-go/v2"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender/fake"
 	"github.com/stretchr/testify/require"
@@ -26,7 +26,7 @@ func TestEventSender_SendK8sEvent(t *testing.T) {
 	fakeRecorder := record.NewFakeRecorder(100)
 	eventSender := NewK8sSender(fakeRecorder)
 
-	eventSender.Emit(common.PhaseAppDeployment, "pre-event", &v1beta1.KeptnAppVersion{
+	eventSender.Emit(apicommon.PhaseAppDeployment, "pre-event", &apilifecycle.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "app",
 			Namespace: "ns",
@@ -35,7 +35,7 @@ func TestEventSender_SendK8sEvent(t *testing.T) {
 
 	event := <-fakeRecorder.Events
 
-	require.Contains(t, event, fmt.Sprintf("%s: reason-long / Namespace: ns, Name: app, Version: ver1", common.PhaseAppDeployment.LongName))
+	require.Contains(t, event, fmt.Sprintf("%s: reason-long / Namespace: ns, Name: app, Version: ver1", apicommon.PhaseAppDeployment.LongName))
 }
 
 func TestEventSender_SendCloudEvent(t *testing.T) {
@@ -46,7 +46,7 @@ func TestEventSender_SendCloudEvent(t *testing.T) {
 	eventType := "my-type"
 	version := "v0.0.1-dev"
 	msg := "my message"
-	phase := common.PhaseAppDeployment
+	phase := apicommon.PhaseAppDeployment
 	waitToReceive := make(chan bool, 1)
 	// when
 	// we have a CloudEvent endpoint
@@ -77,7 +77,7 @@ func TestEventSender_SendCloudEvent(t *testing.T) {
 		log.Fatalf("failed to create client, %v", err)
 	}
 	ceSender := newCloudEventSender(ctrl.Log.WithName("testytest"), c)
-	ceSender.Emit(phase, eventType, &v1beta1.KeptnAppVersion{
+	ceSender.Emit(phase, eventType, &apilifecycle.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      name,
 			Namespace: ns,
@@ -125,7 +125,7 @@ func TestEventSender_CloudEventNoFailure(t *testing.T) {
 			log.Fatalf("failed to create client, %v", err)
 		}
 		ceSender := newCloudEventSender(ctrl.Log.WithName("testytest"), c)
-		ceSender.Emit(common.PhaseAppCompleted, "type", &v1beta1.KeptnAppVersion{
+		ceSender.Emit(apicommon.PhaseAppCompleted, "type", &apilifecycle.KeptnAppVersion{
 			ObjectMeta: v1.ObjectMeta{
 				Name:      "app",
 				Namespace: "ns",
@@ -173,12 +173,12 @@ func TestEventSender_Multiplexer_emit(t *testing.T) {
 	recE2 := make(chan struct{})
 
 	em1 := &fake.MockEvent{}
-	em1.EmitFunc = func(phase common.KeptnPhaseType, eventType string, reconcileObject client.Object, status string, message string, version string) {
+	em1.EmitFunc = func(phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, status string, message string, version string) {
 		recE1 <- struct{}{}
 	}
 
 	em2 := &fake.MockEvent{}
-	em2.EmitFunc = func(phase common.KeptnPhaseType, eventType string, reconcileObject client.Object, status string, message string, version string) {
+	em2.EmitFunc = func(phase apicommon.KeptnPhaseType, eventType string, reconcileObject client.Object, status string, message string, version string) {
 		recE2 <- struct{}{}
 	}
 	emitter := EventMultiplexer{}
@@ -187,7 +187,7 @@ func TestEventSender_Multiplexer_emit(t *testing.T) {
 	// then
 	// fire a new event
 	msg := "my special message"
-	emitter.Emit(common.PhaseAppDeployment, "", nil, "", msg, "")
+	emitter.Emit(apicommon.PhaseAppDeployment, "", nil, "", msg, "")
 	// assert we got one event
 	// wait for the emitMocks to receive the events
 
@@ -229,7 +229,7 @@ func Test_setEventMessage(t *testing.T) {
 		},
 	}
 
-	appVersion := &v1beta1.KeptnAppVersion{
+	appVersion := &apilifecycle.KeptnAppVersion{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      "app",
 			Namespace: "namespace",
@@ -237,7 +237,7 @@ func Test_setEventMessage(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, setEventMessage(common.PhaseAppDeployment, appVersion, "longReason", tt.version), tt.want)
+			require.Equal(t, setEventMessage(apicommon.PhaseAppDeployment, appVersion, "longReason", tt.version), tt.want)
 		})
 	}
 }
@@ -255,12 +255,12 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name:   "empty object",
-			object: &v1beta1.KeptnEvaluationDefinition{},
+			object: &apilifecycle.KeptnEvaluationDefinition{},
 			want:   nil,
 		},
 		{
 			name: "unknown object",
-			object: &v1beta1.KeptnEvaluationDefinition{
+			object: &apilifecycle.KeptnEvaluationDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "def",
 					Namespace: "namespace",
@@ -275,7 +275,7 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "object with traceparent",
-			object: &v1beta1.KeptnEvaluationDefinition{
+			object: &apilifecycle.KeptnEvaluationDefinition{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "def",
 					Namespace: "namespace",
@@ -293,13 +293,13 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnApp",
-			object: &v1beta1.KeptnApp{
+			object: &apilifecycle.KeptnApp{
 				ObjectMeta: v1.ObjectMeta{
 					Name:       "app",
 					Namespace:  "namespace",
 					Generation: 1,
 				},
-				Spec: v1beta1.KeptnAppSpec{
+				Spec: apilifecycle.KeptnAppSpec{
 					Version: "1.0.0",
 				},
 			},
@@ -315,14 +315,14 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnAppVersion",
-			object: &v1beta1.KeptnAppVersion{
+			object: &apilifecycle.KeptnAppVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "appVersion",
 					Namespace: "namespace",
 				},
-				Spec: v1beta1.KeptnAppVersionSpec{
+				Spec: apilifecycle.KeptnAppVersionSpec{
 					AppName: "app",
-					KeptnAppSpec: v1beta1.KeptnAppSpec{
+					KeptnAppSpec: apilifecycle.KeptnAppSpec{
 						Version: "1.0.0",
 					},
 				},
@@ -339,12 +339,12 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnWorkload",
-			object: &v1beta1.KeptnWorkload{
+			object: &apilifecycle.KeptnWorkload{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "workload",
 					Namespace: "namespace",
 				},
-				Spec: v1beta1.KeptnWorkloadSpec{
+				Spec: apilifecycle.KeptnWorkloadSpec{
 					AppName: "app",
 					Version: "1.0.0",
 				},
@@ -361,13 +361,13 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnWorkloadVersion",
-			object: &v1beta1.KeptnWorkloadVersion{
+			object: &apilifecycle.KeptnWorkloadVersion{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "workloadVersion",
 					Namespace: "namespace",
 				},
-				Spec: v1beta1.KeptnWorkloadVersionSpec{
-					KeptnWorkloadSpec: v1beta1.KeptnWorkloadSpec{
+				Spec: apilifecycle.KeptnWorkloadVersionSpec{
+					KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 						AppName: "app",
 						Version: "1.0.0",
 					},
@@ -387,14 +387,14 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnTask",
-			object: &v1beta1.KeptnTask{
+			object: &apilifecycle.KeptnTask{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "task",
 					Namespace: "namespace",
 				},
-				Spec: v1beta1.KeptnTaskSpec{
+				Spec: apilifecycle.KeptnTaskSpec{
 					TaskDefinition: "def",
-					Context: v1beta1.TaskContext{
+					Context: apilifecycle.TaskContext{
 						WorkloadName:    "workload",
 						AppName:         "app",
 						AppVersion:      "1.0.0",
@@ -417,12 +417,12 @@ func Test_setAnnotations(t *testing.T) {
 		},
 		{
 			name: "KeptnEvaluation",
-			object: &v1beta1.KeptnEvaluation{
+			object: &apilifecycle.KeptnEvaluation{
 				ObjectMeta: v1.ObjectMeta{
 					Name:      "eval",
 					Namespace: "namespace",
 				},
-				Spec: v1beta1.KeptnEvaluationSpec{
+				Spec: apilifecycle.KeptnEvaluationSpec{
 					AppName:              "app",
 					AppVersion:           "1.0.0",
 					Workload:             "workload",
@@ -447,7 +447,7 @@ func Test_setAnnotations(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			require.Equal(t, setAnnotations(tt.object, common.PhaseAppDeployment), tt.want)
+			require.Equal(t, setAnnotations(tt.object, apicommon.PhaseAppDeployment), tt.want)
 		})
 	}
 }

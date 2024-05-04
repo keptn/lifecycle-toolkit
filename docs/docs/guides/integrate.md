@@ -37,7 +37,7 @@ To integrate Keptn with your workloads:
       feature.
 
 Keptn uses these annotations to the Kubernetes workloads to create the
-[KeptnWorkload](../reference/api-reference/lifecycle/v1beta1/index.md#keptnworkload)
+[KeptnWorkload](../reference/api-reference/lifecycle/v1/index.md#keptnworkload)
 and
 [KeptnApp](../reference/crd-reference/app.md)
 resources that it uses to provide observability
@@ -66,7 +66,7 @@ resources in the namespaces where Keptn is enabled.
 If Keptn finds any of these resources and the resource has either
 the `keptn.sh` or the `kubernetes` annotations/labels,
 it creates appropriate
-[KeptnWorkload](../reference/api-reference/lifecycle/v1beta1/index.md#keptnworkload)
+[KeptnWorkload](../reference/api-reference/lifecycle/v1/index.md#keptnworkload)
 and
 [KeptnApp](../reference/crd-reference/app.md)
 resources for the version it detects.
@@ -94,7 +94,7 @@ These keys are defined as:
 
 - `keptn.sh/workload` or `app.kubernetes.io/name`: Determines the name
   of the generated
-  [KeptnWorkload](../reference/api-reference/lifecycle/v1beta1/index.md#keptnworkload)
+  [KeptnWorkload](../reference/api-reference/lifecycle/v1/index.md#keptnworkload)
   resource.
 - `keptn.sh/version` or `app.kubernetes.io/version`:
   Determines the version of the `KeptnWorkload`

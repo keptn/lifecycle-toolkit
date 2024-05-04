@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
@@ -23,15 +23,15 @@ import (
 
 func TestKeptnWorkloadReconciler_CannotLookupWorkloadVersion(t *testing.T) {
 
-	workload := &klcv1beta1.KeptnWorkload{
+	workload := &apilifecycle.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-workload",
 			Namespace: "my-namespace",
 		},
-		Spec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadSpec{
 			AppName: "my-app",
 			Version: "v1",
-			ResourceReference: klcv1beta1.ResourceReference{
+			ResourceReference: apilifecycle.ResourceReference{
 				UID:  "id1",
 				Kind: "ReplicaSet",
 				Name: "my-replica-set",
@@ -64,15 +64,15 @@ func TestKeptnWorkloadReconciler_CannotLookupWorkloadVersion(t *testing.T) {
 
 func TestKeptnWorkloadReconciler_CreateWorkloadVersion(t *testing.T) {
 
-	workload := &klcv1beta1.KeptnWorkload{
+	workload := &apilifecycle.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-workload",
 			Namespace: "my-namespace",
 		},
-		Spec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadSpec{
 			AppName: "my-app",
 			Version: "v1",
-			ResourceReference: klcv1beta1.ResourceReference{
+			ResourceReference: apilifecycle.ResourceReference{
 				UID:  "id1",
 				Kind: "ReplicaSet",
 				Name: "my-replica-set",
@@ -80,12 +80,12 @@ func TestKeptnWorkloadReconciler_CreateWorkloadVersion(t *testing.T) {
 		},
 	}
 
-	expectedWorkloadVersion := &klcv1beta1.KeptnWorkloadVersion{
+	expectedWorkloadVersion := &apilifecycle.KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-workload-v1",
 			Namespace: "my-namespace",
 		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
 			KeptnWorkloadSpec: workload.Spec,
 			WorkloadName:      "my-workload",
 		},
@@ -102,7 +102,7 @@ func TestKeptnWorkloadReconciler_CreateWorkloadVersion(t *testing.T) {
 	require.Nil(t, err)
 	require.False(t, res.Requeue)
 
-	createdWorkloadVersion := &klcv1beta1.KeptnWorkloadVersion{}
+	createdWorkloadVersion := &apilifecycle.KeptnWorkloadVersion{}
 	err = r.Client.Get(context.TODO(),
 		types.NamespacedName{
 			Namespace: expectedWorkloadVersion.Namespace,
@@ -116,15 +116,15 @@ func TestKeptnWorkloadReconciler_CreateWorkloadVersion(t *testing.T) {
 
 func TestKeptnWorkloadReconciler_CreateWorkloadVersionErrorWhenCreating(t *testing.T) {
 
-	workload := &klcv1beta1.KeptnWorkload{
+	workload := &apilifecycle.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-workload",
 			Namespace: "my-namespace",
 		},
-		Spec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadSpec{
 			AppName: "my-app",
 			Version: "v1",
-			ResourceReference: klcv1beta1.ResourceReference{
+			ResourceReference: apilifecycle.ResourceReference{
 				UID:  "id1",
 				Kind: "ReplicaSet",
 				Name: "my-replica-set",
@@ -155,15 +155,15 @@ func TestKeptnWorkloadReconciler_CreateWorkloadVersionErrorWhenCreating(t *testi
 
 func TestKeptnWorkloadReconciler_UpdateExistingWorkloadVersion(t *testing.T) {
 
-	workload := &klcv1beta1.KeptnWorkload{
+	workload := &apilifecycle.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-workload",
 			Namespace: "my-namespace",
 		},
-		Spec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadSpec{
 			AppName: "my-app",
 			Version: "v1",
-			ResourceReference: klcv1beta1.ResourceReference{
+			ResourceReference: apilifecycle.ResourceReference{
 				UID:  "id1",
 				Kind: "ReplicaSet",
 				Name: "my-replica-set",
@@ -171,16 +171,16 @@ func TestKeptnWorkloadReconciler_UpdateExistingWorkloadVersion(t *testing.T) {
 		},
 	}
 
-	workloadVersion := &klcv1beta1.KeptnWorkloadVersion{
+	workloadVersion := &apilifecycle.KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-workload-v1",
 			Namespace: "my-namespace",
 		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				AppName: "my-app",
 				Version: "v1",
-				ResourceReference: klcv1beta1.ResourceReference{
+				ResourceReference: apilifecycle.ResourceReference{
 					UID:  "id2",
 					Kind: "ReplicaSet",
 					Name: "another-replica-set",
@@ -200,7 +200,7 @@ func TestKeptnWorkloadReconciler_UpdateExistingWorkloadVersion(t *testing.T) {
 	require.Nil(t, err)
 	require.False(t, res.Requeue)
 
-	updatedWorkloadVersion := &klcv1beta1.KeptnWorkloadVersion{}
+	updatedWorkloadVersion := &apilifecycle.KeptnWorkloadVersion{}
 	err = r.Client.Get(context.TODO(),
 		types.NamespacedName{
 			Namespace: workloadVersion.Namespace,
@@ -214,15 +214,15 @@ func TestKeptnWorkloadReconciler_UpdateExistingWorkloadVersion(t *testing.T) {
 
 func TestKeptnWorkloadReconciler_UpdateExistingWorkloadVersionUpdateFails(t *testing.T) {
 
-	workload := &klcv1beta1.KeptnWorkload{
+	workload := &apilifecycle.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-workload",
 			Namespace: "my-namespace",
 		},
-		Spec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadSpec{
 			AppName: "my-app",
 			Version: "v1",
-			ResourceReference: klcv1beta1.ResourceReference{
+			ResourceReference: apilifecycle.ResourceReference{
 				UID:  "id1",
 				Kind: "ReplicaSet",
 				Name: "my-replica-set",
@@ -230,16 +230,16 @@ func TestKeptnWorkloadReconciler_UpdateExistingWorkloadVersionUpdateFails(t *tes
 		},
 	}
 
-	workloadVersion := &klcv1beta1.KeptnWorkloadVersion{
+	workloadVersion := &apilifecycle.KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-workload-v1",
 			Namespace: "my-namespace",
 		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				AppName: "my-app",
 				Version: "v1",
-				ResourceReference: klcv1beta1.ResourceReference{
+				ResourceReference: apilifecycle.ResourceReference{
 					UID:  "id2",
 					Kind: "ReplicaSet",
 					Name: "another-replica-set",
@@ -268,12 +268,12 @@ func TestKeptnWorkloadReconciler_UpdateExistingWorkloadVersionUpdateFails(t *tes
 }
 
 func TestKeptnWorkload(t *testing.T) {
-	workload := &klcv1beta1.KeptnWorkload{
+	workload := &apilifecycle.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "workload",
 			Namespace: "namespace",
 		},
-		Spec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadSpec{
 			Version: "version",
 			AppName: "app",
 			Metadata: map[string]string{
@@ -283,14 +283,14 @@ func TestKeptnWorkload(t *testing.T) {
 	}
 
 	workloadVersion := generateWorkloadVersion("prev", map[string]string{}, workload)
-	require.Equal(t, klcv1beta1.KeptnWorkloadVersion{
+	require.Equal(t, apilifecycle.KeptnWorkloadVersion{
 		ObjectMeta: metav1.ObjectMeta{
 			Annotations: map[string]string{},
 			Name:        "workload-version",
 			Namespace:   "namespace",
 		},
-		Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-			KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadVersionSpec{
+			KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
 				Version: "version",
 				AppName: "app",
 				Metadata: map[string]string{

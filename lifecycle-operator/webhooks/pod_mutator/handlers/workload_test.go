@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr/testr"
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/pkg/errors"
@@ -32,15 +32,15 @@ func TestHandle(t *testing.T) {
 	mockEventSender := eventsender.NewK8sSender(record.NewFakeRecorder(100))
 	log := testr.New(t)
 
-	workload := &klcv1beta1.KeptnWorkload{
+	workload := &apilifecycle.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "my-workload-my-workload",
 			Namespace: namespace,
 		},
 	}
 
-	wantWorkload := &klcv1beta1.KeptnWorkload{
-		TypeMeta: metav1.TypeMeta{Kind: "KeptnWorkload", APIVersion: "lifecycle.keptn.sh/v1beta1"},
+	wantWorkload := &apilifecycle.KeptnWorkload{
+		TypeMeta: metav1.TypeMeta{Kind: "KeptnWorkload", APIVersion: "lifecycle.keptn.sh/v1"},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testAppWorkload,
 			Namespace: namespace,
@@ -49,7 +49,7 @@ func TestHandle(t *testing.T) {
 			},
 			ResourceVersion: "1",
 		},
-		Spec: klcv1beta1.KeptnWorkloadSpec{
+		Spec: apilifecycle.KeptnWorkloadSpec{
 			AppName: TestWorkload,
 			Version: "0.1",
 			Metadata: map[string]string{
@@ -75,7 +75,7 @@ func TestHandle(t *testing.T) {
 		client       client.Client
 		pod          *corev1.Pod
 		wanterr      error
-		wantWorkload *klcv1beta1.KeptnWorkload
+		wantWorkload *apilifecycle.KeptnWorkload
 	}{
 		{
 			name:         "Create Workload",
@@ -138,7 +138,7 @@ func TestHandle(t *testing.T) {
 			}
 
 			if tt.wantWorkload != nil {
-				actualWorkload := &klcv1beta1.KeptnWorkload{}
+				actualWorkload := &apilifecycle.KeptnWorkload{}
 				err = tt.client.Get(context.TODO(), types.NamespacedName{Name: tt.wantWorkload.Name, Namespace: tt.wantWorkload.Namespace}, actualWorkload)
 				require.Nil(t, err)
 				require.Equal(t, tt.wantWorkload, actualWorkload)
@@ -152,7 +152,7 @@ func TestUpdateWorkloadNoSpecChanges(t *testing.T) {
 	mockEventSender := eventsender.NewK8sSender(record.NewFakeRecorder(100))
 	log := testr.New(t)
 
-	workload := &klcv1beta1.KeptnWorkload{
+	workload := &apilifecycle.KeptnWorkload{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testAppWorkload,
 			Namespace: namespace,
@@ -172,7 +172,7 @@ func TestGenerateWorkload(t *testing.T) {
 	testCases := []struct {
 		name           string
 		podAnnotations map[string]string
-		expected       *klcv1beta1.KeptnWorkload
+		expected       *apilifecycle.KeptnWorkload
 	}{
 		{
 			name: "Pod with annotations",
@@ -184,7 +184,7 @@ func TestGenerateWorkload(t *testing.T) {
 				apicommon.PostDeploymentEvaluationAnnotation: "eval3,eval4",
 				apicommon.K8sRecommendedAppAnnotations:       "my-app",
 			},
-			expected: &klcv1beta1.KeptnWorkload{
+			expected: &apilifecycle.KeptnWorkload{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:        getWorkloadName(&metav1.ObjectMeta{}, "my-app"),
 					Namespace:   "my-namespace",
@@ -198,10 +198,10 @@ func TestGenerateWorkload(t *testing.T) {
 						},
 					},
 				},
-				Spec: klcv1beta1.KeptnWorkloadSpec{
+				Spec: apilifecycle.KeptnWorkloadSpec{
 					AppName:                   "my-app",
 					Version:                   "v1",
-					ResourceReference:         klcv1beta1.ResourceReference{UID: "owner-uid", Kind: "Deployment", Name: "deployment-1"},
+					ResourceReference:         apilifecycle.ResourceReference{UID: "owner-uid", Kind: "Deployment", Name: "deployment-1"},
 					PreDeploymentTasks:        []string{"task1", "task2"},
 					PostDeploymentTasks:       []string{"task3", "task4"},
 					PreDeploymentEvaluations:  []string{"eval1", "eval2"},
@@ -213,7 +213,7 @@ func TestGenerateWorkload(t *testing.T) {
 		{
 			name:           "Pod with no annotations",
 			podAnnotations: nil,
-			expected: &klcv1beta1.KeptnWorkload{
+			expected: &apilifecycle.KeptnWorkload{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:        "-",
 					Namespace:   "my-namespace",
@@ -225,8 +225,8 @@ func TestGenerateWorkload(t *testing.T) {
 						UID:        "owner-uid",
 					},
 					}},
-				Spec: klcv1beta1.KeptnWorkloadSpec{
-					ResourceReference: klcv1beta1.ResourceReference{
+				Spec: apilifecycle.KeptnWorkloadSpec{
+					ResourceReference: apilifecycle.ResourceReference{
 						UID:  "owner-uid",
 						Kind: "Deployment",
 						Name: "deployment-1",

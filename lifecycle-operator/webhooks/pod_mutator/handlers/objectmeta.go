@@ -5,7 +5,7 @@ import (
 	"hash/fnv"
 	"strings"
 
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	operatorcommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/common"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

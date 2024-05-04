@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	"gopkg.in/inf.v0"
 	"k8s.io/apimachinery/pkg/api/resource"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -101,7 +101,7 @@ func (c *SLOConverter) convertSLO(sloContent *SLO, name string, namespace string
 	definition := &metricsapi.AnalysisDefinition{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "AnalysisDefinition",
-			APIVersion: "metrics.keptn.sh/v1beta1",
+			APIVersion: "metrics.keptn.sh/v1",
 		},
 		ObjectMeta: v1.ObjectMeta{
 			Name: name,

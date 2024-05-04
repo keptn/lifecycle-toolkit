@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppVersion
 metadata:
   name: podtato-head-0.1.0-6b86b273
@@ -11,7 +11,7 @@ status:
   status: Failed
   workloadOverallStatus: Deprecated
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnEvaluation
 spec:
   checkType: pre-eval
@@ -21,7 +21,7 @@ spec:
   retries: 10
   retryInterval: 5s
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnEvaluationDefinition
 metadata:
   name: available-cpus

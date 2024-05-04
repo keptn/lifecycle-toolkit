@@ -21,11 +21,6 @@ spec:
               - check:
                   ($error != null): true
         - apply:
-            file: td_bad_function_deno.yaml
-            expect:
-              - check:
-                  ($error != null): true
-        - apply:
             file: td_bad_function_python.yaml
             expect:
               - check:
@@ -37,11 +32,6 @@ spec:
                   ($error != null): true
         - apply:
             file: td_bad_container_python.yaml
-            expect:
-              - check:
-                  ($error != null): true
-        - apply:
-            file: td_bad_container_function.yaml
             expect:
               - check:
                   ($error != null): true
@@ -63,14 +53,10 @@ spec:
         - error:
             file: td_bad_python_deno.yaml
         - error:
-            file: td_bad_function_deno.yaml
-        - error:
             file: td_bad_function_python.yaml
         - error:
             file: td_bad_container_deno.yaml
         - error:
             file: td_bad_container_python.yaml
-        - error:
-            file: td_bad_container_function.yaml
         - error:
             file: td_bad_empty.yaml

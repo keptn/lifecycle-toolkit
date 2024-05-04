@@ -127,11 +127,13 @@ spec:
             "context" $) | nindent 12 }}
           privileged: {{ .Values.lifecycleOperator.containerSecurityContext.privileged
             }}
+          {{- if not .Values.global.openShift.enabled }}
           runAsGroup: {{ .Values.lifecycleOperator.containerSecurityContext.runAsGroup
             }}
-          runAsNonRoot: {{ .Values.lifecycleOperator.containerSecurityContext.runAsNonRoot
-            }}
           runAsUser: {{ .Values.lifecycleOperator.containerSecurityContext.runAsUser
+            }}
+          {{- end }}
+          runAsNonRoot: {{ .Values.lifecycleOperator.containerSecurityContext.runAsNonRoot
             }}
           seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
@@ -158,7 +160,7 @@ spec:
          initialDelaySeconds: 5
          periodSeconds: 10
         {{- end }}
-      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
+      {{- include "lifecycleOperator.imagePullSecrets" . | nindent 6 }}
       securityContext:
         runAsNonRoot: true
       serviceAccountName: lifecycle-operator
@@ -224,7 +226,9 @@ spec:
             }}
           runAsNonRoot: {{ .Values.scheduler.containerSecurityContext.runAsNonRoot
             }}
+          {{- if not .Values.global.openShift.enabled }}
           runAsUser: {{ .Values.scheduler.containerSecurityContext.runAsUser }}
+          {{- end }}
           seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
         volumeMounts:
@@ -250,7 +254,7 @@ spec:
            port: 10259
            scheme: HTTPS
         {{- end }}
-      imagePullSecrets: {{- include "common.images.imagePullSecrets" . }}
+      {{- include "scheduler.imagePullSecrets" . | nindent 6 }}
       serviceAccountName: keptn-scheduler
       volumes:
       - configMap:

@@ -12,6 +12,9 @@ metadata:
   name: podtato-head-frontend
   namespace: podtato-kubectl
 spec:
+  selector:
+    matchLabels:
+      app: podtato-head-frontend
   template:
     metadata:
       labels:
@@ -20,8 +23,11 @@ spec:
         app.kubernetes.io/version: 0.1.0
     spec:
       containers:
-        - name: podtato-head-frontend
-          image: podtato-head-frontend
+        - env:
+            - name: PODTATO_COMPONENT
+              value: frontend
+          name: podtato-head-frontend
+          image: ghcr.io/podtato-head/podtato-server:v0.3.1
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -29,6 +35,9 @@ metadata:
   name: podtato-head-hat
   namespace: podtato-kubectl
 spec:
+  selector:
+    matchLabels:
+      app: podtato-head-hat
   replicas: 1
   template:
     metadata:
@@ -38,5 +47,8 @@ spec:
         app.kubernetes.io/version: 0.1.1
     spec:
       containers:
-        - name: podtato-head-hat
-          image: podtato-head-hat
+        - env:
+            - name: PODTATO_COMPONENT
+              value: hat
+          name: podtato-head-hat
+          image: ghcr.io/podtato-head/podtato-server:v0.3.1

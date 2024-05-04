@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/lifecycle/interfaces/fake"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel/attribute"
@@ -13,8 +13,8 @@ import (
 )
 
 func TestPhaseItemWrapper_GetState(t *testing.T) {
-	appVersion := &v1beta1.KeptnAppVersion{
-		Status: v1beta1.KeptnAppVersionStatus{
+	appVersion := &apilifecycle.KeptnAppVersion{
+		Status: apilifecycle.KeptnAppVersionStatus{
 			Status:       apicommon.StateFailed,
 			CurrentPhase: "test",
 		},
@@ -77,10 +77,10 @@ func TestPhaseItem(t *testing.T) {
 		GetPostDeploymentTasksFunc: func() []string {
 			return nil
 		},
-		GetPreDeploymentTaskStatusFunc: func() []v1beta1.ItemStatus {
+		GetPreDeploymentTaskStatusFunc: func() []apilifecycle.ItemStatus {
 			return nil
 		},
-		GetPostDeploymentTaskStatusFunc: func() []v1beta1.ItemStatus {
+		GetPostDeploymentTaskStatusFunc: func() []apilifecycle.ItemStatus {
 			return nil
 		},
 		GetPreDeploymentEvaluationsFunc: func() []string {
@@ -89,23 +89,23 @@ func TestPhaseItem(t *testing.T) {
 		GetPostDeploymentEvaluationsFunc: func() []string {
 			return nil
 		},
-		GetPreDeploymentEvaluationTaskStatusFunc: func() []v1beta1.ItemStatus {
+		GetPreDeploymentEvaluationTaskStatusFunc: func() []apilifecycle.ItemStatus {
 			return nil
 		},
-		GetPostDeploymentEvaluationTaskStatusFunc: func() []v1beta1.ItemStatus {
+		GetPostDeploymentEvaluationTaskStatusFunc: func() []apilifecycle.ItemStatus {
 			return nil
 		},
 		GetPromotionTasksFunc: func() []string {
 			return []string{}
 		},
-		GetPromotionTaskStatusFunc: func() []v1beta1.ItemStatus {
-			return []v1beta1.ItemStatus{}
+		GetPromotionTaskStatusFunc: func() []apilifecycle.ItemStatus {
+			return []apilifecycle.ItemStatus{}
 		},
-		GenerateTaskFunc: func(taskDefinition v1beta1.KeptnTaskDefinition, checkType apicommon.CheckType) v1beta1.KeptnTask {
-			return v1beta1.KeptnTask{}
+		GenerateTaskFunc: func(taskDefinition apilifecycle.KeptnTaskDefinition, checkType apicommon.CheckType) apilifecycle.KeptnTask {
+			return apilifecycle.KeptnTask{}
 		},
-		GenerateEvaluationFunc: func(evaluationDefinition v1beta1.KeptnEvaluationDefinition, checkType apicommon.CheckType) v1beta1.KeptnEvaluation {
-			return v1beta1.KeptnEvaluation{}
+		GenerateEvaluationFunc: func(evaluationDefinition apilifecycle.KeptnEvaluationDefinition, checkType apicommon.CheckType) apilifecycle.KeptnEvaluation {
+			return apilifecycle.KeptnEvaluation{}
 		},
 		SetSpanAttributesFunc: func(span trace.Span) {
 		},
@@ -181,10 +181,10 @@ func TestPhaseItem(t *testing.T) {
 	_ = wrapper.GetPostDeploymentEvaluationTaskStatus()
 	require.Len(t, phaseItemMock.GetPostDeploymentEvaluationTaskStatusCalls(), 1)
 
-	_ = wrapper.GenerateTask(v1beta1.KeptnTaskDefinition{}, apicommon.PostDeploymentCheckType)
+	_ = wrapper.GenerateTask(apilifecycle.KeptnTaskDefinition{}, apicommon.PostDeploymentCheckType)
 	require.Len(t, phaseItemMock.GenerateTaskCalls(), 1)
 
-	_ = wrapper.GenerateEvaluation(v1beta1.KeptnEvaluationDefinition{}, apicommon.PostDeploymentCheckType)
+	_ = wrapper.GenerateEvaluation(apilifecycle.KeptnEvaluationDefinition{}, apicommon.PostDeploymentCheckType)
 	require.Len(t, phaseItemMock.GenerateEvaluationCalls(), 1)
 
 	wrapper.SetSpanAttributes(nil)

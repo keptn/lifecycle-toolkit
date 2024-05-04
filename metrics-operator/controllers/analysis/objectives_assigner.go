@@ -1,6 +1,6 @@
 package analysis
 
-import metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+import metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 
 type ITaskAssigner interface {
 	AssignTasks(tasks []metricsapi.Objective, numWorkers int) [][]metricsapi.Objective

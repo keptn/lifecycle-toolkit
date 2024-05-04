@@ -21,7 +21,7 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 	controllercommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/taskdefinition"
@@ -49,7 +49,7 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 	requestInfo := controllercommon.GetRequestInfo(req)
 	r.Log.Info("Reconciling KeptnTaskDefinition", "requestInfo", requestInfo)
 
-	definition := &klcv1beta1.KeptnTaskDefinition{}
+	definition := &apilifecycle.KeptnTaskDefinition{}
 
 	if err := r.Client.Get(ctx, req.NamespacedName, definition); err != nil {
 		if errors.IsNotFound(err) {
@@ -99,7 +99,7 @@ func (r *KeptnTaskDefinitionReconciler) Reconcile(ctx context.Context, req ctrl.
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeptnTaskDefinitionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&klcv1beta1.KeptnTaskDefinition{}).
+		For(&apilifecycle.KeptnTaskDefinition{}).
 		Owns(&corev1.ConfigMap{}).
 		Complete(r)
 }

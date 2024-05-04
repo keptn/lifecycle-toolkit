@@ -13,7 +13,7 @@ import (
 
 	"github.com/DataDog/datadog-api-client-go/v2/api/datadogV1"
 	"github.com/go-logr/logr"
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 

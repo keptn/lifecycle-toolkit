@@ -7,12 +7,12 @@ metadata:
 status:
   readyReplicas: 1
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnWorkload
 metadata:
   name: waiter-waiter
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnWorkloadVersion
 metadata:
   name: waiter-waiter-0.4.0-1
@@ -30,12 +30,12 @@ status:
     - status: Succeeded
       definitionName: pre-deployment-hello
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnApp
 metadata:
   name: waiter
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppVersion
 metadata:
   name: waiter-0.4.0-1-6b86b273

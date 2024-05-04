@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
 )
@@ -15,15 +15,15 @@ func TestGetRuntimeImage(t *testing.T) {
 	t.Setenv(PythonRuntimeImageKey, PythonScriptKey)
 	tests := []struct {
 		name string
-		def  *klcv1beta1.KeptnTaskDefinition
+		def  *apilifecycle.KeptnTaskDefinition
 		want string
 	}{
 		{
 			name: PythonScriptKey,
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Python: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
+			def: &apilifecycle.KeptnTaskDefinition{
+				Spec: apilifecycle.KeptnTaskDefinitionSpec{
+					Python: &apilifecycle.RuntimeSpec{
+						HttpReference: apilifecycle.HttpReference{
 							Url: "testy.com",
 						},
 					},
@@ -32,40 +32,10 @@ func TestGetRuntimeImage(t *testing.T) {
 			want: PythonScriptKey,
 		}, {
 			name: FunctionScriptKey,
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Deno: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
-				},
-			},
-			want: FunctionScriptKey,
-		}, {
-			name: "default function",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
-				},
-			},
-			want: FunctionScriptKey,
-		},
-		{
-			name: "default and python defined, default wins",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
-					Python: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
+			def: &apilifecycle.KeptnTaskDefinition{
+				Spec: apilifecycle.KeptnTaskDefinitionSpec{
+					Deno: &apilifecycle.RuntimeSpec{
+						HttpReference: apilifecycle.HttpReference{
 							Url: "testy.com",
 						},
 					},
@@ -75,15 +45,15 @@ func TestGetRuntimeImage(t *testing.T) {
 		},
 		{
 			name: "deno and python defined, deno wins",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Deno: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
+			def: &apilifecycle.KeptnTaskDefinition{
+				Spec: apilifecycle.KeptnTaskDefinitionSpec{
+					Deno: &apilifecycle.RuntimeSpec{
+						HttpReference: apilifecycle.HttpReference{
 							Url: "testy.com",
 						},
 					},
-					Python: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
+					Python: &apilifecycle.RuntimeSpec{
+						HttpReference: apilifecycle.HttpReference{
 							Url: "testy.com",
 						},
 					},
@@ -104,109 +74,70 @@ func TestGetRuntimeImage(t *testing.T) {
 func TestGetRuntimeSpec(t *testing.T) {
 	tests := []struct {
 		name string
-		def  *klcv1beta1.KeptnTaskDefinition
-		want *klcv1beta1.RuntimeSpec
+		def  *apilifecycle.KeptnTaskDefinition
+		want *apilifecycle.RuntimeSpec
 	}{
 		{
 			name: PythonScriptKey,
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Python: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
+			def: &apilifecycle.KeptnTaskDefinition{
+				Spec: apilifecycle.KeptnTaskDefinitionSpec{
+					Python: &apilifecycle.RuntimeSpec{
+						HttpReference: apilifecycle.HttpReference{
 							Url: "testy.com",
 						},
 					},
 				},
 			},
-			want: &klcv1beta1.RuntimeSpec{
-				HttpReference: klcv1beta1.HttpReference{
+			want: &apilifecycle.RuntimeSpec{
+				HttpReference: apilifecycle.HttpReference{
 					Url: "testy.com",
 				},
 			},
 		},
 		{
 			name: FunctionScriptKey,
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Deno: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
+			def: &apilifecycle.KeptnTaskDefinition{
+				Spec: apilifecycle.KeptnTaskDefinitionSpec{
+					Deno: &apilifecycle.RuntimeSpec{
+						HttpReference: apilifecycle.HttpReference{
 							Url: "testy.com",
 						},
 					},
 				},
 			},
-			want: &klcv1beta1.RuntimeSpec{
-				HttpReference: klcv1beta1.HttpReference{
+			want: &apilifecycle.RuntimeSpec{
+				HttpReference: apilifecycle.HttpReference{
 					Url: "testy.com",
 				},
 			},
 		},
 		{
-			name: "default function",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
+			name: "deno & python exist",
+			def: &apilifecycle.KeptnTaskDefinition{
+				Spec: apilifecycle.KeptnTaskDefinitionSpec{
+					Deno: &apilifecycle.RuntimeSpec{
+						HttpReference: apilifecycle.HttpReference{
 							Url: "testy.com",
 						},
 					},
-				},
-			},
-			want: &klcv1beta1.RuntimeSpec{
-				HttpReference: klcv1beta1.HttpReference{
-					Url: "testy.com",
-				},
-			},
-		},
-		{
-			name: "default function & python exist",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
-					Python: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
+					Python: &apilifecycle.RuntimeSpec{
+						HttpReference: apilifecycle.HttpReference{
 							Url: "nottesty.com",
 						},
 					},
 				},
 			},
-			want: &klcv1beta1.RuntimeSpec{
-				HttpReference: klcv1beta1.HttpReference{
-					Url: "testy.com",
-				},
-			},
-		},
-		{
-			name: "default function empty & python exists ",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "",
-						},
-					},
-					Python: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
-				},
-			},
-			want: &klcv1beta1.RuntimeSpec{
-				HttpReference: klcv1beta1.HttpReference{
+			want: &apilifecycle.RuntimeSpec{
+				HttpReference: apilifecycle.HttpReference{
 					Url: "testy.com",
 				},
 			},
 		},
 		{
 			name: "only container spec exists ",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Container: &klcv1beta1.ContainerSpec{
+			def: &apilifecycle.KeptnTaskDefinition{
+				Spec: apilifecycle.KeptnTaskDefinitionSpec{
+					Container: &apilifecycle.ContainerSpec{
 						Container: &corev1.Container{
 							Name: "myc",
 						},
@@ -229,25 +160,14 @@ func TestGetRuntimeMountPath(t *testing.T) {
 
 	tests := []struct {
 		name string
-		def  *klcv1beta1.KeptnTaskDefinition
+		def  *apilifecycle.KeptnTaskDefinition
 		want string
 	}{
 		{
-			name: "default function",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						CmdParameters: "hi",
-					},
-				},
-			},
-			want: FunctionScriptMountPath,
-		},
-		{
 			name: "deno",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Deno: &klcv1beta1.RuntimeSpec{
+			def: &apilifecycle.KeptnTaskDefinition{
+				Spec: apilifecycle.KeptnTaskDefinitionSpec{
+					Deno: &apilifecycle.RuntimeSpec{
 						CmdParameters: "hi",
 					},
 				},
@@ -256,9 +176,9 @@ func TestGetRuntimeMountPath(t *testing.T) {
 		},
 		{
 			name: PythonScriptKey,
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Python: &klcv1beta1.RuntimeSpec{
+			def: &apilifecycle.KeptnTaskDefinition{
+				Spec: apilifecycle.KeptnTaskDefinitionSpec{
+					Python: &apilifecycle.RuntimeSpec{
 						CmdParameters: "hi",
 					},
 				},
@@ -266,34 +186,16 @@ func TestGetRuntimeMountPath(t *testing.T) {
 			want: PythonScriptMountPath,
 		},
 		{
-			name: "default and python defined, default wins",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Function: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
-					Python: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
-							Url: "testy.com",
-						},
-					},
-				},
-			},
-			want: FunctionScriptMountPath,
-		},
-		{
 			name: "deno and python defined, deno wins",
-			def: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Deno: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
+			def: &apilifecycle.KeptnTaskDefinition{
+				Spec: apilifecycle.KeptnTaskDefinitionSpec{
+					Deno: &apilifecycle.RuntimeSpec{
+						HttpReference: apilifecycle.HttpReference{
 							Url: "testy.com",
 						},
 					},
-					Python: &klcv1beta1.RuntimeSpec{
-						HttpReference: klcv1beta1.HttpReference{
+					Python: &apilifecycle.RuntimeSpec{
+						HttpReference: apilifecycle.HttpReference{
 							Url: "testy.com",
 						},
 					},
@@ -314,7 +216,7 @@ func TestGetRuntimeMountPath(t *testing.T) {
 func TestIsRuntimeEmpty(t *testing.T) {
 	tests := []struct {
 		name string
-		spec *klcv1beta1.RuntimeSpec
+		spec *apilifecycle.RuntimeSpec
 		want bool
 	}{
 		{
@@ -324,8 +226,8 @@ func TestIsRuntimeEmpty(t *testing.T) {
 		},
 		{
 			name: "not empty",
-			spec: &klcv1beta1.RuntimeSpec{
-				HttpReference: klcv1beta1.HttpReference{Url: "hello.com"},
+			spec: &apilifecycle.RuntimeSpec{
+				HttpReference: apilifecycle.HttpReference{Url: "hello.com"},
 			},
 			want: false,
 		},
@@ -342,7 +244,7 @@ func TestIsRuntimeEmpty(t *testing.T) {
 func TestIsContianerEmpty(t *testing.T) {
 	tests := []struct {
 		name string
-		spec *klcv1beta1.ContainerSpec
+		spec *apilifecycle.ContainerSpec
 		want bool
 	}{
 		{
@@ -352,7 +254,7 @@ func TestIsContianerEmpty(t *testing.T) {
 		},
 		{
 			name: "not empty",
-			spec: &klcv1beta1.ContainerSpec{
+			spec: &apilifecycle.ContainerSpec{
 				Container: &corev1.Container{
 					Name: "name",
 				},
@@ -373,20 +275,20 @@ func TestIsInline(t *testing.T) {
 
 	var tests = []struct {
 		name string
-		spec *klcv1beta1.RuntimeSpec
+		spec *apilifecycle.RuntimeSpec
 		want bool
 	}{
 		{
 			name: "empty inline",
-			spec: &klcv1beta1.RuntimeSpec{
-				Inline: klcv1beta1.Inline{},
+			spec: &apilifecycle.RuntimeSpec{
+				Inline: apilifecycle.Inline{},
 			},
 			want: false,
 		},
 		{
 			name: "code in inline",
-			spec: &klcv1beta1.RuntimeSpec{
-				Inline: klcv1beta1.Inline{
+			spec: &apilifecycle.RuntimeSpec{
+				Inline: apilifecycle.Inline{
 					Code: "testcode",
 				},
 			},
@@ -411,12 +313,12 @@ func TestIsVolumeMountPresent(t *testing.T) {
 
 	var tests = []struct {
 		name string
-		spec *klcv1beta1.ContainerSpec
+		spec *apilifecycle.ContainerSpec
 		want bool
 	}{
 		{
 			name: "with mount",
-			spec: &klcv1beta1.ContainerSpec{
+			spec: &apilifecycle.ContainerSpec{
 				Container: &corev1.Container{
 					VolumeMounts: []corev1.VolumeMount{
 						{
@@ -434,14 +336,14 @@ func TestIsVolumeMountPresent(t *testing.T) {
 		},
 		{
 			name: "no container",
-			spec: &klcv1beta1.ContainerSpec{
+			spec: &apilifecycle.ContainerSpec{
 				Container: nil,
 			},
 			want: false,
 		},
 		{
 			name: "no mount",
-			spec: &klcv1beta1.ContainerSpec{
+			spec: &apilifecycle.ContainerSpec{
 				Container: &corev1.Container{},
 			},
 			want: false,
@@ -460,14 +362,14 @@ func TestSpecExists(t *testing.T) {
 
 	tests := []struct {
 		name       string
-		definition *klcv1beta1.KeptnTaskDefinition
+		definition *apilifecycle.KeptnTaskDefinition
 		want       bool
 	}{
 		{
 			name: "container spec",
-			definition: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Container: &klcv1beta1.ContainerSpec{
+			definition: &apilifecycle.KeptnTaskDefinition{
+				Spec: apilifecycle.KeptnTaskDefinitionSpec{
+					Container: &apilifecycle.ContainerSpec{
 						Container: &corev1.Container{
 							Name: "mytestcontainer",
 						},
@@ -478,9 +380,9 @@ func TestSpecExists(t *testing.T) {
 		},
 		{
 			name: "runtime spec",
-			definition: &klcv1beta1.KeptnTaskDefinition{
-				Spec: klcv1beta1.KeptnTaskDefinitionSpec{
-					Python: &klcv1beta1.RuntimeSpec{
+			definition: &apilifecycle.KeptnTaskDefinition{
+				Spec: apilifecycle.KeptnTaskDefinitionSpec{
+					Python: &apilifecycle.RuntimeSpec{
 						CmdParameters: "ciaoPy",
 					},
 				},
@@ -507,14 +409,14 @@ func TestGetCmName(t *testing.T) {
 	tests := []struct {
 		name         string
 		functionName string
-		spec         *klcv1beta1.RuntimeSpec
+		spec         *apilifecycle.RuntimeSpec
 		want         string
 	}{
 		{
 			name:         "inline func",
 			functionName: "funcName",
-			spec: &klcv1beta1.RuntimeSpec{
-				Inline: klcv1beta1.Inline{
+			spec: &apilifecycle.RuntimeSpec{
+				Inline: apilifecycle.Inline{
 					Code: "code",
 				},
 			},
@@ -523,8 +425,8 @@ func TestGetCmName(t *testing.T) {
 		{
 			name:         "inline func long name",
 			functionName: "funcNamelooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong",
-			spec: &klcv1beta1.RuntimeSpec{
-				Inline: klcv1beta1.Inline{
+			spec: &apilifecycle.RuntimeSpec{
+				Inline: apilifecycle.Inline{
 					Code: "code",
 				},
 			},
@@ -533,8 +435,8 @@ func TestGetCmName(t *testing.T) {
 		{
 			name:         "non inline func",
 			functionName: "funcName",
-			spec: &klcv1beta1.RuntimeSpec{
-				ConfigMapReference: klcv1beta1.ConfigMapReference{
+			spec: &apilifecycle.RuntimeSpec{
+				ConfigMapReference: apilifecycle.ConfigMapReference{
 					Name: "configMapName",
 				},
 			},

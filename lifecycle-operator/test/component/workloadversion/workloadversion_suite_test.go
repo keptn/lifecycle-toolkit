@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/evaluation"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/phase"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/telemetry"
@@ -46,13 +45,6 @@ var _ = BeforeSuite(func() {
 	eventSender := eventsender.NewK8sSender(k8sManager.GetEventRecorderFor("test-workloadversion-controller"))
 
 	tracerFactory := &common.TracerFactory{Tracer: tracer}
-	evaluationHandler := evaluation.NewHandler(
-		k8sManager.GetClient(),
-		eventSender,
-		GinkgoLogr,
-		tracerFactory.GetTracer(traceComponentName),
-		k8sManager.GetScheme(),
-		&telemetry.Handler{})
 
 	phaseHandler := phase.NewHandler(
 		k8sManager.GetClient(),
@@ -64,16 +56,15 @@ var _ = BeforeSuite(func() {
 	// //setup controllers here
 	config.Instance().SetDefaultNamespace(KeptnNamespace)
 	controller := &keptnworkloadversion.KeptnWorkloadVersionReconciler{
-		Client:            k8sManager.GetClient(),
-		Scheme:            k8sManager.GetScheme(),
-		EventSender:       eventSender,
-		Log:               GinkgoLogr,
-		Meters:            common.InitKeptnMeters(),
-		SpanHandler:       &telemetry.Handler{},
-		TracerFactory:     tracerFactory,
-		EvaluationHandler: evaluationHandler,
-		PhaseHandler:      phaseHandler,
-		Config:            config.Instance(),
+		Client:        k8sManager.GetClient(),
+		Scheme:        k8sManager.GetScheme(),
+		EventSender:   eventSender,
+		Log:           GinkgoLogr,
+		Meters:        common.InitKeptnMeters(),
+		SpanHandler:   &telemetry.Handler{},
+		TracerFactory: tracerFactory,
+		PhaseHandler:  phaseHandler,
+		Config:        config.Instance(),
 	}
 	Eventually(controller.SetupWithManager(k8sManager)).WithTimeout(30 * time.Second).WithPolling(time.Second).Should(Succeed())
 	close(readyToStart)

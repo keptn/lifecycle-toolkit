@@ -2,7 +2,7 @@ package keptntask
 
 import (
 	"github.com/go-logr/logr"
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/eventsender"
 	"golang.org/x/net/context"
 	corev1 "k8s.io/api/core/v1"
@@ -23,9 +23,9 @@ type BuilderOptions struct {
 	eventSender   eventsender.IEvent
 	req           ctrl.Request
 	Log           logr.Logger
-	task          *klcv1beta1.KeptnTask
-	containerSpec *klcv1beta1.ContainerSpec
-	funcSpec      *klcv1beta1.RuntimeSpec
+	task          *apilifecycle.KeptnTask
+	containerSpec *apilifecycle.ContainerSpec
+	funcSpec      *apilifecycle.RuntimeSpec
 	Image         string
 	MountPath     string
 	ConfigMap     string

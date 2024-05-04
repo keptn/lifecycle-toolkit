@@ -19,12 +19,7 @@ spec:
         - podLogs:
             selector: app=podtato-head
         - describe:
-            resource: keptnworkloadversion
-        - describe:
             resource: keptnappversion
         - podLogs:
             namespace: keptn-system
             selector: control-plane=lifecycle-operator
-        - podLogs:
-            namespace: keptn-system
-            selector: control-plane=metrics-operator

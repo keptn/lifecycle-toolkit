@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	analysistypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"github.com/prometheus/client_golang/prometheus"
 	io_prometheus_client "github.com/prometheus/client_model/go"

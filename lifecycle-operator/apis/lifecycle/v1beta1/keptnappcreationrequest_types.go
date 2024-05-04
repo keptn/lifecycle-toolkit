@@ -17,9 +17,6 @@ limitations under the License.
 package v1beta1
 
 import (
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -30,7 +27,6 @@ type KeptnAppCreationRequestSpec struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:storageversion
 // +kubebuilder:subresource:status
 
 // KeptnAppCreationRequest is the Schema for the keptnappcreationrequests API
@@ -59,18 +55,4 @@ type KeptnAppCreationRequestList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnAppCreationRequest{}, &KeptnAppCreationRequestList{})
-}
-
-func (kacr KeptnAppCreationRequest) IsSingleService() bool {
-	return kacr.Annotations[common.AppTypeAnnotation] == string(common.AppTypeSingleService)
-}
-
-func (kacr KeptnAppCreationRequest) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(kacr.GetSpanAttributes()...)
-}
-
-func (kacr KeptnAppCreationRequest) GetSpanAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(kacr.Name),
-	}
 }

@@ -7,7 +7,7 @@ comments: true
 A `KeptnTaskDefinition` defines tasks
 that Keptn runs as part of the pre- and post-deployment phases of a
 [KeptnApp](./app.md) or
-[KeptnWorkload](../api-reference/lifecycle/v1beta1/index.md#keptnworkload).
+[KeptnWorkload](../api-reference/lifecycle/v1/index.md#keptnworkload).
 
 A Keptn task executes as a
 [runner](https://docs.gitlab.com/runner/executors/kubernetes.html#how-the-runner-creates-kubernetes-pods)
@@ -20,11 +20,12 @@ Each `KeptnTaskDefinition` can use exactly one container with one runner.
 which is one of the following,
 differentiated by the `spec` section:
 
-- The `custom-runtime` runner provides
-  a standard Kubernetes application container
-  that is run as part of a Kubernetes job.
-  You define the runner, an application,
-  and its runtime dependencies.
+- The `container-runtime` runner provides
+  functionality to run
+  a standard Kubernetes container inside
+  a Kubernetes job.
+  You define the container image, and
+  the arbitrary application inside it.
   This gives you the flexibility
   to define tasks using the language and facilities of your choice,
   although it is more complicated that using one of the pre-defined runtimes.
@@ -39,8 +40,7 @@ differentiated by the `spec` section:
       to define tasks using
       [Deno](https://deno.com/)
       scripts,
-      which use a syntax similar to JavaScript and Typescript,
-      with a few limitations.
+      which use JavaScript with a few limitations.
       You can use this to specify simple actions
       without having to define a full container.
       See [runtime examples](#examples-for-deno-runtime-and-python-runtime-runners)
@@ -138,7 +138,7 @@ almost anything that you implemented with JES for Keptn v1.
           [image concepts](https://kubernetes.io/docs/concepts/containers/images/)
           and pushed to a registry
         - **other fields** -- The full list of valid fields is available at
-          [ContainerSpec](../api-reference/lifecycle/v1beta1/index.md#containerspec),
+          [ContainerSpec](../api-reference/lifecycle/v1/index.md#containerspec),
           with additional information in the Kubernetes
           [Container](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container)
           spec documentation.
@@ -287,7 +287,7 @@ and Keptn sets up the container and runs the script as part of the task.
 
 A Task executes the TaskDefinition of a
 [KeptnApp](app.md) or a
-[KeptnWorkload](../api-reference/lifecycle/v1beta1/index.md#keptnworkload).
+[KeptnWorkload](../api-reference/lifecycle/v1/index.md#keptnworkload).
 The execution is done by spawning a Kubernetes
 [Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/)
 to handle a single Task.
@@ -493,14 +493,14 @@ directory for more example `KeptnTaskDefinition` YAML files.
 
 API Reference:
 
-- [KeptnTaskDefinition](../api-reference/lifecycle/v1beta1/index.md#keptntaskdefinition)
-- [KeptnTaskDefinitionList](../api-reference/lifecycle/v1beta1/index.md#keptntaskdefinitionlist)
-- [KeptnTaskDefinitionSpec](../api-reference/lifecycle/v1beta1/index.md#keptntaskdefinitionspec)
-- [FunctionReference](../api-reference/lifecycle/v1beta1/index.md#functionreference)
-- [FunctionSpec](../api-reference/lifecycle/v1beta1/index.md#runtimespec)
-- [FunctionStatus](../api-reference/lifecycle/v1beta1/index.md#functionstatus)
-- [HttpReference](../api-reference/lifecycle/v1beta1/index.md#httpreference)
-- [Inline](../api-reference/lifecycle/v1beta1/index.md#inline)
+- [KeptnTaskDefinition](../api-reference/lifecycle/v1/index.md#keptntaskdefinition)
+- [KeptnTaskDefinitionList](../api-reference/lifecycle/v1/index.md#keptntaskdefinitionlist)
+- [KeptnTaskDefinitionSpec](../api-reference/lifecycle/v1/index.md#keptntaskdefinitionspec)
+- [FunctionReference](../api-reference/lifecycle/v1/index.md#functionreference)
+- [FunctionSpec](../api-reference/lifecycle/v1/index.md#runtimespec)
+- [FunctionStatus](../api-reference/lifecycle/v1/index.md#functionstatus)
+- [HttpReference](../api-reference/lifecycle/v1/index.md#httpreference)
+- [Inline](../api-reference/lifecycle/v1/index.md#inline)
 
 ## Differences between versions
 

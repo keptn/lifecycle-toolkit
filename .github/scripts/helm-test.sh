@@ -5,6 +5,9 @@
 # This script supports the comparison of standard values and expected templated results to helm chart
 # it is used to make sure changes to the chart are intentional and produce expected outcomes
 
+# shellcheck source=./.github/scripts/helm-utils.sh
+source ./.github/scripts/helm-utils.sh
+
 echo "running Helm tests"
   tests=$(find ./.github/scripts/.helm-tests -maxdepth 1 -mindepth 1 -type d )
 
@@ -12,21 +15,7 @@ echo "running Helm tests"
   successful=0
   failures=""
 
-    helm repo add keptn "https://charts.lifecycle.keptn.sh"
-    helm repo update
-
-    for chart_dir in ./lifecycle-operator/chart \
-            ./metrics-operator/chart \
-            ./keptn-cert-manager/chart \
-            ./chart; do
-        # shellcheck disable=SC2164
-        cd "$chart_dir"
-        echo "updating charts for" $chart_dir
-        helm dependency update
-        helm dependency build
-        # shellcheck disable=SC2164
-        cd -  # Return to the previous directory
-    done
+  performHelmRepoUpdate
 
   for test in $tests
   do

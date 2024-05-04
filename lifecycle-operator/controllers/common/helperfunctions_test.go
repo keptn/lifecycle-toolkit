@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	klcv1beta1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
-	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1/common"
+	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/testcommon"
 	"github.com/stretchr/testify/require"
@@ -22,19 +22,19 @@ import (
 func Test_GetItemStatus(t *testing.T) {
 	tests := []struct {
 		name     string
-		inStatus []klcv1beta1.ItemStatus
-		want     klcv1beta1.ItemStatus
+		inStatus []apilifecycle.ItemStatus
+		want     apilifecycle.ItemStatus
 	}{
 		{
 			name: "non-existing",
-			inStatus: []klcv1beta1.ItemStatus{
+			inStatus: []apilifecycle.ItemStatus{
 				{
 					DefinitionName: "def-name",
 					Name:           "name",
 					Status:         apicommon.StatePending,
 				},
 			},
-			want: klcv1beta1.ItemStatus{
+			want: apilifecycle.ItemStatus{
 				DefinitionName: "non-existing",
 				Status:         apicommon.StatePending,
 				Name:           "",
@@ -42,14 +42,14 @@ func Test_GetItemStatus(t *testing.T) {
 		},
 		{
 			name: "def-name",
-			inStatus: []klcv1beta1.ItemStatus{
+			inStatus: []apilifecycle.ItemStatus{
 				{
 					DefinitionName: "def-name",
 					Name:           "name",
 					Status:         apicommon.StateProgressing,
 				},
 			},
-			want: klcv1beta1.ItemStatus{
+			want: apilifecycle.ItemStatus{
 				DefinitionName: "def-name",
 				Name:           "name",
 				Status:         apicommon.StateProgressing,
@@ -57,8 +57,8 @@ func Test_GetItemStatus(t *testing.T) {
 		},
 		{
 			name:     "empty",
-			inStatus: []klcv1beta1.ItemStatus{},
-			want: klcv1beta1.ItemStatus{
+			inStatus: []apilifecycle.ItemStatus{},
+			want: apilifecycle.ItemStatus{
 				DefinitionName: "empty",
 				Status:         apicommon.StatePending,
 				Name:           "",
@@ -75,22 +75,22 @@ func Test_GetItemStatus(t *testing.T) {
 
 func Test_GetOldStatus(t *testing.T) {
 	tests := []struct {
-		statuses       []klcv1beta1.ItemStatus
+		statuses       []apilifecycle.ItemStatus
 		definitionName string
 		want           apicommon.KeptnState
 	}{
 		{
-			statuses:       []klcv1beta1.ItemStatus{},
+			statuses:       []apilifecycle.ItemStatus{},
 			definitionName: "",
 			want:           "",
 		},
 		{
-			statuses:       []klcv1beta1.ItemStatus{},
+			statuses:       []apilifecycle.ItemStatus{},
 			definitionName: "defName",
 			want:           "",
 		},
 		{
-			statuses: []klcv1beta1.ItemStatus{
+			statuses: []apilifecycle.ItemStatus{
 				{
 					DefinitionName: "defName",
 					Status:         apicommon.StateFailed,
@@ -101,7 +101,7 @@ func Test_GetOldStatus(t *testing.T) {
 			want:           "",
 		},
 		{
-			statuses: []klcv1beta1.ItemStatus{
+			statuses: []apilifecycle.ItemStatus{
 				{
 					DefinitionName: "defName",
 					Status:         apicommon.StateFailed,
@@ -124,15 +124,15 @@ func Test_GetOldStatus(t *testing.T) {
 func Test_GetTaskDefinition(t *testing.T) {
 	tests := []struct {
 		name             string
-		taskDef          *klcv1beta1.KeptnTaskDefinition
+		taskDef          *apilifecycle.KeptnTaskDefinition
 		taskDefName      string
 		taskDefNamespace string
-		out              *klcv1beta1.KeptnTaskDefinition
+		out              *apilifecycle.KeptnTaskDefinition
 		wantError        bool
 	}{
 		{
 			name: "taskDef not found",
-			taskDef: &klcv1beta1.KeptnTaskDefinition{
+			taskDef: &apilifecycle.KeptnTaskDefinition{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "taskDef",
 					Namespace: "some-other-namespace",
@@ -145,7 +145,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 		},
 		{
 			name: "taskDef found",
-			taskDef: &klcv1beta1.KeptnTaskDefinition{
+			taskDef: &apilifecycle.KeptnTaskDefinition{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "taskDef",
 					Namespace: "some-namespace",
@@ -153,7 +153,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 			},
 			taskDefName:      "taskDef",
 			taskDefNamespace: "some-namespace",
-			out: &klcv1beta1.KeptnTaskDefinition{
+			out: &apilifecycle.KeptnTaskDefinition{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "taskDef",
 					Namespace: "some-namespace",
@@ -163,7 +163,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 		},
 		{
 			name: "taskDef found in default Keptn namespace",
-			taskDef: &klcv1beta1.KeptnTaskDefinition{
+			taskDef: &apilifecycle.KeptnTaskDefinition{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "taskDef",
 					Namespace: testcommon.KeptnNamespace,
@@ -171,7 +171,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 			},
 			taskDefName:      "taskDef",
 			taskDefNamespace: "some-namespace",
-			out: &klcv1beta1.KeptnTaskDefinition{
+			out: &apilifecycle.KeptnTaskDefinition{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "taskDef",
 					Namespace: testcommon.KeptnNamespace,
@@ -181,7 +181,7 @@ func Test_GetTaskDefinition(t *testing.T) {
 		},
 	}
 
-	err := klcv1beta1.AddToScheme(scheme.Scheme)
+	err := apilifecycle.AddToScheme(scheme.Scheme)
 	require.Nil(t, err)
 
 	config.Instance().SetDefaultNamespace(testcommon.KeptnNamespace)
@@ -208,15 +208,15 @@ func Test_GetTaskDefinition(t *testing.T) {
 func Test_GetEvaluationDefinition(t *testing.T) {
 	tests := []struct {
 		name             string
-		evalDef          *klcv1beta1.KeptnEvaluationDefinition
+		evalDef          *apilifecycle.KeptnEvaluationDefinition
 		evalDefName      string
 		evalDefNamespace string
-		out              *klcv1beta1.KeptnEvaluationDefinition
+		out              *apilifecycle.KeptnEvaluationDefinition
 		wantError        bool
 	}{
 		{
 			name: "evalDef not found",
-			evalDef: &klcv1beta1.KeptnEvaluationDefinition{
+			evalDef: &apilifecycle.KeptnEvaluationDefinition{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "evalDef",
 					Namespace: "some-other-namespace",
@@ -229,7 +229,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 		},
 		{
 			name: "evalDef found",
-			evalDef: &klcv1beta1.KeptnEvaluationDefinition{
+			evalDef: &apilifecycle.KeptnEvaluationDefinition{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "evalDef",
 					Namespace: "some-namespace",
@@ -237,7 +237,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 			},
 			evalDefName:      "evalDef",
 			evalDefNamespace: "some-namespace",
-			out: &klcv1beta1.KeptnEvaluationDefinition{
+			out: &apilifecycle.KeptnEvaluationDefinition{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "evalDef",
 					Namespace: "some-namespace",
@@ -247,7 +247,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 		},
 		{
 			name: "evalDef found in default Keptn namespace",
-			evalDef: &klcv1beta1.KeptnEvaluationDefinition{
+			evalDef: &apilifecycle.KeptnEvaluationDefinition{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "evalDef",
 					Namespace: testcommon.KeptnNamespace,
@@ -255,7 +255,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 			},
 			evalDefName:      "evalDef",
 			evalDefNamespace: "some-namespace",
-			out: &klcv1beta1.KeptnEvaluationDefinition{
+			out: &apilifecycle.KeptnEvaluationDefinition{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      "evalDef",
 					Namespace: testcommon.KeptnNamespace,
@@ -265,7 +265,7 @@ func Test_GetEvaluationDefinition(t *testing.T) {
 		},
 	}
 
-	err := klcv1beta1.AddToScheme(scheme.Scheme)
+	err := apilifecycle.AddToScheme(scheme.Scheme)
 	require.Nil(t, err)
 	config.Instance().SetDefaultNamespace(testcommon.KeptnNamespace)
 
@@ -397,10 +397,10 @@ func Test_resourceRefUIDIndexFunc(t *testing.T) {
 		{
 			name: "get uid of resource reference",
 			args: args{
-				rawObj: &klcv1beta1.KeptnWorkloadVersion{
-					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
-							ResourceReference: klcv1beta1.ResourceReference{
+				rawObj: &apilifecycle.KeptnWorkloadVersion{
+					Spec: apilifecycle.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
+							ResourceReference: apilifecycle.ResourceReference{
 								UID: "my-uid",
 							},
 						},
@@ -412,10 +412,10 @@ func Test_resourceRefUIDIndexFunc(t *testing.T) {
 		{
 			name: "empty uid",
 			args: args{
-				rawObj: &klcv1beta1.KeptnWorkloadVersion{
-					Spec: klcv1beta1.KeptnWorkloadVersionSpec{
-						KeptnWorkloadSpec: klcv1beta1.KeptnWorkloadSpec{
-							ResourceReference: klcv1beta1.ResourceReference{
+				rawObj: &apilifecycle.KeptnWorkloadVersion{
+					Spec: apilifecycle.KeptnWorkloadVersionSpec{
+						KeptnWorkloadSpec: apilifecycle.KeptnWorkloadSpec{
+							ResourceReference: apilifecycle.ResourceReference{
 								UID: "",
 							},
 						},

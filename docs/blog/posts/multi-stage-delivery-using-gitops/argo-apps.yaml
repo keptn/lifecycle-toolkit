@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: simple-go-app-context
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/bacherfl/keptn-analysis-demo'
+    path: simple-app/chart-dev
+    targetRevision: HEAD
+    helm:
+      parameters:
+        - name: "commitID"
+          value: "$ARGOCD_APP_REVISION"
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: simple-go
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: simple-go-app-context-prod
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/bacherfl/keptn-analysis-demo'
+    path: simple-app/chart-prod
+    targetRevision: HEAD
+    helm:
+      parameters:
+        - name: "commitID"
+          value: "$ARGOCD_APP_REVISION"
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: simple-go
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -10,7 +10,7 @@ list of Service Level Objectives (SLOs) for an `Analysis`.
 ## Synopsis
 
 ```yaml
-apiVersion: metrics.keptn.sh/v1beta1
+apiVersion: metrics.keptn.sh/v1
 kind: AnalysisDefinition
 metadata:
   name: <name-of-this-resource>
@@ -134,7 +134,7 @@ Each of these objectives must specify:
 ## Example
 
 ```yaml
-{% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/metrics-operator/config/samples/metrics_v1beta1_analysisdefinition.yaml" %}
+{% include "https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/metrics-operator/config/samples/metrics_v1_analysisdefinition.yaml" %}
 ```
 
 For a full example of how to implement the Keptn Analysis feature, see the
@@ -144,7 +144,7 @@ guide page.
 ## Files
 
 API reference:
-[AnalysisDefinition](../api-reference/metrics/v1beta1/index.md#analysisdefinition)
+[AnalysisDefinition](../api-reference/metrics/v1/index.md#analysisdefinition)
 
 ## Differences between versions
 

@@ -17,18 +17,9 @@ limitations under the License.
 package v1alpha3
 
 import (
-	"time"
-
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha3/common"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/trace"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
-
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // KeptnEvaluationSpec defines the desired state of KeptnEvaluation
 type KeptnEvaluationSpec struct {
@@ -138,105 +129,4 @@ type KeptnEvaluationList struct {
 
 func init() {
 	SchemeBuilder.Register(&KeptnEvaluation{}, &KeptnEvaluationList{})
-}
-
-func (e KeptnEvaluationList) GetItems() []client.Object {
-	var b []client.Object
-	for _, i := range e.Items {
-		b = append(b, &i)
-	}
-	return b
-}
-
-func (e *KeptnEvaluation) SetStartTime() {
-	if e.Status.StartTime.IsZero() {
-		e.Status.StartTime = metav1.NewTime(time.Now().UTC())
-	}
-}
-
-func (e *KeptnEvaluation) SetEndTime() {
-	if e.Status.EndTime.IsZero() {
-		e.Status.EndTime = metav1.NewTime(time.Now().UTC())
-	}
-}
-
-func (e *KeptnEvaluation) IsStartTimeSet() bool {
-	return !e.Status.StartTime.IsZero()
-}
-
-func (e *KeptnEvaluation) IsEndTimeSet() bool {
-	return !e.Status.EndTime.IsZero()
-}
-
-func (e KeptnEvaluation) GetActiveMetricsAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(e.Spec.AppName),
-		common.AppVersion.String(e.Spec.AppVersion),
-		common.WorkloadName.String(e.Spec.Workload),
-		common.WorkloadVersion.String(e.Spec.WorkloadVersion),
-		common.EvaluationName.String(e.Name),
-		common.EvaluationType.String(string(e.Spec.Type)),
-	}
-}
-
-func (e KeptnEvaluation) GetMetricsAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(e.Spec.AppName),
-		common.AppVersion.String(e.Spec.AppVersion),
-		common.WorkloadName.String(e.Spec.Workload),
-		common.WorkloadVersion.String(e.Spec.WorkloadVersion),
-		common.EvaluationName.String(e.Name),
-		common.EvaluationType.String(string(e.Spec.Type)),
-		common.EvaluationStatus.String(string(e.Status.OverallStatus)),
-	}
-}
-
-func (e *KeptnEvaluation) AddEvaluationStatus(objective Objective) {
-
-	evaluationStatusItem := EvaluationStatusItem{
-		Status: common.StatePending,
-	}
-	if e.Status.EvaluationStatus == nil {
-		e.Status.EvaluationStatus = make(map[string]EvaluationStatusItem)
-	}
-	e.Status.EvaluationStatus[objective.KeptnMetricRef.Name] = evaluationStatusItem
-
-}
-
-func (e KeptnEvaluation) SetSpanAttributes(span trace.Span) {
-	span.SetAttributes(e.GetSpanAttributes()...)
-}
-
-func (e KeptnEvaluation) GetSpanAttributes() []attribute.KeyValue {
-	return []attribute.KeyValue{
-		common.AppName.String(e.Spec.AppName),
-		common.AppVersion.String(e.Spec.AppVersion),
-		common.WorkloadName.String(e.Spec.Workload),
-		common.WorkloadVersion.String(e.Spec.WorkloadVersion),
-		common.EvaluationName.String(e.Name),
-		common.EvaluationType.String(string(e.Spec.Type)),
-	}
-}
-
-func (e *KeptnEvaluation) SetPhaseTraceID(phase string, carrier propagation.MapCarrier) {
-	// present due to SpanItem interface
-}
-
-func (e KeptnEvaluation) GetSpanKey(phase string) string {
-	return e.Name
-}
-
-func (e KeptnEvaluation) GetSpanName(phase string) string {
-	return e.Name
-}
-
-func (e KeptnEvaluation) GetEventAnnotations() map[string]string {
-	return map[string]string{
-		"appName":                  e.Spec.AppName,
-		"appVersion":               e.Spec.AppVersion,
-		"workloadName":             e.Spec.Workload,
-		"workloadVersion":          e.Spec.WorkloadVersion,
-		"evaluationName":           e.Name,
-		"evaluationDefinitionName": e.Spec.EvaluationDefinition,
-	}
 }

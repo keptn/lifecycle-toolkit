@@ -2,7 +2,7 @@
 comments: true
 ---
 
-# Spell Checker
+# Spell checker
 
 All PRs that are pushed to a Keptn repository
 are run through a spell checker that is based on the

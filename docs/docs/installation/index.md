@@ -8,12 +8,13 @@ Keptn must be installed onto each Kubernetes cluster you want to monitor.
 Additionally, Keptn needs to be enabled on your namespaces.
 This gives you flexibility in how and where you want to use Keptn.
 
-Keptn v0.9.0 and later is installed using [Helm](https://helm.sh/).
-
-> **Note** Earlier releases could also be installed using the manifest.
+> **Note** By default, Keptn monitors all namespaces in the cluster
+> except for those reserved for major components.
 > See
-[Upgrade to Helm from a manifest installation](upgrade.md/#upgrade-to-helm-from-a-manifest-installation)
-> if you need to upgrade from a manifest installation.
+> [Namespaces and Keptn](configuration/namespace-keptn.md)
+> to learn how to limit the namespaces that Keptn monitors.
+
+Keptn is installed using [Helm](https://helm.sh/).
 
 After you install Keptn, you are ready to
 [Integrate Keptn with your applications](../guides/integrate.md).
@@ -119,6 +120,25 @@ Some helpful hints:
     ```
 
     The output shows all Keptn components that are running on your cluster.
+
+### Alternative installation methods
+
+#### Install Keptn via Glasskube
+
+[Glasskube](https://glasskube.dev/)
+is a package manager for Keptn that simplifies the installation process
+and can be used to automatically upgrade Keptn to the latest version.
+For more information on how to install Glasskube, see
+[Glasskube Installation](https://glasskube.dev/docs/getting-started/install/).
+
+To install Keptn via Glasskube after Glasskube is installed, run the following command:
+
+``` shell
+glasskube install keptn
+```
+
+After that, Keptn is installed on your cluster and
+will be automatically upgraded to the latest version.
 
 ## Keptn Helm configuration
 

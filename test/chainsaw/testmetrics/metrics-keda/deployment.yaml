@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podtato-head-entry
+  labels:
+    app: podtato-head
+spec:
+  selector:
+    matchLabels:
+      component: podtato-head-entry
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        component: podtato-head-entry

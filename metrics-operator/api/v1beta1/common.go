@@ -8,18 +8,6 @@ type ObjectReference struct {
 	Namespace string `json:"namespace,omitempty"`
 }
 
-func (o *ObjectReference) IsNamespaceSet() bool {
-	return o.Namespace != ""
-}
-
-func (o *ObjectReference) GetNamespace(defaultNamespace string) string {
-	if o.IsNamespaceSet() {
-		return o.Namespace
-	}
-
-	return defaultNamespace
-}
-
 // AnalysisState represents the state of the analysis
 type AnalysisState string
 
@@ -28,11 +16,3 @@ const (
 	StateProgressing AnalysisState = "Progressing"
 	StateCompleted   AnalysisState = "Completed"
 )
-
-func (s AnalysisState) IsPending() bool {
-	return s == StatePending || s == ""
-}
-
-func (s AnalysisState) IsCompleted() bool {
-	return s == StateCompleted
-}

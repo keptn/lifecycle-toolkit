@@ -3,28 +3,28 @@ package v1alpha2
 import (
 	"testing"
 
+	v1 "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1alpha2/common"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1beta1"
 	"github.com/stretchr/testify/require"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v2 "sigs.k8s.io/controller-runtime/pkg/webhook/conversion/testdata/api/v2"
 )
 
 func TestKeptnApp_ConvertFrom(t *testing.T) {
 	tests := []struct {
 		name    string
-		srcObj  *v1beta1.KeptnApp
+		srcObj  *v1.KeptnApp
 		wantErr bool
 		wantObj *KeptnApp
 	}{
 		{
 			name: "Test that conversion from v1alpha3 to v1alpha3 works",
-			srcObj: &v1beta1.KeptnApp{
-				TypeMeta: v1.TypeMeta{
+			srcObj: &v1.KeptnApp{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "KeptnApp",
 					APIVersion: "lifecycle.keptn.sh/v1alpha3",
 				},
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "some-keptn-app-name",
 					Namespace: "",
 					Labels: map[string]string{
@@ -34,10 +34,10 @@ func TestKeptnApp_ConvertFrom(t *testing.T) {
 						"some-annotation": "some-annotation-value",
 					},
 				},
-				Spec: v1beta1.KeptnAppSpec{
+				Spec: v1.KeptnAppSpec{
 					Version:  "1.2.3",
 					Revision: 1,
-					Workloads: []v1beta1.KeptnWorkloadRef{
+					Workloads: []v1.KeptnWorkloadRef{
 						{
 							Name:    "workload-1",
 							Version: "1.2.3",
@@ -48,13 +48,13 @@ func TestKeptnApp_ConvertFrom(t *testing.T) {
 						},
 					},
 				},
-				Status: v1beta1.KeptnAppStatus{
+				Status: v1.KeptnAppStatus{
 					CurrentVersion: "1.2.3",
 				},
 			},
 			wantErr: false,
 			wantObj: &KeptnApp{
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "some-keptn-app-name",
 					Namespace: "",
 					Labels: map[string]string{
@@ -87,8 +87,8 @@ func TestKeptnApp_ConvertFrom(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			dst := &KeptnApp{
-				TypeMeta:   v1.TypeMeta{},
-				ObjectMeta: v1.ObjectMeta{},
+				TypeMeta:   metav1.TypeMeta{},
+				ObjectMeta: metav1.ObjectMeta{},
 				Spec:       KeptnAppSpec{},
 				Status:     KeptnAppStatus{},
 			}
@@ -107,16 +107,16 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 		name    string
 		src     *KeptnApp
 		wantErr bool
-		wantObj *v1beta1.KeptnApp
+		wantObj *v1.KeptnApp
 	}{
 		{
 			name: "Test that conversion from v1alpha3 to v1alpha3 works",
 			src: &KeptnApp{
-				TypeMeta: v1.TypeMeta{
+				TypeMeta: metav1.TypeMeta{
 					Kind:       "KeptnApp",
 					APIVersion: "lifecycle.keptn.sh/v1alpha3",
 				},
-				ObjectMeta: v1.ObjectMeta{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "some-keptn-app-name",
 					Namespace: "",
 					Labels: map[string]string{
@@ -145,8 +145,8 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 				},
 			},
 			wantErr: false,
-			wantObj: &v1beta1.KeptnApp{
-				ObjectMeta: v1.ObjectMeta{
+			wantObj: &v1.KeptnApp{
+				ObjectMeta: metav1.ObjectMeta{
 					Name:      "some-keptn-app-name",
 					Namespace: "",
 					Labels: map[string]string{
@@ -156,10 +156,10 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 						"some-annotation": "some-annotation-value",
 					},
 				},
-				Spec: v1beta1.KeptnAppSpec{
+				Spec: v1.KeptnAppSpec{
 					Version:  "1.2.3",
 					Revision: 1,
-					Workloads: []v1beta1.KeptnWorkloadRef{
+					Workloads: []v1.KeptnWorkloadRef{
 						{
 							Name:    "workload-1",
 							Version: "1.2.3",
@@ -170,7 +170,7 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 						},
 					},
 				},
-				Status: v1beta1.KeptnAppStatus{
+				Status: v1.KeptnAppStatus{
 					CurrentVersion: "1.2.3",
 				},
 			},
@@ -178,11 +178,11 @@ func TestKeptnApp_ConvertTo(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			dst := v1beta1.KeptnApp{
-				TypeMeta:   v1.TypeMeta{},
-				ObjectMeta: v1.ObjectMeta{},
-				Spec:       v1beta1.KeptnAppSpec{},
-				Status:     v1beta1.KeptnAppStatus{},
+			dst := v1.KeptnApp{
+				TypeMeta:   metav1.TypeMeta{},
+				ObjectMeta: metav1.ObjectMeta{},
+				Spec:       v1.KeptnAppSpec{},
+				Status:     v1.KeptnAppStatus{},
 			}
 			if err := tt.src.ConvertTo(&dst); (err != nil) != tt.wantErr {
 				t.Errorf("ConvertTo() error = %v, wantErr %v", err, tt.wantErr)
@@ -199,8 +199,8 @@ func TestKeptnApp_ConvertFrom_Errorcase(t *testing.T) {
 	testObj := v2.ExternalJob{}
 
 	dst := &KeptnApp{
-		TypeMeta:   v1.TypeMeta{},
-		ObjectMeta: v1.ObjectMeta{},
+		TypeMeta:   metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{},
 		Spec:       KeptnAppSpec{},
 		Status:     KeptnAppStatus{},
 	}

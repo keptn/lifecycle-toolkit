@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1beta1"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	fakeprom "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus/fake"
 	promapi "github.com/prometheus/client_golang/api"
@@ -324,7 +324,7 @@ func TestFetchAnalysisValueWithAuth(t *testing.T) {
 
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		header := r.Header.Get("Authorization")
-		//prometheus encodes basic user password in header
+		// prometheus encodes basic user password in header
 		t.Log(header)
 		encoded := "Basic " + base64.StdEncoding.EncodeToString([]byte("user:password"))
 		if strings.Contains(header, encoded) {

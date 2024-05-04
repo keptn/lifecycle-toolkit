@@ -1,0 +1,23 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: keptn-certs
+  namespace: keptn-system
+spec:
+  dnsNames:
+    - lifecycle-webhook-service.keptn-system.svc
+    - lifecycle-webhook-service.keptn-system.svc.cluster.local
+    - metrics-webhook-service.keptn-system.svc
+    - metrics-webhook-service.keptn-system.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: keptn-selfsigned-issuer
+  secretName: keptn-certs
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: keptn-selfsigned-issuer
+  namespace: keptn-system
+spec:
+  selfSigned: {}

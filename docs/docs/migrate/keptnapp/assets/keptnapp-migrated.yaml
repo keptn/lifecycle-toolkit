@@ -1,4 +1,4 @@
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnApp
 metadata:
   name: "some-keptn-app"
@@ -12,7 +12,7 @@ spec:
       version: 0.2.7
 # removed pre/post-deployment tasks and evaluations
 ---
-apiVersion: lifecycle.keptn.sh/v1beta1
+apiVersion: lifecycle.keptn.sh/v1
 kind: KeptnAppContext
 metadata:
   name: "some-keptn-app" # created a resource with the same name as KeptnApp

@@ -67,6 +67,7 @@ and application health checks
 | `lifecycleOperator.replicas`                                          | customize number of installed lifecycle operator replicas                      | `1`                                   |
 | `lifecycleOperator.tolerations`                                       | add custom tolerations to lifecycle operator                                   | `[]`                                  |
 | `lifecycleOperator.topologySpreadConstraints`                         | add custom topology constraints to lifecycle operator                          | `[]`                                  |
+| `lifecycleOperator.hostNetwork`                                       | Sets hostNetwork option for lifecycle operator                                 | `false`                               |
 | `lifecycleOperatorMetricsService`                                     | Adjust settings here to change the k8s service for scraping Prometheus metrics |                                       |
 
 ### Global

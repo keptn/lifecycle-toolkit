@@ -154,6 +154,8 @@ lifecycleOperator:
   tolerations: []
 ## @param   lifecycleOperator.topologySpreadConstraints add custom topology constraints to lifecycle operator
   topologySpreadConstraints: []
+## @param   lifecycleOperator.hostNetwork Sets hostNetwork option for lifecycle operator
+  hostNetwork: false
 ## @extra   lifecycleOperatorMetricsService Adjust settings here to change the k8s service for scraping Prometheus metrics
 ## @skip    lifecycleOperatorMetricsService.ports[0].name
 ## @skip    lifecycleOperatorMetricsService.ports[0].port

@@ -100,7 +100,6 @@ data:
             "metricSelector" : [ "query" ]
           }
           "headers" : {
-            "host" : [ "mockserver.chainsaw-epic-spaniel.svc.cluster.local:1080" ],
             "content-length" : [ "0" ],
             "connection" : [ "keep-alive" ],
             "accept-encoding" : [ "gzip,deflate" ],

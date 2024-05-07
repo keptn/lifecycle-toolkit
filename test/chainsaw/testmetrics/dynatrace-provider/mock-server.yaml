@@ -99,13 +99,6 @@ data:
           "queryStringParameters" : {
             "metricSelector" : [ "query" ]
           }
-          "headers" : {
-            "content-length" : [ "0" ],
-            "connection" : [ "keep-alive" ],
-            "accept-encoding" : [ "gzip,deflate" ],
-            "User-Agent" : [ "Go-http-client/1.1" ],
-            "Authorization" : [ "Api-Token token: mytoken" ]
-          },
         },
         "httpResponse": {
           "body": {

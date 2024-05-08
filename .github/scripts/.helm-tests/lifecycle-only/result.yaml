@@ -11989,7 +11989,7 @@ spec:
         runAsNonRoot: true
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10
-      hostNetwork: false
+      hostNetwork: true
       volumes:
       - name: keptn-certs
         secret:

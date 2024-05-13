@@ -1,5 +1,5 @@
 ---
-date: 2024-05-04
+date: 2024-05-13
 authors: [bacherfl]
 description: >
   In this blog post you will learn how to use the Analysis feature of Keptn within Argo Workflows.
@@ -112,6 +112,11 @@ for the metrics mentioned above:
 ```yaml
 {% include "./using-keptn-analyses-in-argo-workflows/analysisdefinition.yaml" %}
 ```
+
+Note that the `AnalysisDefinition` used in this example is kept rather simple.
+If you would like to learn more about the possibilities of the
+analysis feature of Keptn, feel free to read more about it
+in [this blog post](./application-performance-analysis.md).
 
 ## Putting it all together
 

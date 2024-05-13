@@ -122,6 +122,7 @@ spec:
               memory: 64Mi
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10
+      hostNetwork: false
       volumes:
         - name: keptn-certs
           secret:

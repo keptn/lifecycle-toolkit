@@ -14,14 +14,14 @@ comments: true
 
 In this blog post we will explore how Keptn
 can be used within [Argo Workflows](https://argoproj.github.io/workflows/) to
-execute load tests, using a [KeptnTask](../../docs/reference/crd-reference/task.md), and analyze their results
-afterward, using the [Keptn Analysis](../../docs/reference/crd-reference/analysis.md) feature.
+execute load tests using a [KeptnTask](../../docs/reference/crd-reference/task.md), and analyze their results
+afterward using the [Keptn Analysis](../../docs/reference/crd-reference/analysis.md) feature.
 Argo Workflows is a workflow orchestration engine built for Kubernetes, which makes it a perfect fit
 to be used together with Keptn.
-We will achieve this by making use of the support for [Executor Plugins](https://argo-workflows.readthedocs.io/en/latest/executor_plugins/)
+We will achieve this by using the support for [Executor Plugins](https://argo-workflows.readthedocs.io/en/latest/executor_plugins/)
 provided by Argo Workflows.
 This plugin mechanism is an easy way of integrating custom functionality into an Argo Workflow,
-and provide further nodes in the workflow with valuable information, such as the outcome of a Keptn Analysis.
+and providing further nodes in the workflow with valuable information, such as the outcome of a Keptn Analysis.
 
 <!-- more -->
 
@@ -30,8 +30,8 @@ and provide further nodes in the workflow with valuable information, such as the
 For this, we are using the following technologies:
 
 - The [Keptn Analysis](../../docs/reference/crd-reference/analysis.md) resource
-  is used to define goals for our metrics and evaluate them.
-- [Argo Workflows](https://argoproj.github.io/workflows/) as a workflow engine.
+  defines goals for our metrics and evaluates them.
+- [Argo Workflows](https://argoproj.github.io/workflows/) is the workflow engine.
 - [Prometheus](https://prometheus.io): Provides monitoring data for the application.
 
 ## Architecture
@@ -55,7 +55,7 @@ on the Analysis results to other potential nodes in the workflow.
 
 Both of the workflow nodes are executed using a simple Argo Workflow executor plugin
 hosted in [this repo](https://github.com/bacherfl/argo-keptn-plugin).
-Note however, that the code in this repo is just a proof of concept and not
+Note, however, that the code in this repo is just a proof of concept and not
 intended for use in production.
 
 ## Setting up the environment
@@ -88,7 +88,7 @@ The related `KeptnTaskDefinition` looks as follows:
 {% include "./using-keptn-analyses-in-argo-workflows/load-generator-task.yaml" %}
 ```
 
-This task will simply create some load by sending a curl request
+This task simply creates some load by sending a curl request
 to the sample application for a duration of one minute.
 
 ## Defining the AnalysisValueTemplates
@@ -99,7 +99,7 @@ Now we are going to define the queries for the metrics we would like to analyse:
 - The error rate of the demo service
 
 Below are the `AnalysisValueTemplate` definitions, as well as the
-`KeptnMetricsProvider` which points to the Prometheus API
+`KeptnMetricsProvider` resource that points to the Prometheus API
 inside our cluster:
 
 ```yaml
@@ -118,7 +118,7 @@ for the metrics mentioned above:
 Now that we have defined our Keptn resources for executing
 load tests and analysing the performance of our application,
 it is time to put everything together by defining the
-Argo Workflow, which looks as follows:
+Argo Workflow, which looks like the following:
 
 ```yaml
 {% include "./using-keptn-analyses-in-argo-workflows/argo-workflow.yaml" %}
@@ -127,22 +127,22 @@ Argo Workflow, which looks as follows:
 This workflow contains the following steps:
 
 - **execute-load-tests:** Starts a new instance of a `KeptnTask` based on the `loadtests`
-`KeptnTaskDefinition` we have created earlier.
-The result of the step contains the `start` and `end` timestamps of the executed load tests.
+`KeptnTaskDefinition` we created earlier.
+The result of this step contains the `start` and `end` timestamps of the executed load tests.
 - **keptn-analysis:** Runs after the previous node is completed, and accepts the reported
 `start` and `end` timestamps as input parameters.
 This interval is used to create a new instance of an `Analysis` where the response time
 and error rate during this interval is evaluated, using the `AnalysisDefinition` created earlier.
 The overall result (i.e. whether the `Analysis` has passed or not), as well as a detailed breakdown
-of each objective in JSON format is reported back to argo in the results of the step.
-- **print-result:** Takes bot the `start` and `end` timestamps of the load tests, as well
+of each objective in JSON format is reported back to Argo in the results of the step.
+- **print-result:** Takes both the `start` and `end` timestamps of the load tests, as well
 as the overall `result` of the `Analysis` as input parameters, and prints a message containing
 the result.
 - **print-json**: Takes the JSON object containing the
 analysis objective breakdown of the `keptn-analysis` as an input parameter,
 and stores the received JSON object as an artifact.
-This enables other nodes in a workflow to retrieve that artifact and use the information
-in there as input artifacts.
+This enables other nodes in a workflow to retrieve that artifact and use the information in it
+as input artifacts.
 Read more about the concept of artifacts in Argo Workflows [here](https://argo-workflows.readthedocs.io/en/latest/walk-through/artifacts/).
 
 ## Executing the workflow
@@ -162,14 +162,12 @@ the Argo Workflows UI:
 ## Conclusion
 
 In this article we have explored the potential of using Keptn
-to both perform tasks, and analyse performance metrics
-within Argo Workflows, and pass on the obtained results
-to the following steps.
-Hopefully this article provided you with some inspiration of
-how you could make use of Keptn yourself within Argo Workflows -
-If yes, we would love to hear about it, and we are always happy
-about any feedback.
-Also in case you have some questions or run into any kind of issues,
+to both perform tasks and analyse performance metrics
+within Argo Workflows, and pass the results on to the following steps.
+Hopefully this article provides you with some inspiration of
+how you can make use of Keptn within Argo Workflows -
+If so, we would love to hear about it, and we always welcome any feedback.
+If you have questions or run into any kind of issues,
 feel free to reach out on the
 [#Keptn CNCF Slack channel](https://cloud-native.slack.com/archives/C017GAX90GM)
 or by raising issues in our

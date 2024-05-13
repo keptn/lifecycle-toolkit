@@ -40,7 +40,7 @@ The overall architecture of this example is depicted in the diagram below:
 
 ![Architecture](./using-keptn-analyses-in-argo-workflows/workflow.png)
 
-Our example workflow exists of two nodes, which do the following:
+Our example workflow consists of two nodes, which do the following:
 
 - The **Load Tests** node creates a `KeptnTask` that executes load tests against
 a sample application.
@@ -98,7 +98,7 @@ Now we are going to define the queries for the metrics we would like to analyse:
 - The response time of the demo service
 - The error rate of the demo service
 
-Below are the `AnalysisValueTemplate` definitions, as well as the
+Below are the `AnalysisValueTemplate` resources, as well as the
 `KeptnMetricsProvider` resource that points to the Prometheus API
 inside our cluster:
 

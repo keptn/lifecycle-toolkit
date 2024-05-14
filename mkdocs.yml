@@ -236,3 +236,5 @@ nav:
           - Word list: docs/contribute/docs/word-list.md
   - Blog:
       - blog/index.md
+  - Artifacts:
+      - artifacts/index.md

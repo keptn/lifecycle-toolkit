@@ -1,0 +1,115 @@
+metadata:
+  generateName: test-123
+  namespace: argo
+  labels:
+    example: 'true'
+spec:
+  arguments:
+    parameters:
+      - name: workload
+        value: simple-go-service
+  entrypoint: main
+  templates:
+    - name: main
+      dag:
+        tasks:
+          - name: execute-load-tests
+            template: keptn-loadtests
+          - name: analyze
+            template: keptn-analysis
+            dependencies:
+              - execute-load-tests
+            arguments:
+              parameters:
+                - name: query
+                  value: analysis/simple-go/my-analysis-definition/1m/workload=simple-go-service
+                - name: start
+                  value: "{{tasks.execute-load-tests.outputs.parameters.start}}"
+                - name: end
+                  value: "{{tasks.execute-load-tests.outputs.parameters.end}}"
+          - name: print-result
+            dependencies:
+              - analyze
+              - execute-load-tests
+            arguments:
+              parameters:
+                - name: start
+                  value: "{{tasks.execute-load-tests.outputs.parameters.start}}"
+                - name: end
+                  value: "{{tasks.execute-load-tests.outputs.parameters.end}}"
+                - name: result
+                  value: "{{tasks.analyze.outputs.parameters.result}}"
+            template: whalesay
+          - name: print-json
+            dependencies:
+              - analyze
+            arguments:
+              parameters:
+                - name: details
+                  value: "{{tasks.analyze.outputs.parameters.details}}"
+            template: print-json
+
+    - name: keptn-loadtests
+      inputs:
+        parameters:
+          - name: query
+            value: keptntask/simple-go/post-deployment-loadtests
+      outputs:
+        parameters:
+          - name: start
+            valueFrom:
+              jsonPath: '{.output.parameters.start}'
+          - name: end
+            valueFrom:
+              jsonPath: '{.output.parameters.end}'
+      plugin:
+        keptn: {}
+
+    - name: keptn-analysis
+      inputs:
+        parameters:
+          - name: query
+          - name: start
+          - name: end
+      outputs:
+        parameters:
+          - name: result
+            valueFrom:
+              jsonPath: "{.output.parameters.result}"
+          - name: details
+            valueFrom:
+              jsonPath: "{.output.parameters.details}"
+
+      plugin:
+        keptn: {}
+
+    - name: whalesay
+      inputs:
+        parameters:
+          - name: start
+          - name: end
+          - name: result
+      container:
+        image: docker/whalesay:latest
+        command: [sh, -c]
+        args: ["cowsay 'Analysis result for timeframe {{inputs.parameters.start}} - {{inputs.parameters.end}}: {{inputs.parameters.result}}'"]
+
+    - name: print-json
+      inputs:
+        parameters:
+          - name: details
+      container:
+        image: alpine:latest
+        command: [sh, -c]
+        args: ["echo '{{inputs.parameters.details}}' | tee /tmp/result.json"]
+      outputs:
+        artifacts:
+          - name: result
+            path: /tmp/result.json
+            archive:
+              none: {}
+
+  ttlStrategy:
+    secondsAfterCompletion: 300
+  podGC:
+    strategy: OnPodCompletion

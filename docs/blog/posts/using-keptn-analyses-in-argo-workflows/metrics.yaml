@@ -1,0 +1,28 @@
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetricsProvider
+metadata:
+  name: my-provider
+  namespace: simple-go
+spec:
+  targetServer: https://prometheus-k8s.monitoring.svc.cluster.local:9090
+  type: prometheus
+---
+apiVersion: metrics.keptn.sh/v1
+kind: AnalysisValueTemplate
+metadata:
+  name: response-time-p95
+  namespace: simple-go
+spec:
+  provider:
+    name: my-provider
+  query: "histogram_quantile(0.95, sum by(le) (rate(http_server_request_latency_seconds_bucket{job='{{.workload}}'}[1m])))"
+---
+apiVersion: metrics.keptn.sh/v1
+kind: AnalysisValueTemplate
+metadata:
+  name: error-rate
+  namespace: simple-go
+spec:
+  provider:
+    name: my-provider
+  query: "rate(http_requests_total{status_code='500', job='{{.workload}}'}[1m]) or on() vector(0)"

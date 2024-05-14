@@ -1,0 +1,16 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: loadtests
+  namespace: simple-go
+spec:
+  container:
+    - name: loadtests
+      image: curl
+      command: ["sh", "-c"]
+      args:
+        - |
+          for i in $(seq 1 600); do
+            curl -s http://simple-go-service.simple-go:8080
+            sleep 0.1
+          done

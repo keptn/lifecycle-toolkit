@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/keptn/lifecycle-toolkit,325,178
+/keptn/lifecycle-toolkit/issues,92,31
+/keptn/lifecycle-toolkit/pulls,59,16
+/keptn/lifecycle-toolkit/tree/main/examples/support,57,4
+/keptn/lifecycle-toolkit/tree/main/examples,47,7
+/keptn/lifecycle-toolkit/tree/main/examples/sample-app,40,10
+/keptn/lifecycle-toolkit/pull/3487,37,5
+/keptn/lifecycle-toolkit/tree/main/examples/support/observability,33,2
+/keptn/lifecycle-toolkit/pull/3500,32,8
+/keptn/lifecycle-toolkit/blob/main/test/chainsaw/scheduling-gates/simple-deployment-restart-pod/chainsaw-test.yaml,30,1

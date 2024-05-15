@@ -1,0 +1,15 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnTaskDefinition
+metadata:
+  name: pre-deployment-check-frontend
+spec:
+  deno:
+    inline:
+      code: |
+        try {
+              let resp = await fetch(http://podtato-head-frontend.podtato-kubectl.svc.cluster.local:8081);
+          }
+          catch (error){
+              console.error("Could not fetch url");
+              Deno.exit(1);
+          }

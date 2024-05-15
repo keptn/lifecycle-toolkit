@@ -1,0 +1,3 @@
+metadata:
+  labels:
+    keptn.sh/post-deployment-tasks: pre-deployment-check-frontend

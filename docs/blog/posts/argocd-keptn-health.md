@@ -11,7 +11,7 @@ comments: true
 
 # Application health checks with Keptn using ArgoCD
 
-In this blogpost we will present a planned Keptn and
+In this blog post we will present a planned Keptn and
 [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) integration to execute
 application health checks using Keptn, where the application itself is deployed
 by ArgoCD, and display the Keptn application health status via ArgoCD UI.

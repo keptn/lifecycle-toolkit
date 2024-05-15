@@ -52,7 +52,7 @@ will be used.
 
 Let's try to show a real-life example of an application deployed via ArgoCD,
 which has a healthy green status in ArgoCD UI, but it's not working as expected
-due to an internal error of the application.
+due to an internal misconfiguration of the application.
 
 We will deploy a simple podtato-head application, which consists of multiple
 Deployments and Services via ArgoCD.
@@ -72,18 +72,18 @@ We can also examine the ArgoCD UI and everything seems to be working as expected
 
 ![Healthy App](./argocd-keptn-health/healthy-app.png)
 
-Let's now try to add some additional health checks of the `podtato-head` application
+Let's now try to add some health checks of the `podtato-head` application
 and use Keptn to execute them.
 For this we are going to use the
 [Keptn Release Lifecycle Management](https://keptn.sh/stable/docs/getting-started/lifecycle-management/)
-feature and perform the health checks via `KeptnTasks`.
+feature and perform the checks via `KeptnTasks`.
 
 First we need to add `KeptnTaskDefinition` into our GitOps repository, where our
 `podtato-head` application lives.
-It defines a simple check of reachability of one of the `podtato-head` application
+It defines a simple test of reachability of one of the `podtato-head` application
 services and confirms that this service is available.
-For simplicity we choose a very simple task for example purposes, but in a real deployment,
-more advanced checks can be used.
+For simplicity we choose a very simple task that will fail for example purposes,
+but in a real deployment more advanced checks can be used.
 
 ```yaml
 {% include "./argocd-keptn-health/taskdefinition.yaml" %}
@@ -108,7 +108,7 @@ The executed `KeptnTask` therefore fails.
 Here we can see that with the use of Keptn we can perform more advanced health checks
 (tasks or evaluations) and verify that the application is healthy during the process
 of deployment which is performed by ArgoCD.
-Similary to `KeptnTasks`, `KeptnEvaluations` can be executed as part of a quality checks
+Similary to `KeptnTasks`, `KeptnEvaluations` can be executed as part of a quality health checks
 for our application.
 
 ## How to show Keptn health status in ArgoCD UI?
@@ -131,7 +131,7 @@ Deployment might be displayed on the main ArgoCD UI screen.
 ![Main screen unhealthy](./argocd-keptn-health/main-screen-unhealthy-keptn.png)
 
 Additionally, it should be possible to examine also the details of the unhealthy
-microservice and potentially reason of the failure of the checks.
+microservice and potentially see the reason of the failure of the checks.
 
 ![Details screen unhealthy](./argocd-keptn-health/details-screen-unhealthy-keptn.png)
 
@@ -153,6 +153,9 @@ We hope that this blog post gives you an idea and some inspiration
 on how these two projects can cooperate and complement each other
 effectively in order to support continuous delivery of applications
 more reliable and faster.
+
+We would really appreciate if you can provide us feedback on this
+feature below in the comments!
 
 ## Useful links
 

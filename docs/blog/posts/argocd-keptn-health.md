@@ -2,7 +2,7 @@
 date: 2024-05-15
 authors: [odubajDT]
 description: >
-  In this blog post we will present how Keptn can show application health in integration with ArgoCD.
+  This blog post presents how Keptn can show application health when integrated with ArgoCD.
 categories:
   - ArgoCD
   - Application health
@@ -17,11 +17,14 @@ advanced application health checks using Keptn, where the application itself is 
 by ArgoCD and display the Keptn application health status via ArgoCD UI.
 
 Keptn provides an effective way to perform application health checks using the
-pre- or post-deployment tasks and evaluations.
+pre- or post-deployment [tasks](https://keptn.sh/stable/docs/guides/tasks/)
+and [evaluations](https://keptn.sh/stable/docs/guides/evaluations/).
 Compared to ArgoCD application
 health checks, which are evaluating if the application is successfully deployed
 and the workloads are running on the cluster, they do not show if the microservices
-of a single application are able to communicate and cooperate with each other.
+of a single application are actually working as expected.
+For example, it could be the case that the individual services are up and running, but due to a
+networking misconfiguration they cannot communicate with each other.
 Keptn pre- and post-deployment tasks and evaluations complement the missing functionality
 by providing a straight-forward way to examine the application ability to perform
 actions for which it was developed to do.
@@ -30,17 +33,17 @@ actions for which it was developed to do.
 
 ## How it's going to work?
 
-The integration of Keptn and ArgoCD performing and displaying full application
-health checks is not fully implemented yet, but
-we can have a brief look how it might work in the future.
-
-First of all, Keptn and ArgoCD need to be installed and enabled on the same
+Keptn and ArgoCD need to be installed and enabled on the same
 cluster.
-The reason is, we want to have ArgoCD performing the actual deployment
+To install both components, you can follow the
+[Keptn installation instructions](https://keptn.sh/stable/docs/installation/)
+as well as
+[ArgoCD installation instructions](https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/).
+The reason is that we want to have ArgoCD perform the actual deployment
 of the application and Keptn executing the advanced application health checks.
 
 Additionally, we will need to have an ArgoCD extension, which will consist of
-React application extending the ArgoCD UI, implemented as
+a React application extending the ArgoCD UI, implemented as
 [ArgoCD UI Application Tab Extension](https://argo-cd.readthedocs.io/en/stable/developer-guide/extensions/ui-extensions/#application-tab-extensions)
 and a proxy allowing Keptn (which will work as a backend service)
 to push the application health status data to the ArgoCD UI.
@@ -54,7 +57,7 @@ Let's try to show a real-life example of an application deployed via ArgoCD,
 which has a healthy green status in ArgoCD UI, but it's not working as expected
 due to an internal misconfiguration of the application.
 
-We will deploy a simple podtato-head application, which consists of multiple
+We will deploy a simple `podtato-head` application, which consists of multiple
 Deployments and Services via ArgoCD.
 The Argo Application deploying the manifests can look like the following:
 
@@ -74,32 +77,32 @@ We can also examine the ArgoCD UI and everything seems to be working as expected
 
 Let's now try to add some health checks of the `podtato-head` application
 and use Keptn to execute them.
-For this we are going to use the
+For this, we are going to use the
 [Keptn Release Lifecycle Management](https://keptn.sh/stable/docs/getting-started/lifecycle-management/)
 feature and perform the checks via `KeptnTasks`.
 
-First we need to add `KeptnTaskDefinition` into our GitOps repository, where our
+First, we add `KeptnTaskDefinition` into our git repository, where our
 `podtato-head` application lives.
 It defines a simple test of reachability of one of the `podtato-head` application
 services and confirms that this service is available.
-For simplicity we choose a very simple task that will fail for example purposes,
+For simplicity, we choose a very simple task that will fail for example purposes,
 but in a real deployment more advanced checks can be used.
 
 ```yaml
 {% include "./argocd-keptn-health/taskdefinition.yaml" %}
 ```
 
-Additionally, we need to annotate the `podtato-head-frontend` Deployment to execute
+Additionally, we annotate the `podtato-head-frontend` Deployment to execute
 the task as part of `post-deployment` checks.
 
 ```yaml
 {% include "./argocd-keptn-health/annotation.yaml" %}
 ```
 
-After these two changes are made in our GitOps repository, we can restart the deployment
+After these two changes are made in our git repository, ArgoCD will see changes and re-trigger deployment
 of `podtato-head` application.
-After the restart, ArgoCD will re-deploy the application, Keptn waits until all of the
-application pods are running and afterwards executes `post-deployment` tasks.
+Keptn waits until all of the
+application pods are running and afterwards, it executes `post-deployment` tasks.
 
 Due to misconfiguration of the `podtato-head-frontend` Deployment, the service is exposed on
 port `8080` instead of `8081` as it's expected by the task.
@@ -108,18 +111,19 @@ The executed `KeptnTask` therefore fails.
 Here we can see that with the use of Keptn we can perform more advanced health checks
 (tasks or evaluations) and verify that the application is healthy during the process
 of deployment which is performed by ArgoCD.
-Similary to `KeptnTasks`, `KeptnEvaluations` can be executed as part of a quality health checks
+Similarly to `KeptnTasks`, `KeptnEvaluations` can be executed as part of a quality health check
 for our application.
 
 ## How to show Keptn health status in ArgoCD UI?
 
 Using Keptn together with ArgoCD brings a lot of value, which we saw in the previous section,
-but looking on application health status in the cluster is not the best user experience.
+but observing application health status by inspecting the status of the
+various resources using `kubectl` is not the best user experience.
 The data should be nicely displayed in the ArgoCD UI to provide the user with an overview
 if the application was deployed, if it's synchronized and if it's healthy, all in
 one place.
 
-Due to this reason, we are going to enhance ArgoCD UI with additional application health
+Due to this reason, we are going to implement an ArgoCD UI extension with additional application health
 data, which are retrieved from Keptn.
 This way, the ArgoCD UI will act as a single source of truth for the user providing all
 the information about the deployed application.

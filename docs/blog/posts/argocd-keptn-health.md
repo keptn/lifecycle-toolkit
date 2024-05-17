@@ -23,11 +23,13 @@ Compared to ArgoCD application
 health checks, which are evaluating if the application is successfully deployed
 and the workloads are running on the cluster, they do not show if the microservices
 of a single application are actually working as expected.
-For example, it could be the case that the individual services are up and running, but due to a
-networking misconfiguration they cannot communicate with each other.
+For example, it could be the case that the individual services deployed by ArgoCD are up and
+running, but due to a slow `response time` (let's say `3s`) they are unable to communicate with each other.
 Keptn pre- and post-deployment tasks and evaluations complement the missing functionality
 by providing a straight-forward way to examine the application ability to perform
 actions for which it was developed to do.
+In this particular case, Keptn can perform `KeptnEvaluations` to examine, if the `response time`
+of the application microservices are in the expected boundaries.
 
 <!-- more -->
 
@@ -55,7 +57,7 @@ will be used.
 
 Let's try to show a real-life example of an application deployed via ArgoCD,
 which has a healthy green status in ArgoCD UI, but it's not working as expected
-due to an internal misconfiguration of the application.
+due to a slow `response time` of the application.
 
 We will deploy a simple `podtato-head` application, which consists of multiple
 Deployments and Services via ArgoCD.
@@ -79,21 +81,33 @@ Let's now try to add some health checks of the `podtato-head` application
 and use Keptn to execute them.
 For this, we are going to use the
 [Keptn Release Lifecycle Management](https://keptn.sh/stable/docs/getting-started/lifecycle-management/)
-feature and perform the checks via `KeptnTasks`.
+feature and perform the checks via `KeptnEvaluations`.
+For this example, we assume that you already have a metrics provider deployed
+and configured on your cluster, which is able to fetch the `response time` values
+of the microservices.
+In our setup, we are going to use [Prometheus](https://prometheus.io/).
 
-First, we add `KeptnTaskDefinition` into our git repository, where our
-`podtato-head` application lives.
-It defines a simple test of reachability of one of the `podtato-head` application
-services and confirms that this service is available.
-For simplicity, we choose a very simple task that will fail for example purposes,
-but in a real deployment more advanced checks can be used.
+First, we need to create [KeptnMetric](https://keptn.sh/stable/docs/reference/crd-reference/metric/)
+and [KeptnMetricsProvider](https://keptn.sh/stable/docs/reference/crd-reference/metricsprovider/)
+resources in our cluster.
+Thes two resources contain a simple query for fetching `response time` of the `podtato-head`
+application microservice as well as configuration for the metrics provider supplying the data.
 
 ```yaml
-{% include "./argocd-keptn-health/taskdefinition.yaml" %}
+{% include "./argocd-keptn-health/metric.yaml" %}
+```
+
+Next, we add `KeptnEvaluationDefinition` into our git repository, where our
+`podtato-head` application lives.
+It defines the [SLO](https://www.dynatrace.com/news/blog/what-are-slos/)
+by linking the existing `KeptnMetric` resource and providing the rule the value should fullfil.
+
+```yaml
+{% include "./argocd-keptn-health/evaluationdefinition.yaml" %}
 ```
 
 Additionally, we annotate the `podtato-head-frontend` Deployment to execute
-the task as part of `post-deployment` checks.
+the task as part of `post-deployment-evaluation` checks.
 
 ```yaml
 {% include "./argocd-keptn-health/annotation.yaml" %}
@@ -102,16 +116,15 @@ the task as part of `post-deployment` checks.
 After these two changes are made in our git repository, ArgoCD will see changes and re-trigger deployment
 of `podtato-head` application.
 Keptn waits until all of the
-application pods are running and afterwards, it executes `post-deployment` tasks.
+application pods are running and afterwards, it executes `post-deployment-evaluation` tasks.
 
-Due to misconfiguration of the `podtato-head-frontend` Deployment, the service is exposed on
-port `8080` instead of `8081` as it's expected by the task.
-The executed `KeptnTask` therefore fails.
+Due to slow `response time` of the `podtato-head-frontend` microservice, the
+executed `KeptnEvaluation` fails.
 
 Here we can see that with the use of Keptn we can perform more advanced health checks
 (tasks or evaluations) and verify that the application is healthy during the process
 of deployment which is performed by ArgoCD.
-Similarly to `KeptnTasks`, `KeptnEvaluations` can be executed as part of a quality health check
+Similarly to `KeptnEvaluations`, `KeptnTasks` can be executed as part of a quality health check
 for our application.
 
 ## How to show Keptn health status in ArgoCD UI?
@@ -129,7 +142,7 @@ This way, the ArgoCD UI will act as a single source of truth for the user provid
 the information about the deployed application.
 
 Below you can see the first mockups how the extension of ArgoCD UI might look like
-and how a failed `KeptnTask` and therefore unhealthy Keptn status of `podtato-head-frontend`
+and how a failed `KeptnEvaluation` and therefore unhealthy Keptn status of `podtato-head-frontend`
 Deployment might be displayed on the main ArgoCD UI screen.
 
 ![Main screen unhealthy](./argocd-keptn-health/main-screen-unhealthy-keptn.png)
@@ -146,7 +159,7 @@ We have seen how Keptn can easily complement ArgoCD
 and enhance its functionality by providing more insights into
 application health status.
 We showed an example where ArgoCD wasn't able to detect that
-the deployed application is not healthy and used `KeptnTasks`
+the deployed application is not healthy and used `KeptnEvaluations`
 for performing more advanced checks.
 In the end, we looked at the first drafts of the potential
 ArgoCD UI extension and how it can easily display the
@@ -165,3 +178,4 @@ feature below in the comments!
 
 - <https://keptn.sh>
 - <https://argo-cd.readthedocs.io/en/stable/>
+- <https://prometheus.io/>

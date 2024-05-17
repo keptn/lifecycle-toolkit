@@ -13,8 +13,7 @@ comments: true
 
 In this blog post we will present a planned Keptn and
 [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) integration to execute
-advanced application health checks using Keptn, where the application itself is deployed
-by ArgoCD and display the Keptn application health status via ArgoCD UI.
+advanced application health checks using Keptn.
 
 Keptn provides an effective way to perform application health checks using the
 pre- or post-deployment [tasks](https://keptn.sh/stable/docs/guides/tasks/)
@@ -90,7 +89,7 @@ In our setup, we are going to use [Prometheus](https://prometheus.io/).
 First, we need to create [KeptnMetric](https://keptn.sh/stable/docs/reference/crd-reference/metric/)
 and [KeptnMetricsProvider](https://keptn.sh/stable/docs/reference/crd-reference/metricsprovider/)
 resources in our cluster.
-Thes two resources contain a simple query for fetching `response time` of the `podtato-head`
+These two resources contain a simple query for fetching `response time` of the `podtato-head`
 application microservice as well as configuration for the metrics provider supplying the data.
 
 ```yaml
@@ -113,8 +112,8 @@ the task as part of `post-deployment-evaluation` checks.
 {% include "./argocd-keptn-health/annotation.yaml" %}
 ```
 
-After these two changes are made in our git repository, ArgoCD will see changes and re-trigger deployment
-of `podtato-head` application.
+After these two changes are made in our git repository, ArgoCD will see changes and re-trigger
+the deployment of `podtato-head`.
 Keptn waits until all of the
 application pods are running and afterwards, it executes `post-deployment-evaluation` tasks.
 
@@ -154,7 +153,7 @@ microservice and potentially see the reason of the failure of the checks.
 
 ## Summary
 
-Time to sum up what we have learned in this blog post.
+Time to sum up what we have presented in this blog post.
 We have seen how Keptn can easily complement ArgoCD
 and enhance its functionality by providing more insights into
 application health status.

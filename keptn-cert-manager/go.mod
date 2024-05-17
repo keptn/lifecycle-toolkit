@@ -74,5 +74,5 @@ require (
 
 replace (
 	golang.org/x/net => golang.org/x/net v0.24.0
-	google.golang.org/protobuf => google.golang.org/protobuf v1.34.0
+	google.golang.org/protobuf => google.golang.org/protobuf v1.34.1
 )

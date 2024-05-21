@@ -32,8 +32,8 @@ import (
 //			AddHealthzCheckFunc: func(name string, check healthz.Checker) error {
 //				panic("mock out the AddHealthzCheck method")
 //			},
-//			AddMetricsExtraHandlerFunc: func(path string, handler http.Handler) error {
-//				panic("mock out the AddMetricsExtraHandler method")
+//			AddMetricsServerExtraHandlerFunc: func(path string, handler http.Handler) error {
+//				panic("mock out the AddMetricsServerExtraHandler method")
 //			},
 //			AddReadyzCheckFunc: func(name string, check healthz.Checker) error {
 //				panic("mock out the AddReadyzCheck method")
@@ -93,8 +93,8 @@ type MockManager struct {
 	// AddHealthzCheckFunc mocks the AddHealthzCheck method.
 	AddHealthzCheckFunc func(name string, check healthz.Checker) error
 
-	// AddMetricsExtraHandlerFunc mocks the AddMetricsExtraHandler method.
-	AddMetricsExtraHandlerFunc func(path string, handler http.Handler) error
+	// AddMetricsServerExtraHandlerFunc mocks the AddMetricsServerExtraHandler method.
+	AddMetricsServerExtraHandlerFunc func(path string, handler http.Handler) error
 
 	// AddReadyzCheckFunc mocks the AddReadyzCheck method.
 	AddReadyzCheckFunc func(name string, check healthz.Checker) error
@@ -155,8 +155,8 @@ type MockManager struct {
 			// Check is the check argument value.
 			Check healthz.Checker
 		}
-		// AddMetricsExtraHandler holds details about calls to the AddMetricsExtraHandler method.
-		AddMetricsExtraHandler []struct {
+		// AddMetricsServerExtraHandler holds details about calls to the AddMetricsServerExtraHandler method.
+		AddMetricsServerExtraHandler []struct {
 			// Path is the path argument value.
 			Path string
 			// Handler is the handler argument value.
@@ -216,24 +216,24 @@ type MockManager struct {
 			Ctx context.Context
 		}
 	}
-	lockAdd                    sync.RWMutex
-	lockAddHealthzCheck        sync.RWMutex
-	lockAddMetricsExtraHandler sync.RWMutex
-	lockAddReadyzCheck         sync.RWMutex
-	lockElected                sync.RWMutex
-	lockGetAPIReader           sync.RWMutex
-	lockGetCache               sync.RWMutex
-	lockGetClient              sync.RWMutex
-	lockGetConfig              sync.RWMutex
-	lockGetControllerOptions   sync.RWMutex
-	lockGetEventRecorderFor    sync.RWMutex
-	lockGetFieldIndexer        sync.RWMutex
-	lockGetHTTPClient          sync.RWMutex
-	lockGetLogger              sync.RWMutex
-	lockGetRESTMapper          sync.RWMutex
-	lockGetScheme              sync.RWMutex
-	lockGetWebhookServer       sync.RWMutex
-	lockStart                  sync.RWMutex
+	lockAdd                          sync.RWMutex
+	lockAddHealthzCheck              sync.RWMutex
+	lockAddMetricsServerExtraHandler sync.RWMutex
+	lockAddReadyzCheck               sync.RWMutex
+	lockElected                      sync.RWMutex
+	lockGetAPIReader                 sync.RWMutex
+	lockGetCache                     sync.RWMutex
+	lockGetClient                    sync.RWMutex
+	lockGetConfig                    sync.RWMutex
+	lockGetControllerOptions         sync.RWMutex
+	lockGetEventRecorderFor          sync.RWMutex
+	lockGetFieldIndexer              sync.RWMutex
+	lockGetHTTPClient                sync.RWMutex
+	lockGetLogger                    sync.RWMutex
+	lockGetRESTMapper                sync.RWMutex
+	lockGetScheme                    sync.RWMutex
+	lockGetWebhookServer             sync.RWMutex
+	lockStart                        sync.RWMutex
 }
 
 // Add calls AddFunc.
@@ -304,10 +304,10 @@ func (mock *MockManager) AddHealthzCheckCalls() []struct {
 	return calls
 }
 
-// AddMetricsExtraHandler calls AddMetricsExtraHandlerFunc.
-func (mock *MockManager) AddMetricsExtraHandler(path string, handler http.Handler) error {
-	if mock.AddMetricsExtraHandlerFunc == nil {
-		panic("MockManager.AddMetricsExtraHandlerFunc: method is nil but IManager.AddMetricsExtraHandler was just called")
+// AddMetricsServerExtraHandler calls AddMetricsServerExtraHandlerFunc.
+func (mock *MockManager) AddMetricsServerExtraHandler(path string, handler http.Handler) error {
+	if mock.AddMetricsServerExtraHandlerFunc == nil {
+		panic("MockManager.AddMetricsServerExtraHandlerFunc: method is nil but IManager.AddMetricsServerExtraHandler was just called")
 	}
 	callInfo := struct {
 		Path    string
@@ -316,17 +316,17 @@ func (mock *MockManager) AddMetricsExtraHandler(path string, handler http.Handle
 		Path:    path,
 		Handler: handler,
 	}
-	mock.lockAddMetricsExtraHandler.Lock()
-	mock.calls.AddMetricsExtraHandler = append(mock.calls.AddMetricsExtraHandler, callInfo)
-	mock.lockAddMetricsExtraHandler.Unlock()
-	return mock.AddMetricsExtraHandlerFunc(path, handler)
+	mock.lockAddMetricsServerExtraHandler.Lock()
+	mock.calls.AddMetricsServerExtraHandler = append(mock.calls.AddMetricsServerExtraHandler, callInfo)
+	mock.lockAddMetricsServerExtraHandler.Unlock()
+	return mock.AddMetricsServerExtraHandlerFunc(path, handler)
 }
 
-// AddMetricsExtraHandlerCalls gets all the calls that were made to AddMetricsExtraHandler.
+// AddMetricsServerExtraHandlerCalls gets all the calls that were made to AddMetricsServerExtraHandler.
 // Check the length with:
 //
-//	len(mockedIManager.AddMetricsExtraHandlerCalls())
-func (mock *MockManager) AddMetricsExtraHandlerCalls() []struct {
+//	len(mockedIManager.AddMetricsServerExtraHandlerCalls())
+func (mock *MockManager) AddMetricsServerExtraHandlerCalls() []struct {
 	Path    string
 	Handler http.Handler
 } {
@@ -334,9 +334,9 @@ func (mock *MockManager) AddMetricsExtraHandlerCalls() []struct {
 		Path    string
 		Handler http.Handler
 	}
-	mock.lockAddMetricsExtraHandler.RLock()
-	calls = mock.calls.AddMetricsExtraHandler
-	mock.lockAddMetricsExtraHandler.RUnlock()
+	mock.lockAddMetricsServerExtraHandler.RLock()
+	calls = mock.calls.AddMetricsServerExtraHandler
+	mock.lockAddMetricsServerExtraHandler.RUnlock()
 	return calls
 }
 

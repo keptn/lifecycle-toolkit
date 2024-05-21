@@ -58,8 +58,8 @@ Let's try to show a real-life example of an application deployed via ArgoCD,
 which has a healthy green status in ArgoCD UI, but it's not working as expected
 due to a slow `response time` of the application.
 
-We will deploy a simple `podtato-head` application via ArgoCD, which consists of multiple
-Deployments and Services.
+We will deploy a simple [podtato-head](https://github.com/podtato-head/podtato-head)
+application via ArgoCD, which consists of multiple Deployments and Services.
 The Argo Application deploying the manifests can look like the following:
 
 ```yaml
@@ -121,8 +121,7 @@ Due to slow `response time` of the `podtato-head-frontend` microservice, the
 executed `KeptnEvaluation` fails.
 
 Here we see that Keptn lets us perform more advanced health checks
-(tasks or evaluations) and verify that the application is healthy during the process
-of deployment which is performed by ArgoCD.
+(tasks or evaluations) and verify that the application deployed via ArgoCD is healthy.
 Like `KeptnEvaluations`, `KeptnTasks` can be executed as part of a quality health check
 for our application.
 

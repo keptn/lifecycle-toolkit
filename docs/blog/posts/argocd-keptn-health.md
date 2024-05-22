@@ -82,7 +82,7 @@ For this, we are going to use the
 feature and perform the checks via `KeptnEvaluations`.
 
 Apart from `KeptnEvaluations`, `KeptnTasks` can be used to execute health checks
-of an application as well, for example perfoming an http request to test
+of an application as well, for example performing an HTTP request to test
 the reachability of a certain service exposed on a configured port.
 
 For simplicity, we assume that you already have a data source

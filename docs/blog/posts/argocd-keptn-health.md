@@ -81,8 +81,10 @@ and use Keptn to execute them.
 For this, we are going to use the
 [Keptn Release Lifecycle Management](https://keptn.sh/stable/docs/getting-started/lifecycle-management/)
 feature and perform the checks via `KeptnEvaluations`.
-For this example, we assume that you already have a metrics provider deployed
-and configured on your cluster, which is able to fetch the `response time` values
+For this example, we assume that you already have a data source
+(such as Prometheus, Dynatrace, or Datadog)
+deployed and configured as a metrics provider on your cluster.
+This data provider can fetch the `response time` values
 of the microservices.
 In our setup, we are going to use [Prometheus](https://prometheus.io/).
 

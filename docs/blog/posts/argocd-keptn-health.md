@@ -20,7 +20,7 @@ pre- or post-deployment [tasks](https://keptn.sh/stable/docs/guides/tasks/)
 and [evaluations](https://keptn.sh/stable/docs/guides/evaluations/).
 ArgoCD application health checks evaluate whether the application is successfully deployed
 and the workloads are running on the cluster
-but they do not show if the microservices
+but they do not show if the services
 of a single application are actually working as expected.
 For example, it could be the case that the individual services deployed by ArgoCD are up and
 running, but due to a slow `response time` (let's say `3s`), the users would have a bad experience.
@@ -28,7 +28,7 @@ Keptn pre- and post-deployment tasks and evaluations complement the missing func
 by providing a straight-forward way to examine the application's ability to perform
 the actions for which it was developed.
 In this particular case, Keptn can perform `KeptnEvaluations` to examine whether the `response time`
-of the application microservices are in the expected boundaries.
+of the application services are in the expected boundaries.
 
 <!-- more -->
 
@@ -46,11 +46,10 @@ of the application and Keptn execute the advanced application health checks.
 Additionally, we will need to have an ArgoCD extension, which consists of
 a React application extending the ArgoCD UI, implemented as  an
 [ArgoCD UI Application Tab Extension](https://argo-cd.readthedocs.io/en/stable/developer-guide/extensions/ui-extensions/#application-tab-extensions)
-and a proxy allowing Keptn (which will work as a backend service)
-to push the application health status data to the ArgoCD UI.
-For proxy setup, the
+and a
 [ArgoCD proxy extension](https://argo-cd.readthedocs.io/en/stable/developer-guide/extensions/proxy-extensions/)
-will be used.
+allowing Keptn (which will work as a backend service)
+to push the application health status data to the ArgoCD UI.
 
 ## What's the added value of Keptn?
 

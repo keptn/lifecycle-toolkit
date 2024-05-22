@@ -80,18 +80,23 @@ and use Keptn to execute them.
 For this, we are going to use the
 [Keptn Release Lifecycle Management](https://keptn.sh/stable/docs/getting-started/lifecycle-management/)
 feature and perform the checks via `KeptnEvaluations`.
-For this example, we assume that you already have a data source
+
+Apart from `KeptnEvaluations`, `KeptnTasks` can be used to execute health checks
+of an application as well, for example perfoming an http request to test
+the reachability of a certain service exposed on a configured port.
+
+For simplicity, we assume that you already have a data source
 (such as Prometheus, Dynatrace, or Datadog)
 deployed and configured as a metrics provider on your cluster.
 This data provider can fetch the `response time` values
-of the microservices.
+of the services.
 In our setup, we are going to use [Prometheus](https://prometheus.io/).
 
 First, we need to create [KeptnMetric](https://keptn.sh/stable/docs/reference/crd-reference/metric/)
 and [KeptnMetricsProvider](https://keptn.sh/stable/docs/reference/crd-reference/metricsprovider/)
 resources in our cluster.
 These two resources contain a simple query for fetching the `response time` of the `podtato-head`
-application microservice and configuration for the metrics provider supplying the data.
+application service and configuration for the metrics provider supplying the data.
 
 ```yaml
 {% include "./argocd-keptn-health/metric.yaml" %}
@@ -118,7 +123,7 @@ the deployment of `podtato-head`.
 Keptn waits until all of the
 application pods are running and then it executes `post-deployment-evaluation` evaluations.
 
-Due to slow `response time` of the `podtato-head-frontend` microservice, the
+Due to slow `response time` of the `podtato-head-frontend` service, the
 executed `KeptnEvaluation` fails.
 
 Here we see that Keptn lets us perform more advanced health checks
@@ -168,7 +173,7 @@ health status.
 We hope that this blog post gives you an idea and some inspiration
 on how these two projects can cooperate and complement each other
 effectively in order to support continuous delivery of applications
-faster. and more reliably.
+faster and more reliably.
 
 We would really appreciate if you can provide us feedback on this
 feature below in the comments!

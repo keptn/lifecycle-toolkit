@@ -15,4 +15,4 @@ metadata:
   name: my-prometheus-provider
 spec:
   type: prometheus
-  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
+  targetServer: "my-metrics-provider-url:9090"

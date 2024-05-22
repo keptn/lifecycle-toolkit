@@ -128,8 +128,6 @@ executed `KeptnEvaluation` fails.
 
 Here we see that Keptn lets us perform more advanced health checks
 (tasks or evaluations) and verify that the application deployed via ArgoCD is healthy.
-Like `KeptnEvaluations`, `KeptnTasks` can be executed as part of a quality health check
-for our application.
 
 ## How to show Keptn health status in ArgoCD UI?
 

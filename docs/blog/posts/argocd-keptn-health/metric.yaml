@@ -1,0 +1,18 @@
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetric
+metadata:
+  name: response-time
+spec:
+  fetchIntervalSeconds: 10
+  provider:
+    name: my-prometheus-provider
+  query: >-
+    "histogram_quantile(0.95, sum by(le) (rate(http_server_request_latency_seconds_bucket{job='{{.podtato-head-frontend-service}}'}[1m])))"
+---
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetricsProvider
+metadata:
+  name: my-prometheus-provider
+spec:
+  type: prometheus
+  targetServer: "my-metrics-provider-url:9090"

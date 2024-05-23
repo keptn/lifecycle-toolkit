@@ -1,0 +1,9 @@
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnEvaluationDefinition
+metadata:
+  name: response-time-evaluation
+spec:
+  objectives:
+    - evaluationTarget: "<0.3"
+      keptnMetricRef:
+        name: response-time

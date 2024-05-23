@@ -1,0 +1,3 @@
+metadata:
+  labels:
+    keptn.sh/post-deployment-evaluations: response-time-evaluation

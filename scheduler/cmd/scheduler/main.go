@@ -34,7 +34,6 @@ import (
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/semconv"
-	"google.golang.org/grpc"
 	"k8s.io/apimachinery/pkg/util/rand"
 	"k8s.io/component-base/cli"
 	"k8s.io/klog/v2"
@@ -133,7 +132,6 @@ func newOTelExporter(env envConfig) (sdktrace.SpanExporter, error) {
 	driver := otlpgrpc.NewDriver(
 		otlpgrpc.WithInsecure(),
 		otlpgrpc.WithEndpoint(env.OTelCollectorURL),
-		otlpgrpc.WithDialOption(grpc.WithBlock()), // useful for testing
 	)
 	traceExporter, err := otlp.NewExporter(ctx, driver)
 	if err != nil {

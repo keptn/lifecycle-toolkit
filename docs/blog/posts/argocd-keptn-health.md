@@ -1,5 +1,5 @@
 ---
-date: 2024-05-15
+date: 2024-05-23
 authors: [odubajDT]
 description: >
   This blog post presents how Keptn can show application health when integrated with ArgoCD.

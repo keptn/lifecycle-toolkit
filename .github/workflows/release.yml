@@ -218,7 +218,7 @@ jobs:
           output-file: ./sbom-${{ matrix.config.name }}.spdx.json
 
       - name: Attach SBOM to release
-        uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564 # v2.0.4
+        uses: softprops/action-gh-release@69320dbe05506a9a39fc8ae11030b214ec2d1f87 # v2.0.5
         with:
           tag_name: ${{ matrix.config.tagName }}
           files: ./sbom-${{ matrix.config.name }}.spdx.json

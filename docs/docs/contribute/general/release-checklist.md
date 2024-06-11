@@ -31,4 +31,5 @@ This page should be used to document the current process to create a full releas
 1. release the Keptn chart
 1. update `stable` tag to the new keptn version and rebuild stable tag on readthedocs
 1. verify docs
+1. verify all docs reflect breaking changes in helm charts
 1. manually test examples

@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/DataDog/datadog-api-client-go/v2 v2.25.0
 	github.com/benbjohnson/clock v1.3.5
-	github.com/go-logr/logr v1.4.1
+	github.com/go-logr/logr v1.4.2
 	github.com/gorilla/mux v1.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240424092952-ec765bcdd14a

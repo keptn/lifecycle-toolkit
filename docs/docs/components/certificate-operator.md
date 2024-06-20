@@ -37,8 +37,4 @@ If you don't want to use Keptn Cert Manager, you can instead
 use [cert-manager.io](../installation/configuration/cert-manager.md)
 for this purpose.
 
-## Troubleshooting
 
-When experiencing problems with setting up cert-manager.io,
-please refer to the
-[cert-manager.io troubleshooting page](https://cert-manager.io/docs/troubleshooting/).

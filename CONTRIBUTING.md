@@ -66,10 +66,3 @@ All commits must be accompanied by a DCO sign-off.
 See
 [DCO](https://keptn.sh/stable/docs/contribute/general/dco/)
 for more information.
-
-## Contributing to Website
-
-Thank you for considering contributing to our website !
-
-The website files are all in this folder: (https://github.com/keptn/lifecycle-toolkit/tree/main/docs)
-Stylesheet files are in : (https://github.com/keptn/lifecycle-toolkit/tree/main/docs/assets/stylesheets)

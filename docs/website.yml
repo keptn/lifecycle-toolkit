@@ -3,14 +3,14 @@
 
 Wesbite files:
 
-   - HTML files: 
+     HTML files: 
       -First path: https://github.com/keptn/lifecycle-toolkit/tree/main/docs/overrides
       -Second path: https://github.com/keptn/lifecycle-toolkit/tree/main/docs/overrides/partials
 
-   - Stylesheet files:
+     Stylesheet files:
       -path: https://github.com/keptn/lifecycle-toolkit/tree/main/docs/assets/stylesheets
 
-   - JavaScript files:
+     JavaScript files:
       -path: https://github.com/keptn/lifecycle-toolkit/tree/main/docs/assets/javascripts   
 
 # If you have additional information about the website, please feel free to contribute!      

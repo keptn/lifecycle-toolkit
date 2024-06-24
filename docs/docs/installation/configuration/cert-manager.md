@@ -86,3 +86,9 @@ global:
 Refer to the
 [Customizing the configuration of components](../index.md#customizing-the-configuration-of-components)
 for more details.
+
+## Troubleshooting
+
+When experiencing problems with setting up cert-manager.io, 
+please refer to the
+[cert-manager.io troubleshooting page](https://cert-manager.io/docs/troubleshooting/).

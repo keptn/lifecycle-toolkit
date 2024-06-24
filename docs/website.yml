@@ -1,4 +1,3 @@
-# Thank you for considering contributing to our website !
 
 contribution_guide:
   directories:
@@ -10,5 +9,3 @@ contribution_guide:
         - path: "https://github.com/keptn/lifecycle-toolkit/tree/main/docs/assets/stylesheets"
       javascript_files:
         - path: "https://github.com/keptn/lifecycle-toolkit/tree/main/docs/assets/javascripts"
-
-# If you have additional information about the website, please feel free to contribute!

@@ -1,3 +1,4 @@
 global:
-   certManager:
-     enabled: false
+  certManager:
+    enabled: false
+

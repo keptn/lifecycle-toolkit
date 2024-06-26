@@ -20,9 +20,13 @@ spec:
         - podLogs:
             selector: app=test
         - describe:
-            resource: keptnworkloadversion
+            resource:
+              apiVersion: lifecycle.keptn.sh/v1
+              kind: KeptnWorkloadVersion
         - describe:
-            resource: keptnappversion
+            resource:
+              apiVersion: lifecycle.keptn.sh/v1
+              kind: KeptnAppVersion
         - podLogs:
             selector: control-plane=lifecycle-operator
             namespace: keptn-system
@@ -34,9 +38,13 @@ spec:
         - podLogs:
             selector: app=test
         - describe:
-            resource: keptnworkloadversion
+            resource:
+              apiVersion: lifecycle.keptn.sh/v1
+              kind: KeptnWorkloadVersion
         - describe:
-            resource: keptnappversion
+            resource:
+              apiVersion: lifecycle.keptn.sh/v1
+              kind: KeptnAppVersion
         - podLogs:
             selector: control-plane=lifecycle-operator
             namespace: keptn-system

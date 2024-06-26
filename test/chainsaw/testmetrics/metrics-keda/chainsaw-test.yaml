@@ -34,27 +34,40 @@ spec:
         - podLogs:
             selector: app=podtato-head
         - describe:
-            resource: pods
+            resource:
+              apiVersion: v1
+              kind: Pod
             selector: app=podtato-head
         - podLogs:
             namespace: keda
             selector: name=keda-operator
         - describe:
-            resource: pods
+            resource:
+              apiVersion: v1
+              kind: Pod
             namespace: keda
             selector: name=keda-operator
         - podLogs:
             namespace: keptn-system
             selector: app=metrics-operator
         - describe:
-            resource: keptnmetric
-            name: test
+            resource:
+              apiVersion: metrics.keptn.sh/v1
+              kind: KeptnMetric
+              metadata:
+                name: test
         - describe:
-            resource: keptnmetricsprovider
-            name: my-provider
+            resource:
+              apiVersion: metrics.keptn.sh/v1
+              kind: KeptnMetricsProvider
+              metadata:
+                name: my-provider
         - describe:
-            resource: scaledobject
-            name: test-scaledobject
+            resource:
+              apiVersion: keda.k8s.io/v1alpha1
+              kind: ScaledObject
+              metadata:
+                name: test-scaledobject
     # remove keda in regular step, since in case of failure, we want to have the logs available
     - name: step-01
       try:

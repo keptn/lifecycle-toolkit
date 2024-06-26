@@ -25,11 +25,19 @@ spec:
             namespace: keptn-system
             selector: app=metrics-operator
         - describe:
-            resource: keptnmetric
-            name: podtatometric
+            resource:
+              apiVersion: metrics.keptn.sh/v1
+              kind: KeptnMetric
+              metadata:
+                name: podtatometric
         - describe:
-            resource: keptnmetricsprovider
-            name: dynatrace
+            resource:
+              apiVersion: metrics.keptn.sh/v1
+              kind: KeptnMetricsProvider
+              metadata:
+                name: dynatrace
         - describe:
-            resource: pods
+            resource:
+              apiVersion: v1
+              kind: Pod
             selector: app=podtato-head

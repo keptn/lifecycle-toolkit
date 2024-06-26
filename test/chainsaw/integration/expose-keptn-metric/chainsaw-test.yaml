@@ -15,7 +15,7 @@ spec:
             file: job-no-metric.yaml
         - wait:
             timeout: 5m
-            resource: 
+            resource:
               apiVersion: batch/v1
               kind: Job
             selector: kind=no-metric
@@ -29,7 +29,7 @@ spec:
             file: job-existing-metric.yaml
         - wait:
             timeout: 5m
-            resource: 
+            resource:
               apiVersion: batch/v1
               kind: Job
             selector: kind=existing-metric

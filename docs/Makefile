@@ -1,7 +1,7 @@
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # renovate: datasource=docker depName=squidfunk/mkdocs-material
-MKDOCS_DOCKER_IMAGE_VERSION=9.5.25
+MKDOCS_DOCKER_IMAGE_VERSION=9.5.27
 MKDOCS_DOCKER_IMAGE=squidfunk/mkdocs-material
 
 INTERACTIVE:=$(shell [ -t 0 ] && echo 1)

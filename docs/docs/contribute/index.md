@@ -38,7 +38,7 @@ It is divided into three sections:
   and the documentation tools we use.
 
 * [Website contributions](website/index.md)
-  provides relevant information for contributing 
-  to the website, including all the file directories and 
+  provides relevant information for contributing
+  to the website, including all the file directories and
   files used to modify the website, and instructions for
   testing and verifying changes before submitting.

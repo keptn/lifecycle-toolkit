@@ -26,3 +26,10 @@ To test and verify changes before submitting:
 - Open a pull request.
 - The changes will be reflected in the ReadTheDocs preview for the PR.
 - Review the preview to ensure your changes are correct.
+
+## Building the Website Locally
+
+To see your changes live on your local machine, follow the steps described in the
+[Building Documentation Locally](../docs/local-building.md) guide.
+This guide provides detailed instructions on how to set up a local MkDocs build
+environment.

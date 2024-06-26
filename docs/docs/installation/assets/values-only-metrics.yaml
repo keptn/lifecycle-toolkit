@@ -1,6 +1,9 @@
-certManager:
-  enabled: true
+global:
+  certManager:
+    enabled: true
+
 lifecycleOperator:
-  enabled: false
-metricsOperator:
   enabled: true
+
+metricsOperator:
+  enabled: false

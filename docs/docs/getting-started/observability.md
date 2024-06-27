@@ -407,7 +407,9 @@ Save this file as `values.yaml`:
 ```yaml
 grafana:
   adminPassword: admin
-  sidecar.datasources.defaultDatasourceEnabled: false
+  sidecar:
+    datasources:
+      defaultDatasourceEnabled: false
 prometheus:
   prometheusSpec:
     additionalScrapeConfigs:

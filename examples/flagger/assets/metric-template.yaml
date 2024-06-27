@@ -1,0 +1,11 @@
+apiVersion: flagger.app/v1beta1
+kind: MetricTemplate
+metadata:
+  name: response-time
+  namespace: keptn-system
+spec:
+  provider:
+    type: keptn
+    address: ""
+  query: |
+    analysis/simple-go/my-analysis-definition/1m/workload=simple-go-service

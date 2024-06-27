@@ -1,0 +1,29 @@
+apiVersion: metrics.keptn.sh/v1beta1
+kind: AnalysisDefinition
+metadata:
+  name: response-time-analysis
+  namespace: simple-go
+spec:
+  objectives:
+    - analysisValueTemplateRef:
+        name: response-time-p95
+      keyObjective: false
+      target:
+        failure:
+          greaterThan:
+            fixedValue: 30M
+      weight: 1
+  totalScore:
+    passPercentage: 100
+    warningPercentage: 75
+---
+apiVersion: metrics.keptn.sh/v1beta1
+kind: AnalysisValueTemplate
+metadata:
+  name: response-time-p95
+  namespace: simple-go
+spec:
+  provider:
+    name: my-provider
+  query: histogram_quantile(0.95, sum by(le) (rate(http_server_request_latency_seconds_bucket{job='{{.workload}}'}[1m[])))
+

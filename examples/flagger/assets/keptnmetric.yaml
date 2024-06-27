@@ -1,0 +1,10 @@
+apiVersion: metrics.keptn.sh/v1beta1
+kind: KeptnMetric
+metadata:
+  name: response-time
+  namespace: keptn-system
+spec:
+  provider:
+    name: my-prometheus-provider
+  query: "histogram_quantile(0.8, sum by(le) (rate(http_server_request_latency_seconds_bucket{status_code='200', job='simple-go-backend'}[5m])))"
+  fetchIntervalSeconds: 10

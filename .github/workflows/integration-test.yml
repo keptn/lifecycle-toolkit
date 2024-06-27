@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Setup cluster
         uses: ./.github/actions/deploy-keptn-on-cluster
@@ -43,7 +43,7 @@ jobs:
         uses: ./.github/actions/deploy-prometheus-on-cluster
 
       - name: Install Chainsaw
-        uses: kyverno/action-install-chainsaw@ef2517389320aae0fd7c067aa14b060eef08b76d # v0.2.3
+        uses: kyverno/action-install-chainsaw@dd64b5d7b2b7d36fdf701d48ac8b216aa94414db # v0.2.4
 
       - name: Run Integration Tests
         working-directory: .

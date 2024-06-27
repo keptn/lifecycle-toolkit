@@ -148,7 +148,7 @@ jobs:
 
       - name: KICS Scan
         if: matrix.tool == 'kics'
-        uses: Checkmarx/kics-github-action@d1b692d84c536f4e8696954ce7aab6818f95f5bc # v2.0.0
+        uses: Checkmarx/kics-github-action@aacf8e81cd48e227259c937c215b352e02ad447a # v2.1.0
         with:
           path: scans
           config_path: .github/kics-config.yml

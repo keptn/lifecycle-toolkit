@@ -234,5 +234,7 @@ nav:
           - Blogs: docs/contribute/docs/blog.md
           - Published doc structure: docs/contribute/docs/publish.md
           - Word list: docs/contribute/docs/word-list.md
+      - Website Contributions:
+          - docs/contribute/website/index.md
   - Blog:
       - blog/index.md

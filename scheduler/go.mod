@@ -13,7 +13,6 @@ require (
 	go.opentelemetry.io/otel/exporters/stdout v0.20.0
 	go.opentelemetry.io/otel/sdk v0.20.0
 	go.opentelemetry.io/otel/trace v0.20.0
-	google.golang.org/grpc v1.64.0
 	k8s.io/api v0.25.16
 	k8s.io/apimachinery v0.25.16
 	k8s.io/apiserver v0.25.16
@@ -103,6 +102,7 @@ require (
 	google.golang.org/genproto v0.0.0-20240227224415-6ceb2ff114de // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240318140521-94a12d6c2237 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240318140521-94a12d6c2237 // indirect
+	google.golang.org/grpc v1.64.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
@@ -126,7 +126,7 @@ replace (
 	github.com/golang/protobuf => github.com/golang/protobuf v1.5.4
 	github.com/keptn/lifecycle-toolkit/scheduler/pkg/klcpermit => /pkg/klcpermit
 	golang.org/x/net => golang.org/x/net v0.24.0
-	google.golang.org/protobuf => google.golang.org/protobuf v1.34.1
+	google.golang.org/protobuf => google.golang.org/protobuf v1.34.2
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.25.16
 	k8s.io/cli-runtime => k8s.io/cli-runtime v0.25.16
 	k8s.io/cloud-provider => k8s.io/cloud-provider v0.25.16

@@ -132,7 +132,7 @@ replace (
 	k8s.io/cloud-provider => k8s.io/cloud-provider v0.25.16
 	k8s.io/cluster-bootstrap => k8s.io/cluster-bootstrap v0.25.16
 	k8s.io/code-generator => k8s.io/code-generator v0.25.16
-	k8s.io/component-helpers => k8s.io/component-helpers v0.25.16
+	k8s.io/component-helpers => k8s.io/component-helpers v0.30.2
 	k8s.io/controller-manager => k8s.io/controller-manager v0.25.16
 	k8s.io/cri-api => k8s.io/cri-api v0.25.16
 	k8s.io/csi-translation-lib => k8s.io/csi-translation-lib v0.25.16

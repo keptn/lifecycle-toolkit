@@ -1,5 +1,78 @@
 # Changelog
 
+## [2.1.0](https://github.com/keptn/lifecycle-toolkit/compare/keptn-v2.0.0...keptn-v2.1.0) (2024-07-01)
+
+
+### Features
+
+* **helm-chart:** ability to set hostNetwork for lifecycle operator deployment ([#3500](https://github.com/keptn/lifecycle-toolkit/issues/3500)) ([c08bb07](https://github.com/keptn/lifecycle-toolkit/commit/c08bb07f9e59c6488062e76d09ff9dcff4311102))
+
+
+### Bug Fixes
+
+* **examples:** helm values overide format and dashboard fix ([#3562](https://github.com/keptn/lifecycle-toolkit/issues/3562)) ([f5a820f](https://github.com/keptn/lifecycle-toolkit/commit/f5a820f7016e5203c9c370b57ccc02225ee4e455))
+
+
+### Other
+
+* backport umbrella helm chart version ([#3465](https://github.com/keptn/lifecycle-toolkit/issues/3465)) ([29219c3](https://github.com/keptn/lifecycle-toolkit/commit/29219c35d1df61c304005a2bbcb221ad65ee9eae))
+
+
+### Docs
+
+* adapt release dates of blogposts ([#3530](https://github.com/keptn/lifecycle-toolkit/issues/3530)) ([38931ff](https://github.com/keptn/lifecycle-toolkit/commit/38931ff98a65dde5707086f692f9e864fb50b239))
+* add blog post about using Keptn within Argo Workflows ([#3487](https://github.com/keptn/lifecycle-toolkit/issues/3487)) ([6434efc](https://github.com/keptn/lifecycle-toolkit/commit/6434efc0bd0bc43a6d6e203b13aa03d1308c676a))
+* fix vCluster broken link ([#3544](https://github.com/keptn/lifecycle-toolkit/issues/3544)) ([950f242](https://github.com/keptn/lifecycle-toolkit/commit/950f24255eec72a9e0b5345cee28605a3fb0d4ec))
+* introduce blogpost of ArgoCD and Keptn integration ([#3521](https://github.com/keptn/lifecycle-toolkit/issues/3521)) ([1a34801](https://github.com/keptn/lifecycle-toolkit/commit/1a34801a89459dd5dcfe635c58676eb558c2e717))
+* move Flux use-case Keptn resources to v1 ([#3471](https://github.com/keptn/lifecycle-toolkit/issues/3471)) ([97ee68c](https://github.com/keptn/lifecycle-toolkit/commit/97ee68cec45822049f9ea3608c78c6f81a47501d))
+* moved cert manager to global ([#3560](https://github.com/keptn/lifecycle-toolkit/issues/3560)) ([9f143b0](https://github.com/keptn/lifecycle-toolkit/commit/9f143b0481507242e11cfff70e478fc27dffeb22))
+* removed the note from analysis guide ([#3573](https://github.com/keptn/lifecycle-toolkit/issues/3573)) ([ef2cd08](https://github.com/keptn/lifecycle-toolkit/commit/ef2cd0819e7ab1019533b7c037274c32baa35375))
+* troubleshooting shifted ([#3561](https://github.com/keptn/lifecycle-toolkit/issues/3561)) ([cc65f8e](https://github.com/keptn/lifecycle-toolkit/commit/cc65f8e95b12e1dc18d02a898e6262e99b1d8497))
+* update release checklist to verify reflection of breaking changes in helm charts ([#3543](https://github.com/keptn/lifecycle-toolkit/issues/3543)) ([c6ce5bc](https://github.com/keptn/lifecycle-toolkit/commit/c6ce5bcc0405a6538a3d1484c540347b7104cf09))
+* update using-keptn-analyses-in-argo-workflows.md ([#3571](https://github.com/keptn/lifecycle-toolkit/issues/3571)) ([cdc8ec8](https://github.com/keptn/lifecycle-toolkit/commit/cdc8ec82eb4c57f823713bf0d3abb801bd3439ef))
+* updated contribution guidelines for website ([#3559](https://github.com/keptn/lifecycle-toolkit/issues/3559)) ([65211fe](https://github.com/keptn/lifecycle-toolkit/commit/65211fed1854b548ece60deaad3a7315855e0d24))
+
+
+### Dependency Updates
+
+* update actions/checkout action to v4.1.4 ([#3479](https://github.com/keptn/lifecycle-toolkit/issues/3479)) ([6e126a9](https://github.com/keptn/lifecycle-toolkit/commit/6e126a9930b2f939ef1c2d7106a020265186b69d))
+* update actions/checkout action to v4.1.5 ([#3501](https://github.com/keptn/lifecycle-toolkit/issues/3501)) ([bf8d387](https://github.com/keptn/lifecycle-toolkit/commit/bf8d3870abaf8ca3fff79e5b4f7d563b254b17b0))
+* update actions/checkout action to v4.1.6 ([#3527](https://github.com/keptn/lifecycle-toolkit/issues/3527)) ([37e9c8d](https://github.com/keptn/lifecycle-toolkit/commit/37e9c8d2ff0e4dda4dc472a4b998684dad53d2c0))
+* update actions/checkout action to v4.1.7 ([#3566](https://github.com/keptn/lifecycle-toolkit/issues/3566)) ([1899e6b](https://github.com/keptn/lifecycle-toolkit/commit/1899e6b01a77253efde5310839979f11d0664b17))
+* update actions/download-artifact digest to 65a9edc ([#3467](https://github.com/keptn/lifecycle-toolkit/issues/3467)) ([c3a104d](https://github.com/keptn/lifecycle-toolkit/commit/c3a104d3ced511a5daa7d5863fbb25e9e7fbb87e))
+* update actions/setup-go digest to cdcb360 ([#3492](https://github.com/keptn/lifecycle-toolkit/issues/3492)) ([e603b0a](https://github.com/keptn/lifecycle-toolkit/commit/e603b0a2dd1e1e221c7c3335943a890458deb77b))
+* update amannn/action-semantic-pull-request action to v5.5.2 ([#3476](https://github.com/keptn/lifecycle-toolkit/issues/3476)) ([d9a61e1](https://github.com/keptn/lifecycle-toolkit/commit/d9a61e1b96a8b1daee8f07472165b02054f113e6))
+* update anchore/sbom-action action to v0.15.11 ([#3483](https://github.com/keptn/lifecycle-toolkit/issues/3483)) ([9e220b5](https://github.com/keptn/lifecycle-toolkit/commit/9e220b5bdacc6b75c7909c3d155f61e7c1fdc129))
+* update aquasecurity/trivy-action action to v0.23.0 ([#3570](https://github.com/keptn/lifecycle-toolkit/issues/3570)) ([1bde488](https://github.com/keptn/lifecycle-toolkit/commit/1bde48810c708be8a74340a90f41c0714503529e))
+* update checkmarx/kics-github-action action to v2 ([#3470](https://github.com/keptn/lifecycle-toolkit/issues/3470)) ([7418fcd](https://github.com/keptn/lifecycle-toolkit/commit/7418fcd4242408b11983837939b852622e8efe9c))
+* update codecov/codecov-action action to v4.3.1 ([#3498](https://github.com/keptn/lifecycle-toolkit/issues/3498)) ([ba7b4a9](https://github.com/keptn/lifecycle-toolkit/commit/ba7b4a919b5107fcbb09cfe8ee1d1cb8aeedea39))
+* update dependency bitnami-labs/readme-generator-for-helm to v2.6.1 ([#3472](https://github.com/keptn/lifecycle-toolkit/issues/3472)) ([67b0140](https://github.com/keptn/lifecycle-toolkit/commit/67b0140f06cefe89dc274d45cbb39a14803371d2))
+* update dependency kubernetes-sigs/kustomize to v5.4.2 ([#3548](https://github.com/keptn/lifecycle-toolkit/issues/3548)) ([fdecc9b](https://github.com/keptn/lifecycle-toolkit/commit/fdecc9b44c52a69407310dd85240b355a6b56c6e))
+* update dependency mkdocs-git-revision-date-localized-plugin to v1.2.5 ([#3494](https://github.com/keptn/lifecycle-toolkit/issues/3494)) ([5ac40f3](https://github.com/keptn/lifecycle-toolkit/commit/5ac40f3567ec7e1e6b396467657f6df63b0b7b77))
+* update dependency mkdocs-git-revision-date-localized-plugin to v1.2.6 ([#3549](https://github.com/keptn/lifecycle-toolkit/issues/3549)) ([59bc16a](https://github.com/keptn/lifecycle-toolkit/commit/59bc16a8bf67ad3a7d066409ccfb48fd7468ba31))
+* update dependency mkdocs-include-markdown-plugin to v6.0.6 ([#3502](https://github.com/keptn/lifecycle-toolkit/issues/3502)) ([d706379](https://github.com/keptn/lifecycle-toolkit/commit/d706379164fd5e36cb6e8fee747ace5f5d4b79b9))
+* update dependency mkdocs-include-markdown-plugin to v6.0.7 ([#3550](https://github.com/keptn/lifecycle-toolkit/issues/3550)) ([8cec6a9](https://github.com/keptn/lifecycle-toolkit/commit/8cec6a99966d070736b88b668d871ce50f23566a))
+* update dependency pymdown-extensions to v10.8.1 ([#3488](https://github.com/keptn/lifecycle-toolkit/issues/3488)) ([e048679](https://github.com/keptn/lifecycle-toolkit/commit/e048679b0b2d95bdd71b4545ef620e6be0bfac20))
+* update github/codeql-action action to v3.25.10 ([#3567](https://github.com/keptn/lifecycle-toolkit/issues/3567)) ([c03cbf6](https://github.com/keptn/lifecycle-toolkit/commit/c03cbf638136000ee1c16665e7236a21abd09532))
+* update github/codeql-action action to v3.25.3 ([#3485](https://github.com/keptn/lifecycle-toolkit/issues/3485)) ([aa3f328](https://github.com/keptn/lifecycle-toolkit/commit/aa3f328019009903fe26e04850abc2e162dcfb1f))
+* update github/codeql-action action to v3.25.5 ([#3511](https://github.com/keptn/lifecycle-toolkit/issues/3511)) ([e246f2f](https://github.com/keptn/lifecycle-toolkit/commit/e246f2f0c359cb1a6378d46257156b8e28bf96e5))
+* update github/codeql-action action to v3.25.8 ([#3532](https://github.com/keptn/lifecycle-toolkit/issues/3532)) ([beb48d9](https://github.com/keptn/lifecycle-toolkit/commit/beb48d95bfd8dee935eda5cd422bfbc9b9941c8a))
+* update golangci/golangci-lint-action digest to d6238b0 ([#3469](https://github.com/keptn/lifecycle-toolkit/issues/3469)) ([0c7ecac](https://github.com/keptn/lifecycle-toolkit/commit/0c7ecac8f9f15ee6e0b0823eeded6776de1d0f80))
+* update google-github-actions/release-please-action digest to e4dc86b ([#3515](https://github.com/keptn/lifecycle-toolkit/issues/3515)) ([975b712](https://github.com/keptn/lifecycle-toolkit/commit/975b712a797b7e4e7ed5df6f0fa5141ba6ceacb3))
+* update helm/kind-action action to v1.10.0 ([#3477](https://github.com/keptn/lifecycle-toolkit/issues/3477)) ([9186087](https://github.com/keptn/lifecycle-toolkit/commit/9186087470bf64757fe9e84aadf003d23211dcb3))
+* update kyverno/action-install-chainsaw action to v0.2.0 ([#3505](https://github.com/keptn/lifecycle-toolkit/issues/3505)) ([69b8978](https://github.com/keptn/lifecycle-toolkit/commit/69b897827079e72d8323de69f558d5368ca24491))
+* update kyverno/action-install-chainsaw action to v0.2.3 ([#3533](https://github.com/keptn/lifecycle-toolkit/issues/3533)) ([622ebef](https://github.com/keptn/lifecycle-toolkit/commit/622ebef6e03ae9d06a150a66ddc13d67e12ff2df))
+* update kyverno/action-install-chainsaw action to v0.2.4 ([#3553](https://github.com/keptn/lifecycle-toolkit/issues/3553)) ([ada23b5](https://github.com/keptn/lifecycle-toolkit/commit/ada23b5ef877de5be2022648e44d772058438283))
+* update octokit/request-action action to v2.3.1 ([#3524](https://github.com/keptn/lifecycle-toolkit/issues/3524)) ([f6bce3b](https://github.com/keptn/lifecycle-toolkit/commit/f6bce3b85f7dbf95b9df3d79c7c873cd2903a4b1))
+* update ossf/scorecard-action action to v2.3.3 ([#3525](https://github.com/keptn/lifecycle-toolkit/issues/3525)) ([3cc37b4](https://github.com/keptn/lifecycle-toolkit/commit/3cc37b41478931d6bf032714c96f160b101e3f75))
+* update peter-evans/create-pull-request action to v6.0.5 ([#3486](https://github.com/keptn/lifecycle-toolkit/issues/3486)) ([6428ccb](https://github.com/keptn/lifecycle-toolkit/commit/6428ccbd57e4f0730ea8d42c553d61c571b05ede))
+* update softprops/action-gh-release action to v2.0.5 ([#3536](https://github.com/keptn/lifecycle-toolkit/issues/3536)) ([d6000b7](https://github.com/keptn/lifecycle-toolkit/commit/d6000b78f505f84500e2913c7aa66323f625bd73))
+* update softprops/action-gh-release action to v2.0.6 ([#3569](https://github.com/keptn/lifecycle-toolkit/issues/3569)) ([e62d1fa](https://github.com/keptn/lifecycle-toolkit/commit/e62d1fa259691fe9d670918a7090b7c6faa0c1eb))
+* update squidfunk/mkdocs-material to v9.5.20 (patch) ([#3490](https://github.com/keptn/lifecycle-toolkit/issues/3490)) ([f75b03c](https://github.com/keptn/lifecycle-toolkit/commit/f75b03cafd73a53363c02bcd1980bfee4d8f0a3d))
+* update squidfunk/mkdocs-material to v9.5.21 (patch) ([#3499](https://github.com/keptn/lifecycle-toolkit/issues/3499)) ([6f0d9c3](https://github.com/keptn/lifecycle-toolkit/commit/6f0d9c385f81ef0e912608d8a3f60b8ab346b8dd))
+* update squidfunk/mkdocs-material to v9.5.25 (patch) ([#3537](https://github.com/keptn/lifecycle-toolkit/issues/3537)) ([8cde438](https://github.com/keptn/lifecycle-toolkit/commit/8cde43860ed1b4314a094fe1eca8bea6b3007d3f))
+* update squidfunk/mkdocs-material to v9.5.27 (patch) ([#3556](https://github.com/keptn/lifecycle-toolkit/issues/3556)) ([5034443](https://github.com/keptn/lifecycle-toolkit/commit/50344438d50d93a4d6db7c6cb7d7e8d69a439793))
+
 ## [2.0.0](https://github.com/keptn/lifecycle-toolkit/compare/keptn-v2.0.0-rc.2...keptn-v2.0.0) (2024-04-24)
 
 

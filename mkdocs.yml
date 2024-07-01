@@ -238,3 +238,5 @@ nav:
           - docs/contribute/website/index.md
   - Blog:
       - blog/index.md
+  - Artifacts:
+      - artifacts/index.md

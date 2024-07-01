@@ -11,3 +11,6 @@ spec:
             file: 00-install.yaml
         - assert:
             file: 00-assert.yaml
+      catch:
+        - podLogs:
+            selector: app=test

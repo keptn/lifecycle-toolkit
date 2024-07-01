@@ -15,9 +15,25 @@ spec:
             file: 00-install.yaml
         - assert:
             file: 00-assert.yaml
+      catch:
+        - podLogs:
+            selector: app=statefultest
+        - describe:
+            resource: keptnworkloadversion
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=lifecycle-operator
     - name: step-01
       try:
         - apply:
             file: 02-install.yaml
         - assert:
             file: 02-assert.yaml
+      catch:
+        - podLogs:
+            selector: app=statefultest
+        - describe:
+            resource: keptnworkloadversion
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=lifecycle-operator

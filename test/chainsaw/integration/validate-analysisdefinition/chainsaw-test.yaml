@@ -16,6 +16,10 @@ spec:
             expect:
               - check:
                   ($error != null): true
+      catch:
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=metrics-operator
     - name: step-01
       try:
         - error:
@@ -24,3 +28,7 @@ spec:
             file: analysisdef_good_empty_fail.yaml
         - assert:
             file: analysisdef_good.yaml
+      catch:
+        - podLogs:
+            namespace: keptn-system
+            selector: control-plane=metrics-operator

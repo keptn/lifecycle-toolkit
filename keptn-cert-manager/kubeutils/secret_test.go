@@ -23,6 +23,7 @@ func TestSecretQuery(t *testing.T) {
 	t.Run(`Update secret when data has changed`, testUpdateSecretWhenDataChanged)
 	t.Run(`Update secret when labels have changed`, testUpdateSecretWhenLabelsChanged)
 	t.Run(`Create secret in target namespace`, testCreateSecretInTargetNamespace)
+	t.Run(`New Secret`, Secretwithmutiplekeys)
 }
 
 func testGetSecret(t *testing.T) {
@@ -258,4 +259,44 @@ func createTestSecret(labels map[string]string, data map[string][]byte) *corev1.
 		Type: corev1.SecretTypeOpaque,
 	}
 	return secret
+}
+
+func Secretwithmutiplekeys(t *testing.T) {
+
+	testCases := []struct {
+		name      string
+		namespace string
+		data      map[string][]byte
+	}{
+		{
+			name:      "test-secret-1",
+			namespace: "test-namespace-1",
+			data: map[string][]byte{
+				"key1": []byte("value1"),
+				"key2": []byte("value2"),
+			},
+		},
+		{
+			name:      "test-secret-2",
+			namespace: "test-namespace-2",
+			data: map[string][]byte{
+				"key1": []byte("value1"),
+			},
+		},
+		{
+			name:      "test-secret-3",
+			namespace: "test-namespace-3",
+			data:      map[string][]byte{},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			secret := NewSecret(tc.name, tc.namespace, tc.data)
+
+			assert.Equal(t, tc.name, secret.Name)
+			assert.Equal(t, tc.namespace, secret.Namespace)
+			assert.Equal(t, tc.data, secret.Data)
+		})
+	}
 }

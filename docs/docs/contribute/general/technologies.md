@@ -28,7 +28,7 @@ of containers will help a lot for working with and contributing to Keptn.
 * **Useful Tools**
     * [Docker Compose Overview](https://docs.docker.com/compose/)
     * [Docker Compose Tutorial](https://youtu.be/SXwC9fSwct8?si=dXaxQVxx0QhW7sku)
-    * [Docker Swarm](https://www.techtarget.com/searchitoperations/definition/Docker-Swarm)
+    * [Docker Swarm](https://docs.docker.com/engine/swarm/)
 
 ## Kubernetes
 

@@ -11,6 +11,25 @@ The information has been gathered from the community and is subject to alteratio
 If you have suggestions about additional content that should be included in this list,
 please submit an issue.
 
+## Containers
+
+Containers are a basic prerequisite in the path of learning kubernetes and a good understanding
+of containers will help a lot for working with and contributing to Keptn.
+
+* **Understand the Basics of Containers**
+    * [Docker's Official Getting Started Guide](https://docs.docker.com/get-started/)
+    * [Docker for beginner](https://youtu.be/3c-iBn73dDE?si=tilXJsYAxZGEMGg1)
+* **Container Architecture**
+    * [Understanding Docker Architecture](https://docs.docker.com/get-started/overview/#docker-architecture)
+* **Container Concepts**
+    * [Docker Images and Containers Explained](https://circleci.com/blog/docker-image-vs-container/)
+    * [Container Security Explained](https://www.youtube.com/watch?v=b_euX_M82uI)
+    * [Container Orchestration Explained](https://youtu.be/kBF6Bvth0zw?si=bUj2bdMbk9xmnF_G)
+* **Useful Tools**
+    * [Docker Compose Overview](https://docs.docker.com/compose/)
+    * [Docker Compose Tutorial](https://youtu.be/SXwC9fSwct8?si=dXaxQVxx0QhW7sku)
+    * [Docker Swarm](https://docs.docker.com/engine/swarm/)
+
 ## Kubernetes
 
 Keptn runs on Kubernetes and primarily works with deployments that run on Kubernetes

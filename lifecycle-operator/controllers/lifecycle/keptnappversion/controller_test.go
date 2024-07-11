@@ -117,6 +117,71 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 }
 
+func TestKeptnAppVersionNonBlockingReconciler_Reconcile(t *testing.T) {
+
+	status := apilifecycle.KeptnAppVersionStatus{
+		CurrentPhase:        apicommon.PhaseCompleted.ShortName,
+		Status:              apicommon.StateSucceeded,
+		PreDeploymentStatus: apicommon.StateWarning,
+		PreDeploymentTaskStatus: []apilifecycle.ItemStatus{
+			{
+				Name:           "pre-task",
+				DefinitionName: "task",
+				Status:         apicommon.StateFailed,
+			},
+		},
+		PreDeploymentEvaluationStatus:  apicommon.StateSucceeded,
+		WorkloadOverallStatus:          apicommon.StateSucceeded,
+		PostDeploymentStatus:           apicommon.StateSucceeded,
+		PostDeploymentEvaluationStatus: apicommon.StateSucceeded,
+	}
+
+	appVersionName := fmt.Sprintf("%s-%s", "myapp", "1.0.0")
+	app := &apilifecycle.KeptnAppVersion{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:       appVersionName,
+			Namespace:  "default",
+			Generation: 1,
+		},
+		Spec: apilifecycle.KeptnAppVersionSpec{
+			KeptnAppSpec: apilifecycle.KeptnAppSpec{
+				Version: "1.0.0",
+			},
+			KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+				DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
+					PreDeploymentTasks: []string{
+						"task",
+					},
+				},
+			},
+			AppName: "myapp",
+			TraceId: map[string]string{
+				"traceparent": "parent-trace",
+			},
+		},
+		Status: status,
+	}
+	r, _, _ := setupReconciler(app)
+	// set up a non blocking deployment
+	r.Config.SetBlockDeployment(false)
+	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		return phase.PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
+	}}
+
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: "default",
+			Name:      "myapp-1.0.0",
+		},
+	}
+
+	result, err := r.Reconcile(context.WithValue(context.TODO(), CONTEXTID, req.Name), req)
+	require.Nil(t, err)
+
+	require.False(t, result.Requeue)
+}
+
 func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 
 	status := apilifecycle.KeptnAppVersionStatus{

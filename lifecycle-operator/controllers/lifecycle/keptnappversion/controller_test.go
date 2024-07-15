@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-logr/logr"
 	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
+	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
@@ -120,9 +121,6 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 func TestKeptnAppVersionNonBlockingReconciler_Reconcile(t *testing.T) {
 
 	status := apilifecycle.KeptnAppVersionStatus{
-		CurrentPhase:        apicommon.PhaseCompleted.ShortName,
-		Status:              apicommon.StateSucceeded,
-		PreDeploymentStatus: apicommon.StateWarning,
 		PreDeploymentTaskStatus: []apilifecycle.ItemStatus{
 			{
 				Name:           "pre-task",
@@ -130,10 +128,6 @@ func TestKeptnAppVersionNonBlockingReconciler_Reconcile(t *testing.T) {
 				Status:         apicommon.StateFailed,
 			},
 		},
-		PreDeploymentEvaluationStatus:  apicommon.StateSucceeded,
-		WorkloadOverallStatus:          apicommon.StateSucceeded,
-		PostDeploymentStatus:           apicommon.StateSucceeded,
-		PostDeploymentEvaluationStatus: apicommon.StateSucceeded,
 	}
 
 	appVersionName := fmt.Sprintf("%s-%s", "myapp", "1.0.0")
@@ -166,7 +160,11 @@ func TestKeptnAppVersionNonBlockingReconciler_Reconcile(t *testing.T) {
 	// set up a non blocking deployment
 	r.Config.SetBlockDeployment(false)
 	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
-		return phase.PhaseResult{Continue: false, Result: ctrl.Result{}}, nil
+		state, _ := reconcilePhase(ctx)
+		if phaseMoqParam == common.PhaseAppPreDeployment {
+			require.Equal(t, state.IsWarning(), true)
+		}
+		return phase.PhaseResult{Continue: true, Result: ctrl.Result{}}, nil
 	}}
 
 	req := ctrl.Request{
@@ -178,7 +176,6 @@ func TestKeptnAppVersionNonBlockingReconciler_Reconcile(t *testing.T) {
 
 	result, err := r.Reconcile(context.WithValue(context.TODO(), CONTEXTID, req.Name), req)
 	require.Nil(t, err)
-
 	require.False(t, result.Requeue)
 }
 

@@ -10,7 +10,6 @@ import (
 
 	"github.com/go-logr/logr"
 	apilifecycle "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1"
-	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	apicommon "github.com/keptn/lifecycle-toolkit/lifecycle-operator/apis/lifecycle/v1/common"
 	"github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/config"
 	keptncontext "github.com/keptn/lifecycle-toolkit/lifecycle-operator/controllers/common/context"
@@ -160,10 +159,7 @@ func TestKeptnAppVersionNonBlockingReconciler_Reconcile(t *testing.T) {
 	// set up a non blocking deployment
 	r.Config.SetBlockDeployment(false)
 	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
-		state, _ := reconcilePhase(ctx)
-		if phaseMoqParam == common.PhaseAppPreDeployment {
-			require.Equal(t, state.IsWarning(), true)
-		}
+		reconcilePhase(ctx)
 		return phase.PhaseResult{Continue: true, Result: ctrl.Result{}}, nil
 	}}
 
@@ -176,6 +172,13 @@ func TestKeptnAppVersionNonBlockingReconciler_Reconcile(t *testing.T) {
 
 	result, err := r.Reconcile(context.WithValue(context.TODO(), CONTEXTID, req.Name), req)
 	require.Nil(t, err)
+
+	appVersion := &apilifecycle.KeptnAppVersion{}
+	err = r.Get(context.Background(), req.NamespacedName, appVersion)
+	require.Nil(t, err)
+
+	require.Equal(t, appVersion.Status.PreDeploymentStatus.IsWarning(), true)
+
 	require.False(t, result.Requeue)
 }
 

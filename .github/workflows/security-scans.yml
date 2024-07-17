@@ -113,7 +113,7 @@ jobs:
 
       - name: Download tag
         id: download_manifests
-        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
         with:
           name: tag
           path: tag
@@ -231,7 +231,7 @@ jobs:
 
       - name: Download images
         id: download_images
-        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
         with:
           name: images
           path: images

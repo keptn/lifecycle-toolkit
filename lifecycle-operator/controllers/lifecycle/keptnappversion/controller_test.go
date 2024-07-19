@@ -159,7 +159,8 @@ func TestKeptnAppVersionNonBlockingReconciler_Reconcile(t *testing.T) {
 	// set up a non blocking deployment
 	r.Config.SetBlockDeployment(false)
 	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
-		reconcilePhase(ctx)
+		_, err := reconcilePhase(ctx)
+		require.Nil(t, err)
 		return phase.PhaseResult{Continue: true, Result: ctrl.Result{}}, nil
 	}}
 

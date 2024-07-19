@@ -117,6 +117,72 @@ func TestKeptnAppVersionReconciler_reconcile(t *testing.T) {
 
 }
 
+func TestKeptnAppVersionNonBlockingReconciler_Reconcile(t *testing.T) {
+
+	status := apilifecycle.KeptnAppVersionStatus{
+		PreDeploymentTaskStatus: []apilifecycle.ItemStatus{
+			{
+				Name:           "pre-task",
+				DefinitionName: "task",
+				Status:         apicommon.StateFailed,
+			},
+		},
+	}
+
+	appVersionName := fmt.Sprintf("%s-%s", "myapp", "1.0.0")
+	app := &apilifecycle.KeptnAppVersion{
+		TypeMeta: metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:       appVersionName,
+			Namespace:  "default",
+			Generation: 1,
+		},
+		Spec: apilifecycle.KeptnAppVersionSpec{
+			KeptnAppSpec: apilifecycle.KeptnAppSpec{
+				Version: "1.0.0",
+			},
+			KeptnAppContextSpec: apilifecycle.KeptnAppContextSpec{
+				DeploymentTaskSpec: apilifecycle.DeploymentTaskSpec{
+					PreDeploymentTasks: []string{
+						"task",
+					},
+				},
+			},
+			AppName: "myapp",
+			TraceId: map[string]string{
+				"traceparent": "parent-trace",
+			},
+		},
+		Status: status,
+	}
+	r, _, _ := setupReconciler(app)
+	// set up a non blocking deployment
+	r.Config.SetBlockDeployment(false)
+	r.PhaseHandler = &phasefake.MockHandler{HandlePhaseFunc: func(ctx context.Context, ctxTrace context.Context, tracer telemetry.ITracer, reconcileObject client.Object, phaseMoqParam apicommon.KeptnPhaseType, reconcilePhase func(phaseCtx context.Context) (apicommon.KeptnState, error)) (phase.PhaseResult, error) {
+		_, err := reconcilePhase(ctx)
+		require.Nil(t, err)
+		return phase.PhaseResult{Continue: true, Result: ctrl.Result{}}, nil
+	}}
+
+	req := ctrl.Request{
+		NamespacedName: types.NamespacedName{
+			Namespace: "default",
+			Name:      "myapp-1.0.0",
+		},
+	}
+
+	result, err := r.Reconcile(context.WithValue(context.TODO(), CONTEXTID, req.Name), req)
+	require.Nil(t, err)
+
+	appVersion := &apilifecycle.KeptnAppVersion{}
+	err = r.Get(context.Background(), req.NamespacedName, appVersion)
+	require.Nil(t, err)
+
+	require.Equal(t, appVersion.Status.PreDeploymentStatus.IsWarning(), true)
+
+	require.False(t, result.Requeue)
+}
+
 func TestKeptnAppVersionReconciler_ReconcileFailed(t *testing.T) {
 
 	status := apilifecycle.KeptnAppVersionStatus{

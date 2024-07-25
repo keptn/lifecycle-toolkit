@@ -104,7 +104,7 @@ podAnnotations: {}
 ## @param     kubernetesClusterDomain overrides cluster.local
 kubernetesClusterDomain: cluster.local
 customMetricsAPIService:
-## @param   customMetricsAPIService.enabled enable/disable the K8s APIService installation
+## @param   customMetricsAPIService.enabled enable/disable the installation of custom metrics API Service
   enabled: "true"
 
 ## @section Keptn Metrics Operator controller

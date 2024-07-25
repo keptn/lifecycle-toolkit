@@ -84,6 +84,6 @@ Error: Unable to continue with install: APIService "v1beta1.custom.metrics.k8s.i
 
 Set the `metricsOperator.customMetricsAPIService.enabled` Helm value in the
 [metrics-operator/chart/README.md](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/chart/README.md#keptn-metrics-operator-common)
-to `false` to disable the Keptn installation of an `APIService` and retry the installation.
+file to `false` to disable the Keptn installation of an `APIService` and retry the installation.
 
 The custom metrics API is a non-namespaced resource that can only exist once in a Kubernetes cluster.

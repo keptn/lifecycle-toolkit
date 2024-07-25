@@ -72,3 +72,18 @@ installed and configured on the cluster.
 
 [The OpenTelemetry observability page](https://lifecycle.keptn.sh/docs/implementing/otel/)
 contains more information on how to configure this.
+
+## I get a custom metrics API APIService error when installing metrics-operator
+
+An error like the following occurs when installing the Keptn metrics operator on a cluster
+that already has a custom metrics API defined:
+
+```shell
+Error: Unable to continue with install: APIService "v1beta1.custom.metrics.k8s.io" in namespace "" exists and cannot be imported into the current release: invalid ownership metadata; annotation validation error: missing key "meta.helm.sh/release-name": must be set to "keptn"; annotation validation error: missing key "meta.helm.sh/release-namespace": must be set to "dynatrace"
+```
+
+Set the `metricsOperator.customMetricsAPIService.enabled` Helm value in the
+[metrics-operator/chart/README.md](https://github.com/keptn/lifecycle-toolkit/blob/main/metrics-operator/chart/README.md#keptn-metrics-operator-common)
+file to `false` to disable the Keptn installation of an `APIService` and retry the installation.
+
+The custom metrics API is a non-namespaced resource that can only exist once in a Kubernetes cluster.

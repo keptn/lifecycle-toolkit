@@ -21,8 +21,8 @@ type IConfig interface {
 	GetBlockDeployment() bool
 	SetObservabilityTimeout(timeout metav1.Duration)
 	GetObservabilityTimeout() metav1.Duration
-	SetRestApi(value bool)
-	GetRestApi() bool
+	SetRestApiEnabled(value bool)
+	GetRestApiEnabled() bool
 }
 
 type ControllerConfig struct {
@@ -31,7 +31,7 @@ type ControllerConfig struct {
 	defaultNamespace               string
 	blockDeployment                bool
 	observabilityTimeout           metav1.Duration
-	restApi                        bool
+	restApiEnabled                 bool
 }
 
 var instance *ControllerConfig
@@ -90,10 +90,10 @@ func (o *ControllerConfig) GetObservabilityTimeout() metav1.Duration {
 	return o.observabilityTimeout
 }
 
-func (o *ControllerConfig) SetRestApi(value bool) {
-	o.restApi = value
+func (o *ControllerConfig) SetRestApiEnabled(value bool) {
+	o.restApiEnabled = value
 }
 
-func (o *ControllerConfig) GetRestApi() bool {
-	return o.restApi
+func (o *ControllerConfig) GetRestApiEnabled() bool {
+	return o.restApiEnabled
 }

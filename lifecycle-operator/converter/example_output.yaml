@@ -9,8 +9,8 @@ metadata:
 spec:
   version: 1.2.3
   workloads:
-    - name: podtato-head-left-arm
-      version: 0.2.7
+  - name: podtato-head-left-arm
+    version: 0.2.7
 status: {}
 
 ---
@@ -22,11 +22,11 @@ metadata:
   namespace: my-app-ns
 spec:
   postDeploymentEvaluations:
-    - post-deployment-evaluation
+  - post-deployment-evaluation
   postDeploymentTasks:
-    - post-deployment-task
+  - post-deployment-task
   preDeploymentEvaluations:
-    - pre-deployment-evaluation
+  - pre-deployment-evaluation
   preDeploymentTasks:
-    - pre-deployment-task
+  - pre-deployment-task
 status: {}

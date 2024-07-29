@@ -73,6 +73,12 @@ type MockConfig struct {
 	// SetCloudEventsEndpointFunc mocks the SetCloudEventsEndpoint method.
 	SetCloudEventsEndpointFunc func(endpoint string)
 
+	// SetRestApiFunc the SetRestApi method.
+  SetRestApiFunc func(value bool)
+
+	// SetRestApiFunc the SetRestApi method.
+  GetRestApiFunc func() bool
+
 	// SetCreationRequestTimeoutFunc mocks the SetCreationRequestTimeout method.
 	SetCreationRequestTimeoutFunc func(value time.Duration)
 
@@ -135,6 +141,16 @@ type MockConfig struct {
 	lockSetCreationRequestTimeout sync.RWMutex
 	lockSetDefaultNamespace       sync.RWMutex
 	lockSetObservabilityTimeout   sync.RWMutex
+}
+
+// GetRestApi calls GetRestApiFunc.
+func (mock *MockConfig) GetRestApi() bool {
+  return mock.GetRestApiFunc()
+}
+
+// GetRestApi calls GetRestApiFunc.
+func (mock *MockConfig) SetRestApi(value bool) {
+  mock.SetRestApiFunc(value)
 }
 
 // GetBlockDeployment calls GetBlockDeploymentFunc.

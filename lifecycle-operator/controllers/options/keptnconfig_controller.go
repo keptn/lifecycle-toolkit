@@ -78,6 +78,7 @@ func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	r.config.SetCloudEventsEndpoint(cfg.Spec.CloudEventsEndpoint)
 	r.config.SetBlockDeployment(cfg.Spec.BlockDeployment)
 	r.config.SetObservabilityTimeout(cfg.Spec.ObservabilityTimeout)
+	r.config.SetRestApiEnabled(cfg.Spec.RestApiEnabled)
 	result, err := r.reconcileOtelCollectorUrl(cfg)
 	if err != nil {
 		return result, err

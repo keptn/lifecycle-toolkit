@@ -389,6 +389,7 @@ func setupReconciler(withConfig *optionsv1alpha1.KeptnConfig) *KeptnConfigReconc
 		SetCreationRequestTimeoutFunc: func(value time.Duration) {},
 		SetBlockDeploymentFunc:        func(value bool) {},
 		SetObservabilityTimeoutFunc:   func(timeout metav1.Duration) {},
+		SetRestApiEnabledFunc:         func(value bool) {},
 	}
 	return r
 }

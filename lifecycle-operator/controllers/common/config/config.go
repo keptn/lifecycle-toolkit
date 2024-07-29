@@ -31,7 +31,7 @@ type ControllerConfig struct {
 	defaultNamespace               string
 	blockDeployment                bool
 	observabilityTimeout           metav1.Duration
-	restApi                bool
+	restApi                        bool
 }
 
 var instance *ControllerConfig
@@ -97,4 +97,3 @@ func (o *ControllerConfig) SetRestApi(value bool) {
 func (o *ControllerConfig) GetRestApi() bool {
 	return o.restApi
 }
-

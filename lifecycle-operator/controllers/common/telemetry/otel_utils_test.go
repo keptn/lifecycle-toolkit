@@ -87,6 +87,7 @@ func TestSetUpKeptnMeters(t *testing.T) {
 			return nil, errors.New("some error")
 		},
 		RegisterCallbackFunc: func(f metric.Callback, instruments ...metric.Observable) (metric.Registration, error) {
+			// nolint: nilnil
 			return nil, nil
 		},
 	}

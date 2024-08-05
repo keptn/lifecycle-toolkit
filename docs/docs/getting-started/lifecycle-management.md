@@ -50,7 +50,7 @@ For demo purposes, a place is required to which those requests are sent.
 To implement this:
 
 1. Install the
-   [open source webhook.site tool](https://github.com/webhooksite/webhook.site/tree/master/kubernetes).
+   [open source webhook.site tool](https://github.com/webhooksite/webhook.site/tree/7f10c9f4aecb243636c9e5197d4dbf8f5eaf5341/kubernetes).
 
      This provides a place on your cluster to which web requests are sent
      and from which they can be viewed.
@@ -59,11 +59,11 @@ To implement this:
 1. Execute the following commands to apply the web hook:
 
      ```shell
-     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/namespace.yml
-     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/redis.deployment.yml
-     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/laravel-echo-server.deployment.yml
-     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/webhook.deployment.yml
-     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/master/kubernetes/service.yml
+     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/7f10c9f4aecb243636c9e5197d4dbf8f5eaf5341/kubernetes/namespace.yml
+     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/7f10c9f4aecb243636c9e5197d4dbf8f5eaf5341/kubernetes/redis.deployment.yml
+     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/7f10c9f4aecb243636c9e5197d4dbf8f5eaf5341/kubernetes/laravel-echo-server.deployment.yml
+     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/7f10c9f4aecb243636c9e5197d4dbf8f5eaf5341/kubernetes/webhook.deployment.yml
+     kubectl apply -f https://raw.githubusercontent.com/webhooksite/webhook.site/7f10c9f4aecb243636c9e5197d4dbf8f5eaf5341/kubernetes/service.yml
      ```
 
 1. Wait until all Pods are running in the `webhook` namespace

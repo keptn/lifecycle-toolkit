@@ -19,7 +19,7 @@ on:
 permissions: read-all
 
 env:
-  GO_VERSION: "~1.21"
+  GO_VERSION: "~1.22"
 defaults:
   run:
     shell: bash
@@ -43,7 +43,7 @@ jobs:
         uses: ./.github/actions/deploy-prometheus-on-cluster
 
       - name: Install Chainsaw
-        uses: kyverno/action-install-chainsaw@7ad918efe13995d01bafa59aef8203a5246f5d04 # v0.2.7
+        uses: kyverno/action-install-chainsaw@82d8e747037f840e0ef9bdd97ecdc617f5535bdc # v0.2.8
 
       - name: Run Integration Tests
         working-directory: .
@@ -56,7 +56,7 @@ jobs:
 
       - name: Upload cluster logs
         if: failure()
-        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4
+        uses: actions/upload-artifact@89ef406dd8d7e03cfd12d9e0a4a378f454709029 # v4.3.5
         with:
           name: logs-integration-tests-${{ inputs.scheduling-gates }}-${{ inputs.cert-manager-io-enabled }}
           path: .github/scripts/logs

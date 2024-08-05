@@ -15,9 +15,9 @@ defaults:
     shell: bash
 
 env:
-  GO_VERSION: "~1.21"
+  GO_VERSION: "~1.22"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.13.0"
+  CONTROLLER_TOOLS_VERSION: "v0.15.0"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
   PUBLISHABLE_ITEMS: '[".","lifecycle-operator","metrics-operator","keptn-cert-manager","runtimes/deno-runtime","runtimes/python-runtime","scheduler"]'
 
@@ -218,7 +218,7 @@ jobs:
           output-file: ./sbom-${{ matrix.config.name }}.spdx.json
 
       - name: Attach SBOM to release
-        uses: softprops/action-gh-release@a74c6b72af54cfa997e81df42d94703d6313a2d0 # v2.0.6
+        uses: softprops/action-gh-release@c062e08bd532815e2082a85e87e3ef29c3e6d191 # v2.0.8
         with:
           tag_name: ${{ matrix.config.tagName }}
           files: ./sbom-${{ matrix.config.name }}.spdx.json
@@ -237,7 +237,7 @@ jobs:
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Upload verification log as artifact
-        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4
+        uses: actions/upload-artifact@89ef406dd8d7e03cfd12d9e0a4a378f454709029 # v4.3.5
         with:
           name: cosign-attest-verification-log
           path: ./cosign-attest-output.json

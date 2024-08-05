@@ -21,8 +21,8 @@ permissions: read-all
 
 env:
   # renovate: datasource=github-releases depName=golangci/golangci-lint
-  GOLANGCI_LINT_VERSION: "v1.55.2"
-  GO_VERSION: "~1.21"
+  GOLANGCI_LINT_VERSION: "v1.59.1"
+  GO_VERSION: "~1.22"
 jobs:
   golangci-lint:
     name: golangci-lint
@@ -49,7 +49,7 @@ jobs:
           check-latest: true
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@d6238b002a20823d52840fda27e2d4891c5952dc # v4
+        uses: golangci/golangci-lint-action@aaa42aa0628b4ae2578232a66b541047968fac86 # v6
         with:
           working-directory: ${{ matrix.config.folder }}
           version: ${{ env.GOLANGCI_LINT_VERSION }}

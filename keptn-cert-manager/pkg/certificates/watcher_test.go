@@ -360,3 +360,40 @@ func TestNewCertificateWatcher(t *testing.T) {
 func TestNewNoOpCertificateWatcher(t *testing.T) {
 	require.EqualValues(t, NewNoOpCertificateWatcher(), &NoOpCertificateWatcher{})
 }
+
+func TestCertificateWatcher_watchForCertificatesSecret(t *testing.T) {
+	mockReader := newFakeClient()
+	logger := testr.New(t)
+
+	watcher := &CertificateWatcher{
+		apiReader:             mockReader,
+		fs:                    afero.NewOsFs(),
+		certificateDirectory:  "",
+		namespace:             "",
+		certificateSecretName: "",
+		ICertificateHandler:   defaultCertificateHandler{},
+		Log:                   logger,
+	}
+
+	updateSignal := make(chan struct{})
+	defer close(updateSignal)
+
+	updateCalled := false
+	go func() {
+		time.Sleep(10 * time.Millisecond)
+		updateSignal <- struct{}{}
+	}()
+
+	go watcher.watchForCertificatesSecret()
+
+	select {
+	case <-time.After(20 * time.Millisecond):
+		t.Error("Expected update but did not receive it within the specified interval")
+	case <-updateSignal:
+		updateCalled = true
+	}
+
+	if !updateCalled {
+		t.Error("updateCertificatesFromSecret method was not called as expected")
+	}
+}

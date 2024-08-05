@@ -146,6 +146,8 @@ jobs:
       DATETIME: ${{ needs.release-please.outputs.DATETIME }}
       BUILD_TIME: ${{ needs.release-please.outputs.BUILD_TIME }}
       GIT_SHA: ${{ needs.release-please.outputs.GIT_SHA }}
+      DOCKER_BUILD_SUMMARY: "false"
+      DOCKER_BUILD_RECORD_UPLOAD: "false"
     steps:
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -182,7 +184,7 @@ jobs:
 
       - name: Build Docker Image
         id: docker_build_image
-        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5.4.0
+        uses: docker/build-push-action@5176d81f87c23d6fc96624dfdbcd9f3830bbe445 # v6.5.0
         with:
           context: ${{ matrix.config.folder }}
           platforms: linux/amd64,linux/arm64

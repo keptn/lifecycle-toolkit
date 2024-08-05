@@ -24,7 +24,8 @@ data:
                 - targets: ['lifecycle-operator-metrics-service:2222']
     processors:
     extensions:
-      health_check: {}
+      health_check:
+        endpoint: "0.0.0.0:13133"
     exporters:
       otlp:
         endpoint: "jaeger-collector:4317"

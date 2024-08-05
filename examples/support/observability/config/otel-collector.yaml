@@ -24,7 +24,8 @@ data:
                 - targets: ['lifecycle-operator-metrics-service:2222']
     processors:
     extensions:
-      health_check: {}
+      health_check:
+        endpoint: "0.0.0.0:13133"
     exporters:
       otlp:
         endpoint: "jaeger-collector:4317"
@@ -103,7 +104,7 @@ spec:
           env:
             - name: GOGC
               value: "80"
-          image: otel/opentelemetry-collector:0.99.0
+          image: otel/opentelemetry-collector:0.106.1
           name: otel-collector
           resources:
             limits:

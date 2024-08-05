@@ -133,7 +133,7 @@ _Appears in:_
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
 | `timeframe` _[Timeframe](#timeframe)_ | Timeframe specifies the range for the corresponding query in the AnalysisValueTemplate. Please note that either<br />a combination of 'from' and 'to' or the 'recent' property may be set. If neither is set, the Analysis can<br />not be added to the cluster. || x |  |
-| `args` _object (keys:string, values:string)_ | Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:{{.foo}})". || ✓ |  |
+| `args` _object (keys:string, values:string)_ | Args corresponds to a map of key/value pairs that can be used to substitute placeholders in the AnalysisValueTemplate query. i.e. for args foo:bar the query could be "query:percentile(95)?scope=tag(my_foo_label:\{\{.foo\}\})". || ✓ |  |
 | `analysisDefinition` _[ObjectReference](#objectreference)_ | AnalysisDefinition refers to the AnalysisDefinition, a CRD that stores the AnalysisValuesTemplates || x |  |
 
 
@@ -452,7 +452,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
-| `fixedValue` _[Quantity](https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity)_ | FixedValue defines the value for comparison || x |  |
+| `fixedValue` _[Quantity](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#quantity-resource-api)_ | FixedValue defines the value for comparison || x |  |
 
 
 #### ProviderRef
@@ -523,8 +523,8 @@ _Appears in:_
 
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
-| `lowBound` _[Quantity](https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity)_ | LowBound defines the lower bound of the range || x |  |
-| `highBound` _[Quantity](https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#Quantity)_ | HighBound defines the higher bound of the range || x |  |
+| `lowBound` _[Quantity](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#quantity-resource-api)_ | LowBound defines the lower bound of the range || x |  |
+| `highBound` _[Quantity](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#quantity-resource-api)_ | HighBound defines the higher bound of the range || x |  |
 
 
 #### Target

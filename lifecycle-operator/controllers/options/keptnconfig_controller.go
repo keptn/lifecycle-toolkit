@@ -55,6 +55,50 @@ func NewReconciler(client client.Client, scheme *runtime.Scheme, log logr.Logger
 	}
 }
 
+// variables needed for the Keptn RestAPI
+const restApiPort = 8080
+
+var restApiDeployment = &appsv1.Deployment{
+	ObjectMeta: metav1.ObjectMeta{
+		Name:      "keptn-rest-api",
+		Namespace: "keptn-system",
+	},
+	Spec: appsv1.DeploymentSpec{
+		Template: apiv1.PodTemplateSpec{
+			Spec: apiv1.PodSpec{
+				Containers: []apiv1.Container{
+					{
+						Name:  "restapi",
+						Image: "asamonik/keptn-rest-api:latest",
+						Ports: []apiv1.ContainerPort{
+							{
+								Name:          "http",
+								Protocol:      apiv1.ProtocolTCP,
+								ContainerPort: restApiPort,
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
+var restApiService = &apiv1.Service{
+	TypeMeta: metav1.TypeMeta{
+		APIVersion: "v1",
+		Kind:       "Service",
+	},
+	ObjectMeta: metav1.ObjectMeta{
+		Name: "restapi-service",
+	},
+	Spec: apiv1.ServiceSpec{
+		Ports: []apiv1.ServicePort{{
+			Port: restApiPort,
+		}},
+	},
+}
+
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs/status,verbs=get
 // +kubebuilder:rbac:groups=apps,resources=deployments,verbs=create;delete
@@ -111,58 +155,35 @@ func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha
 }
 
 func (r *KeptnConfigReconciler) reconcileRestApi(config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
-	var replicas int32 = 1
-
-	deployment := &appsv1.Deployment{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "keptn-rest-api",
-			Namespace: "keptn-system",
-		},
-		Spec: appsv1.DeploymentSpec{
-			Replicas: &replicas,
-			Selector: &metav1.LabelSelector{
-				MatchLabels: map[string]string{
-					"app": "demo",
-				},
-			},
-			Template: apiv1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels: map[string]string{
-						"app": "demo",
-					},
-				},
-				Spec: apiv1.PodSpec{
-					Containers: []apiv1.Container{
-						{
-							Name:  "restapi",
-							Image: "asamonik/keptn-rest-api:latest",
-							Ports: []apiv1.ContainerPort{
-								{
-									Name:          "http",
-									Protocol:      apiv1.ProtocolTCP,
-									ContainerPort: 8080,
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
 
 	if config.Spec.RestApiEnabled {
 		fmt.Println("Creating Rest-Api deployment...")
-		err := r.Client.Create(context.TODO(), deployment)
+
+		err := r.Client.Create(context.TODO(), restApiDeployment)
 		if err != nil {
 			r.Log.Error(err, "Unable to Deploy Rest API")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
+
+		err = r.Client.Create(context.TODO(), restApiService)
+		if err != nil {
+			r.Log.Error(err, "Unable to Deploy Rest API Service")
+			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+		}
+
 		fmt.Printf("Created Rest-Api deployment.\n")
 	} else {
 		fmt.Println("Deleting Rest-Api deployment...")
-		err := r.Client.Delete(context.TODO(), deployment)
+
+		err := r.Client.Delete(context.TODO(), restApiDeployment)
 		if err != nil {
 			r.Log.Error(err, "Unable to Delete Rest API Deployment")
+			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+		}
+
+		err = r.Client.Delete(context.TODO(), restApiService)
+		if err != nil {
+			r.Log.Error(err, "Unable to Delete Rest API Service")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 		fmt.Printf("Deleted Rest-Api deployment.\n")

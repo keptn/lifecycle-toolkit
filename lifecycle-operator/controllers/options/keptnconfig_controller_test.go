@@ -396,6 +396,124 @@ func TestKeptnConfigReconciler_reconcileOtelCollectorUrl(t *testing.T) {
 	}
 }
 
+func TestKeptnConfigReconciler_reconcileRestApiEnabled(t *testing.T) {
+	// set up logger
+	opts := zap.Options{
+		Development: true,
+	}
+	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+
+	type fields struct {
+		Client          client.Client
+		Scheme          *runtime.Scheme
+		Log             logr.Logger
+		LastAppliedSpec *optionsv1alpha1.KeptnConfigSpec
+	}
+	type args struct {
+		config *optionsv1alpha1.KeptnConfig
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    ctrl.Result
+		wantErr bool
+	}{
+		{
+			name: "Test Enabled",
+			fields: fields{
+				Client: nil,
+				Scheme: nil,
+				Log:    ctrl.Log.WithName("test-keptn-config-controller"),
+				LastAppliedSpec: &optionsv1alpha1.KeptnConfigSpec{
+					OTelCollectorUrl: "",
+				},
+			},
+			args: args{
+				config: &optionsv1alpha1.KeptnConfig{
+					ObjectMeta: metav1.ObjectMeta{
+						Name: "test-config",
+					},
+					Spec: optionsv1alpha1.KeptnConfigSpec{
+						RestApiEnabled: true,
+					},
+				},
+			},
+			want:    ctrl.Result{},
+			wantErr: false,
+		},
+		{
+			name: "Test Disabled",
+			fields: fields{
+				Client: nil,
+				Scheme: nil,
+				Log:    ctrl.Log.WithName("test-keptn-config-controller"),
+			},
+			args: args{
+				config: &optionsv1alpha1.KeptnConfig{
+					ObjectMeta: metav1.ObjectMeta{
+						Name: "test-config",
+					},
+					Spec: optionsv1alpha1.KeptnConfigSpec{
+						RestApiEnabled: false,
+					},
+				},
+			},
+			want:    ctrl.Result{},
+			wantErr: false,
+		},
+		{
+			name: "Test want error",
+			fields: fields{
+				Client: nil,
+				Scheme: nil,
+				Log:    ctrl.Log.WithName("test-keptn-config-controller"),
+			},
+			args: args{
+				config: &optionsv1alpha1.KeptnConfig{
+					ObjectMeta: metav1.ObjectMeta{
+						Name: "test-config",
+					},
+					Spec: optionsv1alpha1.KeptnConfigSpec{
+						RestApiEnabled: true,
+					},
+				},
+			},
+			want:    ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			reconcileConfig := &optionsv1alpha1.KeptnConfig{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "empty-config",
+					Namespace: "keptn-system",
+				},
+				Spec: optionsv1alpha1.KeptnConfigSpec{
+					OTelCollectorUrl: "",
+					BlockDeployment:  true,
+					RestApiEnabled:   false,
+					ObservabilityTimeout: metav1.Duration{
+						Duration: time.Duration(5 * time.Minute),
+					},
+				},
+			}
+
+			r := setupReconciler(reconcileConfig)
+
+			got, err := r.reconcileRestApi(tt.args.config)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("reconcileRestApi() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("reconcileRestApi() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func setupReconciler(withConfig *optionsv1alpha1.KeptnConfig) *KeptnConfigReconciler {
 	// setup logger
 	opts := zap.Options{

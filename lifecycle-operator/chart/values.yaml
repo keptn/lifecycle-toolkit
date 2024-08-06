@@ -109,7 +109,7 @@ lifecycleOperator:
 ## @param   lifecycleOperator.image.repository specify registry for manager image
     repository: keptn/lifecycle-operator
 ## @param   lifecycleOperator.image.tag  select tag for manager image
-    tag: v1.0.0 # x-release-please-version
+    tag: v2.0.0 # x-release-please-version
 ## @param   lifecycleOperator.image.imagePullPolicy specify pull policy for the manager image. This overrides global values
     imagePullPolicy: ""
 ## @extra  lifecycleOperator.livenessProbe custom liveness probe for manager container

@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	dario.cat/mergo v1.0.0
-	github.com/argoproj/argo-rollouts v1.6.6
+	github.com/argoproj/argo-rollouts v1.7.1
 	github.com/benbjohnson/clock v1.3.5
 	github.com/cloudevents/sdk-go/v2 v2.15.2
 	github.com/go-logr/logr v1.4.2
@@ -43,7 +43,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/evanphx/json-patch v5.6.0+incompatible // indirect
-	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
+	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-logr/zapr v1.2.4 // indirect

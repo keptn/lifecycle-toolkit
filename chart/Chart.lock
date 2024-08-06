@@ -7,6 +7,6 @@ dependencies:
   version: 0.3.0
 - name: keptn-metrics-operator
   repository: file://../metrics-operator/chart
-  version: 0.2.1
-digest: sha256:0ca3edc9566fea40f47cb5ced2221855d66f9ce85a0b55eca103b29a732755f2
-generated: "2024-08-06T10:21:38.319675+02:00"
+  version: 0.2.2
+digest: sha256:a02debd2ad647972a072e0663083a573ecf2c3dab72f153fb4879e8a07050239
+generated: "2024-08-06T10:46:36.938198+02:00"

@@ -29,7 +29,7 @@ annotations:
 kubeVersion: '>= 1.24.0-0'
 type: application
 version: 0.3.0
-appVersion: v1.0.0 # x-release-please-version
+appVersion: v1.1.0 # x-release-please-version
 dependencies:
   - name: common
     repository: https://charts.lifecycle.keptn.sh

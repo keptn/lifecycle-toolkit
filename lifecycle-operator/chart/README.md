@@ -58,7 +58,7 @@ and application health checks
 | `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                          | `ghcr.io/keptn/python-runtime:v1.0.6` |
 | `lifecycleOperator.image.registry`                                    | specify the container registry for the lifecycle-operator image                | `""`                                  |
 | `lifecycleOperator.image.repository`                                  | specify registry for manager image                                             | `keptn/lifecycle-operator`            |
-| `lifecycleOperator.image.tag`                                         | select tag for manager image                                                   | `v1.0.0`                              |
+| `lifecycleOperator.image.tag`                                         | select tag for manager image                                                   | `v1.1.0`                              |
 | `lifecycleOperator.image.imagePullPolicy`                             | specify pull policy for the manager image. This overrides global values        | `""`                                  |
 | `lifecycleOperator.livenessProbe`                                     | custom liveness probe for manager container                                    |                                       |
 | `lifecycleOperator.readinessProbe`                                    | custom readinessprobe for manager container                                    |                                       |
@@ -92,7 +92,7 @@ and application health checks
 | `scheduler.env.otelCollectorUrl`                             | sets url for open telemetry collector                                   | `otel-collector:4317` |
 | `scheduler.image.registry`                                   | specify the container registry for the scheduler image                  | `""`                  |
 | `scheduler.image.repository`                                 | set image repository for scheduler                                      | `keptn/scheduler`     |
-| `scheduler.image.tag`                                        | set image tag for scheduler                                             | `v1.0.0`              |
+| `scheduler.image.tag`                                        | set image tag for scheduler                                             | `v1.0.1`              |
 | `scheduler.image.imagePullPolicy`                            | specify pull policy for the manager image. This overrides global values | `""`                  |
 | `scheduler.livenessProbe`                                    | customizable liveness probe for the scheduler                           |                       |
 | `scheduler.readinessProbe`                                   | customizable readiness probe for the scheduler                          |                       |

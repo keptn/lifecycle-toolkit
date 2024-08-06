@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v1.0.1...metrics-operator-v2.0.0) (2024-08-06)
+## [1.0.2](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v1.0.1...metrics-operator-v1.0.2) (2024-08-06)
 
 
 ### Other

@@ -33,7 +33,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	appsv1 "k8s.io/api/apps/v1"
-	apiv1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -64,16 +64,16 @@ var restApiDeployment = &appsv1.Deployment{
 		Namespace: "keptn-system",
 	},
 	Spec: appsv1.DeploymentSpec{
-		Template: apiv1.PodTemplateSpec{
-			Spec: apiv1.PodSpec{
-				Containers: []apiv1.Container{
+		Template: corev1.PodTemplateSpec{
+			Spec: corev1.PodSpec{
+				Containers: []corev1.Container{
 					{
 						Name:  "restapi",
 						Image: "asamonik/keptn-rest-api:latest",
-						Ports: []apiv1.ContainerPort{
+						Ports: []corev1.ContainerPort{
 							{
 								Name:          "http",
-								Protocol:      apiv1.ProtocolTCP,
+								Protocol:      corev1.ProtocolTCP,
 								ContainerPort: restApiPort,
 							},
 						},
@@ -84,16 +84,15 @@ var restApiDeployment = &appsv1.Deployment{
 	},
 }
 
-var restApiService = &apiv1.Service{
+var restApiService = &corev1.Service{
 	TypeMeta: metav1.TypeMeta{
-		APIVersion: "v1",
-		Kind:       "Service",
+		Kind: "Service",
 	},
 	ObjectMeta: metav1.ObjectMeta{
 		Name: "restapi-service",
 	},
-	Spec: apiv1.ServiceSpec{
-		Ports: []apiv1.ServicePort{{
+	Spec: corev1.ServiceSpec{
+		Ports: []corev1.ServicePort{{
 			Port: restApiPort,
 		}},
 	},
@@ -155,9 +154,8 @@ func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha
 }
 
 func (r *KeptnConfigReconciler) reconcileRestApi(config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
-
 	if config.Spec.RestApiEnabled {
-		fmt.Println("Creating Rest-Api deployment...")
+		r.Log.Info("Creating Rest-Api deployment...")
 
 		err := r.Client.Create(context.TODO(), restApiDeployment)
 		if err != nil {
@@ -171,23 +169,23 @@ func (r *KeptnConfigReconciler) reconcileRestApi(config *optionsv1alpha1.KeptnCo
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 
-		fmt.Printf("Created Rest-Api deployment.\n")
-	} else {
-		fmt.Println("Deleting Rest-Api deployment...")
-
-		err := r.Client.Delete(context.TODO(), restApiDeployment)
-		if err != nil {
-			r.Log.Error(err, "Unable to Delete Rest API Deployment")
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
-		}
-
-		err = r.Client.Delete(context.TODO(), restApiService)
-		if err != nil {
-			r.Log.Error(err, "Unable to Delete Rest API Service")
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
-		}
-		fmt.Printf("Deleted Rest-Api deployment.\n")
+		r.Log.Info("Created Rest-Api deployment.\n")
+		return ctrl.Result{}, nil
 	}
+
+	r.Log.Info("Deleting Rest-Api deployment...")
+	err := r.Client.DeleteAllOf(context.TODO(), restApiDeployment)
+	if err != nil {
+		r.Log.Error(err, "Unable to Delete Rest API Deployment")
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+	}
+
+	err = r.Client.DeleteAllOf(context.TODO(), restApiService)
+	if err != nil {
+		r.Log.Error(err, "Unable to Delete Rest API Service")
+		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+	}
+	r.Log.Info("Deleted Rest-Api deployment.\n")
 
 	return ctrl.Result{}, nil
 }

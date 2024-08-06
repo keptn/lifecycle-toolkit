@@ -17,6 +17,9 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+
+	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 )
 
 func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
@@ -40,7 +43,9 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 		wantCreationRequestTimeoutConfig time.Duration
 		wantCloudEventsEndpointConfig    string
 		wantBlockDeployment              bool
+		wantRestApiEnabled               bool
 		blockDeploymentCalls             int
+		restApiEnabledCalls              int
 		wantObservabilityTimeout         metav1.Duration
 		observabilityTimeoutCalls        int
 	}{
@@ -63,6 +68,7 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 				Spec: optionsv1alpha1.KeptnConfigSpec{
 					OTelCollectorUrl: "",
 					BlockDeployment:  true,
+					RestApiEnabled:   false,
 					ObservabilityTimeout: metav1.Duration{
 						Duration: time.Duration(5 * time.Minute),
 					},
@@ -73,6 +79,8 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			wantErr:                   false,
 			wantBlockDeployment:       true,
 			blockDeploymentCalls:      1,
+			wantRestApiEnabled:        false,
+			restApiEnabledCalls:       1,
 			observabilityTimeoutCalls: 1,
 			wantObservabilityTimeout: metav1.Duration{
 				Duration: time.Duration(5 * time.Minute),
@@ -97,6 +105,7 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 				Spec: optionsv1alpha1.KeptnConfigSpec{
 					OTelCollectorUrl: "",
 					BlockDeployment:  true,
+					RestApiEnabled:   true,
 					ObservabilityTimeout: metav1.Duration{
 						Duration: time.Duration(5 * time.Minute),
 					},
@@ -107,6 +116,8 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			wantBlockDeployment:       true,
 			blockDeploymentCalls:      1,
 			observabilityTimeoutCalls: 1,
+			wantRestApiEnabled:        true,
+			restApiEnabledCalls:       1,
 			wantObservabilityTimeout: metav1.Duration{
 				Duration: time.Duration(5 * time.Minute),
 			},
@@ -131,6 +142,8 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			want:                      ctrl.Result{},
 			wantErr:                   false,
 			blockDeploymentCalls:      0,
+			wantRestApiEnabled:        false,
+			restApiEnabledCalls:       0,
 			observabilityTimeoutCalls: 0,
 		},
 		{
@@ -169,6 +182,8 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			wantErr:                          true,
 			wantBlockDeployment:              false,
 			blockDeploymentCalls:             1,
+			wantRestApiEnabled:               false,
+			restApiEnabledCalls:              1,
 			observabilityTimeoutCalls:        1,
 			wantObservabilityTimeout: metav1.Duration{
 				Duration: time.Duration(5 * time.Minute),
@@ -198,6 +213,7 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 					KeptnAppCreationRequestTimeoutSeconds: 10,
 					CloudEventsEndpoint:                   "ce-endpoint",
 					BlockDeployment:                       false,
+					RestApiEnabled:                        false,
 					ObservabilityTimeout: metav1.Duration{
 						Duration: time.Duration(10 * time.Minute),
 					},
@@ -209,6 +225,8 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			wantErr:                          true,
 			wantBlockDeployment:              false,
 			blockDeploymentCalls:             1,
+			wantRestApiEnabled:               false,
+			restApiEnabledCalls:              1,
 			observabilityTimeoutCalls:        1,
 			wantObservabilityTimeout: metav1.Duration{
 				Duration: time.Duration(10 * time.Minute),
@@ -234,14 +252,22 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 				require.Len(t, mockConfig.SetCreationRequestTimeoutCalls(), 1)
 				require.Equal(t, tt.wantCreationRequestTimeoutConfig, mockConfig.SetCreationRequestTimeoutCalls()[0].Value)
 			}
+
 			if tt.wantCloudEventsEndpointConfig != "" {
 				require.Len(t, mockConfig.SetCloudEventsEndpointCalls(), 1)
 				require.Equal(t, tt.wantCloudEventsEndpointConfig, mockConfig.SetCloudEventsEndpointCalls()[0].Endpoint)
 			}
+
 			require.Len(t, mockConfig.SetBlockDeploymentCalls(), tt.blockDeploymentCalls)
 			if tt.blockDeploymentCalls > 0 {
 				require.Equal(t, tt.wantBlockDeployment, mockConfig.SetBlockDeploymentCalls()[0].Value)
 			}
+
+			require.Len(t, mockConfig.SetRestApiEnabledCalls(), tt.restApiEnabledCalls)
+			if tt.restApiEnabledCalls > 0 {
+				require.Equal(t, tt.wantRestApiEnabled, mockConfig.SetRestApiEnabledCalls()[0].Value)
+			}
+
 			require.Len(t, mockConfig.SetObservabilityTimeoutCalls(), tt.observabilityTimeoutCalls)
 			if tt.observabilityTimeoutCalls > 0 {
 				require.Equal(t, tt.wantObservabilityTimeout, mockConfig.SetObservabilityTimeoutCalls()[0].Timeout)
@@ -379,9 +405,17 @@ func setupReconciler(withConfig *optionsv1alpha1.KeptnConfig) *KeptnConfigReconc
 
 	fakeClient := testcommon.NewTestClient(withConfig)
 
+	schemes := runtime.NewSchemeBuilder(
+		appsv1.AddToScheme,
+		corev1.AddToScheme,
+	)
+
+	s := runtime.NewScheme()
+	schemes.AddToScheme(s)
+
 	r := NewReconciler(
 		fakeClient,
-		fakeClient.Scheme(),
+		s,
 		ctrl.Log.WithName("test-keptnconfig-controller"),
 	)
 	r.config = &fakeconfig.MockConfig{

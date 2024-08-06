@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0](https://github.com/keptn/lifecycle-toolkit/compare/lifecycle-operator-v1.0.0...lifecycle-operator-v2.0.0) (2024-08-06)
+## [1.1.0](https://github.com/keptn/lifecycle-toolkit/compare/lifecycle-operator-v1.0.0...lifecycle-operator-v1.1.0) (2024-08-06)
 
 
 ### Features

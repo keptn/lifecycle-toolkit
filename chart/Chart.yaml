@@ -48,7 +48,7 @@ dependencies:
     condition: lifecycleOperator.enabled
     repository: file://../lifecycle-operator/chart
   - name: keptn-metrics-operator
-    version: 0.2.1
+    version: 0.2.2
     alias: metricsOperator
     condition: metricsOperator.enabled
     repository: file://../metrics-operator/chart

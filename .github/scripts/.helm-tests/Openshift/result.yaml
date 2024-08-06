@@ -50,8 +50,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 ---
 # Source: keptn/charts/lifecycleOperator/templates/lifecycle-manager-config.yaml
 apiVersion: v1
@@ -114,8 +114,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 data:
   controller_manager_config.yaml: |
     apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
@@ -11077,8 +11077,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 spec:
   group: metrics.keptn.sh
   names:
@@ -11595,8 +11595,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 spec:
   group: metrics.keptn.sh
   names:
@@ -12626,8 +12626,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 spec:
   group: metrics.keptn.sh
   names:
@@ -12835,8 +12835,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 spec:
   group: metrics.keptn.sh
   names:
@@ -13548,8 +13548,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 spec:
   group: metrics.keptn.sh
   names:
@@ -14470,8 +14470,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 rules:
   - apiGroups:
       - ""
@@ -14578,8 +14578,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 rules:
 - apiGroups:
   - custom.metrics.k8s.io
@@ -14666,8 +14666,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14687,8 +14687,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14708,8 +14708,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14899,8 +14899,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 rules:
 - apiGroups:
   - ""
@@ -15076,8 +15076,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15097,8 +15097,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15167,8 +15167,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 spec:
   type: ClusterIP
   selector:
@@ -15198,8 +15198,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 spec:
   type: ClusterIP
   selector:
@@ -15517,8 +15517,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 spec:
   replicas: 1
   selector:
@@ -15565,7 +15565,7 @@ spec:
           value: cluster.local
         - name: CERT_MANAGER_ENABLED
           value: "true"
-        image: ghcr.io/keptn/metrics-operator:v1.0.1
+        image: ghcr.io/keptn/metrics-operator:v1.0.2
         imagePullPolicy: IfNotPresent
         name: metrics-operator
         ports:
@@ -15633,8 +15633,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 spec:
   group: custom.metrics.k8s.io
   groupPriorityMinimum: 100
@@ -15655,8 +15655,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 spec:
   group: custom.metrics.k8s.io
   groupPriorityMinimum: 100
@@ -15762,8 +15762,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.0.1
-    helm.sh/chart: metrics-operator-0.2.1
+    app.kubernetes.io/version: v1.0.2
+    helm.sh/chart: metrics-operator-0.2.2
 webhooks:
 - admissionReviewVersions:
   - v1

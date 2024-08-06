@@ -3,16 +3,13 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"flag"
-	"path/filepath"
 
 	"fmt"
 	"log"
 	"net/http"
 
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/client-go/util/homedir"
+	"k8s.io/client-go/rest"
 
 	metrics_v1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 )
@@ -44,24 +41,14 @@ func handlerMetricsCount(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kc", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kc", "", "absolute path to the kubeconfig file")
-	}
-	flag.Parse()
-
-	clientConfig, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-
+	config, err := rest.InClusterConfig()
 	if err != nil {
 		panic(err.Error())
 	}
-
-	clientset, err = kubernetes.NewForConfig(clientConfig)
-
+	// creates the clientset
+	clientset, err = kubernetes.NewForConfig(config)
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 
 	http.Handle("/metricscount", http.HandlerFunc(handlerMetricsCount))

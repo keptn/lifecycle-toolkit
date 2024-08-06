@@ -43,12 +43,12 @@ dependencies:
     condition: global.certManagerEnabled
     repository: file://../keptn-cert-manager/chart
   - name: keptn-lifecycle-operator
-    version: 0.3.0
+    version: 0.4.0
     alias: lifecycleOperator
     condition: lifecycleOperator.enabled
     repository: file://../lifecycle-operator/chart
   - name: keptn-metrics-operator
-    version: 0.2.2
+    version: 0.2.3
     alias: metricsOperator
     condition: metricsOperator.enabled
     repository: file://../metrics-operator/chart

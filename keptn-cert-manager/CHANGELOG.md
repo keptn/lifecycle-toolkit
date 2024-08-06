@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.2.0...cert-manager-v2.0.0) (2024-08-06)
+## [2.2.1](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.2.0...cert-manager-v2.2.1) (2024-08-06)
 
 
 ### Other

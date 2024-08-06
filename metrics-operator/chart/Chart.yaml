@@ -22,8 +22,8 @@ annotations:
   artifacthub.io/operator: 'true'
 kubeVersion: '>= 1.24.0-0'
 type: application
-version: 0.2.1
-appVersion: v1.0.1 # x-release-please-version
+version: 2.0.0
+appVersion: v1.0.1
 dependencies:
   - name: common
     repository: https://charts.lifecycle.keptn.sh

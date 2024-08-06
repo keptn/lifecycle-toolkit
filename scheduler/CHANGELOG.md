@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.0.1](https://github.com/keptn/lifecycle-toolkit/compare/scheduler-v1.0.0...scheduler-v1.0.1) (2024-08-06)
+
+
+### Dependency Updates
+
+* update dependency kubernetes-sigs/kustomize to v5.4.2 ([#3548](https://github.com/keptn/lifecycle-toolkit/issues/3548)) ([fdecc9b](https://github.com/keptn/lifecycle-toolkit/commit/fdecc9b44c52a69407310dd85240b355a6b56c6e))
+* update dependency kubernetes-sigs/kustomize to v5.4.3 ([#3617](https://github.com/keptn/lifecycle-toolkit/issues/3617)) ([8e583ab](https://github.com/keptn/lifecycle-toolkit/commit/8e583ab22897eb8039c4038d0f85081c0f1a3a79))
+* update golang docker tag to v1.21.10 ([#3508](https://github.com/keptn/lifecycle-toolkit/issues/3508)) ([ed3409f](https://github.com/keptn/lifecycle-toolkit/commit/ed3409f1fa0f309e1fb0b1d971ec56e0c8f854bb))
+* update golang docker tag to v1.21.11 ([#3552](https://github.com/keptn/lifecycle-toolkit/issues/3552)) ([6fdf850](https://github.com/keptn/lifecycle-toolkit/commit/6fdf8503c179264b1428d13dc00717cb2eb9d589))
+* update golang docker tag to v1.21.12 ([#3604](https://github.com/keptn/lifecycle-toolkit/issues/3604)) ([0838454](https://github.com/keptn/lifecycle-toolkit/commit/083845486d2b5a94d75b49afbd1093c68b1d4523))
+* update golang docker tag to v1.22.5 ([#3315](https://github.com/keptn/lifecycle-toolkit/issues/3315)) ([0d7a613](https://github.com/keptn/lifecycle-toolkit/commit/0d7a613997697ba4db937f5e6193bc23c6b34551))
+* update module github.com/onsi/ginkgo/v2 to v2.17.2 ([#3489](https://github.com/keptn/lifecycle-toolkit/issues/3489)) ([4a7e9cf](https://github.com/keptn/lifecycle-toolkit/commit/4a7e9cf80e083e35b39da7e8204ff1cfb5d842ae))
+* update module github.com/onsi/ginkgo/v2 to v2.17.3 ([#3512](https://github.com/keptn/lifecycle-toolkit/issues/3512)) ([c0d2afe](https://github.com/keptn/lifecycle-toolkit/commit/c0d2afe9eda7d73654538cef636439fb5168beef))
+* update module github.com/onsi/ginkgo/v2 to v2.19.1 ([#3636](https://github.com/keptn/lifecycle-toolkit/issues/3636)) ([0018af4](https://github.com/keptn/lifecycle-toolkit/commit/0018af46771d1d8a26356206d1a8e471a90613b8))
+* update module github.com/onsi/gomega to v1.33.0 ([#3468](https://github.com/keptn/lifecycle-toolkit/issues/3468)) ([e8ddfde](https://github.com/keptn/lifecycle-toolkit/commit/e8ddfdecd1a5fef73013d968a0913ac4aa9d744f))
+* update module github.com/onsi/gomega to v1.33.1 ([#3495](https://github.com/keptn/lifecycle-toolkit/issues/3495)) ([80caa18](https://github.com/keptn/lifecycle-toolkit/commit/80caa185c2909089c746c392f32dda54edd42dc3))
+* update module golang.org/x/net to v0.27.0 ([#3638](https://github.com/keptn/lifecycle-toolkit/issues/3638)) ([04ca505](https://github.com/keptn/lifecycle-toolkit/commit/04ca5052acde4f65ad6b39f8b15250c194988e89))
+* update module google.golang.org/grpc to v1.64.0 ([#3526](https://github.com/keptn/lifecycle-toolkit/issues/3526)) ([19a0f7c](https://github.com/keptn/lifecycle-toolkit/commit/19a0f7ce421ca204f7d2eb168a2487426c8220e4))
+* update module google.golang.org/protobuf to v1.34.0 ([#3496](https://github.com/keptn/lifecycle-toolkit/issues/3496)) ([5862111](https://github.com/keptn/lifecycle-toolkit/commit/586211185649f9542dd7782d551d1ad04e3c809f))
+* update module google.golang.org/protobuf to v1.34.1 ([#3518](https://github.com/keptn/lifecycle-toolkit/issues/3518)) ([6146e6d](https://github.com/keptn/lifecycle-toolkit/commit/6146e6d142b3e75e52730ef66ae76e6d60fab3bc))
+* update module google.golang.org/protobuf to v1.34.2 ([#3568](https://github.com/keptn/lifecycle-toolkit/issues/3568)) ([08b5684](https://github.com/keptn/lifecycle-toolkit/commit/08b568411f444461a30a286be5cc63f27f0bb8c2))
+
 ## [1.0.0](https://github.com/keptn/lifecycle-toolkit/compare/scheduler-v0.9.2...scheduler-v1.0.0) (2024-04-24)
 
 

@@ -53,7 +53,7 @@ jobs:
           echo "BUILD_TIME=$BUILD_TIME" >> "$GITHUB_OUTPUT"
 
       - name: Run release please
-        uses: google-github-actions/release-please-action@e4dc86ba9405554aeba3c6bb2d169500e7d3b4ee # v4
+        uses: googleapis/release-please-action@7987652d64b4581673a76e33ad5e98e3dd56832f # v4.1.3
         id: release
         with:
           token: ${{ secrets.KEPTN_BOT_TOKEN }}

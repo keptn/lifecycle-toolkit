@@ -184,8 +184,8 @@ fetchintervalseconds
 fieldpath
 fieldref
 finalizer
-flyout
 fluxcd
+flyout
 fontawesome
 ftp
 fullname
@@ -225,6 +225,7 @@ goodanalysis
 goodmetric
 goodtaskdefinition
 google
+googleapis
 gotk
 govulncheck
 Grabner
@@ -660,8 +661,8 @@ Umre
 undeploy
 unmarshal
 unmarshalling
-usr
 urlset
+usr
 utilruntime
 Utkarsh
 validatingwebhookconfigurations

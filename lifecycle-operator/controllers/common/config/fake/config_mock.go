@@ -93,6 +93,9 @@ type MockConfig struct {
 		// GetBlockDeployment holds details about calls to the GetBlockDeployment method.
 		GetBlockDeployment []struct {
 		}
+
+		GetRestApiEnabled []struct {
+		}
 		// GetCloudEventsEndpoint holds details about calls to the GetCloudEventsEndpoint method.
 		GetCloudEventsEndpoint []struct {
 		}
@@ -107,6 +110,11 @@ type MockConfig struct {
 		}
 		// SetBlockDeployment holds details about calls to the SetBlockDeployment method.
 		SetBlockDeployment []struct {
+			// Value is the value argument value.
+			Value bool
+		}
+		// SetREstApiEnabled holds details about calls to the SetRestApiEnabled method.
+		SetRestApiEnabled []struct {
 			// Value is the value argument value.
 			Value bool
 		}
@@ -132,26 +140,19 @@ type MockConfig struct {
 		}
 	}
 	lockGetBlockDeployment        sync.RWMutex
+	lockGetRestApiEnabled         sync.RWMutex
 	lockGetCloudEventsEndpoint    sync.RWMutex
 	lockGetCreationRequestTimeout sync.RWMutex
 	lockGetDefaultNamespace       sync.RWMutex
 	lockGetObservabilityTimeout   sync.RWMutex
 	lockSetBlockDeployment        sync.RWMutex
+	lockSetRestApiEnabled         sync.RWMutex
 	lockSetCloudEventsEndpoint    sync.RWMutex
 	lockSetCreationRequestTimeout sync.RWMutex
 	lockSetDefaultNamespace       sync.RWMutex
 	lockSetObservabilityTimeout   sync.RWMutex
 }
 
-// GetRestApi calls GetRestApiFunc.
-func (mock *MockConfig) GetRestApiEnabled() bool {
-	return mock.GetRestApiEnabledFunc()
-}
-
-// GetRestApi calls GetRestApiFunc.
-func (mock *MockConfig) SetRestApiEnabled(value bool) {
-	mock.SetRestApiEnabledFunc(value)
-}
 
 // GetBlockDeployment calls GetBlockDeploymentFunc.
 func (mock *MockConfig) GetBlockDeployment() bool {
@@ -164,6 +165,19 @@ func (mock *MockConfig) GetBlockDeployment() bool {
 	mock.calls.GetBlockDeployment = append(mock.calls.GetBlockDeployment, callInfo)
 	mock.lockGetBlockDeployment.Unlock()
 	return mock.GetBlockDeploymentFunc()
+}
+
+// GetRestApiEnabled calls GetRestApiEnabledFunc.
+func (mock *MockConfig) GetRestApiEnabled() bool {
+	if mock.GetRestApiEnabledFunc == nil {
+		panic("MockConfig.GetRestApiEnabledFunc: method is nil but IConfig.GetRestApiEnabled was just called")
+	}
+	callInfo := struct {
+	}{}
+	mock.lockGetRestApiEnabled.Lock()
+	mock.calls.GetRestApiEnabled = append(mock.calls.GetRestApiEnabled, callInfo)
+	mock.lockGetRestApiEnabled.Unlock()
+	return mock.GetRestApiEnabledFunc()
 }
 
 // GetBlockDeploymentCalls gets all the calls that were made to GetBlockDeployment.
@@ -304,6 +318,22 @@ func (mock *MockConfig) SetBlockDeployment(value bool) {
 	mock.SetBlockDeploymentFunc(value)
 }
 
+// SetRestApiEnabled calls SetRestApiEnabledFunc.
+func (mock *MockConfig) SetRestApiEnabled(value bool) {
+	if mock.SetRestApiEnabledFunc == nil {
+		panic("MockConfig.SetRestApiEnabledFunc: method is nil but IConfig.SetRestApiEnabledFunc was just called")
+	}
+	callInfo := struct {
+		Value bool
+	}{
+		Value: value,
+	}
+	mock.lockSetRestApiEnabled.Lock()
+	mock.calls.SetRestApiEnabled = append(mock.calls.SetRestApiEnabled, callInfo)
+	mock.lockSetRestApiEnabled.Unlock()
+	mock.SetRestApiEnabledFunc(value)
+}
+
 // SetBlockDeploymentCalls gets all the calls that were made to SetBlockDeployment.
 // Check the length with:
 //
@@ -317,6 +347,22 @@ func (mock *MockConfig) SetBlockDeploymentCalls() []struct {
 	mock.lockSetBlockDeployment.RLock()
 	calls = mock.calls.SetBlockDeployment
 	mock.lockSetBlockDeployment.RUnlock()
+	return calls
+}
+
+// SetRestApiEnabledCalls gets all the calls that were made to SetRestApiEnabled.
+// Check the length with:
+//
+//	len(mockedIConfig.SetRestApiEnabledCalls())
+func (mock *MockConfig) SetRestApiEnabledCalls() []struct {
+	Value bool
+} {
+	var calls []struct {
+		Value bool
+	}
+	mock.lockSetRestApiEnabled.RLock()
+	calls = mock.calls.SetRestApiEnabled
+	mock.lockSetRestApiEnabled.RUnlock()
 	return calls
 }
 

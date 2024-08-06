@@ -31,6 +31,10 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
+
+	appsv1 "k8s.io/api/apps/v1"
+	apiv1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // KeptnConfigReconciler reconciles a KeptnConfig object
@@ -53,6 +57,7 @@ func NewReconciler(client client.Client, scheme *runtime.Scheme, log logr.Logger
 
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs/status,verbs=get
+// +kubebuilder:rbac:groups=apps,resources=deployments,verbs=create;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -79,7 +84,13 @@ func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	r.config.SetBlockDeployment(cfg.Spec.BlockDeployment)
 	r.config.SetObservabilityTimeout(cfg.Spec.ObservabilityTimeout)
 	r.config.SetRestApiEnabled(cfg.Spec.RestApiEnabled)
+
 	result, err := r.reconcileOtelCollectorUrl(cfg)
+	if err != nil {
+		return result, err
+	}
+
+	result, err = r.reconcileRestApi(cfg)
 	if err != nil {
 		return result, err
 	}
@@ -96,6 +107,67 @@ func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha
 		r.Log.Error(err, "unable to initialize OTel tracer options")
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
+	return ctrl.Result{}, nil
+}
+
+func (r *KeptnConfigReconciler) reconcileRestApi(config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
+	var replicas int32 = 1
+
+	deployment := &appsv1.Deployment{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "keptn-rest-api",
+			Namespace: "keptn-system",
+		},
+		Spec: appsv1.DeploymentSpec{
+			Replicas: &replicas,
+			Selector: &metav1.LabelSelector{
+				MatchLabels: map[string]string{
+					"app": "demo",
+				},
+			},
+			Template: apiv1.PodTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: map[string]string{
+						"app": "demo",
+					},
+				},
+				Spec: apiv1.PodSpec{
+					Containers: []apiv1.Container{
+						{
+							Name:  "restapi",
+							Image: "asamonik/keptn-rest-api:latest",
+							Ports: []apiv1.ContainerPort{
+								{
+									Name:          "http",
+									Protocol:      apiv1.ProtocolTCP,
+									ContainerPort: 8080,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	if config.Spec.RestApiEnabled {
+		fmt.Println("Creating Rest-Api deployment...")
+		err := r.Client.Create(context.TODO(), deployment)
+		if err != nil {
+			r.Log.Error(err, "Unable to Deploy Rest API")
+			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+		}
+		fmt.Printf("Created Rest-Api deployment.\n")
+	} else {
+		fmt.Println("Deleting Rest-Api deployment...")
+		err := r.Client.Delete(context.TODO(), deployment)
+		if err != nil {
+			r.Log.Error(err, "Unable to Delete Rest API Deployment")
+			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+		}
+		fmt.Printf("Deleted Rest-Api deployment.\n")
+	}
+
 	return ctrl.Result{}, nil
 }
 

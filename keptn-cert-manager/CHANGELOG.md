@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.2.1...cert-manager-v2.2.2) (2024-08-07)
+
+
+### Other
+
+* bump keptn-cert-manager chart version ([#3657](https://github.com/keptn/lifecycle-toolkit/issues/3657)) ([9bcc0d1](https://github.com/keptn/lifecycle-toolkit/commit/9bcc0d1633a6e0a731d8fd831b8e8c5e7ab1995f))
+
 ## [2.2.1](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.2.0...cert-manager-v2.2.1) (2024-08-06)
 
 

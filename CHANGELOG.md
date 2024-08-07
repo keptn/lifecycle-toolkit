@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/keptn/lifecycle-toolkit/compare/keptn-v2.1.0...keptn-v2.1.1) (2024-08-07)
+
+
+### Other
+
+* bump helm chart version ([#3665](https://github.com/keptn/lifecycle-toolkit/issues/3665)) ([ff62ede](https://github.com/keptn/lifecycle-toolkit/commit/ff62ede9f55f9545f98ceb1e7d8122478fa7033e))
+
 ## [2.1.0](https://github.com/keptn/lifecycle-toolkit/compare/keptn-v2.0.0...keptn-v2.1.0) (2024-08-06)
 
 

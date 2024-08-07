@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/keptn/lifecycle-toolkit/compare/lifecycle-operator-v1.1.0...lifecycle-operator-v1.1.1) (2024-08-07)
+
+
+### Other
+
+* backport helm chart versions ([#3662](https://github.com/keptn/lifecycle-toolkit/issues/3662)) ([81320a5](https://github.com/keptn/lifecycle-toolkit/commit/81320a534f52cf16d3e59c76b451c92b3502b35f))
+
 ## [1.1.0](https://github.com/keptn/lifecycle-toolkit/compare/lifecycle-operator-v1.0.0...lifecycle-operator-v1.1.0) (2024-08-06)
 
 

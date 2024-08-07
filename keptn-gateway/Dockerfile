@@ -34,8 +34,6 @@ COPY --from=builder /keptn-gateway/bin/keptn-gateway /bin/keptn-gateway
 
 WORKDIR /bin
 
-EXPOSE 8080
-
 CMD ["keptn-gateway"]
 
 FROM gcr.io/distroless/static-debian11:nonroot AS production
@@ -50,7 +48,5 @@ COPY --from=builder /keptn-gateway/bin/keptn-gateway /bin/keptn-gateway
 USER 65532:65532
 
 WORKDIR /bin
-
-EXPOSE 8080
 
 CMD ["keptn-gateway"]

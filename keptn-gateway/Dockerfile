@@ -7,7 +7,7 @@ WORKDIR /keptn-gateway
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY ./ ./
+COPY ./*.go ./
 
 ARG RELEASE_VERSION
 ARG GIT_HASH

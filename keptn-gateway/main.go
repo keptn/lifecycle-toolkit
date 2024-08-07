@@ -37,7 +37,11 @@ func handlerMetricsCount(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	returnval := fmt.Sprintf("%#v", len(l.Items))
-	w.Write([]byte(returnval))
+
+	_, err = w.Write([]byte(returnval))
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }
 
 func main() {

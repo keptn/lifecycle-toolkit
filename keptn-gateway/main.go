@@ -28,7 +28,10 @@ func handlerMetricsCount(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+    _, err = w.Write([]byte(err.Error()))
+    if err != nil {
+      fmt.Println(err.Error())
+    }
 	}
 
 	l := metrics_v1.KeptnMetricList{}

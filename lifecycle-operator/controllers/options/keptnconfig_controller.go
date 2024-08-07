@@ -133,7 +133,7 @@ func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return result, err
 	}
 
-	result, err = r.reconcileRestApi(cfg)
+	result, err = r.reconcileRestApi(ctx, cfg)
 	if err != nil {
 		return result, err
 	}
@@ -153,17 +153,17 @@ func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha
 	return ctrl.Result{}, nil
 }
 
-func (r *KeptnConfigReconciler) reconcileRestApi(config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
+func (r *KeptnConfigReconciler) reconcileRestApi(ctx context.Context, config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
 	if config.Spec.RestApiEnabled {
 		r.Log.Info("Creating Rest-Api deployment...")
 
-		err := r.Client.Create(context.TODO(), restApiDeployment)
+		err := r.Client.Create(ctx, restApiDeployment)
 		if err != nil {
 			r.Log.Error(err, "Unable to Deploy Rest API")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 
-		err = r.Client.Create(context.TODO(), restApiService)
+		err = r.Client.Create(ctx, restApiService)
 		if err != nil {
 			r.Log.Error(err, "Unable to Deploy Rest API Service")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
@@ -174,13 +174,13 @@ func (r *KeptnConfigReconciler) reconcileRestApi(config *optionsv1alpha1.KeptnCo
 	}
 
 	r.Log.Info("Deleting Rest-Api deployment...")
-	err := r.Client.DeleteAllOf(context.TODO(), restApiDeployment)
+	err := r.Client.DeleteAllOf(ctx, restApiDeployment)
 	if err != nil {
 		r.Log.Error(err, "Unable to Delete Rest API Deployment")
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
 
-	err = r.Client.DeleteAllOf(context.TODO(), restApiService)
+	err = r.Client.DeleteAllOf(ctx, restApiService)
 	if err != nil {
 		r.Log.Error(err, "Unable to Delete Rest API Service")
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err

@@ -15,7 +15,7 @@ ARG BUILD_TIME
 ARG TARGETOS
 ARG TARGETARCH
 
-RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags "\
+RUN GOOS="$TARGETOS" GOARCH="$TARGETARCH" go build -ldflags "\
   -X main.gitCommit=${GIT_HASH} \
   -X main.buildTime=${BUILD_TIME} \
   -X main.buildVersion=${RELEASE_VERSION} \

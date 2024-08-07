@@ -47,6 +47,7 @@ argocd
 argoproj
 ARMO
 artifacthub
+asamonik
 asdfg
 authurl
 automerge
@@ -539,6 +540,7 @@ remediations
 replicasets
 replicationcontrollers
 resourcereference
+restapi
 Rexed
 rgb
 RLock

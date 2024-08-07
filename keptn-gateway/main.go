@@ -34,6 +34,9 @@ func handlerMetricsCount(w http.ResponseWriter, r *http.Request) {
 	l := metrics_v1.KeptnMetricList{}
 
 	err = json.Unmarshal([]byte(d), &l)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
 	w.WriteHeader(http.StatusOK)
 	returnval := fmt.Sprintf("%#v", len(l.Items))

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v1.0.2...metrics-operator-v1.0.3) (2024-08-07)
+
+
+### Other
+
+* backport helm chart versions ([#3662](https://github.com/keptn/lifecycle-toolkit/issues/3662)) ([81320a5](https://github.com/keptn/lifecycle-toolkit/commit/81320a534f52cf16d3e59c76b451c92b3502b35f))
+* bump metrics-operator chart version ([#3660](https://github.com/keptn/lifecycle-toolkit/issues/3660)) ([600151d](https://github.com/keptn/lifecycle-toolkit/commit/600151d9fb858bc3adbc0e9eb97b8e0f2da6a3c5))
+
 ## [1.0.2](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v1.0.1...metrics-operator-v1.0.2) (2024-08-06)
 
 

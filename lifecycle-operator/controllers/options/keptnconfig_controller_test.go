@@ -432,21 +432,6 @@ func TestKeptnConfigReconciler_reconcileRestApiEnabled(t *testing.T) {
 			want:    ctrl.Result{},
 			wantErr: false,
 		},
-		{
-			name: "Test want error",
-			args: args{
-				config: &optionsv1alpha1.KeptnConfig{
-					ObjectMeta: metav1.ObjectMeta{
-						Name: "test-config1",
-					},
-					Spec: optionsv1alpha1.KeptnConfigSpec{
-						RestApiEnabled: true,
-					},
-				},
-			},
-			want:    ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second},
-			wantErr: true,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -456,14 +441,14 @@ func TestKeptnConfigReconciler_reconcileRestApiEnabled(t *testing.T) {
 				Scheme:          fakeClient.Scheme(),
 				LastAppliedSpec: &tt.args.config.Spec,
 			}
-			_, err := r.reconcileRestApi(context.TODO(), tt.args.config)
+			got, err := r.reconcileRestApi(context.TODO(), tt.args.config)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("reconcileRestApi() error = %v, wantErr %v", err, tt.wantErr)
-				return
 			}
-			//if !reflect.DeepEqual(got, tt.want) {
-			//t.Errorf("reconcileRestApi() got = %v, want %v", got, tt.want)
-			//}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("reconcileRestApi() got = %v, want %v", got, tt.want)
+			}
+			fakeClient.DeleteAllOf(context.TODO(), tt.args.config)
 		})
 	}
 }

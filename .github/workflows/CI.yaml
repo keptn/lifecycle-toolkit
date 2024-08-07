@@ -138,8 +138,8 @@ jobs:
             folder: "runtimes/python-runtime/"
           - name: "certificate-operator"
             folder: "keptn-cert-manager/"
-          - name: "rest-api"
-            folder: "rest-api/"
+          - name: "rest-gateway"
+            folder: "rest-gateway/"
     steps:
       - name: Check out code
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7

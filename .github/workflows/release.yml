@@ -19,7 +19,7 @@ env:
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
   CONTROLLER_TOOLS_VERSION: "v0.15.0"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
-  PUBLISHABLE_ITEMS: '[".","lifecycle-operator","metrics-operator","keptn-cert-manager","runtimes/deno-runtime","runtimes/python-runtime","scheduler", "rest-api]'
+  PUBLISHABLE_ITEMS: '[".","lifecycle-operator","metrics-operator","keptn-cert-manager","runtimes/deno-runtime","runtimes/python-runtime","scheduler", "keptn-gateway]'
 
 jobs:
   release-please:
@@ -101,7 +101,7 @@ jobs:
                     case "lifecycle-operator":
                     case "scheduler":
                     case "metrics-operator":
-                    case "rest-api":
+                    case "keptn-gateway":
                         releaseMatrix.push({
                             name: item,
                             folder: item,
@@ -181,7 +181,7 @@ jobs:
           temp="${temp##deno-runtime-}"
           temp="${temp##scheduler-}"
           temp="${temp##lifecycle-operator-}"
-          temp="${temp##rest-api-}"
+          temp="${temp##keptn-gateway-}"
           echo "IMAGE_TAG=${temp##metrics-operator-}" >> "$GITHUB_OUTPUT"
 
       - name: Build Docker Image

@@ -82,6 +82,7 @@ changefreq
 Chans
 Checkmarx
 clientgoscheme
+clientset
 cloudevents
 clt
 clusterrole
@@ -408,6 +409,7 @@ Meha
 mergo
 metricsapi
 metricscontroller
+metricscount
 metricskeptnsh
 metricsobject
 metricsprovider
@@ -539,6 +541,8 @@ remediations
 replicasets
 replicationcontrollers
 resourcereference
+restapi
+returnval
 Rexed
 rgb
 RLock

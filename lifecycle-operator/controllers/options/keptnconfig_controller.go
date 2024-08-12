@@ -44,44 +44,48 @@ type KeptnConfigReconciler struct {
 	Log             logr.Logger
 	LastAppliedSpec *optionsv1alpha1.KeptnConfigSpec
 	config          config.IConfig
+	Namespace       string
 }
 
-func NewReconciler(client client.Client, scheme *runtime.Scheme, log logr.Logger) *KeptnConfigReconciler {
+func NewReconciler(client client.Client, scheme *runtime.Scheme, log logr.Logger, namespace string) *KeptnConfigReconciler {
 	return &KeptnConfigReconciler{
-		Client: client,
-		Scheme: scheme,
-		Log:    log,
-		config: config.Instance(),
+		Client:    client,
+		Scheme:    scheme,
+		Log:       log,
+		config:    config.Instance(),
+		Namespace: namespace,
 	}
 }
 
 // variables needed for Keptn Gateway
 const gatewayPort = 8080
 
-var keptnGatewayDeployment = &appsv1.Deployment{
-	ObjectMeta: metav1.ObjectMeta{
-		Name:      "keptn-gateway",
-		Namespace: "keptn-system",
-	},
-	Spec: appsv1.DeploymentSpec{
-		Template: corev1.PodTemplateSpec{
-			Spec: corev1.PodSpec{
-				Containers: []corev1.Container{
-					{
-						Name:  "keptn-gateway",
-						Image: "keptn/keptn-gateway:latest",
-						Ports: []corev1.ContainerPort{
-							{
-								Name:          "http",
-								Protocol:      corev1.ProtocolTCP,
-								ContainerPort: gatewayPort,
+func getKeptnGatewayDeployment(namespace string) *appsv1.Deployment {
+	return &appsv1.Deployment{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "keptn-gateway",
+			Namespace: namespace,
+		},
+		Spec: appsv1.DeploymentSpec{
+			Template: corev1.PodTemplateSpec{
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{
+							Name:  "keptn-gateway",
+							Image: "keptn/keptn-gateway:latest",
+							Ports: []corev1.ContainerPort{
+								{
+									Name:          "http",
+									Protocol:      corev1.ProtocolTCP,
+									ContainerPort: gatewayPort,
+								},
 							},
 						},
 					},
 				},
 			},
 		},
-	},
+	}
 }
 
 var keptnGatewayService = &corev1.Service{
@@ -157,7 +161,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 	if config.Spec.KeptnGatewayEnabled {
 		r.Log.Info("Creating Keptn-Gateway deployment...")
 
-		err := r.Client.Create(ctx, keptnGatewayDeployment)
+		err := r.Client.Create(ctx, getKeptnGatewayDeployment(r.Namespace))
 		if err != nil {
 			r.Log.Error(err, "Unable to Deploy Keptn Gateway")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
@@ -174,7 +178,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 	}
 
 	r.Log.Info("Deleting Keptn-Gateway deployment...")
-	err := r.Client.DeleteAllOf(ctx, keptnGatewayDeployment)
+	err := r.Client.DeleteAllOf(ctx, getKeptnGatewayDeployment(r.Namespace))
 	if err != nil {
 		r.Log.Error(err, "Unable to Delete Keptn Gateway Deployment")
 		if !errors.IsNotFound(err) {

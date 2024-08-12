@@ -348,7 +348,9 @@ func main() {
 		mgr.GetClient(),
 		mgr.GetScheme(),
 		configLogger,
+		env.PodNamespace,
 	)
+
 	if err = (configReconciler).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "KeptnConfig")
 		os.Exit(1)

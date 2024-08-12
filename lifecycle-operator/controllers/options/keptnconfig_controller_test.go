@@ -41,9 +41,9 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 		wantCreationRequestTimeoutConfig time.Duration
 		wantCloudEventsEndpointConfig    string
 		wantBlockDeployment              bool
-		wantRestApiEnabled               bool
+		wantKeptnGatewayEnabled          bool
 		blockDeploymentCalls             int
-		restApiEnabledCalls              int
+		keptnGatewayEnabledCalls         int
 		wantObservabilityTimeout         metav1.Duration
 		observabilityTimeoutCalls        int
 	}{
@@ -64,9 +64,9 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 					Namespace: "keptn-system",
 				},
 				Spec: optionsv1alpha1.KeptnConfigSpec{
-					OTelCollectorUrl: "",
-					BlockDeployment:  true,
-					RestApiEnabled:   false,
+					OTelCollectorUrl:    "",
+					BlockDeployment:     true,
+					KeptnGatewayEnabled: false,
 					ObservabilityTimeout: metav1.Duration{
 						Duration: time.Duration(5 * time.Minute),
 					},
@@ -77,8 +77,8 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			wantErr:                   false,
 			wantBlockDeployment:       true,
 			blockDeploymentCalls:      1,
-			wantRestApiEnabled:        false,
-			restApiEnabledCalls:       1,
+			wantKeptnGatewayEnabled:   false,
+			keptnGatewayEnabledCalls:  1,
 			observabilityTimeoutCalls: 1,
 			wantObservabilityTimeout: metav1.Duration{
 				Duration: time.Duration(5 * time.Minute),
@@ -101,9 +101,9 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 					Namespace: "keptn-system",
 				},
 				Spec: optionsv1alpha1.KeptnConfigSpec{
-					OTelCollectorUrl: "",
-					BlockDeployment:  true,
-					RestApiEnabled:   false,
+					OTelCollectorUrl:    "",
+					BlockDeployment:     true,
+					KeptnGatewayEnabled: false,
 					ObservabilityTimeout: metav1.Duration{
 						Duration: time.Duration(5 * time.Minute),
 					},
@@ -114,8 +114,8 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			wantBlockDeployment:       true,
 			blockDeploymentCalls:      1,
 			observabilityTimeoutCalls: 1,
-			wantRestApiEnabled:        false,
-			restApiEnabledCalls:       1,
+			wantKeptnGatewayEnabled:   false,
+			keptnGatewayEnabledCalls:  1,
 			wantObservabilityTimeout: metav1.Duration{
 				Duration: time.Duration(5 * time.Minute),
 			},
@@ -140,8 +140,8 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			want:                      ctrl.Result{},
 			wantErr:                   false,
 			blockDeploymentCalls:      0,
-			wantRestApiEnabled:        false,
-			restApiEnabledCalls:       0,
+			wantKeptnGatewayEnabled:   false,
+			keptnGatewayEnabledCalls:  0,
 			observabilityTimeoutCalls: 0,
 		},
 		{
@@ -180,8 +180,8 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			wantErr:                          true,
 			wantBlockDeployment:              false,
 			blockDeploymentCalls:             1,
-			wantRestApiEnabled:               false,
-			restApiEnabledCalls:              1,
+			wantKeptnGatewayEnabled:          false,
+			keptnGatewayEnabledCalls:         1,
 			observabilityTimeoutCalls:        1,
 			wantObservabilityTimeout: metav1.Duration{
 				Duration: time.Duration(5 * time.Minute),
@@ -211,7 +211,7 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 					KeptnAppCreationRequestTimeoutSeconds: 10,
 					CloudEventsEndpoint:                   "ce-endpoint",
 					BlockDeployment:                       false,
-					RestApiEnabled:                        false,
+					KeptnGatewayEnabled:                   false,
 					ObservabilityTimeout: metav1.Duration{
 						Duration: time.Duration(10 * time.Minute),
 					},
@@ -223,8 +223,8 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 			wantErr:                          true,
 			wantBlockDeployment:              false,
 			blockDeploymentCalls:             1,
-			wantRestApiEnabled:               false,
-			restApiEnabledCalls:              1,
+			wantKeptnGatewayEnabled:          false,
+			keptnGatewayEnabledCalls:         1,
 			observabilityTimeoutCalls:        1,
 			wantObservabilityTimeout: metav1.Duration{
 				Duration: time.Duration(10 * time.Minute),
@@ -261,9 +261,9 @@ func TestKeptnConfigReconciler_Reconcile(t *testing.T) {
 				require.Equal(t, tt.wantBlockDeployment, mockConfig.SetBlockDeploymentCalls()[0].Value)
 			}
 
-			require.Len(t, mockConfig.SetRestApiEnabledCalls(), tt.restApiEnabledCalls)
-			if tt.restApiEnabledCalls > 0 {
-				require.Equal(t, tt.wantRestApiEnabled, mockConfig.SetRestApiEnabledCalls()[0].Value)
+			require.Len(t, mockConfig.SetKeptnGatewayEnabledCalls(), tt.keptnGatewayEnabledCalls)
+			if tt.keptnGatewayEnabledCalls > 0 {
+				require.Equal(t, tt.wantKeptnGatewayEnabled, mockConfig.SetKeptnGatewayEnabledCalls()[0].Value)
 			}
 
 			require.Len(t, mockConfig.SetObservabilityTimeoutCalls(), tt.observabilityTimeoutCalls)
@@ -386,7 +386,7 @@ func TestKeptnConfigReconciler_reconcileOtelCollectorUrl(t *testing.T) {
 	}
 }
 
-func TestKeptnConfigReconciler_reconcileRestApiEnabled(t *testing.T) {
+func TestKeptnConfigReconciler_reconcileKeptnGatewayEnabled(t *testing.T) {
 	// set up logger
 	opts := zap.Options{
 		Development: true,
@@ -410,7 +410,7 @@ func TestKeptnConfigReconciler_reconcileRestApiEnabled(t *testing.T) {
 						Name: "test-config1",
 					},
 					Spec: optionsv1alpha1.KeptnConfigSpec{
-						RestApiEnabled: true,
+						KeptnGatewayEnabled: true,
 					},
 				},
 			},
@@ -425,7 +425,7 @@ func TestKeptnConfigReconciler_reconcileRestApiEnabled(t *testing.T) {
 						Name: "test-config1",
 					},
 					Spec: optionsv1alpha1.KeptnConfigSpec{
-						RestApiEnabled: false,
+						KeptnGatewayEnabled: false,
 					},
 				},
 			},
@@ -441,12 +441,12 @@ func TestKeptnConfigReconciler_reconcileRestApiEnabled(t *testing.T) {
 				Scheme:          fakeClient.Scheme(),
 				LastAppliedSpec: &tt.args.config.Spec,
 			}
-			got, err := r.reconcileRestApi(context.TODO(), tt.args.config)
+			got, err := r.reconcileKeptnGateway(context.TODO(), tt.args.config)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("reconcileRestApi() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("reconcileKeptnGateway() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("reconcileRestApi() got = %v, want %v", got, tt.want)
+				t.Errorf("reconcileKeptnGateway() got = %v, want %v", got, tt.want)
 			}
 			fakeClient.DeleteAllOf(context.TODO(), tt.args.config)
 		})
@@ -472,7 +472,7 @@ func setupReconciler(withConfig *optionsv1alpha1.KeptnConfig) *KeptnConfigReconc
 		SetCreationRequestTimeoutFunc: func(value time.Duration) {},
 		SetBlockDeploymentFunc:        func(value bool) {},
 		SetObservabilityTimeoutFunc:   func(timeout metav1.Duration) {},
-		SetRestApiEnabledFunc:         func(value bool) {},
+		SetKeptnGatewayEnabledFunc:    func(value bool) {},
 	}
 	return r
 }

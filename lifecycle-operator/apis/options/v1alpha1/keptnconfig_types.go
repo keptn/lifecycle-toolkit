@@ -51,10 +51,10 @@ type KeptnConfigSpec struct {
 	// +optional
 	ObservabilityTimeout metav1.Duration `json:"observabilityTimeout,omitempty"`
 
-	// RestApiEnabled can be used to enable or disable the Keptn Rest Client
+	// KeptnGatewayEnabled can be used to enable or disable the Keptn Rest Client
 	// +kubebuilder:default:=false
 	// +optional
-	RestApiEnabled bool `json:"restApiEnabled,omitempty"`
+	KeptnGatewayEnabled bool `json:"KeptnGatewayEnabled,omitempty"`
 }
 
 // +kubebuilder:object:root=true

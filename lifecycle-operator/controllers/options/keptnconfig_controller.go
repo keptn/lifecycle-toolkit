@@ -56,9 +56,9 @@ func NewReconciler(client client.Client, scheme *runtime.Scheme, log logr.Logger
 }
 
 // variables needed for Keptn Gateway
-const restApiPort = 8080
+const gatewayPort = 8080
 
-var restApiDeployment = &appsv1.Deployment{
+var keptnGatewayDeployment = &appsv1.Deployment{
 	ObjectMeta: metav1.ObjectMeta{
 		Name:      "keptn-rest-api",
 		Namespace: "keptn-system",
@@ -68,13 +68,13 @@ var restApiDeployment = &appsv1.Deployment{
 			Spec: corev1.PodSpec{
 				Containers: []corev1.Container{
 					{
-						Name:  "restapi",
-						Image: "asamonik/keptn-rest-api:latest",
+						Name:  "keptn-gateway",
+						Image: "keptn/keptn-gateway:latest",
 						Ports: []corev1.ContainerPort{
 							{
 								Name:          "http",
 								Protocol:      corev1.ProtocolTCP,
-								ContainerPort: restApiPort,
+								ContainerPort: gatewayPort,
 							},
 						},
 					},
@@ -84,16 +84,16 @@ var restApiDeployment = &appsv1.Deployment{
 	},
 }
 
-var restApiService = &corev1.Service{
+var keptnGatewayService = &corev1.Service{
 	TypeMeta: metav1.TypeMeta{
 		Kind: "Service",
 	},
 	ObjectMeta: metav1.ObjectMeta{
-		Name: "restapi-service",
+		Name: "keptn-gateway-service",
 	},
 	Spec: corev1.ServiceSpec{
 		Ports: []corev1.ServicePort{{
-			Port: restApiPort,
+			Port: gatewayPort,
 		}},
 	},
 }
@@ -126,14 +126,14 @@ func (r *KeptnConfigReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	r.config.SetCloudEventsEndpoint(cfg.Spec.CloudEventsEndpoint)
 	r.config.SetBlockDeployment(cfg.Spec.BlockDeployment)
 	r.config.SetObservabilityTimeout(cfg.Spec.ObservabilityTimeout)
-	r.config.SetRestApiEnabled(cfg.Spec.RestApiEnabled)
+	r.config.SetKeptnGatewayEnabled(cfg.Spec.KeptnGatewayEnabled)
 
 	result, err := r.reconcileOtelCollectorUrl(cfg)
 	if err != nil {
 		return result, err
 	}
 
-	result, err = r.reconcileRestApi(ctx, cfg)
+	result, err = r.reconcileKeptnGateway(ctx, cfg)
 	if err != nil {
 		return result, err
 	}
@@ -153,17 +153,17 @@ func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha
 	return ctrl.Result{}, nil
 }
 
-func (r *KeptnConfigReconciler) reconcileRestApi(ctx context.Context, config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
-	if config.Spec.RestApiEnabled {
+func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
+	if config.Spec.KeptnGatewayEnabled {
 		r.Log.Info("Creating Rest-Api deployment...")
 
-		err := r.Client.Create(ctx, restApiDeployment)
+		err := r.Client.Create(ctx, keptnGatewayDeployment)
 		if err != nil {
 			r.Log.Error(err, "Unable to Deploy Rest API")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 
-		err = r.Client.Create(ctx, restApiService)
+		err = r.Client.Create(ctx, keptnGatewayService)
 		if err != nil {
 			r.Log.Error(err, "Unable to Deploy Rest API Service")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
@@ -174,13 +174,13 @@ func (r *KeptnConfigReconciler) reconcileRestApi(ctx context.Context, config *op
 	}
 
 	r.Log.Info("Deleting Rest-Api deployment...")
-	err := r.Client.DeleteAllOf(ctx, restApiDeployment)
+	err := r.Client.DeleteAllOf(ctx, keptnGatewayDeployment)
 	if err != nil {
 		r.Log.Error(err, "Unable to Delete Rest API Deployment")
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
 
-	err = r.Client.DeleteAllOf(ctx, restApiService)
+	err = r.Client.DeleteAllOf(ctx, keptnGatewayService)
 	if err != nil {
 		r.Log.Error(err, "Unable to Delete Rest API Service")
 		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err

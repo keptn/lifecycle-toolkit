@@ -39,6 +39,11 @@ spec:
           spec:
             description: KeptnConfigSpec defines the desired state of KeptnConfig
             properties:
+              KeptnGatewayEnabled:
+                default: false
+                description: KeptnGatewayEnabled can be used to enable or disable
+                  the Keptn Rest Client
+                type: boolean
               OTelCollectorUrl:
                 description: OTelCollectorUrl can be used to set the Open Telemetry
                   collector that the lifecycle operator should use
@@ -67,11 +72,6 @@ spec:
                   considered as failed.
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
-              restApiEnabled:
-                default: false
-                description: RestApiEnabled can be used to enable or disable the Keptn
-                  Rest Client
-                type: boolean
             type: object
           status:
             description: unused field

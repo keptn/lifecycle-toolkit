@@ -73,11 +73,11 @@ type MockConfig struct {
 	// SetCloudEventsEndpointFunc mocks the SetCloudEventsEndpoint method.
 	SetCloudEventsEndpointFunc func(endpoint string)
 
-	// SetRestApiEnabledFunc mocks the the SetRestApiEnabled method.
-	SetRestApiEnabledFunc func(value bool)
+	// SetKeptnGatewayEnabledFunc mocks the the SetKeptnGatewayEnabled method.
+	SetKeptnGatewayEnabledFunc func(value bool)
 
-	// GetRestApiFunc mocks the GetRestApiEnabled method.
-	GetRestApiEnabledFunc func() bool
+	// GetKeptnGatewayFunc mocks the GetKeptnGatewayEnabled method.
+	GetKeptnGatewayEnabledFunc func() bool
 
 	// SetCreationRequestTimeoutFunc mocks the SetCreationRequestTimeout method.
 	SetCreationRequestTimeoutFunc func(value time.Duration)
@@ -94,7 +94,7 @@ type MockConfig struct {
 		GetBlockDeployment []struct {
 		}
 
-		GetRestApiEnabled []struct {
+		GetKeptnGatewayEnabled []struct {
 		}
 		// GetCloudEventsEndpoint holds details about calls to the GetCloudEventsEndpoint method.
 		GetCloudEventsEndpoint []struct {
@@ -113,8 +113,8 @@ type MockConfig struct {
 			// Value is the value argument value.
 			Value bool
 		}
-		// SetREstApiEnabled holds details about calls to the SetRestApiEnabled method.
-		SetRestApiEnabled []struct {
+		// SetKeptnGatewayEnabled holds details about calls to the SetKeptnGatewayEnabled method.
+		SetKeptnGatewayEnabled []struct {
 			// Value is the value argument value.
 			Value bool
 		}
@@ -140,19 +140,18 @@ type MockConfig struct {
 		}
 	}
 	lockGetBlockDeployment        sync.RWMutex
-	lockGetRestApiEnabled         sync.RWMutex
+	lockGetKeptnGatewayEnabled    sync.RWMutex
 	lockGetCloudEventsEndpoint    sync.RWMutex
 	lockGetCreationRequestTimeout sync.RWMutex
 	lockGetDefaultNamespace       sync.RWMutex
 	lockGetObservabilityTimeout   sync.RWMutex
 	lockSetBlockDeployment        sync.RWMutex
-	lockSetRestApiEnabled         sync.RWMutex
+	lockSetKeptnGatewayEnabled    sync.RWMutex
 	lockSetCloudEventsEndpoint    sync.RWMutex
 	lockSetCreationRequestTimeout sync.RWMutex
 	lockSetDefaultNamespace       sync.RWMutex
 	lockSetObservabilityTimeout   sync.RWMutex
 }
-
 
 // GetBlockDeployment calls GetBlockDeploymentFunc.
 func (mock *MockConfig) GetBlockDeployment() bool {
@@ -167,17 +166,17 @@ func (mock *MockConfig) GetBlockDeployment() bool {
 	return mock.GetBlockDeploymentFunc()
 }
 
-// GetRestApiEnabled calls GetRestApiEnabledFunc.
-func (mock *MockConfig) GetRestApiEnabled() bool {
-	if mock.GetRestApiEnabledFunc == nil {
-		panic("MockConfig.GetRestApiEnabledFunc: method is nil but IConfig.GetRestApiEnabled was just called")
+// GetKeptnGatewayEnabled calls GetKeptnGatewayEnabledFunc.
+func (mock *MockConfig) GetKeptnGatewayEnabled() bool {
+	if mock.GetKeptnGatewayEnabledFunc == nil {
+		panic("MockConfig.GetKeptnGatewayEnabledFunc: method is nil but IConfig.GetKeptnGatewayEnabled was just called")
 	}
 	callInfo := struct {
 	}{}
-	mock.lockGetRestApiEnabled.Lock()
-	mock.calls.GetRestApiEnabled = append(mock.calls.GetRestApiEnabled, callInfo)
-	mock.lockGetRestApiEnabled.Unlock()
-	return mock.GetRestApiEnabledFunc()
+	mock.lockGetKeptnGatewayEnabled.Lock()
+	mock.calls.GetKeptnGatewayEnabled = append(mock.calls.GetKeptnGatewayEnabled, callInfo)
+	mock.lockGetKeptnGatewayEnabled.Unlock()
+	return mock.GetKeptnGatewayEnabledFunc()
 }
 
 // GetBlockDeploymentCalls gets all the calls that were made to GetBlockDeployment.
@@ -318,20 +317,20 @@ func (mock *MockConfig) SetBlockDeployment(value bool) {
 	mock.SetBlockDeploymentFunc(value)
 }
 
-// SetRestApiEnabled calls SetRestApiEnabledFunc.
-func (mock *MockConfig) SetRestApiEnabled(value bool) {
-	if mock.SetRestApiEnabledFunc == nil {
-		panic("MockConfig.SetRestApiEnabledFunc: method is nil but IConfig.SetRestApiEnabledFunc was just called")
+// SetKetpnGatewayEnabled calls SetKeptnGatewayEnabledFunc.
+func (mock *MockConfig) SetKeptnGatewayEnabled(value bool) {
+	if mock.SetKeptnGatewayEnabledFunc == nil {
+		panic("MockConfig.SetKeptnGatewayEnabledFunc: method is nil but IConfig.SetKeptnGatewayEnabledFunc was just called")
 	}
 	callInfo := struct {
 		Value bool
 	}{
 		Value: value,
 	}
-	mock.lockSetRestApiEnabled.Lock()
-	mock.calls.SetRestApiEnabled = append(mock.calls.SetRestApiEnabled, callInfo)
-	mock.lockSetRestApiEnabled.Unlock()
-	mock.SetRestApiEnabledFunc(value)
+	mock.lockSetKeptnGatewayEnabled.Lock()
+	mock.calls.SetKeptnGatewayEnabled = append(mock.calls.SetKeptnGatewayEnabled, callInfo)
+	mock.lockSetKeptnGatewayEnabled.Unlock()
+	mock.SetKeptnGatewayEnabledFunc(value)
 }
 
 // SetBlockDeploymentCalls gets all the calls that were made to SetBlockDeployment.
@@ -350,19 +349,19 @@ func (mock *MockConfig) SetBlockDeploymentCalls() []struct {
 	return calls
 }
 
-// SetRestApiEnabledCalls gets all the calls that were made to SetRestApiEnabled.
+// SetKeptnGatewayEnabledCalls gets all the calls that were made to SetKeptnGatewayEnabled.
 // Check the length with:
 //
-//	len(mockedIConfig.SetRestApiEnabledCalls())
-func (mock *MockConfig) SetRestApiEnabledCalls() []struct {
+//	len(mockedIConfig.SetKeptnGatewayEnabledCalls())
+func (mock *MockConfig) SetKeptnGatewayEnabledCalls() []struct {
 	Value bool
 } {
 	var calls []struct {
 		Value bool
 	}
-	mock.lockSetRestApiEnabled.RLock()
-	calls = mock.calls.SetRestApiEnabled
-	mock.lockSetRestApiEnabled.RUnlock()
+	mock.lockSetKeptnGatewayEnabled.RLock()
+	calls = mock.calls.SetKeptnGatewayEnabled
+	mock.lockSetKeptnGatewayEnabled.RUnlock()
 	return calls
 }
 

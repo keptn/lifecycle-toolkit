@@ -60,7 +60,7 @@ const gatewayPort = 8080
 
 var keptnGatewayDeployment = &appsv1.Deployment{
 	ObjectMeta: metav1.ObjectMeta{
-		Name:      "keptn-rest-api",
+		Name:      "keptn-gateway",
 		Namespace: "keptn-system",
 	},
 	Spec: appsv1.DeploymentSpec{
@@ -155,7 +155,7 @@ func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha
 
 func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
 	if config.Spec.KeptnGatewayEnabled {
-		r.Log.Info("Creating Rest-Api deployment...")
+		r.Log.Info("Creating Keptn-Gateway deployment...")
 
 		err := r.Client.Create(ctx, keptnGatewayDeployment)
 		if err != nil {
@@ -169,11 +169,11 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 
-		r.Log.Info("Created Rest-Api deployment.\n")
+		r.Log.Info("Created Keptn-Gateway deployment.\n")
 		return ctrl.Result{}, nil
 	}
 
-	r.Log.Info("Deleting Rest-Api deployment...")
+	r.Log.Info("Deleting Keptn-Gateway deployment...")
 	err := r.Client.DeleteAllOf(ctx, keptnGatewayDeployment)
 	if err != nil {
 		r.Log.Error(err, "Unable to Delete Rest API Deployment")
@@ -189,7 +189,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 	}
-	r.Log.Info("Deleted Rest-Api deployment.\n")
+	r.Log.Info("Deleted Keptn-Gateway deployment.\n")
 
 	return ctrl.Result{}, nil
 }

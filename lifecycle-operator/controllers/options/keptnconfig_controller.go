@@ -159,13 +159,13 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 
 		err := r.Client.Create(ctx, keptnGatewayDeployment)
 		if err != nil {
-			r.Log.Error(err, "Unable to Deploy Rest API")
+			r.Log.Error(err, "Unable to Deploy Keptn Gateway")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 
 		err = r.Client.Create(ctx, keptnGatewayService)
 		if err != nil {
-			r.Log.Error(err, "Unable to Deploy Rest API Service")
+			r.Log.Error(err, "Unable to Deploy Keptn Gateway Service")
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 
@@ -176,7 +176,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 	r.Log.Info("Deleting Keptn-Gateway deployment...")
 	err := r.Client.DeleteAllOf(ctx, keptnGatewayDeployment)
 	if err != nil {
-		r.Log.Error(err, "Unable to Delete Rest API Deployment")
+		r.Log.Error(err, "Unable to Delete Keptn Gateway Deployment")
 		if !errors.IsNotFound(err) {
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
@@ -184,7 +184,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 
 	err = r.Client.DeleteAllOf(ctx, keptnGatewayService)
 	if err != nil {
-		r.Log.Error(err, "Unable to Delete Rest API Service")
+		r.Log.Error(err, "Unable to Delete Keptn Gateway Service")
 		if !errors.IsNotFound(err) {
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}

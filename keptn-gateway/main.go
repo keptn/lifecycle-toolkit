@@ -11,15 +11,22 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
+	"go.uber.org/zap"
+
 	metrics_v1 "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 )
 
-var clientset *kubernetes.Clientset
+type Gateway struct {
+	clientset *kubernetes.Clientset
+	logger    *zap.Logger
+}
+
+var gateway Gateway
 
 func handlerMetricsCount(w http.ResponseWriter, r *http.Request) {
 	log.Println("http call to /pods")
 
-	d, err := clientset.RESTClient().
+	d, err := gateway.clientset.RESTClient().
 		Get().
 		AbsPath("/apis/metrics.keptn.sh/v1/").
 		Resource("keptnmetrics").
@@ -28,17 +35,17 @@ func handlerMetricsCount(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-    _, err = w.Write([]byte(err.Error()))
-    if err != nil {
-      fmt.Println(err.Error())
-    }
+		_, err = w.Write([]byte(err.Error()))
+		if err != nil {
+			gateway.logger.Error(err.Error())
+		}
 	}
 
 	l := metrics_v1.KeptnMetricList{}
 
 	err = json.Unmarshal([]byte(d), &l)
 	if err != nil {
-		fmt.Println(err.Error())
+		gateway.logger.Error(err.Error())
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -46,17 +53,20 @@ func handlerMetricsCount(w http.ResponseWriter, r *http.Request) {
 
 	_, err = w.Write([]byte(returnval))
 	if err != nil {
-		fmt.Println(err.Error())
+		gateway.logger.Error(err.Error())
 	}
 }
 
 func main() {
+	gateway.logger = zap.Must(zap.NewDevelopment())
+	defer gateway.logger.Sync()
+
 	config, err := rest.InClusterConfig()
 	if err != nil {
 		panic(err.Error())
 	}
 	// creates the clientset
-	clientset, err = kubernetes.NewForConfig(config)
+	gateway.clientset, err = kubernetes.NewForConfig(config)
 	if err != nil {
 		panic(err.Error())
 	}

@@ -55,7 +55,7 @@ func NewReconciler(client client.Client, scheme *runtime.Scheme, log logr.Logger
 	}
 }
 
-// variables needed for the Keptn RestAPI
+// variables needed for Keptn Gateway
 const restApiPort = 8080
 
 var restApiDeployment = &appsv1.Deployment{

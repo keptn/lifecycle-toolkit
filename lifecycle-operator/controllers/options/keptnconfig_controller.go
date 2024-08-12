@@ -159,7 +159,7 @@ func (r *KeptnConfigReconciler) reconcileOtelCollectorUrl(config *optionsv1alpha
 
 func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, config *optionsv1alpha1.KeptnConfig) (ctrl.Result, error) {
 	if config.Spec.KeptnGatewayEnabled {
-		r.Log.Info("Creating Keptn-Gateway deployment...")
+		r.Log.Info("Creating Keptn-Gateway resources...")
 
 		err := r.Client.Create(ctx, getKeptnGatewayDeployment(r.Namespace))
 		if err != nil {
@@ -173,11 +173,11 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 
-		r.Log.Info("Created Keptn-Gateway deployment.\n")
+		r.Log.Info("Created Keptn-Gateway resources.\n")
 		return ctrl.Result{}, nil
 	}
 
-	r.Log.Info("Deleting Keptn-Gateway deployment...")
+	r.Log.Info("Deleting Keptn-Gateway resources...")
 	err := r.Client.DeleteAllOf(ctx, getKeptnGatewayDeployment(r.Namespace))
 	if err != nil {
 		r.Log.Error(err, "Unable to Delete Keptn Gateway Deployment")
@@ -193,7 +193,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 	}
-	r.Log.Info("Deleted Keptn-Gateway deployment.\n")
+	r.Log.Info("Deleted Keptn-Gateway resources.\n")
 
 	return ctrl.Result{}, nil
 }

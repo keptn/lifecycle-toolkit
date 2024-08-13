@@ -52,3 +52,6 @@ readme-generator-for-helm/
 **helm_tests_output.yaml
 
 /docs/site
+
+# keptn-gateway bin
+keptn-gateway/keptn-gateway

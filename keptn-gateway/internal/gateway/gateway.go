@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"strconv"
+	"syscall"
 	"time"
 
 	_ "github.com/joho/godotenv/autoload"
@@ -19,7 +21,7 @@ type Gateway struct {
 	port   int
 	logger *zap.Logger
 	client *kubernetes.Clientset
-	Server *http.Server
+	server *http.Server
 }
 
 func NewGateway() *Gateway {
@@ -27,12 +29,6 @@ func NewGateway() *Gateway {
 	if port == 0 {
 		port = 8080
 	}
-
-	NewGateway := &Gateway{
-		port:   port,
-		logger: zap.Must(zap.NewDevelopment()),
-	}
-	defer NewGateway.logger.Sync()
 
 	// kubernetes clientset in cluster
 	/*
@@ -50,19 +46,42 @@ func NewGateway() *Gateway {
 		return nil
 	}
 
-	NewGateway.client, err = kubernetes.NewForConfig(config)
+	client, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		panic(err.Error())
 	}
 
-	// http server
-	NewGateway.Server = &http.Server{
-		Addr:         fmt.Sprintf(":%d", NewGateway.port),
-		Handler:      NewGateway.RegisterRoutes(),
-		IdleTimeout:  time.Minute,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 30 * time.Second,
+	NewGateway := &Gateway{
+		port:   port,
+		logger: zap.Must(zap.NewDevelopment()),
+		server: &http.Server{
+			Addr:         fmt.Sprintf(":%d", port),
+			Handler:      RegisterRoutes(client),
+			IdleTimeout:  time.Minute,
+			ReadTimeout:  10 * time.Second,
+			WriteTimeout: 30 * time.Second,
+		},
 	}
+	defer NewGateway.logger.Sync()
 
 	return NewGateway
+}
+
+func (gw *Gateway) Serve() error {
+	go func() {
+		gw.logger.Info("server starting")
+		if err := gw.server.ListenAndServe(); err != http.ErrServerClosed {
+			panic(err)
+		}
+	}()
+
+	c := make(chan os.Signal, 2)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+
+	<-c // block until signal received
+
+	gw.logger.Info("shutting down")
+	gw.server.Shutdown(nil)
+
+	return nil
 }

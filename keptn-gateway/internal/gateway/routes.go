@@ -7,9 +7,21 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+	"k8s.io/client-go/kubernetes"
 )
 
-func (s *Gateway) RegisterRoutes() http.Handler {
+type RouteConfig struct {
+	client *kubernetes.Clientset
+	logger *zap.Logger
+}
+
+func RegisterRoutes(client *kubernetes.Clientset) http.Handler {
+	rc := RouteConfig{
+		client: client,
+		logger: zap.Must(zap.NewDevelopment()),
+	}
+
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
@@ -21,13 +33,13 @@ func (s *Gateway) RegisterRoutes() http.Handler {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	r.GET("/namespace/:namespace/keptnapp/:keptnapp/resources", s.ResourcePanelHandler)
-	r.GET("/namespace/:namespace/keptnapp/:keptnapp/health", s.HealthHandler)
+	r.GET("/namespace/:namespace/keptnapp/:keptnapp/resources", rc.ResourcePanelHandler)
+	r.GET("/namespace/:namespace/keptnapp/:keptnapp/health", rc.HealthHandler)
 
 	return r
 }
 
-func (s *Gateway) ResourcePanelHandler(c *gin.Context) {
+func (rc *RouteConfig) ResourcePanelHandler(c *gin.Context) {
 	namespace := c.Param("namespace")
 	keptnapp := c.Param("keptnapp")
 
@@ -38,7 +50,7 @@ func (s *Gateway) ResourcePanelHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
-func (s *Gateway) HealthHandler(c *gin.Context) {
+func (rc *RouteConfig) HealthHandler(c *gin.Context) {
 	_ = c.Param("namespace")
 	_ = c.Param("keptnapp")
 

@@ -173,7 +173,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 
-		r.Log.Info("Created Keptn-Gateway resources.\n")
+		r.Log.Info("Created Keptn-Gateway resources")
 		return ctrl.Result{}, nil
 	}
 
@@ -193,7 +193,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 	}
-	r.Log.Info("Deleted Keptn-Gateway resources.\n")
+	r.Log.Info("Deleted Keptn-Gateway resources")
 
 	return ctrl.Result{}, nil
 }

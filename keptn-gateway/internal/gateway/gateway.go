@@ -48,7 +48,7 @@ func NewGateway() *Gateway {
 		panic(err.Error())
 	}
 
-	NewGateway := &Gateway{
+	gateway := &Gateway{
 		port:   port,
 		logger: zap.Must(zap.NewDevelopment()),
 		server: &http.Server{
@@ -59,7 +59,7 @@ func NewGateway() *Gateway {
 			WriteTimeout: 30 * time.Second,
 		},
 	}
-	return NewGateway
+	return gateway
 }
 
 func (gw *Gateway) Serve() error {

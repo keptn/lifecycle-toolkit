@@ -59,8 +59,6 @@ func NewGateway() *Gateway {
 			WriteTimeout: 30 * time.Second,
 		},
 	}
-	defer NewGateway.logger.Sync()
-
 	return NewGateway
 }
 

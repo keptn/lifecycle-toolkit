@@ -39,12 +39,8 @@ func (s *Gateway) ResourcePanelHandler(c *gin.Context) {
 }
 
 func (s *Gateway) HealthHandler(c *gin.Context) {
-	namespace := c.Param("namespace")
-	keptnapp := c.Param("keptnapp")
-
-	resp := make(map[string]string)
-	resp["namespace"] = namespace
-	resp["keptnapp"] = keptnapp
+	_ = c.Param("namespace")
+	_ = c.Param("keptnapp")
 
 	// Demo implementation
 	responses := []string{"Healthy", "Unhealthy", "Warning", "Progressing"}

@@ -7,7 +7,8 @@ WORKDIR /keptn-gateway
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY ./*.go ./
+COPY cmd ./cmd
+COPY internal ./internal
 
 ARG RELEASE_VERSION
 ARG GIT_HASH
@@ -20,7 +21,7 @@ RUN GOOS="$TARGETOS" GOARCH="$TARGETARCH" go build -ldflags "\
   -X main.buildTime=${BUILD_TIME} \
   -X main.buildVersion=${RELEASE_VERSION} \
   -w" \
-  -o bin/keptn-gateway ./main.go
+  -o bin/keptn-gateway ./cmd/api/main.go
 
 FROM gcr.io/distroless/static-debian11:debug-nonroot AS debug
 

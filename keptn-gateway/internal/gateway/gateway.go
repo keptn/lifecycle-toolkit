@@ -19,9 +19,10 @@ type Gateway struct {
 	port   int
 	logger *zap.Logger
 	client *kubernetes.Clientset
+	Server *http.Server
 }
 
-func NewGateway() *http.Server {
+func NewGateway() *Gateway {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 	if port == 0 {
 		port = 8080
@@ -33,7 +34,7 @@ func NewGateway() *http.Server {
 	}
 	defer NewGateway.logger.Sync()
 
-	// kubernetes clientset the clientset
+	// kubernetes clientset in cluster
 	/*
 		config, err := rest.InClusterConfig()
 		if err != nil {
@@ -54,8 +55,8 @@ func NewGateway() *http.Server {
 		panic(err.Error())
 	}
 
-	// server config
-	server := &http.Server{
+	// http server
+	NewGateway.Server = &http.Server{
 		Addr:         fmt.Sprintf(":%d", NewGateway.port),
 		Handler:      NewGateway.RegisterRoutes(),
 		IdleTimeout:  time.Minute,
@@ -63,7 +64,5 @@ func NewGateway() *http.Server {
 		WriteTimeout: 30 * time.Second,
 	}
 
-	NewGateway.logger.Info("Listening on: " + server.Addr)
-
-	return server
+	return NewGateway
 }

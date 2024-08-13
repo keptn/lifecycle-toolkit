@@ -8,7 +8,7 @@ import (
 func main() {
 	gw := gateway.NewGateway()
 
-	err := gw.ListenAndServe()
+	err := gw.Server.ListenAndServe()
 	if err != nil {
 		panic(fmt.Sprintf("cannot start server: %s", err))
 	}

@@ -63,6 +63,7 @@ const gatewayPort = 8080
 func getKeptnGatewayDeployment(namespace string) *appsv1.Deployment {
 	return &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
+			Labels:    map[string]string{"app.kubernetes.io/name": "keptn-gateway"},
 			Name:      "keptn-gateway",
 			Namespace: namespace,
 		},
@@ -93,7 +94,8 @@ var keptnGatewayService = &corev1.Service{
 		Kind: "Service",
 	},
 	ObjectMeta: metav1.ObjectMeta{
-		Name: "keptn-gateway-service",
+		Labels: map[string]string{"app.kubernetes.io/name": "keptn-gateway"},
+		Name:   "keptn-gateway-service",
 	},
 	Spec: corev1.ServiceSpec{
 		Ports: []corev1.ServicePort{{

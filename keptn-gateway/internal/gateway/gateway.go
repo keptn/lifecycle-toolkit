@@ -13,6 +13,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 	"go.uber.org/zap"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
 )
@@ -31,19 +32,15 @@ func NewGateway() *Gateway {
 	}
 
 	// kubernetes clientset in cluster
-	/*
-		config, err := rest.InClusterConfig()
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		// if error fallback to .kube/config
+		home := homedir.HomeDir()
+		kubeconfig := filepath.Join(home, ".kube", "config")
+		config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
 		if err != nil {
 			panic(err.Error())
 		}
-	*/
-
-	// alternative not in cluster config
-	home := homedir.HomeDir()
-	kubeconfig := filepath.Join(home, ".kube", "config")
-	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
-	if err != nil {
-		return nil
 	}
 
 	client, err := kubernetes.NewForConfig(config)

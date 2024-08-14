@@ -39,11 +39,6 @@ spec:
           spec:
             description: KeptnConfigSpec defines the desired state of KeptnConfig
             properties:
-              KeptnGatewayEnabled:
-                default: false
-                description: KeptnGatewayEnabled can be used to enable or disable
-                  the Keptn Rest Client
-                type: boolean
               OTelCollectorUrl:
                 description: OTelCollectorUrl can be used to set the Open Telemetry
                   collector that the lifecycle operator should use
@@ -64,6 +59,11 @@ spec:
                   KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery
                   searches for workload to put into the same auto-generated KeptnApp
                 type: integer
+              keptnGatewayEnabled:
+                default: false
+                description: KeptnGatewayEnabled can be used to enable or disable
+                  the Keptn Rest Client
+                type: boolean
               observabilityTimeout:
                 default: 5m
                 description: |-

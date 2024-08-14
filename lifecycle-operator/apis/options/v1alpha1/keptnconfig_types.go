@@ -54,7 +54,7 @@ type KeptnConfigSpec struct {
 	// KeptnGatewayEnabled can be used to enable or disable the Keptn Rest Client
 	// +kubebuilder:default:=false
 	// +optional
-	KeptnGatewayEnabled bool `json:"KeptnGatewayEnabled,omitempty"`
+	KeptnGatewayEnabled bool `json:"keptnGatewayEnabled,omitempty"`
 }
 
 // +kubebuilder:object:root=true

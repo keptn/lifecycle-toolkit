@@ -68,7 +68,15 @@ func getKeptnGatewayDeployment(namespace string) *appsv1.Deployment {
 			Namespace: namespace,
 		},
 		Spec: appsv1.DeploymentSpec{
+			Selector: &metav1.LabelSelector{
+				MatchLabels: map[string]string{
+					"app": "keptn",
+				},
+			},
 			Template: corev1.PodTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: map[string]string{"app": "keptn"},
+				},
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{
 						{
@@ -94,10 +102,11 @@ var keptnGatewayService = &corev1.Service{
 		Kind: "Service",
 	},
 	ObjectMeta: metav1.ObjectMeta{
-		Labels: map[string]string{"app.kubernetes.io/name": "keptn-gateway"},
-		Name:   "keptn-gateway-service",
+		//Labels: map[string]string{"app.kubernetes.io/name": "keptn-gateway"},
+		Name: "keptn-gateway-service",
 	},
 	Spec: corev1.ServiceSpec{
+		Selector: map[string]string{"app.kubernetes.io/name": "keptn-gateway"},
 		Ports: []corev1.ServicePort{{
 			Port: gatewayPort,
 		}},
@@ -107,6 +116,7 @@ var keptnGatewayService = &corev1.Service{
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs/status,verbs=get
 // +kubebuilder:rbac:groups=apps,resources=deployments,verbs=create;delete
+// +kubebuilder:rbac:groups=apps,resources=deployments.apps,verbs=create;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.

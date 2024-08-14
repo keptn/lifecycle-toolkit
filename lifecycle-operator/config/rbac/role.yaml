@@ -23,6 +23,13 @@ rules:
   - create
   - delete
 - apiGroups:
+  - apps
+  resources:
+  - deployments.apps
+  verbs:
+  - create
+  - delete
+- apiGroups:
   - argoproj.io
   resources:
   - rollouts

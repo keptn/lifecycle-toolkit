@@ -159,8 +159,14 @@ build-deploy-certmanager:
 	kubectl create namespace keptn-system --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -f keptn-cert-manager/config/rendered/release.yaml
 
+.PHONY: build-deploy-keptn-gateway
+build-deploy-keptn-gateway:
+	$(MAKE) -C keptn-gateway release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	$(MAKE) -C keptn-gateway push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
+	kubectl create namespace keptn-system --dry-run=client -o yaml | kubectl apply -f -
+
 .PHONY: build-deploy-dev-environment
-build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-metrics-operator build-deploy-scheduler
+build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-metrics-operator build-deploy-scheduler build-deploy-keptn-gateway
 
 include docs/Makefile
 

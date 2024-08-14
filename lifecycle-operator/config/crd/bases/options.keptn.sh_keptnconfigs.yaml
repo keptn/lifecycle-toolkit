@@ -59,6 +59,11 @@ spec:
                   KeptnAppCreationRequestTimeoutSeconds is used to set the interval in which automatic app discovery
                   searches for workload to put into the same auto-generated KeptnApp
                 type: integer
+              keptnGatewayEnabled:
+                default: false
+                description: KeptnGatewayEnabled can be used to enable or disable
+                  the Keptn Rest Client
+                type: boolean
               observabilityTimeout:
                 default: 5m
                 description: |-
@@ -67,11 +72,6 @@ spec:
                   considered as failed.
                 pattern: ^0|([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                 type: string
-              restApiEnabled:
-                default: false
-                description: RestApiEnabled can be used to enable or disable the Keptn
-                  Rest Client
-                type: boolean
             type: object
           status:
             description: unused field

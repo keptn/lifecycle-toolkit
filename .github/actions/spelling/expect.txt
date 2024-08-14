@@ -47,6 +47,7 @@ argocd
 argoproj
 ARMO
 artifacthub
+asamonik
 asdfg
 authurl
 automerge
@@ -82,7 +83,6 @@ changefreq
 Chans
 Checkmarx
 clientgoscheme
-clientset
 cloudevents
 clt
 clusterrole
@@ -409,7 +409,6 @@ Meha
 mergo
 metricsapi
 metricscontroller
-metricscount
 metricskeptnsh
 metricsobject
 metricsprovider
@@ -542,7 +541,6 @@ replicasets
 replicationcontrollers
 resourcereference
 restapi
-returnval
 Rexed
 rgb
 RLock

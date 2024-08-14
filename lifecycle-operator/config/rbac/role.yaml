@@ -16,6 +16,20 @@ rules:
   - list
   - watch
 - apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+- apiGroups:
+  - apps
+  resources:
+  - deployments.apps
+  verbs:
+  - create
+  - delete
+- apiGroups:
   - argoproj.io
   resources:
   - rollouts

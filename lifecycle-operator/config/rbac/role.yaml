@@ -23,13 +23,6 @@ rules:
   - create
   - delete
 - apiGroups:
-  - apps
-  resources:
-  - deployments.apps
-  verbs:
-  - create
-  - delete
-- apiGroups:
   - argoproj.io
   resources:
   - rollouts
@@ -107,6 +100,13 @@ rules:
   - secrets
   verbs:
   - get
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - create
+  - delete
 - apiGroups:
   - lifecycle.keptn.sh
   resources:

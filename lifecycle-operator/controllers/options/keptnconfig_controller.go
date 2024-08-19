@@ -112,7 +112,6 @@ func getKeptnGatewayService(namespace string) *corev1.Service {
 			Selector: map[string]string{"app": "keptn"},
 			Ports: []corev1.ServicePort{{
 				Port: gatewayPort,
-				//TargetPort: gatewayPort,
 				NodePort: 30091,
 				Protocol: "TCP",
 			}},
@@ -185,13 +184,11 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 		err := r.Client.Create(ctx, getKeptnGatewayDeployment(r.Namespace))
 		if err != nil {
 			r.Log.Error(err, "Unable to Deploy Keptn Gateway")
-			//return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 
 		err = r.Client.Create(ctx, getKeptnGatewayService(r.Namespace))
 		if err != nil {
 			r.Log.Error(err, "Unable to Deploy Keptn Gateway Service")
-			//return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 
 		r.Log.Info("Created Keptn-Gateway resources")

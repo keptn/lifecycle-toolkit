@@ -99,10 +99,6 @@ func getKeptnGatewayDeployment(namespace string) *appsv1.Deployment {
 
 func getKeptnGatewayService(namespace string) *corev1.Service {
 	return &corev1.Service{
-		TypeMeta: metav1.TypeMeta{
-			APIVersion: "v1",
-			Kind:       "Service",
-		},
 		ObjectMeta: metav1.ObjectMeta{
 			Labels:    map[string]string{"app.kubernetes.io/name": "keptn-gateway"},
 			Name:      "keptn-gateway-service",
@@ -183,7 +179,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 
 		err := r.Client.Create(ctx, getKeptnGatewayDeployment(r.Namespace))
 		if err != nil {
-			r.Log.Error(err, "Unable to Deploy Keptn Gateway")
+			r.Log.Error(err, "Unable to Deploy Keptn Gateway Deployment")
 		}
 
 		err = r.Client.Create(ctx, getKeptnGatewayService(r.Namespace))

@@ -111,7 +111,7 @@ func getKeptnGatewayService(namespace string) *corev1.Service {
 		Spec: corev1.ServiceSpec{
 			Selector: map[string]string{"app": "keptn"},
 			Ports: []corev1.ServicePort{{
-				Port: gatewayPort,
+				Port:     gatewayPort,
 				NodePort: 30091,
 				Protocol: "TCP",
 			}},
@@ -123,7 +123,7 @@ func getKeptnGatewayService(namespace string) *corev1.Service {
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs/status,verbs=get
 // +kubebuilder:rbac:groups=apps,resources=deployments,verbs=create;delete
-// +kubebuilder:rbac:groups=apps,resources=deployments,verbs=create;delete
+// +kubebuilder:rbac:groups=apps,resources=deployments.apps,verbs=create;delete
 // +kubebuilder:rbac:groups=core,resources=services,verbs=create;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
@@ -196,7 +196,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 	}
 
 	r.Log.Info("Deleting Keptn-Gateway resources...")
-	err := r.Client.DeleteAllOf(ctx, getKeptnGatewayDeployment(r.Namespace))
+	err := r.Client.Delete(ctx, getKeptnGatewayDeployment(r.Namespace))
 	if err != nil {
 		r.Log.Error(err, "Unable to Delete Keptn Gateway Deployment")
 		if !errors.IsNotFound(err) {
@@ -204,7 +204,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 		}
 	}
 
-	err = r.Client.DeleteAllOf(ctx, getKeptnGatewayService(r.Namespace))
+	err = r.Client.Delete(ctx, getKeptnGatewayService(r.Namespace))
 	if err != nil {
 		r.Log.Error(err, "Unable to Delete Keptn Gateway Service")
 		if !errors.IsNotFound(err) {

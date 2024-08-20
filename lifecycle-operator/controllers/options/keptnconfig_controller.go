@@ -97,26 +97,30 @@ func getKeptnGatewayDeployment(namespace string) *appsv1.Deployment {
 	}
 }
 
-var keptnGatewayService = &corev1.Service{
-	TypeMeta: metav1.TypeMeta{
-		Kind: "Service",
-	},
-	ObjectMeta: metav1.ObjectMeta{
-		//Labels: map[string]string{"app.kubernetes.io/name": "keptn-gateway"},
-		Name: "keptn-gateway-service",
-	},
-	Spec: corev1.ServiceSpec{
-		Selector: map[string]string{"app.kubernetes.io/name": "keptn-gateway"},
-		Ports: []corev1.ServicePort{{
-			Port: gatewayPort,
-		}},
-	},
+func getKeptnGatewayService(namespace string) *corev1.Service {
+	return &corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Labels:    map[string]string{"app.kubernetes.io/name": "keptn-gateway"},
+			Name:      "keptn-gateway-service",
+			Namespace: namespace,
+		},
+		Spec: corev1.ServiceSpec{
+			Selector: map[string]string{"app": "keptn"},
+			Ports: []corev1.ServicePort{{
+				Port:     gatewayPort,
+				NodePort: 30091,
+				Protocol: "TCP",
+			}},
+			Type: "NodePort",
+		},
+	}
 }
 
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs,verbs=get;list;watch
 // +kubebuilder:rbac:groups=options.keptn.sh,resources=keptnconfigs/status,verbs=get
 // +kubebuilder:rbac:groups=apps,resources=deployments,verbs=create;delete
 // +kubebuilder:rbac:groups=apps,resources=deployments.apps,verbs=create;delete
+// +kubebuilder:rbac:groups=core,resources=services,verbs=create;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -175,14 +179,12 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 
 		err := r.Client.Create(ctx, getKeptnGatewayDeployment(r.Namespace))
 		if err != nil {
-			r.Log.Error(err, "Unable to Deploy Keptn Gateway")
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
+			r.Log.Error(err, "Unable to Deploy Keptn Gateway Deployment")
 		}
 
-		err = r.Client.Create(ctx, keptnGatewayService)
+		err = r.Client.Create(ctx, getKeptnGatewayService(r.Namespace))
 		if err != nil {
 			r.Log.Error(err, "Unable to Deploy Keptn Gateway Service")
-			return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 		}
 
 		r.Log.Info("Created Keptn-Gateway resources")
@@ -190,7 +192,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 	}
 
 	r.Log.Info("Deleting Keptn-Gateway resources...")
-	err := r.Client.DeleteAllOf(ctx, getKeptnGatewayDeployment(r.Namespace))
+	err := r.Client.Delete(ctx, getKeptnGatewayDeployment(r.Namespace))
 	if err != nil {
 		r.Log.Error(err, "Unable to Delete Keptn Gateway Deployment")
 		if !errors.IsNotFound(err) {
@@ -198,7 +200,7 @@ func (r *KeptnConfigReconciler) reconcileKeptnGateway(ctx context.Context, confi
 		}
 	}
 
-	err = r.Client.DeleteAllOf(ctx, keptnGatewayService)
+	err = r.Client.Delete(ctx, getKeptnGatewayService(r.Namespace))
 	if err != nil {
 		r.Log.Error(err, "Unable to Delete Keptn Gateway Service")
 		if !errors.IsNotFound(err) {

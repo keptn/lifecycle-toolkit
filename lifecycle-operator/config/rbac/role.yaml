@@ -108,6 +108,13 @@ rules:
   verbs:
   - get
 - apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - create
+  - delete
+- apiGroups:
   - lifecycle.keptn.sh
   resources:
   - keptnappcontexts

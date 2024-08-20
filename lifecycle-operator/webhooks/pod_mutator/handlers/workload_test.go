@@ -126,12 +126,12 @@ func TestHandle(t *testing.T) {
 		wanterr      error
 		wantWorkload *apilifecycle.KeptnWorkload
 	}{
-		// {
-		// 	name:         "Create Workload",
-		// 	pod:          pod,
-		// 	client:       testcommon.NewTestClient(),
-		// 	wantWorkload: wantWorkload,
-		// },
+		{
+			name:         "Create Workload",
+			pod:          pod,
+			client:       testcommon.NewTestClient(),
+			wantWorkload: wantWorkload,
+		},
 		{
 			name:         "Update Workload",
 			pod:          pod2,

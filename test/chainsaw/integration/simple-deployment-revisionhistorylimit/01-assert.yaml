@@ -38,7 +38,7 @@ spec:
   revision: 1
   version: "0.2"
   workloads:
-  - name: waiter
-    version: "0.2"
+    - name: waiter
+      version: "0.2"
 status:
   currentPhase: Completed

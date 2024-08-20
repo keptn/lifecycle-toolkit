@@ -52,6 +52,7 @@ func (a *WorkloadHandler) updateWorkload(ctx context.Context, workload *apilifec
 
 	a.Log.Info("Pod changed, updating workload")
 	workload.Spec = newWorkload.Spec
+	workload.OwnerReferences = newWorkload.OwnerReferences
 
 	err := a.Client.Update(ctx, workload)
 	if err != nil {

@@ -58,6 +58,35 @@ func TestHandle(t *testing.T) {
 			},
 		},
 	}
+	wantWorkload2 := &apilifecycle.KeptnWorkload{
+		TypeMeta: metav1.TypeMeta{Kind: "KeptnWorkload", APIVersion: "lifecycle.keptn.sh/v1"},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testAppWorkload,
+			Namespace: namespace,
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					UID:        "owner-uid",
+					Kind:       "Deployment",
+					Name:       "deployment-1",
+					APIVersion: "apps/v1",
+				},
+			},
+			ResourceVersion: "2",
+		},
+		Spec: apilifecycle.KeptnWorkloadSpec{
+			AppName: TestWorkload,
+			Version: "0.2",
+			Metadata: map[string]string{
+				"foo": "bar",
+				"bar": "foo",
+			},
+			ResourceReference: apilifecycle.ResourceReference{
+				UID:  "owner-uid",
+				Kind: "Deployment",
+				Name: "deployment-1",
+			},
+		},
+	}
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
@@ -68,7 +97,27 @@ func TestHandle(t *testing.T) {
 				apicommon.VersionAnnotation:  "0.1",
 				apicommon.MetadataAnnotation: "foo=bar,bar=foo",
 			},
-		}}
+		},
+	}
+	pod2 := &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "example-pod",
+			Namespace: namespace,
+			Annotations: map[string]string{
+				apicommon.WorkloadAnnotation: TestWorkload,
+				apicommon.VersionAnnotation:  "0.2",
+				apicommon.MetadataAnnotation: "foo=bar,bar=foo",
+			},
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					UID:        "owner-uid",
+					Kind:       "Deployment",
+					Name:       "deployment-1",
+					APIVersion: "apps/v1",
+				},
+			},
+		},
+	}
 	// Define test cases
 	tests := []struct {
 		name         string
@@ -85,9 +134,9 @@ func TestHandle(t *testing.T) {
 		},
 		{
 			name:         "Update Workload",
-			pod:          pod,
+			pod:          pod2,
 			client:       testcommon.NewTestClient(wantWorkload),
-			wantWorkload: wantWorkload,
+			wantWorkload: wantWorkload2,
 		},
 		{
 			name: "Error Fetching Workload",

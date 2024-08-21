@@ -539,6 +539,7 @@ remediations
 replicasets
 replicationcontrollers
 resourcereference
+revisionhistorylimit
 Rexed
 rgb
 RLock

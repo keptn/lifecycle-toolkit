@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test
+  name: test
+status:
+  readyReplicas: 2
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkload
+metadata:
+  name: waiter-waiter
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnWorkloadVersion
+metadata:
+  name: waiter-waiter-0.1
+status:
+  currentPhase: Completed
+  deploymentStatus: Succeeded
+  postDeploymentEvaluationStatus: Succeeded
+  postDeploymentStatus: Succeeded
+  preDeploymentEvaluationStatus: Succeeded
+  preDeploymentStatus: Succeeded
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnApp
+metadata:
+  name: waiter
+---
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppVersion
+metadata:
+  name: waiter-0.1-6b86b273
+spec:
+  appName: waiter
+  revision: 1
+  version: "0.1"
+  workloads:
+    - name: waiter
+      version: "0.1"
+status:
+  currentPhase: Completed

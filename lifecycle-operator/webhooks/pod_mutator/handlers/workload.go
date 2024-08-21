@@ -45,13 +45,14 @@ func (a *WorkloadHandler) Handle(ctx context.Context, pod *corev1.Pod, namespace
 }
 
 func (a *WorkloadHandler) updateWorkload(ctx context.Context, workload *apilifecycle.KeptnWorkload, newWorkload *apilifecycle.KeptnWorkload) error {
-	if reflect.DeepEqual(workload.Spec, newWorkload.Spec) {
+	if reflect.DeepEqual(workload.Spec, newWorkload.Spec) && reflect.DeepEqual(workload.OwnerReferences, newWorkload.OwnerReferences) {
 		a.Log.Info("Pod not changed, not updating anything")
 		return nil
 	}
 
 	a.Log.Info("Pod changed, updating workload")
 	workload.Spec = newWorkload.Spec
+	workload.OwnerReferences = newWorkload.OwnerReferences
 
 	err := a.Client.Update(ctx, workload)
 	if err != nil {

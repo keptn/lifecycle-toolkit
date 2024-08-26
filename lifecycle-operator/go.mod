@@ -11,7 +11,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240806082913-9bcc0d1633a6
 	github.com/magiconair/properties v1.8.7
-	github.com/onsi/ginkgo/v2 v2.19.1
+	github.com/onsi/ginkgo/v2 v2.20.1
 	github.com/onsi/gomega v1.34.1
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.19.1
@@ -57,7 +57,7 @@ require (
 	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
-	github.com/google/pprof v0.0.0-20240424215950-a892ee059fd6 // indirect
+	github.com/google/pprof v0.0.0-20240727154555-813a5fbdbec8 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect

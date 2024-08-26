@@ -14,6 +14,7 @@
   "prConcurrentLimit": 15,
   "stabilityDays": 3,
   "timezone": "Europe/Vienna",
+  "rebaseWhen": "conflicted",
   "postUpdateOptions": [
     "gomodTidy",
     "gomodMassage"
@@ -68,6 +69,11 @@
         "mkdocs-material"
       ],
       "groupName": "squidfunk/mkdocs-material"
+    },
+    {
+      "matchManagers": ["gomod"],
+      "matchPackagePrefixes": ["golang.org/x"],
+      "groupName": "All golang.org/x packages"
     }
   ],
   "regexManagers": [

@@ -65,7 +65,7 @@ spec:
                 x-kubernetes-map-type: atomic
               skipVerifyCertificate:
                 default: false
-                description: SkipVerifyCertificate skips verification of the cerificate
+                description: SkipVerifyCertificate skips verification of the certificate
                 type: boolean
               targetServer:
                 description: TargetServer defines URL (including port and protocol)

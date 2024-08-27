@@ -251,7 +251,7 @@ func TestProvidersPool_StartProviders(t *testing.T) {
 	resChan := make(chan metricsapi.ProviderResult)
 	// Create a mock IObjectivesEvaluator, Client, and Logger for testing
 	mockEvaluator := &fake.IObjectivesEvaluatorMock{
-		EvaluateFunc: func(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest) {
+		EvaluateFunc: func(ctx context.Context, metricsProvider *metricsapi.KeptnMetricsProvider, obj chan metricstypes.ProviderRequest) {
 		},
 	}
 

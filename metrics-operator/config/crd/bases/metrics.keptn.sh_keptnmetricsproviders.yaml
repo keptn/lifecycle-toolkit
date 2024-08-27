@@ -63,6 +63,10 @@ spec:
                 - key
                 type: object
                 x-kubernetes-map-type: atomic
+              skipVerifyCertificate:
+                default: false
+                description: SkipVerifyCertificate skips verification of the cerificate
+                type: boolean
               targetServer:
                 description: TargetServer defines URL (including port and protocol)
                   at which the metrics provider is reachable.

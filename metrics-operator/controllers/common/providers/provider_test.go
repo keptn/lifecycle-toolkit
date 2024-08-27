@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/go-logr/logr"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/datadog"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace"
@@ -13,50 +14,78 @@ import (
 
 func TestFactory(t *testing.T) {
 	tests := []struct {
-		providerType string
-		provider     interface{}
-		err          bool
+		metricsProvider metricsapi.KeptnMetricsProvider
+		provider        interface{}
+		err             bool
 	}{
 		{
-			providerType: PrometheusProviderType,
-			provider:     &prometheus.KeptnPrometheusProvider{},
-			err:          false,
+			metricsProvider: metricsapi.KeptnMetricsProvider{
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					Type: PrometheusProviderType,
+				},
+			},
+			provider: &prometheus.KeptnPrometheusProvider{},
+			err:      false,
 		},
 		{
-			providerType: ThanosProviderType,
-			provider:     &prometheus.KeptnPrometheusProvider{},
-			err:          false,
+			metricsProvider: metricsapi.KeptnMetricsProvider{
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					Type: ThanosProviderType,
+				},
+			},
+			provider: &prometheus.KeptnPrometheusProvider{},
+			err:      false,
 		},
 		{
-			providerType: CortexProviderType,
-			provider:     &prometheus.KeptnPrometheusProvider{},
-			err:          false,
+			metricsProvider: metricsapi.KeptnMetricsProvider{
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					Type: CortexProviderType,
+				},
+			},
+			provider: &prometheus.KeptnPrometheusProvider{},
+			err:      false,
 		},
 		{
-			providerType: DynatraceProviderType,
-			provider:     &dynatrace.KeptnDynatraceProvider{},
-			err:          false,
+			metricsProvider: metricsapi.KeptnMetricsProvider{
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					Type: DynatraceProviderType,
+				},
+			},
+			provider: &dynatrace.KeptnDynatraceProvider{},
+			err:      false,
 		},
 		{
-			providerType: DynatraceDQLProviderType,
-			provider:     dynatrace.NewKeptnDynatraceDQLProvider(fake.NewClient()),
-			err:          false,
+			metricsProvider: metricsapi.KeptnMetricsProvider{
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					Type: DynatraceDQLProviderType,
+				},
+			},
+			provider: dynatrace.NewKeptnDynatraceDQLProvider(fake.NewClient()),
+			err:      false,
 		},
 		{
-			providerType: DataDogProviderType,
-			provider:     &datadog.KeptnDataDogProvider{},
-			err:          false,
+			metricsProvider: metricsapi.KeptnMetricsProvider{
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					Type: DataDogProviderType,
+				},
+			},
+			provider: &datadog.KeptnDataDogProvider{},
+			err:      false,
 		},
 		{
-			providerType: "invalid",
-			provider:     nil,
-			err:          true,
+			metricsProvider: metricsapi.KeptnMetricsProvider{
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					Type: "invalid",
+				},
+			},
+			provider: nil,
+			err:      true,
 		},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.providerType, func(t *testing.T) {
-			p, e := NewProvider(tt.providerType, logr.Logger{}, nil)
+		t.Run(tt.metricsProvider.Spec.Type, func(t *testing.T) {
+			p, e := NewProvider(&tt.metricsProvider, logr.Logger{}, nil)
 			require.IsType(t, tt.provider, p)
 			if tt.err {
 				require.NotNil(t, e)

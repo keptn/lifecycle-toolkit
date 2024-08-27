@@ -6,6 +6,7 @@ package fake
 import (
 	"context"
 	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
+	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	"sync"
 )
 
@@ -15,7 +16,7 @@ import (
 //
 //		// make and configure a mocked analysis.IObjectivesEvaluator
 //		mockedIObjectivesEvaluator := &IObjectivesEvaluatorMock{
-//			EvaluateFunc: func(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest)  {
+//			EvaluateFunc: func(ctx context.Context, metricsProvider *metricsapi.KeptnMetricsProvider, obj chan metricstypes.ProviderRequest)  {
 //				panic("mock out the Evaluate method")
 //			},
 //		}
@@ -26,7 +27,7 @@ import (
 //	}
 type IObjectivesEvaluatorMock struct {
 	// EvaluateFunc mocks the Evaluate method.
-	EvaluateFunc func(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest)
+	EvaluateFunc func(ctx context.Context, metricsProvider *metricsapi.KeptnMetricsProvider, obj chan metricstypes.ProviderRequest)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -35,7 +36,7 @@ type IObjectivesEvaluatorMock struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// ProviderType is the providerType argument value.
-			ProviderType string
+			metricsProvider *metricsapi.KeptnMetricsProvider
 			// Obj is the obj argument value.
 			Obj chan metricstypes.ProviderRequest
 		}
@@ -44,23 +45,23 @@ type IObjectivesEvaluatorMock struct {
 }
 
 // Evaluate calls EvaluateFunc.
-func (mock *IObjectivesEvaluatorMock) Evaluate(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest) {
+func (mock *IObjectivesEvaluatorMock) Evaluate(ctx context.Context, metricsProvider *metricsapi.KeptnMetricsProvider, obj chan metricstypes.ProviderRequest) {
 	if mock.EvaluateFunc == nil {
 		panic("IObjectivesEvaluatorMock.EvaluateFunc: method is nil but IObjectivesEvaluator.Evaluate was just called")
 	}
 	callInfo := struct {
 		Ctx          context.Context
-		ProviderType string
+		metricsProvider *metricsapi.KeptnMetricsProvider
 		Obj          chan metricstypes.ProviderRequest
 	}{
 		Ctx:          ctx,
-		ProviderType: providerType,
+		metricsProvider: metricsProvider,
 		Obj:          obj,
 	}
 	mock.lockEvaluate.Lock()
 	mock.calls.Evaluate = append(mock.calls.Evaluate, callInfo)
 	mock.lockEvaluate.Unlock()
-	mock.EvaluateFunc(ctx, providerType, obj)
+	mock.EvaluateFunc(ctx, metricsProvider, obj)
 }
 
 // EvaluateCalls gets all the calls that were made to Evaluate.
@@ -69,12 +70,12 @@ func (mock *IObjectivesEvaluatorMock) Evaluate(ctx context.Context, providerType
 //	len(mockedIObjectivesEvaluator.EvaluateCalls())
 func (mock *IObjectivesEvaluatorMock) EvaluateCalls() []struct {
 	Ctx          context.Context
-	ProviderType string
+	metricsProvider *metricsapi.KeptnMetricsProvider
 	Obj          chan metricstypes.ProviderRequest
 } {
 	var calls []struct {
 		Ctx          context.Context
-		ProviderType string
+		metricsProvider *metricsapi.KeptnMetricsProvider
 		Obj          chan metricstypes.ProviderRequest
 	}
 	mock.lockEvaluate.RLock()

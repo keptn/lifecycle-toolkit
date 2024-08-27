@@ -35,6 +35,10 @@ type KeptnMetricsProviderSpec struct {
 	// SecretKeyRef defines an optional secret for access credentials to the metrics provider.
 	// +optional
 	SecretKeyRef corev1.SecretKeySelector `json:"secretKeyRef,omitempty"`
+	// SkipVerifyCertificate skips verification of the cerificate
+	// +kubebuilder:default:=false
+	// +optional
+	SkipVerifyCertificate bool `json:"skipVerifyCertificate,omitempty"`
 }
 
 // +kubebuilder:object:root=true

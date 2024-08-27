@@ -20,15 +20,13 @@ func TestEvaluate(t *testing.T) {
 	// Define test cases
 	testCases := []struct {
 		name            string
-		providerType    string
 		mockProvider    providers.KeptnSLIProvider
 		providerRequest metricstypes.ProviderRequest
 		expectedResult  metricsapi.ProviderResult
 		expectedError   string
 	}{
 		{
-			name:         "SuccessfulEvaluation",
-			providerType: "mockProvider",
+			name: "SuccessfulEvaluation",
 			mockProvider: &fake2.KeptnSLIProviderMock{
 				FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 					return "10", nil
@@ -56,8 +54,7 @@ func TestEvaluate(t *testing.T) {
 			expectedError: "",
 		},
 		{
-			name:         "FailedEvaluation",
-			providerType: "mockProvider",
+			name: "FailedEvaluation",
 			mockProvider: &fake2.KeptnSLIProviderMock{
 				FetchAnalysisValueFunc: func(ctx context.Context, query string, spec metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
 					return "", fmt.Errorf("something bad")
@@ -88,7 +85,7 @@ func TestEvaluate(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			mockProviderFactory := func(providerType string, log logr.Logger, client client.Client) (providers.KeptnSLIProvider, error) {
+			mockProviderFactory := func(metricsProvider *metricsapi.KeptnMetricsProvider, log logr.Logger, client client.Client) (providers.KeptnSLIProvider, error) {
 				// Define your mock provider implementation
 				return tc.mockProvider, nil
 			}
@@ -115,7 +112,7 @@ func TestEvaluate(t *testing.T) {
 				objChan <- tc.providerRequest
 				close(objChan)
 			}()
-			objectivesEvaluator.Evaluate(ctx, tc.providerType, objChan)
+			objectivesEvaluator.Evaluate(ctx, tc.providerRequest.Provider, objChan)
 			close(objectivesEvaluator.results)
 			result := <-objectivesEvaluator.results
 

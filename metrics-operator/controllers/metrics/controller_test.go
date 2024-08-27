@@ -217,7 +217,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric2"},
 			},
-			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+			providerFactory: func(provider *metricsapi.KeptnMetricsProvider, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
 				return nil, fmt.Errorf("provider unsupported-type not supported")
 			},
 			client:           fake.NewClient(metric2, unsupportedProvider),
@@ -232,7 +232,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric3"},
 			},
-			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+			providerFactory: func(provider *metricsapi.KeptnMetricsProvider, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
 				mymock := &providersfake.KeptnSLIProviderMock{
 					EvaluateQueryFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 						return "", nil, fmt.Errorf("client_error: client error: 404")
@@ -262,7 +262,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric3"},
 			},
-			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+			providerFactory: func(provider *metricsapi.KeptnMetricsProvider, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
 				mymock := &providersfake.KeptnSLIProviderMock{
 					EvaluateQueryFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 						return "result", []byte("result"), nil
@@ -292,7 +292,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric4"},
 			},
-			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+			providerFactory: func(provider *metricsapi.KeptnMetricsProvider, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
 				mymock := &providersfake.KeptnSLIProviderMock{
 					EvaluateQueryForStepFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
 						return []string{}, nil, fmt.Errorf("client_error: client error: 404")
@@ -323,7 +323,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric4"},
 			},
-			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+			providerFactory: func(provider *metricsapi.KeptnMetricsProvider, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
 				mymock := &providersfake.KeptnSLIProviderMock{
 					EvaluateQueryForStepFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
 						return []string{"11"}, []byte("11"), nil
@@ -353,7 +353,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric5"},
 			},
-			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+			providerFactory: func(provider *metricsapi.KeptnMetricsProvider, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
 				mymock := &providersfake.KeptnSLIProviderMock{
 					EvaluateQueryForStepFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
 						return []string{}, nil, fmt.Errorf("client_error: client error: 404")
@@ -385,7 +385,7 @@ func TestKeptnMetricReconciler_Reconcile(t *testing.T) {
 			req: controllerruntime.Request{
 				NamespacedName: types.NamespacedName{Namespace: "default", Name: "mymetric5"},
 			},
-			providerFactory: func(providerType string, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
+			providerFactory: func(provider *metricsapi.KeptnMetricsProvider, log logr.Logger, k8sClient k8sclient.Client) (providers.KeptnSLIProvider, error) {
 				mymock := &providersfake.KeptnSLIProviderMock{
 					EvaluateQueryForStepFunc: func(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) ([]string, []byte, error) {
 						return []string{"11"}, []byte("11"), nil

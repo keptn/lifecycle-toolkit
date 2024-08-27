@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.1.1](https://github.com/keptn/lifecycle-toolkit/compare/lifecycle-operator-v1.1.0...lifecycle-operator-v1.1.1) (2024-08-27)
+
+
+### Bug Fixes
+
+* **lifecycle-operator:** update ownerReference when updating KeptnWorkload ([#3683](https://github.com/keptn/lifecycle-toolkit/issues/3683)) ([de2c441](https://github.com/keptn/lifecycle-toolkit/commit/de2c4412021b0aff8f2276830205f7fab1586c41))
+
+
+### Other
+
+* backport helm chart versions ([#3662](https://github.com/keptn/lifecycle-toolkit/issues/3662)) ([81320a5](https://github.com/keptn/lifecycle-toolkit/commit/81320a534f52cf16d3e59c76b451c92b3502b35f))
+
+
+### Dependency Updates
+
+* update all golang.org/x packages ([#3708](https://github.com/keptn/lifecycle-toolkit/issues/3708)) ([1014268](https://github.com/keptn/lifecycle-toolkit/commit/1014268f72066049bd707373feea367f680d0132))
+* update golang docker tag to v1.22.6 ([#3692](https://github.com/keptn/lifecycle-toolkit/issues/3692)) ([73b30ee](https://github.com/keptn/lifecycle-toolkit/commit/73b30ee6a0748535d8af1160a7c0b8e2f2c04ec2))
+* update kubernetes packages to v0.29.8 (patch) ([#3693](https://github.com/keptn/lifecycle-toolkit/issues/3693)) ([7ca1250](https://github.com/keptn/lifecycle-toolkit/commit/7ca12502889b1b74431a3210039299b620d37c3f))
+* update module dario.cat/mergo to v1.0.1 ([#3694](https://github.com/keptn/lifecycle-toolkit/issues/3694)) ([80d8e9d](https://github.com/keptn/lifecycle-toolkit/commit/80d8e9de846adef30c5061c4e16e82698069b890))
+* update module github.com/argoproj/argo-rollouts to v1.7.2 ([#3695](https://github.com/keptn/lifecycle-toolkit/issues/3695)) ([e0445d9](https://github.com/keptn/lifecycle-toolkit/commit/e0445d9d76d5589a7ae711e8d0dbfe617a7cb20c))
+* update module github.com/onsi/ginkgo/v2 to v2.20.1 ([#3704](https://github.com/keptn/lifecycle-toolkit/issues/3704)) ([df11440](https://github.com/keptn/lifecycle-toolkit/commit/df1144084e337c8eda64e2635b8ee534fd10252f))
+
 ## [1.1.0](https://github.com/keptn/lifecycle-toolkit/compare/lifecycle-operator-v1.0.0...lifecycle-operator-v1.1.0) (2024-08-06)
 
 

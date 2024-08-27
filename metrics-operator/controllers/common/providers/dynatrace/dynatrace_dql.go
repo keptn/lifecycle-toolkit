@@ -277,7 +277,7 @@ func (d *keptnDynatraceDQLProvider) ensureDTClientIsSetUp(ctx context.Context, p
 			http.Client{
 				Transport: &http.Transport{
 					TLSClientConfig: &tls.Config{
-						InsecureSkipVerify: provider.Spec.SkipVerifyCertificate,
+						InsecureSkipVerify: provider.Spec.InsecureSkipTlsVerify,
 					},
 				},
 			},

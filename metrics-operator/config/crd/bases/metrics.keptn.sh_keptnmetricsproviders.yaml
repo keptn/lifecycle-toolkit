@@ -42,6 +42,10 @@ spec:
           spec:
             description: KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
             properties:
+              insecureSkipTlsVerify:
+                default: false
+                description: InsecureSkipTlsVerify skips verification of the tls certificate
+                type: boolean
               secretKeyRef:
                 description: SecretKeyRef defines an optional secret for access credentials
                   to the metrics provider.
@@ -63,10 +67,6 @@ spec:
                 - key
                 type: object
                 x-kubernetes-map-type: atomic
-              skipVerifyCertificate:
-                default: false
-                description: SkipVerifyCertificate skips verification of the certificate
-                type: boolean
               targetServer:
                 description: TargetServer defines URL (including port and protocol)
                   at which the metrics provider is reachable.

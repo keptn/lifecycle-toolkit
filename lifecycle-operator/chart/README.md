@@ -58,7 +58,7 @@ and application health checks
 | `lifecycleOperator.env.pythonRunnerImage`                             | specify image for python task runtime                                          | `ghcr.io/keptn/python-runtime:v1.0.6` |
 | `lifecycleOperator.image.registry`                                    | specify the container registry for the lifecycle-operator image                | `""`                                  |
 | `lifecycleOperator.image.repository`                                  | specify registry for manager image                                             | `keptn/lifecycle-operator`            |
-| `lifecycleOperator.image.tag`                                         | select tag for manager image                                                   | `v1.1.0`                              |
+| `lifecycleOperator.image.tag`                                         | select tag for manager image                                                   | `v1.1.1`                              |
 | `lifecycleOperator.image.imagePullPolicy`                             | specify pull policy for the manager image. This overrides global values        | `""`                                  |
 | `lifecycleOperator.livenessProbe`                                     | custom liveness probe for manager container                                    |                                       |
 | `lifecycleOperator.readinessProbe`                                    | custom readinessprobe for manager container                                    |                                       |

@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.2.0](https://github.com/keptn/lifecycle-toolkit/compare/keptn-v2.1.0...keptn-v2.2.0) (2024-08-27)
+
+
+### Features
+
+* **metrics-operator:** introduce insecureSkipTlsVerify parameter ([#3711](https://github.com/keptn/lifecycle-toolkit/issues/3711)) ([c51c5e4](https://github.com/keptn/lifecycle-toolkit/commit/c51c5e406cefef87dc1f22daf1555fe8ecb70158))
+
+
+### Other
+
+* bump helm chart version ([#3665](https://github.com/keptn/lifecycle-toolkit/issues/3665)) ([ff62ede](https://github.com/keptn/lifecycle-toolkit/commit/ff62ede9f55f9545f98ceb1e7d8122478fa7033e))
+* release lifecycle-operator 1.1.1 ([#3664](https://github.com/keptn/lifecycle-toolkit/issues/3664)) ([e688c73](https://github.com/keptn/lifecycle-toolkit/commit/e688c73853f3136a2e2646be85a31a2a67caa0dc))
+* release metrics-operator 1.1.0 ([#3661](https://github.com/keptn/lifecycle-toolkit/issues/3661)) ([24191f8](https://github.com/keptn/lifecycle-toolkit/commit/24191f8024c75582f0936226fe6ad5671d0dc7d7))
+* update helm chart versions ([#3713](https://github.com/keptn/lifecycle-toolkit/issues/3713)) ([e052c92](https://github.com/keptn/lifecycle-toolkit/commit/e052c927cdb83215dfc2724e259f8fd72988a0a2))
+
+
+### Dependency Updates
+
+* update actions/upload-artifact action to v4.3.6 ([#3670](https://github.com/keptn/lifecycle-toolkit/issues/3670)) ([0d5c60f](https://github.com/keptn/lifecycle-toolkit/commit/0d5c60f48fac850dedbab72ebf6be17636bb76c5))
+* update anchore/sbom-action action to v0.17.2 ([#3687](https://github.com/keptn/lifecycle-toolkit/issues/3687)) ([2484e49](https://github.com/keptn/lifecycle-toolkit/commit/2484e495594de62d970a263d2b86ff9738c9e3e4))
+* update checkmarx/kics-github-action action to v2.1.2 ([#3688](https://github.com/keptn/lifecycle-toolkit/issues/3688)) ([8178ac5](https://github.com/keptn/lifecycle-toolkit/commit/8178ac5c8146b0b01f95854d44146e4903101026))
+* update dependency mkdocs-git-revision-date-localized-plugin to v1.2.7 ([#3690](https://github.com/keptn/lifecycle-toolkit/issues/3690)) ([c2fc3b6](https://github.com/keptn/lifecycle-toolkit/commit/c2fc3b69ff402d383eac9365999222e0f4e118d6))
+* update dependency mkdocs-include-markdown-plugin to v6.2.2 ([#3691](https://github.com/keptn/lifecycle-toolkit/issues/3691)) ([759443a](https://github.com/keptn/lifecycle-toolkit/commit/759443a181dae03ca8066b4dcf5574e1b23f114d))
+* update sigstore/cosign-installer action to v3.6.0 ([#3706](https://github.com/keptn/lifecycle-toolkit/issues/3706)) ([29e1614](https://github.com/keptn/lifecycle-toolkit/commit/29e16143218d9bec85af039595a90ebfbc402ee2))
+* update squidfunk/mkdocs-material to v9.5.33 (patch) ([#3697](https://github.com/keptn/lifecycle-toolkit/issues/3697)) ([605ebe1](https://github.com/keptn/lifecycle-toolkit/commit/605ebe16323e75744a5119da1b2099ca892d2bb7))
+
 ## [2.1.0](https://github.com/keptn/lifecycle-toolkit/compare/keptn-v2.0.0...keptn-v2.1.0) (2024-08-06)
 
 

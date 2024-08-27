@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.1.0](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v1.0.2...metrics-operator-v1.1.0) (2024-08-27)
+
+
+### Features
+
+* **metrics-operator:** introduce insecureSkipTlsVerify parameter ([#3711](https://github.com/keptn/lifecycle-toolkit/issues/3711)) ([c51c5e4](https://github.com/keptn/lifecycle-toolkit/commit/c51c5e406cefef87dc1f22daf1555fe8ecb70158))
+
+
+### Other
+
+* backport helm chart versions ([#3662](https://github.com/keptn/lifecycle-toolkit/issues/3662)) ([81320a5](https://github.com/keptn/lifecycle-toolkit/commit/81320a534f52cf16d3e59c76b451c92b3502b35f))
+* bump metrics-operator chart version ([#3660](https://github.com/keptn/lifecycle-toolkit/issues/3660)) ([600151d](https://github.com/keptn/lifecycle-toolkit/commit/600151d9fb858bc3adbc0e9eb97b8e0f2da6a3c5))
+
+
+### Dependency Updates
+
+* update all golang.org/x packages ([#3708](https://github.com/keptn/lifecycle-toolkit/issues/3708)) ([1014268](https://github.com/keptn/lifecycle-toolkit/commit/1014268f72066049bd707373feea367f680d0132))
+* update golang docker tag to v1.22.6 ([#3692](https://github.com/keptn/lifecycle-toolkit/issues/3692)) ([73b30ee](https://github.com/keptn/lifecycle-toolkit/commit/73b30ee6a0748535d8af1160a7c0b8e2f2c04ec2))
+* update kubernetes packages to v0.29.8 (patch) ([#3693](https://github.com/keptn/lifecycle-toolkit/issues/3693)) ([7ca1250](https://github.com/keptn/lifecycle-toolkit/commit/7ca12502889b1b74431a3210039299b620d37c3f))
+* update module github.com/datadog/datadog-api-client-go/v2 to v2.29.0 ([#3703](https://github.com/keptn/lifecycle-toolkit/issues/3703)) ([e722389](https://github.com/keptn/lifecycle-toolkit/commit/e722389d359dbe3c040b1ae6bcd4e2f4553b5002))
+* update module github.com/open-feature/go-sdk to v1.12.0 ([#3668](https://github.com/keptn/lifecycle-toolkit/issues/3668)) ([a804e39](https://github.com/keptn/lifecycle-toolkit/commit/a804e399150a8d20c6ce4cb6d33c566412307637))
+
 ## [1.0.2](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v1.0.1...metrics-operator-v1.0.2) (2024-08-06)
 
 

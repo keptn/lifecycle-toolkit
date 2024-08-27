@@ -1,5 +1,5 @@
 {
-  ".": "2.1.0",
+  ".": "2.2.0",
   "keptn-cert-manager": "2.2.1",
   "runtimes/python-runtime": "1.0.6",
   "runtimes/deno-runtime": "2.0.5",

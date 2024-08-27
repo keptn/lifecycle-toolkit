@@ -28,9 +28,9 @@ type keptnDynatraceDQLProvider struct {
 	log       logr.Logger
 	k8sClient client.Client
 
-	dtClient       dtclient.DTAPIClient
-	clock          clock.Clock
-	skipVerifyCert bool
+	dtClient              dtclient.DTAPIClient
+	clock                 clock.Clock
+	insecureSkipTlsVerify bool
 }
 
 type DynatraceDQLHandler struct {
@@ -120,9 +120,9 @@ func WithLogger(logger logr.Logger) KeptnDynatraceDQLProviderOption {
 	}
 }
 
-func WithSkipVerifyCertificate(skipCert bool) KeptnDynatraceDQLProviderOption {
+func WithInsecureSkipTlsVerify(skipCert bool) KeptnDynatraceDQLProviderOption {
 	return func(provider *keptnDynatraceDQLProvider) {
-		provider.skipVerifyCert = skipCert
+		provider.insecureSkipTlsVerify = skipCert
 	}
 }
 
@@ -277,7 +277,7 @@ func (d *keptnDynatraceDQLProvider) ensureDTClientIsSetUp(ctx context.Context, p
 			http.Client{
 				Transport: &http.Transport{
 					TLSClientConfig: &tls.Config{
-						InsecureSkipVerify: provider.Spec.InsecureSkipTlsVerify,
+						InsecureSkipVerify: d.insecureSkipTlsVerify,
 					},
 				},
 			},

@@ -48,7 +48,7 @@ func NewProvider(provider *metricsapi.KeptnMetricsProvider, log logr.Logger, k8s
 		return dynatrace.NewKeptnDynatraceDQLProvider(
 			k8sClient,
 			dynatrace.WithLogger(log),
-			dynatrace.WithSkipVerifyCertificate(provider.Spec.InsecureSkipTlsVerify),
+			dynatrace.WithInsecureSkipTlsVerify(provider.Spec.InsecureSkipTlsVerify),
 		), nil
 	case DataDogProviderType:
 		return &datadog.KeptnDataDogProvider{

@@ -39,7 +39,12 @@ func (ps ProvidersPool) StartProviders(ctx context.Context, numJobs int) {
 	for _, provider := range providers.SupportedProviders {
 		channel := make(chan metricstypes.ProviderRequest, numJobs)
 		ps.providers[provider] = channel
-		go ps.Evaluate(ctx, provider, channel)
+		metricsProvider := &metricsapi.KeptnMetricsProvider{
+			Spec: metricsapi.KeptnMetricsProviderSpec{
+				Type: provider,
+			},
+		}
+		go ps.Evaluate(ctx, metricsProvider, channel)
 	}
 }
 

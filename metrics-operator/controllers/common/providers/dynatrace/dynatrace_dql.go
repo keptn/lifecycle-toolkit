@@ -2,6 +2,7 @@ package dynatrace
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -27,8 +28,9 @@ type keptnDynatraceDQLProvider struct {
 	log       logr.Logger
 	k8sClient client.Client
 
-	dtClient dtclient.DTAPIClient
-	clock    clock.Clock
+	dtClient              dtclient.DTAPIClient
+	clock                 clock.Clock
+	insecureSkipTlsVerify bool
 }
 
 type DynatraceDQLHandler struct {
@@ -115,6 +117,12 @@ func WithDTAPIClient(dtApiClient dtclient.DTAPIClient) KeptnDynatraceDQLProvider
 func WithLogger(logger logr.Logger) KeptnDynatraceDQLProviderOption {
 	return func(provider *keptnDynatraceDQLProvider) {
 		provider.log = logger
+	}
+}
+
+func WithInsecureSkipTlsVerify(skipCert bool) KeptnDynatraceDQLProviderOption {
+	return func(provider *keptnDynatraceDQLProvider) {
+		provider.insecureSkipTlsVerify = skipCert
 	}
 }
 
@@ -265,7 +273,15 @@ func (d *keptnDynatraceDQLProvider) ensureDTClientIsSetUp(ctx context.Context, p
 		if err != nil {
 			return err
 		}
-		d.dtClient = dtclient.NewAPIClient(*config, dtclient.WithLogger(d.log))
+		d.dtClient = dtclient.NewAPIClient(*config, dtclient.WithLogger(d.log), dtclient.WithHTTPClient(
+			http.Client{
+				Transport: &http.Transport{
+					TLSClientConfig: &tls.Config{
+						InsecureSkipVerify: d.insecureSkipTlsVerify,
+					},
+				},
+			},
+		))
 	}
 	return nil
 }

@@ -11,7 +11,7 @@ import (
 
 //go:generate moq -pkg fake -skip-ensure -out ./fake/evaluator_mock.go . IObjectivesEvaluator
 type IObjectivesEvaluator interface {
-	Evaluate(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest)
+	Evaluate(ctx context.Context, metricsProvider *metricsapi.KeptnMetricsProvider, obj chan metricstypes.ProviderRequest)
 }
 
 type ObjectivesEvaluator struct {
@@ -23,8 +23,8 @@ type ObjectivesEvaluator struct {
 	cancel  context.CancelFunc
 }
 
-func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, providerType string, obj chan metricstypes.ProviderRequest) {
-	provider, err := oe.ProviderFactory(providerType, oe.log, oe.Client)
+func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, metricsProvider *metricsapi.KeptnMetricsProvider, obj chan metricstypes.ProviderRequest) {
+	provider, err := oe.ProviderFactory(metricsProvider, oe.log, oe.Client)
 	if err != nil {
 		oe.log.Error(err, "Failed to get the correct Provider")
 		oe.cancel()
@@ -44,7 +44,7 @@ func (oe ObjectivesEvaluator) Evaluate(ctx context.Context, providerType string,
 			Value:     value,
 			ErrMsg:    strErr,
 		}
-		oe.log.Info("provider", "id:", providerType, "finished job:", o.Objective.AnalysisValueTemplateRef.Name, "result:", result)
+		oe.log.Info("provider", "id:", metricsProvider.Spec.Type, "finished job:", o.Objective.AnalysisValueTemplateRef.Name, "result:", result)
 		oe.results <- result
 	}
 }

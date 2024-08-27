@@ -2,6 +2,7 @@ package providers
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"net/http"
 	"strings"
@@ -23,32 +24,45 @@ type KeptnSLIProvider interface {
 	FetchAnalysisValue(ctx context.Context, query string, spec metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error)
 }
 
-type ProviderFactory func(providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error)
+type ProviderFactory func(provider *metricsapi.KeptnMetricsProvider, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error)
 
 // NewProvider is a factory method that chooses the right implementation of KeptnSLIProvider
-func NewProvider(providerType string, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
+func NewProvider(provider *metricsapi.KeptnMetricsProvider, log logr.Logger, k8sClient client.Client) (KeptnSLIProvider, error) {
 
-	switch strings.ToLower(providerType) {
+	switch strings.ToLower(provider.Spec.Type) {
 	case PrometheusProviderType, ThanosProviderType, CortexProviderType:
 		return prometheus.NewPrometheusProvider(log, k8sClient), nil
 	case DynatraceProviderType:
 		return &dynatrace.KeptnDynatraceProvider{
-			HttpClient: http.Client{},
-			Log:        log,
-			K8sClient:  k8sClient,
+			HttpClient: http.Client{
+				Transport: &http.Transport{
+					TLSClientConfig: &tls.Config{
+						InsecureSkipVerify: provider.Spec.InsecureSkipTlsVerify,
+					},
+				},
+			},
+			Log:       log,
+			K8sClient: k8sClient,
 		}, nil
 	case DynatraceDQLProviderType:
 		return dynatrace.NewKeptnDynatraceDQLProvider(
 			k8sClient,
 			dynatrace.WithLogger(log),
+			dynatrace.WithInsecureSkipTlsVerify(provider.Spec.InsecureSkipTlsVerify),
 		), nil
 	case DataDogProviderType:
 		return &datadog.KeptnDataDogProvider{
-			Log:        log,
-			HttpClient: http.Client{},
-			K8sClient:  k8sClient,
+			Log: log,
+			HttpClient: http.Client{
+				Transport: &http.Transport{
+					TLSClientConfig: &tls.Config{
+						InsecureSkipVerify: provider.Spec.InsecureSkipTlsVerify,
+					},
+				},
+			},
+			K8sClient: k8sClient,
 		}, nil
 	default:
-		return nil, fmt.Errorf("provider %s not supported", providerType)
+		return nil, fmt.Errorf("provider %s not supported", provider.Spec.Type)
 	}
 }

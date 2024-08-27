@@ -86,7 +86,7 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{Requeue: true, RequeueAfter: diff}, nil
 	}
 
-	metricProvider, err := r.fetchProvider(ctx, types.NamespacedName{Name: metric.Spec.Provider.Name, Namespace: metric.Namespace})
+	metricsProvider, err := r.fetchProvider(ctx, types.NamespacedName{Name: metric.Spec.Provider.Name, Namespace: metric.Namespace})
 	if err != nil {
 		if errors.IsNotFound(err) {
 			r.Log.Info(err.Error()+", ignoring error since object must be deleted", "requestInfo", requestInfo)
@@ -96,14 +96,14 @@ func (r *KeptnMetricReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 	}
 	// load the provider
-	provider, err2 := r.ProviderFactory(metricProvider.GetType(), r.Log, r.Client)
+	provider, err2 := r.ProviderFactory(metricsProvider, r.Log, r.Client)
 	if err2 != nil {
 		r.Log.Error(err2, "Failed to get the correct Metric Provider", "requestInfo", requestInfo)
 		return ctrl.Result{Requeue: false}, err2
 	}
 	reconcile := ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}
 
-	value, rawValue, err := r.getResults(ctx, metric, provider, metricProvider)
+	value, rawValue, err := r.getResults(ctx, metric, provider, metricsProvider)
 
 	reconcile = r.updateMetric(metric, value, rawValue, reconcile, err)
 
@@ -150,22 +150,22 @@ func (r *KeptnMetricReconciler) updateMetric(metric *metricsapi.KeptnMetric, val
 	return reconcile
 }
 
-func (r *KeptnMetricReconciler) getResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+func (r *KeptnMetricReconciler) getResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricsProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	if metric.Spec.Range != nil && metric.Spec.Range.Step != "" {
-		return r.getStepQueryResults(ctx, metric, provider, metricProvider)
+		return r.getStepQueryResults(ctx, metric, provider, metricsProvider)
 	}
-	return r.getQueryResults(ctx, metric, provider, metricProvider)
+	return r.getQueryResults(ctx, metric, provider, metricsProvider)
 }
-func (r *KeptnMetricReconciler) getQueryResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
-	value, rawValue, err := provider.EvaluateQuery(ctx, *metric, *metricProvider)
+func (r *KeptnMetricReconciler) getQueryResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricsProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	value, rawValue, err := provider.EvaluateQuery(ctx, *metric, *metricsProvider)
 	if err != nil {
 		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
 		return "", cupSize(rawValue), err
 	}
 	return value, cupSize(rawValue), nil
 }
-func (r *KeptnMetricReconciler) getStepQueryResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
-	value, rawValue, err := provider.EvaluateQueryForStep(ctx, *metric, *metricProvider)
+func (r *KeptnMetricReconciler) getStepQueryResults(ctx context.Context, metric *metricsapi.KeptnMetric, provider providers.KeptnSLIProvider, metricsProvider *metricsapi.KeptnMetricsProvider) (string, []byte, error) {
+	value, rawValue, err := provider.EvaluateQueryForStep(ctx, *metric, *metricsProvider)
 	if err != nil {
 		r.Log.Error(err, "Failed to evaluate the query", "Response from provider was:", (string)(rawValue))
 		return "", cupSize(rawValue), err

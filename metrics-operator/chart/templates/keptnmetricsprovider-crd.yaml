@@ -50,6 +50,11 @@ spec:
           spec:
             description: KeptnMetricsProviderSpec defines the desired state of KeptnMetricsProvider
             properties:
+              insecureSkipTlsVerify:
+                default: false
+                description: InsecureSkipTlsVerify skips verification of the tls certificate
+                  when fetching metrics
+                type: boolean
               secretKeyRef:
                 description: SecretKeyRef defines an optional secret for access credentials
                   to the metrics provider.

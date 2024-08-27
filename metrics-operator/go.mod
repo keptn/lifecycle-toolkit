@@ -3,7 +3,7 @@ module github.com/keptn/lifecycle-toolkit/metrics-operator
 go 1.22
 
 require (
-	github.com/DataDog/datadog-api-client-go/v2 v2.28.0
+	github.com/DataDog/datadog-api-client-go/v2 v2.29.0
 	github.com/benbjohnson/clock v1.3.5
 	github.com/go-logr/logr v1.4.2
 	github.com/gorilla/mux v1.8.1

@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/keptn/lifecycle-toolkit,324,150
+/keptn/lifecycle-toolkit/pulls,90,10
+/keptn/lifecycle-toolkit/issues,83,18
+/keptn/lifecycle-toolkit/tree/main/examples/sample-app,66,14
+/keptn/lifecycle-toolkit/tree/main/chart,61,9
+/keptn/lifecycle-toolkit/tree/main/examples,48,14
+/keptn/lifecycle-toolkit/tree/main/examples/sample-app/version-1,36,2
+/keptn/lifecycle-toolkit/blob/main/metrics-operator/controllers/common/providers/prometheus/prometheus.go,35,7
+/keptn/lifecycle-toolkit/tree/main/examples/sample-app/base,34,3
+/keptn/lifecycle-toolkit/issues/3680,31,6

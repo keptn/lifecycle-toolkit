@@ -12,7 +12,7 @@ require (
 	github.com/keptn/lifecycle-toolkit/keptn-cert-manager v0.0.0-20240806082913-9bcc0d1633a6
 	github.com/magiconair/properties v1.8.7
 	github.com/onsi/ginkgo/v2 v2.20.2
-	github.com/onsi/gomega v1.34.1
+	github.com/onsi/gomega v1.34.2
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.19.1
 	github.com/stretchr/testify v1.9.0

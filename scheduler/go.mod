@@ -1,6 +1,6 @@
 module github.com/keptn/lifecycle-toolkit/scheduler
 
-go 1.22
+go 1.23
 
 require (
 	github.com/kelseyhightower/envconfig v1.4.0

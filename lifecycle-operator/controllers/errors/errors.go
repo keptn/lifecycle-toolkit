@@ -31,7 +31,7 @@ var ErrCannotRetrieveWorkloadMsg = "could not retrieve KeptnWorkload: %w"
 var ErrNoLabelsFoundTask = "no labels found for task: %s"
 var ErrNoConfigMapMsg = "no ConfigMap specified or HTTP source specified in TaskDefinition / Namespace: %s, Name: %s"
 var ErrCannotGetFunctionConfigMap = "could not get function configMap: %w"
-var ErrCannotFetchAppVersionForWorkloadVersionMsg = "could not fetch AppVersion for KeptnWorkloadVersion: "
+var ErrCannotFetchAppVersionForWorkloadVersionMsg = "could not fetch AppVersion for KeptnWorkloadVersion: %s"
 var ErrCouldNotUnbindSpan = "could not unbind span for %s"
 
 // IgnoreReferencedResourceNotFound returns nil on NotFound errors.

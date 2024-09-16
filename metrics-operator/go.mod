@@ -2,8 +2,6 @@ module github.com/keptn/lifecycle-toolkit/metrics-operator
 
 go 1.22.0
 
-toolchain go1.23.1
-
 require (
 	github.com/DataDog/datadog-api-client-go/v2 v2.29.0
 	github.com/benbjohnson/clock v1.3.5

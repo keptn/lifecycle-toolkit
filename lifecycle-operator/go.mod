@@ -2,8 +2,6 @@ module github.com/keptn/lifecycle-toolkit/lifecycle-operator
 
 go 1.22.0
 
-toolchain go1.23.1
-
 require (
 	dario.cat/mergo v1.0.1
 	github.com/argoproj/argo-rollouts v1.7.2

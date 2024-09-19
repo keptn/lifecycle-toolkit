@@ -1,4 +1,4 @@
-site_name: Keptn - Supercharge Your Deployments
+site_name: Keptn
 theme:
   name: material
   custom_dir: docs/overrides

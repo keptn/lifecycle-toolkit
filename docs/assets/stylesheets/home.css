@@ -16,6 +16,39 @@ body {
     display: block;
 }
 
+.bg-blue {
+    background-color: #011549;
+    color: white;
+}
+
+.text-blue {
+    color: #232EAB;
+}
+
+.text-bold {
+    font-weight: 800;
+}
+
+.banner {
+    margin-top: 107px;
+}
+
+.cncf-disclaimer {
+    width: 800px;
+    height: 200px;
+    object-fit: cover;
+    background-repeat: no-repeat;
+    margin: 0 auto;
+}
+
+.cncf-disclaimer {
+    background-image: url("../images/cncf-color.svg");
+}
+
+[data-md-color-scheme="slate"] .cncf-disclaimer {
+    background-image: url("../images/cncf-white.svg");
+}
+
 @media (max-width: 600px) {
     .md-typeset .header-link {
         display: none;
@@ -59,9 +92,9 @@ body {
     text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
+    align-items: center;
     gap: 1rem;
-    padding-top: 20vh;
 }
 
 .tx-hero h1 {
@@ -73,7 +106,6 @@ body {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    width: 65%;
     font-weight: 700;
     font-size: 4rem;
     margin: 0px;
@@ -166,7 +198,13 @@ body {
     .tx-hero {
         display: flex;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .tx-hero h1 {
+        width: 54rem;
     }
 
     .tx-hero__content {
@@ -229,7 +267,6 @@ body {
     margin-top: 15px;
     font-family: "Lato", sans-serif;
     font-size: 23px;
-    font-weight: 300;
     padding-bottom: 10px;
 }
 

@@ -31,6 +31,8 @@ require (
 	sigs.k8s.io/yaml v1.4.0
 )
 
+require github.com/elastic/elastic-transport-go/v8 v8.6.0 // indirect
+
 require (
 	github.com/DataDog/zstd v1.5.2 // indirect
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
@@ -43,6 +45,8 @@ require (
 	github.com/coreos/go-semver v0.3.1 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/elastic/go-elasticsearch/v7 v7.17.10
+	github.com/elastic/go-elasticsearch/v8 v8.15.0
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/evanphx/json-patch v5.7.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect

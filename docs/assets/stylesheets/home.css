@@ -34,7 +34,7 @@ body {
 }
 
 .cncf-disclaimer {
-    width: 800px;
+    width: 600px;
     height: 200px;
     object-fit: cover;
     background-repeat: no-repeat;
@@ -52,6 +52,20 @@ body {
 @media (max-width: 600px) {
     .md-typeset .header-link {
         display: none;
+    }
+
+    .tx-hero h1 {       
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        width: 80%;
+    }
+
+    .cncf-disclaimer {
+        width: 400px;
+        height: 200px;
     }
 }
 
@@ -215,6 +229,11 @@ body {
         margin-right: 4rem;
         align-items: center;
     }
+
+    .cncf-disclaimer {
+        width: 800px;
+        height: 200px;
+    }
 }
 
 @media screen and (min-width: 76.25em) {
@@ -292,6 +311,10 @@ body {
     margin-top: -0.8em;
 }
 
+.md-typeset h2 {
+    font-weight: 800;
+}
+
 .md-typeset figure {
     display: flex;
 }
@@ -306,6 +329,8 @@ body {
 
 .mdx-spotlight__feature {
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex: 1 0 48%;
     flex-flow: row nowrap;
     gap: 3.2rem;

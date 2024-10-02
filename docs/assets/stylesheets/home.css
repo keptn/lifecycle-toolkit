@@ -16,6 +16,10 @@ body {
     display: block;
 }
 
+.border-0 {
+    border: 0px;
+}
+
 .bg-blue {
     background-color: #011549;
     color: white;
@@ -39,9 +43,6 @@ body {
     object-fit: cover;
     background-repeat: no-repeat;
     margin: 0 auto;
-}
-
-.cncf-disclaimer {
     background-image: url("../images/cncf-color.svg");
 }
 
@@ -213,7 +214,6 @@ body {
         display: flex;
         align-items: center;
         justify-content: center;
-        align-items: center;
         gap: 1rem;
     }
 

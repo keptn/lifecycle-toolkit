@@ -159,7 +159,6 @@ dynatrace
 ecr
 elasticquota
 elasticsearch
-Elasticsearch
 elif
 ENABLEGITINFO
 endblock

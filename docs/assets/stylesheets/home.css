@@ -128,7 +128,6 @@ body {
             #F57534 360deg);
     background-clip: text;
     -webkit-background-clip: text;
-    text-fill-color: transparent;
     -webkit-text-fill-color: transparent;
     font-weight: 700;
     font-size: 4rem;

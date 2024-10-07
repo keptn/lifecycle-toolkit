@@ -113,13 +113,22 @@ body {
 }
 
 .tx-hero h1 {
-    background: conic-gradient(from 168deg at 48.75% 6.95%,
-            #6BA3CE 0deg,
-            #63a7d7 148.1250035762787deg,
-            #93C5EA 270deg,
-            #5690BB 360deg);
+    background:
+        linear-gradient(220.89deg,
+            #6BA3CE 21.74%,
+            #5690BB 29.21%,
+            #026BBA 42.97%,
+            #93C5EA 55.34%,
+            #4F9ED9 65.88%,
+            #08528A 73.28%),
+        conic-gradient(from 167.81deg at 48.75% 6.95%,
+            #E625A7 0deg,
+            #63A7D7 148.13deg,
+            #7F5FB0 270deg,
+            #F57534 360deg);
     background-clip: text;
     -webkit-background-clip: text;
+    text-fill-color: transparent;
     -webkit-text-fill-color: transparent;
     font-weight: 700;
     font-size: 4rem;

@@ -384,7 +384,11 @@ body {
         padding-bottom: 3vw;
     }
 
-    .mdx-spotlight__feature:nth-child(odd) {
+    .mdx-spotlight__feature:not(.reversed):nth-child(odd) {
+        flex-direction: row-reverse;
+    }
+
+    .mdx-spotlight__feature.reversed:nth-child(even) {
         flex-direction: row-reverse;
     }
 }

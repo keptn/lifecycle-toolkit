@@ -1,7 +1,6 @@
 ---
 comments: true
 ---
-
 # Keptn Observability
 
 Keptn provides sophisticated observability features
@@ -282,8 +281,13 @@ So let's install new Observability components to help us:
   Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
 - [Grafana](https://grafana.com) (and some prebuilt dashboards): Visualise the data
 
-![add observability](./assets/install01.png)
+The following is an example uses the Jaeger `allInOne` image, which has the UI, query service as well as collector. 
+The Jaeger installation process bundles the configured OpenTelemetery(OTEL) collector.
+Other tools including `jaeger-ui` without `allInOne` image, use OpenTelemetery collector directly.
+[See for more information](../guides/otel.md)
 
+![add observability](./assets/install01.png)
+ 
 ## Step 8: Install Cert Manager
 
 Jaeger requires Cert Manager, so install it now:
@@ -331,6 +335,7 @@ Jaeger is available on `http://localhost:16686`
 Create some Keptn Grafana dashboards that will be available when Grafana is installed and started:
 
 <!---x-release-please-start-version-->
+
 ```shell
 kubectl create ns monitoring
 kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.2.0/examples/support/observability/config/prometheus/grafana-config.yaml
@@ -338,6 +343,7 @@ kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn
 kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.2.0/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
 kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.2.0/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
 ```
+
 <!---x-release-please-end-->
 
 ### Install Grafana datasources

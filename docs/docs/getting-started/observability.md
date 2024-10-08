@@ -281,9 +281,10 @@ So let's install new Observability components to help us:
   Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
 - [Grafana](https://grafana.com) (and some prebuilt dashboards): Visualise the data
 
+**Note**
 The following is an example uses the Jaeger `allInOne` image, which has the UI, query service as well as collector. 
 The Jaeger installation process bundles the configured OpenTelemetery(OTEL) collector.
-Other tools including `jaeger-ui` without `allInOne` image, use OpenTelemetery collector directly.
+There are other tools including `jaeger-ui` without `allInOne` image, use OpenTelemetery collector directly.
 [See for more information](../guides/otel.md)
 
 ![add observability](./assets/install01.png)

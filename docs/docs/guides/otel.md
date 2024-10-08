@@ -208,3 +208,25 @@ of your application and apply the`KeptnAppContext`.
 Keptn will re-deploy your application and Jaeger should show a link to the previous trace in the references section.
 
 ![linked trace](./assets/linkedtrace.png)
+
+## OTEL Internal Data Processing
+
+How is data logging is performed.Most Languages have specific instrumentation library which does have expoters
+for popular backends & OTLP. So we can directly send data without collector, but it's reccommended to use 
+collector as it handles various operations.
+
+So if you don't want to use pre-built collector such as `jeager` you can even build or configure a collector according
+to your requirements with the help of [OTEL collector Builder](https://github.com/open-telemetry/opentelemetry-collector/tree/main/cmd/builder)
+
+For deployments that don't use the Jaeger allInOne image, follow these steps:
+
+- Deploy the OpenTelemetry Collector: Use the official otel collector image, either by running it as a standalone
+  service or integrating it into your infrastructure.
+
+- Configure the otel Collector: Define pipelines to receive traces and metrics from your application and export
+  them to Jaeger. For example, you can configure the otel collector to receive data over protocols like gRPC,
+  HTTP, or OTLP, and then export the processed data to Jaeger or other backends.
+
+- Integration with UI(Jaeger as example): Once the otel collector is set up, ensure that your application is
+  sending telemetry data to the correct otel endpoint, and that the collector is exporting it to Jaeger’s 
+  jaeger-query or other processing units.

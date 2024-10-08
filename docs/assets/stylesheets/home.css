@@ -50,26 +50,6 @@ body {
     background-image: url("../images/cncf-white.svg");
 }
 
-@media (max-width: 600px) {
-    .md-typeset .header-link {
-        display: none;
-    }
-
-    .tx-hero h1 {       
-        font-size: 2rem;
-    }
-
-    .hero-subtitle {
-        font-size: 1rem;
-        width: 80%;
-    }
-
-    .cncf-disclaimer {
-        width: 400px;
-        height: 200px;
-    }
-}
-
 .md-main {
     flex-grow: 0;
 }
@@ -100,16 +80,20 @@ body {
 .tx-hero {
     width: 100%;
     height: 100vh;
+    background-image: url("../images/moon-gradient.svg");
     background-size: 40%;
     background-repeat: no-repeat;
     background-position: center;
-    background-image: url("../images/moon-gradient.svg");
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
+}
+
+[data-md-color-scheme="slate"] .tx-hero {
+    background-image: url("../images/moon-gradient-dark.svg");
 }
 
 .tx-hero h1 {
@@ -207,78 +191,6 @@ body {
     display: block;
 }
 
-@media screen and (max-width: 30em) {
-    .tx-hero h1 {
-        font-size: 1.4rem;
-    }
-}
-
-@media screen and (min-width: 60em) {
-    .md-sidebar--secondary {
-        display: none;
-    }
-
-    .tx-hero {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-    }
-
-    .tx-hero h1 {
-        width: 54rem;
-    }
-
-    .tx-hero__content {
-        max-width: 22rem;
-        margin-top: 3.5rem;
-        margin-bottom: 3.5rem;
-        margin-left: 1rem;
-        margin-right: 4rem;
-        align-items: center;
-    }
-
-    .cncf-disclaimer {
-        width: 800px;
-        height: 200px;
-    }
-}
-
-@media screen and (min-width: 76.25em) {
-    .md-sidebar--primary {
-        display: none;
-    }
-
-    .top-hr {
-        width: 100%;
-        display: flex;
-        max-width: 61rem;
-        margin-right: auto;
-        margin-left: auto;
-        padding: 0 0.2rem;
-    }
-
-    .bottom-hr {
-        margin-top: 10px;
-        width: 100%;
-        display: flex;
-        max-width: 61rem;
-        margin-right: auto;
-        margin-left: auto;
-        padding: 0 0.2rem;
-    }
-
-    .feature-item {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .feature-item:hover {
-        background-color: var(--md-accent-fg-color--transparent);
-        border-radius: 3px;
-    }
-}
-
 .hr {
     border-bottom: 1px solid #eee;
     width: 100%;
@@ -360,6 +272,103 @@ body {
 
 .mdx-spotlight__feature figcaption {
     margin-top: 0.8rem;
+}
+
+
+@media screen and (max-width: 30em) {
+    .tx-hero h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media screen and (min-width: 60em) {
+    .md-sidebar--secondary {
+        display: none;
+    }
+
+    .tx-hero {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .tx-hero h1 {
+        width: 54rem;
+    }
+
+    .tx-hero__content {
+        max-width: 22rem;
+        margin-top: 3.5rem;
+        margin-bottom: 3.5rem;
+        margin-left: 1rem;
+        margin-right: 4rem;
+        align-items: center;
+    }
+
+    .cncf-disclaimer {
+        width: 800px;
+        height: 200px;
+    }
+}
+
+@media (max-width: 600px) {
+    .md-typeset .header-link {
+        display: none;
+    }
+
+    .cncf-disclaimer {
+        width: 400px;
+        height: 200px;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        width: 80%;
+    }
+
+    .tx-hero {
+        background-image: none;
+    }
+
+    [data-md-color-scheme="slate"] .tx-hero {
+        background-image: none;
+    }
+}
+
+@media screen and (min-width: 76.25em) {
+    .md-sidebar--primary {
+        display: none;
+    }
+
+    .top-hr {
+        width: 100%;
+        display: flex;
+        max-width: 61rem;
+        margin-right: auto;
+        margin-left: auto;
+        padding: 0 0.2rem;
+    }
+
+    .bottom-hr {
+        margin-top: 10px;
+        width: 100%;
+        display: flex;
+        max-width: 61rem;
+        margin-right: auto;
+        margin-left: auto;
+        padding: 0 0.2rem;
+    }
+
+    .feature-item {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .feature-item:hover {
+        background-color: var(--md-accent-fg-color--transparent);
+        border-radius: 3px;
+    }
 }
 
 @media screen and (max-width: 59.9375em) {

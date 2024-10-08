@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
+	elastic "github.com/elastic/go-elasticsearch/v8"
 	"github.com/go-logr/logr"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
-	elastic "github.com/elastic/go-elasticsearch/v8"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 

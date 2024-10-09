@@ -25,12 +25,11 @@ type SecretData struct {
 	Password config.Secret `json:"password"`
 }
 
-// IRoundTripper interface defines the method to get the RoundTripper
+//go:generate moq -pkg fake -skip-ensure -out ./fake/roundtripper_mock.go . IRoundTripper
 type IRoundTripper interface {
 	GetRoundTripper(context.Context, metricsapi.KeptnMetricsProvider, client.Client) (http.RoundTripper, error)
 }
 
-// RoundTripperRetriever implements the IRoundTripper interface
 type RoundTripperRetriever struct {
 }
 

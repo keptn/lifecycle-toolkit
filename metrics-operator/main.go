@@ -115,7 +115,7 @@ func main() {
 		// convert
 		content, err := convertSLI(SLIFilePath, provider, namespace)
 		if err != nil {
-			log.Fatalf(err.Error())
+			log.Fatalf("failed to covert SLIs: %s", err.Error())
 			return
 		}
 		// write out converted result
@@ -127,7 +127,7 @@ func main() {
 		// convert
 		content, err := convertSLO(SLOFilePath, analysisDefinition, namespace)
 		if err != nil {
-			log.Fatalf(err.Error())
+			log.Fatalf("failed to covert SLOs: %s", err.Error())
 			return
 		}
 		// write out converted result

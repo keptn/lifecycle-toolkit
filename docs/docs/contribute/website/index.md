@@ -13,8 +13,6 @@ Here are some key files and directories:
 - **`docs/assets/`**: This directory contains all the stylesheets and
 javascript files.
 - **`docs/overrides/`**: This directory contains all the html files.
-- **`docs/website.yml`**: This file contains configurations specific to the
-website, such as all the directories.
 - **`mkdocs.yml`**: The main configuration file for MkDocs.
 It defines the structure and configuration of the documentation site.
 

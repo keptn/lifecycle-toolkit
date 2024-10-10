@@ -42,10 +42,9 @@ func (r RoundTripperRetriever) GetRoundTripper(ctx context.Context, provider met
 		return nil, err
 	}
 
-	transport := &http.Transport{
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: provider.Spec.InsecureSkipTlsVerify, 
-		},
+	transport := promapi.DefaultRoundTripper.(*http.Transport).Clone()
+	transport.TLSClientConfig = &tls.Config{
+		InsecureSkipVerify: provider.Spec.InsecureSkipTlsVerify,
 	}
 
 	return config.NewBasicAuthRoundTripper(secret.User, secret.Password, "", "", transport), nil

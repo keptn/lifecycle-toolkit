@@ -16,7 +16,7 @@ body {
     display: block;
 }
 
-.border-0 {
+.frame {
     border: 0px;
 }
 
@@ -247,6 +247,10 @@ body {
     margin: 2em 0;
 }
 
+.pt-4 {
+    padding-top: 3em;
+}
+
 .mdx-spotlight__feature {
     display: flex;
     justify-content: center;
@@ -329,6 +333,23 @@ body {
 
     .tx-hero {
         background-size: 80%;
+    }
+
+    .youtube-container {
+        position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding-top: 75%;
+    }
+
+    .frame {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
     }
 }
 

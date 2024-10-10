@@ -328,11 +328,7 @@ body {
     }
 
     .tx-hero {
-        background-image: none;
-    }
-
-    [data-md-color-scheme="slate"] .tx-hero {
-        background-image: none;
+        background-size: 80%;
     }
 }
 

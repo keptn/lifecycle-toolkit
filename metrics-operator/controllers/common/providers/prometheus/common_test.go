@@ -2,6 +2,7 @@ package prometheus
 
 import (
 	"context"
+	"crypto/tls"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -137,11 +138,18 @@ func Test_GetRoundtripper(t *testing.T) {
 						Key:      "",
 						Optional: nil,
 					},
+					InsecureSkipTlsVerify: true,
 				},
 			},
 			k8sClient: fake.NewClient(goodsecret),
-			want:      config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
-			wantErr:   false,
+			want: func() http.RoundTripper {
+				transport := promapi.DefaultRoundTripper.(*http.Transport).Clone()
+				transport.TLSClientConfig = &tls.Config{
+					InsecureSkipVerify: true,
+				}
+				return config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", transport)
+			}(),
+			wantErr: false,
 		},
 		{
 			name:      "TestSecretNotDefined",

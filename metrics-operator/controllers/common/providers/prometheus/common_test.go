@@ -2,14 +2,17 @@ package prometheus
 
 import (
 	"context"
+	"encoding/base64"
 	"net/http"
 	"net/http/httptest"
+
 	// "reflect"
 	"strings"
 	"testing"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
+
 	// promapi "github.com/prometheus/client_golang/api"
 	"github.com/prometheus/common/config"
 	"github.com/stretchr/testify/require"
@@ -115,15 +118,14 @@ func Test_GetRoundtripper(t *testing.T) {
 			"password": []byte("mytoken"),
 		},
 	}
-
 	tests := []struct {
-		name      string
-		provider  metricsapi.KeptnMetricsProvider
-		k8sClient client.Client
-		wantUser  string
-		wantPass  string
-		wantErr   bool
-		errorStr  string
+		name         string
+		provider     metricsapi.KeptnMetricsProvider
+		k8sClient    client.Client
+		wantUser     string
+		wantPassword string
+		wantErr      bool
+		errorStr     string
 	}{
 		{
 			name: "TestSuccess",
@@ -141,18 +143,18 @@ func Test_GetRoundtripper(t *testing.T) {
 					},
 				},
 			},
-			k8sClient: fake.NewClient(goodsecret),
-			wantUser:  "myuser",
-			wantPass:  "mytoken",
-			wantErr:   false,
+			k8sClient:    fake.NewClient(goodsecret),
+			wantUser:     "myuser",
+			wantPassword: "mytoken",
+			wantErr:      false,
 		},
 		{
-			name:      "TestSecretNotDefined",
-			provider:  metricsapi.KeptnMetricsProvider{},
-			k8sClient: fake.NewClient(),
-			wantUser:  "",
-			wantPass:  "",
-			wantErr:   false,
+			name:         "TestSecretNotDefined",
+			provider:     metricsapi.KeptnMetricsProvider{},
+			k8sClient:    fake.NewClient(),
+			wantUser:     "",
+			wantPassword: "",
+			wantErr:      false,
 		},
 		{
 			name: "TestErrorFromGetPrometheusSecretNotExists",
@@ -170,41 +172,58 @@ func Test_GetRoundtripper(t *testing.T) {
 					},
 				},
 			},
-			k8sClient: fake.NewClient(),
-			wantUser:  "",
-			wantPass:  "",
-			wantErr:   true,
-			errorStr:  "not found",
+			k8sClient:    fake.NewClient(),
+			wantUser:     "",
+			wantPassword: "",
+			wantErr:      true,
+			errorStr:     "not found",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := RoundTripperRetriever{}.GetRoundTripper(context.TODO(), tt.provider, tt.k8sClient)
-
-			// Check if an error was expected and if the error occurred.
+			t.Log(err)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("getRoundtripper() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-
-			// If an error string is expected, ensure the error message contains it.
-			if tt.errorStr != "" && err != nil && !strings.Contains(err.Error(), tt.errorStr) {
+			if tt.errorStr != "" && !strings.Contains(err.Error(), tt.errorStr) {
 				t.Errorf("getRoundtripper() error = %s, wantErr %s", err.Error(), tt.errorStr)
 				return
 			}
 
-			// If no error is expected, check the credentials inside the round tripper
-			if !tt.wantErr {
-				basicAuthRT, ok := got.(*config.BasicAuthRoundTripper)
-				if !ok {
-					t.Errorf("Expected BasicAuthRoundTripper, got %T", got)
-					return
+			if tt.wantErr {
+				return
+			}
+
+			// Create a mock server to capture the request
+			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				auth := r.Header.Get("Authorization")
+				if tt.wantUser != "" || tt.wantPassword != "" {
+					expected := "Basic " + base64.StdEncoding.EncodeToString([]byte(tt.wantUser+":"+tt.wantPassword))
+					if auth != expected {
+						t.Errorf("getRoundtripper() got Authorization = %v, want %v", auth, expected)
+					}
+				} else if auth != "" {
+					t.Errorf("getRoundtripper() got unexpected Authorization header: %v", auth)
 				}
-				if basicAuthRT.User != tt.wantUser || basicAuthRT.Password != tt.wantPass {
-					t.Errorf("getRoundtripper() credentials = (%v, %v), want (%v, %v)",
-						basicAuthRT.User, basicAuthRT.Password, tt.wantUser, tt.wantPass)
-				}
+				w.WriteHeader(http.StatusOK)
+			}))
+			defer server.Close()
+
+			// Create a test request to the mock server
+			req, err := http.NewRequest("GET", server.URL, nil)
+			require.NoError(t, err)
+
+			// Use the RoundTripper to send the request
+			resp, err := got.RoundTrip(req)
+			require.NoError(t, err)
+			defer resp.Body.Close()
+
+			// Check if the request was successful
+			if resp.StatusCode != http.StatusOK {
+				t.Errorf("getRoundtripper() got status code %v, want %v", resp.StatusCode, http.StatusOK)
 			}
 		})
 	}

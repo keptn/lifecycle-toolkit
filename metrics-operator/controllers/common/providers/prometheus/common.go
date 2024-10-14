@@ -41,19 +41,12 @@ func (r RoundTripperRetriever) GetRoundTripper(ctx context.Context, provider met
 		return nil, err
 	}
 
-	baseTransport := promapi.DefaultRoundTripper
-
-	if provider.Spec.InsecureSkipTlsVerify {
-		if httpTransport, ok := baseTransport.(*http.Transport); ok {
-			newTransport := httpTransport.Clone()
-			newTransport.TLSClientConfig = &tls.Config{
-				InsecureSkipVerify: true,
-			}
-			baseTransport = newTransport
-		}
+	transport := promapi.DefaultRoundTripper.(*http.Transport).Clone()
+	transport.TLSClientConfig = &tls.Config{
+		InsecureSkipVerify: provider.Spec.InsecureSkipTlsVerify,
 	}
 
-	return config.NewBasicAuthRoundTripper(secret.User, secret.Password, "", "", baseTransport), nil
+	return config.NewBasicAuthRoundTripper(secret.User, secret.Password, "", "", transport), nil
 }
 
 func getPrometheusSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (*SecretData, error) {

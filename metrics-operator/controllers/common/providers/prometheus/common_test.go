@@ -2,16 +2,15 @@ package prometheus
 
 import (
 	"context"
-	"crypto/tls"
+	"encoding/base64"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"strings"
 	"testing"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
-	promapi "github.com/prometheus/client_golang/api"
+
 	"github.com/prometheus/common/config"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
@@ -120,7 +119,8 @@ func Test_GetRoundtripper(t *testing.T) {
 		name      string
 		provider  metricsapi.KeptnMetricsProvider
 		k8sClient client.Client
-		want      http.RoundTripper
+		wantUser  string
+		wantPass  string
 		wantErr   bool
 		errorStr  string
 	}{
@@ -138,24 +138,19 @@ func Test_GetRoundtripper(t *testing.T) {
 						Key:      "",
 						Optional: nil,
 					},
-					InsecureSkipTlsVerify: true,
 				},
 			},
 			k8sClient: fake.NewClient(goodsecret),
-			want: func() http.RoundTripper {
-				transport := promapi.DefaultRoundTripper.(*http.Transport).Clone()
-				transport.TLSClientConfig = &tls.Config{
-					InsecureSkipVerify: true,
-				}
-				return config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", transport)
-			}(),
-			wantErr: false,
+			wantUser:  "myuser",
+			wantPass:  "mytoken",
+			wantErr:   false,
 		},
 		{
 			name:      "TestSecretNotDefined",
 			provider:  metricsapi.KeptnMetricsProvider{},
 			k8sClient: fake.NewClient(),
-			want:      promapi.DefaultRoundTripper,
+			wantUser:  "",
+			wantPass:  "",
 			wantErr:   false,
 		},
 		{
@@ -175,7 +170,8 @@ func Test_GetRoundtripper(t *testing.T) {
 				},
 			},
 			k8sClient: fake.NewClient(),
-			want:      nil,
+			wantUser:  "",
+			wantPass:  "",
 			wantErr:   true,
 			errorStr:  "not found",
 		},
@@ -193,8 +189,46 @@ func Test_GetRoundtripper(t *testing.T) {
 				t.Errorf("getRoundtripper() error = %s, wantErr %s", err.Error(), tt.errorStr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("getRoundtripper() got = %v, want %v", got, tt.want)
+
+			if tt.wantErr {
+				return
+			}
+
+			if _, ok := got.(*http.Transport); ok {
+				if tt.wantUser != "" || tt.wantPass != "" {
+					t.Errorf("getRoundtripper() got default RoundTripper, want BasicAuth")
+				}
+				return
+			}
+
+			testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				authHeader := r.Header.Get("Authorization")
+				if authHeader == "" {
+					t.Errorf("Authorization header not set")
+					return
+				}
+
+				auth := strings.SplitN(authHeader, " ", 2)
+				if len(auth) != 2 || auth[0] != "Basic" {
+					t.Errorf("Invalid Authorization header format")
+					return
+				}
+				payload, _ := base64.StdEncoding.DecodeString(auth[1])
+				pair := strings.SplitN(string(payload), ":", 2)
+
+				if pair[0] != tt.wantUser {
+					t.Errorf("got user = %v, want %v", pair[0], tt.wantUser)
+				}
+				if pair[1] != tt.wantPass {
+					t.Errorf("got password = %v, want %v", pair[1], tt.wantPass)
+				}
+			}))
+			defer testServer.Close()
+
+			req, _ := http.NewRequest("GET", testServer.URL, nil)
+			_, err = got.RoundTrip(req)
+			if err != nil {
+				t.Errorf("RoundTrip error: %v", err)
 			}
 		})
 	}

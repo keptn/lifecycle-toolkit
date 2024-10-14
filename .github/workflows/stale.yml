@@ -17,8 +17,8 @@ jobs:
         with:
           days-before-stale: 60
           days-before-close: 7
-          exempt-issue-labels: "pinned,security,future,help wanted,integrations,known issue,known-limitation,Epic,area:security"
-          exempt-pr-labels: "pinned,security,future,help wanted,integrations,known issue,known-limitation,Epic,area:security"
+          exempt-issue-labels: "pinned,security,future,help wanted,integrations,known issue,known-limitation,Epic,area:security,never-stale"
+          exempt-pr-labels: "pinned,security,future,help wanted,integrations,known issue,known-limitation,Epic,area:security,never-stale"
           exempt-all-milestones: true
           stale-issue-message: |
             This issue has been automatically marked as stale because it has not had recent activity. It will be

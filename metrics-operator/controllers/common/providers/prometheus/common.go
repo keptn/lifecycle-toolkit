@@ -4,13 +4,12 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
-	"net/http"
-
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	promapi "github.com/prometheus/client_golang/api"
 	"github.com/prometheus/common/config"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"net/http"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -42,31 +41,35 @@ func (r RoundTripperRetriever) GetRoundTripper(ctx context.Context, provider met
 		return nil, err
 	}
 
-	transport := promapi.DefaultRoundTripper.(*http.Transport).Clone()
-	transport.TLSClientConfig = &tls.Config{
-		InsecureSkipVerify: provider.Spec.InsecureSkipTlsVerify,
+	baseTransport := promapi.DefaultRoundTripper
+
+	if provider.Spec.InsecureSkipTlsVerify {
+		if httpTransport, ok := baseTransport.(*http.Transport); ok {
+			newTransport := httpTransport.Clone()
+			newTransport.TLSClientConfig = &tls.Config{
+				InsecureSkipVerify: true,
+			}
+			baseTransport = newTransport
+		}
 	}
 
-	return config.NewBasicAuthRoundTripper(secret.User, secret.Password, "", "", transport), nil
+	return config.NewBasicAuthRoundTripper(secret.User, secret.Password, "", "", baseTransport), nil
 }
 
 func getPrometheusSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (*SecretData, error) {
 	if !provider.HasSecretDefined() {
 		return nil, ErrSecretKeyRefNotDefined
 	}
-
 	secret := &corev1.Secret{}
 	if err := k8sClient.Get(ctx, types.NamespacedName{Name: provider.Spec.SecretKeyRef.Name, Namespace: provider.Namespace}, secret); err != nil {
 		return nil, err
 	}
-
 	var secretData SecretData
 	user, ok := secret.Data[secretKeyUserName]
 	pw, yes := secret.Data[secretKeyPassword]
 	if !ok || !yes {
 		return nil, ErrInvalidSecretFormat
 	}
-
 	secretData.User = string(user)
 	secretData.Password = config.Secret(pw)
 	return &secretData, nil

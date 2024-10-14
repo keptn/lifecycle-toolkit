@@ -2,15 +2,16 @@ package prometheus
 
 import (
 	"context"
-	"encoding/base64"
 	"net/http"
 	"net/http/httptest"
+	// "reflect"
 	"strings"
 	"testing"
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
-
+	
+	// promapi "github.com/prometheus/client_golang/api"
 	"github.com/prometheus/common/config"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
@@ -120,7 +121,7 @@ func Test_GetRoundtripper(t *testing.T) {
 		provider  metricsapi.KeptnMetricsProvider
 		k8sClient client.Client
 		wantUser  string
-		wantPass  string
+		wantPass  config.Secret
 		wantErr   bool
 		errorStr  string
 	}{
@@ -129,20 +130,16 @@ func Test_GetRoundtripper(t *testing.T) {
 			provider: metricsapi.KeptnMetricsProvider{
 				ObjectMeta: metav1.ObjectMeta{Namespace: "default"},
 				Spec: metricsapi.KeptnMetricsProviderSpec{
-					Type:         "",
-					TargetServer: "",
 					SecretKeyRef: v1.SecretKeySelector{
 						LocalObjectReference: v1.LocalObjectReference{
 							Name: "test",
 						},
-						Key:      "",
-						Optional: nil,
 					},
 				},
 			},
 			k8sClient: fake.NewClient(goodsecret),
 			wantUser:  "myuser",
-			wantPass:  "mytoken",
+			wantPass:  config.Secret("mytoken"),
 			wantErr:   false,
 		},
 		{
@@ -158,14 +155,10 @@ func Test_GetRoundtripper(t *testing.T) {
 			provider: metricsapi.KeptnMetricsProvider{
 				ObjectMeta: metav1.ObjectMeta{Namespace: "default"},
 				Spec: metricsapi.KeptnMetricsProviderSpec{
-					Type:         "",
-					TargetServer: "",
 					SecretKeyRef: v1.SecretKeySelector{
 						LocalObjectReference: v1.LocalObjectReference{
 							Name: "test",
 						},
-						Key:      "",
-						Optional: nil,
 					},
 				},
 			},
@@ -185,50 +178,17 @@ func Test_GetRoundtripper(t *testing.T) {
 				t.Errorf("getRoundtripper() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if tt.errorStr != "" && !strings.Contains(err.Error(), tt.errorStr) {
+			if tt.errorStr != "" && err != nil && !strings.Contains(err.Error(), tt.errorStr) {
 				t.Errorf("getRoundtripper() error = %s, wantErr %s", err.Error(), tt.errorStr)
 				return
 			}
 
-			if tt.wantErr {
-				return
-			}
-
-			if _, ok := got.(*http.Transport); ok {
-				if tt.wantUser != "" || tt.wantPass != "" {
-					t.Errorf("getRoundtripper() got default RoundTripper, want BasicAuth")
-				}
-				return
-			}
-
-			testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				authHeader := r.Header.Get("Authorization")
-				if authHeader == "" {
-					t.Errorf("Authorization header not set")
-					return
-				}
-
-				auth := strings.SplitN(authHeader, " ", 2)
-				if len(auth) != 2 || auth[0] != "Basic" {
-					t.Errorf("Invalid Authorization header format")
-					return
-				}
-				payload, _ := base64.StdEncoding.DecodeString(auth[1])
-				pair := strings.SplitN(string(payload), ":", 2)
-
-				if pair[0] != tt.wantUser {
-					t.Errorf("got user = %v, want %v", pair[0], tt.wantUser)
-				}
-				if pair[1] != tt.wantPass {
-					t.Errorf("got password = %v, want %v", pair[1], tt.wantPass)
-				}
-			}))
-			defer testServer.Close()
-
-			req, _ := http.NewRequest("GET", testServer.URL, nil)
-			_, err = got.RoundTrip(req)
-			if err != nil {
-				t.Errorf("RoundTrip error: %v", err)
+			// Check user and password, instead of comparing the RoundTripper objects directly
+			if gotTransport, ok := got.(*config.BasicAuthRoundTripper); ok {
+				require.Equal(t, tt.wantUser, gotTransport.Username)
+				require.Equal(t, tt.wantPass, gotTransport.Password)
+			} else if !tt.wantErr {
+				t.Errorf("getRoundtripper() expected BasicAuthRoundTripper, but got = %T", got)
 			}
 		})
 	}

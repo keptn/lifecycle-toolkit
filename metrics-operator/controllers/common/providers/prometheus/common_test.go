@@ -10,7 +10,6 @@ import (
 
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
-	
 	// promapi "github.com/prometheus/client_golang/api"
 	"github.com/prometheus/common/config"
 	"github.com/stretchr/testify/require"
@@ -116,12 +115,13 @@ func Test_GetRoundtripper(t *testing.T) {
 			"password": []byte("mytoken"),
 		},
 	}
+
 	tests := []struct {
 		name      string
 		provider  metricsapi.KeptnMetricsProvider
 		k8sClient client.Client
 		wantUser  string
-		wantPass  config.Secret
+		wantPass  string
 		wantErr   bool
 		errorStr  string
 	}{
@@ -130,16 +130,20 @@ func Test_GetRoundtripper(t *testing.T) {
 			provider: metricsapi.KeptnMetricsProvider{
 				ObjectMeta: metav1.ObjectMeta{Namespace: "default"},
 				Spec: metricsapi.KeptnMetricsProviderSpec{
+					Type:         "",
+					TargetServer: "",
 					SecretKeyRef: v1.SecretKeySelector{
 						LocalObjectReference: v1.LocalObjectReference{
 							Name: "test",
 						},
+						Key:      "",
+						Optional: nil,
 					},
 				},
 			},
 			k8sClient: fake.NewClient(goodsecret),
 			wantUser:  "myuser",
-			wantPass:  config.Secret("mytoken"),
+			wantPass:  "mytoken",
 			wantErr:   false,
 		},
 		{
@@ -155,10 +159,14 @@ func Test_GetRoundtripper(t *testing.T) {
 			provider: metricsapi.KeptnMetricsProvider{
 				ObjectMeta: metav1.ObjectMeta{Namespace: "default"},
 				Spec: metricsapi.KeptnMetricsProviderSpec{
+					Type:         "",
+					TargetServer: "",
 					SecretKeyRef: v1.SecretKeySelector{
 						LocalObjectReference: v1.LocalObjectReference{
 							Name: "test",
 						},
+						Key:      "",
+						Optional: nil,
 					},
 				},
 			},
@@ -173,22 +181,30 @@ func Test_GetRoundtripper(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := RoundTripperRetriever{}.GetRoundTripper(context.TODO(), tt.provider, tt.k8sClient)
-			t.Log(err)
+
+			// Check if an error was expected and if the error occurred.
 			if (err != nil) != tt.wantErr {
 				t.Errorf("getRoundtripper() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
+			// If an error string is expected, ensure the error message contains it.
 			if tt.errorStr != "" && err != nil && !strings.Contains(err.Error(), tt.errorStr) {
 				t.Errorf("getRoundtripper() error = %s, wantErr %s", err.Error(), tt.errorStr)
 				return
 			}
 
-			// Check user and password, instead of comparing the RoundTripper objects directly
-			if gotTransport, ok := got.(*config.BasicAuthRoundTripper); ok {
-				require.Equal(t, tt.wantUser, gotTransport.Username)
-				require.Equal(t, tt.wantPass, gotTransport.Password)
-			} else if !tt.wantErr {
-				t.Errorf("getRoundtripper() expected BasicAuthRoundTripper, but got = %T", got)
+			// If no error is expected, check the credentials inside the round tripper
+			if !tt.wantErr {
+				basicAuthRT, ok := got.(*config.BasicAuthRoundTripper)
+				if !ok {
+					t.Errorf("Expected BasicAuthRoundTripper, got %T", got)
+					return
+				}
+				if basicAuthRT.User != tt.wantUser || basicAuthRT.Password != tt.wantPass {
+					t.Errorf("getRoundtripper() credentials = (%v, %v), want (%v, %v)",
+						basicAuthRT.User, basicAuthRT.Password, tt.wantUser, tt.wantPass)
+				}
 			}
 		})
 	}

@@ -116,12 +116,13 @@ func Test_GetRoundtripper(t *testing.T) {
 		},
 	}
 	tests := []struct {
-		name      string
-		provider  metricsapi.KeptnMetricsProvider
-		k8sClient client.Client
-		want      http.RoundTripper
-		wantErr   bool
-		errorStr  string
+		name                  string
+		provider              metricsapi.KeptnMetricsProvider
+		k8sClient             client.Client
+		want                  http.RoundTripper
+		wantErr               bool
+		errorStr              string
+		insecureSkipTlsVerify bool
 	}{
 		{
 			name: "TestSuccess",
@@ -137,6 +138,7 @@ func Test_GetRoundtripper(t *testing.T) {
 						Key:      "",
 						Optional: nil,
 					},
+					InsecureSkipTlsVerify: false,
 				},
 			},
 			k8sClient: fake.NewClient(goodsecret),
@@ -171,6 +173,25 @@ func Test_GetRoundtripper(t *testing.T) {
 			wantErr:   true,
 			errorStr:  "not found",
 		},
+		{
+			name: "TestInsecureSkipTlsVerifyEnabled",
+			provider: metricsapi.KeptnMetricsProvider{
+				ObjectMeta: metav1.ObjectMeta{Namespace: "default"},
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					SecretKeyRef: v1.SecretKeySelector{
+						LocalObjectReference: v1.LocalObjectReference{
+							Name: "test",
+						},
+						Key:      "",
+						Optional: nil,
+					},
+					InsecureSkipTlsVerify: true,
+				},
+			},
+			k8sClient: fake.NewClient(goodsecret),
+			want:      config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
+			wantErr:   false,
+		},
 	}
 
 	for _, tt := range tests {
@@ -187,6 +208,14 @@ func Test_GetRoundtripper(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("getRoundtripper() got = %v, want %v", got, tt.want)
+			}
+
+			if transport, ok := got.(*config.BasicAuthRoundTripper); ok {
+				if transport.Transport != nil {
+					if httpTransport, ok := transport.Transport.(*http.Transport); ok {
+						require.Equal(t, tt.provider.Spec.InsecureSkipTlsVerify, httpTransport.TLSClientConfig.InsecureSkipVerify, "Expected InsecureSkipTlsVerify to be set")
+					}
+				}
 			}
 		})
 	}

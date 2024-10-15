@@ -49,7 +49,6 @@ func (r RoundTripperRetriever) GetRoundTripper(ctx context.Context, provider met
 	return config.NewBasicAuthRoundTripper(secret.User, secret.Password, "", "", transport), nil
 }
 
-
 func getPrometheusSecret(ctx context.Context, provider metricsapi.KeptnMetricsProvider, k8sClient client.Client) (*SecretData, error) {
 	if !provider.HasSecretDefined() {
 		return nil, ErrSecretKeyRefNotDefined

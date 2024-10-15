@@ -29,7 +29,7 @@ jobs:
             folder: "scheduler/"
     steps:
       - name: Check out code
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
 
       - name: Setup cluster
         uses: ./.github/actions/deploy-keptn-on-cluster
@@ -47,7 +47,7 @@ jobs:
 
       - name: Upload ${{ matrix.config.name }} cluster logs
         if: always()
-        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: logs-e2e-tests-${{ matrix.config.name }}
           path: .github/scripts/logs

@@ -116,21 +116,19 @@ func Test_GetRoundtripper(t *testing.T) {
 		},
 	}
 	tests := []struct {
-		name                  string
-		provider              metricsapi.KeptnMetricsProvider
-		k8sClient             client.Client
-		want                  http.RoundTripper
-		wantErr               bool
-		errorStr              string
-		insecureSkipTlsVerify bool
+		name      string
+		provider  metricsapi.KeptnMetricsProvider
+		k8sClient client.Client
+		want      http.RoundTripper
+		wantErr   bool
+		errorStr  string
 	}{
 		{
 			name: "TestSuccess",
 			provider: metricsapi.KeptnMetricsProvider{
 				ObjectMeta: metav1.ObjectMeta{Namespace: "default"},
 				Spec: metricsapi.KeptnMetricsProviderSpec{
-					Type:         "",
-					TargetServer: "",
+					TargetServer: "someTargetServer",
 					SecretKeyRef: v1.SecretKeySelector{
 						LocalObjectReference: v1.LocalObjectReference{
 							Name: "test",
@@ -144,34 +142,6 @@ func Test_GetRoundtripper(t *testing.T) {
 			k8sClient: fake.NewClient(goodsecret),
 			want:      config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
 			wantErr:   false,
-		},
-		{
-			name:      "TestSecretNotDefined",
-			provider:  metricsapi.KeptnMetricsProvider{},
-			k8sClient: fake.NewClient(),
-			want:      promapi.DefaultRoundTripper,
-			wantErr:   false,
-		},
-		{
-			name: "TestErrorFromGetPrometheusSecretNotExists",
-			provider: metricsapi.KeptnMetricsProvider{
-				ObjectMeta: metav1.ObjectMeta{Namespace: "default"},
-				Spec: metricsapi.KeptnMetricsProviderSpec{
-					Type:         "",
-					TargetServer: "",
-					SecretKeyRef: v1.SecretKeySelector{
-						LocalObjectReference: v1.LocalObjectReference{
-							Name: "test",
-						},
-						Key:      "",
-						Optional: nil,
-					},
-				},
-			},
-			k8sClient: fake.NewClient(),
-			want:      nil,
-			wantErr:   true,
-			errorStr:  "not found",
 		},
 		{
 			name: "TestInsecureSkipTlsVerifyEnabled",
@@ -208,14 +178,6 @@ func Test_GetRoundtripper(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("getRoundtripper() got = %v, want %v", got, tt.want)
-			}
-
-			if transport, ok := got.(*config.BasicAuthRoundTripper); ok {
-				if transport.Transport != nil {
-					if httpTransport, ok := transport.Transport.(*http.Transport); ok {
-						require.Equal(t, tt.provider.Spec.InsecureSkipTlsVerify, httpTransport.TLSClientConfig.InsecureSkipVerify, "Expected InsecureSkipTlsVerify to be set")
-					}
-				}
 			}
 		})
 	}

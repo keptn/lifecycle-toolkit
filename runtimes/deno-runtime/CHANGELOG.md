@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.6](https://github.com/keptn/lifecycle-toolkit/compare/deno-runtime-v2.0.5...deno-runtime-v2.0.6) (2024-10-16)
+
+
+### Dependency Updates
+
+* update denoland/deno docker tag to alpine-1.46.1 ([#3698](https://github.com/keptn/lifecycle-toolkit/issues/3698)) ([4cdc75d](https://github.com/keptn/lifecycle-toolkit/commit/4cdc75d540ff5546db312d31e57bf5705fb46a41))
+* update denoland/deno docker tag to alpine-1.46.3 ([#3730](https://github.com/keptn/lifecycle-toolkit/issues/3730)) ([31f1d99](https://github.com/keptn/lifecycle-toolkit/commit/31f1d993c8f45665f6cdb93ae1048120b93dbd03))
+
 ## [2.0.5](https://github.com/keptn/lifecycle-toolkit/compare/deno-runtime-v2.0.4...deno-runtime-v2.0.5) (2024-08-06)
 
 

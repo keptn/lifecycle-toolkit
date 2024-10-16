@@ -22,7 +22,7 @@ env:
 jobs:
   prepare-security-scans:
     name: "Prepare Security Scans"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Determine Target Branch
         id: determine_branch
@@ -81,7 +81,7 @@ jobs:
   security-scans:
     name: "Security Scans"
     needs: prepare-security-scans
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -210,7 +210,7 @@ jobs:
 
   trivy:
     name: Trivy
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: prepare-security-scans
     strategy:
       fail-fast: false
@@ -259,7 +259,7 @@ jobs:
 
   govulncheck:
     name: Govulncheck
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -288,7 +288,7 @@ jobs:
 
   create_issue:
     name: Create GitHub Issue
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [security-scans, govulncheck, trivy]
     if: failure() && github.event_name == 'schedule'
     steps:

@@ -32,7 +32,7 @@ defaults:
 jobs:
   prepare_ci_run:
     name: Prepare CI Run
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       GIT_SHA: ${{ steps.extract_branch.outputs.GIT_SHA }}
       BRANCH: ${{ steps.extract_branch.outputs.BRANCH }}
@@ -77,7 +77,7 @@ jobs:
   test:
     name: Unit Tests
     needs: prepare_ci_run
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         config:
@@ -114,7 +114,7 @@ jobs:
   build_image:
     name: Build Docker Image
     needs: prepare_ci_run
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       BRANCH: ${{ needs.prepare_ci_run.outputs.BRANCH }}
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
@@ -182,7 +182,7 @@ jobs:
   image_tag:
     name: Store tag of the built images
     needs: prepare_ci_run
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       DATETIME: ${{ needs.prepare_ci_run.outputs.DATETIME }}
     steps:
@@ -289,7 +289,7 @@ jobs:
             path: metrics-operator/chart
           - name: keptn-cert-manager
             path: keptn-cert-manager/chart
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out keptn repo
         uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1

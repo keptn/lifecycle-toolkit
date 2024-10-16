@@ -23,7 +23,7 @@ env:
 
 jobs:
   release-please:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       keptn-release-created: ${{ steps.release.outputs.release_created }}
       keptn-tag-name: ${{ steps.release.outputs.tag_name }}
@@ -134,7 +134,7 @@ jobs:
       - release-please
     strategy:
       matrix: ${{ fromJson(needs.release-please.outputs.build-matrix) }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
       packages: write

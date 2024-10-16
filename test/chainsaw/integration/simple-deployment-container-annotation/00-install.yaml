@@ -20,7 +20,7 @@ spec:
         keptn.sh/metadata: "commit-id=1234,stage=dev"
     spec:
       containers:
-        - image: busybox:1.37
+        - image: busybox:1.37.0
           name: busybox
           command: ['sh', '-c', 'echo The app is running! && sleep infinity']
         - name: init-myservice

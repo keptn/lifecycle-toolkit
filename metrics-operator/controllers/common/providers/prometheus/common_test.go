@@ -128,7 +128,8 @@ func Test_GetRoundtripper(t *testing.T) {
 			provider: metricsapi.KeptnMetricsProvider{
 				ObjectMeta: metav1.ObjectMeta{Namespace: "default"},
 				Spec: metricsapi.KeptnMetricsProviderSpec{
-					TargetServer: "someTargetServer",
+					Type:         "",
+					TargetServer: "",
 					SecretKeyRef: v1.SecretKeySelector{
 						LocalObjectReference: v1.LocalObjectReference{
 							Name: "test",
@@ -136,12 +137,39 @@ func Test_GetRoundtripper(t *testing.T) {
 						Key:      "",
 						Optional: nil,
 					},
-					InsecureSkipTlsVerify: false,
 				},
 			},
 			k8sClient: fake.NewClient(goodsecret),
 			want:      config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
 			wantErr:   false,
+		},
+		{
+			name:      "TestSecretNotDefined",
+			provider:  metricsapi.KeptnMetricsProvider{},
+			k8sClient: fake.NewClient(),
+			want:      promapi.DefaultRoundTripper,
+			wantErr:   false,
+		},
+		{
+			name: "TestErrorFromGetPrometheusSecretNotExists",
+			provider: metricsapi.KeptnMetricsProvider{
+				ObjectMeta: metav1.ObjectMeta{Namespace: "default"},
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					Type:         "",
+					TargetServer: "",
+					SecretKeyRef: v1.SecretKeySelector{
+						LocalObjectReference: v1.LocalObjectReference{
+							Name: "test",
+						},
+						Key:      "",
+						Optional: nil,
+					},
+				},
+			},
+			k8sClient: fake.NewClient(),
+			want:      nil,
+			wantErr:   true,
+			errorStr:  "not found",
 		},
 		{
 			name: "TestInsecureSkipTlsVerifyEnabled",

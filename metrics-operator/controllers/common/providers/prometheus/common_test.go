@@ -197,7 +197,7 @@ func Test_GetRoundtripper(t *testing.T) {
 			got, err := RoundTripperRetriever{}.GetRoundTripper(context.TODO(), tt.provider, tt.k8sClient)
 			t.Log(err)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("getRoundtripper() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("getRoundtripper() error. = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if tt.errorStr != "" && !strings.Contains(err.Error(), tt.errorStr) {

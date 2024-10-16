@@ -309,11 +309,6 @@ body {
         margin-right: 4rem;
         align-items: center;
     }
-
-    .cncf-disclaimer {
-        width: 800px;
-        height: 200px;
-    }
 }
 
 @media (max-width: 600px) {

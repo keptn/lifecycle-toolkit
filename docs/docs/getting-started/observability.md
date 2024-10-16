@@ -282,8 +282,14 @@ So let's install new Observability components to help us:
   Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
 - [Grafana](https://grafana.com) (and some prebuilt dashboards): Visualise the data
 
-![add observability](./assets/install01.png)
+**Note**
+The following is an example uses the Jaeger `allInOne` image, which has the UI, query service as well as collector. 
+The Jaeger installation process bundles the configured OpenTelemetery(OTEL) collector.
+There are other tools including `jaeger-ui` without `allInOne` image, use OpenTelemetery collector directly.
+[See for more information](../guides/otel.md)
 
+![add observability](./assets/install01.png)
+ 
 ## Step 8: Install Cert Manager
 
 Jaeger requires Cert Manager, so install it now:

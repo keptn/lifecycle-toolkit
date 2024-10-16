@@ -171,6 +171,25 @@ func Test_GetRoundtripper(t *testing.T) {
 			wantErr:   true,
 			errorStr:  "not found",
 		},
+		{
+			name: "TestInsecureSkipTlsVerifyEnabled",
+			provider: metricsapi.KeptnMetricsProvider{
+				ObjectMeta: metav1.ObjectMeta{Namespace: "default"},
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					SecretKeyRef: v1.SecretKeySelector{
+						LocalObjectReference: v1.LocalObjectReference{
+							Name: "test",
+						},
+						Key:      "",
+						Optional: nil,
+					},
+					InsecureSkipTlsVerify: true,
+				},
+			},
+			k8sClient: fake.NewClient(goodsecret),
+			want:      config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
+			wantErr:   false,
+		},
 	}
 
 	for _, tt := range tests {
@@ -178,7 +197,7 @@ func Test_GetRoundtripper(t *testing.T) {
 			got, err := RoundTripperRetriever{}.GetRoundTripper(context.TODO(), tt.provider, tt.k8sClient)
 			t.Log(err)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("getRoundtripper() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("getRoundtripper() error. = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if tt.errorStr != "" && !strings.Contains(err.Error(), tt.errorStr) {

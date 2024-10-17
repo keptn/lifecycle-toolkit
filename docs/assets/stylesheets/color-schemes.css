@@ -46,7 +46,7 @@
     --md-default-fg-color--light:        hsla(0, 0%, 100%, 0.7);
     --md-default-fg-color--lighter:      hsla(0, 0%, 100%, 0.3);
     --md-default-fg-color--lightest:     hsla(0, 0%, 100%, 0.12);
-    --md-default-bg-color:               hsla(0, 0%, 0%, 0.67);
+    --md-default-bg-color:               rgb(30, 30, 30);
     --md-default-bg-color--light:        hsla(0, 0%, 0%, 0.54);
     --md-default-bg-color--lighter:      hsla(0, 0%, 0%, 0.32);
     --md-default-bg-color--lightest:     hsla(0, 0%, 0%, 0.07);

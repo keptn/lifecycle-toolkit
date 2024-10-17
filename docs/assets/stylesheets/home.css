@@ -118,6 +118,16 @@ body {
     margin: 0;
 }
 
+[data-md-color-scheme="slate"] .tx-hero h1 {
+    background: #D9D9D9DE;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    font-size: 4rem;
+    margin: 0;
+}
+
 .hero-subtitle {
     font-size: 1.25rem;
     font-weight: 300;
@@ -270,7 +280,6 @@ body {
     flex-shrink: 0;
     border-radius: 0.2rem;
     box-shadow: var(--md-shadow-z2);
-    width: 25rem;
     max-width: 100%;
 }
 

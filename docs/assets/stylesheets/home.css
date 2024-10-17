@@ -394,7 +394,7 @@ body {
 
 @media screen and (max-width: 59.9375em) {
     .mdx-spotlight__feature {
-        flex-direction: column;
+        flex-direction: column-reverse;
         gap: 0;
     }
 

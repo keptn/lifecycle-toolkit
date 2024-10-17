@@ -7,7 +7,7 @@ lifecycleOperator:
   lifecycleOperator:
     image:
       repository: busybox
-      tag: 1.35
+      tag: 1.37
       imagePullPolicy: Always
     hostNetwork: true
   scheduler:

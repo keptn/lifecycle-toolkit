@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM golang:1.23.1-alpine3.19 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.23.2-alpine3.19 AS builder
 
 ENV CGO_ENABLED=0
 
@@ -8,7 +8,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-ARG CONTROLLER_TOOLS_VERSION=v0.16.2
+ARG CONTROLLER_TOOLS_VERSION=v0.16.4
 RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@$CONTROLLER_TOOLS_VERSION
 
 # Copy the go source

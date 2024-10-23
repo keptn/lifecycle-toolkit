@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
-	// "reflect"
 	"strings"
 	"testing"
 
@@ -116,12 +115,14 @@ func Test_GetRoundtripper(t *testing.T) {
 		},
 	}
 	tests := []struct {
-		name      string
-		provider  metricsapi.KeptnMetricsProvider
-		k8sClient client.Client
-		want      http.RoundTripper
-		wantErr   bool
-		errorStr  string
+		name            string
+		provider        metricsapi.KeptnMetricsProvider
+		k8sClient       client.Client
+		wantUser        string
+		wantPassword    string
+		wantRoundTripper http.RoundTripper
+		wantErr         bool
+		errorStr        string
 	}{
 		{
 			name: "TestSuccess",
@@ -140,14 +141,18 @@ func Test_GetRoundtripper(t *testing.T) {
 				},
 			},
 			k8sClient: fake.NewClient(goodsecret),
-			want:      config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
+			wantUser:         "myuser",
+			wantPassword:     "mytoken",
+			wantRoundTripper: config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
 			wantErr:   false,
 		},
 		{
 			name:      "TestSecretNotDefined",
 			provider:  metricsapi.KeptnMetricsProvider{},
 			k8sClient: fake.NewClient(),
-			want:      promapi.DefaultRoundTripper,
+			wantUser:         "myuser",
+			wantPassword:     "mytoken",
+			wantRoundTripper: config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
 			wantErr:   false,
 		},
 		{
@@ -167,7 +172,9 @@ func Test_GetRoundtripper(t *testing.T) {
 				},
 			},
 			k8sClient: fake.NewClient(),
-			want:      nil,
+			wantUser:         "myuser",
+			wantPassword:     "mytoken",
+			wantRoundTripper: config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
 			wantErr:   true,
 			errorStr:  "not found",
 		},
@@ -206,9 +213,6 @@ func Test_GetRoundtripper(t *testing.T) {
 			if !tt.wantErr && got == nil {
 				t.Errorf("getRoundtripper() returned nil, expected a RoundTripper")
 			}
-			// if !reflect.DeepEqual(got, tt.want) {
-			// 	t.Errorf("getRoundtripper() got = %v, want %v", got, tt.want)
-			// }
 			if tr, ok := got.(*http.Transport); ok {
 				if tr.TLSClientConfig.InsecureSkipVerify != tt.provider.Spec.InsecureSkipTlsVerify {
 					t.Errorf("RoundTripper TLSClientConfig.InsecureSkipVerify = %v, expected %v",

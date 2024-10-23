@@ -115,14 +115,14 @@ func Test_GetRoundtripper(t *testing.T) {
 		},
 	}
 	tests := []struct {
-		name            string
-		provider        metricsapi.KeptnMetricsProvider
-		k8sClient       client.Client
-		wantUser        string
-		wantPassword    string
+		name             string
+		provider         metricsapi.KeptnMetricsProvider
+		k8sClient        client.Client
+		wantUser         string
+		wantPassword     string
 		wantRoundTripper http.RoundTripper
-		wantErr         bool
-		errorStr        string
+		wantErr          bool
+		errorStr         string
 	}{
 		{
 			name: "TestSuccess",
@@ -140,20 +140,20 @@ func Test_GetRoundtripper(t *testing.T) {
 					},
 				},
 			},
-			k8sClient: fake.NewClient(goodsecret),
+			k8sClient:        fake.NewClient(goodsecret),
 			wantUser:         "myuser",
 			wantPassword:     "mytoken",
 			wantRoundTripper: config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
-			wantErr:   false,
+			wantErr:          false,
 		},
 		{
-			name:      "TestSecretNotDefined",
-			provider:  metricsapi.KeptnMetricsProvider{},
-			k8sClient: fake.NewClient(),
+			name:             "TestSecretNotDefined",
+			provider:         metricsapi.KeptnMetricsProvider{},
+			k8sClient:        fake.NewClient(),
 			wantUser:         "myuser",
 			wantPassword:     "mytoken",
 			wantRoundTripper: config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
-			wantErr:   false,
+			wantErr:          false,
 		},
 		{
 			name: "TestErrorFromGetPrometheusSecretNotExists",
@@ -171,12 +171,12 @@ func Test_GetRoundtripper(t *testing.T) {
 					},
 				},
 			},
-			k8sClient: fake.NewClient(),
+			k8sClient:        fake.NewClient(),
 			wantUser:         "myuser",
 			wantPassword:     "mytoken",
 			wantRoundTripper: config.NewBasicAuthRoundTripper("myuser", "mytoken", "", "", promapi.DefaultRoundTripper),
-			wantErr:   true,
-			errorStr:  "not found",
+			wantErr:          true,
+			errorStr:         "not found",
 		},
 		{
 			name: "TestInsecureSkipTlsVerifyEnabled",

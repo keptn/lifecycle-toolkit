@@ -29,7 +29,7 @@ The following is an imperative walkthrough.
 By the end of this page, here is what will be built.
 The system will be built in stages.
 
-![system overview](./assets/Keptn.png)
+![system overview](./assets/install01.png)
 
 ## The Basics: A Deployment, Keptn and DORA Metrics
 
@@ -278,11 +278,11 @@ So let's install new Observability components to help us:
 - [Cert manager](https://cert-manager.io): Jaeger requires cert-manager
 - [Jaeger](https://jaegertracing.io): Store and view DORA deployment traces
 - [OpenTelemetry collector](https://opentelemetry.io/docs/collector/):(in this guide, we will use the OTel collector that comes bundled with the Jaeger `allInOne` image)
-- [Prometheus](https://prometheus.io): Store DORA metrics
   Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
+- [Prometheus](https://prometheus.io): Store DORA metrics
 - [Grafana](https://grafana.com) (and some prebuilt dashboards): Visualise the data
 
-![add observability](./assets/Keptn.png)
+![add observability](./assets/install01.png)
 
 ## Step 8: Install Cert Manager
 

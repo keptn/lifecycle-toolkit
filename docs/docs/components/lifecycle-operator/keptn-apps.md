@@ -140,7 +140,7 @@ annotation/label is populated:
 
 **Note**:Keptn application discovery determines the name of the `KeptnWorkload`
  by concatenating the values of the `app.kubernetes.io/name` (or `keptn.sh/workload`)
-  and `app.kubernetes.io/part`-of (or `keptn.sh/app`) annotations. This means that when
+  and `app.kubernetes.io/part-of` (or `keptn.sh/app`) annotations. This means that when
   only workload and version annotations/labels are provided—without the `keptn.sh/app`
   or `app.kubernetes.io/part`-of annotation—Keptn creates a `KeptnApp` resource for each
   `KeptnWorkload`. Consequently, observability traces will capture individual `KeptnWorkload`

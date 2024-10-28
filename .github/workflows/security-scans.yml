@@ -99,7 +99,7 @@ jobs:
     steps:
       - name: Set up Go
         if: matrix.tool == 'kubeconform'
-        uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32 # v5
+        uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
@@ -242,7 +242,7 @@ jobs:
 
       - name: Trivy image scan scheduler
         if: matrix.image == 'scheduler'
-        uses: aquasecurity/trivy-action@5681af892cd0f4997658e2bacc62bd0a894cf564 # 0.27.0
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2 # 0.28.0
         with:
           input: "images/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
@@ -251,7 +251,7 @@ jobs:
 
       - name: Trivy image scan
         if: matrix.image != 'scheduler'
-        uses: aquasecurity/trivy-action@5681af892cd0f4997658e2bacc62bd0a894cf564 # 0.27.0
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2 # 0.28.0
         with:
           input: "images/${{ matrix.image }}-image.tar"
           severity: 'CRITICAL,HIGH'
@@ -270,7 +270,7 @@ jobs:
           - "keptn-cert-manager"
     steps:
       - name: Set up Go 1.x
-        uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32 # v5
+        uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5
         with:
           cache-dependency-path: ${{ matrix.artifact }}/go.sum
           go-version: ${{ env.GO_VERSION }}

@@ -138,7 +138,7 @@ annotation/label is populated:
   or `app.kubernetes.io/part-of` annotation/label is populated),
   one `KeptnApp` resource is created automatically for each workload.
 
-**Note**:Keptn application discovery determines the name of the `KeptnWorkload`
+> **Note**: Keptn application discovery determines the name of the `KeptnWorkload`
  by concatenating the values of the `app.kubernetes.io/name` (or `keptn.sh/workload`)
   and `app.kubernetes.io/part-of` (or `keptn.sh/app`) annotations. This means that when
   only workload and version annotations/labels are provided — without the `keptn.sh/app`

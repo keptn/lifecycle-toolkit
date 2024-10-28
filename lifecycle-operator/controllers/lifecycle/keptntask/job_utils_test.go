@@ -158,6 +158,7 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 
 	jobStatus := batchv1.JobStatus{
 		Conditions: []batchv1.JobCondition{
+			//todo
 			{
 				Type: batchv1.JobFailed,
 			},
@@ -191,6 +192,7 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 
 	// now, set the job to succeeded
 	job.Status.Conditions = []batchv1.JobCondition{
+		//todo
 		{
 			Type: batchv1.JobComplete,
 		},

@@ -98,4 +98,4 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 )
 
-replace google.golang.org/protobuf => google.golang.org/protobuf v1.34.2
+replace google.golang.org/protobuf => google.golang.org/protobuf v1.35.1

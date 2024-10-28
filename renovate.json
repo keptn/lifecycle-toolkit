@@ -42,7 +42,8 @@
     },
     {
       "matchManagers": ["github-actions"],
-      "addLabels": ["github_actions"]
+      "addLabels": ["github_actions"],
+      "groupName": "github-actions"
     },
     {
       "matchManagers": ["dockerfile"],

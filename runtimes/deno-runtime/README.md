@@ -3,7 +3,7 @@
 ## Build
 
 ```shell
-docker build -t keptnsandbox/klc-runtime:${VERSION} .
+docker build -t keptn/deno-runtime:${VERSION} .
 ```
 
 ## Usage

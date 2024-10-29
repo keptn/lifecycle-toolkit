@@ -17,7 +17,7 @@ defaults:
 env:
   GO_VERSION: "~1.23"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.16.4"
+  CONTROLLER_TOOLS_VERSION: "v0.16.5"
   SCHEDULER_COMPATIBLE_K8S_VERSION: "v0.24.3"
   PUBLISHABLE_ITEMS: '[".","lifecycle-operator","metrics-operator","keptn-cert-manager","runtimes/deno-runtime","runtimes/python-runtime","scheduler"]'
 

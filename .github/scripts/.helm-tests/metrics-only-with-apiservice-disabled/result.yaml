@@ -44,7 +44,7 @@ kind: CustomResourceDefinition
 metadata:
   name: analyses.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -562,7 +562,7 @@ kind: CustomResourceDefinition
 metadata:
   name: analysisdefinitions.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -1593,7 +1593,7 @@ kind: CustomResourceDefinition
 metadata:
   name: analysisvaluetemplates.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -1802,7 +1802,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnmetrics.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -2515,7 +2515,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnmetricsproviders.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
   labels:
     app.kubernetes.io/part-of: keptn
     crdGroup: metrics.keptn.sh
@@ -2579,7 +2579,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -2645,7 +2644,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -2705,7 +2703,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -2772,7 +2769,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -2845,49 +2841,13 @@ rules:
       - metrics.keptn.sh
     resources:
       - analyses/finalizers
-    verbs:
-      - update
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
-      - analyses/status
-    verbs:
-      - get
-      - patch
-      - update
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
-      - analysisdefinitions
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
-      - analysisvaluetemplates
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
-      - keptnmetrics
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
       - keptnmetrics/finalizers
     verbs:
       - update
   - apiGroups:
       - metrics.keptn.sh
     resources:
+      - analyses/status
       - keptnmetrics/status
     verbs:
       - get
@@ -2896,14 +2856,10 @@ rules:
   - apiGroups:
       - metrics.keptn.sh
     resources:
+      - analysisdefinitions
+      - analysisvaluetemplates
+      - keptnmetrics
       - keptnmetricsproviders
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
       - providers
     verbs:
       - get

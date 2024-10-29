@@ -144,6 +144,6 @@ annotation/label is populated:
   This means that when only workload and version annotations/labels are provided — without
   the `keptn.sh/app` or `app.kubernetes.io/part-of` annotation — Keptn creates a `KeptnApp`
   resource for each `KeptnWorkload`.
-  Consequently, observability traces will capture individual`KeptnWorkload`
+  Consequently, observability traces will capture individual `KeptnWorkload`
   resources, but they will not represent the combined workloads that make up the complete
   deployed application.

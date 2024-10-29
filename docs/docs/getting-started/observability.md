@@ -277,9 +277,10 @@ So let's install new Observability components to help us:
 
 - [Cert manager](https://cert-manager.io): Jaeger requires cert-manager
 - [Jaeger](https://jaegertracing.io): Store and view DORA deployment traces
+- [OpenTelemetry collector](https://opentelemetry.io/docs/collector/): Scrape metrics from the above DORA metrics endpoint
+  & forward to Prometheus.
+  In this guide, we will use the OTel collector that comes bundled with the Jaeger `allInOne` image.
 - [Prometheus](https://prometheus.io): Store DORA metrics
-- [OpenTelemetry collector](https://opentelemetry.io/docs/collector/):
-  Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
 - [Grafana](https://grafana.com) (and some prebuilt dashboards): Visualise the data
 
 ![add observability](./assets/install01.png)

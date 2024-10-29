@@ -152,6 +152,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	}, resultingJob.Annotations)
 }
 
+//nolint:dupl
 func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 	namespace := "default"
 	taskDefinitionName := "my-task-definition"
@@ -201,6 +202,7 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 	require.Equal(t, apicommon.StateSucceeded, task.Status.Status)
 }
 
+//nolint:dupl
 func TestKeptnTaskReconciler_updateTaskStatusK8s31(t *testing.T) {
 	namespace := "default"
 	taskDefinitionName := "my-task-definition"

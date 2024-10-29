@@ -10,9 +10,7 @@
     "group:kubernetes",
     ":automergePatch"
   ],
-  "addLabels": [
-    "dependencies"
-  ],
+  "addLabels": ["dependencies"],
   "cloneSubmodules": true,
   "prConcurrentLimit": 15,
   "minimumReleaseAge": "3 days",
@@ -40,47 +38,29 @@
       ]
     },
     {
-      "matchManagers": [
-        "gomod"
-      ],
-      "addLabels": [
-        "go"
-      ]
+      "matchManagers": ["gomod"],
+      "addLabels": ["go"]
     },
     {
-      "matchManagers": [
-        "github-actions"
-      ],
-      "addLabels": [
-        "github_actions"
-      ],
+      "matchManagers": ["github-actions"],
+      "addLabels": ["github_actions"],
       "groupName": "github actions",
       "groupSlug": "github-actions"
     },
     {
-      "matchManagers": [
-        "dockerfile"
-      ],
-      "addLabels": [
-        "docker"
-      ]
+      "matchManagers": ["dockerfile"],
+      "addLabels": ["docker"]
     },
     {
-      "matchPackageNames": [
-        "kubernetes-sigs/kustomize"
-      ],
+      "matchPackageNames": ["kubernetes-sigs/kustomize"],
       "extractVersion": "^kustomize/(?<version>.*)$"
     },
     {
-      "matchPackageNames": [
-        "ghcr.io/podtato-head/**"
-      ],
+      "matchPackageNames": ["ghcr.io/podtato-head/**"],
       "groupName": "podtato-head"
     },
     {
-      "matchPackageNames": [
-        "denoland/deno"
-      ],
+      "matchPackageNames": ["denoland/deno"],
       "versioning": "regex:^(?<compatibility>[a-z]+?)-(?<major>\\d+)(\\.(?<minor>\\d+))?(\\.(?<patch>\\d+))?$"
     },
     {
@@ -98,13 +78,9 @@
       "groupName": "squidfunk/mkdocs-material"
     },
     {
-      "matchManagers": [
-        "gomod"
-      ],
+      "matchManagers": ["gomod"],
       "groupName": "All golang.org/x packages",
-      "matchPackageNames": [
-        "golang.org/x{/,}**"
-      ]
+      "matchPackageNames": ["golang.org/x{/,}**"]
     }
   ],
   "customManagers": [
@@ -129,9 +105,7 @@
     ],
     "packageRules": [
       {
-        "matchPackageNames": [
-          "!/.*podtato\\-head.*/"
-        ]
+        "matchPackageNames": ["!/.*podtato\\-head.*/"]
       }
     ],
     "ignorePaths": [

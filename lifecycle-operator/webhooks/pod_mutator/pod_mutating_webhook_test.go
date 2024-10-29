@@ -652,7 +652,7 @@ func generateRequest(pod *corev1.Pod, t *testing.T) admissionv1.AdmissionRequest
 	}
 }
 
-func setupTestData() (*corev1.Pod, *v1.Deployment, *corev1.Namespace, *admission.Decoder) {
+func setupTestData() (*corev1.Pod, *v1.Deployment, *corev1.Namespace, admission.Decoder) {
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testPod,

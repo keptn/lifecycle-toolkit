@@ -43,10 +43,6 @@ func TestAppHandlerHandle(t *testing.T) {
 		}}
 
 	singleServiceCreationReq := &apilifecycle.KeptnAppCreationRequest{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       "KeptnAppCreationRequest",
-			APIVersion: "lifecycle.keptn.sh/v1",
-		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:            TestWorkload,
 			Namespace:       namespace,
@@ -91,10 +87,6 @@ func TestAppHandlerHandle(t *testing.T) {
 				}},
 			client: testcommon.NewTestClient(),
 			wantReq: &apilifecycle.KeptnAppCreationRequest{
-				TypeMeta: metav1.TypeMeta{
-					Kind:       "KeptnAppCreationRequest",
-					APIVersion: "lifecycle.keptn.sh/v1",
-				},
 				ObjectMeta: metav1.ObjectMeta{
 					Name:            testApp,
 					Namespace:       namespace,

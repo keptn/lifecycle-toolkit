@@ -24,7 +24,7 @@ data:
         endpoint: "0.0.0.0:4317"
         tls:
           insecure: true
-      logging:
+      debug:
         verbosity: detailed
 
     service:
@@ -33,7 +33,7 @@ data:
         traces:
           receivers: [otlp]
           processors: []
-          exporters: [otlp, logging]
+          exporters: [otlp, debug]
 ---
 apiVersion: v1
 kind: Service
@@ -91,7 +91,7 @@ spec:
           env:
             - name: GOGC
               value: "80"
-          image: otel/opentelemetry-collector:0.108.0
+          image: otel/opentelemetry-collector:0.112.0
           name: otel-collector
           resources:
             limits:
@@ -121,22 +121,3 @@ spec:
               - key: otel-collector-config
                 path: otel-collector-config.yaml
           name: otel-collector-config-vol
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  labels:
-    serviceapp: otel-collector
-  name: otel-collector
-  namespace: keptn-system
-spec:
-  endpoints:
-    - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-      interval: 30s
-      port: metrics
-  namespaceSelector:
-    matchNames:
-      - keptn-system
-  selector:
-    matchLabels:
-      app: opentelemetry

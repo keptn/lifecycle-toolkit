@@ -33,7 +33,7 @@ data:
           insecure: true
       prometheus:
         endpoint: 0.0.0.0:8889
-      logging:
+      debug:
 
     service:
       extensions: [health_check]
@@ -46,7 +46,7 @@ data:
         metrics:
           receivers: [otlp,prometheus]
           processors: []
-          exporters: [prometheus, logging]
+          exporters: [prometheus, debug]
 ---
 apiVersion: v1
 kind: Service
@@ -104,7 +104,7 @@ spec:
           env:
             - name: GOGC
               value: "80"
-          image: otel/opentelemetry-collector:0.108.0
+          image: otel/opentelemetry-collector:0.112.0
           name: otel-collector
           resources:
             limits:

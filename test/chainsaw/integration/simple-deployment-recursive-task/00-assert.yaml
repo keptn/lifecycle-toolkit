@@ -11,7 +11,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   annotations:
-    batch.kubernetes.io/job-tracking: ""
     keptn.sh/app: waiter
     keptn.sh/version: "0.4"
     keptn.sh/workload: waiter-waiter
@@ -43,7 +42,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   annotations:
-    batch.kubernetes.io/job-tracking: ""
     keptn.sh/app: waiter
     keptn.sh/version: "0.4"
     keptn.sh/workload: waiter-waiter

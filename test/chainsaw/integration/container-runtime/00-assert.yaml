@@ -44,7 +44,4 @@ spec:
             - '-c'
             - 'sleep 30'
 status:
-  conditions:
-    - type: Complete
-      status: 'True'
   succeeded: 1

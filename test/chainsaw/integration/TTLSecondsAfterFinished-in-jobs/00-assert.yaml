@@ -9,7 +9,4 @@ metadata:
 spec:
   ttlSecondsAfterFinished: 100
 status:
-  conditions:
-    - type: Complete
-      status: 'True'
   succeeded: 1

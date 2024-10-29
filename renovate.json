@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     ":gitSignOff",
     "schedule:nonOfficeHours",
     ":semanticCommitTypeAll(deps)",
@@ -13,7 +13,7 @@
   "addLabels": ["dependencies"],
   "cloneSubmodules": true,
   "prConcurrentLimit": 15,
-  "stabilityDays": 3,
+  "minimumReleaseAge": "3 days",
   "timezone": "Europe/Vienna",
   "rebaseWhen": "conflicted",
   "postUpdateOptions": [
@@ -26,15 +26,15 @@
   ],
   "packageRules": [
     {
-      "excludePackagePatterns": [
-        "docker.io\\/thschue\\/.*",
-        "docker.io\\/annadreal\\/.*",
-        "docker.io\\/bacherfl\\/.*",
-        "docker.io\\/mowies\\/.*",
-        "docker.io\\/odubajdt\\/.*",
-        "docker.io\\/thisthatdc\\/.*",
-        "testreg\\/.*",
-        "myrep"
+      "matchPackageNames": [
+        "!/docker.io\\/thschue\\/.*/",
+        "!/docker.io\\/annadreal\\/.*/",
+        "!/docker.io\\/bacherfl\\/.*/",
+        "!/docker.io\\/mowies\\/.*/",
+        "!/docker.io\\/odubajdt\\/.*/",
+        "!/docker.io\\/thisthatdc\\/.*/",
+        "!/testreg\\/.*/",
+        "!/myrep/"
       ]
     },
     {
@@ -79,12 +79,13 @@
     },
     {
       "matchManagers": ["gomod"],
-      "matchPackagePrefixes": ["golang.org/x"],
-      "groupName": "All golang.org/x packages"
+      "groupName": "All golang.org/x packages",
+      "matchPackageNames": ["golang.org/x{/,}**"]
     }
   ],
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "fileMatch": [
         "(^|\\/)Makefile$",
         "(^|\\/)Dockerfile",
@@ -104,9 +105,7 @@
     ],
     "packageRules": [
       {
-        "excludePackagePatterns": [
-          ".*podtato\\-head.*"
-        ]
+        "matchPackageNames": ["!/.*podtato\\-head.*/"]
       }
     ],
     "ignorePaths": [

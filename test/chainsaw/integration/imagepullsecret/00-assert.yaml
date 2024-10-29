@@ -46,7 +46,4 @@ spec:
       imagePullSecrets:
         - name: my-registry-secret
 status:
-  conditions:
-    - type: Complete
-      status: 'True'
   succeeded: 1

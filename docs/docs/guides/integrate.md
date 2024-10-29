@@ -135,8 +135,8 @@ annotation/label is populated:
   and your observability output traces the individual `Keptnworkload` resources
   but not the combined workloads that constitute your deployed application.
 
-> **Note**: Keptn application discovery concatenates the values of the app.kubernetes.io/name or 
-keptn.sh/workload and app.kubernetes.io/part-of or keptn.sh/app annotation to determine the 
+> **Note**: Keptn application discovery concatenates the values of the app.kubernetes.io/name or
+keptn.sh/workload and app.kubernetes.io/part-of or keptn.sh/app annotation to determine the
 name of the KeptnWorkload.
 
 See

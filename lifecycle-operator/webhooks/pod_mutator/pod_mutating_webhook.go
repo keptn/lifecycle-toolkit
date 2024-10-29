@@ -38,7 +38,7 @@ type PodMutatingWebhook struct {
 
 func NewPodMutator(
 	client client.Client,
-	decoder *admission.Decoder,
+	decoder admission.Decoder,
 	eventSender eventsender.IEvent,
 	log logr.Logger,
 	schedulingGatesEnabled bool,

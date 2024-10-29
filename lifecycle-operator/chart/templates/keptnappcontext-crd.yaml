@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnappcontexts.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     cert-manager.io/inject-ca-from: '{{ .Release.Namespace }}/keptn-certs'
     {{- include "common.annotations" ( dict "context" . ) }}
   labels:

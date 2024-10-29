@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.15.0
+    controller-gen.kubebuilder.io/version: v0.16.5
   name: keptnmetricsproviders.metrics.keptn.sh
 spec:
   group: metrics.keptn.sh
@@ -59,7 +59,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -125,7 +124,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -185,7 +183,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -252,7 +249,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined

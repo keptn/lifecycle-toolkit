@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnmetricsproviders.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     {{- with .Values.global.caInjectionAnnotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -67,7 +67,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -133,7 +132,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -193,7 +191,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -260,7 +257,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined

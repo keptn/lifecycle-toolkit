@@ -216,7 +216,7 @@ func TestReconcile(t *testing.T) {
 		// crd 3 should not have a webhook conversion
 		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: crd3.Name}, actualCrd)
 		require.NoError(t, err)
-		assert.Empty(t, actualCrd.Spec.Conversion.Webhook)
+		require.Nil(t, actualCrd.Spec.Conversion)
 	})
 
 	t.Run(`update crd and webhooks successfully with up-to-date secret`, func(t *testing.T) {
@@ -272,7 +272,7 @@ func TestReconcile(t *testing.T) {
 		// crd 3 should not have a webhook conversion
 		err = fakeClient.Get(context.TODO(), client.ObjectKey{Name: crd3.Name}, actualCrd)
 		require.NoError(t, err)
-		assert.Empty(t, actualCrd.Spec.Conversion.Webhook)
+		require.Nil(t, actualCrd.Spec.Conversion)
 	})
 
 	// Generation must not be skipped because webhook startup routine listens for the secret

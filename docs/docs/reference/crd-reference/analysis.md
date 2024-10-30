@@ -186,20 +186,20 @@ The overall evaluation has passed, and no warnings have been issued.
 }
 ```
 
-1.  **`objectiveResults`**: This is an array containing one or more objects,
+1. **`objectiveResults`**: This is an array containing one or more objects,
     each representing the results of a specific objective or performance metric.
-2.  **`result`** -- This object contains information about whether the objective has passed or failed.
+2. **`result`** -- This object contains information about whether the objective has passed or failed.
     It has two sub-objects **`failResult`** & **`warnResult`**
-3.  **`failResult`** -- Indicates whether the objective has failed.
+3. **`failResult`** -- Indicates whether the objective has failed.
     In this case, it checks if a value is greater than 500 milliseconds and it has not been fulfilled (`fulfilled: false`).
-4.  **`warnResult`** -- Indicates whether the objective has issued a warning.
+4. **`warnResult`** -- Indicates whether the objective has issued a warning.
     It checks if a value is greater than 300 milliseconds
-5.  **`warning`** (false in this case).
-6.  **`pass`** -- Indicates whether the objective has passed (true in this case).
-7.  **`objective`** -- Describes the objective being evaluated.
+5. **`warning`** (false in this case).
+6. **`pass`** -- Indicates whether the objective has passed (true in this case).
+7. **`objective`** -- Describes the objective being evaluated.
     It includes: **`analysisValueTemplateRef`** , **`target`** & **`weight`**
-8.  **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`response-time-p95`).
-9.  **`target`** -- Sets the target value for failure (failure occurs if the value is greater than 0).
+8. **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`response-time-p95`).
+9. **`target`** -- Sets the target value for failure (failure occurs if the value is greater than 0).
     In this case, failure occurs
     if the value is greater than 500 milliseconds and warning occurs if it's greater than 300 milliseconds.
 10. **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
@@ -219,7 +219,6 @@ The overall evaluation has passed, and no warnings have been issued.
 22. **`maximumScore`** -- Indicates the maximum possible score (maximumScore: 2).
 23. **`pass`** -- Indicates whether the overall evaluation has passed (true in this case).
 24. **`warning`** -- Indicates whether any warnings have been issued during the evaluation (false in this case).
-
 
 ## Usage
 

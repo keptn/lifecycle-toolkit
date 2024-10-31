@@ -62,6 +62,6 @@ roleRef:
   kind: Role
   name: 'certificate-operator-leader-election-role'
 subjects:
-- kind: ServiceAccount
-  name: 'certificate-operator'
-  namespace: '{{ .Release.Namespace }}'
+  - kind: ServiceAccount
+    name: 'certificate-operator'
+    namespace: '{{ .Release.Namespace }}'

@@ -1,5 +1,5 @@
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/service-account.yaml
+# Source: keptn/charts/certManager/templates/service-account.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -10,9 +10,9 @@ metadata:
     app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: v1
@@ -11351,7 +11351,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -11360,9 +11360,9 @@ metadata:
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 rules:
 - apiGroups:
   - admissionregistration.k8s.io
@@ -11789,7 +11789,7 @@ rules:
   verbs:
   - '*'
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -11801,9 +11801,9 @@ metadata:
     app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -11855,7 +11855,7 @@ subjects:
   name: 'lifecycle-operator'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-leader-election-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -11864,9 +11864,9 @@ metadata:
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 rules:
 - apiGroups:
   - ""
@@ -11900,7 +11900,7 @@ rules:
   - create
   - patch
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -11909,9 +11909,9 @@ metadata:
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 rules:
 - apiGroups:
   - ""
@@ -12025,7 +12025,7 @@ rules:
   - create
   - patch
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-leader-election-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -12037,19 +12037,19 @@ metadata:
     app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: 'certificate-operator-leader-election-role'
 subjects:
-  - kind: ServiceAccount
-    name: 'certificate-operator'
-    namespace: 'helmtests'
+- kind: ServiceAccount
+  name: 'certificate-operator'
+  namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-role-binding-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-role-binding-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -12061,9 +12061,9 @@ metadata:
     app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -12205,7 +12205,7 @@ spec:
     protocol: TCP
     targetPort: 9443
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/deployment.yaml
+# Source: keptn/charts/certManager/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -12217,21 +12217,21 @@ metadata:
     control-plane: certificate-operator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 spec:
   replicas: 1
   selector:
     matchLabels:
       control-plane: certificate-operator
-      app.kubernetes.io/name: keptn-cert-manager
+      app.kubernetes.io/name: cert-manager
       app.kubernetes.io/instance: keptn-test
   template:
     metadata:
       labels:
         control-plane: certificate-operator
-        app.kubernetes.io/name: keptn-cert-manager
+        app.kubernetes.io/name: cert-manager
         app.kubernetes.io/instance: keptn-test
       annotations:
         kubectl.kubernetes.io/default-container: certificate-operator
@@ -12252,7 +12252,7 @@ spec:
               value: "true"
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
-          image: ghcr.io/keptn/certificate-operator:v2.2.2
+          image: ghcr.io/keptn/certificate-operator:v0.0.0
           imagePullPolicy: IfNotPresent
           name: certificate-operator
           resources:

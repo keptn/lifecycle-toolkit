@@ -1,5 +1,5 @@
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/service-account.yaml
+# Source: keptn/charts/certManager/templates/service-account.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -8,17 +8,17 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
-    test-annotation: global
+    test-annotation: local
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: v1
@@ -71,7 +71,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -153,7 +153,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -11514,7 +11514,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -12038,7 +12038,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -13075,7 +13075,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -13290,7 +13290,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -14009,7 +14009,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -14286,7 +14286,7 @@ spec:
     subresources:
       status: {}
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -14295,15 +14295,15 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
-    test-annotation: global
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 rules:
 - apiGroups:
   - admissionregistration.k8s.io
@@ -14762,7 +14762,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -14836,7 +14836,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -14850,7 +14850,7 @@ rules:
   - list
   - watch
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -14859,18 +14859,18 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
-    test-annotation: global
+    test-annotation: local
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14948,7 +14948,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -14975,7 +14975,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -15002,7 +15002,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -15015,7 +15015,7 @@ subjects:
   name: 'metrics-operator'
   namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-leader-election-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -15024,15 +15024,15 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
-    test-annotation: global
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 rules:
 - apiGroups:
   - ""
@@ -15066,7 +15066,7 @@ rules:
   - create
   - patch
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -15075,15 +15075,15 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
-    test-annotation: global
+    test-annotation: local
   labels:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 rules:
 - apiGroups:
   - ""
@@ -15223,7 +15223,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -15260,7 +15260,7 @@ rules:
   - create
   - patch
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-leader-election-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-leader-election-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -15269,31 +15269,31 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
-    test-annotation: global
+    test-annotation: local
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
     globalAnnotation1: test1
     globalAnnotation2: test2
-    test-annotation: global
+    test-annotation: local
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: 'certificate-operator-leader-election-role'
 subjects:
-  - kind: ServiceAccount
-    name: 'certificate-operator'
-    namespace: 'helmtests'
+- kind: ServiceAccount
+  name: 'certificate-operator'
+  namespace: 'helmtests'
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/certificate-operator-role-binding-rbac.yaml
+# Source: keptn/charts/certManager/templates/certificate-operator-role-binding-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -15302,18 +15302,18 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
-    test-annotation: global
+    test-annotation: local
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: certificate-operator
     app.kubernetes.io/part-of: keptn
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15445,7 +15445,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -15472,7 +15472,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -15560,7 +15560,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -15597,7 +15597,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -15612,7 +15612,7 @@ spec:
     protocol: TCP
     targetPort: 9443
 ---
-# Source: keptn/charts/keptn-cert-manager/templates/deployment.yaml
+# Source: keptn/charts/certManager/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15621,30 +15621,30 @@ metadata:
   annotations:
     globalAnnotation1: test1
     globalAnnotation2: test2
-    test-annotation: global
+    test-annotation: local
   labels:
     app.kubernetes.io/component: keptn-cert-manager
     app.kubernetes.io/part-of: keptn
     control-plane: certificate-operator
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keptn-cert-manager
+    app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: keptn-cert-manager-0.2.6
+    helm.sh/chart: cert-manager-0.2.5
 spec:
   replicas: 1
   selector:
     matchLabels:
       control-plane: certificate-operator
-      app.kubernetes.io/name: keptn-cert-manager
+      app.kubernetes.io/name: cert-manager
       app.kubernetes.io/instance: keptn-test
   template:
     metadata:
       labels:
         control-plane: certificate-operator
-        app.kubernetes.io/name: keptn-cert-manager
+        app.kubernetes.io/name: cert-manager
         app.kubernetes.io/instance: keptn-test
       annotations:
         kubectl.kubernetes.io/default-container: certificate-operator
@@ -15665,7 +15665,7 @@ spec:
               value: "true"
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
-          image: global-registry.io/keptn/certificate-operator:v2.2.2
+          image: local-registry.io/keptn/certificate-operator:v2.2.2
           imagePullPolicy: Always
           name: certificate-operator
           resources:
@@ -15949,7 +15949,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -15999,7 +15999,7 @@ spec:
           value: cluster.local
         - name: CERT_MANAGER_ENABLED
           value: "true"
-        image: local-registry.io/keptn/metrics-operator:v1.1.0
+        image: local-registry.io/keptn/metrics-operator:v1.1.1
         imagePullPolicy: Never
         name: metrics-operator
         ports:
@@ -16075,7 +16075,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -16103,7 +16103,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0
@@ -16231,7 +16231,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v1.1.1
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: metrics-operator-0.3.0

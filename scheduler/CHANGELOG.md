@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.0.2](https://github.com/keptn/lifecycle-toolkit/compare/scheduler-v1.0.1...scheduler-v1.0.2) (2024-10-31)
+
+
+### Dependency Updates
+
+* update all golang.org/x packages ([#3708](https://github.com/keptn/lifecycle-toolkit/issues/3708)) ([1014268](https://github.com/keptn/lifecycle-toolkit/commit/1014268f72066049bd707373feea367f680d0132))
+* update all golang.org/x packages ([#3729](https://github.com/keptn/lifecycle-toolkit/issues/3729)) ([d0a22de](https://github.com/keptn/lifecycle-toolkit/commit/d0a22deacb3af85c95e07c9b4d2d91120b7c07ca))
+* update all golang.org/x packages ([#3754](https://github.com/keptn/lifecycle-toolkit/issues/3754)) ([736a4ac](https://github.com/keptn/lifecycle-toolkit/commit/736a4ac129b8f81a17e609090efadc6b1bc10939))
+* update dependency kubernetes-sigs/kustomize to v5.5.0 ([#3793](https://github.com/keptn/lifecycle-toolkit/issues/3793)) ([62ff5ac](https://github.com/keptn/lifecycle-toolkit/commit/62ff5ac84966ab3dcbf1a640133a47e7301479bd))
+* update golang docker tag to v1.22.6 ([#3692](https://github.com/keptn/lifecycle-toolkit/issues/3692)) ([73b30ee](https://github.com/keptn/lifecycle-toolkit/commit/73b30ee6a0748535d8af1160a7c0b8e2f2c04ec2))
+* update golang docker tag to v1.23.0 ([#3702](https://github.com/keptn/lifecycle-toolkit/issues/3702)) ([a4d7328](https://github.com/keptn/lifecycle-toolkit/commit/a4d73287d793bdd4681d5e8ba9fe56d185705b80))
+* update golang docker tag to v1.23.1 ([#3732](https://github.com/keptn/lifecycle-toolkit/issues/3732)) ([8eb878f](https://github.com/keptn/lifecycle-toolkit/commit/8eb878f908467ab9a7140694d263de0fc352f2dd))
+* update golang docker tag to v1.23.2 ([#3758](https://github.com/keptn/lifecycle-toolkit/issues/3758)) ([37a3f51](https://github.com/keptn/lifecycle-toolkit/commit/37a3f512da9ecd8eb8cf1dcb339647e9872e0b7e))
+* update module github.com/onsi/ginkgo/v2 to v2.20.1 ([#3704](https://github.com/keptn/lifecycle-toolkit/issues/3704)) ([df11440](https://github.com/keptn/lifecycle-toolkit/commit/df1144084e337c8eda64e2635b8ee534fd10252f))
+* update module github.com/onsi/ginkgo/v2 to v2.20.2 ([#3724](https://github.com/keptn/lifecycle-toolkit/issues/3724)) ([7d62fad](https://github.com/keptn/lifecycle-toolkit/commit/7d62fadadbd251debe2b2c0c46a9042538a70c71))
+* update module google.golang.org/protobuf to v1.35.1 ([#3797](https://github.com/keptn/lifecycle-toolkit/issues/3797)) ([2c5f1b3](https://github.com/keptn/lifecycle-toolkit/commit/2c5f1b310f34609dddb602059cbcca35c672ca6f))
+
 ## [1.0.1](https://github.com/keptn/lifecycle-toolkit/compare/scheduler-v1.0.0...scheduler-v1.0.1) (2024-08-06)
 
 

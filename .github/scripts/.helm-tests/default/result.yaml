@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.2.6
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: v1
@@ -25,7 +25,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: v1
@@ -38,7 +38,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 ---
 # Source: keptn/charts/metricsOperator/templates/metrics-operator-service-account.yaml
 apiVersion: v1
@@ -51,7 +51,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 ---
 # Source: keptn/charts/lifecycleOperator/templates/lifecycle-manager-config.yaml
 apiVersion: v1
@@ -64,7 +64,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 data:
   controller_manager_config.yaml: |
     apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
@@ -90,7 +90,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 data:
   scheduler-config.yaml: |
     apiVersion: kubescheduler.config.k8s.io/v1beta3
@@ -115,7 +115,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 data:
   controller_manager_config.yaml: |
     apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
@@ -145,7 +145,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   conversion:
     strategy: Webhook
@@ -570,7 +570,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -782,7 +782,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -931,7 +931,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   conversion:
     strategy: Webhook
@@ -2596,7 +2596,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   group: options.keptn.sh
   names:
@@ -2684,7 +2684,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -3395,7 +3395,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -3762,7 +3762,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -4528,7 +4528,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -9852,7 +9852,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -10392,7 +10392,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -11405,7 +11405,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 spec:
   group: metrics.keptn.sh
   names:
@@ -11923,7 +11923,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 spec:
   group: metrics.keptn.sh
   names:
@@ -12954,7 +12954,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 spec:
   group: metrics.keptn.sh
   names:
@@ -13163,7 +13163,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 spec:
   group: metrics.keptn.sh
   names:
@@ -13876,7 +13876,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 spec:
   group: metrics.keptn.sh
   names:
@@ -14161,7 +14161,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.2.6
 rules:
 - apiGroups:
   - admissionregistration.k8s.io
@@ -14204,7 +14204,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 rules:
 - apiGroups:
   - ""
@@ -14395,7 +14395,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 rules:
 - apiGroups:
   - ""
@@ -14579,7 +14579,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 rules:
 - apiGroups:
   - custom.metrics.k8s.io
@@ -14599,7 +14599,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 rules:
   - apiGroups:
       - ""
@@ -14667,7 +14667,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 rules:
 - apiGroups:
   - custom.metrics.k8s.io
@@ -14692,7 +14692,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.2.6
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14713,7 +14713,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14734,7 +14734,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14755,7 +14755,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14776,7 +14776,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14797,7 +14797,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14818,7 +14818,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.2.6
 rules:
 - apiGroups:
   - ""
@@ -14863,7 +14863,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.2.6
 rules:
 - apiGroups:
   - ""
@@ -14895,7 +14895,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 rules:
 - apiGroups:
   - ""
@@ -14943,7 +14943,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 rules:
 - apiGroups:
   - ""
@@ -14988,7 +14988,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 rules:
 - apiGroups:
   - ""
@@ -15036,15 +15036,15 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.2.6
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: 'certificate-operator-leader-election-role'
 subjects:
-- kind: ServiceAccount
-  name: 'certificate-operator'
-  namespace: 'helmtests'
+  - kind: ServiceAccount
+    name: 'certificate-operator'
+    namespace: 'helmtests'
 ---
 # Source: keptn/charts/certManager/templates/certificate-operator-role-binding-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -15060,7 +15060,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.2.6
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15081,7 +15081,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15102,7 +15102,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15123,7 +15123,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15144,7 +15144,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15165,7 +15165,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15186,7 +15186,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15208,7 +15208,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   type: ClusterIP
   selector:
@@ -15232,7 +15232,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   type: ClusterIP
   selector:
@@ -15256,7 +15256,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 spec:
   type: ClusterIP
   selector:
@@ -15287,7 +15287,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 spec:
   type: ClusterIP
   selector:
@@ -15313,7 +15313,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/version: v2.2.2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.2.6
 spec:
   replicas: 1
   selector:
@@ -15398,7 +15398,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   replicas: 1
   selector:
@@ -15529,7 +15529,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 spec:
   replicas: 1
   selector:
@@ -15611,7 +15611,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 spec:
   replicas: 1
   selector:
@@ -15729,7 +15729,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 spec:
   group: custom.metrics.k8s.io
   groupPriorityMinimum: 100
@@ -15751,7 +15751,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 spec:
   group: custom.metrics.k8s.io
   groupPriorityMinimum: 100
@@ -15774,7 +15774,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 webhooks:
 - admissionReviewVersions:
   - v1
@@ -15824,7 +15824,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
     app.kubernetes.io/version: v1.2.0
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.5.0
 webhooks:
 - admissionReviewVersions:
   - v1
@@ -15858,7 +15858,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
     app.kubernetes.io/version: v1.1.1
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.3.1
 webhooks:
 - admissionReviewVersions:
   - v1

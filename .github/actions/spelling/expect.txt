@@ -158,6 +158,7 @@ dynamicinformer
 dynatrace
 ecr
 elasticquota
+elasticsearch
 elif
 ENABLEGITINFO
 endblock
@@ -391,6 +392,7 @@ Lifcycle
 lifecyclekeptnsh
 linenums
 linkedin
+lte
 linkedtrace
 livenessprobe
 loadtests

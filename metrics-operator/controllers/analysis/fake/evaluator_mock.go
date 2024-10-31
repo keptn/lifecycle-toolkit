@@ -5,8 +5,8 @@ package fake
 
 import (
 	"context"
-	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
+	metricstypes "github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/analysis/types"
 	"sync"
 )
 
@@ -50,13 +50,13 @@ func (mock *IObjectivesEvaluatorMock) Evaluate(ctx context.Context, metricsProvi
 		panic("IObjectivesEvaluatorMock.EvaluateFunc: method is nil but IObjectivesEvaluator.Evaluate was just called")
 	}
 	callInfo := struct {
-		Ctx          context.Context
+		Ctx             context.Context
 		metricsProvider *metricsapi.KeptnMetricsProvider
-		Obj          chan metricstypes.ProviderRequest
+		Obj             chan metricstypes.ProviderRequest
 	}{
-		Ctx:          ctx,
+		Ctx:             ctx,
 		metricsProvider: metricsProvider,
-		Obj:          obj,
+		Obj:             obj,
 	}
 	mock.lockEvaluate.Lock()
 	mock.calls.Evaluate = append(mock.calls.Evaluate, callInfo)
@@ -69,14 +69,14 @@ func (mock *IObjectivesEvaluatorMock) Evaluate(ctx context.Context, metricsProvi
 //
 //	len(mockedIObjectivesEvaluator.EvaluateCalls())
 func (mock *IObjectivesEvaluatorMock) EvaluateCalls() []struct {
-	Ctx          context.Context
+	Ctx             context.Context
 	metricsProvider *metricsapi.KeptnMetricsProvider
-	Obj          chan metricstypes.ProviderRequest
+	Obj             chan metricstypes.ProviderRequest
 } {
 	var calls []struct {
-		Ctx          context.Context
+		Ctx             context.Context
 		metricsProvider *metricsapi.KeptnMetricsProvider
-		Obj          chan metricstypes.ProviderRequest
+		Obj             chan metricstypes.ProviderRequest
 	}
 	mock.lockEvaluate.RLock()
 	calls = mock.calls.Evaluate

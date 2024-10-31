@@ -34,7 +34,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -49,7 +49,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -90,7 +90,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -122,7 +122,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -189,7 +189,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -619,7 +619,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -837,7 +837,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -992,7 +992,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -2663,7 +2663,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -2757,7 +2757,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -3474,7 +3474,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -3847,7 +3847,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -4619,7 +4619,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -9949,7 +9949,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -10495,7 +10495,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -14349,7 +14349,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -14546,7 +14546,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -14736,7 +14736,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -14894,7 +14894,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -14921,7 +14921,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -15118,7 +15118,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -15172,7 +15172,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -15337,7 +15337,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -15364,7 +15364,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -15391,7 +15391,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -15418,7 +15418,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -15500,7 +15500,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -15530,7 +15530,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -15718,7 +15718,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -15789,7 +15789,7 @@ spec:
           value: cluster.local
         - name: CERT_MANAGER_ENABLED
           value: "true"
-        image: local-registry.io/keptn/lifecycle-operator:v1.1.1
+        image: local-registry.io/keptn/lifecycle-operator:v1.2.0
         imagePullPolicy: Never
         name: lifecycle-operator
         ports:
@@ -15856,7 +15856,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -16133,7 +16133,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1
@@ -16190,7 +16190,7 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v1.2.0
     globalLabel1: test1
     globalLabel2: test2
     helm.sh/chart: lifecycle-operator-0.4.1

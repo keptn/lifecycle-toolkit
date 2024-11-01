@@ -97,6 +97,8 @@ In this example, the objectives include response time and error rate analysis,
 each with its own criteria for passing or failing.
 The overall evaluation has passed, and no warnings have been issued.
 
+> Note: Please check the inline annotations to get more information about the particular lines you are interested in.
+
 ```json
 {
     "objectiveResults"/*(1)!*/: [

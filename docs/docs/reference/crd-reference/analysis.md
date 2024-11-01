@@ -103,11 +103,11 @@ The overall evaluation has passed, and no warnings have been issued.
 {
     "objectiveResults"/*(1)!*/: [
         {
-            "result"/*(2)!*/: { 
-                "failResult"/*(3)!*/: { 
+            "result"/*(2)!*/: {
+                "failResult"/*(3)!*/: {
                     "operator": {
                         "greaterThan": {
-                            "fixedValue": "500m" 
+                            "fixedValue": "500m"
                         }
                     },
                     "fulfilled": false

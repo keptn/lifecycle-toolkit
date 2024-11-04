@@ -39,7 +39,6 @@ jobs:
           scopes: |
             main
             helm-chart
-            scheduler
             lifecycle-operator
             cert-manager
             metrics-operator

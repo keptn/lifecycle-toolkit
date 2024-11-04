@@ -35,8 +35,6 @@ jobs:
             folder: "lifecycle-operator/"
           - name: "metrics-operator"
             folder: "metrics-operator/"
-          - name: "scheduler"
-            folder: "scheduler/"
           - name: "certificate-operator"
             folder: "keptn-cert-manager/"
     steps:

@@ -174,17 +174,13 @@ jobs:
           cd ../crd && kustomize build ./ > /tmp/crds.yaml
           cd ../../../metrics-operator/config/default
           sed -i 's/\- ..\/crd//' kustomization.yaml && kustomize build ./ > /tmp/metrics-operator-manifest.yaml
-          echo "---" >> /tmp/crds.yaml
-          cd ../crd && kustomize build ./ >> /tmp/crds.yaml
-          cd ../../../scheduler/manifests/install && kustomize build ./ > /tmp/scheduler-manifest.yaml
 
           curl -s https://raw.githubusercontent.com/yannh/kubeconform/${{ matrix.version }}/scripts/openapi2jsonschema.py > /tmp/openapi2jsonschema.py
           mkdir -p /tmp/schema && cd /tmp/schema
           python3 ../openapi2jsonschema.py ../crds.yaml
           cd .. && \
             echo "---" >> lifecycle-operator-manifest.yaml && \
-            echo "---" >> scheduler-manifest.yaml && \
-            cat lifecycle-operator-manifest.yaml scheduler-manifest.yaml metrics-operator-manifest.yaml > manifest.yaml
+            cat lifecycle-operator-manifest.yaml metrics-operator-manifest.yaml > manifest.yaml
           kubeconform \
             -schema-location default \
             -schema-location './schema/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' \
@@ -220,7 +216,6 @@ jobs:
           - "python-runtime"
           - "lifecycle-operator"
           - "metrics-operator"
-          - "scheduler"
           - "certificate-operator"
     steps:
       - name: Check out code
@@ -240,17 +235,7 @@ jobs:
         run: |
           tar -xvf images/${{ matrix.image }}-image.tar/${{ matrix.image }}-image.tar -C images/${{ matrix.image }}-image.tar/
 
-      - name: Trivy image scan scheduler
-        if: matrix.image == 'scheduler'
-        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2 # 0.28.0
-        with:
-          input: "images/${{ matrix.image }}-image.tar"
-          severity: 'CRITICAL,HIGH'
-          exit-code: '1'
-          trivyignores: .trivyignore
-
       - name: Trivy image scan
-        if: matrix.image != 'scheduler'
         uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2 # 0.28.0
         with:
           input: "images/${{ matrix.image }}-image.tar"
@@ -266,7 +251,6 @@ jobs:
         artifact:
           - "lifecycle-operator"
           - "metrics-operator"
-          - "scheduler"
           - "keptn-cert-manager"
     steps:
       - name: Set up Go 1.x

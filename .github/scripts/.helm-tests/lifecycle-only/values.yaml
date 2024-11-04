@@ -10,9 +10,6 @@ lifecycleOperator:
       tag: 1.37
       imagePullPolicy: Always
     hostNetwork: true
-  scheduler:
-    image:
-      tag: v0.0.0
   deniedNamespaces: ["foo", "bar"]
 
 metricsOperator:

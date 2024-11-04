@@ -109,13 +109,9 @@ certmanager-test:
 operator-test:
 	$(MAKE) -C lifecycle-operator test
 
-.PHONY: scheduler-test
-scheduler-test:
-	$(MAKE) -C scheduler test
-
 #command(make test) to run all tests 
 .PHONY: test
-test: metrics-operator-test certmanager-test operator-test scheduler-test integration-test
+test: metrics-operator-test certmanager-test operator-test integration-test
 
 .PHONY: cleanup-manifests
 cleanup-manifests:
@@ -143,14 +139,6 @@ build-deploy-metrics-operator:
 
 	kubectl apply -f metrics-operator/config/rendered/release.yaml
 
-.PHONY: build-deploy-scheduler
-build-deploy-scheduler:
-	$(MAKE) -C scheduler release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
-	$(MAKE) -C scheduler push-local RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
-	$(MAKE) -C scheduler release-manifests RELEASE_REGISTRY=$(RELEASE_REGISTRY) CHART_APPVERSION=$(TAG) ARCH=$(ARCH)
-	kubectl create namespace keptn-system --dry-run=client -o yaml | kubectl apply -f -
-	kubectl apply -f scheduler/config/rendered/release.yaml
-
 .PHONY: build-deploy-certmanager
 build-deploy-certmanager:
 	$(MAKE) -C keptn-cert-manager release-local.$(ARCH) RELEASE_REGISTRY=$(RELEASE_REGISTRY) TAG=$(TAG)
@@ -160,7 +148,7 @@ build-deploy-certmanager:
 	kubectl apply -f keptn-cert-manager/config/rendered/release.yaml
 
 .PHONY: build-deploy-dev-environment
-build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-metrics-operator build-deploy-scheduler
+build-deploy-dev-environment: build-deploy-certmanager build-deploy-operator build-deploy-metrics-operator
 
 include docs/Makefile
 
@@ -184,10 +172,6 @@ certmanager-lint: install-golangci-lint
 operator-lint: install-golangci-lint
 	$(MAKE) -C lifecycle-operator lint
 
-.PHONY: scheduler-lint
-scheduler-lint: install-golangci-lint
-	$(MAKE) -C scheduler lint
-
 .PHONY: helm-test
 helm-test:
 	./.github/scripts/helm-test.sh
@@ -200,4 +184,3 @@ generate-helm-test-results:
 lint: metrics-operator-lint
 lint: certmanager-lint
 lint: operator-lint
-lint: scheduler-lint

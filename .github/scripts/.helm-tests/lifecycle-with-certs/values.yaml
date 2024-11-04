@@ -7,9 +7,5 @@ lifecycleOperator:
     image:
       tag: v0.0.0
       imagePullPolicy: Never
-  scheduler:
-    image:
-      tag: v0.0.0
-      imagePullPolicy: Never
 metricsOperator:
   enabled: false

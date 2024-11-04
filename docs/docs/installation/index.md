@@ -21,7 +21,7 @@ After you install Keptn, you are ready to
 
 ## Supported Kubernetes versions
 
-Keptn requires Kubernetes v1.24.0 or later.
+Keptn requires Kubernetes v1.27.0 or later.
 
 Run the following to ensure that both client and server versions
 are running Kubernetes versions greater than or equal to v1.24.
@@ -33,24 +33,19 @@ kubectl version --short
 ```
 
 ```shell
-Client Version: v1.24.0
-Kustomize Version: v4.5.4
-Server Version: v1.24.0
+Client Version: v1.27.0
+Kustomize Version: v5.0.0
+Server Version: v1.27.0
 ```
 
-Keptn makes use of a custom scheduler
-when running on Kubernetes v1.26 and earlier.
-For Kubernetes v1.27 and later, scheduling is
-implemented using
-[Kubernetes scheduling gates](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness/),
-unless the `schedulingGatesEnabled` Helm value is set to `false`.
+Scheduling is implemented using
+[Kubernetes scheduling gates](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-scheduling-readiness/).
 See
 [Keptn integration with Scheduling](../components/scheduling.md)
 for details.
 
-If Keptn is installed on a [vCluster](https://www.vcluster.com/) with
-Kubernetes v1.26 or earlier, some extra configuration
-needs to be added for full compatibility.
+If Keptn is installed on a [vCluster](https://www.vcluster.com/),
+some extra configuration needs to be added for full compatibility.
 See
 [Running Keptn with vCluster](./configuration/vcluster.md)
 for more information.

@@ -23,7 +23,6 @@ To prepare to contribute to the Keptn project, we recommend that you:
   
     * [lifecycle-operator](https://github.com/keptn/lifecycle-toolkit/tree/main/lifecycle-operator)
     * [metrics-operator](https://github.com/keptn/lifecycle-toolkit/tree/main/metrics-operator)
-    * [scheduler](https://github.com/keptn/lifecycle-toolkit/tree/main/scheduler)
     * [keptn-cert-manager](https://github.com/keptn/lifecycle-toolkit/tree/main/keptn-cert-manager)
 
     Each of these is described in the
@@ -51,7 +50,6 @@ documentation:
     * `metrics-operator`
     * `lifecycle-operatory`
     * `cert-manager`
-* Keptn `scheduler`
 
 At the top level of the repository,
 you also see the `runtimes` directory.
@@ -180,7 +178,7 @@ From the `lifecycle-operator` directory, run the component tests:
 
 ### End-to-end test
 
-From the `lifecycle-operator` or `scheduler` directory, run the end-to-end tests:
+From the `lifecycle-operator` directory, run the end-to-end tests:
 
   ```shell
   make e2e-test

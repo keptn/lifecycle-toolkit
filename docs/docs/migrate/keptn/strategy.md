@@ -80,7 +80,7 @@ Some key points:
 * Keptn provides an operator
   that can observe and orchestrate application-aware workload life cycles.
   This operator leverages Kubernetes webhooks
-  and the Kubernetes scheduler
+  and the default Kubernetes scheduler
   to support pre- and post-deployment hooks.
   When the operator detects a new version of a service
   (implemented as a Kubernetes

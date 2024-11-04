@@ -23,7 +23,6 @@ After the run a ```report.E2E-operator``` file will be generated with the result
 ```text
 2022-11-04 12:46:05.2373262 +0000 UTC
 If annotated for keptn, a new Pod should stay pending | passed
-If annotated for keptn, a new Pod should be assigned to keptn scheduler | passed
 ```
 
 ## Contributing

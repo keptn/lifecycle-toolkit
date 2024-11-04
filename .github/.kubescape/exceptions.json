@@ -126,13 +126,6 @@
         "designatorType": "Attributes",
         "attributes": {
           "kind": "ServiceAccount",
-          "name": "keptn-scheduler"
-        }
-      },
-      {
-        "designatorType": "Attributes",
-        "attributes": {
-          "kind": "ServiceAccount",
           "name": "lifecycle-operator"
         }
       }

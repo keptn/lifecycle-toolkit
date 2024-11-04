@@ -5,10 +5,6 @@ lifecycleOperator:
     image:
       registry: "local-registry.io" # will be used
       imagePullPolicy: Never # will be used
-  scheduler:
-    image:
-      registry: "local-registry.io" # will be used
-      imagePullPolicy: Never # will be used
 metricsOperator:
   annotations:
     test-annotation: "local" # will be used

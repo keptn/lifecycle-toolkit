@@ -72,33 +72,11 @@ and application health checks
 
 ### Global
 
-| Name                      | Description                                                                                                                                     | Value                                                          |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `kubernetesClusterDomain` | overrides cluster.local                                                                                                                         | `cluster.local`                                                |
-| `annotations`             | add deployment level annotations                                                                                                                | `{}`                                                           |
-| `podAnnotations`          | adds pod level annotations                                                                                                                      | `{}`                                                           |
-| `schedulingGatesEnabled`  | enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version | `false`                                                        |
-| `promotionTasksEnabled`   | enables the promotion task feature in the lifecycle-operator.                                                                                   | `false`                                                        |
-| `allowedNamespaces`       | specifies the allowed namespaces for the lifecycle orchestration functionality                                                                  | `[]`                                                           |
-| `deniedNamespaces`        | specifies a list of namespaces where the lifecycle orchestration functionality is disabled, ignored if `allowedNamespaces` is set               | `["cert-manager","keptn-system","observability","monitoring"]` |
-
-### Keptn Scheduler
-
-| Name                                                         | Description                                                             | Value                 |
-| ------------------------------------------------------------ | ----------------------------------------------------------------------- | --------------------- |
-| `scheduler.nodeSelector`                                     | adds node selectors for scheduler                                       | `{}`                  |
-| `scheduler.replicas`                                         | modifies replicas                                                       | `1`                   |
-| `scheduler.containerSecurityContext`                         | Sets security context                                                   |                       |
-| `scheduler.env.otelCollectorUrl`                             | sets url for open telemetry collector                                   | `otel-collector:4317` |
-| `scheduler.image.registry`                                   | specify the container registry for the scheduler image                  | `""`                  |
-| `scheduler.image.repository`                                 | set image repository for scheduler                                      | `keptn/scheduler`     |
-| `scheduler.image.tag`                                        | set image tag for scheduler                                             | `v1.0.2`              |
-| `scheduler.image.imagePullPolicy`                            | specify pull policy for the manager image. This overrides global values | `""`                  |
-| `scheduler.livenessProbe`                                    | customizable liveness probe for the scheduler                           |                       |
-| `scheduler.readinessProbe`                                   | customizable readiness probe for the scheduler                          |                       |
-| `scheduler.resources`                                        | sets cpu and memory resources/limits for scheduler                      |                       |
-| `scheduler.topologySpreadConstraints`                        | add topology constraints for scheduler                                  | `[]`                  |
-| `schedulerConfig.profiles[0].schedulerName`                  | changes scheduler name                                                  | `keptn-scheduler`     |
-| `schedulerConfig.leaderElection.leaderElect`                 | enables leader election for multiple replicas of the scheduler          | `false`               |
-| `schedulerConfig.profiles[0].plugins.permit.enabled[0].name` | enables permit plugin                                                   | `KLCPermit`           |
-| `scheduler.tolerations`                                      | adds tolerations for scheduler                                          | `[]`                  |
+| Name                      | Description                                                                                                                       | Value                                                          |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `kubernetesClusterDomain` | overrides cluster.local                                                                                                           | `cluster.local`                                                |
+| `annotations`             | add deployment level annotations                                                                                                  | `{}`                                                           |
+| `podAnnotations`          | adds pod level annotations                                                                                                        | `{}`                                                           |
+| `promotionTasksEnabled`   | enables the promotion task feature in the lifecycle-operator.                                                                     | `false`                                                        |
+| `allowedNamespaces`       | specifies the allowed namespaces for the lifecycle orchestration functionality                                                    | `[]`                                                           |
+| `deniedNamespaces`        | specifies a list of namespaces where the lifecycle orchestration functionality is disabled, ignored if `allowedNamespaces` is set | `["cert-manager","keptn-system","observability","monitoring"]` |

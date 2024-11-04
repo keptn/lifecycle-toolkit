@@ -17,7 +17,6 @@
         "keptn-cert-manager",
         "lifecycle-operator",
         "metrics-operator",
-        "scheduler",
         "runtimes",
         ".github/actions/spelling",
         "test",
@@ -58,18 +57,6 @@
         "Makefile",
         "chart/Chart.yaml",
         "chart/values.yaml"
-      ]
-    },
-    "scheduler": {
-      "package-name": "scheduler",
-      "component": "scheduler",
-      "changelog-path": "CHANGELOG.md",
-      "release-type": "go",
-      "monorepo-tags": "scheduler",
-      "prerelease": false,
-      "draft": false,
-      "extra-files": [
-        "Makefile"
       ]
     },
     "metrics-operator": {

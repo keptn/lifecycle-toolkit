@@ -1,17 +1,3 @@
-{{- if or (le .Capabilities.KubeVersion.Minor "26") (not .Values.schedulingGatesEnabled) }}
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: keptn-scheduler
-  namespace: {{ .Release.Namespace | quote }}
-  {{- $annotations := include "common.annotations" (dict "context" .) }}
-  {{- with $annotations }}
-  annotations: {{- . -}}
-  {{- end }}
-  labels:
-{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -99,9 +85,6 @@ spec:
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
           value: {{ .Values.lifecycleOperator.env.optionsControllerLogLevel | quote
             }}
-        - name: SCHEDULING_GATES_ENABLED
-          value: {{ .Values.schedulingGatesEnabled | quote
-            }}
         - name: PROMOTION_TASKS_ENABLED
           value: {{ .Values.promotionTasksEnabled | quote
             }}
@@ -178,96 +161,4 @@ spec:
 {{- end }}
 {{- if .Values.lifecycleOperator.tolerations }}
       tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.tolerations "context" .) | nindent 8 }}
-{{- end }}
-
-{{- if or (le .Capabilities.KubeVersion.Minor "26") (not .Values.schedulingGatesEnabled) }}
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: scheduler
-  namespace: {{ .Release.Namespace | quote }}
-  labels:
-    component: scheduler
-{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include "common.annotations" ( dict "context" . ) }}
-spec:
-  replicas: {{ .Values.scheduler.replicas }}
-  selector:
-    matchLabels:
-      component: scheduler
-    {{- include "common.selectorLabels"  ( dict "context" . ) | nindent 6 }}
-  template:
-    metadata:
-      labels:
-        component: scheduler
-      {{- include "common.selectorLabels"  ( dict "context" . )  | nindent 8 }}
-    spec:
-      containers:
-      - command:
-        - /bin/kube-scheduler
-        - --config=/etc/kubernetes/scheduler-config.yaml
-        env:
-        - name: OTEL_COLLECTOR_URL
-          value: {{ .Values.scheduler.env.otelCollectorUrl | quote }}
-        - name: KUBERNETES_CLUSTER_DOMAIN
-          value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ include "common.images.image" ( dict "imageRoot" .Values.scheduler.image "global" .Values.global ) }}
-        imagePullPolicy: {{.Values.scheduler.image.imagePullPolicy | default (.Values.global.imagePullPolicy | default "IfNotPresent") }}
-        name: scheduler
-        resources: {{- toYaml .Values.scheduler.resources | nindent 10 }}
-        securityContext:
-          allowPrivilegeEscalation: {{ .Values.scheduler.containerSecurityContext.allowPrivilegeEscalation
-            }}
-          capabilities: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.containerSecurityContext.capabilities
-            "context" $) | nindent 12 }}
-          privileged: {{ .Values.scheduler.containerSecurityContext.privileged
-            }}
-          readOnlyRootFilesystem: {{ .Values.scheduler.containerSecurityContext.readOnlyRootFilesystem
-            }}
-          runAsNonRoot: {{ .Values.scheduler.containerSecurityContext.runAsNonRoot
-            }}
-          {{- if not .Values.global.openShift.enabled }}
-          runAsUser: {{ .Values.scheduler.containerSecurityContext.runAsUser }}
-          {{- end }}
-          seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.containerSecurityContext.seccompProfile
-            "context" $) | nindent 12 }}
-        volumeMounts:
-        - mountPath: /etc/kubernetes
-          name: scheduler-config
-          readOnly: true
-        {{- if .Values.scheduler.livenessProbe }}
-        livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.livenessProbe "context" $) | nindent 10 }}
-         {{- else }}
-        livenessProbe:
-         httpGet:
-           path: /healthz
-           port: 10259
-           scheme: HTTPS
-         initialDelaySeconds: 15
-        {{- end }}
-        {{- if .Values.scheduler.readinessProbe }}
-        readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.readinessProbe "context" $) | nindent 10 }}
-         {{- else }}
-        readinessProbe:
-         httpGet:
-           path: /healthz
-           port: 10259
-           scheme: HTTPS
-        {{- end }}
-      {{- include "scheduler.imagePullSecrets" . | nindent 6 }}
-      serviceAccountName: keptn-scheduler
-      volumes:
-      - configMap:
-          name: scheduler-config
-        name: scheduler-config
-{{- if .Values.scheduler.topologySpreadConstraints }}
-      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.topologySpreadConstraints "context" $) | nindent 8 }}
-{{- end }}
-{{- if .Values.scheduler.nodeSelector }}
-      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.scheduler.nodeSelector "context" $) | nindent 8 }}
-{{- end }}
-{{- if .Values.scheduler.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.tolerations "context" .) | nindent 8 }}
-{{- end }}
 {{- end }}

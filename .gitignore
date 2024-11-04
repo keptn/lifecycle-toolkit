@@ -26,7 +26,6 @@ kubeconfig
 .dccache*
 
 manifests/
-/scheduler/config/rendered/release.yaml
 /lifecycle-operator/config/rendered/release.yaml
 /metrics-operator/config/rendered/release.yaml
 /keptn-cert-manager/config/rendered/release.yaml

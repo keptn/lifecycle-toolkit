@@ -171,15 +171,13 @@ lifecycleOperatorMetricsService:
   type: ClusterIP
 
 ## @section Global
-## Current available parameters: kubernetesClusterDomain, imagePullSecrets, schedulingGatesEnabled, allowedNamespaces, deniedNamespaces, promotionTasksEnabled
+## Current available parameters: kubernetesClusterDomain, imagePullSecrets, allowedNamespaces, deniedNamespaces, promotionTasksEnabled
 ## @param     kubernetesClusterDomain overrides cluster.local
 kubernetesClusterDomain: cluster.local
 ## @param     annotations add deployment level annotations
 annotations: {}
 ## @param     podAnnotations adds pod level annotations
 podAnnotations: {}
-## @param  schedulingGatesEnabled enables the scheduling gates in lifecycle-operator. This feature is available in alpha version from K8s 1.27 or 1.26 enabling the alpha version
-schedulingGatesEnabled: false
 ## @param promotionTasksEnabled enables the promotion task feature in the lifecycle-operator.
 promotionTasksEnabled: false
 ## @param  allowedNamespaces specifies the allowed namespaces for the lifecycle orchestration functionality
@@ -190,90 +188,3 @@ deniedNamespaces:
   - keptn-system
   - observability
   - monitoring
-
-# yamllint disable rule:line-length
-## @section Keptn Scheduler
-scheduler:
-## @param scheduler.nodeSelector adds node selectors for scheduler
-  nodeSelector: {}
-## @param scheduler.replicas modifies replicas
-  replicas: 1
-## @extra scheduler.containerSecurityContext Sets security context
-## @skip scheduler.containerSecurityContext.allowPrivilegeEscalation
-## @skip scheduler.containerSecurityContext.capabilities.drop
-## @skip scheduler.containerSecurityContext.privileged
-## @skip scheduler.containerSecurityContext.readOnlyRootFilesystem
-## @skip scheduler.containerSecurityContext.runAsNonRoot
-## @skip scheduler.containerSecurityContext.runAsUser
-## @skip scheduler.containerSecurityContext.seccompProfile.type
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-      - ALL
-    privileged: false
-    readOnlyRootFilesystem: true
-    runAsNonRoot: true
-    runAsUser: 65532
-    seccompProfile:
-      type: RuntimeDefault
-  env:
-## @param scheduler.env.otelCollectorUrl sets url for open telemetry collector
-    otelCollectorUrl: otel-collector:4317
-  image:
-## @param     scheduler.image.registry specify the container registry for the scheduler image
-    registry: ""
-## @param scheduler.image.repository set image repository for scheduler
-    repository: keptn/scheduler
-## @param scheduler.image.tag set image tag for scheduler
-    tag: v1.0.2
-## @param   scheduler.image.imagePullPolicy specify pull policy for the manager image. This overrides global values
-    imagePullPolicy: ""
-## @extra scheduler.livenessProbe customizable liveness probe for the scheduler
-## @skip scheduler.livenessProbe.httpGet.path
-## @skip scheduler.livenessProbe.httpGet.port
-## @skip scheduler.livenessProbe.httpGet.scheme
-## @skip scheduler.livenessProbe.initialDelaySeconds
-  livenessProbe:
-    httpGet:
-      path: /healthz
-      port: 10259
-      scheme: HTTPS
-    initialDelaySeconds: 15
-## @extra scheduler.readinessProbe customizable readiness probe for the scheduler
-## @skip scheduler.readinessProbe.httpGet.path
-## @skip scheduler.readinessProbe.httpGet.port
-## @skip scheduler.readinessProbe.httpGet.scheme
-  readinessProbe:
-    httpGet:
-      path: /healthz
-      port: 10259
-      scheme: HTTPS
-## @extra scheduler.resources sets cpu and memory resources/limits for scheduler
-## @skip scheduler.resources.limits.cpu
-## @skip scheduler.resources.limits.memory
-## @skip scheduler.resources.requests.cpu
-## @skip scheduler.resources.requests.memory
-  resources:
-    limits:
-      cpu: 300m
-      memory: 100Mi
-    requests:
-      cpu: 100m
-      memory: 20Mi
-  tolerations: []
-## @param scheduler.topologySpreadConstraints add topology constraints for scheduler
-  topologySpreadConstraints: []
-## @param  schedulerConfig.profiles[0].schedulerName changes scheduler name
-schedulerConfig:
-  leaderElection:
-## @param  schedulerConfig.leaderElection.leaderElect enables leader election for multiple replicas of the scheduler
-    leaderElect: false
-  profiles:
-  - plugins:
-      permit:
-        enabled:
-## @param  schedulerConfig.profiles[0].plugins.permit.enabled[0].name enables permit plugin
-        - name: KLCPermit
-## @param scheduler.tolerations adds tolerations for scheduler
-    schedulerName: keptn-scheduler

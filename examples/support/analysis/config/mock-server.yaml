@@ -38,7 +38,7 @@ spec:
               value: INFO
             - name: SERVER_PORT
               value: "1080"
-          image: mockserver/mockserver:mockserver-5.13.0
+          image: mockserver/mockserver:mockserver-5.15.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 10

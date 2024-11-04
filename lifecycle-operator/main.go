@@ -423,7 +423,6 @@ func main() {
 						webhookRecorder,
 						ceClient),
 					webhookLogger,
-					env.SchedulingGatesEnabled,
 				),
 			},
 		})

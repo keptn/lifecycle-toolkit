@@ -38,8 +38,15 @@ spec:
               value: INFO
             - name: SERVER_PORT
               value: "1080"
-          image: mockserver/mockserver:mockserver-5.13.0
+          image: mockserver/mockserver:mockserver-5.15.0
           imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
           livenessProbe:
             failureThreshold: 10
             initialDelaySeconds: 10

@@ -38,13 +38,13 @@ integration-test-local:
 
 .PHONY: integration-test-metrics #these tests should run on a real cluster!
 integration-test-metrics:
-	kubectl apply -f ./lifecycle-operator/config/crd/bases
+	kubectl apply -f ./metrics-operator/config/crd/bases
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/
 
 .PHONY: integration-test-metrics-local #these tests should run on a real cluster!
 integration-test-metrics-local:
-	kubectl apply -f ./lifecycle-operator/config/crd/bases
+	kubectl apply -f ./metrics-operator/config/crd/bases
 	chainsaw test --test-dir ./test/chainsaw/testmetrics/ --config ./.chainsaw-local.yaml
 	chainsaw test --test-dir ./test/chainsaw/testanalysis/ --config ./.chainsaw-local.yaml
 

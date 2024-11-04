@@ -97,12 +97,14 @@ In this example, the objectives include response time and error rate analysis,
 each with its own criteria for passing or failing.
 The overall evaluation has passed, and no warnings have been issued.
 
+> Note: Please check the inline annotations to get more information about the particular lines you are interested in.
+
 ```json
 {
-    "objectiveResults": [
+    "objectiveResults"/*(1)!*/: [
         {
-            "result": {
-                "failResult": {
+            "result"/*(2)!*/: {
+                "failResult"/*(3)!*/: {
                     "operator": {
                         "greaterThan": {
                             "fixedValue": "500m"
@@ -110,7 +112,7 @@ The overall evaluation has passed, and no warnings have been issued.
                     },
                     "fulfilled": false
                 },
-                "warnResult": {
+                "warnResult"/*(4)!*/: {
                     "operator": {
                         "greaterThan": {
                             "fixedValue": "300m"
@@ -118,32 +120,32 @@ The overall evaluation has passed, and no warnings have been issued.
                     },
                     "fulfilled": false
                 },
-                "warning": false,
-                "pass": true
+                "warning"/*(5)!*/: false,
+                "pass"/*(6)!*/: true
             },
-            "objective": {
-                "analysisValueTemplateRef": {
+            "objective"/*(7)!*/: {
+                "analysisValueTemplateRef"/*(8)!*/: {
                     "name": "response-time-p95"
                 },
-                "target": {
+                "target"/*(9)!*/: {
                     "failure": {
                         "greaterThan": {
                             "fixedValue": "500m"
                         }
                     },
-                    "warning": {
+                    "warning" : {
                         "greaterThan": {
                             "fixedValue": "300m"
                         }
                     }
                 },
-                "weight": 1
+                "weight"/*(10)!*/: 1
             },
-            "value": 0.00475,
-            "score": 1
+            "value"/*(11)!*/: 0.00475,
+            "score"/*(12)!*/: 1
         },
         {
-            "result": {
+            "result"/*(13)!*/: {
                 "failResult": {
                     "operator": {
                         "greaterThan": {
@@ -161,77 +163,64 @@ The overall evaluation has passed, and no warnings have been issued.
                 "warning": false,
                 "pass": true
             },
-            "objective": {
-                "analysisValueTemplateRef": {
+            "objective"/*(14)!*/: {
+                "analysisValueTemplateRef"/*(15)!*/: {
                     "name": "error-rate"
                 },
-                "target": {
+                "target"/*(16)!*/: {
                     "failure": {
                         "greaterThan": {
                             "fixedValue": "0"
                         }
                     }
                 },
-                "weight": 1,
-                "keyObjective": true
+                "weight"/*(17)!*/: 1,
+                "keyObjective"/*(18)!*/: true
             },
-            "value": 0,
-            "score": 1
+            "value"/*(19)!*/: 0,
+            "score"/*(20)!*/: 1
         }
     ],
-    "totalScore": 2,
-    "maximumScore": 2,
-    "pass": true,
-    "warning": false
+    "totalScore"/*(21)!*/: 2,
+    "maximumScore"/*(22)!*/: 2,
+    "pass"/*(23)!*/: true,
+    "warning"/*(24)!*/: false
 }
 ```
 
-The meaning of each of these properties is as follows:
-
-**`objectiveResults`**: This is an array containing one or more objects,
-each representing the results of a specific objective or performance metric.
-
-- The first item in the array:
-    - **`result`** -- This object contains information about whether the objective has passed or failed.
-    It has two sub-objects:
-        - **`failResult`** -- Indicates whether the objective has failed.
-          In this case, it checks if a value is greater than 500 milliseconds
-          and it has not been fulfilled (`fulfilled: false`).
-        - **`warnResult`** -- Indicates whether the objective has issued a warning.
-          It checks if a value is greater than 300 milliseconds
-          and it has not been fulfilled (`fulfilled: false`).
-    - **`warning`** (false in this case).
-        - **`pass`** -- Indicates whether the objective has passed (true in this case).
-    - **`objective`** -- Describes the objective being evaluated.
-      It includes:
-        - **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`response-time-p95`).
-        - **`target`** -- Sets the target values for failure and warning conditions.
-          In this case, failure occurs
-          if the value is greater than 500 milliseconds
-          and warning occurs if it's greater than 300 milliseconds.
-        - **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
-    - **`value`** -- Indicates the actual value measured for this objective (value: 0.00475).
-    - **`score`** -- Indicates the score assigned to this objective (score: 1).
-
-- The second item in the array:
-    - **`result`** -- Similar to the first objective,
-      it checks whether a value is greater than 0 and has not been fulfilled (`fulfilled: false`).
-      There are no warning conditions in this case.
-    - **`objective`** -- Describes the objective related to error rate analysis.
-        - **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`error-rate`).
-        - **`target`** -- Sets the target value for failure (failure occurs if the value is greater than 0).
-        - **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
-        - **`keyObjective`** -- Indicates that this is a key objective (true).
-    - **`value`** -- Indicates the actual value measured for this objective (value: 0).
-    - **`score`** -- Indicates the score assigned to this objective (score: 1).
-
-**`totalScore`** -- Represents the total score achieved based on the objectives evaluated (totalScore: 2).
-
-**`maximumScore`** -- Indicates the maximum possible score (maximumScore: 2).
-
-**`pass`** -- Indicates whether the overall evaluation has passed (true in this case).
-
-**`warning`** -- Indicates whether any warnings have been issued during the evaluation (false in this case).
+1. **`objectiveResults`**: This is an array containing one or more objects,
+    each representing the results of a specific objective or performance metric.
+2. **`result`** -- This object contains information about whether the objective has passed or failed.
+    It has two sub-objects **`failResult`** & **`warnResult`**
+3. **`failResult`** -- Indicates whether the objective has failed.
+    In this case, it checks if a value is greater than 500 milliseconds and it has not been fulfilled (`fulfilled: false`).
+4. **`warnResult`** -- Indicates whether the objective has issued a warning.
+    It checks if a value is greater than 300 milliseconds
+5. **`warning`** (false in this case).
+6. **`pass`** -- Indicates whether the objective has passed (true in this case).
+7. **`objective`** -- Describes the objective being evaluated.
+    It includes: **`analysisValueTemplateRef`** , **`target`** & **`weight`**
+8. **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`response-time-p95`).
+9. **`target`** -- Sets the target value for failure (failure occurs if the value is greater than 0).
+    In this case, failure occurs
+    if the value is greater than 500 milliseconds and warning occurs if it's greater than 300 milliseconds.
+10. **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
+11. **`value`** -- Indicates the actual value measured for this objective (value: 0.00475).
+12. **`score`** -- Indicates the score assigned to this objective (score: 1).
+13. **`result`** -- Similar to the first objective,
+    it checks whether a value is greater than 0 and has not been fulfilled (`fulfilled: false`).
+    There are no warning conditions in this case.
+14. **`objective`** -- Describes the objective related to error rate analysis.
+15. **`analysisValueTemplateRef`** -- Refers to the template used for analysis (`error-rate`).
+16. **`target`** -- Sets the target value for failure (failure occurs if the value is greater than 0).
+17. **`weight`** -- Specifies the weight assigned to this objective (weight: 1).
+18. **`keyObjective`** -- Indicates that this is a key objective (true).
+19. **`value`** -- Indicates the actual value measured for this objective (value: 0).
+20. **`score`** -- Indicates the score assigned to this objective (score: 1).
+21. **`totalScore`** -- Represents the total score achieved based on the objectives evaluated (totalScore: 2).
+22. **`maximumScore`** -- Indicates the maximum possible score (maximumScore: 2).
+23. **`pass`** -- Indicates whether the overall evaluation has passed (true in this case).
+24. **`warning`** -- Indicates whether any warnings have been issued during the evaluation (false in this case).
 
 ## Usage
 

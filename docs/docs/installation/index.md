@@ -44,12 +44,6 @@ See
 [Keptn integration with Scheduling](../components/scheduling.md)
 for details.
 
-If Keptn is installed on a [vCluster](https://www.vcluster.com/),
-some extra configuration needs to be added for full compatibility.
-See
-[Running Keptn with vCluster](./configuration/vcluster.md)
-for more information.
-
 If you want to deploy Keptn via [ArgoCD](https://argoproj.github.io/cd/),
 refer to the [Deploying Keptn via ArgoCD](./configuration/argocd.md) section
 for more information.

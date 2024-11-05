@@ -122,7 +122,6 @@ nav:
               - docs/installation/configuration/index.md
               - Restricting monitored namespaces: docs/installation/configuration/namespace-keptn.md
               - Allocating namespaces for Keptn resources: docs/installation/configuration/namespace-resources.md
-              - vCluster installation: docs/installation/configuration/vcluster.md
               - Keptn + cert-manager.io: docs/installation/configuration/cert-manager.md
               - Deploy Keptn via ArgoCD: docs/installation/configuration/argocd.md
               - Deploy Keptn on OpenShift: docs/installation/configuration/Openshift.md
@@ -158,7 +157,7 @@ nav:
               - Keptn non-blocking application deployment: docs/components/lifecycle-operator/keptn-non-blocking.md
               - Webhooks: docs/components/lifecycle-operator/webhook.md
           - Metrics Operator: docs/components/metrics-operator.md
-          - Scheduler and Scheduling Gates: docs/components/scheduling.md
+          - Scheduling Gates: docs/components/scheduling.md
           - Keptn Certificate Manager: docs/components/certificate-operator.md
       - Reference:
           - docs/reference/index.md

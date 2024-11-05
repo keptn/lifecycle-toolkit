@@ -20,9 +20,8 @@ metadata:
 ```
 
 The mutating webhook only modifies specifically annotated resources in the annotated namespace.
-When the webhook receives a request for a new pod, it first either replaces the scheduler
-with the Keptn Scheduler, or adds the
-[Scheduling Gate](https://keptn.sh/stable/docs/components/scheduling/#keptn-scheduling-gates-for-k8s-127-and-above).
+When the webhook receives a request for a new pod, it adds the
+[Scheduling Gate](https://keptn.sh/stable/docs/components/scheduling/#keptn-scheduling-gates).
 
 In the next step it looks for the workload annotations:
 

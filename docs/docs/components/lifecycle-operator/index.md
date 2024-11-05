@@ -21,12 +21,12 @@ transitions between different stages such as development, testing, staging, and 
 graph TD;
 
 G((CRs + manifests)) -- apply --> H[Kubernetes API]
-I[Scheduler] <-- schedules Pods --> H
-J[Lifecycle controllers] <-- orchestrates --> H
+I[Lifecycle controller] <-- orchestrates --> H
+I <-- schedules Pods --> H
+
     
 style H fill:#006bb8,stroke:#fff,stroke-width:px,color:#fff
 style I fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
-style J fill:#d8e6f4,stroke:#fff,stroke-width:px,color:#006bb8
 style G fill:#fff,stroke:#123,stroke-width:px,color:#006bb8
 ```
 

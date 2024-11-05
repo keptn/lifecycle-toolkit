@@ -136,12 +136,12 @@ kubectl edit configmap otel-collector-conf \
 ```
 
 When the `otel-collector` pod is up and running,
-restart the `keptn-scheduler` (if installed) and `lifecycle-operator`
+restart the `lifecycle-operator`
 so they can pick up the new configuration:
 
 ```shell
 kubectl rollout restart deployment \
-    -n keptn-system keptn-scheduler lifecycle-operator
+    -n keptn-system lifecycle-operator
 ```
 
 Keptn begins to collect OpenTelemetry metrics

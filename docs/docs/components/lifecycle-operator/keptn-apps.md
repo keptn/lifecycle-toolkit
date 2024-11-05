@@ -59,7 +59,7 @@ Implementing Keptn applications provides the following benefits:
   of all workloads together rather than individually.
 * You can define pre-deployment evaluations and tasks
   that must all complete successfully
-  before the scheduler binds the pods to the nodes.
+  before the Kubernetes scheduler binds the pods to the nodes.
   For information about how to disable the blocking
   functionality, please refer to
   [this section](./keptn-non-blocking.md#keptn-non-blocking-deployment-functionality).

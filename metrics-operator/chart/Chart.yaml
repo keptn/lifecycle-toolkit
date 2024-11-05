@@ -20,7 +20,7 @@ annotations:
       url: https://slack.keptn.sh/
   artifacthub.io/license: Apache-2.0
   artifacthub.io/operator: 'true'
-kubeVersion: '>= 1.24.0-0'
+kubeVersion: '>= 1.27.0-0'
 type: application
 version: 0.3.1
 appVersion: v1.1.1 # x-release-please-version

@@ -21,9 +21,9 @@ require (
 	k8s.io/api v0.31.2
 	k8s.io/apiextensions-apiserver v0.31.2
 	k8s.io/apimachinery v0.31.2
-	k8s.io/apiserver v0.29.10
+	k8s.io/apiserver v0.31.2
 	k8s.io/client-go v0.31.2
-	k8s.io/component-base v0.29.10
+	k8s.io/component-base v0.31.2
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/metrics v0.29.10
 	sigs.k8s.io/controller-runtime v0.19.1
@@ -34,7 +34,7 @@ require (
 require (
 	github.com/DataDog/zstd v1.5.2 // indirect
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
-	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20230305170008-8188dc5388df // indirect
+	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
@@ -119,7 +119,7 @@ require (
 
 replace (
 	github.com/golang/protobuf => github.com/golang/protobuf v1.5.4
-	github.com/google/cel-go => github.com/google/cel-go v0.17.7
+	github.com/google/cel-go => github.com/google/cel-go v0.21.0
 	github.com/prometheus/client_golang => github.com/prometheus/client_golang v1.18.0
 	github.com/prometheus/common => github.com/prometheus/common v0.47.0
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc => go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.56.0

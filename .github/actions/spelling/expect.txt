@@ -650,7 +650,6 @@ Utkarsh
 validatingwebhookconfigurations
 vanalysis
 vanalysisdefinition
-vcluster
 Vec
 versioned
 versioning

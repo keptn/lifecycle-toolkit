@@ -24,8 +24,8 @@ After you install Keptn, you are ready to
 Keptn requires Kubernetes v1.27.0 or later.
 
 Run the following to ensure that both client and server versions
-are running Kubernetes versions greater than or equal to v1.24.
-In this example, both client and server are at v1.24.0
+are running Kubernetes versions greater than or equal to v1.27.
+In this example, both client and server are at v1.27.0
 so Keptn will work.
 
 ```shell

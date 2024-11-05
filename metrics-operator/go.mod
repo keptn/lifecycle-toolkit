@@ -21,9 +21,9 @@ require (
 	k8s.io/api v0.31.2
 	k8s.io/apiextensions-apiserver v0.31.2
 	k8s.io/apimachinery v0.31.2
-	k8s.io/apiserver v0.29.10
+	k8s.io/apiserver v0.31.2
 	k8s.io/client-go v0.31.2
-	k8s.io/component-base v0.29.10
+	k8s.io/component-base v0.31.2
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/metrics v0.29.10
 	sigs.k8s.io/controller-runtime v0.19.1
@@ -119,7 +119,7 @@ require (
 
 replace (
 	github.com/golang/protobuf => github.com/golang/protobuf v1.5.4
-	github.com/google/cel-go => github.com/google/cel-go v0.17.7
+	github.com/google/cel-go => github.com/google/cel-go v0.17.8
 	github.com/prometheus/client_golang => github.com/prometheus/client_golang v1.18.0
 	github.com/prometheus/common => github.com/prometheus/common v0.47.0
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc => go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.56.0

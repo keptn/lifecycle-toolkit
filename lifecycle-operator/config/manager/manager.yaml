@@ -56,9 +56,9 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: FUNCTION_RUNNER_IMAGE
-              value: ghcr.io/keptn/deno-runtime:v3.0.0
+              value: ghcr.io/keptn/deno-runtime:v3.0.1
             - name: PYTHON_RUNNER_IMAGE
-              value: ghcr.io/keptn/python-runtime:v1.0.7
+              value: ghcr.io/keptn/python-runtime:v1.0.8
             - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
               value: "0"
             - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL

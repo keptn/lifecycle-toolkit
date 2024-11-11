@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.8](https://github.com/keptn/lifecycle-toolkit/compare/python-runtime-v1.0.7...python-runtime-v1.0.8) (2024-11-11)
+
+
+### Other
+
+* **python-runtime:** remove pinned version of libexpat ([#3844](https://github.com/keptn/lifecycle-toolkit/issues/3844)) ([8f23af5](https://github.com/keptn/lifecycle-toolkit/commit/8f23af58addbbb83d81248b7025b923668f6d39e))
+
 ## [1.0.7](https://github.com/keptn/lifecycle-toolkit/compare/python-runtime-v1.0.6...python-runtime-v1.0.7) (2024-11-04)
 
 

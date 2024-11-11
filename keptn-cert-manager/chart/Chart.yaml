@@ -19,7 +19,7 @@ annotations:
   artifacthub.io/operator: 'true'
 kubeVersion: '>= 1.27.0-0'
 type: application
-version: 0.2.6 # Helm Chart version
+version: 0.3.0 # Helm Chart version
 appVersion: v3.0.0 # x-release-please-version
 dependencies:
   - name: common

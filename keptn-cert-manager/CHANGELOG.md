@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.0.0](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.2.2...cert-manager-v3.0.0) (2024-11-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* The Keptn Scheduler was removed and therefore support for Kubernetes 1.26 and lower was dropped.
+
+### Docs
+
+* remove Keptn scheduler ([#3826](https://github.com/keptn/lifecycle-toolkit/issues/3826)) ([cb01b09](https://github.com/keptn/lifecycle-toolkit/commit/cb01b09ec5ec079595e5d64de70c541b432f4de0))
+
+
+### Dependency Updates
+
+* bump umbrella chart dependencies ([#3816](https://github.com/keptn/lifecycle-toolkit/issues/3816)) ([302150a](https://github.com/keptn/lifecycle-toolkit/commit/302150a60b07c88d9d1fe6412dfb91f89fb36c7f))
+* update golang docker tag to v1.23.3 ([#3847](https://github.com/keptn/lifecycle-toolkit/issues/3847)) ([a200b38](https://github.com/keptn/lifecycle-toolkit/commit/a200b38e5c4f1b4d024e50585d68410f8ceba446))
+
 ## [2.2.2](https://github.com/keptn/lifecycle-toolkit/compare/cert-manager-v2.2.1...cert-manager-v2.2.2) (2024-10-30)
 
 

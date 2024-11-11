@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.0.0](https://github.com/keptn/lifecycle-toolkit/compare/keptn-v2.3.0...keptn-v3.0.0) (2024-11-11)
+## [2.4.0](https://github.com/keptn/lifecycle-toolkit/compare/keptn-v2.3.0...keptn-v2.4.0) (2024-11-11)
 
 
 ### ⚠ BREAKING CHANGES

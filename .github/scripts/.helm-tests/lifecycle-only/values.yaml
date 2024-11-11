@@ -4,12 +4,11 @@ global:
 lifecycleOperator:
   enabled: true
   promotionTasksEnabled: true
-  lifecycleOperator:
-    image:
-      repository: busybox
-      tag: 1.37
-      imagePullPolicy: Always
-    hostNetwork: true
+  image:
+    repository: busybox
+    tag: 1.37
+    imagePullPolicy: Always
+  hostNetwork: true
   deniedNamespaces: ["foo", "bar"]
 
 metricsOperator:

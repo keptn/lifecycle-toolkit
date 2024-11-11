@@ -1,5 +1,48 @@
 # Changelog
 
+## [2.4.0](https://github.com/keptn/lifecycle-toolkit/compare/keptn-v2.3.0...keptn-v2.4.0) (2024-11-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* **lifecycle-operator:** The Lifecycle Operator helm chart was adapted after removal of the Keptn Scheduler and many Helm values were simplified, please double check your values files and adapt them accordingly.
+* The Keptn Scheduler was removed and therefore support for Kubernetes 1.26 and lower was dropped.
+* remove Keptn scheduler ([#3821](https://github.com/keptn/lifecycle-toolkit/issues/3821))
+
+### Bug Fixes
+
+* **lifecycle-operator:** remove scheduler from helm charts ([#3855](https://github.com/keptn/lifecycle-toolkit/issues/3855)) ([fd78a53](https://github.com/keptn/lifecycle-toolkit/commit/fd78a536c1131ca57b0e8e7929a6c382b34e47b8))
+
+
+### Other
+
+* bump helm chart versions ([#3857](https://github.com/keptn/lifecycle-toolkit/issues/3857)) ([1873178](https://github.com/keptn/lifecycle-toolkit/commit/1873178a28878c0a12ce00e20a8e62d105068fe5))
+* polish helm charts ([#3853](https://github.com/keptn/lifecycle-toolkit/issues/3853)) ([17fa47b](https://github.com/keptn/lifecycle-toolkit/commit/17fa47b16fb43bb627a466e999851bc1f225e878))
+* release cert-manager 3.0.0 ([#3819](https://github.com/keptn/lifecycle-toolkit/issues/3819)) ([f3aac6a](https://github.com/keptn/lifecycle-toolkit/commit/f3aac6a691aefc721ced5e5681729b235e19a64c))
+* release deno-runtime 3.0.1 ([#3833](https://github.com/keptn/lifecycle-toolkit/issues/3833)) ([a4a99dc](https://github.com/keptn/lifecycle-toolkit/commit/a4a99dcd98addb9ecb05025195b9438a975165a0))
+* release lifecycle-operator 2.0.0 ([#3818](https://github.com/keptn/lifecycle-toolkit/issues/3818)) ([3c671ee](https://github.com/keptn/lifecycle-toolkit/commit/3c671ee8030e0badcfa0caa3bfe649fbc86386f0))
+* release metrics-operator 2.0.0 ([#3820](https://github.com/keptn/lifecycle-toolkit/issues/3820)) ([8247c33](https://github.com/keptn/lifecycle-toolkit/commit/8247c3355b4dcd4b2640ec349d67082b3986488c))
+* release python-runtime 1.0.7 ([#3822](https://github.com/keptn/lifecycle-toolkit/issues/3822)) ([1bbde40](https://github.com/keptn/lifecycle-toolkit/commit/1bbde406d6b1879d67ee48c792e84662f44744ec))
+* release python-runtime 1.0.8 ([#3845](https://github.com/keptn/lifecycle-toolkit/issues/3845)) ([96a0a27](https://github.com/keptn/lifecycle-toolkit/commit/96a0a271e7901ea170b290871a45eef723509fcd))
+* remove Keptn scheduler ([#3821](https://github.com/keptn/lifecycle-toolkit/issues/3821)) ([de3a0e7](https://github.com/keptn/lifecycle-toolkit/commit/de3a0e7a17c8c16ab350188d5235ca6b435c6ba5))
+
+
+### Docs
+
+* remove Keptn scheduler ([#3826](https://github.com/keptn/lifecycle-toolkit/issues/3826)) ([cb01b09](https://github.com/keptn/lifecycle-toolkit/commit/cb01b09ec5ec079595e5d64de70c541b432f4de0))
+
+
+### Dependency Updates
+
+* bump mockserver to v5.15.0 ([#3825](https://github.com/keptn/lifecycle-toolkit/issues/3825)) ([5be9abe](https://github.com/keptn/lifecycle-toolkit/commit/5be9abef60efcd82c7d719874561ea82830c78b5))
+* **lifecycle-operator:** bump python and deno runtime images ([#3852](https://github.com/keptn/lifecycle-toolkit/issues/3852)) ([140498b](https://github.com/keptn/lifecycle-toolkit/commit/140498ba922640ee76d8a8a7330056e721eb8193))
+* update anchore/sbom-action action to v0.17.7 ([#3839](https://github.com/keptn/lifecycle-toolkit/issues/3839)) ([80882e1](https://github.com/keptn/lifecycle-toolkit/commit/80882e11a2cbde75fa0b445ed21946edef8e938b))
+* update check-spelling/check-spelling action to v0.0.24 ([#3827](https://github.com/keptn/lifecycle-toolkit/issues/3827)) ([9de9e44](https://github.com/keptn/lifecycle-toolkit/commit/9de9e44125cc65fe63c5e2efd1930ca8c85c8d82))
+* update dependency pymdown-extensions to v10.12 ([#3831](https://github.com/keptn/lifecycle-toolkit/issues/3831)) ([3dc5d8b](https://github.com/keptn/lifecycle-toolkit/commit/3dc5d8b125df8238876baf2efe35fc23b41d244d))
+* update github actions (patch) ([#3817](https://github.com/keptn/lifecycle-toolkit/issues/3817)) ([5a09dfa](https://github.com/keptn/lifecycle-toolkit/commit/5a09dfa1e24256a737ff751493b65fa49d7b03e6))
+* update squidfunk/mkdocs-material to v9.5.43 (patch) ([#3830](https://github.com/keptn/lifecycle-toolkit/issues/3830)) ([06abb69](https://github.com/keptn/lifecycle-toolkit/commit/06abb6963173dd5e16d033a280a2916d435338c7))
+* update squidfunk/mkdocs-material to v9.5.44 (patch) ([#3841](https://github.com/keptn/lifecycle-toolkit/issues/3841)) ([bcd369b](https://github.com/keptn/lifecycle-toolkit/commit/bcd369bde0b753427648e49922b206e9d3ed10ac))
+
 ## [2.3.0](https://github.com/keptn/lifecycle-toolkit/compare/keptn-v2.2.0...keptn-v2.3.0) (2024-11-04)
 
 

@@ -30,139 +30,137 @@ global:
     ## @param global.openShift.enabled Enable this value to install on Openshift
     enabled: false
 
-lifecycleOperatorConfig:
+config:
   health:
-## @param    lifecycleOperatorConfig.health.healthProbeBindAddress setup on what address to start the default health handler
+## @param    config.health.healthProbeBindAddress setup on what address to start the default health handler
     healthProbeBindAddress: :8081
   leaderElection:
-## @param    lifecycleOperatorConfig.leaderElection.leaderElect enable leader election for multiple replicas of the lifecycle operator
+## @param    config.leaderElection.leaderElect enable leader election for multiple replicas of the lifecycle operator
     leaderElect: true
-## @param    lifecycleOperatorConfig.leaderElection.resourceName define LeaderElectionID
+## @param    config.leaderElection.resourceName define LeaderElectionID
     resourceName: 6b866dd9.keptn.sh
   metrics:
-## @param    lifecycleOperatorConfig.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
+## @param    config.metrics.bindAddress MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics. It can be set to "0" to disable the metrics serving.
     bindAddress: 127.0.0.1:8080
   webhook:
-## @param    lifecycleOperatorConfig.webhook.port setup port for the lifecycle operator admission webhook
+## @param    config.webhook.port setup port for the lifecycle operator admission webhook
     port: 9443
-## @extra    lifecycleWebhookService Mutating Webhook Configurations for lifecycle Operator
-lifecycleWebhookService:
+## @extra    webhookService Mutating Webhook Configurations for lifecycle Operator
+webhookService:
   ports:
-## @param    lifecycleWebhookService.ports[0].port
+## @param    webhookService.ports[0].port
   - port: 443
-## @param    lifecycleWebhookService.ports[0].protocol
+## @param    webhookService.ports[0].protocol
     protocol: TCP
-## @param    lifecycleWebhookService.ports[0].targetPort
+## @param    webhookService.ports[0].targetPort
     targetPort: 9443
-## @param    lifecycleWebhookService.type
+## @param    webhookService.type
   type: ClusterIP
 
-## @section Keptn Lifecycle Operator controller
-## @extra   lifecycleOperator.containerSecurityContext Sets security context privileges
-lifecycleOperator:
-  containerSecurityContext:
-## @param   lifecycleOperator.containerSecurityContext.allowPrivilegeEscalation
-    allowPrivilegeEscalation: false
-    capabilities:
-## @param   lifecycleOperator.containerSecurityContext.capabilities.drop
-      drop:
-      - ALL
-## @param   lifecycleOperator.containerSecurityContext.privileged
-    privileged: false
-## @param   lifecycleOperator.containerSecurityContext.runAsGroup
-    runAsGroup: 65532
-## @param   lifecycleOperator.containerSecurityContext.runAsNonRoot
-    runAsNonRoot: true
-## @param   lifecycleOperator.containerSecurityContext.runAsUser
-    runAsUser: 65532
-    seccompProfile:
-## @param   lifecycleOperator.containerSecurityContext.seccompProfile.type
-      type: RuntimeDefault
-## @param   lifecycleOperator.env.functionRunnerImage specify image for deno task runtime
-  env:
-    functionRunnerImage: ghcr.io/keptn/deno-runtime:v3.0.0
-## @param   lifecycleOperator.env.keptnAppControllerLogLevel sets the log level of Keptn App Controller
-    keptnAppControllerLogLevel: "0"
-## @param   lifecycleOperator.env.keptnAppCreationRequestControllerLogLevel sets the log level of Keptn App Creation Request Controller
-    keptnAppCreationRequestControllerLogLevel: "0"
-## @param   lifecycleOperator.env.keptnAppVersionControllerLogLevel sets the log level of Keptn AppVersion Controller
-    keptnAppVersionControllerLogLevel: "0"
-## @param   lifecycleOperator.env.keptnEvaluationControllerLogLevel sets the log level of Keptn Evaluation Controller
-    keptnEvaluationControllerLogLevel: "0"
-## @param   lifecycleOperator.env.keptnTaskControllerLogLevel sets the log level of Keptn Task Controller
-    keptnTaskControllerLogLevel: "0"
-## @param   lifecycleOperator.env.keptnTaskDefinitionControllerLogLevel sets the log level of Keptn TaskDefinition Controller
-    keptnTaskDefinitionControllerLogLevel: "0"
-## @param   lifecycleOperator.env.keptnWorkloadControllerLogLevel sets the log level of Keptn Workload Controller
-    keptnWorkloadControllerLogLevel: "0"
-## @param   lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel sets the log level of Keptn WorkloadVersion Controller
-    keptnWorkloadVersionControllerLogLevel: "0"
-## @param   lifecycleOperator.env.keptnDoraMetricsPort sets the port for accessing lifecycle metrics in prometheus format
-    keptnDoraMetricsPort: "2222"
-## @param   lifecycleOperator.env.optionsControllerLogLevel sets the log level of Keptn Options Controller
-    optionsControllerLogLevel: "0"
-## @param   lifecycleOperator.env.pythonRunnerImage specify image for python task runtime
-    pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.7
-  image:
-## @param    lifecycleOperator.image.registry specify the container registry for the lifecycle-operator image
-    registry: ""
-## @param   lifecycleOperator.image.repository specify registry for manager image
-    repository: keptn/lifecycle-operator
-## @param   lifecycleOperator.image.tag  select tag for manager image
-    tag: v1.2.0 # x-release-please-version
-## @param   lifecycleOperator.image.imagePullPolicy specify pull policy for the manager image. This overrides global values
-    imagePullPolicy: ""
-## @extra  lifecycleOperator.livenessProbe custom liveness probe for manager container
-## @skip   lifecycleOperator.livenessProbe.httpGet.path
-## @skip   lifecycleOperator.livenessProbe.httpGet.port
-## @skip   lifecycleOperator.livenessProbe.initialDelaySeconds
-## @skip   lifecycleOperator.livenessProbe.periodSeconds
-  livenessProbe:
-    httpGet:
-      path: /healthz
-      port: 8081
-    initialDelaySeconds: 15
-    periodSeconds: 20
-## @extra  lifecycleOperator.readinessProbe custom readinessprobe for manager container
-## @skip   lifecycleOperator.readinessProbe.httpGet.path
-## @skip   lifecycleOperator.readinessProbe.httpGet.port
-## @skip   lifecycleOperator.readinessProbe.initialDelaySeconds
-## @skip   lifecycleOperator.readinessProbe.periodSeconds
-  readinessProbe:
-    httpGet:
-      path: /readyz
-      port: 8081
-    initialDelaySeconds: 5
-    periodSeconds: 10
-## @extra  lifecycleOperator.resources specify limits and requests for manager container
-## @skip   lifecycleOperator.resources.limits.cpu
-## @skip   lifecycleOperator.resources.limits.memory
-## @skip   lifecycleOperator.resources.requests.cpu
-## @skip   lifecycleOperator.resources.requests.memory
-  resources:
-    limits:
-      cpu: 500m
-      memory: 128Mi
-    requests:
-      cpu: 5m
-      memory: 64Mi
-## @param   lifecycleOperator.nodeSelector add custom nodes selector to lifecycle operator
-  nodeSelector: {}
-## @param   lifecycleOperator.replicas customize number of installed lifecycle operator replicas
-  replicas: 1
-## @param   lifecycleOperator.tolerations add custom tolerations to lifecycle operator
-  tolerations: []
-## @param   lifecycleOperator.topologySpreadConstraints add custom topology constraints to lifecycle operator
-  topologySpreadConstraints: []
-## @param   lifecycleOperator.hostNetwork Sets hostNetwork option for lifecycle operator
-  hostNetwork: false
-## @extra   lifecycleOperatorMetricsService Adjust settings here to change the k8s service for scraping Prometheus metrics
-## @skip    lifecycleOperatorMetricsService.ports[0].name
-## @skip    lifecycleOperatorMetricsService.ports[0].port
-## @skip    lifecycleOperatorMetricsService.ports[0].protocol
-## @skip    lifecycleOperatorMetricsService.ports[0].targetPort
-## @skip    lifecycleOperatorMetricsService.type
-lifecycleOperatorMetricsService:
+## @extra   containerSecurityContext Sets security context privileges
+containerSecurityContext:
+## @param   containerSecurityContext.allowPrivilegeEscalation
+  allowPrivilegeEscalation: false
+  capabilities:
+## @param   containerSecurityContext.capabilities.drop
+    drop:
+    - ALL
+## @param   containerSecurityContext.privileged
+  privileged: false
+## @param   containerSecurityContext.runAsGroup
+  runAsGroup: 65532
+## @param   containerSecurityContext.runAsNonRoot
+  runAsNonRoot: true
+## @param   containerSecurityContext.runAsUser
+  runAsUser: 65532
+  seccompProfile:
+## @param   containerSecurityContext.seccompProfile.type
+    type: RuntimeDefault
+## @param   env.functionRunnerImage specify image for deno task runtime
+env:
+  functionRunnerImage: ghcr.io/keptn/deno-runtime:v3.0.1
+## @param   env.keptnAppControllerLogLevel sets the log level of Keptn App Controller
+  keptnAppControllerLogLevel: "0"
+## @param   env.keptnAppCreationRequestControllerLogLevel sets the log level of Keptn App Creation Request Controller
+  keptnAppCreationRequestControllerLogLevel: "0"
+## @param   env.keptnAppVersionControllerLogLevel sets the log level of Keptn AppVersion Controller
+  keptnAppVersionControllerLogLevel: "0"
+## @param   env.keptnEvaluationControllerLogLevel sets the log level of Keptn Evaluation Controller
+  keptnEvaluationControllerLogLevel: "0"
+## @param   env.keptnTaskControllerLogLevel sets the log level of Keptn Task Controller
+  keptnTaskControllerLogLevel: "0"
+## @param   env.keptnTaskDefinitionControllerLogLevel sets the log level of Keptn TaskDefinition Controller
+  keptnTaskDefinitionControllerLogLevel: "0"
+## @param   env.keptnWorkloadControllerLogLevel sets the log level of Keptn Workload Controller
+  keptnWorkloadControllerLogLevel: "0"
+## @param   env.keptnWorkloadVersionControllerLogLevel sets the log level of Keptn WorkloadVersion Controller
+  keptnWorkloadVersionControllerLogLevel: "0"
+## @param   env.keptnDoraMetricsPort sets the port for accessing lifecycle metrics in prometheus format
+  keptnDoraMetricsPort: "2222"
+## @param   env.optionsControllerLogLevel sets the log level of Keptn Options Controller
+  optionsControllerLogLevel: "0"
+## @param   env.pythonRunnerImage specify image for python task runtime
+  pythonRunnerImage: ghcr.io/keptn/python-runtime:v1.0.8
+image:
+## @param    image.registry specify the container registry for the lifecycle-operator image
+  registry: ""
+## @param   image.repository specify registry for manager image
+  repository: keptn/lifecycle-operator
+## @param   image.tag  select tag for manager image
+  tag: v2.0.0 # x-release-please-version
+## @param   image.imagePullPolicy specify pull policy for the manager image. This overrides global values
+  imagePullPolicy: ""
+## @extra  livenessProbe custom liveness probe for manager container
+## @skip   livenessProbe.httpGet.path
+## @skip   livenessProbe.httpGet.port
+## @skip   livenessProbe.initialDelaySeconds
+## @skip   livenessProbe.periodSeconds
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8081
+  initialDelaySeconds: 15
+  periodSeconds: 20
+## @extra  readinessProbe custom readinessprobe for manager container
+## @skip   readinessProbe.httpGet.path
+## @skip   readinessProbe.httpGet.port
+## @skip   readinessProbe.initialDelaySeconds
+## @skip   readinessProbe.periodSeconds
+readinessProbe:
+  httpGet:
+    path: /readyz
+    port: 8081
+  initialDelaySeconds: 5
+  periodSeconds: 10
+## @extra  resources specify limits and requests for manager container
+## @skip   resources.limits.cpu
+## @skip   resources.limits.memory
+## @skip   resources.requests.cpu
+## @skip   resources.requests.memory
+resources:
+  limits:
+    cpu: 500m
+    memory: 128Mi
+  requests:
+    cpu: 5m
+    memory: 64Mi
+## @param   nodeSelector add custom nodes selector to lifecycle operator
+nodeSelector: {}
+## @param   replicas customize number of installed lifecycle operator replicas
+replicas: 1
+## @param   tolerations add custom tolerations to lifecycle operator
+tolerations: []
+## @param   topologySpreadConstraints add custom topology constraints to lifecycle operator
+topologySpreadConstraints: []
+## @param   hostNetwork Sets hostNetwork option for lifecycle operator
+hostNetwork: false
+## @extra   operatorMetricsService Adjust settings here to change the k8s service for scraping Prometheus metrics
+## @skip    operatorMetricsService.ports[0].name
+## @skip    operatorMetricsService.ports[0].port
+## @skip    operatorMetricsService.ports[0].protocol
+## @skip    operatorMetricsService.ports[0].targetPort
+## @skip    operatorMetricsService.type
+operatorMetricsService:
   ports:
   - name: metrics
     port: 2222

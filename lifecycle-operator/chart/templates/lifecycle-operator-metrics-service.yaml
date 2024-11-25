@@ -11,9 +11,9 @@ metadata:
     control-plane: lifecycle-operator
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 spec:
-  type: {{ .Values.lifecycleOperatorMetricsService.type }}
+  type: {{ .Values.operatorMetricsService.type }}
   selector:
     control-plane: lifecycle-operator
   {{- include "common.selectorLabels"  ( dict "context" . )  | nindent 4 }}
   ports:
-	{{- .Values.lifecycleOperatorMetricsService.ports | toYaml | nindent 2 -}}
+	{{- .Values.operatorMetricsService.ports | toYaml | nindent 2 -}}

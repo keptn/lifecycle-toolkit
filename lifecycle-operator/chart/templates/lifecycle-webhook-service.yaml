@@ -10,9 +10,9 @@ metadata:
   labels:
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 spec:
-  type: {{ .Values.lifecycleWebhookService.type }}
+  type: {{ .Values.webhookService.type }}
   selector:
     control-plane: lifecycle-operator
   {{- include "common.selectorLabels"  ( dict "context" . )  | nindent 4 }}
   ports:
-	{{- .Values.lifecycleWebhookService.ports | toYaml | nindent 2 -}}
+	{{- .Values.webhookService.ports | toYaml | nindent 2 -}}

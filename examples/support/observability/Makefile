@@ -6,6 +6,8 @@ GRAFANA_PORT_FORWARD ?= 3000
 
 .PHONY: install
 install: install-cert-manager
+	kubectl apply -f ../keptn/keptnconfig.yaml
+
 	@echo "-----------------------------------"
 	@echo "Create Namespace and install Jaeger"
 	@echo "-----------------------------------"

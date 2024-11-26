@@ -293,6 +293,10 @@ figure {
     .tx-hero h1 {
         font-size: 1.4rem
     }
+
+    .mdx-hero__content {
+        margin-top: 35vh;
+    }
 }
 
 @media screen and (min-width:60em) {

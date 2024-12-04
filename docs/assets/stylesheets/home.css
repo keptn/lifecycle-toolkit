@@ -213,7 +213,7 @@ figure {
 
 .bg-default {
   width: 100vw;
-  height: 80vh;
+  height: 50vh;
   background-color: var(--md-primary-fg-color);
   color: #ffffff;
 }
@@ -253,7 +253,7 @@ figure {
 }
 
 .mdx-hero__content {
-  margin-top: 50vh;
+  margin-top: 20vh;
 }
 
 .hr {
@@ -395,6 +395,10 @@ figure {
 
   .mdx-hero__content {
     margin-top: 35vh;
+  }
+
+  .bg-default {
+    height: 80vh;
   }
 }
 

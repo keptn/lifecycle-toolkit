@@ -1,4 +1,4 @@
-site_name: Keptn - Supercharge Your Deployments
+site_name: Keptn
 theme:
   name: material
   custom_dir: docs/overrides
@@ -51,8 +51,6 @@ extra:
     provider: google
     property: !ENV GLOBAL_ANALYTICS_CODE
   social:
-    - icon: fontawesome/solid/house
-      link: https://keptn.sh
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/keptnProject
     - icon: fontawesome/brands/linkedin
@@ -61,6 +59,8 @@ extra:
       link: https://github.com/keptn
     - icon: fontawesome/brands/slack
       link: https://cloud-native.slack.com/archives/C017GAX90GM
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/c/keptn
 extra_javascript:
   - assets/javascripts/versions.js
 extra_css:

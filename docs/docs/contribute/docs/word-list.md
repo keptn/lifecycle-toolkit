@@ -74,7 +74,7 @@ Here are some guidelines for using these terms in Keptn documentation.
 * The dictionary of Kubernetes terms that is used by the
   Spell checker
   is in the `cspell`
-  [k8s.txt](https://github.com/check-spelling/cspell-dicts/blob/main/dictionaries/k8s/dict/k8s.txt)
+  [k8s.txt](https://github.com/check-spelling/cspell-dicts/blob/main/dictionaries/k8s/k8s.txt)
   file.
 
 ### CRD, resource, etc

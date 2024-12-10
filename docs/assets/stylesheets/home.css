@@ -55,6 +55,7 @@ figure {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: right;
 }
 
 .bg-blue {
@@ -286,6 +287,10 @@ figure {
   margin-top: 1rem;
 }
 
+.md-footer-meta {
+  background-color: transparent;
+}
+
 .md-footer-social {
   padding-top: 20px;
 }
@@ -344,7 +349,14 @@ figure {
         width: 200px;
         height: 100px;
     }
+}
+
+@media (max-width: 960px) {
+.feature-image-container > img,
+  .feature-image-container--vertical > img {
+    object-position: center;
   }
+}
 
 @media (max-width: 1300px) {
   .mdx-hero__content,
@@ -399,6 +411,12 @@ figure {
 
   .bg-default {
     height: 80vh;
+  }
+}
+
+@media screen and (max-width: 40em) {
+  .bg-default {
+    height: 100vh;
   }
 }
 
@@ -484,5 +502,9 @@ figure {
 @media only screen and (max-width: 1220px) {
   .md-nav--primary .md-nav__title .md-nav__icon {
     display: none !important;
+  }
+
+  .md-footer-meta {
+    padding: 0px 30px;
   }
 }

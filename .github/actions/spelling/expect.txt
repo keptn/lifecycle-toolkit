@@ -51,6 +51,7 @@ asdfg
 authurl
 automerge
 automountserviceaccounttokenspec
+autoplay
 autoprovision
 autoscaler
 azurecr
@@ -81,6 +82,7 @@ chainsaw
 changefreq
 Chans
 Checkmarx
+cil
 clientgoscheme
 cloudevents
 clt
@@ -116,6 +118,7 @@ ctrlcommon
 ctx
 curlcontainer
 curlimages
+currentcolor
 CURRENTVERSION
 customresourcedefinitions
 cwd
@@ -379,7 +382,6 @@ kyverno
 lastword
 Lato
 LFC
-libexpat
 Lifcycle
 lifecyclekeptnsh
 linenums
@@ -478,6 +480,7 @@ owide
 oyaml
 PARAMSx
 PDTR
+pepicons
 perc
 phaseitem
 phasetraceid
@@ -637,6 +640,7 @@ trivy
 trunc
 ttlsecondsafterfinished
 ttlsecondstask
+twemoji
 typeof
 UIDs
 Umre
@@ -688,3 +692,4 @@ Yash
 yml
 YOURNAME
 yourregistry
+youtube

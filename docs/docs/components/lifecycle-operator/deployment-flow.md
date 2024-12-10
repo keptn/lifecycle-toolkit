@@ -34,11 +34,6 @@ and [CloudEvents](https://cloudevents.io/)
 are emitted at each phase
 to provide additional Observability of the execution flow.
 
-Keptn implements a
-[Permit Scheduler Plugin](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/#permit)
-that blocks the binding of the pods to a node
-until all the pre-conditions are fulfilled.
-
 A Kubernetes deployment is started by the deployment engine
 that is implemented
 (such as Flux or Argo)

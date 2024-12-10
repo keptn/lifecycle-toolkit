@@ -72,14 +72,26 @@ func (r *KeptnTaskReconciler) createFunctionJob(ctx context.Context, req ctrl.Re
 
 func (r *KeptnTaskReconciler) updateTaskStatus(job *batchv1.Job, task *apilifecycle.KeptnTask) {
 	if len(job.Status.Conditions) > 0 {
-		if job.Status.Conditions[0].Type == batchv1.JobComplete {
+		if hasJobCondition(job.Status.Conditions, batchv1.JobComplete) ||
+			hasJobCondition(job.Status.Conditions, batchv1.JobSuccessCriteriaMet) {
 			task.Status.Status = apicommon.StateSucceeded
-		} else if job.Status.Conditions[0].Type == batchv1.JobFailed {
+		} else if hasJobCondition(job.Status.Conditions, batchv1.JobFailed) ||
+			hasJobCondition(job.Status.Conditions, batchv1.JobFailureTarget) {
 			task.Status.Status = apicommon.StateFailed
 			task.Status.Message = job.Status.Conditions[0].Message
 			task.Status.Reason = job.Status.Conditions[0].Reason
 		}
 	}
+}
+
+func hasJobCondition(conditions []batchv1.JobCondition, searched batchv1.JobConditionType) bool {
+	for _, v := range conditions {
+		if v.Type == searched {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (r *KeptnTaskReconciler) getJob(ctx context.Context, jobName string, namespace string) (*batchv1.Job, error) {

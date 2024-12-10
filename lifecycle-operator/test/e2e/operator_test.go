@@ -73,10 +73,6 @@ var _ = Describe("[E2E] KeptnOperator", Ordered, func() {
 				Expect(newPod.Status.Phase).To(Equal(apiv1.PodPending))
 
 			})
-
-			It(" should be assigned to keptn scheduler", func() {
-				Expect(newPod.Spec.SchedulerName == "keptn-scheduler")
-			})
 		})
 	})
 })

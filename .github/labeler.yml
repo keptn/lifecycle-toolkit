@@ -9,11 +9,6 @@ lifecycle-operator:
       - any-glob-to-any-file:
           - lifecycle-operator/**/*
 
-scheduler:
-  - changed-files:
-      - any-glob-to-any-file:
-          - scheduler/**/*
-
 metrics-operator:
   - changed-files:
       - any-glob-to-any-file:

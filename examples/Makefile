@@ -1,5 +1,5 @@
 # renovate: datasource=github-tags depName=jaegertracing/jaeger-operator
-JAEGER_VERSION ?= v1.60.1
+JAEGER_VERSION ?= v1.62.0
 TOOLKIT_NAMESPACE ?= keptn-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
@@ -90,6 +90,3 @@ restart-lifecycle-toolkit:
 	@echo "----------------------------------"
 	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" -l control-plane=lifecycle-operator
 	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" -l control-plane=lifecycle-operator --watch
-	kubectl rollout restart deployment -n "$(TOOLKIT_NAMESPACE)" -l component=scheduler
-	kubectl rollout status deployment -n "$(TOOLKIT_NAMESPACE)" -l component=scheduler --watch
-

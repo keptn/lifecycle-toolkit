@@ -51,6 +51,7 @@ asdfg
 authurl
 automerge
 automountserviceaccounttokenspec
+autoplay
 autoprovision
 autoscaler
 azurecr
@@ -81,6 +82,7 @@ chainsaw
 changefreq
 Chans
 Checkmarx
+cil
 clientgoscheme
 cloudevents
 clt
@@ -111,14 +113,12 @@ crd
 crdkustomizeresource
 crdkustomizewebhookpatch
 crt
-csidrivers
-csinodes
-csistoragecapacities
 ctrlclient
 ctrlcommon
 ctx
 curlcontainer
 curlimages
+currentcolor
 CURRENTVERSION
 customresourcedefinitions
 cwd
@@ -157,7 +157,6 @@ dupl
 dynamicinformer
 dynatrace
 ecr
-elasticquota
 elif
 ENABLEGITINFO
 endblock
@@ -254,7 +253,6 @@ ICertificate
 IConfig
 IEvaluation
 IEvent
-iface
 ifdef
 ifeq
 ifile
@@ -364,7 +362,6 @@ keptnworkloadversionstatus
 kics
 klakegg
 klc
-klcpermit
 klog
 Klogr
 klt
@@ -374,7 +371,6 @@ kubebuilder
 kubeconform
 kubeflow
 kubescape
-kubescheduler
 kubeutils
 kustomization
 kustomize
@@ -386,7 +382,6 @@ kyverno
 lastword
 Lato
 LFC
-libexpat
 Lifcycle
 lifecyclekeptnsh
 linenums
@@ -477,7 +472,6 @@ otelprom
 otelsdk
 otelurl
 otlp
-otlpgrpc
 otlptrace
 otlptracegrpc
 OUTDIR
@@ -486,17 +480,14 @@ owide
 oyaml
 PARAMSx
 PDTR
+pepicons
 perc
-persistentvolumeclaims
-persistentvolumes
 phaseitem
 phasetraceid
 pid
 pipefail
 pmig
 poc
-poddisruptionbudgets
-podgroups
 podtato
 podtatohead
 podtatometric
@@ -537,7 +528,6 @@ redis
 refcache
 remediations
 replicasets
-replicationcontrollers
 resourcereference
 revisionhistorylimit
 Rexed
@@ -563,7 +553,6 @@ sclient
 screenshot
 sdkmetric
 sdktest
-sdktrace
 secureparameters
 selfsigned
 semconv
@@ -571,7 +560,6 @@ sendserviceaccount
 serrors
 serviceaccount
 serviceaccountspec
-serviceapp
 serviceport
 setuptools
 Shandilya
@@ -602,12 +590,10 @@ stakeholders
 statefulset
 statefultest
 stdouttrace
-storageclasses
 storageversion
 sts
 subchart
 subfolders
-subjectaccessreviews
 substitue
 substr
 Sudipto
@@ -643,7 +629,6 @@ timespan
 timezone
 tmp
 tocstop
-tokenreviews
 toml
 totalscore
 tplvalues
@@ -652,10 +637,10 @@ traceparent
 tracerfactory
 tracetest
 trivy
-trivyignore
 trunc
 ttlsecondsafterfinished
 ttlsecondstask
+twemoji
 typeof
 UIDs
 Umre
@@ -669,7 +654,6 @@ Utkarsh
 validatingwebhookconfigurations
 vanalysis
 vanalysisdefinition
-vcluster
 Vec
 versioned
 versioning
@@ -708,3 +692,4 @@ Yash
 yml
 YOURNAME
 yourregistry
+youtube

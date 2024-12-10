@@ -17,10 +17,10 @@ annotations:
       url: https://slack.keptn.sh/
   artifacthub.io/license: Apache-2.0
   artifacthub.io/operator: 'true'
-kubeVersion: '>= 1.24.0-0'
+kubeVersion: '>= 1.27.0-0'
 type: application
-version: 0.2.5
-appVersion: v2.2.1 # x-release-please-version
+version: 0.3.0 # Helm Chart version
+appVersion: v3.0.0 # x-release-please-version
 dependencies:
   - name: common
     repository: https://charts.lifecycle.keptn.sh

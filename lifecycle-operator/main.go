@@ -103,8 +103,7 @@ type envConfig struct {
 	KeptnDoraMetricsPort                      int `envconfig:"KEPTN_DORA_METRICS_PORT" default:"2222"`
 	KeptnOptionsControllerLogLevel            int `envconfig:"OPTIONS_CONTROLLER_LOG_LEVEL" default:"0"`
 
-	SchedulingGatesEnabled bool `envconfig:"SCHEDULING_GATES_ENABLED" default:"false"`
-	PromotionTasksEnabled  bool `envconfig:"PROMOTION_TASKS_ENABLED" default:"false"`
+	PromotionTasksEnabled bool `envconfig:"PROMOTION_TASKS_ENABLED" default:"false"`
 
 	CertManagerEnabled bool `envconfig:"CERT_MANAGER_ENABLED" default:"true"`
 }
@@ -355,17 +354,15 @@ func main() {
 	}
 
 	schedulingGatesLogger := ctrl.Log.WithName("SchedulingGates Controller").V(env.KeptnSchedulingGatesControllerLogLevel)
-	if env.SchedulingGatesEnabled {
-		schedulingGatesReconciler := &schedulinggates.SchedulingGatesReconciler{
-			Client: mgr.GetClient(),
-			Scheme: mgr.GetScheme(),
-			Log:    schedulingGatesLogger,
-		}
+	schedulingGatesReconciler := &schedulinggates.SchedulingGatesReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+		Log:    schedulingGatesLogger,
+	}
 
-		if err := schedulingGatesReconciler.SetupWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create controller", "controller", "SchedulingGates")
-			os.Exit(1)
-		}
+	if err := schedulingGatesReconciler.SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "SchedulingGates")
+		os.Exit(1)
 	}
 
 	if err = (&lifecyclev1.KeptnApp{}).SetupWebhookWithManager(mgr); err != nil {
@@ -426,7 +423,6 @@ func main() {
 						webhookRecorder,
 						ceClient),
 					webhookLogger,
-					env.SchedulingGatesEnabled,
 				),
 			},
 		})

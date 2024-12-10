@@ -10,14 +10,9 @@ metricsOperator:
   enabled: false
 
 lifecycleOperator:
-  lifecycleOperator:
-    imagePullPolicy: Never
-    image:
-      tag: $TAG
-    env:
-      functionRunnerImage: localhost:5000/keptn/deno-runtime:$TAG
-      pythonRunnerImage: localhost:5000/keptn/python-runtime:$TAG
-  scheduler:
-    imagePullPolicy: Never
-    image:
-      tag: $TAG
+  imagePullPolicy: Never
+  image:
+    tag: $TAG
+  env:
+    functionRunnerImage: localhost:5000/keptn/deno-runtime:$TAG
+    pythonRunnerImage: localhost:5000/keptn/python-runtime:$TAG

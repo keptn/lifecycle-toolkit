@@ -21,8 +21,7 @@ This page should be used to document the current process to create a full releas
 1. release metrics operator
 1. bump metrics operator chart version in charts repo and merge chart release PR
 1. bump metrics operator chart version in main chart
-1. release scheduler
-1. fix scheduler pr conflicts re-generate lifecycle-operator Helm chart docs
+1. re-generate lifecycle-operator Helm chart docs
 1. release lifecycle operator
 1. bump lifecycle operator chart version in charts repo and merge chart release PR
 1. bump lifecycle-operator chart version in main chart

@@ -15,7 +15,7 @@ The following is an imperative walkthrough.
 - [Docker](https://docs.docker.com/get-started/overview/)
 - [kubectl](https://kubernetes.io/docs/reference/kubectl/)
 - [Helm](https://helm.sh/docs/intro/install/)
-- A Kubernetes cluster >= 1.24 (we recommend [Kubernetes kind](https://kind.sigs.k8s.io/docs/user/quick-start/))
+- A Kubernetes cluster >= 1.27 (we recommend [Kubernetes kind](https://kind.sigs.k8s.io/docs/user/quick-start/))
   (`kind create cluster`)
 
 ## Objectives
@@ -277,9 +277,10 @@ So let's install new Observability components to help us:
 
 - [Cert manager](https://cert-manager.io): Jaeger requires cert-manager
 - [Jaeger](https://jaegertracing.io): Store and view DORA deployment traces
+- [OpenTelemetry collector](https://opentelemetry.io/docs/collector/): Scrape metrics from the above DORA metrics endpoint
+  & forward to Prometheus.
+  In this guide, we will use the OTel collector that comes bundled with the Jaeger `allInOne` image.
 - [Prometheus](https://prometheus.io): Store DORA metrics
-- [OpenTelemetry collector](https://opentelemetry.io/docs/collector/):
-  Scrape metrics from the above DORA metrics endpoint & forward to Prometheus
 - [Grafana](https://grafana.com) (and some prebuilt dashboards): Visualise the data
 
 ![add observability](./assets/install01.png)
@@ -333,10 +334,10 @@ Create some Keptn Grafana dashboards that will be available when Grafana is inst
 <!---x-release-please-start-version-->
 ```shell
 kubectl create ns monitoring
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.2.0/examples/support/observability/config/prometheus/grafana-config.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.2.0/examples/support/observability/config/prometheus/grafana-dashboard-keptn-applications.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.2.0/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
-kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.2.0/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.4.0/examples/support/observability/config/prometheus/grafana-config.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.4.0/examples/support/observability/config/prometheus/grafana-dashboard-keptn-applications.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.4.0/examples/support/observability/config/prometheus/grafana-dashboard-keptn-overview.yaml
+kubectl apply -f https://raw.githubusercontent.com/keptn/lifecycle-toolkit/keptn-v2.4.0/examples/support/observability/config/prometheus/grafana-dashboard-keptn-workloads.yaml
 ```
 <!---x-release-please-end-->
 

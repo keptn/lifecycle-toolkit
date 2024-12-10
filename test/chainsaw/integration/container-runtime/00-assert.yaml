@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: testy-test
-          image: busybox:1.36.1
+          image: busybox:1.37.0
           env:
             - name: KEPTN_CONTEXT
               value: '{"workloadName":"waiter-waiter","appName":"waiter","appVersion":"","workloadVersion":"0.4","taskType":"pre","objectType":"Workload"}'
@@ -44,7 +44,4 @@ spec:
             - '-c'
             - 'sleep 30'
 status:
-  conditions:
-    - type: Complete
-      status: 'True'
   succeeded: 1

@@ -60,17 +60,3 @@ spec:
             apiVersion: keda.k8s.io/v1alpha1
             kind: ScaledObject
             name: test-scaledobject
-    # remove keda in regular step, since in case of failure, we want to have the logs available
-    - name: step-01
-      try:
-        - script:
-            content: |
-              kubectl delete -f https://github.com/kedacore/keda/releases/download/v2.13.1/keda-2.13.1.yaml
-        - wait:
-            timeout: 3m
-            apiVersion: v1
-            kind: Pod
-            namespace: keda
-            selector: name=keda-operator
-            for:
-              deletion: {}

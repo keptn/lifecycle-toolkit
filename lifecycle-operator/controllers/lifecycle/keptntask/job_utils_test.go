@@ -152,6 +152,7 @@ func TestKeptnTaskReconciler_createJob_withTaskDefInDefaultNamespace(t *testing.
 	}, resultingJob.Annotations)
 }
 
+//nolint:dupl
 func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 	namespace := "default"
 	taskDefinitionName := "my-task-definition"
@@ -193,6 +194,56 @@ func TestKeptnTaskReconciler_updateTaskStatus(t *testing.T) {
 	job.Status.Conditions = []batchv1.JobCondition{
 		{
 			Type: batchv1.JobComplete,
+		},
+	}
+
+	r.updateTaskStatus(job, task)
+
+	require.Equal(t, apicommon.StateSucceeded, task.Status.Status)
+}
+
+//nolint:dupl
+func TestKeptnTaskReconciler_updateTaskStatusK8s31(t *testing.T) {
+	namespace := "default"
+	taskDefinitionName := "my-task-definition"
+
+	jobStatus := batchv1.JobStatus{
+		Conditions: []batchv1.JobCondition{
+			{
+				Type: batchv1.JobFailureTarget,
+			},
+		},
+	}
+
+	job := makeJob("my.job", namespace, jobStatus)
+
+	fakeClient := fake.NewClientBuilder().WithObjects(job).Build()
+
+	err := apilifecycle.AddToScheme(fakeClient.Scheme())
+	require.Nil(t, err)
+
+	r := &KeptnTaskReconciler{
+		Client:      fakeClient,
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
+		Log:         ctrl.Log.WithName("task-controller"),
+		Scheme:      fakeClient.Scheme(),
+	}
+
+	task := makeTask("my-task", namespace, taskDefinitionName)
+
+	err = fakeClient.Create(context.TODO(), task)
+	require.Nil(t, err)
+
+	task.Status.JobName = job.Name
+
+	r.updateTaskStatus(job, task)
+
+	require.Equal(t, apicommon.StateFailed, task.Status.Status)
+
+	// now, set the job to succeeded
+	job.Status.Conditions = []batchv1.JobCondition{
+		{
+			Type: batchv1.JobSuccessCriteriaMet,
 		},
 	}
 

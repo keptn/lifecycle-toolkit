@@ -26,36 +26,33 @@ const namespaceKey = "namespace"
 const podKey = "pod"
 
 type PodMutatingWebhook struct {
-	Client                 client.Client
-	Decoder                handlers.Decoder
-	EventSender            eventsender.IEvent
-	Log                    logr.Logger
-	SchedulingGatesEnabled bool
-	Pod                    handlers.PodAnnotationHandler
-	Workload               handlers.K8sHandler
-	App                    handlers.K8sHandler
+	Client      client.Client
+	Decoder     handlers.Decoder
+	EventSender eventsender.IEvent
+	Log         logr.Logger
+	Pod         handlers.PodAnnotationHandler
+	Workload    handlers.K8sHandler
+	App         handlers.K8sHandler
 }
 
 func NewPodMutator(
 	client client.Client,
-	decoder *admission.Decoder,
+	decoder admission.Decoder,
 	eventSender eventsender.IEvent,
 	log logr.Logger,
-	schedulingGatesEnabled bool,
 ) *PodMutatingWebhook {
 	return &PodMutatingWebhook{
-		SchedulingGatesEnabled: schedulingGatesEnabled,
-		Client:                 client,
-		EventSender:            eventSender,
-		Decoder:                decoder,
-		Log:                    log,
-		Pod:                    handlers.PodAnnotationHandler{Client: client, Log: log},
-		App:                    &handlers.AppCreationRequestHandler{Log: log, Client: client, EventSender: eventSender},
-		Workload:               &handlers.WorkloadHandler{Log: log, Client: client, EventSender: eventSender},
+		Client:      client,
+		EventSender: eventSender,
+		Decoder:     decoder,
+		Log:         log,
+		Pod:         handlers.PodAnnotationHandler{Client: client, Log: log},
+		App:         &handlers.AppCreationRequestHandler{Log: log, Client: client, EventSender: eventSender},
+		Workload:    &handlers.WorkloadHandler{Log: log, Client: client, EventSender: eventSender},
 	}
 }
 
-// Handle inspects incoming Pods and injects the Keptn scheduler if they contain the Keptn lifecycle annotations.
+// Handle inspects incoming Pods and injects the Keptn resources if they contain the Keptn lifecycle annotations.
 func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) admission.Response {
 	a.Log.Info("webhook for pod called")
 
@@ -91,7 +88,7 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	if a.Pod.IsAnnotated(ctx, &req, pod) {
 		a.Log.Info("Resource is annotated with Keptn annotations", namespaceKey, req.Namespace, podKey, req.Name)
 
-		if scheduled := handleScheduling(a.SchedulingGatesEnabled, a.Log, pod); scheduled {
+		if scheduled := handleScheduling(a.Log, pod); scheduled {
 			return admission.Allowed("gate of the pod already removed")
 		}
 
@@ -117,21 +114,16 @@ func (a *PodMutatingWebhook) Handle(ctx context.Context, req admission.Request) 
 	return admission.PatchResponseFromRaw(req.Object.Raw, marshaledPod)
 }
 
-func handleScheduling(schedulingGatesEnabled bool, logger logr.Logger, pod *corev1.Pod) bool {
-	if schedulingGatesEnabled {
-		logger.Info("SchedulingGates enabled")
-		_, gateRemoved := handlers.GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.SchedulingGateRemoved, "")
-		if gateRemoved {
-			return true
-		}
-		pod.Spec.SchedulingGates = []corev1.PodSchedulingGate{
-			{
-				Name: apicommon.KeptnGate,
-			},
-		}
-	} else {
-		logger.Info("SchedulingGates disabled, using keptn-scheduler")
-		pod.Spec.SchedulerName = "keptn-scheduler"
+func handleScheduling(logger logr.Logger, pod *corev1.Pod) bool {
+	logger.Info("SchedulingGates enabled")
+	_, gateRemoved := handlers.GetLabelOrAnnotation(&pod.ObjectMeta, apicommon.SchedulingGateRemoved, "")
+	if gateRemoved {
+		return true
+	}
+	pod.Spec.SchedulingGates = []corev1.PodSchedulingGate{
+		{
+			Name: apicommon.KeptnGate,
+		},
 	}
 	return false
 }

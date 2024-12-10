@@ -1,11 +1,13 @@
 # renovate: datasource=github-tags depName=jaegertracing/jaeger-operator
-JAEGER_VERSION ?= v1.60.1
+JAEGER_VERSION ?= v1.62.0
 TOOLKIT_NAMESPACE ?= keptn-system
 PODTATO_NAMESPACE ?= podtato-kubectl
 GRAFANA_PORT_FORWARD ?= 3000
 
 .PHONY: install
 install: install-cert-manager
+	kubectl apply -f ../keptn/keptnconfig.yaml
+
 	@echo "-----------------------------------"
 	@echo "Create Namespace and install Jaeger"
 	@echo "-----------------------------------"

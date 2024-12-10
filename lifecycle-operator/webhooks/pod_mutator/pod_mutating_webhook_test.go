@@ -166,7 +166,7 @@ func TestPodMutatingWebhookHandleSingleService(t *testing.T) {
 	decoder := admission.NewDecoder(runtime.NewScheme())
 	log := testr.New(t)
 
-	wh := NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), log, false)
+	wh := NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), log)
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
@@ -277,11 +277,10 @@ func TestPodMutatingWebhookHandleSchedulingGatesGateRemoved(t *testing.T) {
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh := &PodMutatingWebhook{
-		SchedulingGatesEnabled: true,
-		Client:                 fakeClient,
-		Decoder:                decoder,
-		EventSender:            eventsender.NewK8sSender(record.NewFakeRecorder(100)),
-		Log:                    testr.New(t),
+		Client:      fakeClient,
+		Decoder:     decoder,
+		EventSender: eventsender.NewK8sSender(record.NewFakeRecorder(100)),
+		Log:         testr.New(t),
 	}
 
 	request := generateRequest(pod, t)
@@ -337,7 +336,7 @@ func TestPodMutatingWebhookHandleSchedulingGates(t *testing.T) {
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
 	wh :=
-		NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), true)
+		NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t))
 
 	request := generateRequest(pod, t)
 
@@ -415,7 +414,7 @@ func TestPodMutatingWebhookHandleSingleServiceAppCreationRequestAlreadyPresent(t
 
 	decoder := admission.NewDecoder(runtime.NewScheme())
 
-	wh := NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), false)
+	wh := NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t))
 
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
@@ -499,7 +498,7 @@ func TestPodMutatingWebhookHandleMultiService(t *testing.T) {
 
 	pod, _, _, decoder := setupTestData()
 
-	wh := NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t), false)
+	wh := NewPodMutator(fakeClient, decoder, eventsender.NewK8sSender(record.NewFakeRecorder(100)), testr.New(t))
 
 	request := generateRequest(pod, t)
 
@@ -652,7 +651,7 @@ func generateRequest(pod *corev1.Pod, t *testing.T) admissionv1.AdmissionRequest
 	}
 }
 
-func setupTestData() (*corev1.Pod, *v1.Deployment, *corev1.Namespace, *admission.Decoder) {
+func setupTestData() (*corev1.Pod, *v1.Deployment, *corev1.Namespace, admission.Decoder) {
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testPod,

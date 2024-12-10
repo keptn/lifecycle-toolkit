@@ -32,23 +32,23 @@ annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/operator: 'true'
   artifacthub.io/operatorCapabilities: Full Lifecycle
-kubeVersion: '>= 1.24.0-0'
+kubeVersion: '>= 1.27.0-0'
 type: application
-version: 0.8.0
-appVersion: v2.2.0 # x-release-please-version
+version: 0.10.0 # Helm Chart version
+appVersion: v2.4.0 # x-release-please-version
 dependencies:
   - name: keptn-cert-manager
-    version: 0.2.5
+    version: 0.3.0
     alias: certManager
     condition: global.certManagerEnabled
     repository: file://../keptn-cert-manager/chart
   - name: keptn-lifecycle-operator
-    version: 0.4.1
+    version: 0.6.0
     alias: lifecycleOperator
     condition: lifecycleOperator.enabled
     repository: file://../lifecycle-operator/chart
   - name: keptn-metrics-operator
-    version: 0.3.0
+    version: 0.4.0
     alias: metricsOperator
     condition: metricsOperator.enabled
     repository: file://../metrics-operator/chart

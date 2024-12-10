@@ -39,7 +39,7 @@ resource.
 | `env.labelSelectorValue`   | specify the value for the label selector                                  | `true`                       |
 | `image.registry`           | specify the container registry for the certificate-operator image         | `""`                         |
 | `image.repository`         | specify repo for manager image                                            | `keptn/certificate-operator` |
-| `image.tag`                | select tag for manager container                                          | `v2.2.1`                     |
+| `image.tag`                | select tag for manager container                                          | `v3.0.0`                     |
 | `image.imagePullPolicy`    | specify pull policy for the manager image. This overrides global values   | `""`                         |
 | `livenessProbe`            | custom RBAC proxy liveness probe                                          |                              |
 | `readinessProbe`           | custom manager readiness probe                                            |                              |

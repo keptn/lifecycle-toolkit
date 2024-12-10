@@ -11,8 +11,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
-    helm.sh/chart: cert-manager-0.2.5
+    app.kubernetes.io/version: v3.0.0
+    helm.sh/chart: cert-manager-0.3.0
 ---
 # Source: keptn/charts/certManager/templates/certificate-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -24,22 +24,13 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
-    helm.sh/chart: cert-manager-0.2.5
+    app.kubernetes.io/version: v3.0.0
+    helm.sh/chart: cert-manager-0.3.0
 rules:
 - apiGroups:
   - admissionregistration.k8s.io
   resources:
   - mutatingwebhookconfigurations
-  verbs:
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - admissionregistration.k8s.io
-  resources:
   - validatingwebhookconfigurations
   verbs:
   - get
@@ -79,8 +70,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
-    helm.sh/chart: cert-manager-0.2.5
+    app.kubernetes.io/version: v3.0.0
+    helm.sh/chart: cert-manager-0.3.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -100,8 +91,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
-    helm.sh/chart: cert-manager-0.2.5
+    app.kubernetes.io/version: v3.0.0
+    helm.sh/chart: cert-manager-0.3.0
 rules:
 - apiGroups:
   - ""
@@ -145,8 +136,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
-    helm.sh/chart: cert-manager-0.2.5
+    app.kubernetes.io/version: v3.0.0
+    helm.sh/chart: cert-manager-0.3.0
 rules:
 - apiGroups:
   - ""
@@ -180,16 +171,16 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
-    helm.sh/chart: cert-manager-0.2.5
+    app.kubernetes.io/version: v3.0.0
+    helm.sh/chart: cert-manager-0.3.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: 'certificate-operator-leader-election-role'
 subjects:
-- kind: ServiceAccount
-  name: 'certificate-operator'
-  namespace: 'helmtests'
+  - kind: ServiceAccount
+    name: 'certificate-operator'
+    namespace: 'helmtests'
 ---
 # Source: keptn/charts/certManager/templates/certificate-operator-role-binding-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -204,8 +195,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
-    helm.sh/chart: cert-manager-0.2.5
+    app.kubernetes.io/version: v3.0.0
+    helm.sh/chart: cert-manager-0.3.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -228,8 +219,8 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
-    helm.sh/chart: cert-manager-0.2.5
+    app.kubernetes.io/version: v3.0.0
+    helm.sh/chart: cert-manager-0.3.0
 spec:
   replicas: 1
   selector:

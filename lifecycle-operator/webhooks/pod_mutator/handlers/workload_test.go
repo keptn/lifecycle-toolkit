@@ -40,7 +40,6 @@ func TestHandle(t *testing.T) {
 	}
 
 	wantWorkload := &apilifecycle.KeptnWorkload{
-		TypeMeta: metav1.TypeMeta{Kind: "KeptnWorkload", APIVersion: "lifecycle.keptn.sh/v1"},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testAppWorkload,
 			Namespace: namespace,
@@ -59,7 +58,6 @@ func TestHandle(t *testing.T) {
 		},
 	}
 	wantWorkload2 := &apilifecycle.KeptnWorkload{
-		TypeMeta: metav1.TypeMeta{Kind: "KeptnWorkload", APIVersion: "lifecycle.keptn.sh/v1"},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      testAppWorkload,
 			Namespace: namespace,

@@ -6,10 +6,6 @@ on:
         description: "Tag for the deno and python runner images"
         type: "string"
         required: true
-      scheduling-gates:
-        description: "Decides whether to use scheduling gates"
-        type: "string"
-        default: gates_off
       cert-manager-io-enabled:
         description: "Decides whether to use cert-manager.io"
         type: "string"
@@ -27,23 +23,23 @@ defaults:
 jobs:
   run-integration-test:
     name: Run Chainsaw Tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out code
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup cluster
         uses: ./.github/actions/deploy-keptn-on-cluster
         with:
           runtime_tag: ${{ inputs.runtime_tag }}
-          values-file: values-integration-${{ inputs.scheduling-gates }}-${{ inputs.cert-manager-io-enabled }}.yaml
+          values-file: values-integration-${{ inputs.cert-manager-io-enabled }}.yaml
           cert-manager-io-enabled: ${{ inputs.cert-manager-io-enabled }}
 
       - name: Install and expose Prometheus
         uses: ./.github/actions/deploy-prometheus-on-cluster
 
       - name: Install Chainsaw
-        uses: kyverno/action-install-chainsaw@82d8e747037f840e0ef9bdd97ecdc617f5535bdc # v0.2.8
+        uses: kyverno/action-install-chainsaw@d311eacde764f806c9658574ff64c9c3b21f8397 # v0.2.11
 
       - name: Run Integration Tests
         working-directory: .
@@ -56,7 +52,7 @@ jobs:
 
       - name: Upload cluster logs
         if: failure()
-        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
-          name: logs-integration-tests-${{ inputs.scheduling-gates }}-${{ inputs.cert-manager-io-enabled }}
+          name: logs-integration-tests-${{ inputs.cert-manager-io-enabled }}
           path: .github/scripts/logs

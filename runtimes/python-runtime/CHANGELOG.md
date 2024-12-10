@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.0.8](https://github.com/keptn/lifecycle-toolkit/compare/python-runtime-v1.0.7...python-runtime-v1.0.8) (2024-11-11)
+
+
+### Other
+
+* **python-runtime:** remove pinned version of libexpat ([#3844](https://github.com/keptn/lifecycle-toolkit/issues/3844)) ([8f23af5](https://github.com/keptn/lifecycle-toolkit/commit/8f23af58addbbb83d81248b7025b923668f6d39e))
+
+## [1.0.7](https://github.com/keptn/lifecycle-toolkit/compare/python-runtime-v1.0.6...python-runtime-v1.0.7) (2024-11-04)
+
+
+### Other
+
+* release python-runtime 1.0.7 ([#3721](https://github.com/keptn/lifecycle-toolkit/issues/3721)) ([929c291](https://github.com/keptn/lifecycle-toolkit/commit/929c291ea3df3b7381dd955a92bce93fcf2dd8b7))
+
+
+### Dependency Updates
+
+* update module github.com/onsi/ginkgo/v2 to v2.20.2 ([#3724](https://github.com/keptn/lifecycle-toolkit/issues/3724)) ([7d62fad](https://github.com/keptn/lifecycle-toolkit/commit/7d62fadadbd251debe2b2c0c46a9042538a70c71))
+* update python docker tag to v3.12.5 ([#3696](https://github.com/keptn/lifecycle-toolkit/issues/3696)) ([7dac226](https://github.com/keptn/lifecycle-toolkit/commit/7dac22686f79f8175a8bc9aeb221c323f3cb411d))
+* update python docker tag to v3.12.7 ([#3737](https://github.com/keptn/lifecycle-toolkit/issues/3737)) ([f99d1f8](https://github.com/keptn/lifecycle-toolkit/commit/f99d1f839d8263e311b974d7f1f999422be23496))
+* update python docker tag to v3.13.0 ([#3801](https://github.com/keptn/lifecycle-toolkit/issues/3801)) ([2066747](https://github.com/keptn/lifecycle-toolkit/commit/206674751eaeaf98ef330677d36235f835e20e9c))
+
 ## [1.0.6](https://github.com/keptn/lifecycle-toolkit/compare/python-runtime-v1.0.5...python-runtime-v1.0.6) (2024-08-06)
 
 

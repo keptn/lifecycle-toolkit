@@ -93,13 +93,7 @@ You can find our roadmap [here](https://github.com/orgs/keptn/projects/10).
 ## Installation
 
 Keptn can be installed on any Kubernetes cluster
-running Kubernetes >=1.24.
-
-For users running [vCluster](https://www.vcluster.com/),
-please note that you may need to modify
-your configuration before installing Keptn; see
-[Running Keptn with vCluster](https://keptn.sh/stable/docs/installation/configuration/vcluster/)
-for more information.
+running Kubernetes >=1.27.
 
 Use the following command sequence
 to install the latest release of Keptn:

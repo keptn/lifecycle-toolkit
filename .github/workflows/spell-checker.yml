@@ -21,7 +21,7 @@ jobs:
       actions: read
     outputs:
       followup: ${{ steps.spelling.outputs.followup }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     concurrency:
       group: spelling-${{ github.event.pull_request.number || github.ref }}
       # note: If you use only_check_changed_files, you do not want cancel-in-progress
@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: check-spelling
         id: spelling
-        uses: check-spelling/check-spelling@00c989c97749eb0cb2d256bdc55ac61b0096c6d3 # v0.0.22
+        uses: check-spelling/check-spelling@67debf50669c7fc76fc8f5d7f996384535a72b77 # v0.0.24
         with:
           suppress_push_for_open_pull_request: ${{ github.actor != 'dependabot[bot]' && github.actor != 'renovate[bot]' && 1 }}
           checkout: true

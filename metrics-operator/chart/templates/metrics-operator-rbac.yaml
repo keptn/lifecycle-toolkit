@@ -40,49 +40,13 @@ rules:
       - metrics.keptn.sh
     resources:
       - analyses/finalizers
-    verbs:
-      - update
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
-      - analyses/status
-    verbs:
-      - get
-      - patch
-      - update
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
-      - analysisdefinitions
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
-      - analysisvaluetemplates
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
-      - keptnmetrics
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
       - keptnmetrics/finalizers
     verbs:
       - update
   - apiGroups:
       - metrics.keptn.sh
     resources:
+      - analyses/status
       - keptnmetrics/status
     verbs:
       - get
@@ -91,14 +55,10 @@ rules:
   - apiGroups:
       - metrics.keptn.sh
     resources:
+      - analysisdefinitions
+      - analysisvaluetemplates
+      - keptnmetrics
       - keptnmetricsproviders
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
       - providers
     verbs:
       - get

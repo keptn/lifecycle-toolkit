@@ -15,29 +15,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
+    app.kubernetes.io/version: v3.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: cert-manager-0.2.5
----
-# Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: keptn-scheduler
-  namespace: "helmtests"
-  annotations:
-    globalAnnotation1: test1
-    globalAnnotation2: test2
-    test-annotation: local
-  labels:
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
-    globalLabel1: test1
-    globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: cert-manager-0.3.0
 ---
 # Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
 apiVersion: v1
@@ -49,10 +30,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
     globalAnnotation1: test1
     globalAnnotation2: test2
     test-annotation: local
@@ -71,10 +52,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 ---
 # Source: keptn/charts/lifecycleOperator/templates/lifecycle-manager-config.yaml
 apiVersion: v1
@@ -90,10 +71,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 data:
   controller_manager_config.yaml: |
     apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
@@ -107,37 +88,6 @@ data:
       bindAddress: "127.0.0.1:8080"
     webhook:
       port: 9443
----
-# Source: keptn/charts/lifecycleOperator/templates/scheduler-config.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: scheduler-config
-  namespace: "helmtests"
-  annotations:
-    globalAnnotation1: test1
-    globalAnnotation2: test2
-    test-annotation: local
-  labels:
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
-    globalLabel1: test1
-    globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
-data:
-  scheduler-config.yaml: |
-    apiVersion: kubescheduler.config.k8s.io/v1beta3
-    kind: KubeSchedulerConfiguration
-    leaderElection:
-      leaderElect: false
-    profiles: 
-      - plugins:
-          permit:
-            enabled:
-            - name: KLCPermit
-        schedulerName: keptn-scheduler
 ---
 # Source: keptn/charts/metricsOperator/templates/metrics-manager-config.yaml
 apiVersion: v1
@@ -153,10 +103,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 data:
   controller_manager_config.yaml: |
     apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
@@ -177,7 +127,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnapps.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -189,10 +139,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   conversion:
     strategy: Webhook
@@ -607,7 +557,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnappcontexts.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     cert-manager.io/inject-ca-from: 'helmtests/keptn-certs'
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -619,10 +569,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -825,7 +775,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnappcreationrequests.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -837,10 +787,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -980,7 +930,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnappversions.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -992,10 +942,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   conversion:
     strategy: Webhook
@@ -2651,7 +2601,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnconfigs.options.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -2663,10 +2613,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   group: options.keptn.sh
   names:
@@ -2745,7 +2695,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnevaluations.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -2757,10 +2707,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -3462,7 +3412,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnevaluationdefinitions.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -3474,10 +3424,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -3835,7 +3785,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptntasks.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -3847,10 +3797,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -4607,7 +4557,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptntaskdefinitions.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -4619,10 +4569,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -4685,6 +4635,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   command:
                     description: |-
                       Entrypoint array. Not executed within a shell.
@@ -4698,6 +4649,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   env:
                     description: |-
                       List of environment variables to set in the container.
@@ -4733,10 +4685,13 @@ spec:
                                   description: The key to select.
                                   type: string
                                 name:
+                                  default: ""
                                   description: |-
                                     Name of the referent.
+                                    This field is effectively required, but due to backwards compatibility is
+                                    allowed to be empty. Instances of this type with an empty value here are
+                                    almost certainly wrong.
                                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                    TODO: Add other useful fields. apiVersion, kind, uid?
                                   type: string
                                 optional:
                                   description: Specify whether the ConfigMap or its
@@ -4796,10 +4751,13 @@ spec:
                                     be a valid secret key.
                                   type: string
                                 name:
+                                  default: ""
                                   description: |-
                                     Name of the referent.
+                                    This field is effectively required, but due to backwards compatibility is
+                                    allowed to be empty. Instances of this type with an empty value here are
+                                    almost certainly wrong.
                                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                    TODO: Add other useful fields. apiVersion, kind, uid?
                                   type: string
                                 optional:
                                   description: Specify whether the Secret or its key
@@ -4814,6 +4772,9 @@ spec:
                       - name
                       type: object
                     type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
                   envFrom:
                     description: |-
                       List of sources to populate environment variables in the container.
@@ -4830,10 +4791,13 @@ spec:
                           description: The ConfigMap to select from
                           properties:
                             name:
+                              default: ""
                               description: |-
                                 Name of the referent.
+                                This field is effectively required, but due to backwards compatibility is
+                                allowed to be empty. Instances of this type with an empty value here are
+                                almost certainly wrong.
                                 More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                TODO: Add other useful fields. apiVersion, kind, uid?
                               type: string
                             optional:
                               description: Specify whether the ConfigMap must be defined
@@ -4848,10 +4812,13 @@ spec:
                           description: The Secret to select from
                           properties:
                             name:
+                              default: ""
                               description: |-
                                 Name of the referent.
+                                This field is effectively required, but due to backwards compatibility is
+                                allowed to be empty. Instances of this type with an empty value here are
+                                almost certainly wrong.
                                 More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                TODO: Add other useful fields. apiVersion, kind, uid?
                               type: string
                             optional:
                               description: Specify whether the Secret must be defined
@@ -4860,6 +4827,7 @@ spec:
                           x-kubernetes-map-type: atomic
                       type: object
                     type: array
+                    x-kubernetes-list-type: atomic
                   image:
                     description: |-
                       Container image name.
@@ -4900,6 +4868,7 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                                x-kubernetes-list-type: atomic
                             type: object
                           httpGet:
                             description: HTTPGet specifies the http request to perform.
@@ -4929,6 +4898,7 @@ spec:
                                   - value
                                   type: object
                                 type: array
+                                x-kubernetes-list-type: atomic
                               path:
                                 description: Path to access on the HTTP server.
                                 type: string
@@ -4948,6 +4918,17 @@ spec:
                                 type: string
                             required:
                             - port
+                            type: object
+                          sleep:
+                            description: Sleep represents the duration that the container
+                              should sleep before being terminated.
+                            properties:
+                              seconds:
+                                description: Seconds is the number of seconds to sleep.
+                                format: int64
+                                type: integer
+                            required:
+                            - seconds
                             type: object
                           tcpSocket:
                             description: |-
@@ -4997,6 +4978,7 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                                x-kubernetes-list-type: atomic
                             type: object
                           httpGet:
                             description: HTTPGet specifies the http request to perform.
@@ -5026,6 +5008,7 @@ spec:
                                   - value
                                   type: object
                                 type: array
+                                x-kubernetes-list-type: atomic
                               path:
                                 description: Path to access on the HTTP server.
                                 type: string
@@ -5045,6 +5028,17 @@ spec:
                                 type: string
                             required:
                             - port
+                            type: object
+                          sleep:
+                            description: Sleep represents the duration that the container
+                              should sleep before being terminated.
+                            properties:
+                              seconds:
+                                description: Seconds is the number of seconds to sleep.
+                                format: int64
+                                type: integer
+                            required:
+                            - seconds
                             type: object
                           tcpSocket:
                             description: |-
@@ -5090,6 +5084,7 @@ spec:
                             items:
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       failureThreshold:
                         description: |-
@@ -5106,10 +5101,10 @@ spec:
                             format: int32
                             type: integer
                           service:
+                            default: ""
                             description: |-
                               Service is the name of the service to place in the gRPC HealthCheckRequest
                               (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
-
 
                               If this is not specified, the default behavior is defined by gRPC.
                             type: string
@@ -5144,6 +5139,7 @@ spec:
                               - value
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           path:
                             description: Path to access on the HTTP server.
                             type: string
@@ -5300,6 +5296,7 @@ spec:
                             items:
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       failureThreshold:
                         description: |-
@@ -5316,10 +5313,10 @@ spec:
                             format: int32
                             type: integer
                           service:
+                            default: ""
                             description: |-
                               Service is the name of the service to place in the gRPC HealthCheckRequest
                               (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
-
 
                               If this is not specified, the default behavior is defined by gRPC.
                             type: string
@@ -5354,6 +5351,7 @@ spec:
                               - value
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           path:
                             description: Path to access on the HTTP server.
                             type: string
@@ -5467,10 +5465,8 @@ spec:
                           Claims lists the names of resources, defined in spec.resourceClaims,
                           that are used by this container.
 
-
                           This is an alpha field and requires enabling the
                           DynamicResourceAllocation feature gate.
-
 
                           This field is immutable. It can only be set for containers.
                         items:
@@ -5481,6 +5477,12 @@ spec:
                                 Name must match the name of one entry in pod.spec.resourceClaims of
                                 the Pod where this field is used. It makes that resource available
                                 inside a container.
+                              type: string
+                            request:
+                              description: |-
+                                Request is the name chosen for a request in the referenced claim.
+                                If empty, everything from the claim is made available, otherwise
+                                only the result of this request.
                               type: string
                           required:
                           - name
@@ -5548,6 +5550,30 @@ spec:
                           2) has CAP_SYS_ADMIN
                           Note that this field cannot be set when spec.os.name is windows.
                         type: boolean
+                      appArmorProfile:
+                        description: |-
+                          appArmorProfile is the AppArmor options to use by this container. If set, this profile
+                          overrides the pod's appArmorProfile.
+                          Note that this field cannot be set when spec.os.name is windows.
+                        properties:
+                          localhostProfile:
+                            description: |-
+                              localhostProfile indicates a profile loaded on the node that should be used.
+                              The profile must be preconfigured on the node to work.
+                              Must match the loaded name of the profile.
+                              Must be set if and only if type is "Localhost".
+                            type: string
+                          type:
+                            description: |-
+                              type indicates which kind of AppArmor profile will be applied.
+                              Valid options are:
+                                Localhost - a profile pre-loaded on the node.
+                                RuntimeDefault - the container runtime's default profile.
+                                Unconfined - no AppArmor enforcement.
+                            type: string
+                        required:
+                        - type
+                        type: object
                       capabilities:
                         description: |-
                           The capabilities to add/drop when running containers.
@@ -5561,6 +5587,7 @@ spec:
                                 type
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                           drop:
                             description: Removed capabilities
                             items:
@@ -5568,6 +5595,7 @@ spec:
                                 type
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       privileged:
                         description: |-
@@ -5579,7 +5607,7 @@ spec:
                       procMount:
                         description: |-
                           procMount denotes the type of proc mount to use for the containers.
-                          The default is DefaultProcMount which uses the container runtime defaults for
+                          The default value is Default which uses the container runtime defaults for
                           readonly paths and masked paths.
                           This requires the ProcMountType feature flag to be enabled.
                           Note that this field cannot be set when spec.os.name is windows.
@@ -5661,7 +5689,6 @@ spec:
                               type indicates which kind of seccomp profile will be applied.
                               Valid options are:
 
-
                               Localhost - a profile defined in a file on the node should be used.
                               RuntimeDefault - the container runtime default profile should be used.
                               Unconfined - no profile should be applied.
@@ -5725,6 +5752,7 @@ spec:
                             items:
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       failureThreshold:
                         description: |-
@@ -5741,10 +5769,10 @@ spec:
                             format: int32
                             type: integer
                           service:
+                            default: ""
                             description: |-
                               Service is the name of the service to place in the gRPC HealthCheckRequest
                               (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
-
 
                               If this is not specified, the default behavior is defined by gRPC.
                             type: string
@@ -5779,6 +5807,7 @@ spec:
                               - value
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           path:
                             description: Path to access on the HTTP server.
                             type: string
@@ -5920,6 +5949,9 @@ spec:
                       - name
                       type: object
                     type: array
+                    x-kubernetes-list-map-keys:
+                    - devicePath
+                    x-kubernetes-list-type: map
                   volumeMounts:
                     description: |-
                       Pod volumes to mount into the container's filesystem.
@@ -5939,6 +5971,8 @@ spec:
                             to container and the other way around.
                             When not set, MountPropagationNone is used.
                             This field is beta in 1.10.
+                            When RecursiveReadOnly is set to IfPossible or to Enabled, MountPropagation must be None or unspecified
+                            (which defaults to None).
                           type: string
                         name:
                           description: This must match the Name of a Volume.
@@ -5948,6 +5982,25 @@ spec:
                             Mounted read-only if true, read-write otherwise (false or unspecified).
                             Defaults to false.
                           type: boolean
+                        recursiveReadOnly:
+                          description: |-
+                            RecursiveReadOnly specifies whether read-only mounts should be handled
+                            recursively.
+
+                            If ReadOnly is false, this field has no meaning and must be unspecified.
+
+                            If ReadOnly is true, and this field is set to Disabled, the mount is not made
+                            recursively read-only.  If this field is set to IfPossible, the mount is made
+                            recursively read-only, if it is supported by the container runtime.  If this
+                            field is set to Enabled, the mount is made recursively read-only if it is
+                            supported by the container runtime, otherwise the pod will not be started and
+                            an error will be generated to indicate the reason.
+
+                            If this field is set to IfPossible or Enabled, MountPropagation must be set to
+                            None (or be unspecified, which defaults to None).
+
+                            If this field is not specified, it is treated as an equivalent of Disabled.
+                          type: string
                         subPath:
                           description: |-
                             Path within the volume from which the container's volume should be mounted.
@@ -5965,6 +6018,9 @@ spec:
                       - name
                       type: object
                     type: array
+                    x-kubernetes-list-map-keys:
+                    - mountPath
+                    x-kubernetes-list-type: map
                   workingDir:
                     description: |-
                       Container's working directory.
@@ -6057,10 +6113,13 @@ spec:
                     referenced object inside the same namespace.
                   properties:
                     name:
+                      default: ""
                       description: |-
                         Name of the referent.
+                        This field is effectively required, but due to backwards compatibility is
+                        allowed to be empty. Instances of this type with an empty value here are
+                        almost certainly wrong.
                         More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                        TODO: Add other useful fields. apiVersion, kind, uid?
                       type: string
                   type: object
                   x-kubernetes-map-type: atomic
@@ -6394,6 +6453,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   command:
                     description: |-
                       Entrypoint array. Not executed within a shell.
@@ -6407,6 +6467,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   env:
                     description: |-
                       List of environment variables to set in the container.
@@ -6442,10 +6503,13 @@ spec:
                                   description: The key to select.
                                   type: string
                                 name:
+                                  default: ""
                                   description: |-
                                     Name of the referent.
+                                    This field is effectively required, but due to backwards compatibility is
+                                    allowed to be empty. Instances of this type with an empty value here are
+                                    almost certainly wrong.
                                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                    TODO: Add other useful fields. apiVersion, kind, uid?
                                   type: string
                                 optional:
                                   description: Specify whether the ConfigMap or its
@@ -6505,10 +6569,13 @@ spec:
                                     be a valid secret key.
                                   type: string
                                 name:
+                                  default: ""
                                   description: |-
                                     Name of the referent.
+                                    This field is effectively required, but due to backwards compatibility is
+                                    allowed to be empty. Instances of this type with an empty value here are
+                                    almost certainly wrong.
                                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                    TODO: Add other useful fields. apiVersion, kind, uid?
                                   type: string
                                 optional:
                                   description: Specify whether the Secret or its key
@@ -6523,6 +6590,9 @@ spec:
                       - name
                       type: object
                     type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
                   envFrom:
                     description: |-
                       List of sources to populate environment variables in the container.
@@ -6539,10 +6609,13 @@ spec:
                           description: The ConfigMap to select from
                           properties:
                             name:
+                              default: ""
                               description: |-
                                 Name of the referent.
+                                This field is effectively required, but due to backwards compatibility is
+                                allowed to be empty. Instances of this type with an empty value here are
+                                almost certainly wrong.
                                 More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                TODO: Add other useful fields. apiVersion, kind, uid?
                               type: string
                             optional:
                               description: Specify whether the ConfigMap must be defined
@@ -6557,10 +6630,13 @@ spec:
                           description: The Secret to select from
                           properties:
                             name:
+                              default: ""
                               description: |-
                                 Name of the referent.
+                                This field is effectively required, but due to backwards compatibility is
+                                allowed to be empty. Instances of this type with an empty value here are
+                                almost certainly wrong.
                                 More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                TODO: Add other useful fields. apiVersion, kind, uid?
                               type: string
                             optional:
                               description: Specify whether the Secret must be defined
@@ -6569,6 +6645,7 @@ spec:
                           x-kubernetes-map-type: atomic
                       type: object
                     type: array
+                    x-kubernetes-list-type: atomic
                   image:
                     description: |-
                       Container image name.
@@ -6609,6 +6686,7 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                                x-kubernetes-list-type: atomic
                             type: object
                           httpGet:
                             description: HTTPGet specifies the http request to perform.
@@ -6638,6 +6716,7 @@ spec:
                                   - value
                                   type: object
                                 type: array
+                                x-kubernetes-list-type: atomic
                               path:
                                 description: Path to access on the HTTP server.
                                 type: string
@@ -6657,6 +6736,17 @@ spec:
                                 type: string
                             required:
                             - port
+                            type: object
+                          sleep:
+                            description: Sleep represents the duration that the container
+                              should sleep before being terminated.
+                            properties:
+                              seconds:
+                                description: Seconds is the number of seconds to sleep.
+                                format: int64
+                                type: integer
+                            required:
+                            - seconds
                             type: object
                           tcpSocket:
                             description: |-
@@ -6706,6 +6796,7 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                                x-kubernetes-list-type: atomic
                             type: object
                           httpGet:
                             description: HTTPGet specifies the http request to perform.
@@ -6735,6 +6826,7 @@ spec:
                                   - value
                                   type: object
                                 type: array
+                                x-kubernetes-list-type: atomic
                               path:
                                 description: Path to access on the HTTP server.
                                 type: string
@@ -6754,6 +6846,17 @@ spec:
                                 type: string
                             required:
                             - port
+                            type: object
+                          sleep:
+                            description: Sleep represents the duration that the container
+                              should sleep before being terminated.
+                            properties:
+                              seconds:
+                                description: Seconds is the number of seconds to sleep.
+                                format: int64
+                                type: integer
+                            required:
+                            - seconds
                             type: object
                           tcpSocket:
                             description: |-
@@ -6799,6 +6902,7 @@ spec:
                             items:
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       failureThreshold:
                         description: |-
@@ -6815,10 +6919,10 @@ spec:
                             format: int32
                             type: integer
                           service:
+                            default: ""
                             description: |-
                               Service is the name of the service to place in the gRPC HealthCheckRequest
                               (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
-
 
                               If this is not specified, the default behavior is defined by gRPC.
                             type: string
@@ -6853,6 +6957,7 @@ spec:
                               - value
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           path:
                             description: Path to access on the HTTP server.
                             type: string
@@ -7009,6 +7114,7 @@ spec:
                             items:
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       failureThreshold:
                         description: |-
@@ -7025,10 +7131,10 @@ spec:
                             format: int32
                             type: integer
                           service:
+                            default: ""
                             description: |-
                               Service is the name of the service to place in the gRPC HealthCheckRequest
                               (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
-
 
                               If this is not specified, the default behavior is defined by gRPC.
                             type: string
@@ -7063,6 +7169,7 @@ spec:
                               - value
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           path:
                             description: Path to access on the HTTP server.
                             type: string
@@ -7176,10 +7283,8 @@ spec:
                           Claims lists the names of resources, defined in spec.resourceClaims,
                           that are used by this container.
 
-
                           This is an alpha field and requires enabling the
                           DynamicResourceAllocation feature gate.
-
 
                           This field is immutable. It can only be set for containers.
                         items:
@@ -7190,6 +7295,12 @@ spec:
                                 Name must match the name of one entry in pod.spec.resourceClaims of
                                 the Pod where this field is used. It makes that resource available
                                 inside a container.
+                              type: string
+                            request:
+                              description: |-
+                                Request is the name chosen for a request in the referenced claim.
+                                If empty, everything from the claim is made available, otherwise
+                                only the result of this request.
                               type: string
                           required:
                           - name
@@ -7257,6 +7368,30 @@ spec:
                           2) has CAP_SYS_ADMIN
                           Note that this field cannot be set when spec.os.name is windows.
                         type: boolean
+                      appArmorProfile:
+                        description: |-
+                          appArmorProfile is the AppArmor options to use by this container. If set, this profile
+                          overrides the pod's appArmorProfile.
+                          Note that this field cannot be set when spec.os.name is windows.
+                        properties:
+                          localhostProfile:
+                            description: |-
+                              localhostProfile indicates a profile loaded on the node that should be used.
+                              The profile must be preconfigured on the node to work.
+                              Must match the loaded name of the profile.
+                              Must be set if and only if type is "Localhost".
+                            type: string
+                          type:
+                            description: |-
+                              type indicates which kind of AppArmor profile will be applied.
+                              Valid options are:
+                                Localhost - a profile pre-loaded on the node.
+                                RuntimeDefault - the container runtime's default profile.
+                                Unconfined - no AppArmor enforcement.
+                            type: string
+                        required:
+                        - type
+                        type: object
                       capabilities:
                         description: |-
                           The capabilities to add/drop when running containers.
@@ -7270,6 +7405,7 @@ spec:
                                 type
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                           drop:
                             description: Removed capabilities
                             items:
@@ -7277,6 +7413,7 @@ spec:
                                 type
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       privileged:
                         description: |-
@@ -7288,7 +7425,7 @@ spec:
                       procMount:
                         description: |-
                           procMount denotes the type of proc mount to use for the containers.
-                          The default is DefaultProcMount which uses the container runtime defaults for
+                          The default value is Default which uses the container runtime defaults for
                           readonly paths and masked paths.
                           This requires the ProcMountType feature flag to be enabled.
                           Note that this field cannot be set when spec.os.name is windows.
@@ -7370,7 +7507,6 @@ spec:
                               type indicates which kind of seccomp profile will be applied.
                               Valid options are:
 
-
                               Localhost - a profile defined in a file on the node should be used.
                               RuntimeDefault - the container runtime default profile should be used.
                               Unconfined - no profile should be applied.
@@ -7434,6 +7570,7 @@ spec:
                             items:
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       failureThreshold:
                         description: |-
@@ -7450,10 +7587,10 @@ spec:
                             format: int32
                             type: integer
                           service:
+                            default: ""
                             description: |-
                               Service is the name of the service to place in the gRPC HealthCheckRequest
                               (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
-
 
                               If this is not specified, the default behavior is defined by gRPC.
                             type: string
@@ -7488,6 +7625,7 @@ spec:
                               - value
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           path:
                             description: Path to access on the HTTP server.
                             type: string
@@ -7629,6 +7767,9 @@ spec:
                       - name
                       type: object
                     type: array
+                    x-kubernetes-list-map-keys:
+                    - devicePath
+                    x-kubernetes-list-type: map
                   volumeMounts:
                     description: |-
                       Pod volumes to mount into the container's filesystem.
@@ -7648,6 +7789,8 @@ spec:
                             to container and the other way around.
                             When not set, MountPropagationNone is used.
                             This field is beta in 1.10.
+                            When RecursiveReadOnly is set to IfPossible or to Enabled, MountPropagation must be None or unspecified
+                            (which defaults to None).
                           type: string
                         name:
                           description: This must match the Name of a Volume.
@@ -7657,6 +7800,25 @@ spec:
                             Mounted read-only if true, read-write otherwise (false or unspecified).
                             Defaults to false.
                           type: boolean
+                        recursiveReadOnly:
+                          description: |-
+                            RecursiveReadOnly specifies whether read-only mounts should be handled
+                            recursively.
+
+                            If ReadOnly is false, this field has no meaning and must be unspecified.
+
+                            If ReadOnly is true, and this field is set to Disabled, the mount is not made
+                            recursively read-only.  If this field is set to IfPossible, the mount is made
+                            recursively read-only, if it is supported by the container runtime.  If this
+                            field is set to Enabled, the mount is made recursively read-only if it is
+                            supported by the container runtime, otherwise the pod will not be started and
+                            an error will be generated to indicate the reason.
+
+                            If this field is set to IfPossible or Enabled, MountPropagation must be set to
+                            None (or be unspecified, which defaults to None).
+
+                            If this field is not specified, it is treated as an equivalent of Disabled.
+                          type: string
                         subPath:
                           description: |-
                             Path within the volume from which the container's volume should be mounted.
@@ -7674,6 +7836,9 @@ spec:
                       - name
                       type: object
                     type: array
+                    x-kubernetes-list-map-keys:
+                    - mountPath
+                    x-kubernetes-list-type: map
                   workingDir:
                     description: |-
                       Container's working directory.
@@ -7840,10 +8005,13 @@ spec:
                     referenced object inside the same namespace.
                   properties:
                     name:
+                      default: ""
                       description: |-
                         Name of the referent.
+                        This field is effectively required, but due to backwards compatibility is
+                        allowed to be empty. Instances of this type with an empty value here are
+                        almost certainly wrong.
                         More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                        TODO: Add other useful fields. apiVersion, kind, uid?
                       type: string
                   type: object
                   x-kubernetes-map-type: atomic
@@ -8025,6 +8193,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   command:
                     description: |-
                       Entrypoint array. Not executed within a shell.
@@ -8038,6 +8207,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   env:
                     description: |-
                       List of environment variables to set in the container.
@@ -8073,10 +8243,13 @@ spec:
                                   description: The key to select.
                                   type: string
                                 name:
+                                  default: ""
                                   description: |-
                                     Name of the referent.
+                                    This field is effectively required, but due to backwards compatibility is
+                                    allowed to be empty. Instances of this type with an empty value here are
+                                    almost certainly wrong.
                                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                    TODO: Add other useful fields. apiVersion, kind, uid?
                                   type: string
                                 optional:
                                   description: Specify whether the ConfigMap or its
@@ -8136,10 +8309,13 @@ spec:
                                     be a valid secret key.
                                   type: string
                                 name:
+                                  default: ""
                                   description: |-
                                     Name of the referent.
+                                    This field is effectively required, but due to backwards compatibility is
+                                    allowed to be empty. Instances of this type with an empty value here are
+                                    almost certainly wrong.
                                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                    TODO: Add other useful fields. apiVersion, kind, uid?
                                   type: string
                                 optional:
                                   description: Specify whether the Secret or its key
@@ -8154,6 +8330,9 @@ spec:
                       - name
                       type: object
                     type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
                   envFrom:
                     description: |-
                       List of sources to populate environment variables in the container.
@@ -8170,10 +8349,13 @@ spec:
                           description: The ConfigMap to select from
                           properties:
                             name:
+                              default: ""
                               description: |-
                                 Name of the referent.
+                                This field is effectively required, but due to backwards compatibility is
+                                allowed to be empty. Instances of this type with an empty value here are
+                                almost certainly wrong.
                                 More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                TODO: Add other useful fields. apiVersion, kind, uid?
                               type: string
                             optional:
                               description: Specify whether the ConfigMap must be defined
@@ -8188,10 +8370,13 @@ spec:
                           description: The Secret to select from
                           properties:
                             name:
+                              default: ""
                               description: |-
                                 Name of the referent.
+                                This field is effectively required, but due to backwards compatibility is
+                                allowed to be empty. Instances of this type with an empty value here are
+                                almost certainly wrong.
                                 More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                TODO: Add other useful fields. apiVersion, kind, uid?
                               type: string
                             optional:
                               description: Specify whether the Secret must be defined
@@ -8200,6 +8385,7 @@ spec:
                           x-kubernetes-map-type: atomic
                       type: object
                     type: array
+                    x-kubernetes-list-type: atomic
                   image:
                     description: |-
                       Container image name.
@@ -8240,6 +8426,7 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                                x-kubernetes-list-type: atomic
                             type: object
                           httpGet:
                             description: HTTPGet specifies the http request to perform.
@@ -8269,6 +8456,7 @@ spec:
                                   - value
                                   type: object
                                 type: array
+                                x-kubernetes-list-type: atomic
                               path:
                                 description: Path to access on the HTTP server.
                                 type: string
@@ -8288,6 +8476,17 @@ spec:
                                 type: string
                             required:
                             - port
+                            type: object
+                          sleep:
+                            description: Sleep represents the duration that the container
+                              should sleep before being terminated.
+                            properties:
+                              seconds:
+                                description: Seconds is the number of seconds to sleep.
+                                format: int64
+                                type: integer
+                            required:
+                            - seconds
                             type: object
                           tcpSocket:
                             description: |-
@@ -8337,6 +8536,7 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                                x-kubernetes-list-type: atomic
                             type: object
                           httpGet:
                             description: HTTPGet specifies the http request to perform.
@@ -8366,6 +8566,7 @@ spec:
                                   - value
                                   type: object
                                 type: array
+                                x-kubernetes-list-type: atomic
                               path:
                                 description: Path to access on the HTTP server.
                                 type: string
@@ -8385,6 +8586,17 @@ spec:
                                 type: string
                             required:
                             - port
+                            type: object
+                          sleep:
+                            description: Sleep represents the duration that the container
+                              should sleep before being terminated.
+                            properties:
+                              seconds:
+                                description: Seconds is the number of seconds to sleep.
+                                format: int64
+                                type: integer
+                            required:
+                            - seconds
                             type: object
                           tcpSocket:
                             description: |-
@@ -8430,6 +8642,7 @@ spec:
                             items:
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       failureThreshold:
                         description: |-
@@ -8446,10 +8659,10 @@ spec:
                             format: int32
                             type: integer
                           service:
+                            default: ""
                             description: |-
                               Service is the name of the service to place in the gRPC HealthCheckRequest
                               (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
-
 
                               If this is not specified, the default behavior is defined by gRPC.
                             type: string
@@ -8484,6 +8697,7 @@ spec:
                               - value
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           path:
                             description: Path to access on the HTTP server.
                             type: string
@@ -8640,6 +8854,7 @@ spec:
                             items:
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       failureThreshold:
                         description: |-
@@ -8656,10 +8871,10 @@ spec:
                             format: int32
                             type: integer
                           service:
+                            default: ""
                             description: |-
                               Service is the name of the service to place in the gRPC HealthCheckRequest
                               (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
-
 
                               If this is not specified, the default behavior is defined by gRPC.
                             type: string
@@ -8694,6 +8909,7 @@ spec:
                               - value
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           path:
                             description: Path to access on the HTTP server.
                             type: string
@@ -8807,10 +9023,8 @@ spec:
                           Claims lists the names of resources, defined in spec.resourceClaims,
                           that are used by this container.
 
-
                           This is an alpha field and requires enabling the
                           DynamicResourceAllocation feature gate.
-
 
                           This field is immutable. It can only be set for containers.
                         items:
@@ -8821,6 +9035,12 @@ spec:
                                 Name must match the name of one entry in pod.spec.resourceClaims of
                                 the Pod where this field is used. It makes that resource available
                                 inside a container.
+                              type: string
+                            request:
+                              description: |-
+                                Request is the name chosen for a request in the referenced claim.
+                                If empty, everything from the claim is made available, otherwise
+                                only the result of this request.
                               type: string
                           required:
                           - name
@@ -8888,6 +9108,30 @@ spec:
                           2) has CAP_SYS_ADMIN
                           Note that this field cannot be set when spec.os.name is windows.
                         type: boolean
+                      appArmorProfile:
+                        description: |-
+                          appArmorProfile is the AppArmor options to use by this container. If set, this profile
+                          overrides the pod's appArmorProfile.
+                          Note that this field cannot be set when spec.os.name is windows.
+                        properties:
+                          localhostProfile:
+                            description: |-
+                              localhostProfile indicates a profile loaded on the node that should be used.
+                              The profile must be preconfigured on the node to work.
+                              Must match the loaded name of the profile.
+                              Must be set if and only if type is "Localhost".
+                            type: string
+                          type:
+                            description: |-
+                              type indicates which kind of AppArmor profile will be applied.
+                              Valid options are:
+                                Localhost - a profile pre-loaded on the node.
+                                RuntimeDefault - the container runtime's default profile.
+                                Unconfined - no AppArmor enforcement.
+                            type: string
+                        required:
+                        - type
+                        type: object
                       capabilities:
                         description: |-
                           The capabilities to add/drop when running containers.
@@ -8901,6 +9145,7 @@ spec:
                                 type
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                           drop:
                             description: Removed capabilities
                             items:
@@ -8908,6 +9153,7 @@ spec:
                                 type
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       privileged:
                         description: |-
@@ -8919,7 +9165,7 @@ spec:
                       procMount:
                         description: |-
                           procMount denotes the type of proc mount to use for the containers.
-                          The default is DefaultProcMount which uses the container runtime defaults for
+                          The default value is Default which uses the container runtime defaults for
                           readonly paths and masked paths.
                           This requires the ProcMountType feature flag to be enabled.
                           Note that this field cannot be set when spec.os.name is windows.
@@ -9001,7 +9247,6 @@ spec:
                               type indicates which kind of seccomp profile will be applied.
                               Valid options are:
 
-
                               Localhost - a profile defined in a file on the node should be used.
                               RuntimeDefault - the container runtime default profile should be used.
                               Unconfined - no profile should be applied.
@@ -9065,6 +9310,7 @@ spec:
                             items:
                               type: string
                             type: array
+                            x-kubernetes-list-type: atomic
                         type: object
                       failureThreshold:
                         description: |-
@@ -9081,10 +9327,10 @@ spec:
                             format: int32
                             type: integer
                           service:
+                            default: ""
                             description: |-
                               Service is the name of the service to place in the gRPC HealthCheckRequest
                               (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
-
 
                               If this is not specified, the default behavior is defined by gRPC.
                             type: string
@@ -9119,6 +9365,7 @@ spec:
                               - value
                               type: object
                             type: array
+                            x-kubernetes-list-type: atomic
                           path:
                             description: Path to access on the HTTP server.
                             type: string
@@ -9260,6 +9507,9 @@ spec:
                       - name
                       type: object
                     type: array
+                    x-kubernetes-list-map-keys:
+                    - devicePath
+                    x-kubernetes-list-type: map
                   volumeMounts:
                     description: |-
                       Pod volumes to mount into the container's filesystem.
@@ -9279,6 +9529,8 @@ spec:
                             to container and the other way around.
                             When not set, MountPropagationNone is used.
                             This field is beta in 1.10.
+                            When RecursiveReadOnly is set to IfPossible or to Enabled, MountPropagation must be None or unspecified
+                            (which defaults to None).
                           type: string
                         name:
                           description: This must match the Name of a Volume.
@@ -9288,6 +9540,25 @@ spec:
                             Mounted read-only if true, read-write otherwise (false or unspecified).
                             Defaults to false.
                           type: boolean
+                        recursiveReadOnly:
+                          description: |-
+                            RecursiveReadOnly specifies whether read-only mounts should be handled
+                            recursively.
+
+                            If ReadOnly is false, this field has no meaning and must be unspecified.
+
+                            If ReadOnly is true, and this field is set to Disabled, the mount is not made
+                            recursively read-only.  If this field is set to IfPossible, the mount is made
+                            recursively read-only, if it is supported by the container runtime.  If this
+                            field is set to Enabled, the mount is made recursively read-only if it is
+                            supported by the container runtime, otherwise the pod will not be started and
+                            an error will be generated to indicate the reason.
+
+                            If this field is set to IfPossible or Enabled, MountPropagation must be set to
+                            None (or be unspecified, which defaults to None).
+
+                            If this field is not specified, it is treated as an equivalent of Disabled.
+                          type: string
                         subPath:
                           description: |-
                             Path within the volume from which the container's volume should be mounted.
@@ -9305,6 +9576,9 @@ spec:
                       - name
                       type: object
                     type: array
+                    x-kubernetes-list-map-keys:
+                    - mountPath
+                    x-kubernetes-list-type: map
                   workingDir:
                     description: |-
                       Container's working directory.
@@ -9471,10 +9745,13 @@ spec:
                     referenced object inside the same namespace.
                   properties:
                     name:
+                      default: ""
                       description: |-
                         Name of the referent.
+                        This field is effectively required, but due to backwards compatibility is
+                        allowed to be empty. Instances of this type with an empty value here are
+                        almost certainly wrong.
                         More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                        TODO: Add other useful fields. apiVersion, kind, uid?
                       type: string
                   type: object
                   x-kubernetes-map-type: atomic
@@ -9610,7 +9887,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnworkloads.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -9622,10 +9899,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -10156,7 +10433,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnworkloadversions.lifecycle.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -10168,10 +10445,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   group: lifecycle.keptn.sh
   names:
@@ -11175,7 +11452,7 @@ kind: CustomResourceDefinition
 metadata:
   name: analyses.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -11187,10 +11464,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 spec:
   group: metrics.keptn.sh
   names:
@@ -11699,7 +11976,7 @@ kind: CustomResourceDefinition
 metadata:
   name: analysisdefinitions.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -11711,10 +11988,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 spec:
   group: metrics.keptn.sh
   names:
@@ -12736,7 +13013,7 @@ kind: CustomResourceDefinition
 metadata:
   name: analysisvaluetemplates.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -12748,10 +13025,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 spec:
   group: metrics.keptn.sh
   names:
@@ -12951,7 +13228,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnmetrics.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -12963,10 +13240,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 spec:
   group: metrics.keptn.sh
   names:
@@ -13670,7 +13947,7 @@ kind: CustomResourceDefinition
 metadata:
   name: keptnmetricsproviders.metrics.keptn.sh
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
     caAnnotation1: hi
     globalAnnotation1: test1
     globalAnnotation2: test2
@@ -13682,10 +13959,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 spec:
   group: metrics.keptn.sh
   names:
@@ -13740,7 +14017,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -13806,7 +14082,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -13866,7 +14141,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -13933,7 +14207,6 @@ spec:
                     description: |-
                       Name of the referent.
                       More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      TODO: Add other useful fields. apiVersion, kind, uid?
                     type: string
                   optional:
                     description: Specify whether the Secret or its key must be defined
@@ -13977,24 +14250,15 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
+    app.kubernetes.io/version: v3.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.3.0
 rules:
 - apiGroups:
   - admissionregistration.k8s.io
   resources:
   - mutatingwebhookconfigurations
-  verbs:
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - admissionregistration.k8s.io
-  resources:
   - validatingwebhookconfigurations
   verbs:
   - get
@@ -14021,203 +14285,6 @@ rules:
   - list
   - watch
 ---
-# Source: keptn/charts/lifecycleOperator/templates/keptn-scheduler-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: keptn-scheduler
-  namespace: "helmtests"
-  annotations:
-    globalAnnotation1: test1
-    globalAnnotation2: test2
-    test-annotation: local
-  labels:
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
-    globalLabel1: test1
-    globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  - events.k8s.io
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
-  - update
-- apiGroups:
-  - coordination.k8s.io
-  resources:
-  - leases
-  verbs:
-  - create
-- apiGroups:
-  - coordination.k8s.io
-  resourceNames:
-  - kube-scheduler
-  resources:
-  - leases
-  verbs:
-  - get
-  - update
-- apiGroups:
-  - ""
-  resources:
-  - endpoints
-  verbs:
-  - create
-- apiGroups:
-  - ""
-  resourceNames:
-  - kube-scheduler
-  resources:
-  - endpoints
-  verbs:
-  - get
-  - update
-- apiGroups:
-  - ""
-  resources:
-  - nodes
-  verbs:
-  - get
-  - list
-  - watch
-  - patch
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - delete
-  - get
-  - list
-  - watch
-  - update
-- apiGroups:
-  - ""
-  resources:
-  - bindings
-  - pods/binding
-  verbs:
-  - create
-- apiGroups:
-  - ""
-  resources:
-  - pods/status
-  verbs:
-  - patch
-  - update
-- apiGroups:
-  - ""
-  resources:
-  - replicationcontrollers
-  - services
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - apps
-  - extensions
-  resources:
-  - replicasets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - statefulsets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - policy
-  resources:
-  - poddisruptionbudgets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - persistentvolumeclaims
-  - persistentvolumes
-  verbs:
-  - get
-  - list
-  - watch
-  - patch
-  - update
-- apiGroups:
-  - authentication.k8s.io
-  resources:
-  - tokenreviews
-  verbs:
-  - create
-- apiGroups:
-  - authorization.k8s.io
-  resources:
-  - subjectaccessreviews
-  verbs:
-  - create
-- apiGroups:
-  - storage.k8s.io
-  resources:
-  - csinodes
-  - storageclasses
-  - csidrivers
-  - csistoragecapacities
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - scheduling.sigs.k8s.io
-  resources:
-  - podgroups
-  - elasticquotas
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - delete
-  - update
-  - patch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnworkloadversions
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
----
 # Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -14232,11 +14299,64 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
 - apiGroups:
   - apps
   resources:
@@ -14274,173 +14394,9 @@ rules:
   - get
   - list
 - apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - create
-  - get
-  - list
-  - update
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - deployments
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
-  - update
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-- apiGroups:
   - lifecycle.keptn.sh
   resources:
   - keptnappcontexts
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnappcreationrequests
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnappcreationrequests/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnappcreationrequests/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnapps
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnapps/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnapps/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnappversion
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnappversion/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnappversion/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnappversions
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnappversions/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnappversions/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
   - keptnevaluationdefinitions
   verbs:
   - get
@@ -14449,84 +14405,14 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
+  - keptnappcreationrequests
+  - keptnapps
+  - keptnappversion
+  - keptnappversions
   - keptnevaluations
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnevaluations/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnevaluations/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
   - keptntaskdefinitions
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptntaskdefinitions/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptntaskdefinitions/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
   - keptntasks
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptntasks/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptntasks/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
+  - keptnworkloads
   - keptnworkloadversions
   verbs:
   - create
@@ -14539,39 +14425,29 @@ rules:
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
+  - keptnappcreationrequests/finalizers
+  - keptnapps/finalizers
+  - keptnappversion/finalizers
+  - keptnappversions/finalizers
+  - keptnevaluations/finalizers
+  - keptntaskdefinitions/finalizers
+  - keptntasks/finalizers
+  - keptnworkloads/finalizers
   - keptnworkloadversions/finalizers
   verbs:
   - update
 - apiGroups:
   - lifecycle.keptn.sh
   resources:
-  - keptnworkloadversions/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnworkloads
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
-  - keptnworkloads/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - lifecycle.keptn.sh
-  resources:
+  - keptnappcreationrequests/status
+  - keptnapps/status
+  - keptnappversion/status
+  - keptnappversions/status
+  - keptnevaluations/status
+  - keptntaskdefinitions/status
+  - keptntasks/status
   - keptnworkloads/status
+  - keptnworkloadversions/status
   verbs:
   - get
   - patch
@@ -14613,10 +14489,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 rules:
 - apiGroups:
   - custom.metrics.k8s.io
@@ -14639,10 +14515,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 rules:
   - apiGroups:
       - ""
@@ -14674,49 +14550,13 @@ rules:
       - metrics.keptn.sh
     resources:
       - analyses/finalizers
-    verbs:
-      - update
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
-      - analyses/status
-    verbs:
-      - get
-      - patch
-      - update
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
-      - analysisdefinitions
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
-      - analysisvaluetemplates
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
-      - keptnmetrics
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
       - keptnmetrics/finalizers
     verbs:
       - update
   - apiGroups:
       - metrics.keptn.sh
     resources:
+      - analyses/status
       - keptnmetrics/status
     verbs:
       - get
@@ -14725,14 +14565,10 @@ rules:
   - apiGroups:
       - metrics.keptn.sh
     resources:
+      - analysisdefinitions
+      - analysisvaluetemplates
+      - keptnmetrics
       - keptnmetricsproviders
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - metrics.keptn.sh
-    resources:
       - providers
     verbs:
       - get
@@ -14753,10 +14589,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 rules:
 - apiGroups:
   - custom.metrics.k8s.io
@@ -14784,10 +14620,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
+    app.kubernetes.io/version: v3.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.3.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14795,33 +14631,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'certificate-operator'
-  namespace: 'helmtests'
----
-# Source: keptn/charts/lifecycleOperator/templates/keptn-scheduler-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: keptn-scheduler
-  namespace: "helmtests"
-  annotations:
-    globalAnnotation1: test1
-    globalAnnotation2: test2
-    test-annotation: local
-  labels:
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
-    globalLabel1: test1
-    globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: 'keptn-scheduler'
-subjects:
-- kind: ServiceAccount
-  name: 'keptn-scheduler'
   namespace: 'helmtests'
 ---
 # Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-rbac.yaml
@@ -14838,10 +14647,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14865,10 +14674,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14892,10 +14701,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14919,10 +14728,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14946,10 +14755,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
+    app.kubernetes.io/version: v3.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.3.0
 rules:
 - apiGroups:
   - ""
@@ -14997,10 +14806,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
+    app.kubernetes.io/version: v3.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.3.0
 rules:
 - apiGroups:
   - ""
@@ -15035,64 +14844,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - coordination.k8s.io
-  resources:
-  - leases
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
----
-# Source: keptn/charts/lifecycleOperator/templates/scheduler-leader-election-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: keptn-scheduler-leader-election-role
-  namespace: "helmtests"
-  annotations:
-    globalAnnotation1: test1
-    globalAnnotation2: test2
-    test-annotation: local
-  labels:
-    app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: scheduler
-    app.kubernetes.io/part-of: keptn
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
-    globalLabel1: test1
-    globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 rules:
 - apiGroups:
   - ""
@@ -15140,10 +14895,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 rules:
 - apiGroups:
   - ""
@@ -15194,10 +14949,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
+    app.kubernetes.io/version: v3.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.3.0
     globalAnnotation1: test1
     globalAnnotation2: test2
     test-annotation: local
@@ -15206,9 +14961,9 @@ roleRef:
   kind: Role
   name: 'certificate-operator-leader-election-role'
 subjects:
-- kind: ServiceAccount
-  name: 'certificate-operator'
-  namespace: 'helmtests'
+  - kind: ServiceAccount
+    name: 'certificate-operator'
+    namespace: 'helmtests'
 ---
 # Source: keptn/charts/certManager/templates/certificate-operator-role-binding-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -15227,10 +14982,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
+    app.kubernetes.io/version: v3.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.3.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15238,33 +14993,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'certificate-operator'
-  namespace: 'helmtests'
----
-# Source: keptn/charts/lifecycleOperator/templates/extension-apiserver-authentication-reader-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: extension-apiserver-authentication-reader
-  namespace: "helmtests"
-  annotations:
-    globalAnnotation1: test1
-    globalAnnotation2: test2
-    test-annotation: local
-  labels:
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
-    globalLabel1: test1
-    globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: 'extension-apiserver-authentication-reader'
-subjects:
-- kind: ServiceAccount
-  name: 'keptn-scheduler'
   namespace: 'helmtests'
 ---
 # Source: keptn/charts/lifecycleOperator/templates/lifecycle-operator-leader-election-rbac.yaml
@@ -15281,10 +15009,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15308,10 +15036,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15319,33 +15047,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: 'lifecycle-operator'
-  namespace: 'helmtests'
----
-# Source: keptn/charts/lifecycleOperator/templates/scheduler-leader-election-rbac.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: keptn-scheduler-leader-election-rolebinding
-  namespace: "helmtests"
-  annotations:
-    globalAnnotation1: test1
-    globalAnnotation2: test2
-    test-annotation: local
-  labels:
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
-    globalLabel1: test1
-    globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: 'keptn-scheduler-leader-election-role'
-subjects:
-- kind: ServiceAccount
-  name: 'keptn-scheduler'
   namespace: 'helmtests'
 ---
 # Source: keptn/charts/metricsOperator/templates/metrics-operator-leader-election-rbac.yaml
@@ -15362,10 +15063,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15389,10 +15090,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -15417,10 +15118,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   type: ClusterIP
   selector:
@@ -15447,10 +15148,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 spec:
   type: ClusterIP
   selector:
@@ -15477,10 +15178,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 spec:
   type: ClusterIP
   selector:
@@ -15514,10 +15215,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 spec:
   type: ClusterIP
   selector:
@@ -15546,10 +15247,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v2.2.1
+    app.kubernetes.io/version: v3.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: cert-manager-0.2.5
+    helm.sh/chart: cert-manager-0.3.0
 spec:
   replicas: 1
   selector:
@@ -15582,7 +15283,7 @@ spec:
               value: "true"
             - name: KUBERNETES_CLUSTER_DOMAIN
               value: cluster.local
-          image: local-registry.io/keptn/certificate-operator:v2.2.1
+          image: local-registry.io/keptn/certificate-operator:v3.0.0
           imagePullPolicy: Always
           name: certificate-operator
           resources:
@@ -15635,10 +15336,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
     globalAnnotation1: test1
     globalAnnotation2: test2
     test-annotation: local
@@ -15675,9 +15376,9 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: FUNCTION_RUNNER_IMAGE
-          value: "ghcr.io/keptn/deno-runtime:v2.0.5"
+          value: "ghcr.io/keptn/deno-runtime:v3.0.1"
         - name: PYTHON_RUNNER_IMAGE
-          value: "ghcr.io/keptn/python-runtime:v1.0.6"
+          value: "ghcr.io/keptn/python-runtime:v1.0.8"
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
           value: "0"
         - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL
@@ -15698,15 +15399,13 @@ spec:
           value: "2222"
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
           value: "0"
-        - name: SCHEDULING_GATES_ENABLED
-          value: "false"
         - name: PROMOTION_TASKS_ENABLED
           value: "false"
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: cluster.local
         - name: CERT_MANAGER_ENABLED
           value: "true"
-        image: local-registry.io/keptn/lifecycle-operator:v1.1.1
+        image: local-registry.io/keptn/lifecycle-operator:v2.0.0
         imagePullPolicy: Never
         name: lifecycle-operator
         ports:
@@ -15762,92 +15461,6 @@ spec:
         secret:
           secretName: keptn-certs
 ---
-# Source: keptn/charts/lifecycleOperator/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: scheduler
-  namespace: "helmtests"
-  labels:
-    component: scheduler
-    app.kubernetes.io/instance: keptn-test
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
-    globalLabel1: test1
-    globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
-    globalAnnotation1: test1
-    globalAnnotation2: test2
-    test-annotation: local
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      component: scheduler
-      app.kubernetes.io/name: lifecycle-operator
-      app.kubernetes.io/instance: keptn-test
-  template:
-    metadata:
-      labels:
-        component: scheduler
-        app.kubernetes.io/name: lifecycle-operator
-        app.kubernetes.io/instance: keptn-test
-    spec:
-      containers:
-      - command:
-        - /bin/kube-scheduler
-        - --config=/etc/kubernetes/scheduler-config.yaml
-        env:
-        - name: OTEL_COLLECTOR_URL
-          value: "otel-collector:4317"
-        - name: KUBERNETES_CLUSTER_DOMAIN
-          value: cluster.local
-        image: local-registry.io/keptn/scheduler:v1.0.1
-        imagePullPolicy: Never
-        name: scheduler
-        resources:
-          limits:
-            cpu: 300m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 20Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 65532
-          seccompProfile:
-            type: RuntimeDefault
-        volumeMounts:
-        - mountPath: /etc/kubernetes
-          name: scheduler-config
-          readOnly: true
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 10259
-            scheme: HTTPS
-          initialDelaySeconds: 15
-        readinessProbe:
-          httpGet:
-            path: /healthz
-            port: 10259
-            scheme: HTTPS
-      imagePullSecrets:
-        - name: registry-secret
-        - name: second-secret
-      serviceAccountName: keptn-scheduler
-      volumes:
-      - configMap:
-          name: scheduler-config
-        name: scheduler-config
----
 # Source: keptn/charts/metricsOperator/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -15866,10 +15479,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 spec:
   replicas: 1
   selector:
@@ -15916,7 +15529,7 @@ spec:
           value: cluster.local
         - name: CERT_MANAGER_ENABLED
           value: "true"
-        image: local-registry.io/keptn/metrics-operator:v1.1.0
+        image: local-registry.io/keptn/metrics-operator:v2.0.0
         imagePullPolicy: Never
         name: metrics-operator
         ports:
@@ -15992,10 +15605,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 spec:
   group: custom.metrics.k8s.io
   groupPriorityMinimum: 100
@@ -16020,10 +15633,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 spec:
   group: custom.metrics.k8s.io
   groupPriorityMinimum: 100
@@ -16050,10 +15663,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 webhooks:
 - admissionReviewVersions:
   - v1
@@ -16107,10 +15720,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: lifecycle-operator
-    app.kubernetes.io/version: v1.1.1
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: lifecycle-operator-0.4.1
+    helm.sh/chart: lifecycle-operator-0.6.0
 webhooks:
 - admissionReviewVersions:
   - v1
@@ -16148,10 +15761,10 @@ metadata:
     app.kubernetes.io/instance: keptn-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics-operator
-    app.kubernetes.io/version: v1.1.0
+    app.kubernetes.io/version: v2.0.0
     globalLabel1: test1
     globalLabel2: test2
-    helm.sh/chart: metrics-operator-0.3.0
+    helm.sh/chart: metrics-operator-0.4.0
 webhooks:
 - admissionReviewVersions:
   - v1

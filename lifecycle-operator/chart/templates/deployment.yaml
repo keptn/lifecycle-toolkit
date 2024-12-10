@@ -1,17 +1,3 @@
-{{- if or (le .Capabilities.KubeVersion.Minor "26") (not .Values.schedulingGatesEnabled) }}
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: keptn-scheduler
-  namespace: {{ .Release.Namespace | quote }}
-  {{- $annotations := include "common.annotations" (dict "context" .) }}
-  {{- with $annotations }}
-  annotations: {{- . -}}
-  {{- end }}
-  labels:
-{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -34,7 +20,7 @@ metadata:
 {{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
 {{- include "common.annotations" ( dict "context" . ) }}
 spec:
-  replicas: {{ .Values.lifecycleOperator.replicas }}
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       control-plane: lifecycle-operator
@@ -67,40 +53,37 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: FUNCTION_RUNNER_IMAGE
-          value: {{ .Values.lifecycleOperator.env.functionRunnerImage | quote }}
+          value: {{ .Values.env.functionRunnerImage | quote }}
         - name: PYTHON_RUNNER_IMAGE
-          value: {{ .Values.lifecycleOperator.env.pythonRunnerImage | quote }}
+          value: {{ .Values.env.pythonRunnerImage | quote }}
         - name: KEPTN_APP_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.env.keptnAppControllerLogLevel | quote
+          value: {{ .Values.env.keptnAppControllerLogLevel | quote
             }}
         - name: KEPTN_APP_CREATION_REQUEST_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.env.keptnAppCreationRequestControllerLogLevel
+          value: {{ .Values.env.keptnAppCreationRequestControllerLogLevel
             | quote }}
         - name: KEPTN_APP_VERSION_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.env.keptnAppVersionControllerLogLevel
+          value: {{ .Values.env.keptnAppVersionControllerLogLevel
             | quote }}
         - name: KEPTN_EVALUATION_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.env.keptnEvaluationControllerLogLevel
+          value: {{ .Values.env.keptnEvaluationControllerLogLevel
             | quote }}
         - name: KEPTN_TASK_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.env.keptnTaskControllerLogLevel | quote
+          value: {{ .Values.env.keptnTaskControllerLogLevel | quote
             }}
         - name: KEPTN_TASK_DEFINITION_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.env.keptnTaskDefinitionControllerLogLevel
+          value: {{ .Values.env.keptnTaskDefinitionControllerLogLevel
             | quote }}
         - name: KEPTN_WORKLOAD_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.env.keptnWorkloadControllerLogLevel
+          value: {{ .Values.env.keptnWorkloadControllerLogLevel
             | quote }}
         - name: KEPTN_WORKLOAD_VERSION_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.env.keptnWorkloadVersionControllerLogLevel
+          value: {{ .Values.env.keptnWorkloadVersionControllerLogLevel
             | quote }}
         - name: KEPTN_DORA_METRICS_PORT
-          value: {{ .Values.lifecycleOperator.env.keptnDoraMetricsPort | quote }}
+          value: {{ .Values.env.keptnDoraMetricsPort | quote }}
         - name: OPTIONS_CONTROLLER_LOG_LEVEL
-          value: {{ .Values.lifecycleOperator.env.optionsControllerLogLevel | quote
-            }}
-        - name: SCHEDULING_GATES_ENABLED
-          value: {{ .Values.schedulingGatesEnabled | quote
+          value: {{ .Values.env.optionsControllerLogLevel | quote
             }}
         - name: PROMOTION_TASKS_ENABLED
           value: {{ .Values.promotionTasksEnabled | quote
@@ -109,8 +92,8 @@ spec:
           value: {{ .Values.kubernetesClusterDomain }}
         - name: CERT_MANAGER_ENABLED
           value: {{ .Values.global.certManagerEnabled | quote }}
-        image: {{ include "common.images.image" ( dict "imageRoot" .Values.lifecycleOperator.image "global" .Values.global ) }}
-        imagePullPolicy: {{ .Values.lifecycleOperator.image.imagePullPolicy | default (.Values.global.imagePullPolicy | default "IfNotPresent") }}
+        image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global ) }}
+        imagePullPolicy: {{ .Values.image.imagePullPolicy | default (.Values.global.imagePullPolicy | default "IfNotPresent") }}
         name: lifecycle-operator
         ports:
         - containerPort: 9443
@@ -119,29 +102,29 @@ spec:
         - containerPort: 2222
           name: metrics
           protocol: TCP
-        resources: {{- toYaml .Values.lifecycleOperator.resources | nindent 10 }}
+        resources: {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          allowPrivilegeEscalation: {{ .Values.lifecycleOperator.containerSecurityContext.allowPrivilegeEscalation
+          allowPrivilegeEscalation: {{ .Values.containerSecurityContext.allowPrivilegeEscalation
             }}
-          capabilities: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.capabilities
+          capabilities: {{- include "common.tplvalues.render" (dict "value" .Values.containerSecurityContext.capabilities
             "context" $) | nindent 12 }}
-          privileged: {{ .Values.lifecycleOperator.containerSecurityContext.privileged
+          privileged: {{ .Values.containerSecurityContext.privileged
             }}
           {{- if not .Values.global.openShift.enabled }}
-          runAsGroup: {{ .Values.lifecycleOperator.containerSecurityContext.runAsGroup
+          runAsGroup: {{ .Values.containerSecurityContext.runAsGroup
             }}
-          runAsUser: {{ .Values.lifecycleOperator.containerSecurityContext.runAsUser
+          runAsUser: {{ .Values.containerSecurityContext.runAsUser
             }}
           {{- end }}
-          runAsNonRoot: {{ .Values.lifecycleOperator.containerSecurityContext.runAsNonRoot
+          runAsNonRoot: {{ .Values.containerSecurityContext.runAsNonRoot
             }}
-          seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.containerSecurityContext.seccompProfile
+          seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.containerSecurityContext.seccompProfile
             "context" $) | nindent 12 }}
         volumeMounts:
         - name: keptn-certs
           mountPath: /tmp/webhook/certs/
-        {{- if .Values.lifecycleOperator.livenessProbe }}
-        livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.livenessProbe "context" $) | nindent 10 }}
+        {{- if .Values.livenessProbe }}
+        livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.livenessProbe "context" $) | nindent 10 }}
          {{- else }}
         livenessProbe:
          httpGet:
@@ -150,8 +133,8 @@ spec:
          initialDelaySeconds: 15
          periodSeconds: 20
         {{- end }}
-        {{- if .Values.lifecycleOperator.readinessProbe }}
-        readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.readinessProbe "context" $) | nindent 10 }}
+        {{- if .Values.readinessProbe }}
+        readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.readinessProbe "context" $) | nindent 10 }}
          {{- else }}
         readinessProbe:
          httpGet:
@@ -160,114 +143,22 @@ spec:
          initialDelaySeconds: 5
          periodSeconds: 10
         {{- end }}
-      {{- include "lifecycleOperator.imagePullSecrets" . | nindent 6 }}
+      {{- include "imagePullSecrets" . | nindent 6 }}
       securityContext:
         runAsNonRoot: true
       serviceAccountName: lifecycle-operator
       terminationGracePeriodSeconds: 10
-      hostNetwork: {{ .Values.lifecycleOperator.hostNetwork }}
+      hostNetwork: {{ .Values.hostNetwork }}
       volumes:
       - name: keptn-certs
         secret:
           secretName: keptn-certs
-{{- if .Values.lifecycleOperator.topologySpreadConstraints }}
-      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.topologySpreadConstraints "context" $) | nindent 8 }}
+{{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.topologySpreadConstraints "context" $) | nindent 8 }}
 {{- end }}
-{{- if .Values.lifecycleOperator.nodeSelector }}
-      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.lifecycleOperator.nodeSelector "context" $) | nindent 8 }}
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
 {{- end }}
-{{- if .Values.lifecycleOperator.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.lifecycleOperator.tolerations "context" .) | nindent 8 }}
-{{- end }}
-
-{{- if or (le .Capabilities.KubeVersion.Minor "26") (not .Values.schedulingGatesEnabled) }}
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: scheduler
-  namespace: {{ .Release.Namespace | quote }}
-  labels:
-    component: scheduler
-{{- include "common.labels.standard" ( dict "context" . ) | nindent 4 }}
-{{- include "common.annotations" ( dict "context" . ) }}
-spec:
-  replicas: {{ .Values.scheduler.replicas }}
-  selector:
-    matchLabels:
-      component: scheduler
-    {{- include "common.selectorLabels"  ( dict "context" . ) | nindent 6 }}
-  template:
-    metadata:
-      labels:
-        component: scheduler
-      {{- include "common.selectorLabels"  ( dict "context" . )  | nindent 8 }}
-    spec:
-      containers:
-      - command:
-        - /bin/kube-scheduler
-        - --config=/etc/kubernetes/scheduler-config.yaml
-        env:
-        - name: OTEL_COLLECTOR_URL
-          value: {{ .Values.scheduler.env.otelCollectorUrl | quote }}
-        - name: KUBERNETES_CLUSTER_DOMAIN
-          value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ include "common.images.image" ( dict "imageRoot" .Values.scheduler.image "global" .Values.global ) }}
-        imagePullPolicy: {{.Values.scheduler.image.imagePullPolicy | default (.Values.global.imagePullPolicy | default "IfNotPresent") }}
-        name: scheduler
-        resources: {{- toYaml .Values.scheduler.resources | nindent 10 }}
-        securityContext:
-          allowPrivilegeEscalation: {{ .Values.scheduler.containerSecurityContext.allowPrivilegeEscalation
-            }}
-          capabilities: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.containerSecurityContext.capabilities
-            "context" $) | nindent 12 }}
-          privileged: {{ .Values.scheduler.containerSecurityContext.privileged
-            }}
-          readOnlyRootFilesystem: {{ .Values.scheduler.containerSecurityContext.readOnlyRootFilesystem
-            }}
-          runAsNonRoot: {{ .Values.scheduler.containerSecurityContext.runAsNonRoot
-            }}
-          {{- if not .Values.global.openShift.enabled }}
-          runAsUser: {{ .Values.scheduler.containerSecurityContext.runAsUser }}
-          {{- end }}
-          seccompProfile: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.containerSecurityContext.seccompProfile
-            "context" $) | nindent 12 }}
-        volumeMounts:
-        - mountPath: /etc/kubernetes
-          name: scheduler-config
-          readOnly: true
-        {{- if .Values.scheduler.livenessProbe }}
-        livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.livenessProbe "context" $) | nindent 10 }}
-         {{- else }}
-        livenessProbe:
-         httpGet:
-           path: /healthz
-           port: 10259
-           scheme: HTTPS
-         initialDelaySeconds: 15
-        {{- end }}
-        {{- if .Values.scheduler.readinessProbe }}
-        readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.readinessProbe "context" $) | nindent 10 }}
-         {{- else }}
-        readinessProbe:
-         httpGet:
-           path: /healthz
-           port: 10259
-           scheme: HTTPS
-        {{- end }}
-      {{- include "scheduler.imagePullSecrets" . | nindent 6 }}
-      serviceAccountName: keptn-scheduler
-      volumes:
-      - configMap:
-          name: scheduler-config
-        name: scheduler-config
-{{- if .Values.scheduler.topologySpreadConstraints }}
-      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.topologySpreadConstraints "context" $) | nindent 8 }}
-{{- end }}
-{{- if .Values.scheduler.nodeSelector }}
-      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.scheduler.nodeSelector "context" $) | nindent 8 }}
-{{- end }}
-{{- if .Values.scheduler.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.scheduler.tolerations "context" .) | nindent 8 }}
-{{- end }}
+{{- if .Values.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.tolerations "context" .) | nindent 8 }}
 {{- end }}

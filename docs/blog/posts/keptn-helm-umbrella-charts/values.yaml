@@ -6,7 +6,8 @@ certManager:
 
 lifecycleOperator:
   enabled: false # installation of lifecycle-operator is disabled
-  metricsOperator:
+
+metricsOperator:
   replicas: 3 # installing 3 replicas of metrics-operator
   annotations: # setting custom annotations for metrics-operator
   myMetricsKey: metricsValue1

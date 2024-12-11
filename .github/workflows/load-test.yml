@@ -28,7 +28,7 @@ jobs:
 
       - name: Cache build tools
         id: cache-build-tools
-        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
         with:
           path: /usr/local/bin/kube-burner
           key: kube-burner-${{ env.KUBE_BURNER_VERSION }}

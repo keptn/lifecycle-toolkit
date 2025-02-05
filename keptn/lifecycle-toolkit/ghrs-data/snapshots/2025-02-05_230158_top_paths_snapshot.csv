@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/keptn/lifecycle-toolkit,153,113
+/keptn/lifecycle-toolkit/tree/main/examples/sample-app,21,9
+/keptn/lifecycle-toolkit/issues,20,9
+/keptn/lifecycle-toolkit/tree/main/examples/sample-app/base,15,4
+/keptn/lifecycle-toolkit/tree/main/examples/sample-app/version-2,10,5
+/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-2/app-pre-deploy.yaml,8,5
+/keptn/lifecycle-toolkit/tree/main/metrics-operator,7,4
+/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-2/appcontext.yaml,6,5
+/keptn/lifecycle-toolkit/blob/main/examples/sample-app/base/appcontext.yaml,6,4
+/keptn/lifecycle-toolkit/blob/main/examples/sample-app/version-2/kustomization.yaml,6,3

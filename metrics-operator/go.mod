@@ -5,6 +5,7 @@ go 1.23
 require (
 	github.com/DataDog/datadog-api-client-go/v2 v2.32.0
 	github.com/benbjohnson/clock v1.3.5
+	github.com/elastic/go-elasticsearch/v8 v8.17.1
 	github.com/go-logr/logr v1.4.2
 	github.com/gorilla/mux v1.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
@@ -43,6 +44,7 @@ require (
 	github.com/coreos/go-semver v0.3.1 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
+	github.com/elastic/elastic-transport-go/v8 v8.6.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/evanphx/json-patch v5.7.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect

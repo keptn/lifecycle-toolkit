@@ -6,6 +6,7 @@ const PrometheusProviderType = "prometheus"
 const ThanosProviderType = "thanos"
 const CortexProviderType = "cortex"
 const DataDogProviderType = "datadog"
+const ElasticProviderType = "elastic"
 
 var SupportedProviders = []string{
 	DynatraceProviderType,
@@ -14,4 +15,5 @@ var SupportedProviders = []string{
 	DataDogProviderType,
 	CortexProviderType,
 	ThanosProviderType,
+	ElasticProviderType,
 }

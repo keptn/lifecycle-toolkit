@@ -158,6 +158,7 @@ dynamicinformer
 dynatrace
 ecr
 elastic
+elasticsearch
 elif
 ENABLEGITINFO
 endblock

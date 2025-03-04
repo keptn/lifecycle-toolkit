@@ -157,6 +157,7 @@ dupl
 dynamicinformer
 dynatrace
 ecr
+elastic
 elif
 ENABLEGITINFO
 endblock
@@ -392,6 +393,7 @@ loadtests
 LOCALBIN
 logf
 logr
+lte
 makefiles
 markdownfiles
 markdownlint

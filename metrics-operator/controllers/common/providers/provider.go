@@ -64,7 +64,15 @@ func NewProvider(provider *metricsapi.KeptnMetricsProvider, log logr.Logger, k8s
 			K8sClient: k8sClient,
 		}, nil
 	case ElasticProviderType:
-		return elastic.NewElasticProvider(log, k8sClient, "")
+		es, err := elastic.GetElasticClient(*provider)
+		if err != nil {
+			return nil, err
+		}
+		return &elastic.KeptnElasticProvider{
+			Log:       log,
+			K8sClient: k8sClient,
+			Elastic:   es,
+		}, nil
 	default:
 		return nil, fmt.Errorf("provider %s not supported", provider.Spec.Type)
 	}

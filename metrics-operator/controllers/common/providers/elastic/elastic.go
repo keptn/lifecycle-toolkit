@@ -17,7 +17,6 @@ import (
 
 const (
 	warningLogStringElastic = "%s API returned warnings: %s"
-	defaultTimeRange        = 30 * time.Minute
 )
 
 type KeptnElasticProvider struct {
@@ -26,14 +25,7 @@ type KeptnElasticProvider struct {
 	Elastic   *elastic.Client
 }
 
-type ElasticsearchResponse struct {
-	Hits struct {
-		Total struct {
-			Value int `json:"value"`
-		} `json:"total"`
-	} `json:"hits"`
-}
-
+// GetElasticClient will create a new elastic client
 func GetElasticClient(provider metricsapi.KeptnMetricsProvider) (*elastic.Client, error) {
 	es, err := elastic.NewClient(elastic.Config{
 		Addresses: []string{provider.Spec.TargetServer},
@@ -50,31 +42,68 @@ func GetElasticClient(provider metricsapi.KeptnMetricsProvider) (*elastic.Client
 	return es, nil
 }
 
+// FetchAnalysisValue will fetch analysis value depends on query and the metrics provided as input
 func (r *KeptnElasticProvider) FetchAnalysisValue(ctx context.Context, query string, analysis metricsapi.Analysis, provider *metricsapi.KeptnMetricsProvider) (string, error) {
+	// Retrieve the AnalysisDefinition referenced in Analysis
+	var analysisDef metricsapi.AnalysisDefinition
+	err := r.K8sClient.Get(ctx, client.ObjectKey{
+		Name:      analysis.Spec.AnalysisDefinition.Name,
+		Namespace: analysis.Namespace,
+	}, &analysisDef)
+
+	if err != nil {
+		r.Log.Error(err, "Failed to retrieve AnalysisDefinition")
+		return "", fmt.Errorf("failed to get AnalysisDefinition: %w", err)
+	}
+
+	// Extract the referenced AnalysisValueTemplate name
+	if len(analysisDef.Spec.Objectives) == 0 {
+		return "", fmt.Errorf("no objectives defined in AnalysisDefinition")
+	}
+
+	templateName := analysisDef.Spec.Objectives[0].AnalysisValueTemplateRef.Name
+	r.Log.Info("Found referenced AnalysisValueTemplate", "templateName", templateName)
+	// Retrieve the AnalysisValueTemplate using the extracted name
+	var template metricsapi.AnalysisValueTemplate
+	err = r.K8sClient.Get(ctx, client.ObjectKey{
+		Name:      templateName,
+		Namespace: analysis.Namespace,
+	}, &template)
+
+	if err != nil {
+		r.Log.Error(err, "Failed to retrieve AnalysisValueTemplate")
+		return "", fmt.Errorf("failed to get AnalysisValueTemplate: %w", err)
+	}
+
+	// Extract metricPath from args
+	metricPathStr, exists := analysis.Spec.Args["metricPath"]
+	if !exists || metricPathStr == "" {
+		return "", fmt.Errorf("metric path is missing in AnalysisValueTemplate annotations")
+	}
+
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	result, err := r.runElasticQuery(ctx, query, analysis.GetFrom(), analysis.GetTo())
+	result, err := r.runElasticQuery(ctx, query)
 	if err != nil {
 		return "", err
 	}
 
-	r.Log.Info(fmt.Sprintf("Elasticsearch query result: %v", result))
-	return r.extractMetric(result)
+	r.Log.Info("Elasticsearch query result", "result", result)
+	return r.extractMetric(result, metricPathStr)
 }
 
+// EvaluateQuery takes query as a input but doesn't return anything
 func (r *KeptnElasticProvider) EvaluateQuery(ctx context.Context, metric metricsapi.KeptnMetric, provider metricsapi.KeptnMetricsProvider) (string, []byte, error) {
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	timeRange := getTimeRangeFromSpec(metric.Spec.Range)
-
-	result, err := r.runElasticQuery(ctx, metric.Spec.Query, time.Now().Add(-timeRange), time.Now())
+	result, err := r.runElasticQuery(ctx, metric.Spec.Query)
 	if err != nil {
 		return "", nil, err
 	}
 
-	metricValue, err := r.extractMetric(result)
+	metricValue, err := r.extractMetric(result, "")
 	if err != nil {
 		return "", nil, err
 	}
@@ -87,42 +116,12 @@ func (r *KeptnElasticProvider) EvaluateQueryForStep(ctx context.Context, metric 
 	return nil, nil, nil
 }
 
-func getTimeRangeFromSpec(rangeSpec *metricsapi.RangeSpec) time.Duration {
-	if rangeSpec == nil || rangeSpec.Interval == "" {
-		return defaultTimeRange
-	}
-
-	duration, err := time.ParseDuration(rangeSpec.Interval)
-	if err != nil {
-		return defaultTimeRange
-	}
-
-	return duration
-}
-
-func (r *KeptnElasticProvider) runElasticQuery(ctx context.Context, query string, from, to time.Time) (map[string]interface{}, error) {
-	queryBody := fmt.Sprintf(`
-	{
-		"query": {
-			"bool": {
-				"must": [
-					%s,
-					{
-						"range": {
-							"@timestamp": {
-								"gte": "%s",
-								"lte": "%s"
-							}
-						}
-					}
-				]
-			}
-		}
-	}`, query, from.Format(time.RFC3339), to.Format(time.RFC3339))
+// runElasticQuery runs query on elastic search to get output from elasticsearch
+func (r *KeptnElasticProvider) runElasticQuery(ctx context.Context, query string) (map[string]interface{}, error) {
 
 	res, err := r.Elastic.Search(
 		r.Elastic.Search.WithContext(ctx),
-		r.Elastic.Search.WithBody(strings.NewReader(queryBody)),
+		r.Elastic.Search.WithBody(strings.NewReader(query)),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute Elasticsearch query: %w", err)
@@ -141,17 +140,39 @@ func (r *KeptnElasticProvider) runElasticQuery(ctx context.Context, query string
 	return result, nil
 }
 
-func (r *KeptnElasticProvider) extractMetric(result map[string]interface{}) (string, error) {
-	var response ElasticsearchResponse
-	jsonData, err := json.Marshal(result)
-	if err != nil {
-		return "", fmt.Errorf("failed to marshal result: %w", err)
+// extractMetric will parse the result and return the metrics which we input to the function
+func (r *KeptnElasticProvider) extractMetric(result map[string]interface{}, metricPathStr string) (string, error) {
+	convertedResult := convertResultTOMap(result)
+	for k, v := range convertedResult {
+		if strings.Contains(k, metricPathStr) {
+			return fmt.Sprintf("%f", v), nil
+		}
 	}
+	return "", nil
+}
 
-	if err := json.Unmarshal(jsonData, &response); err != nil {
-		return "", fmt.Errorf("failed to unmarshal result into struct: %w", err)
+// convertResultTOMap recursively converts map[string]interface{} to map[string]float64
+func convertResultTOMap(input map[string]interface{}) map[string]float64 {
+	output := make(map[string]float64)
+	for key, value := range input {
+		switch v := value.(type) {
+		case float64:
+			output[key] = v
+		case float32:
+			output[key] = float64(v)
+		case int:
+			output[key] = float64(v)
+		case int32:
+			output[key] = float64(v)
+		case int64:
+			output[key] = float64(v)
+		case map[string]interface{}:
+			nestedMap := convertResultTOMap(v)
+			for nestedKey, nestedValue := range nestedMap {
+				output[key+"."+nestedKey] = nestedValue
+			}
+		default:
+		}
 	}
-
-	value := fmt.Sprintf("%d", response.Hits.Total.Value)
-	return value, nil
+	return output
 }

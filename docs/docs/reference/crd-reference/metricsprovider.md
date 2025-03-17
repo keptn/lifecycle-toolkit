@@ -129,7 +129,7 @@ For detailed information please look at the [Examples section](#examples).
     When using Elastic as metrics provider you can
     define the key name of your Elastic API Key stored in a secret,
     which is not possible for Datadog, Prometheus, Cortex or Thanos.
-    For this example `api-key` was used. 
+    For this example `myCustomTokenKey` was used. 
 
 === "Dynatrace and DQL"
 

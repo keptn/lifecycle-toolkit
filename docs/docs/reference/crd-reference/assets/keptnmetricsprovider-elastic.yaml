@@ -8,12 +8,12 @@ spec:
   targetServer: "<elastic-url>"
   secretKeyRef:
     name: elastic-api-key
-    key: api-key
+    key: myCustomTokenKey
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: elastic-api-key
 data:
-  api-key: mykey
+  myCustomTokenKey: my-token
 type: Opaque

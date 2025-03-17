@@ -8,6 +8,7 @@ import (
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/fake"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/datadog"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/elastic"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus"
 	"github.com/stretchr/testify/require"
 )
@@ -43,6 +44,15 @@ func TestFactory(t *testing.T) {
 				},
 			},
 			provider: &prometheus.KeptnPrometheusProvider{},
+			err:      false,
+		},
+		{
+			metricsProvider: metricsapi.KeptnMetricsProvider{
+				Spec: metricsapi.KeptnMetricsProviderSpec{
+					Type: ElasticProviderType,
+				},
+			},
+			provider: &elastic.KeptnElasticProvider{},
 			err:      false,
 		},
 		{

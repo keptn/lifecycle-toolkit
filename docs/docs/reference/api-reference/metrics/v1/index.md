@@ -373,7 +373,7 @@ _Appears in:_
 
 | Field | Description | Default | Optional |Validation |
 | --- | --- | --- | --- | --- |
-| `type` _string_ | Type represents the provider type. This can be one of cortex, datadog, dql, dynatrace, prometheus or thanos. || x | Optional: {} <br />Pattern: `cortex|datadog|dql|dynatrace|prometheus|thanos` <br /> |
+| `type` _string_ | Type represents the provider type. This can be one of cortex, datadog, dql, dynatrace, prometheus, elastic or thanos. || x | Optional: {} <br />Pattern: `cortex|datadog|dql|dynatrace|prometheus|thanos|elastic` <br /> |
 | `targetServer` _string_ | TargetServer defines URL (including port and protocol) at which the metrics provider is reachable. || x |  |
 | `secretKeyRef` _[SecretKeySelector](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#secretkeyselector-v1-core)_ | SecretKeyRef defines an optional secret for access credentials to the metrics provider. || ✓ | Optional: {} <br /> |
 | `insecureSkipTlsVerify` _boolean_ | InsecureSkipTlsVerify skips verification of the tls certificate when fetching metrics |false| ✓ |  |

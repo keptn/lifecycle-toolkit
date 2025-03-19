@@ -73,8 +73,8 @@ spec:
                 type: string
               type:
                 description: Type represents the provider type. This can be one of
-                  cortex, datadog, dql, dynatrace, prometheus or thanos.
-                pattern: cortex|datadog|dql|dynatrace|prometheus|thanos
+                  cortex, datadog, dql, dynatrace, prometheus, elastic or thanos.
+                pattern: cortex|datadog|dql|dynatrace|prometheus|elastic|thanos
                 type: string
             required:
             - targetServer
@@ -198,7 +198,7 @@ spec:
               type:
                 description: Type represents the provider type. This can be one of
                   prometheus, dynatrace, datadog, dql.
-                pattern: prometheus|dynatrace|datadog|dql
+                pattern: prometheus|dynatrace|datadog|dql|elastic
                 type: string
             required:
             - targetServer
@@ -264,7 +264,7 @@ spec:
               type:
                 description: Type represents the provider type. This can be one of
                   prometheus, dynatrace, datadog, dql.
-                pattern: prometheus|dynatrace|datadog|dql
+                pattern: prometheus|dynatrace|datadog|dql|elastic
                 type: string
             required:
             - targetServer

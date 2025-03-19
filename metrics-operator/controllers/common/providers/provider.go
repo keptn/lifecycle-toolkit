@@ -11,6 +11,7 @@ import (
 	metricsapi "github.com/keptn/lifecycle-toolkit/metrics-operator/api/v1"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/datadog"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/dynatrace"
+	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/elastic"
 	"github.com/keptn/lifecycle-toolkit/metrics-operator/controllers/common/providers/prometheus"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -61,6 +62,16 @@ func NewProvider(provider *metricsapi.KeptnMetricsProvider, log logr.Logger, k8s
 				},
 			},
 			K8sClient: k8sClient,
+		}, nil
+	case ElasticProviderType:
+		es, err := elastic.GetElasticClient(*provider)
+		if err != nil {
+			return nil, err
+		}
+		return &elastic.KeptnElasticProvider{
+			Log:       log,
+			K8sClient: k8sClient,
+			Elastic:   es,
 		}, nil
 	default:
 		return nil, fmt.Errorf("provider %s not supported", provider.Spec.Type)

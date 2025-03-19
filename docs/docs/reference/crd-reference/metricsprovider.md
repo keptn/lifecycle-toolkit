@@ -5,7 +5,7 @@ comments: true
 # KeptnMetricsProvider
 
 A `KeptnMetricsProvider` resource defines an instance of a data provider
-(such as Prometheus, Thanos, Cortex, Dynatrace, or Datadog)
+(such as Prometheus, Thanos, Cortex, Dynatrace, Elastic, or Datadog)
 that is used by one or more [KeptnMetric](metric.md) resources.
 
 One Keptn application can perform
@@ -116,6 +116,20 @@ For detailed information please look at the [Examples section](#examples).
     as `DD_CLIENT_API_KEY` and `DD_CLIENT_API_KEY` key names must be
     present in the linked Secret.
     Setting this field has no effect.
+
+=== "Elastic"
+
+    An example of Elastic as a metrics provider with a Secret holding
+    the authentication data looks like the following:
+ 
+    ```yaml
+    {% include "./assets/keptnmetricsprovider-elastic.yaml" %}
+    ```
+    > **Note**
+    When using Elastic as metrics provider you can
+    define the key name of your Elastic API Key stored in a secret,
+    which is not possible for Datadog, Prometheus, Cortex or Thanos.
+    For this example `myCustomTokenKey` was used. 
 
 === "Dynatrace and DQL"
 

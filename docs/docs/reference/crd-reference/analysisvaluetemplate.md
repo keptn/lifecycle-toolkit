@@ -20,7 +20,7 @@ metadata:
   namespace: <namespace-where-this-resource-resides>
 spec:
   provider:
-    name: cortex | datadog | dql | dynatrace | prometheus | thanos
+    name: cortex | datadog | dql | dynatrace | prometheus | elastic | thanos
   query: <query>
 ```
 

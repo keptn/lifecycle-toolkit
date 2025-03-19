@@ -81,6 +81,7 @@ Your cluster should include the following:
   [Thanos](https://thanos.io/),
   [Cortex](https://cortexmetrics.io/),
   [Dynatrace](https://www.dynatrace.com/),
+  [Elastic](https://www.elastic.co/),
   or [Datadog](https://www.datadoghq.com/);
   you can use multiple instances of different data providers.
   These provide:

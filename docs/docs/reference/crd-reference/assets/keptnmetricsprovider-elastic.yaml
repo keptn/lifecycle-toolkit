@@ -1,0 +1,19 @@
+apiVersion: metrics.keptn.sh/v1
+kind: KeptnMetricsProvider
+metadata:
+  name: elastic-provider
+  namespace: podtato-kubectl
+spec:
+  type: elastic
+  targetServer: "<elastic-url>"
+  secretKeyRef:
+    name: elastic-api-key
+    key: myCustomTokenKey
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: elastic-api-key
+data:
+  myCustomTokenKey: my-token
+type: Opaque

@@ -34,8 +34,8 @@ annotations:
   artifacthub.io/operatorCapabilities: Full Lifecycle
 kubeVersion: '>= 1.27.0-0'
 type: application
-version: 2.5.0
-appVersion: v2.4.0
+version: 0.10.0 # Helm Chart version
+appVersion: v2.5.0 # x-release-please-version
 dependencies:
   - name: keptn-cert-manager
     version: 0.3.0

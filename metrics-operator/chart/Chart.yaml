@@ -23,7 +23,7 @@ annotations:
 kubeVersion: '>= 1.27.0-0'
 type: application
 version: 0.4.0 # Helm Chart version
-appVersion: v2.0.0 # x-release-please-version
+appVersion: v2.1.0
 dependencies:
   - name: common
     repository: https://charts.lifecycle.keptn.sh

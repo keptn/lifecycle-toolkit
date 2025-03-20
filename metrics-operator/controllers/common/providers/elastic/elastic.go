@@ -84,7 +84,7 @@ func (r *KeptnElasticProvider) FetchAnalysisValue(ctx context.Context, query str
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	result, err := r.runElasticQuery(ctx, query)
+	result, err := r.runElasticQuery(ctx, *provider, query)
 	if err != nil {
 		return "", err
 	}
@@ -98,7 +98,7 @@ func (r *KeptnElasticProvider) EvaluateQuery(ctx context.Context, metric metrics
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
 
-	result, err := r.runElasticQuery(ctx, metric.Spec.Query)
+	result, err := r.runElasticQuery(ctx, provider, metric.Spec.Query)
 	if err != nil {
 		return "", nil, err
 	}
@@ -117,7 +117,13 @@ func (r *KeptnElasticProvider) EvaluateQueryForStep(ctx context.Context, metric 
 }
 
 // runElasticQuery runs query on elastic search to get output from elasticsearch
-func (r *KeptnElasticProvider) runElasticQuery(ctx context.Context, query string) (map[string]interface{}, error) {
+func (r *KeptnElasticProvider) runElasticQuery(ctx context.Context, provider metricsapi.KeptnMetricsProvider, query string) (map[string]interface{}, error) {
+	var err error
+	r.Log.Info("Running Elasticsearch query", "query", query)
+	r.Elastic, err = GetElasticClient(provider)
+	if err != nil {
+		return nil, err
+	}
 
 	res, err := r.Elastic.Search(
 		r.Elastic.Search.WithContext(ctx),

@@ -152,7 +152,7 @@ func TestRunElasticQuery(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 			defer cancel()
 
-			result, err := provider.runElasticQuery(ctx, tt.query)
+			result, err := provider.runElasticQuery(ctx, metricsapi.KeptnMetricsProvider{}, tt.query)
 
 			if tt.expectedError {
 				assert.Error(t, err)

@@ -149,9 +149,14 @@ func (r *KeptnElasticProvider) runElasticQuery(ctx context.Context, provider met
 // extractMetric will parse the result and return the metrics which we input to the function
 func (r *KeptnElasticProvider) extractMetric(result map[string]interface{}, metricPathStr string) (string, error) {
 	convertedResult := convertResultTOMap(result)
+	metricPaths := strings.Split(metricPathStr, ",")
 	for k, v := range convertedResult {
-		if strings.Contains(k, metricPathStr) {
-			return fmt.Sprintf("%f", v), nil
+		if strings.HasPrefix(k, "aggregations") {
+			for _, metricPath := range metricPaths {
+				if strings.Contains(k, metricPath) {
+					return fmt.Sprintf("%f", v), nil
+				}
+			}
 		}
 	}
 	return "", nil
@@ -176,6 +181,32 @@ func convertResultTOMap(input map[string]interface{}) map[string]float64 {
 			nestedMap := convertResultTOMap(v)
 			for nestedKey, nestedValue := range nestedMap {
 				output[key+"."+nestedKey] = nestedValue
+			}
+		case []interface{}:
+			for i, item := range v {
+				arrayKey := fmt.Sprintf("%s.%d", key, i)
+				if itemMap, ok := item.(map[string]interface{}); ok {
+					if bucketKey, exists := itemMap["key"]; exists {
+						arrayKey = fmt.Sprintf("%s.%v", key, bucketKey)
+					}
+					nestedMap := convertResultTOMap(itemMap)
+					for nestedKey, nestedValue := range nestedMap {
+						output[arrayKey+"."+nestedKey] = nestedValue
+					}
+				} else {
+					switch num := item.(type) {
+					case float64:
+						output[arrayKey] = num
+					case float32:
+						output[arrayKey] = float64(num)
+					case int:
+						output[arrayKey] = float64(num)
+					case int32:
+						output[arrayKey] = float64(num)
+					case int64:
+						output[arrayKey] = float64(num)
+					}
+				}
 			}
 		default:
 		}

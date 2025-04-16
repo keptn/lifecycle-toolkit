@@ -178,75 +178,116 @@ func TestExtractMetric(t *testing.T) {
 		result        map[string]interface{}
 		metricPath    string
 		expectedValue string
-		expectedError bool
 	}{
 		{
-			name: "Success - Metric Found",
+			name: "Success - Metric Found in Aggregations",
 			result: map[string]interface{}{
-				"metrics": map[string]interface{}{
-					"cpu": 75.5,
+				"aggregations": map[string]interface{}{
+					"metrics": map[string]interface{}{
+						"cpu": 75.5,
+					},
 				},
 			},
 			metricPath:    "metrics.cpu",
 			expectedValue: "75.500000",
-			expectedError: false,
 		},
 		{
 			name: "Failure - Metric Not Found",
 			result: map[string]interface{}{
-				"metrics": map[string]interface{}{
-					"memory": 1024,
+				"aggregations": map[string]interface{}{
+					"metrics": map[string]interface{}{
+						"memory": 1024,
+					},
 				},
 			},
 			metricPath:    "metrics.cpu",
 			expectedValue: "",
-			expectedError: false,
 		},
 		{
-			name: "Success - Nested Metric",
+			name: "Success - Comma Separated Paths",
 			result: map[string]interface{}{
-				"root": map[string]interface{}{
-					"sub": map[string]interface{}{
-						"value": 42.3,
+				"aggregations": map[string]interface{}{
+					"metrics": map[string]interface{}{
+						"cpu": 60,
 					},
 				},
 			},
-			metricPath:    "root.sub.value",
-			expectedValue: "42.300000",
-			expectedError: false,
+			metricPath:    "metrics.memory,metrics.cpu",
+			expectedValue: "60.000000",
+		},
+		{
+			name: "Ignored Non-Aggregation Keys",
+			result: map[string]interface{}{
+				"metrics": map[string]interface{}{
+					"cpu": 50,
+				},
+			},
+			metricPath:    "metrics.cpu",
+			expectedValue: "",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			value, err := provider.extractMetric(tt.result, tt.metricPath)
-
-			if tt.expectedError {
-				assert.Error(t, err)
-			} else {
-				assert.NoError(t, err)
-				assert.Equal(t, tt.expectedValue, value)
-			}
+			assert.NoError(t, err)
+			assert.Equal(t, tt.expectedValue, value)
 		})
 	}
 }
 
 func TestConvertResultTOMap(t *testing.T) {
-	input := map[string]interface{}{
-		"cpu": 50,
-		"mem": 2048.5,
-		"disk": map[string]interface{}{
-			"used": 500,
-			"free": 1500.75,
+	tests := []struct {
+		name     string
+		input    map[string]interface{}
+		expected map[string]float64
+	}{
+		{
+			name: "Basic Conversion",
+			input: map[string]interface{}{
+				"cpu": 50,
+				"mem": 2048.5,
+				"disk": map[string]interface{}{
+					"used": 500,
+					"free": 1500.75,
+				},
+			},
+			expected: map[string]float64{
+				"cpu":       50,
+				"mem":       2048.5,
+				"disk.used": 500,
+				"disk.free": 1500.75,
+			},
+		},
+		{
+			name: "Array of Primitives",
+			input: map[string]interface{}{
+				"prims": []interface{}{float64(1), float64(2)},
+			},
+			expected: map[string]float64{
+				"prims.0": 1,
+				"prims.1": 2,
+			},
+		},
+		{
+			name: "Array of Objects with Keys",
+			input: map[string]interface{}{
+				"buckets": []interface{}{
+					map[string]interface{}{"key": "one", "value": 5},
+					map[string]interface{}{"key": "two", "value": 10},
+				},
+			},
+			expected: map[string]float64{
+				"buckets.one.value": 5,
+				"buckets.two.value": 10,
+			},
 		},
 	}
-	expected := map[string]float64{
-		"cpu":       50,
-		"mem":       2048.5,
-		"disk.used": 500,
-		"disk.free": 1500.75,
-	}
 
-	output := convertResultTOMap(input)
-	assert.Equal(t, expected, output)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			output := convertResultTOMap(tt.input)
+			assert.Equal(t, tt.expected, output)
+		})
+	}
 }

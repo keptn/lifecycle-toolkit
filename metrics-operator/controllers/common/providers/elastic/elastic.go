@@ -159,7 +159,7 @@ func (r *KeptnElasticProvider) extractMetric(result map[string]interface{}, metr
 			}
 		}
 	}
-	return "", nil
+	return "0", nil
 }
 
 // convertResultTOMap recursively converts map[string]interface{} to map[string]float64

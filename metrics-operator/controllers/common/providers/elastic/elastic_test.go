@@ -201,7 +201,7 @@ func TestExtractMetric(t *testing.T) {
 				},
 			},
 			metricPath:    "metrics.cpu",
-			expectedValue: "",
+			expectedValue: "0",
 		},
 		{
 			name: "Success - Comma Separated Paths",
@@ -223,7 +223,7 @@ func TestExtractMetric(t *testing.T) {
 				},
 			},
 			metricPath:    "metrics.cpu",
-			expectedValue: "",
+			expectedValue: "0",
 		},
 	}
 

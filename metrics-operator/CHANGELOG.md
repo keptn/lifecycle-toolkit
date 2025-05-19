@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.1](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v2.1.0...metrics-operator-v2.1.1) (2025-05-19)
+
+
+### Bug Fixes
+
+* fix a bug when elastic as a provider  ([#3904](https://github.com/keptn/lifecycle-toolkit/issues/3904)) ([d6fd74d](https://github.com/keptn/lifecycle-toolkit/commit/d6fd74da776ca91bdac04cd279f4885f00329a26))
+
+
+### Other
+
+* bump metrics-operator Helm chart ([#3899](https://github.com/keptn/lifecycle-toolkit/issues/3899)) ([d8ad7bb](https://github.com/keptn/lifecycle-toolkit/commit/d8ad7bb083fdc69c81b5478aeff7e518724d62de))
+
 ## [2.1.0](https://github.com/keptn/lifecycle-toolkit/compare/metrics-operator-v2.0.0...metrics-operator-v2.1.0) (2025-03-19)
 
 

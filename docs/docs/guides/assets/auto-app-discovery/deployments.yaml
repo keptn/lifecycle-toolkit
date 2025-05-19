@@ -14,7 +14,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: podtato-head-frontend
+      app.kubernetes.io/name: podtato-head-frontend
   template:
     metadata:
       labels:
@@ -37,7 +37,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: podtato-head-hat
+      app.kubernetes.io/name: podtato-head-hat
   replicas: 1
   template:
     metadata:

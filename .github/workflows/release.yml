@@ -17,7 +17,7 @@ defaults:
 env:
   GO_VERSION: "~1.23"
   # renovate: datasource=github-releases depName=kubernetes-sigs/controller-tools
-  CONTROLLER_TOOLS_VERSION: "v0.16.5"
+  CONTROLLER_TOOLS_VERSION: "v0.18.0"
   PUBLISHABLE_ITEMS: '[".","lifecycle-operator","metrics-operator","keptn-cert-manager","runtimes/deno-runtime","runtimes/python-runtime"]'
 
 jobs:

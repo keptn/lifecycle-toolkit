@@ -168,7 +168,7 @@ jobs:
           outputs: type=oci,dest=/tmp/${{ matrix.config.name }}-image.tar
 
       - name: Upload image as artifact
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ matrix.config.name }}-image.tar
           path: /tmp/${{ matrix.config.name }}-image.tar
@@ -184,7 +184,7 @@ jobs:
         run: echo "" > tag
 
       - name: Upload tag for tests
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: dev-${{ env.DATETIME }}
           path: tag
@@ -306,7 +306,7 @@ jobs:
         run: rsync -av --delete --exclude='charts/*.tgz' ./${{ matrix.config.path }}/ ./helm-charts-repository/charts/${{ matrix.config.name }}/
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           token: ${{ secrets.KEPTN_BOT_TOKEN }}
           path: ./helm-charts-repository

@@ -19,14 +19,14 @@ require (
 	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394
 	golang.org/x/net v0.37.0
 	gopkg.in/inf.v0 v0.9.1
-	k8s.io/api v0.31.2
-	k8s.io/apiextensions-apiserver v0.31.2
-	k8s.io/apimachinery v0.31.2
-	k8s.io/apiserver v0.31.2
-	k8s.io/client-go v0.31.2
-	k8s.io/component-base v0.31.2
+	k8s.io/api v0.33.3
+	k8s.io/apiextensions-apiserver v0.33.3
+	k8s.io/apimachinery v0.33.3
+	k8s.io/apiserver v0.33.3
+	k8s.io/client-go v0.33.3
+	k8s.io/component-base v0.33.3
 	k8s.io/klog/v2 v2.130.1
-	k8s.io/metrics v0.29.10
+	k8s.io/metrics v0.33.3
 	sigs.k8s.io/controller-runtime v0.19.1
 	sigs.k8s.io/custom-metrics-apiserver v1.29.0
 	sigs.k8s.io/yaml v1.4.0
@@ -130,12 +130,12 @@ replace (
 	golang.org/x/crypto => golang.org/x/crypto v0.36.0
 	google.golang.org/grpc => google.golang.org/grpc v1.68.0
 	google.golang.org/protobuf => google.golang.org/protobuf v1.35.1
-	k8s.io/api => k8s.io/api v0.29.10
-	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.29.10
-	k8s.io/apimachinery => k8s.io/apimachinery v0.29.10
-	k8s.io/apiserver => k8s.io/apiserver v0.29.10
-	k8s.io/client-go => k8s.io/client-go v0.29.10
-	k8s.io/component-base => k8s.io/component-base v0.29.10
+	k8s.io/api => k8s.io/api v0.33.3
+	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.33.3
+	k8s.io/apimachinery => k8s.io/apimachinery v0.33.3
+	k8s.io/apiserver => k8s.io/apiserver v0.33.3
+	k8s.io/client-go => k8s.io/client-go v0.33.3
+	k8s.io/component-base => k8s.io/component-base v0.33.3
 	k8s.io/kms => k8s.io/kms v0.29.10
 	sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.16.6
 )

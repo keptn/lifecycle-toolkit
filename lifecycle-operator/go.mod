@@ -27,11 +27,11 @@ require (
 	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394
 	golang.org/x/net v0.37.0
 	google.golang.org/grpc v1.68.0
-	k8s.io/api v0.31.2
-	k8s.io/apiextensions-apiserver v0.31.2
-	k8s.io/apimachinery v0.31.2
-	k8s.io/apiserver v0.31.2
-	k8s.io/client-go v0.31.2
+	k8s.io/api v0.31.11
+	k8s.io/apiextensions-apiserver v0.31.11
+	k8s.io/apimachinery v0.31.11
+	k8s.io/apiserver v0.31.11
+	k8s.io/client-go v0.31.11
 	sigs.k8s.io/controller-runtime v0.19.1
 	sigs.k8s.io/yaml v1.4.0
 )

@@ -162,7 +162,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Cosign
-        uses: sigstore/cosign-installer@d7d6bc7722e3daa8354c50bcb52f4837da5e9b6a # v3.8.1
+        uses: sigstore/cosign-installer@3454372f43399081ed03b604cb2d021dabca52bb # v3.8.2
 
       - name: Clean up image tag
         id: clean-image-tag
@@ -215,7 +215,7 @@ jobs:
           output-file: ./sbom-${{ matrix.config.name }}.spdx.json
 
       - name: Attach SBOM to release
-        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda # v2.2.1
+        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631 # v2.2.2
         with:
           tag_name: ${{ matrix.config.tagName }}
           files: ./sbom-${{ matrix.config.name }}.spdx.json
@@ -234,7 +234,7 @@ jobs:
             ${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}
 
       - name: Upload verification log as artifact
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: cosign-attest-verification-log
           path: ./cosign-attest-output.json

@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.5.1](https://github.com/keptn/lifecycle-toolkit/compare/keptn-v2.5.0...keptn-v2.5.1) (2025-08-06)
+
+
+### Other
+
+* bump keptn main chart version ([#3901](https://github.com/keptn/lifecycle-toolkit/issues/3901)) ([759ccff](https://github.com/keptn/lifecycle-toolkit/commit/759ccfff2de422e1d480d6b595f0d32c40fbbbbb))
+
+
+### Docs
+
+* correct match selector section in auto app discovery guide ([#3903](https://github.com/keptn/lifecycle-toolkit/issues/3903)) ([deeb73e](https://github.com/keptn/lifecycle-toolkit/commit/deeb73e66e1808b14e857f7af0f89a286c2700d1))
+
+
+### Dependency Updates
+
+* update dependency cert-manager/cert-manager to v1.16.5 ([#3878](https://github.com/keptn/lifecycle-toolkit/issues/3878)) ([325756f](https://github.com/keptn/lifecycle-toolkit/commit/325756fc63db740805693aa31225503692aaf8ea))
+
 ## [2.5.0](https://github.com/keptn/lifecycle-toolkit/compare/keptn-v2.4.0...keptn-v2.5.0) (2025-03-19)
 
 

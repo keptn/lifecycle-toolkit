@@ -1,5 +1,31 @@
 # Changelog
 
+## [3.0.0](https://github.com/keptn/lifecycle-toolkit/compare/lifecycle-operator-v2.0.0...lifecycle-operator-v3.0.0) (2025-08-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* **lifecycle-operator:** The Lifecycle Operator helm chart was adapted after removal of the Keptn Scheduler and many Helm values were simplified, please double check your values files and adapt them accordingly.
+
+### Features
+
+* allow FailurePolicy to be configured by users ([#3922](https://github.com/keptn/lifecycle-toolkit/issues/3922)) ([40e195d](https://github.com/keptn/lifecycle-toolkit/commit/40e195d78dd1886166e17d2e9c69b75a249fc384))
+
+
+### Bug Fixes
+
+* **lifecycle-operator:** remove scheduler from helm charts ([#3855](https://github.com/keptn/lifecycle-toolkit/issues/3855)) ([fd78a53](https://github.com/keptn/lifecycle-toolkit/commit/fd78a536c1131ca57b0e8e7929a6c382b34e47b8))
+
+
+### Other
+
+* bump helm chart versions ([#3857](https://github.com/keptn/lifecycle-toolkit/issues/3857)) ([1873178](https://github.com/keptn/lifecycle-toolkit/commit/1873178a28878c0a12ce00e20a8e62d105068fe5))
+
+
+### Dependency Updates
+
+* update all golang.org/x packages (minor) ([#3860](https://github.com/keptn/lifecycle-toolkit/issues/3860)) ([80e5650](https://github.com/keptn/lifecycle-toolkit/commit/80e56500d4ed6a90ecf1e2ca411c4b98b294e24f))
+
 ## [2.0.0](https://github.com/keptn/lifecycle-toolkit/compare/lifecycle-operator-v1.2.0...lifecycle-operator-v2.0.0) (2024-11-11)
 
 

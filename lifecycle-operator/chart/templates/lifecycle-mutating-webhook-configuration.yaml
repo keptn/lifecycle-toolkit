@@ -25,7 +25,7 @@ webhooks:
       name: 'lifecycle-webhook-service'
       namespace: '{{ .Release.Namespace }}'
       path: /mutate-v1-pod
-  failurePolicy: Fail
+  failurePolicy: {{ .Values.failurePolicy | default "Fail" }}
   name: mpod.keptn.sh
   namespaceSelector:
     matchExpressions:

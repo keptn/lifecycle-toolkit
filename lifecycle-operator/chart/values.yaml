@@ -186,3 +186,5 @@ deniedNamespaces:
   - keptn-system
   - observability
   - monitoring
+
+failurePolicy: Fail 

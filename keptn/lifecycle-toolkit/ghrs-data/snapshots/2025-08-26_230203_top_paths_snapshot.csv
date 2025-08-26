@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/keptn/lifecycle-toolkit,8,6
+/keptn/lifecycle-toolkit/releases,5,3
+/keptn/lifecycle-toolkit/commits/main,3,2
+/keptn/lifecycle-toolkit/tree/main/examples,3,2
+/keptn/lifecycle-toolkit/tree/main/dashboards/grafana,2,2
+/keptn/lifecycle-toolkit/tree/main/examples/sample-app,2,2
+/keptn/lifecycle-toolkit/blob/main/lifecycle-operator/apis/options/v1alpha1/groupversion_info.go,1,1
+/keptn/lifecycle-toolkit/compare/%7B%7B%20urlEncodedRefName%20%7D%7D..89527d02b0391609bd101d48b6b82f1d1294894a,1,1
+/keptn/lifecycle-toolkit/issues,1,1
+/keptn/lifecycle-toolkit/issues/1841,1,1

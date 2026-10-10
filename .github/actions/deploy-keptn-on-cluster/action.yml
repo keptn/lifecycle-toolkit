@@ -30,7 +30,7 @@ runs:
   using: "composite"
   steps:
     - name: Set up Go 1.x
-      uses: actions/setup-go@f111f3307d8850f501ac008e886eec1fd1932a34 # v5
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
       with:
         go-version: ${{ env.GO_VERSION }}
         cache: true
@@ -38,7 +38,7 @@ runs:
         check-latest: true
 
     - name: Download artifacts
-      uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
       with:
         path: ~/download/artifacts
 

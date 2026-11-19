@@ -202,7 +202,7 @@ func (m *serverManager) recordMetrics() {
 
 // normalizeMetricName removes all characters from the name
 // of the metric that are not digits nor letters and
-// substitues them with underscore (_)
+// substitutes them with underscore (_)
 func normalizeMetricName(s string) string {
 	return strings.Join(strings.FieldsFunc(s,
 		func(r rune) bool {

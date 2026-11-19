@@ -105,7 +105,7 @@ application service and configuration for the metrics provider supplying the dat
 Next, we add `KeptnEvaluationDefinition` into our git repository, where our
 `podtato-head` application lives.
 It defines the [SLO](https://www.dynatrace.com/news/blog/what-are-slos/)
-by linking the existing `KeptnMetric` resource and providing the rule the value should fullfil.
+by linking the existing `KeptnMetric` resource and providing the rule the value should fulfill.
 
 ```yaml
 {% include "./argocd-keptn-health/evaluationdefinition.yaml" %}

@@ -20,7 +20,7 @@ that does not run any other components,
 especially any application deployment.
 
 By default, Keptn lifecycle orchestration is enabled
-for all namespaces except the followings:
+for all namespaces except the following:
 
 - `kube-system`
 - `kube-public`

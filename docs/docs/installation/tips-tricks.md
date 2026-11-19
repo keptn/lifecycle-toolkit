@@ -122,7 +122,7 @@ For more information about implementing Metrics, see the
 ### Enable Keptn Analysis (SLOs/SLIs)
 
 To enable Keptn Analysis in your cluster,
-you again do not need the Keptn Lifcycle Operator.
+you again do not need the Keptn Lifecycle Operator.
 Disable it using the following values.yaml:
 
 ```yaml

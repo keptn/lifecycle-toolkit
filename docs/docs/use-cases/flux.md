@@ -42,7 +42,7 @@ The `apps` directory contains application manifests, that will be deployed.
 The `clusters` directory contains Flux configuration manifests and custom
 resources, that are needed for the delivery.
 The `apps` and `clusters` directories can live in two separate repositories,
-but for simplicity of this excercise, we will keep them in a single one.
+but for simplicity of this exercise, we will keep them in a single one.
 
 You see that the Keptn runs pre/post-deployment tasks
 rather than using the Flux `pre-deploy` and `post-deploy` directories in the Git repository.
